@@ -1,0 +1,21 @@
+* {margin:0;padding:0;}
+html {font-size:100%;}
+.hidden {display:none;}
+.left {float:left;}
+.right {float:right;}
+a img {border:none;position:relative;top:2px;}
+body {background:url('../images/sbfade.png') repeat-x #efede8;font-family: Tahoma, Verdana, Arial, sans-serif;font-size:62%;text-align:center;color:#666;}
+/* structural elements */
+#shell {width:900px;margin:0 auto;padding-top:200px;position:relative;background:url('../images/starbug.png') 0px -3px no-repeat;height:500px;text-align:left;font-size:14px;}
+/* content */
+h1 {position:absolute;top:90px;left:310px;font-size:34px;}
+#subhead {position:absolute;top:130px;left:315px;font-weight:bold;font-size:12px;}
+h2 {color:#262;font-size:20px;margin:15px 0;}
+p {margin-bottom:10px;}
+ul {margin-left:20px;}
+ul li {padding:5px;}
+em {color:#222;}
+#get_started {list-style-type:decimal;}
+.codeblock {border:1px solid #222;padding:10px;margin:5px 0;width:50%;background-color:#fff;font-style:italic;}
+/* links */
+h1 a {color:#494;text-decoration:none;}

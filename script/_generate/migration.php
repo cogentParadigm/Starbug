@@ -1,0 +1,8 @@
+<?php
+$file = fopen(dirname(__FILE__)."/../../db/migrations/".$argv[2].".php", "w");
+fwrite($file, "<?php\nclass ".$argv[2]." extends Migration {\n\n\tfunction describe() {\n\t\t\n\t}\n\n\tfunction up() {\n\t\t\n\t}\n\n}\n\n\tfunction down() {\n\t\t\n\t}\n\n}\n?>");
+fclose($file);
+$file = fopen(dirname(__FILE__)."/../../db/migrations/list", "a");
+fwrite($file, $argv[2]."\r\n");
+fclose($file);
+?>

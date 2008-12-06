@@ -1,0 +1,12 @@
+#!/usr/bin/php
+<?php
+$help = "Usage: generate TYPE NAME [OPTIONS]\n\n";
+$help .= "TYPE\tObject type to generate\n";
+$help .= "    \t\trequest - request\n";
+$help .= "    \t\tresult - result\n";
+$help .= "    \t\ttable - sql table only\n";
+$help .= "    \t\tmodel - model\n";
+if ($argc<3) fwrite(STDOUT, $help);
+else if (file_exists(dirname(__FILE__)."/_generate/".$argv[1].".php")) include(dirname(__FILE__)."/_generate/".$argv[1].".php");
+exit(0);
+?>

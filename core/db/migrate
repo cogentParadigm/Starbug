@@ -1,0 +1,6 @@
+#!/usr/bin/php
+<?php
+$thisdir = dirname(__FILE__)."/";
+$migrationdir = $thisdir."migrations/";
+require_once $thisdir."roll_dir.php";
+?>
