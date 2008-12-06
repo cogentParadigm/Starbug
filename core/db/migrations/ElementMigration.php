@@ -1,13 +1,19 @@
 <?php
 class ElementMigration extends Migration {
 
+	function describe() {
+		$fields = "template=\ntype=string,input_type=text,Label=Template\t,";
+		$fields .= "name=\ntype=string,input_type=text,Label=Name\t,";
+		$fields .= "visible=\ntype=small_int,default=1,input_type=select\t,";
+		$fields .= "importance=\ntype=small_int,default=0,input_type=select\t";
+		return $fields;
+	}
+
 	function up() {
-		$elementTable =  rA("template=\ntype=string\t,name=\ntype=string\t,visible=\ntype=small_int,default=1\t,importance=\ntype=small_int,default=0\t");
+		$elementTable =  rA($this->describe());
 		$this->create_table("elements", $elementTable);
-		$this->table_insert("elements", "name, security", "'Home', '0'");
-		$this->table_insert("elements", "name, security", "'Login', '0'");
-		$this->table_insert("elements", "name, security", "'Elements', '2'");
-		$this->table_insert("elements", "name, security", "'Element', '4'");
+		$this->table_insert("elements", "name, template, security", "'Elements', 'CoreApp', '2'");
+		$this->table_insert("elements", "name, template, security", "'Element', 'CoreApp', '4'");
 		$this->table_insert("elements", "name, template, visible, security", "'Edit_element', 'Empty', '0', '4'");
 		$this->table_insert("elements", "name, template, visible, security", "'Get_element', 'Empty', '0', '4'");
 	}
