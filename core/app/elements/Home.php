@@ -8,7 +8,7 @@
 				<li>Edit <em>etc/Etc.php</em> and enter your database details and any other details.</li>
 				<li>Run the core migrations.
 					<div class="codeblock"><p>./core/db/migrate</p></div>
-					<span class="note">Note: before you do this, you might want to edit some of the migrations in <em>core/db/migrations/<em>.</span>
+					<span class="note"><strong>Note:</strong> before you do this, you might want to edit some of the migrations in <em>core/db/migrations/</em>.</span>
 				</li>
 				<li>Refresh this page.</li>
 			<?php } else { ?>

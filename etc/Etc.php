@@ -29,9 +29,11 @@ class Etc {
 	/* Default redirection time */
 	const REDIRECTION_TIME = 2;
 
-	/* Page table */
+	/* Elements table */
 	const PAGE_COLUMN = "name";
 	const TEMPLATE_COLUMN = "template";
+	const DEFAULT_TEMPLATE = "App";
+	const DEFAULT_PAGE = "Home";
 
 	/* Admin security */
 	const ADMIN_SECURITY = 3;

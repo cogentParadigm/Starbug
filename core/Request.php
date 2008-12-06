@@ -37,12 +37,12 @@ class Request {
 	protected function has_object($name) {return D_exists($name);}
 
 	protected function fetch_payload() {
-		$_GET['page'] = dfault($_GET['page'], "Home");
+		$_GET['page'] = dfault($_GET['page'], Etc::DEFAULT_PAGE);
 		//queue payloads
 		if (Etc::DB_NAME != "") {
 			$elements = $this->get_object('Elements');
 			$payload = $elements->find(Etc::PAGE_COLUMN.", ".Etc::TEMPLATE_COLUMN, Etc::PAGE_COLUMN."='".$_GET['page']."'");
-			if (empty($payload)) $this->set_payload((empty($_GET['page'])?"":"Missing"), "");
+			if (empty($payload)) $this->set_payload((($_GET['page'] == Etc::DEFAULT_PAGE)?Etc::DEFAULT_PAGE:"Missing"), Etc::DEFAULT_TEMPLATE);
 			else $this->set_payload($payload[Etc::PAGE_COLUMN], $payload[Etc::TEMPLATE_COLUMN]);
 		} else $this->set_payload("", "");
 	}
@@ -59,7 +59,6 @@ class Request {
 	private function deliver($payload) {
 		$page = $payload['page'];
 		if (file_exists("app/elements/".$payload['template'].".php")) include("app/elements/".$payload['template'].".php");
-		else if (file_exists("app/elements/App.php")) include("app/elements/App.php");
 		else if (file_exists("core/app/elements/".$payload['template'].".php")) include("core/app/elements/".$payload['template'].".php");
 		else if (file_exists("core/app/elements/CoreApp.php")) include("core/app/elements/CoreApp.php");
 	}

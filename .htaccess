@@ -1,6 +1,6 @@
 RewriteEngine On
 RewriteCond %{REQUEST_URI} !public/(.*)$
-RewriteRule ([A-Z][a-z]+)(/.*)?$ index.php?action=$1&params=$2
+RewriteRule ([A-Z][a-z]+)(/.*)?$ index.php?page=$1&params=$2
 RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost [NC]
 RewriteCond %{HTTP_REFERER} !^$
 RewriteCond %{HTTP_REFERER} ^http://.*$
