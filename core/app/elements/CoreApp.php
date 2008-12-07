@@ -14,7 +14,7 @@
 	<body>
 		<div id="shell">
 			<h1><a href="/"><span>Starbug</span></a></h1>
-			<span id="subhead">Request Engine</span>
+			<span id="subhead">PHP Request Engine</span>
 			<?php $page = dfault($page, "Home"); if (file_exists("core/app/elements/".$page.".php")) include("core/app/elements/".$page.".php"); ?>
 		</div>
 	</body>

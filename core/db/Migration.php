@@ -29,7 +29,6 @@ abstract class Migration {
 		}
 		$sql .= "security int(2) NOT NULL default '2', PRIMARY KEY (`id`) ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;";
 		$result = $this->db->Execute($sql);
-		$this-create_model(ucwords($name),$fields);
 	}
 	
 
@@ -46,7 +45,7 @@ abstract class Migration {
 		} else {
 			$file = fopen(dirname(__FILE__)."/../../app/models/".$name.".php", "w");
 		}
-		fwrite($file, "<?php\nclass ".$name." extends Table {\n\n");
+		fwrite($file, "<?php\nclass ".ucwords($name)." extends Table {\n\n");
 		$uniques = array(); $defaults => array(); $lengths => array();
 		foreach($fields as $name => $options) {
 			if (isset($options['default'])) $defaults[$name] = $options['default'];
