@@ -2,10 +2,10 @@
 class ElementMigration extends Migration {
 
 	function describe() {
-		$fields = "template=\ntype=string,input_type=text,Label=Template\t,";
-		$fields .= "name=\ntype=string,input_type=text,Label=Name\t,";
-		$fields .= "visible=\ntype=small_int,default=1,input_type=select,label=Visible\t,";
-		$fields .= "importance=\ntype=small_int,default=0,input_type=select,label=Importance\t";
+		$fields = "name=\ntype=string,length=32\t,";
+		$fields .= "template=\ntype=string,length=32\t,";
+		$fields .= "visible=\ntype=int,length=2,default=1\t,";
+		$fields .= "importance=\ntype=int,length=2,default=0\t";
 		return $fields;
 	}
 
