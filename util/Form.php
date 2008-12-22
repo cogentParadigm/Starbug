@@ -43,12 +43,12 @@ class Form {
 		return $lab.$ops['label'].'</label>';
 	}
 
-	function text_input($ops) {
+	function text($ops) {
 		$ops['input_type']='text';
 		return Form::input($ops);
 	}
 
-	function password_input($ops) {
+	function password($ops) {
 		$ops['input_type']='password';
 		return Form::input($ops);
 	}
@@ -58,13 +58,13 @@ class Form {
 		return Form::input($ops);
 	}
 
-	function submit_button($ops) {
+	function submit($ops) {
 		$ops['input_type']='submit';
 		$ops['default']=$ops['value'];
 		return Form::input($ops);
 	}
 
-	function image_button($ops) {
+	function image($ops) {
 		return '<input type="image" src="'.$ops['src'].'"/>';
 	}
 
