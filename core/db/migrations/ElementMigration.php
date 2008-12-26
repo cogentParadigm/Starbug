@@ -4,8 +4,8 @@ class ElementMigration extends Migration {
 	function describe() {
 		$fields = "name=\ntype=string,length=32\t,";
 		$fields .= "template=\ntype=string,length=32\t,";
-		$fields .= "visible=\ntype=int,length=2,default=1\t,";
-		$fields .= "importance=\ntype=int,length=2,default=0\t";
+		$fields .= "visible=\ntype=int,length=2,default=1,input_type=select,range=0:1\t,";
+		$fields .= "importance=\ntype=int,length=2,default=0,input_type=select,range=0:10\t";
 		return $fields;
 	}
 

@@ -1,5 +1,5 @@
 <?php
-load_file("util/Validate");
+include("util/Validate.php");
 class Table {
 
 	var $db;
@@ -20,7 +20,7 @@ class Table {
 	protected function store($arr) {
 		$errors = array();
 		foreach ($arr as $col => $value) {
-			//echo $col." ".$value."\n";
+			//echo $col." '".$value."'\n";
 			$arr[$col] = Validate::toStore(trim($value));
 			if ($arr[$col] === "") {
 				if (isset($this->defaults[$col])) $arr[$col] = $this->defaults[$col];

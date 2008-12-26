@@ -2,7 +2,7 @@
 $file = fopen(dirname(__FILE__)."/../../app/models/".ucwords($argv[2]).".php", "w");
 fwrite($file, "<?php\nclass ".ucwords($argv[2])." extends Table {\n\n");
 if (file_exists(dirname(__FILE__)."/../../core/db/schema/".ucwords($argv[2]))) {
-	$uniques = array(); $defaults => array(); $lengths => array();
+	$uniques = array(); $defaults = array(); $lengths = array();
 	$fields = unserialize(file_get_contents(dirname(__FILE__)."/../../core/db/schema/".ucwords($argv[2])));
 	foreach($fields as $name => $options) {
 		if (isset($options['default'])) $defaults[$name] = $options['default'];

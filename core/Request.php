@@ -1,6 +1,6 @@
 <?php
 //class Request
-load_file("core/db/Table");
+include("core/db/Table.php");
 class Request {
 
 	var $db;
@@ -37,7 +37,7 @@ class Request {
 	protected function has_object($name) {return D_exists($name);}
 
 	protected function fetch_payload() {
-		$_GET['page'] = dfault($_GET['page'], Etc::DEFAULT_PAGE);
+		dfault($_GET['page'], Etc::DEFAULT_PAGE);
 		//queue payloads
 		if (Etc::DB_NAME != "") {
 			$elements = $this->get_object('Elements');
