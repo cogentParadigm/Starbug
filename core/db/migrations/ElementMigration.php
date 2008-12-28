@@ -15,7 +15,7 @@ class ElementMigration extends Migration {
 		$this->table_insert("elements", "path, template, security", "'elements', 'Starbug', '2'");
 		$this->table_insert("elements", "path, template, visible, security", "'elements/new', 'Ajax', '0', '2'");
 		$this->table_insert("elements", "path, template, visible, security", "'elements/get', 'Ajax', '0', '2'");
-		$this->table_insert("elements", "path, template, visible, security", "'elements/update', 'Ajax', '0', '2'");
+		$this->table_insert("elements", "path, template, visible, security", "'elements/edit', 'Ajax', '0', '2'");
 	}
 
 	function down() {
