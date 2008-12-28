@@ -33,7 +33,7 @@ class Etc {
 	const PAGE_COLUMN = "name";
 	const TEMPLATE_COLUMN = "template";
 	const DEFAULT_TEMPLATE = "App";
-	const DEFAULT_PAGE = "Home";
+	const DEFAULT_PAGE = "home";
 
 	/* Admin security */
 	const ADMIN_SECURITY = 3;

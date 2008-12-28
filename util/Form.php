@@ -27,16 +27,15 @@ class Form {
 	}
 
 	function field($args) {
-		if (isset($args['options'])) $ops = $args['options'];
+		$ops = $args['options'];
 		unset($args['options']);
-		unset($args['type']);
-		$field = "\t".'<div class="field">'."\n";
+		$field = "\t".'<'.(isset($ops['type'])?$ops['type']:"div").' class="field">'."\n";
 		foreach ($args as $key => $value) {
 			$value['name'] = $key;
 			$value['fielded'] = true;
 			$field .= Form::$value['type']($value);
 		}
-		return $field."\t".'</div>'."\n";
+		return $field."\t".'</'.(isset($ops['type'])?$ops['type']:"div").'>'."\n";
 	}
 
 	function label($ops) {
@@ -77,7 +76,7 @@ class Form {
 	function input($ops) {
 		if (!empty($ops['nofield'])) $tabs = "\t";
 		else if (!empty($ops['fielded'])) $tabs = "\t\t";
-		else return Form::field(array($ops['name'] => $ops));
+		else return Form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
 		$ops['tabs'] = $tabs;
 		//id, name, and type
 		$input = "";
@@ -101,7 +100,7 @@ class Form {
 	function select($ops) {
 		if (!empty($ops['nofield'])) $tabs = "\t";
 		else if (!empty($ops['fielded'])) $tabs = "\t\t";
-		else return Form::field(array($ops['name'] => $ops));
+		else return Form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
 		$ops['tabs'] = $tabs;
 		//id, name, and type
 		$select = "";
