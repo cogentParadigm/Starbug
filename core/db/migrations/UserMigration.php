@@ -2,7 +2,7 @@
 class UserMigration extends Migration {
 
 	function describe() {
-		$fields = "first_name=\nstring,length=16\t,";
+		$fields = "first_name=\ntype=string,length=16\t,";
 		$fields .= "last_name=\ntype=string,length=32\t,";
 		$fields .= "password=\ntype=password\t,";
 		$fields .= "email=\ntype=string,length=64,unique=true\t";
