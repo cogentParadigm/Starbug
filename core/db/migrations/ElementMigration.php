@@ -2,7 +2,7 @@
 class ElementMigration extends Migration {
 
 	function describe() {
-		$fields = "name=\ntype=string,length=32\t,";
+		$fields = "path=\ntype=string,length=64\t,";
 		$fields .= "template=\ntype=string,length=32\t,";
 		$fields .= "visible=\ntype=int,length=2,default=1,input_type=select,range=0:1\t,";
 		$fields .= "importance=\ntype=int,length=2,default=0,input_type=select,range=0:10\t";
@@ -12,10 +12,10 @@ class ElementMigration extends Migration {
 	function up() {
 		$elementTable =  rA($this->describe());
 		$this->create_table("elements", $elementTable);
-		$this->table_insert("elements", "name, template, security", "'Elements', 'CoreApp', '2'");
-		$this->table_insert("elements", "name, template, security", "'Element', 'CoreApp', '4'");
-		$this->table_insert("elements", "name, template, visible, security", "'Edit_element', 'Empty', '0', '4'");
-		$this->table_insert("elements", "name, template, visible, security", "'Get_element', 'Empty', '0', '4'");
+		$this->table_insert("elements", "path, template, security", "'elements', 'Starbug', '2'");
+		$this->table_insert("elements", "path, template, visible, security", "'elements/new', 'Ajax', '0', '2'");
+		$this->table_insert("elements", "path, template, visible, security", "'elements/get', 'Ajax', '0', '2'");
+		$this->table_insert("elements", "path, template, visible, security", "'elements/update', 'Ajax', '0', '2'");
 	}
 
 	function down() {

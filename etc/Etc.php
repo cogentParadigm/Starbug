@@ -30,10 +30,10 @@ class Etc {
 	const REDIRECTION_TIME = 2;
 
 	/* Elements table */
-	const PAGE_COLUMN = "name";
+	const PATH_COLUMN = "path";
 	const TEMPLATE_COLUMN = "template";
 	const DEFAULT_TEMPLATE = "App";
-	const DEFAULT_PAGE = "home";
+	const DEFAULT_PATH = "home";
 
 	/* Admin security */
 	const ADMIN_SECURITY = 3;

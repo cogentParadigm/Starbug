@@ -35,13 +35,13 @@ class Request {
 	protected function has_object($name) {return D_exists($name);}
 
 	protected function fetch_payload() {
-		dfault($this->uri[0], Etc::DEFAULT_PAGE);
+		dfault($this->path, Etc::DEFAULT_PATH);
 		//queue payloads
 		if (Etc::DB_NAME != "") {
 			$elements = $this->get_object('Elements');
-			$payload = $elements->find(Etc::PAGE_COLUMN.", ".Etc::TEMPLATE_COLUMN, Etc::PAGE_COLUMN."='".$this->uri[0]."'");
-			if (empty($payload)) $this->set_payload((($this->uri[0] == Etc::DEFAULT_PAGE)?Etc::DEFAULT_PAGE:"missing"), Etc::DEFAULT_TEMPLATE);
-			else $this->set_payload($payload[Etc::PAGE_COLUMN], $payload[Etc::TEMPLATE_COLUMN]);
+			$payload = $elements->find(Etc::PATH_COLUMN.", ".Etc::TEMPLATE_COLUMN, "'".$this->path."' LIKE ".Etc::PATH_COLUMN." + '%'", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1");
+			if (empty($payload)) $this->set_payload((($this->path == Etc::DEFAULT_PATH)?Etc::DEFAULT_PATH:"missing"), Etc::DEFAULT_TEMPLATE);
+			else $this->set_payload($payload[Etc::PATH_COLUMN], $payload[Etc::TEMPLATE_COLUMN]);
 		} else $this->set_payload("", "");
 	}
 
@@ -55,7 +55,6 @@ class Request {
 	private function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_act($key, $val);}
 
 	private function deliver($payload) {
-		$page = $payload['page'];
 		if (file_exists("app/elements/".$payload['template'].".php")) include("app/elements/".$payload['template'].".php");
 		else if (file_exists("core/app/elements/".$payload['template'].".php")) include("core/app/elements/".$payload['template'].".php");
 		else if (file_exists("core/app/elements/Starbug.php")) include("core/app/elements/Starbug.php");
