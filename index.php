@@ -4,7 +4,7 @@ define("BASE_DIR", end(split("/",dirname(__FILE__))));
 include("etc/Etc.php");
 //initialize
 include("etc/init.php");
-//go
+//go\
 include("core/Request.php");
 new Request($db);
 ?>

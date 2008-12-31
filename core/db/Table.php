@@ -28,6 +28,7 @@ class Table {
 			}
 			if (isset($this->lengths[$col])) { //check length
 				$length = split(":", $this->lengths[$col]);
+				if (!next($length)) $length = array(0, $length[0]);
 				if (!Validate::length($arr[$col], $length[0], $length[1])) $errors[$col."LengthError"] = true; //$col is too long
 			}
 		}
@@ -66,7 +67,7 @@ class Table {
 	}
 
 	function find($select, $where="", $other="") {
-		$_SESSION[P("security")] = empty_nan($_SESSION[P("security")], 1);
+		empty_nan($_SESSION[P("security")], 1);
 		$securityQuery = "(security<=".$_SESSION[P("security")];
 		if($_SESSION[P("security")] != 1) $securityQuery .= " && security!=1)";
 		else $securityQuery .= ")";

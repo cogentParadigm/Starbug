@@ -25,8 +25,17 @@ em {color:#222;}
 .note {font-size:10px;}
 /* forms */
 label {display:block;font-size:11px;font-weight:bold;}
+.field .error {display:block;font-size:9px;font-weight:bold;color:#C00;}
 .field {margin-bottom:10px;padding:15px;background:#fff;border-bottom:1px solid #555;border-top:1px solid #555;}
-.button {padding:2px 5px;border-left:1px solid #555;border-right:1px solid #555;border-bottom:none;color:#494;font-size:11px;font-weight:bold;}
+.button {padding:2px 5px;border:none;border-left:1px solid #555;border-right:1px solid #555;color:#494;background:#DDD;font-size:11px;font-weight:bold;}
 #login {width:215px;}
 /* links */
 h1 a {color:#494;text-decoration:none;}
+a.button {text-decoration:none;height:16px;}
+.button:hover {text-decoration:underline;}
+/* tables */
+th, td {padding:5px 10px;}
+table a.button {display:block;height:16px;width:42px;padding:2px 8px;}
+table form .field {float:left;height:35px;}
+table .elements_form .button, table .users_form .button {display:none;}
+table .users_form input {width:125px;}

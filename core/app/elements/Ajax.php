@@ -1,1 +1,1 @@
-<?php $page=next($this->uri); if (file_exists('core/app/elements/Ajax/'.$page.'.php')) include('core/app/elements/Ajax/'.$page.'.php'); ?>
+<?php $page=current($this->uri); if (file_exists('core/app/elements/Ajax/'.$page.'.php')) include('core/app/elements/Ajax/'.$page.'.php'); ?>

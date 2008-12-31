@@ -1,6 +1,6 @@
-<tr id="new_element">
+<tr id="new_user">
 	<td colspan="5">
-		<?php $formid = "new_element_form"; $action = "create"; include("core/app/elements/elements/elements_form.php"); ?>
+		<?php $formid = "new_user_form"; $action = "create"; include("core/app/elements/users/users_form.php"); ?>
 	</td>
 	<td>
 		<a class="button" href="#" onclick="cancel_new();return false;">Cancel</a><a class="button" href="#" onclick="save_new();return false;">Save</a>

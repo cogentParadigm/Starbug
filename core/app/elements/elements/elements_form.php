@@ -1,10 +1,10 @@
-<form<?php if (!empty($formid)) echo "id=\"$formid\""; ?> class="elements_form" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
-	<input class="action" name="action[Elements]" type="hidden" value="<?php echo $action; ?>" />
+<form<?php if (!empty($formid)) echo " id=\"$formid\""; ?> class="elements_form" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
+	<input class="action" name="action[elements]" type="hidden" value="<?php echo $action; ?>" />
 <?php if (!empty($_POST['elements']['id'])) { ?><input id="id" name="elements[id]" type="hidden" value="<?php echo $_POST['elements']['id']; ?>" /><?php } ?>
 	<div class="field">
-		<label for="name">Name</label>
-		<?php if (!empty($this->errors['elements']['nameError'])) { ?><span class="error">Please enter a name.</span><?php } ?>
-		<input id="name" name="elements[name]" type="text"<?php if (!empty($_POST['elements']['name'])) { ?> value="<?php echo $_POST['elements']['name']; ?>"<?php } ?> />
+		<label for="name">Path</label>
+		<?php if (!empty($this->errors['elements']['pathError'])) { ?><span class="error">Please enter a path name.</span><?php } ?>
+		<input id="name" name="elements[path]" type="text"<?php if (!empty($_POST['elements']['path'])) { ?> value="<?php echo $_POST['elements']['path']; ?>"<?php } ?> />
 	</div>
 	<div class="field">
 		<label for="template">Template</label>
@@ -46,5 +46,5 @@
 			<option value="4"<?php if ($_POST['elements']['security'] == "4") { ?> selected="true"<?php } ?>>4</option>
 		</select>
 	</div>
-	<div><input class="button" type="submit" value="Create Page" /></div>
+	<div><input class="button" type="submit" value="Go" /></div>
 </form>

@@ -3,14 +3,15 @@ class Form {
 
 	function render($contents, $postvar, $meth="post", $act="") {
 		if(empty($act)) $act = '<?php echo htmlentities($_SERVER['."'REQUEST_URI']); ?>";
-		$form = '<form class="'.$postvar.'_form" action="'.$act.'" method="'.$meth.'">'."\n";
-		$form .= "\t<input class=\"action\" name=\"action[".ucwords($postvar)."]\" value=\"<?php echo \$action; ?>\" />\n";
+		$form = "<form<?php if (!empty(\$formid)) echo \" id=\\\"\$formid\\\"\"; ?> class=\"".$postvar."_form\" action=\"".$act."\" method=\"".$meth."\">\n";
+		$form .= "\t<input class=\"action\" name=\"action[$postvar]\" type=\"hidden\" value=\"<?php echo \$action; ?>\" />\n";
+		$form .= "\t<?php if (!empty(\$_POST['$postvar']['id'])) { ?><input id=\"id\" name=\"".$postvar."[id]\" type=\"hidden\" value=\"<?php echo \$_POST['$postvar']['id']; ?>\" /><?php } ?>\n";
 		foreach($contents as $key => $value) {
 			$value['name'] = $key;
 			$value['postvar'] = $postvar;
 			$form .= Form::$value['type']($value);
 		}
-		return $form.'</form>';
+		return $form."\t<div><input class=\"button\" type=\"submit\" value=\"Go\" /></div>\n</form>";
 	}
 
 	function fieldset($args) {
