@@ -5,6 +5,7 @@ $db = ADONewConnection('mysql');
 $db->Connect(Etc::DB_HOST, Etc::DB_USERNAME, Etc::DB_PASSWORD, Etc::DB_NAME);
 function empty_nan(&$val, $default="") {if(!isset($val) || !is_numeric($val)) $val = $default;}
 function dfault(&$val, $default="") {if(!isset($val)) $val = $default;}
+function efault(&$val, $default="") {if(empty($val)) $val = $default;}
 function rA($str="") {return Starr::rstar($str);}
 function D_exists($obj) {return file_exists("app/models/".ucwords($obj).".php");}
 function D($obj, $data) {$obj = ucwords($obj); if (include_once("app/models/".$obj.".php")) $obj = new $obj($data, strtolower($obj)); else return false; return $obj;}

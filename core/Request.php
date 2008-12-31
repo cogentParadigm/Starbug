@@ -18,7 +18,7 @@ class Request {
 		$this->errors = array();
 		//locate request
 		$this->path = end(split(BASE_DIR."/", $_SERVER['REQUEST_URI']));
-		dfault($this->path, Etc::DEFAULT_PATH);
+		efault($this->path, Etc::DEFAULT_PATH);
 		$this->locate();
 		//manipulate data if necessary
 		$this->check_post();
@@ -28,12 +28,13 @@ class Request {
 
 	protected function get($key) {return D($key, $this->db);}
 
-	protected function set_payload($basepath, $template) {$this->payload["path"] = $basepath; $this->payload["template"] = $template;}
-
 	protected function has($name) {return D_exists($name);}
 
 	protected function locate() {
-		if ((Etc::DB_NAME != "") && ($this->payload = $this->get('elements')->find(Etc::PATH_COLUMN.", ".Etc::TEMPLATE_COLUMN, "'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%')", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1")->fields())) if (empty($this->payload)) $this->path = (($this->path == Etc::DEFAULT_PATH)?Etc::DEFAULT_PATH:"missing");
+		if (Etc::DB_NAME != "") {
+			$this->payload = $this->get('elements')->find(Etc::PATH_COLUMN.", ".Etc::TEMPLATE_COLUMN, "'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%')", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1")->fields();
+			if (empty($this->payload)) $this->path = (($this->path == Etc::DEFAULT_PATH)?Etc::DEFAULT_PATH:"missing");
+		}
 		$this->uri = split("/", $this->path);
 	}
 
