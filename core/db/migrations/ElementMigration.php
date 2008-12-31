@@ -12,10 +12,15 @@ class ElementMigration extends Migration {
 	function up() {
 		$elementTable =  rA($this->describe());
 		$this->create_table("elements", $elementTable);
-		$this->table_insert("elements", "path, template, security", "'elements', 'Starbug', '2'");
-		$this->table_insert("elements", "path, template, visible, security", "'elements/new', 'Ajax', '0', '2'");
-		$this->table_insert("elements", "path, template, visible, security", "'elements/get', 'Ajax', '0', '2'");
-		$this->table_insert("elements", "path, template, visible, security", "'elements/edit', 'Ajax', '0', '2'");
+		$this->table_insert("elements", "path, template, security", "'elements', 'Starbug', '4'");
+		$this->table_insert("elements", "path, template, visible, security", "'elements/new', 'Ajax', '0', '4'");
+		$this->table_insert("elements", "path, template, visible, security", "'elements/get', 'Ajax', '0', '4'");
+		$this->table_insert("elements", "path, template, visible, security", "'elements/edit', 'Ajax', '0', '4'");
+		$this->table_insert("elements", "path, template, security", "'users', 'Starbug', '4'");
+		$this->table_insert("elements", "path, template, visible, security", "'users/new', 'Ajax', '0', '4'");
+		$this->table_insert("elements", "path, template, visible, security", "'users/get', 'Ajax', '0', '4'");
+		$this->table_insert("elements", "path, template, visible, security", "'users/edit', 'Ajax', '0', '4'");
+		$this->table_insert("elements", "path, template, visible, security", "'login', 'Starbug', '0', '0'");
 	}
 
 	function down() {
