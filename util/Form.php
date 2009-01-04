@@ -3,7 +3,7 @@ class Form {
 
 	function render($contents, $postvar, $meth="post", $act="") {
 		if(empty($act)) $act = '<?php echo htmlentities($_SERVER['."'REQUEST_URI']); ?>";
-		$form = "<form<?php if (!empty(\$formid)) echo \" id=\\\"\$formid\\\"\"; ?> class=\"".$postvar."_form\" action=\"".$act."\" method=\"".$meth."\">\n";
+		$form = "<form<?php if (!empty(\$formid)) echo \" id=\\\"\$formid\\\"\"; ?> class=\"".$postvar."_form\" action=\"".$act."\" method=\"".(($meth=="get")?"get":"post")."\"".(($meth=="mult")?"enctype=\"multipart/form-data\"":"").">\n";
 		$form .= "\t<input class=\"action\" name=\"action[$postvar]\" type=\"hidden\" value=\"<?php echo \$action; ?>\" />\n";
 		$form .= "\t<?php if (!empty(\$_POST['$postvar']['id'])) { ?><input id=\"id\" name=\"".$postvar."[id]\" type=\"hidden\" value=\"<?php echo \$_POST['$postvar']['id']; ?>\" /><?php } ?>\n";
 		foreach($contents as $key => $value) {
@@ -67,6 +67,11 @@ class Form {
 	function submit($ops) {
 		$ops['input_type']='submit';
 		$ops['default']=$ops['value'];
+		return Form::input($ops);
+	}
+
+	function bin($ops) {
+		$ops['input_type'] = 'file';
 		return Form::input($ops);
 	}
 
