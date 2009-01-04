@@ -32,8 +32,9 @@ class Request {
 
 	protected function locate() {
 		if (Etc::DB_NAME != "") {
-			$this->payload = $this->get('elements')->find(Etc::PATH_COLUMN.", ".Etc::TEMPLATE_COLUMN, "'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%')", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1")->fields();
+			$this->payload = $this->get('elements')->get("*", "'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%')", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1")->fields();
 			if (empty($this->payload)) $this->path = (($this->path == Etc::DEFAULT_PATH)?Etc::DEFAULT_PATH:"missing");
+			else if ($this->payload['security'] > $_SESSION[P('security')]) $this->path = "forbidden";
 		}
 		$this->uri = split("/", $this->path);
 	}
