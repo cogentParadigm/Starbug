@@ -68,9 +68,9 @@ class Table {
 
 	function find($select, $where="", $other="") {
 		empty_nan($_SESSION[P("security")], 1);
-		$securityQuery = "(security<=".$_SESSION[P("security")];
-		if($_SESSION[P("security")] != 1) $securityQuery .= " && security!=1)";
-		else $securityQuery .= ")";
+		$securityQuery = "(security<=".$_SESSION[P("security")].")";
+		//if($_SESSION[P("security")] != 1) $securityQuery .= " && security!=1)";
+		//else $securityQuery .= ")";
 		if (!empty($where)) $where = $securityQuery." && ".$where;
 		else $where = $securityQuery;
 		return $this->get($select, $where, $other);
