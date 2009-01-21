@@ -17,7 +17,7 @@ class Request {
 		//init errors array
 		$this->errors = array();
 		//locate request
-		$this->path = end(split(BASE_DIR."/", $_SERVER['REQUEST_URI']));
+		$this->path = (strpos($_SERVER['REQUEST_URI'], BASE_DIR) === false) ? substr($_SERVER['REQUEST_URI'], 1) : end(split(BASE_DIR."/", $_SERVER['REQUEST_URI']));
 		efault($this->path, Etc::DEFAULT_PATH);
 		$this->locate();
 		//manipulate data if necessary
@@ -46,7 +46,8 @@ class Request {
 	private function execute() {
 		if (file_exists("app/elements/".$this->payload['template'].".php")) include("app/elements/".$this->payload['template'].".php");
 		else if (file_exists("core/app/elements/".$this->payload['template'].".php")) include("core/app/elements/".$this->payload['template'].".php");
-		else if (file_exists("core/app/elements/Starbug.php")) include("core/app/elements/Starbug.php");
+		else if (file_exists("app/elements/".Etc::DEFAULT_TEMPLATE.".php")) include("app/elements/".Etc::DEFAULT_TEMPLATE.".php");
+		else include("core/app/elements/Starbug.php");
 	}
 
 }
