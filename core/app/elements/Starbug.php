@@ -13,7 +13,7 @@
 	<body>
 		<div id="shell">
 			<h1><a href="./"><span>Starbug</span></a></h1>
-			<span id="subhead">PHP Request Engine</span>
+			<span id="subhead">PHP web service development kit</span>
 			<?php $page = current($this->uri); if (file_exists("core/app/elements/".$page.".php")) include("core/app/elements/".$page.".php"); ?>
 		</div>
 	</body>
