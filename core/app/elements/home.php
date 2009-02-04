@@ -32,15 +32,15 @@
 			<h2>Getting Started</h2>
 			<p>Here are a few tips to help you get started.</p>
 			<ul class="decimal">
-				<li>To create a home page, add a new element via the dashboard below using '<?php echo Etc::DEFAULT_PATH; ?>' as the name, and whatever you'd like as the template. The new template will be in <em>app/elements</em> and the new page will be in <em>app/elements/'templateName'</em>.</li>
+				<li>To create a home page, add a new element via the dashboard below using '<?php echo Etc::DEFAULT_PATH; ?>' as the name, and whatever you'd like as the template. The new page and template will be in <em>app/elements/</em>.</li>
 				<li><p>To create a data model, such as Articles, start by generating a migration.<p>
-						<div class="codeblock"><p>./script/generate migration Articles</p></div>
-						<p>Edit the Migration file in <em>/db/migrations</em>, and then migrate the database.</p>
+						<div class="codeblock"><p>./script/generate migration articles</p></div>
+						<p>Edit the Migration file in <em>/db/migrations/</em>, and then migrate the database.</p>
 						<div class="codeblock"><p>./db/migrate</p></div>
-						<p>You now have a model in <em>/app/models</em>.</p>
+						<p>You now have a model in <em>/app/models/</em>.</p>
 						<p>To generate a model without using a migration, use the generater.</p>
-						<div class="codeblock"><p>./script/generate model Articles</p></div>
-						<span class="note"><strong>Note:</strong> for more information on working with models, refer the documentation.</span>
+						<div class="codeblock"><p>./script/generate model articles</p></div>
+						<span class="note"><strong>Note:</strong> for more information on working with models, refer to the documentation (does not exist yet).</span>
 				</li>
 			</ul>
 			<?php }

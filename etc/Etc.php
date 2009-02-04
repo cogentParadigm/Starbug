@@ -40,8 +40,8 @@ class Etc {
 
 
 /* Directories */
-	const STYLESHEET_DIR = "/public/stylesheets/";
-	const IMG_DIR = "/public/images/";
+	const STYLESHEET_DIR = "public/stylesheets/";
+	const IMG_DIR = "public/images/";
 
 	/* Default redirection time */
 	const REDIRECTION_TIME = 2;
