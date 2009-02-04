@@ -32,7 +32,7 @@
 			<h2>Getting Started</h2>
 			<p>Here are a few tips to help you get started.</p>
 			<ul class="decimal">
-				<li>To create a home page, add a new element via the dashboard below using '<?php echo Etc::DEFAULT_PATH; ?>' as the name, and whatever you'd like as the template. The new page and template will be in <em>app/elements/</em>.</li>
+				<li>To create a home page, add a new uri via the dashboard below using '<?php echo Etc::DEFAULT_PATH; ?>' as the path, and whatever you'd like as the template. The new page and template will be in <em>app/nouns/</em>.</li>
 				<li><p>To create a data model, such as Articles, start by generating a migration.<p>
 						<div class="codeblock"><p>./script/generate migration articles</p></div>
 						<p>Edit the Migration file in <em>/db/migrations/</em>, and then migrate the database.</p>

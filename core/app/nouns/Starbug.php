@@ -14,7 +14,7 @@
 		<div id="shell">
 			<h1><a href="./"><span>Starbug</span></a></h1>
 			<span id="subhead">PHP web service development kit</span>
-			<?php $page = current($this->uri); if (file_exists("core/app/elements/".$page.".php")) include("core/app/elements/".$page.".php"); ?>
+			<?php $page = current($this->uri); if (file_exists("core/app/nouns/".$page.".php")) include("core/app/nouns/".$page.".php"); ?>
 			<ul id="footer">
 				<li><a href="http://www.starbugphp.com">StarbugPHP WSDK</a> &copy; 2008-2009 <a href="http://www.aligangji.com">Ali Gangji</a></li>
 				<li><a href="http://www.starbugphp.com/freedoms">freedoms</a></li>
@@ -22,33 +22,34 @@
 		</div>
 		<div id="dash">
 			<script type="text/javascript">
-				function new_element() {
+				function add_uri() {
 					dojo.xhrGet({
-						url: '<?php echo uri("elements/new"); ?>',
+						url: '<?php echo uri("uris/add"); ?>',
 						load: function (data) {
 							dojo.byId('dash_form').innerHTML += data;
 						}
 					});
 				}
-				function save_new() {
+				function save_add() {
 					dojo.xhrPost({
-						url: '<?php echo uri("elements/get"); ?>',
-						form: 'new_element_form',
+						url: '<?php echo uri("uris/get"); ?>',
+						form: 'new_uri_form',
 						load: function(data) {
 							cancel_new();
-							dojo.byId('elements_table').innerHTML += data;
+							dojo.byId('uris_table').innerHTML += data;
 						}
 					});
 				}
-				function cancel_new() {
-					var newrow = dojo.byId('new_element_form');
+				function cancel_add() {
+					var newrow = dojo.byId('add_uri');
 					newrow.parentNode.removeChild(newrow);
 				}
 			</script>
 			<div id="dash_form"></div>
 			<ul id="dashlist">
-				<li class="first"><a class="add" href="elements/create" onclick="new_element();return false;">+</a><a href="">elements</a></li>
-				<li><a class="add" href="">+</a><a href="">models</a></li>
+				<li class="first"><a class="add" href="uris/create" onclick="add_uri();return false;">+</a><a href="">uris</a></li>
+				<li><a class="add" href="users/create" onclick="add_user();return false;">+</a><a href="">users</a></li>
+				<li><a class="add" href="" onclick="add_model();return false;">+</a><a href="">models</a></li>
 			</ul>
 		</div>
 	</body>
