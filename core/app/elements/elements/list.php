@@ -7,55 +7,7 @@ $total = $elements->recordCount;
 $list = $elements->afind("*", "", "ORDER BY id DESC LIMIT ".($page*25).", 25");
 $shown = $elements->recordCount;
 ?>
-<script type="text/javascript">
-	function new_element() {
-		dojo.xhrGet({
-			url: '<?php echo uri("elements/new"); ?>',
-			load: function (data) {
-				dojo.byId('elements_table').innerHTML += data;
-			}
-		});
-	}
-	function save_new() {
-		dojo.xhrPost({
-			url: '<?php echo uri("elements/get"); ?>',
-			form: 'new_element_form',
-			load: function(data) {
-				cancel_new();
-				dojo.byId('elements_table').innerHTML += data;
-			}
-		});
-	}
-	function cancel_new() {
-		var newrow = dojo.byId('new_element');
-		newrow.parentNode.removeChild(newrow);
-	}
-	function edit_element(id) {
-		dojo.xhrGet({
-			url: '<?php echo uri("elements/edit/"); ?>'+id,
-			load: function(data) {
-				dojo.byId('element_'+id).innerHTML = data;
-			}
-		});
-	}
-	function save_edit(id) {
-		dojo.xhrPost({
-			url: '<?php echo uri("elements/get/"); ?>'+id,
-			form: 'edit_element_form',
-			load: function(data) {
-				dojo.byId('element_'+id).innerHTML = data;
-			}
-		});
-	}
-	function cancel_edit(id) {
-		dojo.xhrGet({
-			url: '<?php echo uri("elements/get/"); ?>'+id,
-			load: function(data) {
-				dojo.byId('element_'+id).innerHTML = data;
-			}
-		});
-	}
-</script>
+<script type="text/javascript" src="<?php echo uri("core/public/js/elements.js"); ?>"></script>
 <h2>Elements</h2>
 <?php if ($total > 25) { ?>
 <ul class="pages">

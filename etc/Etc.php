@@ -43,7 +43,7 @@ class Etc {
 	const WEBSITE_URL = "";
 
 
-/* Directories */
+	/* Directories */
 	const STYLESHEET_DIR = "public/stylesheets/";
 	const IMG_DIR = "public/images/";
 

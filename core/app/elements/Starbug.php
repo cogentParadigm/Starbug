@@ -16,8 +16,39 @@
 			<span id="subhead">PHP web service development kit</span>
 			<?php $page = current($this->uri); if (file_exists("core/app/elements/".$page.".php")) include("core/app/elements/".$page.".php"); ?>
 			<ul id="footer">
-				<li><a href="http://www.starbugphp.com">Starbug WSDK</a> &copy; 2008-2009 <a href="http://www.aligangji.com">Ali Gangji</a></li>
+				<li><a href="http://www.starbugphp.com">StarbugPHP WSDK</a> &copy; 2008-2009 <a href="http://www.aligangji.com">Ali Gangji</a></li>
 				<li><a href="http://www.starbugphp.com/freedoms">freedoms</a></li>
+			</ul>
+		</div>
+		<div id="dash">
+			<script type="text/javascript">
+				function new_element() {
+					dojo.xhrGet({
+						url: '<?php echo uri("elements/new"); ?>',
+						load: function (data) {
+							dojo.byId('dash_form').innerHTML += data;
+						}
+					});
+				}
+				function save_new() {
+					dojo.xhrPost({
+						url: '<?php echo uri("elements/get"); ?>',
+						form: 'new_element_form',
+						load: function(data) {
+							cancel_new();
+							dojo.byId('elements_table').innerHTML += data;
+						}
+					});
+				}
+				function cancel_new() {
+					var newrow = dojo.byId('new_element_form');
+					newrow.parentNode.removeChild(newrow);
+				}
+			</script>
+			<div id="dash_form"></div>
+			<ul id="dashlist">
+				<li class="first"><a class="add" href="elements/create" onclick="new_element();return false;">+</a><a href="">elements</a></li>
+				<li><a class="add" href="">+</a><a href="">models</a></li>
 			</ul>
 		</div>
 	</body>
