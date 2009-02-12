@@ -5,6 +5,7 @@ html{font-size:100%}
 .hidden{display:none}
 .left{float:left}
 .right{float:right}
+.clear{clear:both}
 a img{border:none;position:relative;top:2px}
 body{background:url('../images/sbfade.png') repeat-x #efede8;font-family: Tahoma, Verdana, Arial, sans-serif;font-size:62%;text-align:center;color:#666}
 /* structural elements */
@@ -17,15 +18,25 @@ body{background:url('../images/sbfade.png') repeat-x #efede8;font-family: Tahoma
 h1{position:absolute;top:90px;left:310px;font-size:34px}
 #subhead{position:absolute;top:130px;left:315px;font-weight:bold;font-size:12px}
 h2{color:#262;font-size:20px;margin:15px 0}
+.lidls h3{color:#fff;background:#494;font-size:14px;height:27px}
+#models .inactive h3{background:#C22}
+.lidls h3 span{display:block;float:left;padding:5px 10px}
 /* lists */
 #footer li{float:left;padding:0px 5px}
 #dashlist li{float:left;padding:0 0 0 10px}
 #dashlist li.first{padding-left:0}
 #dash_form .buttons{list-style:none;position:absolute;bottom:0;right:0}
 #dash_form .buttons li{float:left;padding:0}
+.lidls{list-style:none;margin-left:0}
+.lidls li{padding:0;margin-bottom:10px;background:#fff}
 ul{margin-left:20px}
 ul li{padding:5px}
 ul.decimal{list-style-type:decimal}
+dl dl{padding-left:15px;clear:both;border-bottom:1px solid #555;border-top:1px solid #555}
+dt, dd{padding:2px}
+dt{font-weight:bold;float:left;width:100px;padding-left:5px;color:#555;clear:left}
+dt.sub{float:none;display:block;width:880px}
+dd .options{float:right}
 /* inline */
 p{margin-bottom:10px}
 em{color:#222}
@@ -37,24 +48,40 @@ em{color:#222}
 label{display:block;font-size:11px;font-weight:bold}
 .field .error{display:block;font-size:9px;font-weight:bold;color:#C00}
 .field{margin-bottom:10px;padding:15px;background:#fff;border-bottom:1px solid #555;border-top:1px solid #555}
-.button{padding:2px 5px;border:none;border-left:1px solid #555;border-right:1px solid #555;color:#494;background:#DDD;font-size:11px;font-weight:bold}
+.button{padding:2px 5px;border:none;color:#fff;background:#494;font-size:11px;font-weight:bold;text-decoration:none}
 #login{width:215px}
 #dash_form{width:100%;position:absolute;bottom:0px}
 #dash_form form{width:900px;background:#fff;height:65px;border-bottom:1px solid #555;border-top:1px solid #555}
 #dash_form .field{border:none}
+dd form .field{padding:2px 5px;border-top:none}
+#new_key{height:48px}
+.lidls h3 form{float:right;visibility:hidden}
+.lidls h3 form .button{padding:5px}
 /* links */
 h1 a{color:#494;text-decoration:none}
-a.button{text-decoration:none;height:16px}
-.button:hover{text-decoration:underline}
+a.button{height:16px}
+.button:hover{background:#5a5;}
 #footer a{color:#494;text-decoration:none}
 #footer a:hover{text-decoration:underline}
 #dash a{color:#fff;font-size:12px;font-weight:bold;display:block;float:left;text-decoration:none;padding:5px}
 #dash a:hover{background:#5a5}
-#dash a.add{font-size:18px;padding:2px 3px 1px}
-#dash .button{height:14px;background:none;border:none}
+#dash a.add{font-size:17px;padding:2px 3px}
+#dash .button{height:14px}
+.lidls h3 a{color:#fff;text-decoration:none;display:block;float:right;padding:5px;visibility:hidden}
+.lidls h3:hover a, .lidls h3:hover form{visibility:visible}
+.lidls h3 a:hover{background:#5a5}
+.lidls h3 a.title{float:none;padding:5px 10px;visibility:visible}
+#models .inactive h3 a:hover{background:#D00;}
+dd .options a{padding:0px 5px;color:#494;text-decoration:none}
+dd .options a:hover, dt.sub a:hover{text-decoration:underline;color:#5a5}
+dt.sub a{color:#494;text-decoration:none}
+dt.sub a.right{margin-left:10px}
+.lidls dd a.button{margin-top:20px;float:left}
 /* tables */
 th, td{padding:5px 10px}
-table a.button{display:block;height:16px;width:42px;padding:2px 8px}
-table form .field, #dash form .field{float:left;height:35px}
-table .uris_form .button, table .users_form .button, #dash_form form .button{display:none}
+table a.button{display:block;float:left}
+table .options form{float:left}
+table form .field, #dash form .field, dd form .field{float:left;height:35px}
+table .uris_form .button, table .users_form .button, #dash_form form .button, .lidls dd form .button{display:none}
 table .users_form input{width:125px}
+/* models */

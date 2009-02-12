@@ -1,4 +1,4 @@
-<form<?php if (!empty($formid)) echo " id=\"$formid\""; ?> class="uris_form" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
+<form<?php if (!empty($formid)) echo " id=\"$formid\""; ?> class="uris_form" action="<?php echo (empty($submit_to) ? htmlentities($_SERVER['REQUEST_URI']) : $submit_to); ?>" method="post">
 	<input class="action" name="action[uris]" type="hidden" value="<?php echo $action; ?>" />
 <?php if (!empty($_POST['uris']['id'])) { ?><input id="id" name="uris[id]" type="hidden" value="<?php echo $_POST['uris']['id']; ?>" /><?php } ?>
 	<div class="field">

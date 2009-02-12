@@ -1,19 +1,65 @@
+<?php
+if (file_exists("etc/install.php")) include("etc/install.php");
+if ($_POST['starbug_create_tables']) unlink("etc/install.php");
+?>
 			<h2>Congratulations, she rides!</h2>
 			<p>You've successfully started the Starbug engine on your server!</p>
 			<?php if (Etc::DB_NAME == "") { ?>
 			<h2>Before you begin</h2>
-			<p>Take the following steps to get up and running with Starbug.</p>
-			<ul class="decimal">
-				<li>Create a database for your project.</li>
-				<li>Edit <em>etc/Etc.php</em> and enter your database details and any other details.</li>
-				<li>Run the core migrations.
-					<div class="codeblock"><p>./core/db/migrate</p></div>
-					<span class="note"><strong>Note:</strong> before you do this, you might want to edit some of the migrations in <em>core/db/migrations/</em>.</span>
-				</li>
-				<li>Refresh this page.</li>
-			</ul>
-			<?php } else { ?>
-			<?php if ($_SESSION[P('security')] != Etc::SUPER_ADMIN_SECURITY) { ?>
+			<p>Answer the following questions to get up and running with Starbug.</p>
+			<form id="install_form" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
+				<input type="hidden" name="configure_starbug" value="1" />
+				<h3>Database details</h3>
+				<div class="field">
+					<label for="dbtype">Database Type (eg. mysql)</label>
+					<input id="dbtype" name="dbtype" type="text" />
+				</div>
+				<div class="field">
+					<label for="dbhost">Database Host (eg. localhost)</label>
+					<input id="dbhost" name="dbhost" type="text" />
+				</div>
+				<div class="field">
+					<label for="dbname">Database Name</label>
+					<input id="dbname" name="dbname" type="text" />
+				</div>
+				<div class="field">
+					<label for="dbuser">Database User</label>
+					<input id="dbuser" name="dbuser" type="text" />
+				</div>
+				<div class="field">
+					<label for="dbpass">Database Password</label>
+					<input id="dbpass" name="dbpass" type="password" />
+				</div>
+				<h3>Site Info</h3>
+				<div class="field">
+					<label for="prefix">Site Prefix</label>
+					<input id="prefix" name="prefix" type="text" />
+				</div>
+				<div class="field">
+					<label for="sitename">Website Name</label>
+					<input id="sitename" name="sitename" type="text" />
+				</div>
+				<div class="field">
+					<label for="siteurl">Website URL</label>
+					<input id="siteurl" name="siteurl" type="text" />
+				</div>
+				<div><input class="button" type="submit" value="submit" /></div>
+			</form>
+			<?php } else if($starbug_create_tables) { ?>
+				<h3>Super Admin User</h3>
+				<form id="create_admin">
+					<input type="hidden" name="starbug_create_tables" value="1" />
+					<div class="field">
+						<label for="adminemail">email</label>
+						<input id="adminemail" type="text" name="adminemail" />
+					</div>
+					<div class="field">
+						<label for="adminpass">password</label>
+						<input id="adminpass" type="text" name="adminpass" />
+					</div>
+					<div><input type="submit" class="button" value="submit" /></div>
+				</form>
+			<?php } else if ($_SESSION[P('security')] != Etc::SUPER_ADMIN_SECURITY) { ?>
 			<h2>Login</h2>
 			<p>Now that you've got the database configured, go ahead and log in as the Administrator</p>
 			<form id="login" method="post" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>">
@@ -43,5 +89,4 @@
 						<span class="note"><strong>Note:</strong> for more information on working with models, refer to the documentation (does not exist yet).</span>
 				</li>
 			</ul>
-			<?php }
-			} ?>
+			<?php } ?>

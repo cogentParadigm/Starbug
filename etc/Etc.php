@@ -36,12 +36,11 @@ class Etc {
 	const NO_REPLY_EMAIL = "no-reply";
 
 	/* Prefix for prefixed variables (ie. database tables) */
-	const PREFIX = "";
+const PREFIX = "";
 	/* Name of website */
 	const WEBSITE_NAME = "";
 	/* URL of website */
 	const WEBSITE_URL = "";
-
 
 	/* Directories */
 	const STYLESHEET_DIR = "public/stylesheets/";

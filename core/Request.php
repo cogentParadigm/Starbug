@@ -59,7 +59,7 @@ class Request {
 		$this->uri = split("/", $this->path);
 	}
 
-	protected function post_act($key, $value) { if (($object = $this->get($key)) && method_exists($object, $value)) $this->errors = array_merge($this->errors, array($key => $object->$value())); }
+	protected function post_act($key, $value) { if (($object = $this->get($key)) && method_exists($object, $value)) $this->errors = array_merge_recursive($this->errors, array($key => $object->$value())); }
 
 	private function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_act($key, $val);}
 

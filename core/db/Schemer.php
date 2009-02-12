@@ -1,6 +1,6 @@
 <?php
 /**
-* This is the Migration class, the base class for all migrations.
+* This is the Schemer class, it is used for structural database manipulations.
 *
 * This file is part of StarbugPHP
 *
@@ -20,15 +20,15 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-abstract class Migration {
+class Schemer {
 
 	private $db;
 
-	function Migration($data) {
+	function Schemer($data) {
 		$this->db = $data;
 	}
 
-	function create_table($name, $fields) {
+	function create($name, $fields, $backup) {
 		$sql = "DROP TABLE IF EXISTS `".P($name)."`";
 		$this->db->Execute($sql);
 		$sql = "CREATE TABLE `".P($name)."` (";
@@ -45,24 +45,32 @@ abstract class Migration {
 		}
 		$sql .= "security int(2) NOT NULL default '2', PRIMARY KEY (`id`) ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 		$result = $this->db->Execute($sql);
-		$this->write_table_schema($name, $fields);
-		if (!file_exists(dirname(__FILE__)."/../../app/models/".ucwords($name).".php")) exec(dirname(__FILE__)."/../../script/generate model ".$name);
+		$this->write_model($name, $backup);
 	}
 
-	function drop_table($name) {$this->db->Execute("DROP TABLE IF EXISTS `".P($name)."`;"); unlink(dirname(__FILE__)."/schema/".ucwords($name));}
+	function write_model($name, $backup) {
+		$loc = "app/models/".ucwords($name);
+		if ($backup) rename("app/models/".ucwords($name), $loc);
+		else exec("script/generate model ".$name);
+	}
 
-	function table_insert($table, $keys, $values) {$this->db->Execute("INSERT INTO ".P($table)." (".$keys.") VALUES (".$values.")");}
+	function drop_model($name) {
+		$model_loc = "app/models/".ucwords($name).".php";
+		if (file_exists($model_loc)) {
+			$info = unserialize(file_get_contents("core/db/schema/.info/$name"));
+			if (filemtime($model_loc) == $info['mtime']) unlink($model_loc);
+			else rename($model_loc, "app/models/.".ucwords($name));
+		}
+	}
+
+	function drop($name) {$this->db->Execute("DROP TABLE IF EXISTS `".P($name)."`;");$this->drop_model($name);}
+
+	function insert($table, $keys, $values) {$this->db->Execute("INSERT INTO ".P($table)." (".$keys.") VALUES (".$values.")");}
 
 	function write_table_schema($name, $fields) {
-		$file = fopen(dirname(__FILE__)."/schema/".ucwords($name), "w");
+		$file = fopen(dirname(__FILE__)."/schema/$name", "w");
 		fwrite($file, serialize($fields));
 	}
-
-	abstract function describe();
-
-	abstract function up();
-
-	abstract function down();
 
 }
 ?>

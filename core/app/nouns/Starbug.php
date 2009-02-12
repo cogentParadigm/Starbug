@@ -20,6 +20,7 @@
 				<li><a href="http://www.starbugphp.com/freedoms">freedoms</a></li>
 			</ul>
 		</div>
+		<?php if ($_SESSION[P('security')] >= Etc::ADMIN_SECURITY) { ?>
 		<div id="dash">
 			<script type="text/javascript">
 				function add_uri() {
@@ -47,10 +48,11 @@
 			</script>
 			<div id="dash_form"></div>
 			<ul id="dashlist">
-				<li class="first"><a class="add" href="uris/create" onclick="add_uri();return false;">+</a><a href="">uris</a></li>
-				<li><a class="add" href="users/create" onclick="add_user();return false;">+</a><a href="">users</a></li>
-				<li><a class="add" href="" onclick="add_model();return false;">+</a><a href="">models</a></li>
+				<li class="first"><a href="<?php echo uri("models"); ?>">models</a></li>
+				<li><a class="add" href="uris/create" onclick="add_uri();return false;">+</a><a href="<?php echo uri("uris"); ?>">uris</a></li>
+				<li><a class="add" href="users/create" onclick="add_user();return false;">+</a><a href="<?php echo uri("users"); ?>">users</a></li>
 			</ul>
 		</div>
+		<?php } ?>
 	</body>
 </html>
