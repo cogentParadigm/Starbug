@@ -1,6 +1,6 @@
 <?php
-if (file_exists("etc/install.php")) include("etc/install.php");
-if ($_POST['starbug_create_tables']) unlink("etc/install.php");
+if (file_exists("etc/configure.php")) include("etc/configure.php");
+if ($_POST['starbug_create_tables']) unlink("etc/configure.php");
 ?>
 			<h2>Congratulations, she rides!</h2>
 			<p>You've successfully started the Starbug engine on your server!</p>
@@ -45,8 +45,8 @@ if ($_POST['starbug_create_tables']) unlink("etc/install.php");
 				</div>
 				<div><input class="button" type="submit" value="submit" /></div>
 			</form>
-			<?php } else if($starbug_create_tables) { ?>
-				<h3>Super Admin User</h3>
+			<h3>Super Admin User</h3>
+			<p>Enter the following information about the Super Admin User.</p>
 				<form id="create_admin">
 					<input type="hidden" name="starbug_create_tables" value="1" />
 					<div class="field">
@@ -69,7 +69,7 @@ if ($_POST['starbug_create_tables']) unlink("etc/install.php");
 				</form>
 			<?php } else if ($_SESSION[P('security')] != Etc::SUPER_ADMIN_SECURITY) { ?>
 			<h2>Login</h2>
-			<p>Now that you've got the database configured, go ahead and log in as the Administrator</p>
+			<p>Now go ahead and login!</p>
 			<form id="login" method="post" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>">
 				<input id="action[users]" name="action[users]" type="hidden" value="login"/>
 				<div class="field">
@@ -87,7 +87,10 @@ if ($_POST['starbug_create_tables']) unlink("etc/install.php");
 			<p>Here are a few tips to help you get started.</p>
 			<ul class="decimal">
 				<li>To create a home page, add a new uri via the dashboard below using '<?php echo Etc::DEFAULT_PATH; ?>' as the path, and whatever you'd like as the template. The new page and template will be in <em>app/nouns/</em>.</li>
-				<li><p>To create a data model, such as Articles, start by generating a migration.<p>
+				<li><p>To create a data model, such as Articles, go to the models page via the dashboard below and do the following:<p>
+						<ul class="decimal">
+							<li><p>click the 'new model' button, enter 'Articles' and hit save.</p></li>
+							<li><p>
 						<div class="codeblock"><p>./script/generate migration articles</p></div>
 						<p>Edit the Migration file in <em>/db/migrations/</em>, and then migrate the database.</p>
 						<div class="codeblock"><p>./db/migrate</p></div>
