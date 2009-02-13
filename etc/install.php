@@ -9,7 +9,6 @@
 		$schemer = new Schemer($db);
 		$schemer->create("uris", $uris);
 		$schemer->create("users", $users);
-		$schemer->insert("users", "first_name, last_name, email, password, security", "'$_POST[adminfirst_name]', '$_POST[adminlast_name]', '$_POST[adminemail]', '".md5($_POST['adminpass'])."', '".Etc::SUPER_ADMIN_SECURITY."'");
 		$schemer->insert("uris", "path, template, security", "'uris', 'Starbug', '4'");
 		$schemer->insert("uris", "path, template, visible, security", "'uris/new', 'Ajax', '0', '4'");
 		$schemer->insert("uris", "path, template, visible, security", "'uris/get', 'Ajax', '0', '4'");

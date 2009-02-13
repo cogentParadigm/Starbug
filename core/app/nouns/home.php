@@ -1,6 +1,9 @@
 <?php
 if (file_exists("etc/configure.php")) include("etc/configure.php");
-if ($_POST['configure_starbug']) unlink("etc/configure.php");
+if ($_POST['configure_starbug']) {
+	unlink("etc/configure.php");
+	header("Location: $_POST[siteurl]");
+}
 ?>
 			<h2>Congratulations, she rides!</h2>
 			<p>You've successfully started the Starbug engine on your server!</p>
