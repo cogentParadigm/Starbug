@@ -6,7 +6,7 @@
 		$uris = unserialize(file_get_contents($base."schema/uris"));
 		$users = unserialize(file_get_contents($base."schema/users"));
 		include($base."Schemer.php");
-		$schemer = new Schemer($this->db);
+		$schemer = new Schemer($db);
 		$schemer->create("uris", $uris);
 		$schemer->create("users", $users);
 		$schemer->insert("users", "first_name, last_name, email, password, security", "'$_POST[adminfirst_name]', '$_POST[adminlast_name]', '$_POST[adminemail]', '".md5($_POST['adminpass'])."', '".Etc::SUPER_ADMIN_SECURITY."'");
