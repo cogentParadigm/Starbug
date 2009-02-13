@@ -43,12 +43,8 @@ if ($_POST['starbug_create_tables']) unlink("etc/configure.php");
 					<label for="siteurl">Website URL</label>
 					<input id="siteurl" name="siteurl" type="text" />
 				</div>
-				<div><input class="button" type="submit" value="submit" /></div>
-			</form>
 			<h3>Super Admin User</h3>
 			<p>Enter the following information about the Super Admin User.</p>
-				<form id="create_admin">
-					<input type="hidden" name="starbug_create_tables" value="1" />
 					<div class="field">
 						<label for="adminfirst_name">first name</label>
 						<input id="adminfirst_name" type="text" name="adminfirst_name" />
