@@ -2,9 +2,10 @@
 <?php
 		include("Etc.php");
 		include("init.php");
-		$uris = unserialize(file_get_contents("core/db/schema/uris"));
-		$users = unserialize(file_get_contents("core/db/schema/users"));
-		include("core/db/Schemer.php");
+		$base = dirname(__FILE__)."/../core/db/";
+		$uris = unserialize(file_get_contents($base."schema/uris"));
+		$users = unserialize(file_get_contents($base."schema/users"));
+		include($base."Schemer.php");
 		$schemer = new Schemer($this->db);
 		$schemer->create("uris", $uris);
 		$schemer->create("users", $users);

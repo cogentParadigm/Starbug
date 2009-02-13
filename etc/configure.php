@@ -25,7 +25,7 @@ if ((Etc::DB_NAME == "") && (!empty($_POST['configure_starbug']))) {
 	$file = fopen("etc/Etc.php", "wb");
 	fwrite($file, $data);
 	fclose($file);
-	exec("./etc/install.php");
+	exec("etc/install.php");
 	unlink("etc/install.php");
 }
 ?>
