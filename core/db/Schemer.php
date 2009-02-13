@@ -50,8 +50,8 @@ class Schemer {
 
 	function write_model($name, $backup) {
 		$loc = "app/models/".ucwords($name);
-		if ($backup) rename("app/models/".ucwords($name), $loc);
-		else exec("script/generate model ".$name);
+		if ($backup) rename("app/models/.".ucwords($name), $loc);
+		else if (!file_exists($loc)) exec("script/generate model ".$name);
 	}
 
 	function drop_model($name) {
@@ -68,8 +68,9 @@ class Schemer {
 	function insert($table, $keys, $values) {$this->db->Execute("INSERT INTO ".P($table)." (".$keys.") VALUES (".$values.")");}
 
 	function write_table_schema($name, $fields) {
-		$file = fopen(dirname(__FILE__)."/schema/$name", "w");
+		$file = fopen(dirname(__FILE__)."/schema/$name", "wb");
 		fwrite($file, serialize($fields));
+		fclose($file);
 	}
 
 }

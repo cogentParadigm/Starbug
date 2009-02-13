@@ -50,6 +50,14 @@ if ($_POST['starbug_create_tables']) unlink("etc/install.php");
 				<form id="create_admin">
 					<input type="hidden" name="starbug_create_tables" value="1" />
 					<div class="field">
+						<label for="adminfirst_name">first name</label>
+						<input id="adminfirst_name" type="text" name="adminfirst_name" />
+					</div>
+					<div class="field">
+						<label for="adminlast_name">last name</label>
+						<input id="adminlast_name" type="text" name="adminlast_name" />
+					</div>
+					<div class="field">
 						<label for="adminemail">email</label>
 						<input id="adminemail" type="text" name="adminemail" />
 					</div>
