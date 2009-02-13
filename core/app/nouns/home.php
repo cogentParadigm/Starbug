@@ -59,7 +59,7 @@ if ($_POST['starbug_create_tables']) unlink("etc/configure.php");
 					</div>
 					<div class="field">
 						<label for="adminpass">password</label>
-						<input id="adminpass" type="text" name="adminpass" />
+						<input id="adminpass" type="password" name="adminpass" />
 					</div>
 					<div><input type="submit" class="button" value="submit" /></div>
 				</form>
