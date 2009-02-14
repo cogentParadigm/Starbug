@@ -9,7 +9,7 @@
 		}
 	}
 	if (!empty($_POST['new_field'])) {
-		$filename = "core/db/schema/".ucwords($_POST['new_field']);
+		$filename = "core/db/schema/".$_POST['new_field'];
 		$fields = unserialize(file_get_contents($filename));
 		if (!isset($fields[$_POST['fieldname']])) $fields[$_POST['fieldname']] = array();
 		$file = fopen($filename, "wb");
@@ -29,7 +29,7 @@
 <?php } else {
 	$loc = next($this->uri);
 	$parts = split("-", $loc, 2);
-	$filename = "core/db/schema/".ucwords($parts[0]);
+	$filename = "core/db/schema/".$parts[0];
 	$arr = split("-", $parts[1]);
 	$fields = unserialize(file_get_contents($filename));
 	if ($_POST['edit_field']) {

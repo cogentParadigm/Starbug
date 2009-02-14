@@ -20,6 +20,7 @@
 		$schemer->insert("uris", "path, template, visible, security", "'models/get', 'Ajax', '0', '4'");
 		$schemer->insert("uris", "path, template, visible, security", "'models/edit', 'Ajax', '0', '4'");
 		$schemer->insert("uris", "path, template, visible, security", "'models/add', 'Ajax', '0', '4'");
+		$schemer->insert("uris", "path, template, visible, security", "'models/remove', 'Ajax', '0', '4'");
 		$schemer->insert("uris", "path, template, security", "'users', 'Starbug', '4'");
 		$schemer->insert("uris", "path, template, visible, security", "'users/new', 'Ajax', '0', '4'");
 		$schemer->insert("uris", "path, template, visible, security", "'users/get', 'Ajax', '0', '4'");

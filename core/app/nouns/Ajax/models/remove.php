@@ -7,7 +7,8 @@
 	}
 	$loc = next($this->uri);
 	$parts = split("-", $loc, 2);
-	$filename = "core/db/schema/".ucwords($parts[0]);
+	echo $parts[0];
+	$filename = "core/db/schema/".$parts[0];
 	if (count($parts) == 1) unlink($filename);
 	else {
 		$arr = split("-", $parts[1]);

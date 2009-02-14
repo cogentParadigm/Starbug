@@ -68,7 +68,7 @@ class Schemer {
 	function insert($table, $keys, $values) {$this->db->Execute("INSERT INTO ".P($table)." (".$keys.") VALUES (".$values.")");}
 
 	function write_table_schema($name, $fields) {
-		$file = fopen(dirname(__FILE__)."/schema/$name", "wb");
+		$file = fopen(dirname(__FILE__)."/schema/".strtolower($name), "wb");
 		fwrite($file, serialize($fields));
 		fclose($file);
 	}

@@ -21,11 +21,10 @@
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
 $base = dirname(__FILE__)."/../../app/nouns/";
-$label_column = $args->flags('l');
 
 // 0.) generate gateway and folder
-$gateway = "<?php \$page=next(\$this->uri); if (file_exists(\"core/app/nouns/$argv[2]/\$page.php\")) include(\"core/app/nouns/$argv[2]/\$page.php\");
-else include(\"core/app/nouns/$argv[2]/list.php\"); ?>";
+$gateway = "<?php \$page=next(\$this->uri); if (file_exists(\"app/nouns/$argv[2]/\$page.php\")) include(\"app/nouns/$argv[2]/\$page.php\");
+else include(\"app/nouns/$argv[2]/list.php\"); ?>";
 $file = fopen($base.$argv[2].".php", "wb");
 fwrite($file, $gateway);
 fclose($file);
@@ -33,16 +32,17 @@ mkdir($base.$argv[2]);
 
 // 1.) generate the form
 include(dirname(__FILE__)."/form.php");
+$label_column = $args->flag('l');
 
 // 2.) generate create
-$create = "<h2>Create $argv[2]</h2>\n<p>Create a new $argv[2]</p>\n<?php \$action = \"create\"; \$submit_to = uri(\"$argv[2]/show\"); include(\"core/app/nouns/$argv[2]/$argv[2]_form.php\"); ?>";
+$create = "<h2>Create $argv[2]</h2>\n<p>Create a new $argv[2]</p>\n<?php \$action = \"create\"; \$submit_to = uri(\"$argv[2]/show\"); include(\"app/nouns/$argv[2]/$argv[2]_form.php\"); ?>";
 $file = fopen($base.$argv[2]."/create.php", "wb");
 fwrite($file, $create);
 fclose($file);
 
 // 3.) generade show
 $show = "<?php \$id = next(\$this->uri);\n";
-$show .= "\tif (!empty(\$this->errors['$argv[2]'])) include(\"core/app/nouns/$argv[2]/\".((\$id)?\"update\":\"create\").\".php\");\n";
+$show .= "\tif (!empty(\$this->errors['$argv[2]'])) include(\"app/nouns/$argv[2]/\".((\$id)?\"update\":\"create\").\".php\");\n";
 $show .= "\telse {\n";
 $show .= "\t\tif (!\$id) \$entry = \$this->get(\"$argv[2]\")->find(\"*\", \"\", \"LIMIT 1\")->fields();\n";
 $show .= "\t\telse \$entry = \$this->get(\"$argv[2]\")->find(\"*\", \"id='\".\$id.\"'\")->fields();\n?>\n";
@@ -62,7 +62,7 @@ fclose($file);
 // 4.) generate update
 $update = "<?php \$id = next(\$this->uri); \$_POST['$argv[2]'] = \$this->get(\"$argv[2]\")->find(\"*\", \"id='\$id'\")->fields(); ?>\n";
 $update .= "<h2>Update uri</h2>";
-$update .= "<?php \$formid = \"edit_$argv[2]_form\"; \$action = \"create\"; \$submit_to = uri(\"models/show/\").\$id; include(\"core/app/nouns/$argv[2]/$argv[2]_form.php\"); ?>\n";
+$update .= "<?php \$formid = \"edit_$argv[2]_form\"; \$action = \"create\"; \$submit_to = uri(\"models/show/\").\$id; include(\"app/nouns/$argv[2]/$argv[2]_form.php\"); ?>\n";
 $file = fopen($base.$argv[2]."/update.php", "wb");
 fwrite($file, $update);
 fclose($file);
@@ -76,7 +76,7 @@ $list .= "\t\tvar display = node.getAttribute('class');\n";
 $list .= "\t\tif (display == 'hidden') display = '';\n";
 $list .= "\t\telse display = 'hidden';\n";
 $list .= "\t\tnode.setAttribute('class', display);\n";
-$list .= "\t}\n</script>\n<?php include(\"core/public/js/$argv[2].php\"); ?>\n";
+$list .= "\t}\n</script>\n<?php include(\"public/js/$argv[2].php\"); ?>\n";
 $list .= "<h2>$argv[2]</h2>\n";
 $list .= "<?php if (\$total > 25) { ?>\n";
 $list .= "<ul class=\"pages\">\n";

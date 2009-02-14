@@ -1,7 +1,7 @@
 <?php
 	$loc = next($this->uri);
 	$parts = split("-", $loc, 2);
-	$filename = "core/db/schema/".ucwords($parts[0]);
+	$filename = "core/db/schema/".$parts[0];
 	$arr = split("-", $parts[1]);
 	$fields = unserialize(file_get_contents($filename));
 	$val = $fields[current($arr)];

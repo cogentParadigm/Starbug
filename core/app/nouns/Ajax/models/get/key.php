@@ -1,7 +1,7 @@
 <?php
 	if (!empty($_POST['add_key'])) {
 		$parts = split("-", $_POST['add_key'], 2);
-		$filename = "core/db/schema/".ucwords($parts[0]);
+		$filename = "core/db/schema/".$parts[0];
 		$arr = split("-", $parts[1]);
 		$merge = array(end($arr) => array($_POST['key'] => $_POST['value']));
 		while (($prev = prev($arr)) !== false) $merge = array($prev => $merge);
@@ -20,7 +20,7 @@
 	}
 	$loc = next($this->uri);
 	$parts = split("-", $loc, 2);
-	$filename = "core/db/schema/".ucwords($parts[0]);
+	$filename = "core/db/schema/".$parts[0];
 	$arr = split("-", $parts[1]);
 	$fields = unserialize(file_get_contents($filename));
 	if ($_POST['edit_key']) {
