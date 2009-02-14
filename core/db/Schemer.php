@@ -28,7 +28,7 @@ class Schemer {
 		$this->db = $data;
 	}
 
-	function create($name, $fields, $backup) {
+	function create($name, $fields, $backup=false) {
 		$sql = "DROP TABLE IF EXISTS `".P($name)."`";
 		$this->db->Execute($sql);
 		$sql = "CREATE TABLE `".P($name)."` (";
