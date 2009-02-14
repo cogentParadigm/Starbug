@@ -49,7 +49,7 @@ class Schemer {
 	}
 
 	function write_model($name, $backup) {
-		$loc = "app/models/".ucwords($name);
+		$loc = "app/models/".ucwords($name).".php";
 		if ($backup) rename("app/models/.".ucwords($name), $loc);
 		else if (!file_exists($loc)) exec("script/generate model ".$name);
 	}
