@@ -71,9 +71,9 @@ if ($_POST['configure_starbug']) {
 			<p>Now go ahead and login!</p>
 			<form id="login" method="post" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>">
 				<input id="action[users]" name="action[users]" type="hidden" value="login"/>
-				<?php print_r($this->errors['users']); ?>
 				<div class="field">
 					<label for="email">Email</label>
+					<?php if (!empty($this->errors['users']['loginMatchError']) { ?><span class="error">That combination does not match.</span><?php } ?>
 					<input id="email" name="users[email]" type="text"<?php if (!empty($_POST['users']['email'])) { ?> value="<?php echo $_POST['users']['email']; ?>"<?php } ?> maxlength="64" />
 				</div>
 				<div class="field">
