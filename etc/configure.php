@@ -25,8 +25,7 @@ if ((Etc::DB_NAME == "") && (!empty($_POST['configure_starbug']))) {
 	$file = fopen("etc/Etc.php", "wb");
 	fwrite($file, $data);
 	fclose($file);
-	exec("etc/install.php");
+	exec("etc/install.php $_POST[adminfirst_name] $_POST[adminlast_name] $_POST[adminemail] $_POST[adminpass]");
 	unlink("etc/install.php");
-	$db->Execute("INSERT INTO $_POST[prefix]users (first_name, last_name, email, password, security) VALUES ('$_POST[adminfirst_name]', '$_POST[adminlast_name]', '$_POST[adminemail]', '".md5($_POST['adminpass'])."', '".Etc::SUPER_ADMIN_SECURITY."')");
 }
 ?>
