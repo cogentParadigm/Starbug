@@ -1,30 +1,86 @@
 #!/usr/bin/php
 <?php
-		include("Etc.php");
-		include("init.php");
-		$base = dirname(__FILE__)."/../core/db/";
-		$uris = unserialize(file_get_contents($base."schema/uris"));
-		$users = unserialize(file_get_contents($base."schema/users"));
-		include($base."Schemer.php");
-		$schemer = new Schemer($db);
-		$schemer->create("uris", $uris);
-		$schemer->create("users", $users);
-		$schemer->insert("users", "first_name, last_name, email, password, security", "'$argv[1]', '$argv[2]', '$argv[3]', '".md5($argv[4])."', '".Etc::SUPER_ADMIN_SECURITY."'");
-		$schemer->insert("uris", "path, template, security", "'uris', 'Starbug', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'uris/new', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'uris/get', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'uris/edit', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'uris/add', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, security", "'models', 'Starbug', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'models/new', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'models/get', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'models/edit', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'models/add', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'models/remove', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, security", "'users', 'Starbug', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'users/new', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'users/get', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'users/edit', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'users/add', 'Ajax', '0', '4'");
-		$schemer->insert("uris", "path, template, visible, security", "'login', 'Starbug', '0', '0'");
+	//COLLECT USER INPUT
+	fwrite(STDOUT, "\nWelcom to the StarbugPHP Installer\nPlease enter the following information:\n(NOTE: you should be running this script with root privelages.)\n\nDatabase type:");
+	$dbtype = fgets(STDIN);
+	fwrite(STDOUT, "Database host:");
+	$dbhost = fgets(STDIN);
+	fwrite(STDOUT, "Database username:");
+	$dbuser = fgets(STDIN);
+	fwrite(STDOUT, "Database password:");
+	$dbpass = fgets(STDIN);
+	fwrite(STDOUT, "Database name:");
+	$dbname = fgets(STDIN);
+	fwrite(STDOUT, "Site prefix:");
+	$prefix = fgets(STDIN);
+	fwrite(STDOUT, "Website name:");
+	$sitename = fgets(STDIN);
+	fwrite(STDOUT, "Website URL:");
+	$siteurl = fgets(STDIN);
+	fwrite(STDOUT, "Super Admin first name:");
+	$admin_first = fgets(STDIN);
+	fwrite(STDOUT, "Super Admin last name:");
+	$admin_last = fgets(STDIN);
+	fwrite(STDOUT, "Super Admin email:");
+	$admin_email = fgets(STDIN);
+	fwrite(STDOUT, "Super Admin password:");
+	$admin_pass = md5(fgets(STDIN));
+
+	//WRITE CONFIG FILE
+	$data = "<?php\n/**\n* This is the main configuration file\n*\n* This file is part of StarbugPHP\n*\n* StarbugPHP - web service development kit\n* Copyright (C) 2008-2009 Ali Gangji\n*\n* StarbugPHP is free software: you can redistribute it and/or modify\n* it under the terms of the GNU General Public License as published by\n* the Free Software Foundation, either version 3 of the License, or\n* (at your option) any later version.\n*\n* StarbugPHP is distributed in the hope that it will be useful,\n* but WITHOUT ANY WARRANTY; without even the implied warranty of\n* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n* GNU General Public License for more details.\n*\n* You should have received a copy of the GNU General Public License\n* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.\n*/\nclass Etc {\n\t/* Log in details for database */\n";
+	$data .= "\tconst DB_TYPE = \"$dbtype\";\n";
+	$data .= "\tconst DB_HOST = \"$dbhost\";\n";
+	$data .= "\tconst DB_USERNAME = \"$dbuser\";\n";
+	$data .= "\tconst DB_PASSWORD = \"$dbpass\";\n";
+	$data .= "\tconst DB_NAME = \"$dbname\";\n\n";
+	$data .= "\t/* Webmaster email */\n";
+	$data .= "\tconst WEBMASTER_EMAIL = \"\";\n\t/* Contact email */\n\tconst CONTACT_EMAIL = \"\";\n\t/* No reply email */\n\tconst NO_REPLY_EMAIL = \"no-reply\";\n\n";
+	$data .= "\t/* Prefix for prefixed variables (ie. database tables) */\n";
+	$data .= "const PREFIX = \"$prefix\";\n";
+	$data .= "\t/* Name of website */\n";
+	$data .= "\tconst WEBSITE_NAME = \"$sitename\";\n";
+	$data .= "\t/* URL of website */\n";
+	$data .= "\tconst WEBSITE_URL = \"$siteurl\";\n\n";
+	$data .= "\t/* Directories */\n";
+	$data .= "\tconst STYLESHEET_DIR = \"public/stylesheets/\";\n";
+	$data .= "\tconst IMG_DIR = \"public/images/\";\n\n";
+	$data .= "\t/* Default redirection time */\n";
+	$data .= "\tconst REDIRECTION_TIME = 2;\n\n";
+	$data .= "\t/* Elements table */\n\tconst PATH_COLUMN = \"path\";\n\tconst TEMPLATE_COLUMN = \"template\";\n\tconst DEFAULT_TEMPLATE = \"App\";\n\tconst DEFAULT_PATH = \"home\";\n\n";
+	$data .= "\t/* Admin security */\n\tconst ADMIN_SECURITY = 3;\n\tconst SUPER_ADMIN_SECURITY = 4;\n\n";
+	$data .= "\t/* Time before a user is considered offline (Minutes*60) */\n\tconst TIME_OUT = 900;\n}\n?>\n";
+	$file = fopen("etc/Etc.php", "wb");
+	fwrite($file, $data);
+	fclose($file);
+
+	//INIT TABLES
+	include("Etc.php");
+	include("init.php");
+	$base = dirname(__FILE__)."/../core/db/";
+	$uris = unserialize(file_get_contents($base."schema/uris"));
+	$users = unserialize(file_get_contents($base."schema/users"));
+	include($base."Schemer.php");
+	$schemer = new Schemer($db);
+	$schemer->create("uris", $uris);
+	$schemer->create("users", $users);
+
+	//INSERT RECORDS
+	$schemer->insert("users", "first_name, last_name, email, password, security", "'$admin_first', '$admin_last', '$admin_email', '$admin_pass', '".Etc::SUPER_ADMIN_SECURITY."'");
+	$schemer->insert("uris", "path, template, security", "'uris', 'Starbug', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'uris/new', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'uris/get', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'uris/edit', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'uris/add', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, security", "'models', 'Starbug', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'models/new', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'models/get', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'models/edit', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'models/add', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'models/remove', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, security", "'users', 'Starbug', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'users/new', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'users/get', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'users/edit', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'users/add', 'Ajax', '0', '4'");
+	$schemer->insert("uris", "path, template, visible, security", "'login', 'Starbug', '0', '0'");
 ?>
