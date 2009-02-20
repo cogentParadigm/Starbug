@@ -1,6 +1,7 @@
 <?php
 /**
-* This file wraps Adodb lite, it is the base class for database models
+* FILE: core/db/Table.php
+* PURPOSE: This class wraps Adodb lite, it is the base class for database models
 *
 * This file is part of StarbugPHP
 *

@@ -1,6 +1,7 @@
 <?php
 /**
-* generates crud
+* FILE: script/_generate/crud.php
+* PURPOSE: generates crud
 *
 * This file is part of StarbugPHP
 *
@@ -22,25 +23,25 @@
 */
 $base = dirname(__FILE__)."/../../app/nouns/";
 
-// 0.) generate gateway and folder
+// 0.) GENERATE URI GATE AND FOLDER
 $gateway = "<?php \$page=next(\$this->uri); if (file_exists(\"app/nouns/$argv[2]/\$page.php\")) include(\"app/nouns/$argv[2]/\$page.php\");
 else include(\"app/nouns/$argv[2]/list.php\"); ?>";
 $file = fopen($base.$argv[2].".php", "wb");
 fwrite($file, $gateway);
 fclose($file);
-mkdir($base.$argv[2]);
+if (!file_exists($base.$argv[2])) mkdir($base.$argv[2]);
 
-// 1.) generate the form
+// 1.) GENERATE FORM
 include(dirname(__FILE__)."/form.php");
 $label_column = $args->flag('l');
 
-// 2.) generate create
+// 2.) GENERATE CREATE
 $create = "<h2>Create $argv[2]</h2>\n<p>Create a new $argv[2]</p>\n<?php \$action = \"create\"; \$submit_to = uri(\"$argv[2]/show\"); include(\"app/nouns/$argv[2]/$argv[2]_form.php\"); ?>";
 $file = fopen($base.$argv[2]."/create.php", "wb");
 fwrite($file, $create);
 fclose($file);
 
-// 3.) generade show
+// 3.) GENERATE SHOW
 $show = "<?php \$id = next(\$this->uri);\n";
 $show .= "\tif (!empty(\$this->errors['$argv[2]'])) include(\"app/nouns/$argv[2]/\".((\$id)?\"update\":\"create\").\".php\");\n";
 $show .= "\telse {\n";
@@ -59,7 +60,7 @@ $file = fopen($base.$argv[2]."/show.php", "wb");
 fwrite($file, $show);
 fclose($file);
 
-// 4.) generate update
+// 4.) GENERATE UPDATE
 $update = "<?php \$id = next(\$this->uri); \$_POST['$argv[2]'] = \$this->get(\"$argv[2]\")->find(\"*\", \"id='\$id'\")->fields(); ?>\n";
 $update .= "<h2>Update uri</h2>";
 $update .= "<?php \$formid = \"edit_$argv[2]_form\"; \$action = \"create\"; \$submit_to = uri(\"models/show/\").\$id; include(\"app/nouns/$argv[2]/$argv[2]_form.php\"); ?>\n";
@@ -67,7 +68,7 @@ $file = fopen($base.$argv[2]."/update.php", "wb");
 fwrite($file, $update);
 fclose($file);
 
-// 5.) generate list
+// 5.) GENERATE LIST
 $list = "<?php\n\$$argv[2] = \$this->get(\"$argv[2]\");\n\$page = next(\$this->uri);\nempty_nan(\$page, 0);\n\$all = \$$argv[2]->afind(\"*\");\n\$total = \$$argv[2]->recordCount;\n\$list = \$$argv[2]->afind(\"*\", \"\", \"ORDER BY id DESC LIMIT \".(\$page*25).\", 25\");\n\$shown = \$$argv[2]->recordCount;\n?>\n";
 $list .= "<script type=\"text/javascript\">\n";
 $list .= "\tfunction showhide(item) {\n";
@@ -77,7 +78,7 @@ $list .= "\t\tif (display == 'hidden') display = '';\n";
 $list .= "\t\telse display = 'hidden';\n";
 $list .= "\t\tnode.setAttribute('class', display);\n";
 $list .= "\t}\n</script>\n<?php include(\"public/js/$argv[2].php\"); ?>\n";
-$list .= "<h2>$argv[2]</h2>\n";
+$list .= "<h2>$argv[2] list</h2>\n";
 $list .= "<?php if (\$total > 25) { ?>\n";
 $list .= "<ul class=\"pages\">\n";
 $list .= "\t<?php if (\$page > 0) { ?>\n";
@@ -106,3 +107,13 @@ $list .= "<a id=\"add_$argv[2]\" class=\"button\" href=\"<?php echo uri(\"$argv[
 $file = fopen($base.$argv[2]."/list.php", "wb");
 fwrite($file, $list);
 fclose($file);
+
+// 6.) INSERT URI
+if (!$args->flag('u')) {
+	include(dirname(__FILE__)."/../../etc/init.php");
+	include(dirname(__FILE__)."/../../core/db/Schemer.php");
+	$schemer = new Schemer($db);
+	$template = ($args->flag('t')) ? $args->flag('t') : Etc::DEFAULT_TEMPLATE;
+	$access = ($args->flag('a')) ? $args->flag('a') : Etc::DEFAULT_SECURITY;
+	$schemer->insert("uris", "path, template, security", "'$argv[2]', '$template', '$access'");
+}

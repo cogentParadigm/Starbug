@@ -1,6 +1,7 @@
 <?php
 /**
-* This is the Schemer class, it is used for structural database manipulations.
+* FILE: core/db/Schemer.php
+* PURPOSE: This is the Schemer class, it is used for managing the db schema.
 *
 * This file is part of StarbugPHP
 *

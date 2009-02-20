@@ -10,8 +10,8 @@ class Uris extends Table {
 		$uris = $_POST['uris'];
 		$errors = $this->store($uris);
 		if (empty($errors)) {
-			$path = dirname(__FILE__)."/../nouns/".strtolower($uris['path']).".php";
-			$template = dirname(__FILE__)."/../nouns/".strtolower($uris['template']).".php";
+			$path = dirname(__FILE__)."/../nouns/".$uris['path'].".php";
+			$template = dirname(__FILE__)."/../nouns/".$uris['template'].".php";
 			if (!file_exists($path)) {
 				$file = fopen($path, "w");
 				fclose($file);

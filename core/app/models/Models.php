@@ -53,7 +53,7 @@ class Models {
 				$dl .= "</dt><dd id=\"$prefix-$k\">".Models::dlfields($v, "$prefix-$k", false)."</dd>\n";
 			}
 			return $dl."</dl>\n";
-		} else return "<span class=\"options\"><a href=\"\" onclick=\"edit_key('$prefix');return false;\">edit</a><a href=\"\" onclick=\"if (confirm('Are you sure you want to delete?')) {delete_key('$prefix');}return false;\">delete</a></span>".$arr;
+		} else return "<span class=\"options\"><a href=\"\" onclick=\"edit_key('$prefix');return false;\">edit</a><a href=\"\" onclick=\"delete_key('$prefix');return false;\">delete</a></span>".$arr;
 	}
 
 }

@@ -1,6 +1,7 @@
 <?php
 /**
-* XHTML generation utility
+* FILE: util/HT.php
+* PURPOSE: XHTML generation utility
 *
 * This file is part of StarbugPHP
 *

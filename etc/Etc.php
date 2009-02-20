@@ -1,6 +1,8 @@
 <?php
 /**
-* This is the main configuration file
+* FILE: etc/Etc.php
+* PURPOSE: This is the main configuration file
+* NOTE: you should only edit this file post installation. 'See etc/install.php'
 *
 * This file is part of StarbugPHP
 *
@@ -36,7 +38,7 @@ class Etc {
 	const NO_REPLY_EMAIL = "no-reply";
 
 	/* Prefix for prefixed variables (ie. database tables) */
-const PREFIX = "";
+	const PREFIX = "";
 	/* Name of website */
 	const WEBSITE_NAME = "";
 	/* URL of website */
@@ -56,6 +58,7 @@ const PREFIX = "";
 	const DEFAULT_PATH = "home";
 
 	/* Admin security */
+	const DEFAULT_SECURITY = 2;
 	const ADMIN_SECURITY = 3;
 	const SUPER_ADMIN_SECURITY = 4;
 

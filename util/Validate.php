@@ -1,6 +1,7 @@
 <?php
 /**
-* Data validation utility
+* FILE: util/Validate.php
+* PURPOSE: Data validation utility
 *
 * This file is part of StarbugPHP
 *
@@ -39,7 +40,7 @@ class Validate {
 	}
 
 	function toStore($string) {
-		return str_replace('"', "&quot;", str_replace("\'", "&#39;", str_replace('\"', "&quot;", htmlspecialchars($string, ENT_NOQUOTES))));
+		return mysql_real_escape_string($string);
 	}
 }
 ?>

@@ -6,10 +6,9 @@
 ?>
 <li id="<?php echo $_POST['modelname']; ?>" class="inactive">
 	<h3>
-		<span><?php echo $_POST['modelname']; ?></span>
-		<a href="" onclick="if (confirm('Are you sure you want to delete?')) {delete_model('<?php echo $_POST['modelname']; ?>');return false;}">[X]</a>
+		<a href="" onclick="delete_model('<?php echo $_POST['modelname']; ?>');return false;">[X]</a>
 		<a href="" onclick="">[activate]</a>
-		<a href="" onclick="showhide('<?php echo $_POST['modelname']; ?>_model');return false;">[details]</a>
+		<a href="" class="title" onclick="showhide('<?php echo $_POST['modelname']; ?>_model');return false;"><?php echo $_POST['modelname']; ?></a>
 	</h3>
 	<div id="<?php echo $_POST['modelname']; ?>_model" class="hidden" style="padding:5px;">
 		<dl id="<?php echo $_POST['modelname']; ?>-fields">
@@ -28,8 +27,7 @@
 	$fields = $models->get($name);
 ?>
 <h3>
-	<span><?php echo $name; ?></span>
-	<a href="" onclick="if (confirm('Are you sure you want to delete?')) {delete_model('<?php echo $name; ?>');return false;}">[X]</a>
+	<a href="" onclick="delete_model('<?php echo $name; ?>');return false;">[X]</a>
 	<?php if ($has) { ?>
 				<a href="" onclick="deactivate_model('<?php echo $name; ?>');return false;">[deactivate]</a>
 				<form class="hidden" id="deactivate_<?php echo $name; ?>" method="post">
@@ -42,7 +40,7 @@
 				</form>
 				<a href="" onclick="activate_model('<?php echo $name; ?>');return false;">[activate]</a>
 			<?php } ?>
-			<a href="" onclick="showhide('<?php echo $name; ?>_model');return false;">[details]</a>
+			<a href="" class="title" onclick="showhide('<?php echo $name; ?>_model');return false;"><?php echo $name; ?></a>
 		</h3>
 		<div id="<?php echo $name; ?>_model" class="hidden" style="padding:5px">
 			<?php echo Models::dlfields($fields, $name); ?>

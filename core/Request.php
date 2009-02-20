@@ -1,6 +1,7 @@
 <?php
 /**
-* This file is the Request class, the main class in this package
+* FILE: core/Request.php
+* PURPOSE: provide data and errors, start session, send form data to models, and locate the request path
 *
 * This file is part of StarbugPHP
 *

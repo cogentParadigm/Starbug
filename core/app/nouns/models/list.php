@@ -18,7 +18,7 @@
 <?php foreach ($models as $name => $fields) { $has = $this->has($name); $backup = file_exists("app/models/.".ucwords($name));?>
 	<li id="<?php echo $name; ?>"<?php if (!$has) echo " class=\"inactive\""; ?>>
 		<h3>
-			<a href="" onclick="if (confirm('Are you sure you want to delete?')) {delete_model('<?php echo $name; ?>');return false;}">[X]</a>
+			<a href="" onclick="delete_model('<?php echo $name; ?>');return false;">[X]</a>
 			<?php if ($has) { ?>
 				<a href="" onclick="deactivate_model('<?php echo $name; ?>');return false;">[deactivate]</a>
 				<form class="hidden" id="deactivate_<?php echo $name; ?>" method="post">

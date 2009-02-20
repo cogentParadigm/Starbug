@@ -47,15 +47,17 @@ function cancel_edit_key(loc) {
 	});
 }
 function delete_key(loc) {
-	dojo.xhrGet({
-		url: '<?php echo uri("models/remove/"); ?>'+loc,
-		load: function(data) {
-			newrow = dojo.byId(loc);
-			newrow.parentNode.removeChild(newrow);
-			newrow = dojo.byId(loc+'-key');
-			newrow.parentNode.removeChild(newrow);
-		}
-	});
+	if (confirm('Are you sure you want to delete?')) {
+		dojo.xhrGet({
+			url: '<?php echo uri("models/remove/"); ?>'+loc,
+			load: function(data) {
+				newrow = dojo.byId(loc);
+				newrow.parentNode.removeChild(newrow);
+				newrow = dojo.byId(loc+'-key');
+				newrow.parentNode.removeChild(newrow);
+			}
+		});
+	}
 }
 function new_field(loc) {
 	dojo.xhrGet({
@@ -127,13 +129,15 @@ function cancel_new_model() {
 	newrow.parentNode.removeChild(newrow);
 }
 function delete_model(loc) {
-	dojo.xhrGet({
-		url: '<?php echo uri("models/remove/"); ?>'+loc,
-		load: function(data) {
-			newrow = dojo.byId(loc);
-			newrow.parentNode.removeChild(newrow);
-		}
-	});
+	if (confirm('Are you sure you want to delete?')) {
+		dojo.xhrGet({
+			url: '<?php echo uri("models/remove/"); ?>'+loc,
+			load: function(data) {
+				newrow = dojo.byId(loc);
+				newrow.parentNode.removeChild(newrow);
+			}
+		});
+	}
 }
 function activate_model(loc, backup) {
 	if ((backup) && !confirm("A backup model exists in the 'app/models/' directory. Press 'OK' to use this backup, or 'Cancel' to delete it and generate a new one.")) {

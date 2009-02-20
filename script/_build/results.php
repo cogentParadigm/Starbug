@@ -1,6 +1,7 @@
 <?php
 /**
-* Template language parser
+* FILE: script/_build/results.php
+* PURPOSE: Template language parser
 *
 * This file is part of StarbugPHP
 *

@@ -1,6 +1,7 @@
 <?php
 /**
-* XML generation utility
+* FILE: util/XML.php
+* PURPOSE: XML generation utility
 *
 * This file is part of StarbugPHP
 *

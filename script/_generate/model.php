@@ -1,6 +1,7 @@
 <?php
 /**
-* generates a model that extends the Table class
+* FILE: script/_generate/model.php
+* PURPOSE: generates a model that extends the Table class
 *
 * This file is part of StarbugPHP
 *
@@ -23,12 +24,12 @@
 $filename = dirname(__FILE__)."/../../app/models/".ucwords($argv[2]).".php";
 $file = fopen($filename, "w");
 fwrite($file, "<?php\nclass ".ucwords($argv[2])." extends Table {\n\n");
-if (file_exists(dirname(__FILE__)."/../../core/db/schema/".ucwords($argv[2]))) {
+if (file_exists(dirname(__FILE__)."/../../core/db/schema/".$argv[2])) {
 	$uniques = array(); $defaults = array(); $lengths = array();
-	$fields = unserialize(file_get_contents(dirname(__FILE__)."/../../core/db/schema/".ucwords($argv[2])));
+	$fields = unserialize(file_get_contents(dirname(__FILE__)."/../../core/db/schema/".$argv[2]));
 	foreach($fields as $name => $options) {
 		if (isset($options['default'])) $defaults[$name] = $options['default'];
-		if (isset($options['unique'])) $uniques[] = $name;
+		if (isset($options['unique'])) $uniques[] = "\"$name\"";
 		if (isset($options['length'])) $lengths[$name] = $options['length'];
 	}
 	$d = ""; $l = "";

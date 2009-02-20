@@ -1,4 +1,9 @@
 <?php
+//
+// FILE: Args.php
+// PURPOSE: Parse command line arguments
+// NOTE: found as below at http://clickontyler.com/blog/2008/11/parse-command-line-arguments-in-php/ under the MIT License
+//
 // A quick and dirty command line argument parser. Written in about
 // an hour, so you might want to take this with a grain of salt or two.
 //

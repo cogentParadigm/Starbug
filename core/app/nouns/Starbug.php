@@ -33,11 +33,11 @@
 				}
 				function save_add() {
 					dojo.xhrPost({
-						url: '<?php echo uri("uris/get"); ?>',
-						form: 'new_uri_form',
+						url: '<?php echo uri("uris/add"); ?>',
+						form: 'add_uri_form',
 						load: function(data) {
-							cancel_new();
-							dojo.byId('uris_table').innerHTML += data;
+							cancel_add();
+							dojo.byId('dash_form').innerHTML += data;
 						}
 					});
 				}

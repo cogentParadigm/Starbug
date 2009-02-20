@@ -1,6 +1,7 @@
 <?php
 /**
-* generates a form using the form generation utility
+* FILE: script/_generate/form.php
+* PURPOSE: generates a form using the form generation utility
 *
 * This file is part of StarbugPHP
 *
@@ -25,9 +26,13 @@ include(dirname(__FILE__)."/../../util/Args.php");
 $args = new Args();
 $meth = "post";
 $fields = unserialize(file_get_contents(dirname(__FILE__)."/../../core/db/schema/".$argv[2]));
-if ($args->flag('s')) $fields['security'] = array("input_type" => "select", "range" => "0:".Etc::SUPER_ADMIN_SECURITY, "default" => "2");
+if ($args->flag('s')) $fields['security'] = array("input_type" => "select", "range" => "0:".Etc::SUPER_ADMIN_SECURITY, "default" => Etc::DEFAULT_SECURITY);
 foreach ($fields as $fieldname => $formfield) {
-	if (isset($formfield["input_type"])) $fields[$fieldname]["type"] = $formfield["input_type"];
+	if ($formfield["type"] == "datetime") {
+		$fields[$fieldname]["type"] = "date_select";
+		$fields[$fieldname]["time_select"] = true;
+	}
+	if (isset($fields[$fieldname]["input_type"])) $fields[$fieldname]["type"] = $formfield["input_type"];
 	else if ($fields[$fieldname]['type'] != 'password') $fields[$fieldname]["type"] = "text";
 	if ($args->flag('f')) $fields[$fieldname]['field']['type'] = $args->flag('f');
 	if ($fields[$fieldname]['type'] == 'bin') $meth ="mult";

@@ -1,5 +1,8 @@
 <?php
 /**
+* FILE: etc/init.php
+* PURPOSE: provide application wide functionality
+* 
 * This file is part of StarbugPHP
 *
 * StarbugPHP - web service development kit
