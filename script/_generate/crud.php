@@ -62,8 +62,8 @@ fclose($file);
 
 // 4.) GENERATE UPDATE
 $update = "<?php \$id = next(\$this->uri); \$_POST['$argv[2]'] = \$this->get(\"$argv[2]\")->find(\"*\", \"id='\$id'\")->fields(); ?>\n";
-$update .= "<h2>Update uri</h2>";
-$update .= "<?php \$formid = \"edit_$argv[2]_form\"; \$action = \"create\"; \$submit_to = uri(\"models/show/\").\$id; include(\"app/nouns/$argv[2]/$argv[2]_form.php\"); ?>\n";
+$update .= "<h2>Update $argv[2]</h2>";
+$update .= "<?php \$formid = \"edit_$argv[2]_form\"; \$action = \"create\"; \$submit_to = uri(\"$arv[2]/show/\").\$id; include(\"app/nouns/$argv[2]/$argv[2]_form.php\"); ?>\n";
 $file = fopen($base.$argv[2]."/update.php", "wb");
 fwrite($file, $update);
 fclose($file);
@@ -97,7 +97,7 @@ $list .= "\t\t\t\t<input id=\"action[$argv[2]]\" name=\"action[$argv[2]]\" type=
 $list .= "\t\t\t\t<input type=\"hidden\" name=\"$argv[2]"."[id]\" value=\"<?php echo \$entry['id']; ?>\"/>\n";
 $list .= "\t\t\t\t<input class=\"button\" type=\"submit\" onclick=\"return confirm('Are you sure you want to delete?');\" value=\"[X]\"/>\n";
 $list .= "\t\t\t</form>\n";
-$list .= "\t\t\t<a href=\"<?php echo uri('$argv[2]/update'); ?>\" onclick=\"edit_uri('<?php echo \$entry['id']; ?>');return false;\">[edit]</a>\n";
+$list .= "\t\t\t<a href=\"<?php echo uri(\"$argv[2]/update/\$entry[id]\"); ?>\">[edit]</a>\n";
 $list .= "\t\t\t<a class=\"title\" href=\"#\" onclick=\"showhide('$argv[2]_<?php echo \$entry['id']; ?>_list');return false;\"><?php echo \$entry['$label_column']; ?></a>\n";
 $list .= "\t\t</h3>\n";
 $list .= "\t\t<dl id=\"$argv[2]_<?php echo \$entry['id']; ?>_list\" style=\"padding:5px\" class=\"hidden\">\n";

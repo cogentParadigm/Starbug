@@ -26,7 +26,7 @@
 */
 
 	//COLLECT USER INPUT
-	fwrite(STDOUT, "\nWelcom to the StarbugPHP Installer\nPlease enter the following information:\n(NOTE: you should be running this script with root privelages.)\n\nDatabase type:");
+	fwrite(STDOUT, "\nWelcom to the StarbugPHP Installer\nPlease enter the following information:\n\nDatabase type:");
 	$dbtype = fgets(STDIN);
 	fwrite(STDOUT, "Database host:");
 	$dbhost = fgets(STDIN);
@@ -72,7 +72,7 @@
 	$data .= "\t/* Default redirection time */\n";
 	$data .= "\tconst REDIRECTION_TIME = 2;\n\n";
 	$data .= "\t/* Elements table */\n\tconst PATH_COLUMN = \"path\";\n\tconst TEMPLATE_COLUMN = \"template\";\n\tconst DEFAULT_TEMPLATE = \"App\";\n\tconst DEFAULT_PATH = \"home\";\n\n";
-	$data .= "\t/* Admin security */\n\tconst ADMIN_SECURITY = 3;\n\tconst SUPER_ADMIN_SECURITY = 4;\n\n";
+	$data .= "\t/* Admin security */\n\tconst DEFAULT_SECURITY = 2;\n\tconst ADMIN_SECURITY = 3;\n\tconst SUPER_ADMIN_SECURITY = 4;\n\n";
 	$data .= "\t/* Time before a user is considered offline (Minutes*60) */\n\tconst TIME_OUT = 900;\n}\n?>\n";
 	$data = str_replace("\n\";", "\";", $data);
 	$file = fopen("etc/Etc.php", "wb");
@@ -108,5 +108,9 @@
 	$schemer->insert("uris", "path, template, visible, security", "'users/get', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, visible, security", "'users/edit', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, visible, security", "'users/add', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'login', 'Starbug', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
+	$schemer->insert("uris", "path, template, visible, security", "'login', 'Starbug', '0', '0'");
+	$schemer->insert("uris", "path, template, visible, security", "'engine', 'Starbug', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
+	
+	//SET PERMISSIONS
+	exec("chmod a+s ../script/_generate/*");
 ?>

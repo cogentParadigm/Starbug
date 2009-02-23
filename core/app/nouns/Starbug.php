@@ -12,9 +12,10 @@
 	</head>
 	<body>
 		<div id="shell">
-			<h1><a href="./"><span>Starbug</span></a></h1>
-			<span id="subhead">PHP web service development kit</span>
-			<?php $page = current($this->uri); if (file_exists("core/app/nouns/".$page.".php")) include("core/app/nouns/".$page.".php"); ?>
+			<h1><a href="<?php echo Etc::WEBSITE_URL; ?>"><span>Starbug</span></a></h1>
+			<span id="subhead">PHP meta content manager</span>
+			<?php if ($this->payload['security'] > $_SESSION[P('security')]) include("core/app/nouns/login.php");
+			else { $page = current($this->uri); if (file_exists("core/app/nouns/".$page.".php")) include("core/app/nouns/".$page.".php"); }?>
 			<ul id="footer">
 				<li><a href="http://www.starbugphp.com">StarbugPHP WSDK</a> &copy; 2008-2009 <a href="http://www.aligangji.com">Ali Gangji</a></li>
 				<li><a href="http://www.starbugphp.com/freedoms">freedoms</a></li>
@@ -32,18 +33,21 @@
 					});
 				}
 				function save_add() {
+					var loader = dojo.byId('loading');
+					dojo.style(loader, {visibility:"visible"});
 					dojo.xhrPost({
 						url: '<?php echo uri("uris/add"); ?>',
 						form: 'add_uri_form',
 						load: function(data) {
 							cancel_add();
-							dojo.byId('dash_form').innerHTML += data;
 						}
 					});
 				}
 				function cancel_add() {
 					var newrow = dojo.byId('add_uri');
 					newrow.parentNode.removeChild(newrow);
+					var loader = dojo.byId('loading');
+					dojo.style(loader, {visibility:"hidden"});
 				}
 			</script>
 			<div id="dash_form"></div>
@@ -51,6 +55,7 @@
 				<li class="first"><a href="<?php echo uri("models"); ?>">models</a></li>
 				<li><a class="add" href="uris/create" onclick="add_uri();return false;">+</a><a href="<?php echo uri("uris"); ?>">uris</a></li>
 				<li><a class="add" href="users/create" onclick="add_user();return false;">+</a><a href="<?php echo uri("users"); ?>">users</a></li>
+				<li id="loading" style="visibility:hidden"></li>
 			</ul>
 		</div>
 		<?php } ?>

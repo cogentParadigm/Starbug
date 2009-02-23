@@ -13,12 +13,12 @@ body{background:url('../images/sbfade.png') repeat-x #efede8;font-family: Tahoma
 #shell{padding-top:200px;position:relative;background:url('../images/starbug.png') 0px -3px no-repeat;height:500px;text-align:left;font-size:14px}
 #footer{list-style:none;float:right;font-size:10px;margin-bottom:30px;}
 #dash{width:100%;position:fixed;bottom:0px;}
-#dashlist{width:900px;list-style:none;background:#494;margin:0 auto;height:25px;clear:both}
+#dashlist{width:900px;list-style:none;background:#494;margin:0 auto;height:26px;clear:both;position:relative}
 /* headings */
 h1{position:absolute;top:90px;left:310px;font-size:34px}
 #subhead{position:absolute;top:130px;left:315px;font-weight:bold;font-size:12px}
 h2{color:#262;font-size:20px;margin:15px 0}
-.lidls h3{color:#fff;background:#494;font-size:14px;height:27px}
+.lidls h3{color:#fff;background:#494;font-size:14px;height:28px}
 #models .inactive h3{background:#C22}
 .lidls h3 span{display:block;float:left;padding:5px 10px}
 /* lists */
@@ -32,23 +32,25 @@ h2{color:#262;font-size:20px;margin:15px 0}
 ul{margin-left:20px}
 ul li{padding:5px}
 ul.decimal{list-style-type:decimal}
-dl dl{padding-left:15px;clear:both;border-bottom:1px solid #555;border-top:1px solid #555}
-dt, dd{padding:2px}
-dt{font-weight:bold;float:left;width:100px;padding-left:5px;color:#555;clear:left}
-dt.sub{float:none;display:block;width:880px}
-dd .options{float:right}
+.lidls dl dl{padding-left:15px;clear:both;border-bottom:1px solid #555;border-top:1px solid #555}
+.lidls dt, .lidls dd{padding:2px}
+.lidls dt{font-weight:bold;float:left;width:100px;padding-left:5px;color:#555;clear:left}
+.lidls dt.sub{float:none;display:block;width:880px}
+.lidls dd{margin-left:140px}
+.lidls dd .options{float:right}
+#loading{width:31px;height:26px;background:url(../images/loader.gif) 0px 1px no-repeat;position:absolute;left:438px;top:0}
 /* inline */
 p{margin-bottom:10px}
 em{color:#222}
 /* classes */
 .codeblock{border:1px solid #222;padding:10px;margin:5px 0;width:50%;background:#fff;font-style:italic}
 .note{font-size:10px}
-#dash_form .box{width:900px;margin:0 auto;position:relative;height:75px;padding-bottom:16px;background:#fff;}
+#dash_form .box{width:900px;margin:0 auto;position:relative;height:75px;padding-bottom:16px;z-index:200}
 /* forms */
 label{display:block;font-size:11px;font-weight:bold}
 .field .error{display:block;font-size:9px;font-weight:bold;color:#C00}
 .field{margin-bottom:10px;padding:15px;background:#fff;border-bottom:1px solid #555;border-top:1px solid #555}
-.button{padding:2px 5px;border:none;color:#fff;background:#494;font-size:11px;font-weight:bold;text-decoration:none}
+.button{padding:3px 5px;border:none;color:#fff;background:#494;font-size:11px;font-weight:bold;text-decoration:none}
 #login{width:215px}
 #dash_form{width:100%;position:absolute;bottom:0px}
 #dash_form form{width:900px;background:#fff;height:65px;border-bottom:1px solid #555;border-top:1px solid #555}
@@ -64,7 +66,7 @@ a.button{height:16px}
 .button:hover{background:#5a5;}
 #footer a{color:#494;text-decoration:none}
 #footer a:hover{text-decoration:underline}
-#dash a{color:#fff;font-size:12px;font-weight:bold;display:block;float:left;text-decoration:none;padding:5px}
+#dash a{color:#fff;font-size:12px;font-weight:bold;display:block;float:left;text-decoration:none;padding:5px;}
 #dash a:hover{background:#5a5}
 #dash a.add{font-size:17px;padding:2px 3px}
 #dash .button{height:14px}

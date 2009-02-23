@@ -5,7 +5,7 @@
 *
 * This file is part of StarbugPHP
 *
-* StarbugPHP - web service development kit
+* StarbugPHP - meta content manager
 * Copyright (C) 2008-2009 Ali Gangji
 *
 * StarbugPHP is free software: you can redistribute it and/or modify
@@ -40,8 +40,8 @@ class Schemer {
 			if ($options['type'] == 'password') $type = "varchar(32)";
 			else if ($options['type'] == 'text') $type = "text";
 			else if ($options['type'] == 'int') $type = "int(".(isset($options['length'])?$options['length']:"11").")";
-			else if ($options['type'] == 'datetime') $type = "datetime";
-			else if ($options['type'] == 'timestamp') $type = "timestamp";
+			else if ($options['type'] == 'bool') $type = "int(1)";
+			else if (($options['type'] == 'datetime') || ($options['type'] == 'timestamp')) $type = "datetime";
 			$sql .= $fieldname." ".$type." NOT NULL".((!isset($options['default'])) ? "" : " default '".$options['default']."'").", ";
 		}
 		$sql .= "security int(2) NOT NULL default '2', PRIMARY KEY (`id`) ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";

@@ -5,7 +5,7 @@
 *
 * This file is part of StarbugPHP
 *
-* StarbugPHP - web service development kit
+* StarbugPHP - meta content manager
 * Copyright (C) 2008-2009 Ali Gangji
 *
 * StarbugPHP is free software: you can redistribute it and/or modify
@@ -127,6 +127,30 @@ class Form {
 		//close
 		return $input." />\n";
 	}
+	
+	function checkbox($ops) {
+		if (!empty($ops['nofield'])) $tabs = "\t";
+		else if (!empty($ops['fielded'])) $tabs = "\t\t";
+		else return Form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
+		$ops['tabs'] = $tabs;
+		$ops['input_type'] = "checkbox";
+		//id, name, and type
+		$input = "";
+		if (empty($ops['id'])) $ops['id'] = $ops['name'];
+		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
+		$input .= $tabs.'<input id="'.$ops['id'].'" name="'.$ops['postvar']."[".$ops['name'].']" type="'.$ops['input_type'].'"';
+		//POSTed or default value
+		$input .= "<?php if (isset(\$_POST['".$ops['postvar']."']['".$ops['name']."'])) { ?> value=\"<?php echo \$_POST['".$ops['postvar']."']['".$ops['name']."']; ?>\"<?php } ";
+		if (!empty($ops['default'])) {
+			$input .= "else { ?> value=\"".$ops['default']."\"<?php } ?>";
+		} else $input .= "?>";
+		//size
+		if (!empty($ops['size'])) $input .= ' size="'.$ops['size'].'"';
+		//close
+		$input .= " />\n";
+		$input .= $tabs.Form::label($ops)."\n";
+		return $input;
+	}
 
 	function select($ops) {
 		if (!empty($ops['nofield'])) $tabs = "\t";
@@ -160,7 +184,12 @@ class Form {
 		for($i=1;$i<32;$i++) $day_options["$i"] = $i;
 		//ID, NAME, LABEL, ERRORS
 		$ops['tabs'] = $tabs;
-		$select = "";
+		$select = $tabs."<?php\n";
+		$select .= $tabs."if (!empty(\$_POST['$ops[postvar]']['$ops[name]'])) {\n";
+		$select .= $tabs."\t\$$ops[name]_dt = strtotime(\$_POST['$ops[postvar]']['$ops[name]']);\n";
+		$select .= $tabs."\t\$_POST['$ops[postvar]']['$ops[name]'] = array(\"year\" => date(\"Y\", \$$ops[name]_dt), \"month\" => date(\"m\", \$$ops[name]_dt), \"day\" => date(\"d\", \$$ops[name]_dt));\n";
+		if (!empty($ops['time_select'])) $select .= $tabs."\t\$_POST['$ops[postvar]']['$ops[name]_time'] = array(\"hour\" => date(\"h\", \$$ops[name]_dt), \"minutes\" => date(\"i\", \$$ops[name]_dt), \"ampm\" => date(\"a\", \$$ops[name]_dt));\n";
+		$select .= $tabs."}\n".$tabs."?>\n";
 		if (empty($ops['id'])) $ops['id'] = $ops['name'];
 		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
 		if (!isset($ops['default'])) if (!isset($ops['error'][$ops['name']])) $ops['error'][$ops['name']] = "please";
@@ -217,5 +246,27 @@ class Form {
 		foreach ($ampm_options as $caption => $val) $select .= $tabs."\t<option value=\"$val\"<?php if (\$_POST['".$ops['postvar']."']['".$ops['name']."']['ampm'] == \"$val\") { ?> selected=\"true\"<?php } ?>>$caption</option>\n";
 		$select .= $tabs."</select>\n";
 		return $select;
+	}
+	
+	function textarea($ops) {
+		if (!empty($ops['nofield'])) $tabs = "\t";
+		else if (!empty($ops['fielded'])) $tabs = "\t\t";
+		else return Form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
+		$ops['tabs'] = $tabs;
+		//id, name, and type
+		$input = "";
+		if (empty($ops['id'])) $ops['id'] = $ops['name'];
+		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
+		if (!isset($ops['default'])) if (!isset($ops['error'][$ops['name']])) $ops['error'][$ops['name']] = "please";
+		if (!empty($ops['unique'])) if(!isset($ops['error'][$ops['name']."Exists"])) $ops['error'][$ops['name']."Exists"] = "exists";
+		$input .= $tabs.Form::label($ops)."\n";
+		$sizestring = "cols=\"".((empty($ops['cols'])) ? "60" : $ops['cols'])."\" rows=\"".((empty($ops['rows'])) ? "10" : $ops['rows'])."\"";
+		$input .= $tabs.'<textarea id="'.$ops['id'].'" name="'.$ops['postvar']."[".$ops['name'].']" '.$sizestring.'>';
+		//POSTed or default value
+		$input .= "<?php if (!empty(\$_POST['".$ops['postvar']."']['".$ops['name']."'])) echo \$_POST['".$ops['postvar']."']['".$ops['name']."'];";
+		if (!empty($ops['default'])) $input .= "\n{$tabs}else echo $ops[default]; ?>";
+		else $input .= " ?>";
+		//close
+		return $input."</textarea>\n";
 	}
 }

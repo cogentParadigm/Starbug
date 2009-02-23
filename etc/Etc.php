@@ -1,12 +1,10 @@
 <?php
 /**
-* FILE: etc/Etc.php
-* PURPOSE: This is the main configuration file
-* NOTE: you should only edit this file post installation. 'See etc/install.php'
+* This is the main configuration file
 *
 * This file is part of StarbugPHP
 *
-* StarbugPHP - web service development kit
+* StarbugPHP - meta content manager
 * Copyright (C) 2008-2009 Ali Gangji
 *
 * StarbugPHP is free software: you can redistribute it and/or modify
