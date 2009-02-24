@@ -112,5 +112,5 @@
 	$schemer->insert("uris", "path, template, visible, security", "'engine', 'Starbug', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	
 	//SET PERMISSIONS
-	exec("chmod a+s ../script/_generate/*");
+	exec("chmod a+s script/_generate/*");
 ?>
