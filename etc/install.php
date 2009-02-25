@@ -3,12 +3,13 @@
 /**
 * FILE: etc/install.php
 * PURPOSE: This is the installation file
+* NOTE: You will need to run permit.php as root to set up permissions.
 * NOTE: you should run this from the command line, and then delete it.
 * 			If you need to reinstall, you can get a copy later.
 *
 * This file is part of StarbugPHP
 *
-* StarbugPHP - web service development kit
+* StarbugPHP - meta content manager
 * Copyright (C) 2008-2009 Ali Gangji
 *
 * StarbugPHP is free software: you can redistribute it and/or modify
@@ -110,7 +111,4 @@
 	$schemer->insert("uris", "path, template, visible, security", "'users/add', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, visible, security", "'login', 'Starbug', '0', '0'");
 	$schemer->insert("uris", "path, template, visible, security", "'engine', 'Starbug', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	
-	//SET PERMISSIONS
-	exec("chmod a+s script/_generate/*");
 ?>
