@@ -3,7 +3,6 @@
 /**
 * FILE: etc/install.php
 * PURPOSE: This is the installation file
-* NOTE: You will need to run permit.php as root to set up permissions.
 * NOTE: you should run this from the command line, and then delete it.
 * 			If you need to reinstall, you can get a copy later.
 *
@@ -53,7 +52,7 @@
 	$admin_pass = md5(str_replace("\n", "", fgets(STDIN)));
 
 	//WRITE CONFIG FILE
-	$data = "<?php\n/**\n* This is the main configuration file\n*\n* This file is part of StarbugPHP\n*\n* StarbugPHP - web service development kit\n* Copyright (C) 2008-2009 Ali Gangji\n*\n* StarbugPHP is free software: you can redistribute it and/or modify\n* it under the terms of the GNU General Public License as published by\n* the Free Software Foundation, either version 3 of the License, or\n* (at your option) any later version.\n*\n* StarbugPHP is distributed in the hope that it will be useful,\n* but WITHOUT ANY WARRANTY; without even the implied warranty of\n* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n* GNU General Public License for more details.\n*\n* You should have received a copy of the GNU General Public License\n* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.\n*/\nclass Etc {\n\t/* Log in details for database */\n";
+	$data = "<?php\n/**\n* FILE: etc/Etc.php\n* PURPOSE: This is the main configuration file\n*\n* This file is part of StarbugPHP\n*\n* StarbugPHP - web service development kit\n* Copyright (C) 2008-2009 Ali Gangji\n*\n* StarbugPHP is free software: you can redistribute it and/or modify\n* it under the terms of the GNU General Public License as published by\n* the Free Software Foundation, either version 3 of the License, or\n* (at your option) any later version.\n*\n* StarbugPHP is distributed in the hope that it will be useful,\n* but WITHOUT ANY WARRANTY; without even the implied warranty of\n* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n* GNU General Public License for more details.\n*\n* You should have received a copy of the GNU General Public License\n* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.\n*/\nclass Etc {\n\t/* Log in details for database */\n";
 	$data .= "\tconst DB_TYPE = \"$dbtype\";\n";
 	$data .= "\tconst DB_HOST = \"$dbhost\";\n";
 	$data .= "\tconst DB_USERNAME = \"$dbuser\";\n";
@@ -97,18 +96,20 @@
 	$schemer->insert("uris", "path, template, visible, security", "'uris/new', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, visible, security", "'uris/get', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, visible, security", "'uris/edit', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'uris/add', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, security", "'models', 'Starbug', '4'");
 	$schemer->insert("uris", "path, template, visible, security", "'models/new', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, visible, security", "'models/get', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, visible, security", "'models/edit', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'models/add', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, visible, security", "'models/remove', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, security", "'users', 'Starbug', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, visible, security", "'users/new', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, visible, security", "'users/get', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, visible, security", "'users/edit', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'users/add', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
 	$schemer->insert("uris", "path, template, visible, security", "'login', 'Starbug', '0', '0'");
-	$schemer->insert("uris", "path, template, visible, security", "'engine', 'Starbug', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
+	$schemer->insert("uris", "path, template, visible, security", "'generate', 'Starbug', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
+	
+	//SET PERMISSIONS
+	exec("chmod a+x script/generate");
+	exec("chmod u+s script/generate");
+	exec("chmod -R a+w core/db/schema");
 ?>

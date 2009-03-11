@@ -1,20 +1,7 @@
 <?php
-	function rmloc(&$arr, &$locarr) {
-		if (($pos = current($locarr)) !== false) {
-			if (next($locarr) === false) {
-				$rem = $arr[$pos];
-				unset($arr[$pos]);
-				return $rem;
-			} else rmloc($arr[$pos], $locarr);
-		}
-	}
+	include("core/app/models/Models.php");
 	if (!empty($_POST['new_field'])) {
-		$filename = "core/db/schema/".$_POST['new_field'];
-		$fields = unserialize(file_get_contents($filename));
-		if (!isset($fields[$_POST['fieldname']])) $fields[$_POST['fieldname']] = array();
-		$file = fopen($filename, "wb");
-		fwrite($file, serialize($fields));
-		fclose($file);
+		$models->add_field($_POST['fieldname'], $_POST['new_field']);
 ?>
 <dt id="<?php echo $_POST['new_field']."-".$_POST['fieldname']; ?>-key" class="sub">
 	<a href="" class="right" onclick="if (confirm('Are you sure you want to delete?')) {delete_key('<?php echo $_POST['new_field']."-".$_POST['fieldname']; ?>');return false;}">delete</a>
@@ -28,26 +15,9 @@
 </dd>
 <?php } else {
 	$loc = next($this->uri);
-	$parts = split("-", $loc, 2);
-	$filename = "core/db/schema/".$parts[0];
-	$arr = split("-", $parts[1]);
-	$fields = unserialize(file_get_contents($filename));
-	if ($_POST['edit_field']) {
-		$out = rmloc($fields, $arr);
-		$merge = array($_POST['key'] => $out);
-		end($arr);
-		while(($prev = prev($arr)) !== false) $merge = array($prev => $merge);
-		$fields = array_merge_recursive($fields, $merge);
-		$file = fopen($filename, "wb");
-		fwrite($file, serialize($fields));
-		fclose($file);
-		reset($arr);
-	}
-	$k = ($_POST['edit_field']) ? $_POST['key'] : end($arr);
-	array_pop($arr);
-	$keys = "";
-	foreach($arr as $key) $keys .= $key."-";
-	$keys .= $k;
+	if ($_POST['edit_field']) $models->edit_field($_POST['key'], $loc);
+	$keys = $models->get_field($loc);
+	$k = end(split("-", $keys));
 ?>
 	<a href="" class="right" onclick="if (confirm('Are you sure you want to delete?')) {delete_key('<?php echo $keys; ?>');return false;}">delete</a>
 	<a href="" class="right" onclick="edit_field('<?php echo $keys; ?>');return false;">rename</a>

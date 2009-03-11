@@ -1,6 +1,7 @@
 <?php
 /**
-* This is the main configuration file
+* FILE: etc/Etc.php
+* PURPOSE: This is the main configuration file
 *
 * This file is part of StarbugPHP
 *

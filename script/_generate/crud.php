@@ -21,99 +21,84 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-$base = dirname(__FILE__)."/../../app/nouns/";
+include("etc/Etc.php");
+include("etc/Theme.php");
+include("util/Args.php");
+$args = new Args();
+$fields = unserialize(file_get_contents("core/db/schema/$argv[2]"));
+if ($args->flag('s')) $fields['security'] = array("input_type" => "select", "range" => "0:".Etc::SUPER_ADMIN_SECURITY, "default" => Etc::DEFAULT_SECURITY);
 
-// 0.) GENERATE URI GATE AND FOLDER
-$gateway = "<?php \$page=next(\$this->uri); if (file_exists(\"app/nouns/$argv[2]/\$page.php\")) include(\"app/nouns/$argv[2]/\$page.php\");
-else include(\"app/nouns/$argv[2]/list.php\"); ?>";
-$file = fopen($base.$argv[2].".php", "wb");
-fwrite($file, $gateway);
+//CREATE MODEL XML
+$model = "<model name=\"$argv[2]\">\n";
+foreach($fields as $name => $field) {
+	$model .= "\t<field name=\"$name\"";
+	$kids = "";
+	foreach ($field as $k => $v) {
+		if (is_array($v)) foreach ($v as $key => $val) $kids .= "\t\t<$k name=\"$key\">$val</$k>\n";
+		else $model .= " $k=\"$v\"";
+	}
+	if ($args->flag('l') == $name) $model .= " label=\"true\""; else $model .= " display=\"true\"";
+	if (empty($kids)) $model .= "/>"; else $model .= ">\n$kids\t</field>";
+}
+$model .= "\n</model>";
+
+//CREATE FORM XML
+$form = "<form name=\"$argv[2]\" method=\"post\"";
+$fieldstring = "";
+$mult = false;
+foreach ($fields as $name => $field) {
+	if (!isset($field['id'])) $field['id'] = $name;
+	if (!isset($field['label'])) $field['label'] = str_replace("_", " ", ucwords($name));
+	if (!isset($field['default'])) if (!isset($field['error'][$name])) $field['error'][$name] = "Please enter a ".$field['label'];
+	if (!empty($field['unique'])) if(!isset($field['error'][$name."Exists"])) $field['error'][$name."Exists"] = "That $field[label] already exists";
+	if ($field['type'] == 'file') $mult = true;
+	if ($field['type'] == 'timestamp') continue;
+	if ($field["type"] == "password") $fields[$name]["input_type"] = "password";
+	if ($field["type"] == "datetime") $fields[$name]["input_type"] = "date_select";
+	if ($field["type"] == "timestamp") $fields[$name]["input_type"] = "timestamp";
+	if ($field["type"] == "bool") $fields[$name]["input_type"] = "checkbox";
+	if (isset($field["input_type"])) {
+		$field["type"] = $field["input_type"];
+		unset($field["input_type"]);
+	} else $field["type"] = "text";
+	$fieldstring .= "\t<field name=\"$name\"";
+	$kids = "";
+	foreach ($field as $k => $v) {
+		if (is_array($v)) foreach ($v as $key => $val) $kids .= "\t\t<$k name=\"$key\">$val</$k>\n";
+		else $fieldstring .= " $k=\"$v\"";
+	}
+	if (empty($kids)) $fieldstring .= "/>"; else $fieldstring .= ">\n$kids\t</field>";
+}
+if ($mult) $form .= " multipart=\"true\"";
+$form .= ">\n$fieldstring\n</form>";
+
+//WRITE XML
+$file = fopen("core/db/schema/$argv[2]_model.xml", "wb");
+fwrite($file, $model);
 fclose($file);
-if (!file_exists($base.$argv[2])) mkdir($base.$argv[2]);
-
-// 1.) GENERATE FORM
-include(dirname(__FILE__)."/form.php");
-$label_column = $args->flag('l');
-
-// 2.) GENERATE CREATE
-$create = "<h2>Create $argv[2]</h2>\n<p>Create a new $argv[2]</p>\n<?php \$action = \"create\"; \$submit_to = uri(\"$argv[2]/show\"); include(\"app/nouns/$argv[2]/$argv[2]_form.php\"); ?>";
-$file = fopen($base.$argv[2]."/create.php", "wb");
-fwrite($file, $create);
+$file = fopen("core/db/schema/$argv[2]_form.xml", "wb");
+fwrite($file, $form);
 fclose($file);
 
-// 3.) GENERATE SHOW
-$show = "<?php \$id = next(\$this->uri);\n";
-$show .= "\tif (!empty(\$this->errors['$argv[2]'])) include(\"app/nouns/$argv[2]/\".((\$id)?\"update\":\"create\").\".php\");\n";
-$show .= "\telse {\n";
-$show .= "\t\tif (!\$id) \$entry = \$this->get(\"$argv[2]\")->find(\"*\", \"\", \"LIMIT 1\")->fields();\n";
-$show .= "\t\telse \$entry = \$this->get(\"$argv[2]\")->find(\"*\", \"id='\".\$id.\"'\")->fields();\n?>\n";
-$show .= "<h2><?php echo \$entry['$label_column']; ?></h2>\n<dl>\n";
-foreach ($fields as $k => $v) if ($k != $label_column) $show .= "\t<dt>".ucwords($k)."</dt><dd><?php echo \$entry['$k']; ?></dd>\n";
-$show .= "\t<dt>Options</dt>\n\t<dd>\n";
-$show .= "\t\t<a class=\"button\" href=\"<?php echo uri(\"$argv[2]/update/\$entry[id]\"); ?>\" style=\"float:left\">Edit</a>\n";
-$show .= "\t\t<form id=\"del_form\" action=\"<?php echo uri(\"$argv[2]/list\"); ?>\" method=\"post\">\n";
-$show .= "\t\t\t<input name=\"action[$argv[2]]\" type=\"hidden\" value=\"delete\"/>";
-$show .= "\t\t\t<input type=\"hidden\" name=\"$argv[2]"."[id]\" value=\"<?php echo \$entry['id']; ?>\"/>\n";
-$show .= "\t\t\t<input class=\"button\" type=\"submit\" onclick=\"return confirm('Are you sure you want to delete?')\" value=\"Delete\"/>\n";
-$show .= "\t\t</form>\n\t</dd>\n</dl>\n<?php } ?>\n";
-$file = fopen($base.$argv[2]."/show.php", "wb");
-fwrite($file, $show);
-fclose($file);
+//SET VARS FOR THEME
+$model_name = $argv[2];
+$template = ($args->flag('t')) ? $args->flag('t') : Etc::DEFAULT_TEMPLATE;
+$security = ($args->flag('a')) ? $args->flag('a') : Etc::DEFAULT_SECURITY;
 
-// 4.) GENERATE UPDATE
-$update = "<?php \$id = next(\$this->uri); \$_POST['$argv[2]'] = \$this->get(\"$argv[2]\")->find(\"*\", \"id='\$id'\")->fields(); ?>\n";
-$update .= "<h2>Update $argv[2]</h2>";
-$update .= "<?php \$formid = \"edit_$argv[2]_form\"; \$action = \"create\"; \$submit_to = uri(\"$arv[2]/show/\").\$id; include(\"app/nouns/$argv[2]/$argv[2]_form.php\"); ?>\n";
-$file = fopen($base.$argv[2]."/update.php", "wb");
-fwrite($file, $update);
-fclose($file);
+//INCLUDE THEME CRUD FILE
+include("themes/".THEME::FOLDER."/crud/crud.php");
 
-// 5.) GENERATE LIST
-$list = "<?php\n\$$argv[2] = \$this->get(\"$argv[2]\");\n\$page = next(\$this->uri);\nempty_nan(\$page, 0);\n\$all = \$$argv[2]->afind(\"*\");\n\$total = \$$argv[2]->recordCount;\n\$list = \$$argv[2]->afind(\"*\", \"\", \"ORDER BY id DESC LIMIT \".(\$page*25).\", 25\");\n\$shown = \$$argv[2]->recordCount;\n?>\n";
-$list .= "<script type=\"text/javascript\">\n";
-$list .= "\tfunction showhide(item) {\n";
-$list .= "\t\tvar node = dojo.byId(item);\n";
-$list .= "\t\tvar display = node.getAttribute('class');\n";
-$list .= "\t\tif (display == 'hidden') display = '';\n";
-$list .= "\t\telse display = 'hidden';\n";
-$list .= "\t\tnode.setAttribute('class', display);\n";
-$list .= "\t}\n</script>\n<?php include(\"public/js/$argv[2].php\"); ?>\n";
-$list .= "<h2>$argv[2] list</h2>\n";
-$list .= "<?php if (\$total > 25) { ?>\n";
-$list .= "<ul class=\"pages\">\n";
-$list .= "\t<?php if (\$page > 0) { ?>\n";
-$list .= "\t<li class=\"back\"><a href=\"$argv[2]/list/<?php echo \$page-1; ?>\">Back</a></li>\n";
-$list .= "\t<?php } for(\$i=0;\$i<ceil(\$total/25);\$i++) { ?>\n";
-$list .= "\t<li><a<?php if(\$page == \$i) { ?> class=\"active\"<?php } ?> href=\"$argv[2]/list/<?php echo \$i; ?>\"><?php echo \$i+1; ?></a></li>\n";
-$list .= "\t<?php } if(\$page < ceil(\$total/25)-1) { ?>\n";
-$list .= "\t<li class=\"next\"><a href=\"$argv[2]/list/<?php echo \$page+1; ?>\">Next</a></li>\n";
-$list .= "\t<?php } ?>\n";
-$list .= "</ul>\n<?php } ?>\n<ul id=\"$argv[2]_list\" class=\"lidls\">\n";
-$list .= "<?php foreach(\$list as \$entry) { ?>\n";
-$list .= "\t<li id =\"$argv[2]_<?php echo \$entry['id']; ?>\">\n";
-$list .= "\t\t<h3>\n";
-$list .= "\t\t\t<form id=\"del_form\" action=\"<?php echo htmlentities(\$_SERVER['REQUEST_URI']); ?>\" method=\"post\">\n";
-$list .= "\t\t\t\t<input id=\"action[$argv[2]]\" name=\"action[$argv[2]]\" type=\"hidden\" value=\"delete\"/>\n";
-$list .= "\t\t\t\t<input type=\"hidden\" name=\"$argv[2]"."[id]\" value=\"<?php echo \$entry['id']; ?>\"/>\n";
-$list .= "\t\t\t\t<input class=\"button\" type=\"submit\" onclick=\"return confirm('Are you sure you want to delete?');\" value=\"[X]\"/>\n";
-$list .= "\t\t\t</form>\n";
-$list .= "\t\t\t<a href=\"<?php echo uri(\"$argv[2]/update/\$entry[id]\"); ?>\">[edit]</a>\n";
-$list .= "\t\t\t<a class=\"title\" href=\"#\" onclick=\"showhide('$argv[2]_<?php echo \$entry['id']; ?>_list');return false;\"><?php echo \$entry['$label_column']; ?></a>\n";
-$list .= "\t\t</h3>\n";
-$list .= "\t\t<dl id=\"$argv[2]_<?php echo \$entry['id']; ?>_list\" style=\"padding:5px\" class=\"hidden\">\n";
-foreach ($fields as $k => $v) if ($k != $label_column) $list .= "\t\t\t<dt>".ucwords($k)."</dt><dd><?php echo \$entry['$k']; ?></dd>\n";
-$list .= "\t\t</dl>\n\t</li>\n<?php } ?>\n</ul>\n";
-$list .= "<a id=\"add_$argv[2]\" class=\"button\" href=\"<?php echo uri(\"$argv[2]/create\"); ?>\" onclick=\"new_$argv[2]();return false;\">new $argv[2]</a>\n";
-$file = fopen($base.$argv[2]."/list.php", "wb");
-fwrite($file, $list);
-fclose($file);
+//CREATE DIRECTORIES
+foreach ($dirs as $dir) if (!file_exists("app/nouns/$dir")) mkdir("app/nouns/$dir");
+
+//CREATE FILES
+foreach ($from_model as $stylesheet => $output) exec("saxon -o app/nouns/$output core/db/schema/$argv[2]_model.xml themes/".THEME::FOLDER."/$stylesheet");
+foreach ($from_form as $stylesheet => $output) exec("saxon -o app/nouns/$output core/db/schema/$argv[2]_form.xml themes/".THEME::FOLDER."/$stylesheet");
 
 // 6.) INSERT URI
 if (!$args->flag('u')) {
 	include(dirname(__FILE__)."/../../etc/init.php");
 	include(dirname(__FILE__)."/../../core/db/Schemer.php");
 	$schemer = new Schemer($db);
-	$template = ($args->flag('t')) ? $args->flag('t') : Etc::DEFAULT_TEMPLATE;
-	$access = ($args->flag('a')) ? $args->flag('a') : Etc::DEFAULT_SECURITY;
-	$schemer->insert("uris", "path, template, security", "'$argv[2]', '$template', '$access'");
+	$schemer->insert("uris", "path, template, security", "'$argv[2]', '$template', '$security'");
 }

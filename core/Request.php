@@ -37,12 +37,12 @@ class Request {
 		session_start();
 		//init errors array
 		$this->errors = array();
+		//manipulate data if necessary
+		$this->check_post();
 		//locate request
 		$this->path = (strpos($_SERVER['REQUEST_URI'], BASE_DIR) === false) ? substr($_SERVER['REQUEST_URI'], 1) : end(split(BASE_DIR."/", $_SERVER['REQUEST_URI']));
 		efault($this->path, Etc::DEFAULT_PATH);
 		$this->locate();
-		//manipulate data if necessary
-		$this->check_post();
 		//execute
 		$this->execute();
  	}

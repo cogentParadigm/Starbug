@@ -1,11 +1,7 @@
 <?php
 	$loc = next($this->uri);
 	$parts = split("-", $loc, 2);
-	//$filename = "core/db/schema/".ucwords($parts[0]);
 	$arr = split("-", $parts[1]);
-	//$fields = unserialize(file_get_contents($filename));
-	//$val = $fields[current($arr)];
-	//while (($k = next($arr)) !== false) $val = $val[$k];
 	$_POST['key'] = end($arr);
 ?>
 	<a class="right" href="#" onclick="cancel_edit_field('<?php echo $loc; ?>');return false;">cancel</a>
