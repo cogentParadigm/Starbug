@@ -1,5 +1,6 @@
 <?php
 	include("core/app/models/Models.php");
+	$models = new Models($this->db);
 	if (!empty($_POST['new_field'])) {
 		$models->add_field($_POST['fieldname'], $_POST['new_field']);
 ?>
@@ -15,8 +16,8 @@
 </dd>
 <?php } else {
 	$loc = next($this->uri);
-	if ($_POST['edit_field']) $models->edit_field($_POST['key'], $loc);
-	$keys = $models->get_field($loc);
+	if ($_POST['edit_field']) $models->edit($_POST['key'], $loc);
+	$keys = end(split("-", $loc, 2));
 	$k = end(split("-", $keys));
 ?>
 	<a href="" class="right" onclick="if (confirm('Are you sure you want to delete?')) {delete_key('<?php echo $keys; ?>');return false;}">delete</a>

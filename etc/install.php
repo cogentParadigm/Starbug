@@ -80,15 +80,12 @@
 	fclose($file);
 
 	//INIT TABLES
-	include("Etc.php");
-	include("init.php");
-	$base = "core/db/";
-	$uris = unserialize(file_get_contents($base."schema/uris"));
-	$users = unserialize(file_get_contents($base."schema/users"));
-	include($base."Schemer.php");
+	include("etc/Etc.php");
+	include("etc/init.php");
+	include("core/db/Schemer.php");
 	$schemer = new Schemer($db);
-	$schemer->create("uris", $uris);
-	$schemer->create("users", $users);
+	$schemer->create("uris", $schemer->schema_get("uris"));
+	$schemer->create("users", $schemer->schema_get("users"));
 
 	//INSERT RECORDS
 	$schemer->insert("users", "first_name, last_name, email, password, security", "'$admin_first', '$admin_last', '$admin_email', '$admin_pass', '".Etc::SUPER_ADMIN_SECURITY."'");

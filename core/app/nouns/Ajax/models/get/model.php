@@ -1,8 +1,8 @@
 <?php
 	include("core/app/models/Models.php");
-	$models = new Models("core/db/schema/");
+	$models = new Models($this->db);
 	if (!empty($_POST['new_model'])) {
-		$models->create();
+		$models->create($_POST['modelname']);
 ?>
 <li id="<?php echo $_POST['modelname']; ?>" class="inactive">
 	<h3>
@@ -19,9 +19,9 @@
 <?php } else if (!empty($_POST['activate_model']) || !empty($_POST['deactivate_model'])) {
 	$name = next($this->uri);
 	if (!empty($_POST['activate_model'])) {
-		$models->activate($name, $this->db);
+		$models->activate($name, $_POST['restore_backup']);
 	} else {
-		$models->deactivate($name, $this->db);
+		$models->deactivate($name);
 	}
 	$has = $this->has($name);
 	$fields = $models->get($name);

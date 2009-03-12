@@ -2,47 +2,23 @@
 include("core/db/Schemer.php");
 class Models {
 
-	var $schema_dir; // "core/db/schema/"
+	var $schemer;
 
-	function Models($d) {
-		$this->schema_dir = $d;
-	}
+	function Models($d) { $this->$schemer = new Schemer($db); }
 
-	function create() {
-		if ($_SESSION[P('security')] != Etc::SUPER_ADMIN_SECURITY) return array("securityError");
-		$filename = $this->schema_dir.$_POST['modelname'];
-		$fields = serialize(array());
-		if (!file_exists($filename)) {
-			$file = fopen($filename, "wb");
-			fwrite($file, $fields);
-			fclose($file);
-		} else return array("fileExistsError" => true);
+	function create($name) {
+		if ($this->schemer->exists($_POST['modelname'])) return array("fileExistsError" => true);
+		else $this->schemer->write_schema($_POST['modelname'], array());
 		return array();
 	}
 
-	function get_all() {
-		$models = array();
-		if ($handle = opendir($this->schema_dir)) {
-			while (false !== ($file = readdir($handle))) if ((substr($file, 0, 1) != ".")) $models[$file] = unserialize(file_get_contents($this->schema_dir.$file));
-			closedir($handle);
-		}
-		return $models;
-	}
+	function get_all() { return $this->schemer->get_schemas(); }
 
-	function get($name) {
-		return unserialize(file_get_contents($this->schema_dir.$name));
-	}
+	function get($name) { return $this->schemer->schema_get($name); }
 
-	function activate($name, $db) {
-		$fields = unserialize(file_get_contents($this->schema_dir.$name));
-		$schemer = new Schemer($db);
-		$schemer->create($name, $fields, $_POST['restore_backup']);
-	}
+	function activate($name, $backup) { $this->schemer->create($name, $this->schemer->get_schema($name), $backup); }
 
-	function deactivate($name, $db) {
-		$schemer = new Schemer($db);
-		$schemer->drop($name);
-	}
+	function deactivate($name) { $this->schemer->drop($name); }
 
 	function dlfields($arr, $prefix, $top=true) {
 		if (is_array($arr)) {
@@ -55,105 +31,14 @@ class Models {
 			return $dl."</dl>\n";
 		} else return "<span class=\"options\"><a href=\"\" onclick=\"edit_key('$prefix');return false;\">edit</a><a href=\"\" onclick=\"delete_key('$prefix');return false;\">delete</a></span>".$arr;
 	}
-	
-	function remove($loc) {
-		$parts = split("-", $loc, 2);
-		$filename = $this->schema_dir.$parts[0];
-		if (count($parts) == 1) unlink($filename);
-		else {
-			$arr = split("-", $parts[1]);
-			$fields = unserialize(file_get_contents($filename));
-			$this->rmloc($fields, $arr);
-			$file = fopen($filename, "wb");
-			fwrite($file, serialize($fields));
-			fclose($file);
-		}
-	}
-	
-	function add_field($field, $where) {
-		$filename = $this->schema_dir.$where;
-		$fields = unserialize(file_get_contents($filename));
-		if (!isset($fields[$field])) $fields[$field] = array();
-		$file = fopen($filename, "wb");
-		fwrite($file, serialize($fields));
-		fclose($file);
-	}
-	
-	function get_field($loc) {
-		$parts = split("-", $loc, 2);
-		$filename = $this->schema_dir.$parts[0];
-		$arr = split("-", $parts[1]);
-		$fields = unserialize(file_get_contents($filename));
-		$k = end($arr);
-		array_pop($arr);
-		$keys = "";
-		foreach($arr as $key) $keys .= $key."-";
-		$keys .= $k;
-		return $keys;
-	}
-	
-	function edit_field($field, $where) {
-		$parts = split("-", $loc, 2);
-		$filename = $this->schema_dir.$parts[0];
-		$arr = split("-", $parts[1]);
-		$fields = unserialize(file_get_contents($filename));
-		$out = $this->rmloc($fields, $arr);
-		$merge = array($field => $out);
-		end($arr);
-		while(($prev = prev($arr)) !== false) $merge = array($prev => $merge);
-		$fields = array_merge_recursive($fields, $merge);
-		$file = fopen($filename, "wb");
-		fwrite($file, serialize($fields));
-		fclose($file);
-	}
-	
-	function add_key($key, $value, $where) {
-		$parts = split("-", $where, 2);
-		$filename = $this->schema_dir.$parts[0];
-		$arr = split("-", $parts[1]);
-		$merge = array(end($arr) => array($key => $value));
-		while (($prev = prev($arr)) !== false) $merge = array($prev => $merge);
-		$fields = unserialize(file_get_contents($filename));
-		$fields = array_merge_recursive($fields, $merge);
-		$file = fopen($filename, "wb");
-		fwrite($file, serialize($fields));
-		fclose($file);
-	}
-	
-	function get_key($loc) {
-		$parts = split("-", $loc, 2);
-		$filename = $this->schema_dir.$parts[0];
-		$arr = split("-", $parts[1]);
-		$fields = unserialize(file_get_contents($filename));
-		$val = $fields[current($arr)];
-		while (($k = next($arr)) !== false) $val = $val[$k];
-		return $val;
-	}
-	
-	function edit_key($loc, $value) {
-		$parts = split("-", $loc, 2);
-		$filename = $this->schema_dir.$parts[0];
-		$arr = split("-", $parts[1]);
-		$fields = unserialize(file_get_contents($filename));
-		$merge = array(end($arr) => $value);
-		while(($prev = prev($arr)) !== false) $merge = array($prev => $merge);
-		reset($arr);
-		$this->rmloc($fields, $arr);
-		$fields = array_merge_recursive($fields, $merge);
-		$file = fopen($filename, "wb");
-		fwrite($file, serialize($fields));
-		fclose($file);
-	}
 
-	private function rmloc(&$arr, &$locarr) {
-		if (($pos = current($locarr)) !== false) {
-			if (next($locarr) === false) {
-				$rem = $arr[$pos];
-				unset($arr[$pos]);
-				return $rem;
-			} else rmloc($arr[$pos], $locarr);
-		}
-	}
+	function add_field($field, $where) { $this->schemer->schema_write(array($field => array("inactive" => true)), $where); }
+
+	function add_key($key, $value, $where) { $this->schemer->schema_write(array($key => $value), $where); }	
+
+	function edit($new, $where) {	$this->schemer->schema_edit($new, $where); }
+	
+	function remove($loc) { $this->schemer->schema_remove($loc); }
 
 }
 ?>
