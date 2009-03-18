@@ -105,6 +105,9 @@
 	$schemer->insert("uris", "path, template, visible", "'users/get', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'users/edit', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'generate', 'Starbug', '0'");
+	$schemer->insert("uris", "path, template", "'permits', 'Starbug'");
+	$schemer->insert("uris", "path, template, visible", "'permits/who', 'permits', '0'");
+	$schemer->insert("uris", "path, template, visible", "'permits/relid', 'permits', '0'");
 	$schemer->insert("uris", "path, template, visible, collective", "'login', 'Starbug', '0', '0'");
 	//PRIVILIGES
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'login', '".P('users')."'");
