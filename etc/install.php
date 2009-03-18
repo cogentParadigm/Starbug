@@ -83,27 +83,33 @@
 	include("etc/Etc.php");
 	include("etc/init.php");
 	include("core/db/Schemer.php");
+	$db->Execute("DROP TABLE IF EXISTS `".P('permits')."`");
+	$db->Execute("CREATE TABLE `".P("permits")."` (id int not null AUTO_INCREMENT, role varchar(30) not null, who int not null default 0, action varchar(100) not null, status int not null default '0', priv_type varchar(30) not null default 'table', related_table varchar(100) not null, related_id int not null default '0', PRIMARY KEY (`id`) )");
 	$schemer = new Schemer($db);
-	$schemer->create("uris", $schemer->schema_get("uris"));
-	$schemer->create("users", $schemer->schema_get("users"));
+	$schemer->create("uris");
+	$schemer->create("users");
 
 	//INSERT RECORDS
-	$schemer->insert("users", "first_name, last_name, email, password, security", "'$admin_first', '$admin_last', '$admin_email', '$admin_pass', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, security", "'uris', 'Starbug', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'uris/new', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'uris/get', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'uris/edit', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, security", "'models', 'Starbug', '4'");
-	$schemer->insert("uris", "path, template, visible, security", "'models/new', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'models/get', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'models/edit', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'models/remove', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, security", "'users', 'Starbug', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'users/new', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'users/get', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'users/edit', 'Ajax', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
-	$schemer->insert("uris", "path, template, visible, security", "'login', 'Starbug', '0', '0'");
-	$schemer->insert("uris", "path, template, visible, security", "'generate', 'Starbug', '0', '".Etc::SUPER_ADMIN_SECURITY."'");
+	$schemer->insert("users", "first_name, last_name, email, password, memberships", "'$admin_first', '$admin_last', '$admin_email', '$admin_pass', '1'");
+	$schemer->insert("uris", "path, template", "'uris', 'Starbug'");
+	$schemer->insert("uris", "path, template, visible", "'uris/new', 'Ajax', '0'");
+	$schemer->insert("uris", "path, template, visible", "'uris/get', 'Ajax', '0'");
+	$schemer->insert("uris", "path, template, visible", "'uris/edit', 'Ajax', '0'");
+	$schemer->insert("uris", "path, template", "'models', 'Starbug'");
+	$schemer->insert("uris", "path, template, visible", "'models/new', 'Ajax', '0'");
+	$schemer->insert("uris", "path, template, visible", "'models/get', 'Ajax', '0'");
+	$schemer->insert("uris", "path, template, visible", "'models/edit', 'Ajax', '0'");
+	$schemer->insert("uris", "path, template, visible", "'models/remove', 'Ajax', '0'");
+	$schemer->insert("uris", "path, template", "'users', 'Starbug'");
+	$schemer->insert("uris", "path, template, visible", "'users/new', 'Ajax', '0'");
+	$schemer->insert("uris", "path, template, visible", "'users/get', 'Ajax', '0'");
+	$schemer->insert("uris", "path, template, visible", "'users/edit', 'Ajax', '0'");
+	$schemer->insert("uris", "path, template, visible", "'generate', 'Starbug', '0'");
+	$schemer->insert("uris", "path, template, visible, collective", "'login', 'Starbug', '0', '0'");
+	//PRIVILIGES
+	$schemer->insert("permits", "role, action, related_table", "'everyone', 'login', '".P('users')."'");
+	$schemer->insert("permits", "role, action, related_table", "'everyone', 'logout', '".P('users')."'");
+	$schemer->insert("permits", "role, action, priv_type, related_table", "'collective', 'read', 'global', '".P('uris')."'");
 	
 	//SET PERMISSIONS
 	exec("chmod a+x script/generate");

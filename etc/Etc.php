@@ -5,7 +5,7 @@
 *
 * This file is part of StarbugPHP
 *
-* StarbugPHP - meta content manager
+* StarbugPHP - web service development kit
 * Copyright (C) 2008-2009 Ali Gangji
 *
 * StarbugPHP is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 */
 class Etc {
 	/* Log in details for database */
-	const DB_TYPE = "";
+	const DB_TYPE = "mysql";
 	const DB_HOST = "";
 	const DB_USERNAME = "";
 	const DB_PASSWORD = "";
@@ -55,11 +55,6 @@ class Etc {
 	const TEMPLATE_COLUMN = "template";
 	const DEFAULT_TEMPLATE = "App";
 	const DEFAULT_PATH = "home";
-
-	/* Admin security */
-	const DEFAULT_SECURITY = 2;
-	const ADMIN_SECURITY = 3;
-	const SUPER_ADMIN_SECURITY = 4;
 
 	/* Time before a user is considered offline (Minutes*60) */
 	const TIME_OUT = 900;

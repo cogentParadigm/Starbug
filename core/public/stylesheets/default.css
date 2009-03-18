@@ -60,6 +60,7 @@ dd form .field{padding:2px 5px;border-top:none}
 .lidls h3 form{float:right;visibility:hidden}
 .lidls h3 #new_model_form {visibility:visible;}
 .lidls h3 form .button{padding:5px}
+.permits_form .field {float:left;}
 /* links */
 h1 a{color:#494;text-decoration:none}
 a.button{height:16px}
@@ -79,12 +80,14 @@ dd .options a{padding:0px 5px;color:#494;text-decoration:none}
 dd .options a:hover, dt.sub a:hover{text-decoration:underline;color:#5a5}
 dt.sub a{color:#494;text-decoration:none}
 dt.sub a.right{margin-left:10px}
+dt.sub.inactive a, dd.inactive dl a{color:#C22}
+dt.sub.inactive a:hover, dd.inactive dl a:hover{color:#D00}
 .lidls dd a.button{margin-top:20px;float:left}
 /* tables */
 th, td{padding:5px 10px}
 table a.button{display:block;float:left}
 table .options form{float:left}
-table form .field, #dash form .field, dd form .field{float:left;height:35px}
+table form .field, #dash form .field, dd form .field, .permits_form .field{float:left;height:35px}
 table .uris_form .button, table .users_form .button, #dash_form form .button, .lidls dd form .button{display:none}
 table .users_form input{width:125px}
 /* models */

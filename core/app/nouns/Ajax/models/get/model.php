@@ -16,13 +16,16 @@
 		<a class="button clear" href="" onclick="new_field('<?php echo $_POST['modelname']; ?>');return false;">new field</a>
 	</div>
 </li>
-<?php } else if (!empty($_POST['activate_model']) || !empty($_POST['deactivate_model'])) {
+<?php } else if (!empty($_POST['activate_model']) || !empty($_POST['deactivate_model']) || !empty($_POST['activate_field'])) {
 	$name = next($this->uri);
 	if (!empty($_POST['activate_model'])) {
 		$models->activate($name, $_POST['restore_backup']);
-	} else {
+	} else if (!empty($_POST['deactivate_model'])) {
 		$models->deactivate($name);
-	}
+	} else if (!empty($_POST['activate_field'])) {
+		$models->activate($name);
+		$name = reset(split("-", $name));
+	}	
 	$has = $this->has($name);
 	$fields = $models->get($name);
 ?>
@@ -33,7 +36,6 @@
 				<form class="hidden" id="deactivate_<?php echo $name; ?>" method="post">
 					<input type="hidden" name="deactivate_model" value="1" />
 				</form>
-				<a href="" onclick="">[update]</a>
 			<?php } else { ?>
 				<form class="hidden" id="activate_<?php echo $name; ?>" method="post">
 					<input type="hidden" name="activate_model" value="1" />
@@ -42,8 +44,8 @@
 			<?php } ?>
 			<a href="" class="title" onclick="showhide('<?php echo $name; ?>_model');return false;"><?php echo $name; ?></a>
 		</h3>
-		<div id="<?php echo $name; ?>_model" class="hidden" style="padding:5px">
-			<?php echo Models::dlfields($fields, $name); ?>
+		<div id="<?php echo $name; ?>_model" style="padding:5px">
+			<?php echo Models::dlfields($fields, $name, $has); ?>
 			<a href="" class="button clear" onclick="new_field('<?php echo $name; ?>');return false;">new field</a>
 		</div>
 <?php } ?>

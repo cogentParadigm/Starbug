@@ -29,12 +29,26 @@ class Request {
 	var $errors;
 	var $path;
 	var $uri;
+	var $groups;
+	var $statuses;
 
 	function Request($data) {
+		$this->groups = array(
+			"root"			=> 1,
+			"user"			=> 2
+		);
+		$this->statuses = array(
+			"deleted"     => 1,
+			"inactive"    => 2,
+			"active"      => 4,
+			"cancelled"   => 8,
+			"pending"     => 16
+		);
 		//connect to database
 		$this->db = $data;
 		//start session
 		session_start();
+		if (!isset($_SESSION[P('id')])) $_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
 		//init errors array
 		$this->errors = array();
 		//manipulate data if necessary
@@ -53,14 +67,20 @@ class Request {
 
 	protected function locate() {
 		if (Etc::DB_NAME != "") {
-			$this->payload = $this->get('uris')->get("*", "'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%')", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1")->fields();
+			$this->payload = $this->get('uris')->find("*", "'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%')", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1")->fields();
 			if (empty($this->payload)) $this->path = (($this->path == Etc::DEFAULT_PATH)?Etc::DEFAULT_PATH:"missing");
-			else if ($this->payload['security'] > $_SESSION[P('security')]) $this->path = "forbidden";
 		}
 		$this->uri = split("/", $this->path);
 	}
 
-	protected function post_act($key, $value) { if (($object = $this->get($key)) && method_exists($object, $value)) $this->errors = array_merge_recursive($this->errors, array($key => $object->$value())); }
+	protected function post_act($key, $value) {
+		if (($object = $this->get($key)) && method_exists($object, $value)) {
+			$permits = isset($_POST[$key]['id']) ? $object->get_object_permits("*", $value, "obj.id='".$_POST[$key]['id']."'") : $object->get_table_permits($value);
+			if ($permits->RecordCount() > 0) $errors = $object->$value();
+			else $errors = array("forbidden" => true);
+			$this->errors = array_merge_recursive($this->errors, array($key => $errors)); 
+		}
+	}
 
 	private function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_act($key, $val);}
 

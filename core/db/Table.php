@@ -89,13 +89,26 @@ class Table {
 	}
 
 	function find($select, $where="", $other="") {
-		empty_nan($_SESSION[P("security")], 1);
-		$securityQuery = "(security<=".$_SESSION[P("security")].")";
-		//if($_SESSION[P("security")] != 1) $securityQuery .= " && security!=1)";
-		//else $securityQuery .= ")";
-		if (!empty($where)) $where = $securityQuery." && ".$where;
-		else $where = $securityQuery;
-		return $this->get($select, $where, $other);
+		if (($_SESSION[P('memberships')] & 1)==1) return $this->get($select, $where, $other);
+		else return $this->get_object_permits($select, "read", $where, $other);
+	}
+	
+	function get_table_permits($action) {
+		$sql = "SELECT * FROM ".P("permits")." AS p WHERE p.priv_type='table' && p.related_table='".P($this->type)."' && action='$action' && (p.role='everyone'";
+		$sql .= " || (p.role='user' && p.who='".$_SESSION[P('id')]."') || (p.role='group' && (('".$_SESION[P('memberships')]."' & p.who)=p.who)))";
+		$records = $this->db->Execute($sql);
+		$this->recordCount = $records->RecordCount();
+		return $records;
+	}
+
+	function get_object_permits($select, $action, $query="", $other="") {
+		if (!empty($query)) $query .= " && ";
+		if (!empty($other)) $other = " ".$other;
+		$sql = "SELECT DISTINCT $select FROM ".P("permits")." AS p, ".P($this->type)." AS obj WHERE ".$query."p.related_table='".P($this->type)."' && p.action='$action' && (p.priv_type='global' || (p.priv_type='object' && p.related_id=obj.id)) && ((obj.status & p.status)=p.status) && (p.role='everyone'";
+		$sql .= " || (p.role='user' && p.who='".$_SESSION[P('id')]."') || (p.role='group' && (('".$_SESION[P('memberships')]."' & p.who)=p.who)) || (p.role='owner' && obj.owner='".$_SESSION[P('id')]."') || (p.role='collective' && (('".$_SESION[P('memberships')]."' & obj.collective)=obj.collective)))";
+		$records = $this->db->Execute($sql.$other);
+		$this->recordCount = $records->RecordCount();
+		return $records;
 	}
 
 	function get($select, $where="", $other="") {

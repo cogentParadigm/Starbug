@@ -153,6 +153,16 @@ function activate_model(loc, backup) {
 		}
 	});
 }
+function activate_field(prefix, loc) {
+	dojo.xhrPost({
+		url: '<?php echo uri("models/get/model/"); ?>'+prefix+'-'+loc,
+		form: 'activate_'+prefix+'-'+loc,
+		load: function(data) {
+			var loc_node = dojo.byId(prefix);
+			loc_node.innerHTML = data;
+		}
+	});
+}
 function deactivate_model(loc) {
 	dojo.xhrPost({
 		url: '<?php echo uri("models/get/model/"); ?>'+loc,

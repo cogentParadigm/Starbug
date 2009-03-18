@@ -1,5 +1,5 @@
 <?php $loc = next($this->uri); ?>
-<dt id="new-field" class="sub">
+<dt id="new-field" class="sub inactive">
 <a class="right" href="" onclick="save_new_field('<?php echo $loc; ?>');return false;">save</a><a class="right" href="" onclick="cancel_new_field('<?php echo $loc; ?>');return false;">cancel</a>
 <form id="new_field_form" method="post">
 	<input name="new_field" type="hidden" value="<?php echo $loc; ?>" />

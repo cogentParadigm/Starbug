@@ -1,6 +1,6 @@
 <?php
 	include("core/app/models/Models.php");
-	$models = new Models("core/db/schema");
+	$models = new Models($this->db);
 	$loc = next($this->uri);
 	$models->remove($loc);
 ?>

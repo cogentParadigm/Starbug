@@ -14,14 +14,13 @@
 		<div id="shell">
 			<h1><a href="<?php echo Etc::WEBSITE_URL; ?>"><span>Starbug</span></a></h1>
 			<span id="subhead">PHP meta content manager</span>
-			<?php if ($this->payload['security'] > $_SESSION[P('security')]) include("core/app/nouns/login.php");
-			else { $page = current($this->uri); if (file_exists("core/app/nouns/".$page.".php")) include("core/app/nouns/".$page.".php"); }?>
+			<?php $page = current($this->uri); if (file_exists("core/app/nouns/".$page.".php")) include("core/app/nouns/".$page.".php");?>
 			<ul id="footer">
 				<li><a href="http://www.starbugphp.com">StarbugPHP WSDK</a> &copy; 2008-2009 <a href="http://www.aligangji.com">Ali Gangji</a></li>
 				<li><a href="http://www.starbugphp.com/freedoms">freedoms</a></li>
 			</ul>
 		</div>
-		<?php if ($_SESSION[P('security')] >= Etc::ADMIN_SECURITY) { ?>
+		<?php if (($_SESSION[P('memberships')] & 1)==1) { ?>
 		<div id="dash">
 			<script type="text/javascript">
 				function add_uri() {
