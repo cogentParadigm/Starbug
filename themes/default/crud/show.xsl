@@ -3,7 +3,7 @@
 
 <xsl:output method="text"/>
 
-<xsl:template match="/model" mode="show">&lt;?php
+<xsl:template match="/model">&lt;?php
 	$id = next($this->uri);
 	if (!empty($this->errors['<xsl:value-of select="@name"/>'])) include("app/nouns/<xsl:value-of select="@name"/>/".(($id)?"update":"create").".php");
 		else {

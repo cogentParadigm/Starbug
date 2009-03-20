@@ -10,8 +10,7 @@ class <xsl:value-of select="@label"/> extends Table {
 	var $lengths = array(<xsl:value-of select="lengths"/>);
 	
 	function create() {
-		$<xsl:value-of select="@name"/> = $_POST['<xsl:value-of select="@name"/>'];
-		<xsl:apply-templates select="field"/>
+		$<xsl:value-of select="@name"/> = $_POST['<xsl:value-of select="@name"/>'];<xsl:apply-templates select="field"/>
 		/* more */
 		return $this->store($<xsl:value-of select="/model/@name"/>);
 	} 

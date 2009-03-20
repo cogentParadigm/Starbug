@@ -9,7 +9,7 @@
 <xsl:text disable-output-escaping="yes">&lt;?php $action = "create"; $submit_to = uri("</xsl:text>
 <xsl:value-of select="@name"/>
 <xsl:text disable-output-escaping="yes">/show"); include("app/nouns/</xsl:text>
-<xsl:value-of select="@name"/>/<xsl:value-of select="@name"/>
-<xsl:text disable-output-escaping="yes">_form.php"); ?&gt;</xsl:text>
+<xsl:value-of select="@name"/>
+<xsl:text disable-output-escaping="yes">/form.php"); ?&gt;</xsl:text>
 </xsl:template>
 </xsl:stylesheet>

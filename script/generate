@@ -101,11 +101,11 @@ fclose($file);
 //SET VARS FOR THEME
 $model_name = $argv[2];
 $template = ($args->flag('t')) ? $args->flag('t') : Etc::DEFAULT_TEMPLATE;
-$security = ($args->flag('a')) ? $args->flag('a') : Etc::DEFAULT_SECURITY;
 $dirs = array(); $from_form = array(); $from_model = array(); $paths = array();
 
 //INCLUDE THEME GENERATOR FILE
-include("themes/".THEME::FOLDER."/$argv[1]/$argv[1].php");
+if ($args->flag('u')) include("themes/".THEME::FOLDER."/$argv[1]/update.php");
+else include("themes/".THEME::FOLDER."/$argv[1]/$argv[1].php");
 
 //CREATE DIRECTORIES
 foreach ($dirs as $dir) if (!file_exists($dir)) mkdir($dir);

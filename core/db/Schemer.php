@@ -110,7 +110,7 @@ class Schemer {
 	function get_schemas() {
 		$schemas = array();
 		if ($handle = opendir("core/db/schema/")) {
-			while (false !== ($file = readdir($handle))) if ((substr($file, 0, 1) != ".")) $schemas[$file] = unserialize(file_get_contents("core/db/schema/".$file));
+			while (false !== ($file = readdir($handle))) if ((strpos($file, ".") === false)) $schemas[$file] = unserialize(file_get_contents("core/db/schema/".$file));
 			closedir($handle);
 		}
 		return $schemas;
@@ -179,7 +179,7 @@ class Schemer {
 				$rem = $arr[$pos];
 				unset($arr[$pos]);
 				return $rem;
-			} else rmloc($arr[$pos], $locarr);
+			} else $this->rmloc($arr[$pos], $locarr);
 		}
 	}
 
