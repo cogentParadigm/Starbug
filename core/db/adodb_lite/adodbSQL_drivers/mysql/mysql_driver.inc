@@ -450,7 +450,7 @@ class mysql_driver_ResultSet
 	 * @return string Field name
 	 */
 
-	function fields( $field )
+	function fields($field="")
 	{
 		if(empty($field))
 		{

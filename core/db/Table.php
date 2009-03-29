@@ -95,7 +95,7 @@ class Table {
 	
 	function get_table_permits($action) {
 		$sql = "SELECT * FROM ".P("permits")." AS p WHERE p.priv_type='table' && p.related_table='".P($this->type)."' && action='$action' && (p.role='everyone'";
-		$sql .= " || (p.role='user' && p.who='".$_SESSION[P('id')]."') || (p.role='group' && (('".$_SESION[P('memberships')]."' & p.who)=p.who)))";
+		$sql .= " || (p.role='user' && p.who='".$_SESSION[P('id')]."') || (p.role='group' && (('".$_SESSION[P('memberships')]."' & p.who)=p.who)))";
 		$records = $this->db->Execute($sql);
 		$this->recordCount = $records->RecordCount();
 		return $records;
@@ -104,8 +104,8 @@ class Table {
 	function get_object_permits($select, $action, $query="", $other="") {
 		if (!empty($query)) $query .= " && ";
 		if (!empty($other)) $other = " ".$other;
-		$sql = "SELECT DISTINCT $select FROM ".P("permits")." AS p, ".P($this->type)." AS obj WHERE ".$query."p.related_table='".P($this->type)."' && p.action='$action' && (p.priv_type='global' || (p.priv_type='object' && p.related_id=obj.id)) && ((obj.status & p.status)=p.status) && (p.role='everyone'";
-		$sql .= " || (p.role='user' && p.who='".$_SESSION[P('id')]."') || (p.role='group' && (('".$_SESION[P('memberships')]."' & p.who)=p.who)) || (p.role='owner' && obj.owner='".$_SESSION[P('id')]."') || (p.role='collective' && (('".$_SESION[P('memberships')]."' & obj.collective)=obj.collective)))";
+		$sql = "SELECT DISTINCT $select FROM ".P("permits")." AS p, ".P($this->type)." AS obj WHERE ".$query."p.related_table='".P($this->type)."' && p.action='$action' && (p.priv_type='global' || (p.priv_type='object' && p.related_id=obj.id)) && ((p.status & obj.status)=obj.status) && (p.role='everyone'";
+		$sql .= " || (p.role='user' && p.who='".$_SESSION[P('id')]."') || (p.role='group' && (('".$_SESSION[P('memberships')]."' & p.who)=p.who)) || (p.role='owner' && obj.owner='".$_SESSION[P('id')]."') || (p.role='collective' && (('".$_SESSION[P('memberships')]."' & obj.collective)=obj.collective)))";
 		$records = $this->db->Execute($sql.$other);
 		$this->recordCount = $records->RecordCount();
 		return $records;

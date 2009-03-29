@@ -1,8 +1,0 @@
-#!/usr/bin/php
-<?php
-$help = "Usage: build TYPE [NAME] [OPTIONS]\n\n";
-if ($argc<2) fwrite(STDOUT, $help);
-$topdir = dirname(__FILE__)."/../";
-if (file_exists(dirname(__FILE__)."/_build/".$argv[1].".php")) include(dirname(__FILE__)."/_build/".$argv[1].".php");
-exit(0);
-?>
