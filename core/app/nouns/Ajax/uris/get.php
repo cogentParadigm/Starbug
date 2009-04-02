@@ -10,7 +10,8 @@
 		<td><?php echo $uri['template']; ?></td>
 		<td><?php echo $uri['visible']; ?></td>
 		<td><?php echo $uri['importance']; ?></td>
-		<td><?php echo $uri['security']; ?></td>
+		<td><?php echo $uri['owner']; ?></td>
+		<td><?php echo $uri['collective']; ?></td>
 		<td>
 			<a class="button" href="#" onclick="edit_uri(<?php echo $uri['id']; ?>);return false;">Edit</a>
 			<form id="del_form" action="<?php htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">

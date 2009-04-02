@@ -10,7 +10,7 @@
 		<td><?php echo $user['last_name']; ?></td>
 		<td>*****</td>
 		<td><?php echo $user['email']; ?></td>
-		<td><?php echo $user['security']; ?></td>
+		<td><?php echo $user['memberships']; ?></td>
 		<td class="options"><a class="button" href="#" onclick="edit_user(<?php echo $user['id']; ?>);return false;">Edit</a>
 			<form id="del_form" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
 				<input id="action[users]" name="action[users]" type="hidden" value="delete"/>

@@ -33,12 +33,12 @@ $shown = $permits->recordCount;
 		<td><?php echo $entry['related_table']; ?></td>
 		<td><?php echo $entry['related_id']; ?></td>
 		<td>
-			<form id="del_form" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
+			<a class="left button" href="<?php echo uri("permits/update/$entry[id]"); ?>">edit</a>
+			<form style="float:left" id="del_form" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
 				<input id="action[permits]" name="action[permits]" type="hidden" value="delete"/>
 				<input type="hidden" name="permits[id]" value="<?php echo $entry['id']; ?>"/>
-				<input class="button" type="submit" onclick="return confirm('Are you sure you want to delete?');" value="[X]"/>
+				<input class="button" type="submit" onclick="return confirm('Are you sure you want to delete?');" value="delete"/>
 			</form>
-			<a class="button" href="<?php echo uri("permits/update/$entry[id]"); ?>">[edit]</a>
 		</td>
 	</tr>
 <?php } ?>

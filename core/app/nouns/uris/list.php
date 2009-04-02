@@ -30,16 +30,17 @@ $shown = $uris->recordCount;
 </ul>
 <?php } ?>
 <table id="uris_table">
-<tr><th>Path</th><th>Template</th><th>Visibility</th><th>Importance</th><th>Security</th><th>Options</th></tr>
+<tr><th>Path</th><th>Template</th><th>Visibility</th><th>Importance</th><th>Owner</th><th>Collective</th><th>Options</th></tr>
 <?php foreach($list as $el) { ?>
 	<tr id="uri_<?php echo $el['id']; ?>">
 		<td><?php echo $el['path']; ?></td>
 		<td><?php echo $el['template']; ?></td>
 		<td><?php echo $el['visible']; ?></td>
 		<td><?php echo $el['importance']; ?></td>
-		<td><?php echo $el['security']; ?></td>
-		<td class="options"><a class="button" href="#" onclick="edit_uri(<?php echo $el['id']; ?>);return false;">Edit</a>
-			<form id="del_form" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
+		<td><?php echo $el['owner']; ?></td>
+		<td><?php echo $el['collective']; ?></td>
+		<td class="options"><a class="left button" href="#" onclick="edit_uri(<?php echo $el['id']; ?>);return false;">Edit</a>
+			<form id="del_form" style="float:left" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
 				<input id="action[uris]" name="action[uris]" type="hidden" value="delete"/>
 				<input type="hidden" name="uris[id]" value="<?php echo $el['id']; ?>"/>
 				<input class="button" type="submit" onclick="return confirm('Are you sure you want to delete?');" value="Delete"/>

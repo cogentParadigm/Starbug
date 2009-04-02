@@ -72,7 +72,6 @@
 	$data .= "\t/* Default redirection time */\n";
 	$data .= "\tconst REDIRECTION_TIME = 2;\n\n";
 	$data .= "\t/* Elements table */\n\tconst PATH_COLUMN = \"path\";\n\tconst TEMPLATE_COLUMN = \"template\";\n\tconst DEFAULT_TEMPLATE = \"App\";\n\tconst DEFAULT_PATH = \"home\";\n\n";
-	$data .= "\t/* Admin security */\n\tconst DEFAULT_SECURITY = 2;\n\tconst ADMIN_SECURITY = 3;\n\tconst SUPER_ADMIN_SECURITY = 4;\n\n";
 	$data .= "\t/* Time before a user is considered offline (Minutes*60) */\n\tconst TIME_OUT = 900;\n}\n?>\n";
 	$data = str_replace("\n\";", "\";", $data);
 	$file = fopen("etc/Etc.php", "wb");
@@ -91,16 +90,16 @@
 
 	//INSERT RECORDS
 	$schemer->insert("users", "first_name, last_name, email, password, memberships", "'$admin_first', '$admin_last', '$admin_email', '$admin_pass', '1'");
-	$schemer->insert("uris", "path, template", "'uris', 'Starbug'");
+	$schemer->insert("uris", "path, template", "'uris', 'directory'");
 	$schemer->insert("uris", "path, template, visible", "'uris/new', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'uris/get', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'uris/edit', 'Ajax', '0'");
-	$schemer->insert("uris", "path, template", "'models', 'Starbug'");
+	$schemer->insert("uris", "path, template", "'models', 'directory'");
 	$schemer->insert("uris", "path, template, visible", "'models/new', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'models/get', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'models/edit', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'models/remove', 'Ajax', '0'");
-	$schemer->insert("uris", "path, template", "'users', 'Starbug'");
+	$schemer->insert("uris", "path, template", "'users', 'directory'");
 	$schemer->insert("uris", "path, template, visible", "'users/new', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'users/get', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'users/edit', 'Ajax', '0'");
@@ -116,6 +115,6 @@
 	
 	//SET PERMISSIONS
 	exec("chmod a+x script/generate");
-	exec("chmod u+s script/generate");
+	exec("chmod a+s script/generate");
 	exec("chmod -R a+w core/db/schema");
 ?>

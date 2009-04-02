@@ -1,5 +1,5 @@
 <?php $id = next($this->uri); $_POST['uris'] = $this->get("uris")->find("*", "id='$id'")->fields(); ?>
-<td colspan="5">
+<td colspan="6">
 	<?php $formid = "edit_uri_form"; $action = "create"; include("core/app/nouns/uris/uris_form.php"); ?>
 </td>
 <td>

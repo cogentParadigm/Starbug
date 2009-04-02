@@ -12,7 +12,7 @@
 				</li>
 				<li><p>Refresh this page.</p></li>
 			</ul>
-			<?php } else if ($_SESSION[P('security')] != Etc::SUPER_ADMIN_SECURITY) { ?>
+			<?php } else if (empty($_SESSION[P('id')])) { ?>
 			<h2>Login</h2>
 			<p>Now go ahead and login!</p>
 			<form id="login" method="post" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>">
@@ -28,7 +28,7 @@
 				</div>
 				<input class="button" type="submit" value="Login" />
 			</form>
-			<?php } else { ?>
+			<?php } else if (($_SESSION[P("memberships")] & 1)==1) { ?>
 			<h2>Getting Started</h2>
 			<p>Here are a few tips to help you get started.</p>
 			<ul class="decimal">

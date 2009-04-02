@@ -6,7 +6,7 @@
 *
 * This file is part of StarbugPHP
 *
-* StarbugPHP - web service development kit
+* StarbugPHP - meta content manager
 * Copyright (C) 2008-2009 Ali Gangji
 *
 * StarbugPHP is free software: you can redistribute it and/or modify
@@ -26,93 +26,95 @@ $help = "Usage: generate TYPE NAME [OPTIONS]\n\n";
 $help .= "TYPE\tWhat to generate\n";
 $help .= "    \t\tcrud - CRUD nouns\n";
 $help .= "    \t\tmodel - Object model\n";
-if ($argc<3) {
-	fwrite(STDOUT, $help);
-	exit(0);
-}
+if ($argc==2) $argv[2] = "";
 include("etc/Etc.php");
 include("etc/Theme.php");
 include("util/Args.php");
 $args = new Args();
-$fields = unserialize(file_get_contents("core/db/schema/$argv[2]"));
 
-//CREATE MODEL XML
-$model = "<model name=\"$argv[2]\" label=\"".ucwords($argv[2])."\">\n";
-$uniques = array(); $defaults = array(); $lengths = array();
-foreach($fields as $name => $field) {
-	if (isset($field['default'])) $defaults[$name] = $field['default'];
-	if (isset($field['unique'])) $uniques[] = "\"$name\"";
-	if (isset($field['length'])) $lengths[$name] = $field['length'];
-	$model .= "\t<field name=\"$name\"";
-	$kids = "";
-	foreach ($field as $k => $v) {
-		if (is_array($v)) foreach ($v as $key => $val) $kids .= "\t\t<$k name=\"$key\">$val</$k>\n";
-		else $model .= " $k=\"$v\"";
+if (!empty($argv[2])) {
+	$fields = unserialize(file_get_contents("core/db/schema/$argv[2]"));
+
+	//CREATE MODEL XML
+	$model = "<model name=\"$argv[2]\" label=\"".ucwords($argv[2])."\">\n";
+	$uniques = array(); $defaults = array(); $lengths = array();
+	foreach($fields as $name => $field) {
+		if (isset($field['default'])) $defaults[$name] = $field['default'];
+		if (isset($field['unique'])) $uniques[] = "\"$name\"";
+		if (isset($field['length'])) $lengths[$name] = $field['length'];
+		$model .= "\t<field name=\"$name\"";
+		$kids = "";
+		foreach ($field as $k => $v) {
+			if (is_array($v)) foreach ($v as $key => $val) $kids .= "\t\t<$k name=\"$key\">$val</$k>\n";
+			else $model .= " $k=\"$v\"";
+		}
+		if ($args->flag('l') == $name) $model .= " label=\"true\""; else $model .= " display=\"true\"";
+		if (empty($kids)) $model .= "/>\n"; else $model .= ">\n$kids\t</field>\n";
 	}
-	if ($args->flag('l') == $name) $model .= " label=\"true\""; else $model .= " display=\"true\"";
-	if (empty($kids)) $model .= "/>\n"; else $model .= ">\n$kids\t</field>\n";
-}
-foreach ($defaults as $name => $val) $d = (empty($d) ? "'".$name."' => '".$val."'" : $d.", '".$name."' => '".$val."'");
-foreach ($lengths as $name => $val) $l = (empty($l) ? "'".$name."' => '".$val."'" : $l.", '".$name."' => '".$val."'");
-$model .= "\t<defaults>$d</defaults>\n";
-$model .= "\t<uniques>".implode(", ", $uniques)."</uniques>\n";
-$model .= "\t<lengths>$l</lengths>\n";
-$model .= "</model>";
+	foreach ($defaults as $name => $val) $d = (empty($d) ? "'".$name."' => '".$val."'" : $d.", '".$name."' => '".$val."'");
+	foreach ($lengths as $name => $val) $l = (empty($l) ? "'".$name."' => '".$val."'" : $l.", '".$name."' => '".$val."'");
+	$model .= "\t<defaults>$d</defaults>\n";
+	$model .= "\t<uniques>".implode(", ", $uniques)."</uniques>\n";
+	$model .= "\t<lengths>$l</lengths>\n";
+	$model .= "</model>";
 
-//CREATE FORM XML
-$form = "<form name=\"$argv[2]\" method=\"post\"";
-$fieldstring = "";
-$mult = false;
-foreach ($fields as $name => $field) {
-	if (!isset($field['id'])) $field['id'] = $name;
-	if (!isset($field['label'])) $field['label'] = str_replace("_", " ", ucwords($name));
-	if (!isset($field['default'])) if (!isset($field['error'][$name])) $field['error'][$name] = "Please enter a ".$field['label'];
-	if (!empty($field['unique'])) if(!isset($field['error'][$name."Exists"])) $field['error'][$name."Exists"] = "That $field[label] already exists";
-	if ($field['type'] == 'file') $mult = true;
-	if ($field['type'] == 'timestamp') continue;
-	if ($field["type"] == "password") $field["input_type"] = "password";
-	if ($field["type"] == "datetime") $field["input_type"] = "date_select";
-	if ($field["type"] == "timestamp") $field["input_type"] = "timestamp";
-	if ($field["type"] == "bool") $field["input_type"] = "checkbox";
-	if (isset($field["input_type"])) {
-		$field["type"] = $field["input_type"];
-		unset($field["input_type"]);
-	} else $field["type"] = "text";
-	$fieldstring .= "\t<field name=\"$name\"";
-	$kids = "";
-	foreach ($field as $k => $v) {
-		if (is_array($v)) foreach ($v as $key => $val) $kids .= "\t\t<$k name=\"$key\">$val</$k>\n";
-		else $fieldstring .= " $k=\"$v\"";
+	//CREATE FORM XML
+	$form = "<form name=\"$argv[2]\" method=\"post\"";
+	$fieldstring = "";
+	$mult = false;
+	foreach ($fields as $name => $field) {
+		if (!isset($field['id'])) $field['id'] = $name;
+		if (!isset($field['label'])) $field['label'] = str_replace("_", " ", ucwords($name));
+		if (!isset($field['default'])) if (!isset($field['error'][$name])) $field['error'][$name] = "Please enter a ".$field['label'];
+		if (!empty($field['unique'])) if(!isset($field['error'][$name."Exists"])) $field['error'][$name."Exists"] = "That $field[label] already exists";
+		if ($field['type'] == 'file') $mult = true;
+		if ($field['type'] == 'timestamp') continue;
+		if ($field["type"] == "password") $field["input_type"] = "password";
+		if ($field["type"] == "datetime") $field["input_type"] = "date_select";
+		if ($field["type"] == "timestamp") $field["input_type"] = "timestamp";
+		if ($field["type"] == "bool") $field["input_type"] = "checkbox";
+		if (isset($field["input_type"])) {
+			$field["type"] = $field["input_type"];
+			unset($field["input_type"]);
+		} else $field["type"] = "text";
+		$fieldstring .= "\t<field name=\"$name\"";
+		$kids = "";
+		foreach ($field as $k => $v) {
+			if (is_array($v)) foreach ($v as $key => $val) $kids .= "\t\t<$k name=\"$key\">$val</$k>\n";
+			else $fieldstring .= " $k=\"$v\"";
+		}
+		if (empty($kids)) $fieldstring .= "/>\n"; else $fieldstring .= ">\n$kids\t</field>\n";
 	}
-	if (empty($kids)) $fieldstring .= "/>\n"; else $fieldstring .= ">\n$kids\t</field>\n";
+	if ($mult) $form .= " multipart=\"true\"";
+	$form .= ">\n$fieldstring\n</form>";
+
+	//WRITE XML
+	$file = fopen("core/db/schema/$argv[2]_model.xml", "wb");
+	fwrite($file, $model);
+	fclose($file);
+	$file = fopen("core/db/schema/$argv[2]_form.xml", "wb");
+	fwrite($file, $form);
+	fclose($file);
 }
-if ($mult) $form .= " multipart=\"true\"";
-$form .= ">\n$fieldstring\n</form>";
 
-//WRITE XML
-$file = fopen("core/db/schema/$argv[2]_model.xml", "wb");
-fwrite($file, $model);
-fclose($file);
-$file = fopen("core/db/schema/$argv[2]_form.xml", "wb");
-fwrite($file, $form);
-fclose($file);
-
-
-//SET VARS FOR THEME
+//SET VARS FOR Theme
 $model_name = $argv[2];
 $template = ($args->flag('t')) ? $args->flag('t') : Etc::DEFAULT_TEMPLATE;
-$dirs = array(); $from_form = array(); $from_model = array(); $paths = array();
+$dirs = array(); $from_form = array(); $from_model = array(); $paths = array(); $from_copy = array();
 
-//INCLUDE THEME GENERATOR FILE
-if ($args->flag('u')) include("themes/".THEME::FOLDER."/$argv[1]/update.php");
-else include("themes/".THEME::FOLDER."/$argv[1]/$argv[1].php");
+//INCLUDE Theme GENERATOR FILE
+if ($args->flag('u')) include("themes/".Theme::FOLDER."/$argv[1]/update.php");
+else include("themes/".Theme::FOLDER."/$argv[1]/$argv[1].php");
 
 //CREATE DIRECTORIES
 foreach ($dirs as $dir) if (!file_exists($dir)) mkdir($dir);
 
 //CREATE FILES
-foreach ($from_model as $stylesheet => $output) exec("saxon -o $output core/db/schema/$argv[2]_model.xml themes/".THEME::FOLDER."/$stylesheet");
-foreach ($from_form as $stylesheet => $output) exec("saxon -o $output core/db/schema/$argv[2]_form.xml themes/".THEME::FOLDER."/$stylesheet");
+foreach ($from_model as $stylesheet => $output) exec("saxon -o $output core/db/schema/$argv[2]_model.xml themes/".Theme::FOLDER."/$stylesheet");
+foreach ($from_form as $stylesheet => $output) exec("saxon -o $output core/db/schema/$argv[2]_form.xml themes/".Theme::FOLDER."/$stylesheet");
+print_r($from_copy);
+//COPY FILES
+foreach ($from_copy as $origin => $dest) exec("cp themes/".Theme::FOLDER."/$origin $dest");
 
 exit(0);
 ?>

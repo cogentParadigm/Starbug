@@ -26,6 +26,7 @@ class Users extends Table {
 		//if ($new_user['password'] != $new_user['password_confirm']) $errors['passwordConfirmError'] = true;
 		//if ($new_user['email'] != $new_user['email_confirm']) $errors['emailConfirmError'] = true;
 		if (!empty($new_user['password'])) $new_user['password'] = md5($new_user['password']);
+		else if (!empty($new_user['id'])) unset($new_user['password']);
 		return $this->store($new_user);
 	}
 

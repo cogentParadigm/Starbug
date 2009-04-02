@@ -69,14 +69,14 @@ $shown = $users->recordCount;
 </ul>
 <?php } ?>
 <table id="users_table">
-<tr><th>First Name</th><th>Last Name</th><th>Password</th><th>Email</th><th>Privilages</th><th>Options</th></tr>
+<tr><th>First Name</th><th>Last Name</th><th>Password</th><th>Email</th><th>Memberships</th><th>Options</th></tr>
 <?php foreach($list as $user) { ?>
 	<tr id="user_<?php echo $user['id']; ?>">
 		<td><?php echo $user['first_name']; ?></td>
 		<td><?php echo $user['last_name']; ?></td>
 		<td>*****</td>
 		<td><?php echo $user['email']; ?></td>
-		<td><?php echo $user['security']; ?></td>
+		<td><?php echo $user['memberships']; ?></td>
 		<td class="options"><a class="button" href="#" onclick="edit_user(<?php echo $user['id']; ?>);return false;">Edit</a>
 			<form id="del_form" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
 				<input id="action[Users]" name="action[Users]" type="hidden" value="delete"/>

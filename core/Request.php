@@ -71,6 +71,20 @@ class Request {
 			if (empty($this->payload)) $this->path = (($this->path == Etc::DEFAULT_PATH)?Etc::DEFAULT_PATH:"missing");
 		}
 		$this->uri = split("/", $this->path);
+		if ($this->path == "missing") header("HTTP/1.1 404 Not Found");
+		else if ($this->payload['collective'] == 1) $this->check_path("core/app/nouns/", current($this->uri));
+		else $this->check_path("app/nouns/", current($this->uri));
+		reset($this->uri);
+	}
+	
+	private function check_path($base, $current) {
+		if (file_exists("$base$current.php")) return;
+		else if (file_exists("$base$current")) $this->check_path("$base$current/", next($this->uri));
+		else {
+			header("HTTP/1.1 404 Not Found");
+			$this->path="missing";
+			$this->uri = array("missing");
+		}
 	}
 
 	protected function post_act($key, $value) {
@@ -78,7 +92,7 @@ class Request {
 			$permits = isset($_POST[$key]['id']) ? $object->get_object_permits("*", $value, "obj.id='".$_POST[$key]['id']."'") : $object->get_table_permits($value);
 			if ($permits->RecordCount() > 0) $errors = $object->$value();
 			else $errors = array("forbidden" => true);
-			$this->errors = array_merge_recursive($this->errors, array($key => $errors)); 
+			$this->errors = array_merge_recursive($this->errors, array($key => $errors));
 		}
 	}
 

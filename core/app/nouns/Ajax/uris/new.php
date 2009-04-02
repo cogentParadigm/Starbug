@@ -1,5 +1,5 @@
 <tr id="new_uri">
-	<td colspan="5">
+	<td colspan="6">
 		<?php $formid = "new_uri_form"; $action = "create"; include("core/app/nouns/uris/uris_form.php"); ?>
 	</td>
 	<td>

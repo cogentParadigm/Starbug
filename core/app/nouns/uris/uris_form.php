@@ -4,12 +4,12 @@
 	<div class="field">
 		<label for="name">Path</label>
 		<?php if (!empty($this->errors['uris']['pathError'])) { ?><span class="error">Please enter a path name.</span><?php } ?>
-		<input id="name" name="uris[path]" type="text"<?php if (!empty($_POST['uris']['path'])) { ?> value="<?php echo $_POST['uris']['path']; ?>"<?php } ?> />
+		<input id="name" name="uris[path]" class="text" type="text"<?php if (!empty($_POST['uris']['path'])) { ?> value="<?php echo $_POST['uris']['path']; ?>"<?php } ?> />
 	</div>
 	<div class="field">
 		<label for="template">Template</label>
 		<?php if (!empty($this->errors['uris']['templateError'])) { ?><span class="error">Please enter a template.</span><?php } ?>
-		<input id="template" name="uris[template]" type="text"<?php if (!empty($_POST['uris']['template'])) { ?> value="<?php echo $_POST['uris']['template']; ?>"<?php } ?> />
+		<input id="template" name="uris[template]" class="text" type="text"<?php if (!empty($_POST['uris']['template'])) { ?> value="<?php echo $_POST['uris']['template']; ?>"<?php } ?> />
 	</div>
 	<div class="field">
 		<label for="visibility">Visibility</label>
@@ -36,15 +36,14 @@
 		</select>
 	</div>
 	<div class="field">
-		<label for="security">Security</label>
-		<?php dfault($_POST['uris']['security'], "2"); ?>
-		<select id="security" name="uris[security]">
-			<option value="0"<?php if ($_POST['uris']['security'] == "0") { ?> selected="true"<?php } ?>>0</option>
-			<option value="1"<?php if ($_POST['uris']['security'] == "1") { ?> selected="true"<?php } ?>>1</option>
-			<option value="2"<?php if ($_POST['uris']['security'] == "2") { ?> selected="true"<?php } ?>>2</option>
-			<option value="3"<?php if ($_POST['uris']['security'] == "3") { ?> selected="true"<?php } ?>>3</option>
-			<option value="4"<?php if ($_POST['uris']['security'] == "4") { ?> selected="true"<?php } ?>>4</option>
+		<label for="collective">Collective</label>
+		<?php dfault($_POST['uris']['collective'], "0"); ?>
+		<select id="collective" name="uris[collective]">
+			<option value="0"<?php if ($_POST['uris']['collective'] == "0") { ?> selected="true"<?php } ?>>everybody</option>
+		<?php foreach ($this->groups as $name => $val) { ?>
+			<option value="<?php echo $val; ?>"<?php if ($_POST['uris']['collective'] == $val) { ?> selected="true"<?php } ?>><?php echo $name; ?></option>
+		<?php } ?>
 		</select>
 	</div>
-	<div><input class="button" type="submit" value="Go" /></div>
+	<div><input class="button" type="submit" value="Save" /></div>
 </form>

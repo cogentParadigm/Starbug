@@ -18,27 +18,20 @@ body{background:url('../images/sbfade.png') repeat-x #efede8;font-family: Tahoma
 h1{position:absolute;top:90px;left:310px;font-size:34px}
 #subhead{position:absolute;top:130px;left:315px;font-weight:bold;font-size:12px}
 h2{color:#262;font-size:20px;margin:15px 0}
-.lidls h3{color:#fff;background:#494;font-size:14px;height:28px}
-#models .inactive h3{background:#C22}
-.lidls h3 span{display:block;float:left;padding:5px 10px}
 /* lists */
 #footer li{float:left;padding:0px 5px}
-#dashlist li{float:left;padding:0 0 0 10px}
+#dashlist li{float:left;padding:0}
 #dashlist li.first{padding-left:0}
 #dash_form .buttons{list-style:none;position:absolute;bottom:0;right:0}
 #dash_form .buttons li{float:left;padding:0}
-.lidls{list-style:none;margin-left:0}
-.lidls li{padding:0;margin-bottom:10px;background:#fff}
 ul{margin-left:20px}
 ul li{padding:5px}
 ul.decimal{list-style-type:decimal}
-.lidls dl dl{padding-left:15px;clear:both;border-bottom:1px solid #555;border-top:1px solid #555}
-.lidls dt, .lidls dd{padding:2px}
-.lidls dt{font-weight:bold;float:left;width:100px;padding-left:5px;color:#555;clear:left}
-.lidls dt.sub{float:none;display:block;width:880px}
-.lidls dd{margin-left:140px}
-.lidls dd .options{float:right}
 #loading{width:31px;height:26px;background:url(../images/loader.gif) 0px 1px no-repeat;position:absolute;left:438px;top:0}
+.thumbnails{list-style-type:none;margin:0}
+.thumbnails li{float:left;padding:0}
+.thumbnails .label{display:block;text-align:center}
+.file_list{list-style-type:none;font-style:italic}
 /* inline */
 p{margin-bottom:10px}
 em{color:#222}
@@ -47,7 +40,10 @@ em{color:#222}
 .note{font-size:10px}
 #dash_form .box{width:900px;margin:0 auto;position:relative;height:75px;padding-bottom:16px;z-index:200}
 /* forms */
+input.text{padding:2px;border:1px solid #555}
+select{padding:2px}
 label{display:block;font-size:11px;font-weight:bold}
+.uris_form .text{width:150px}
 .field .error{display:block;font-size:9px;font-weight:bold;color:#C00}
 .field{margin-bottom:10px;padding:15px;background:#fff;border-bottom:1px solid #555;border-top:1px solid #555}
 .button{padding:3px 5px;border:none;color:#fff;background:#494;font-size:11px;font-weight:bold;text-decoration:none}
@@ -55,11 +51,6 @@ label{display:block;font-size:11px;font-weight:bold}
 #dash_form{width:100%;position:absolute;bottom:0px}
 #dash_form form{width:900px;background:#fff;height:65px;border-bottom:1px solid #555;border-top:1px solid #555}
 #dash_form .field{border:none}
-dd form .field{padding:2px 5px;border-top:none}
-#new_key{height:48px}
-.lidls h3 form{float:right;visibility:hidden}
-.lidls h3 #new_model_form {visibility:visible;}
-.lidls h3 form .button{padding:5px}
 .permits_form .field {float:left;}
 /* links */
 h1 a{color:#494;text-decoration:none}
@@ -67,15 +58,45 @@ a.button{height:16px}
 .button:hover{background:#5a5;}
 #footer a{color:#494;text-decoration:none}
 #footer a:hover{text-decoration:underline}
-#dash a{color:#fff;font-size:12px;font-weight:bold;display:block;float:left;text-decoration:none;padding:5px;}
+#dash a{color:#fff;font-size:12px;font-weight:bold;display:block;float:left;text-decoration:none;padding:5px 10px;border-right:2px solid}
 #dash a:hover{background:#5a5}
 #dash a.add{font-size:17px;padding:2px 3px}
 #dash .button{height:14px}
+.thumbnails a{display:block;float:left;padding:2px 10px;text-decoration:none;color:#494;font-weight:bold}
+.thumbnails a:hover{background:#494;color:#FFF}
+/* tables */
+th, td{padding:5px 10px}
+table a.button{display:block;float:left}
+table .options form{float:left}
+table form .field, #dash form .field, dd form .field, .permits_form .field{float:left;height:35px}
+table .uris_form .button, table .users_form .button, #dash_form form .button, .lidls dd form .button{display:none}
+table .users_form .text{width:125px}
+table .users_form .field{padding:15px 10px}
+/* models */
+.lidls{list-style:none;margin-left:0}
+.lidls li{padding:0;margin-bottom:10px;background:#fff}
+.lidls dl dl{padding-left:15px;clear:both;border-bottom:1px solid #555;border-top:1px solid #555}
+.lidls dt, .lidls dd{padding:2px}
+.lidls dt{font-weight:bold;float:left;width:100px;padding-left:5px;color:#555;clear:left}
+.lidls dt.sub{float:none;display:block;width:880px}
+.lidls dd{margin-left:140px}
+.lidls dd .options{float:right}
+/*  models */ /* headings */
+.lidls h3{color:#fff;background:#494;font-size:14px;height:28px}
+#models .inactive h3{background:#C22}
+.lidls h3 span{display:block;float:left;padding:5px 10px}
 .lidls h3 a{color:#fff;text-decoration:none;display:block;float:right;padding:5px;visibility:hidden}
 .lidls h3:hover a, .lidls h3:hover form{visibility:visible}
 .lidls h3 a:hover{background:#5a5}
 .lidls h3 a.title{float:none;padding:5px 10px;visibility:visible}
 #models .inactive h3 a:hover{background:#D00;}
+/*  models */ /* forms */
+dd form .field{padding:2px 5px;border-top:none}
+#new_key{height:48px}
+.lidls h3 form{float:right;visibility:hidden}
+.lidls h3 #new_model_form {visibility:visible;}
+.lidls h3 form .button{padding:5px}
+/*  models */ /* links */
 dd .options a{padding:0px 5px;color:#494;text-decoration:none}
 dd .options a:hover, dt.sub a:hover{text-decoration:underline;color:#5a5}
 dt.sub a{color:#494;text-decoration:none}
@@ -83,11 +104,3 @@ dt.sub a.right{margin-left:10px}
 dt.sub.inactive a, dd.inactive dl a{color:#C22}
 dt.sub.inactive a:hover, dd.inactive dl a:hover{color:#D00}
 .lidls dd a.button{margin-top:20px;float:left}
-/* tables */
-th, td{padding:5px 10px}
-table a.button{display:block;float:left}
-table .options form{float:left}
-table form .field, #dash form .field, dd form .field, .permits_form .field{float:left;height:35px}
-table .uris_form .button, table .users_form .button, #dash_form form .button, .lidls dd form .button{display:none}
-table .users_form input{width:125px}
-/* models */
