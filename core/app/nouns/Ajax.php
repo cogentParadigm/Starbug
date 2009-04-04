@@ -1,1 +1,6 @@
-<?php $page=current($this->uri); if (file_exists('core/app/nouns/Ajax/'.$page.'.php')) include('core/app/nouns/Ajax/'.$page.'.php'); ?>
+<?php
+$directory=current($this->uri);
+$page=next($this->uri);
+$page = "core/app/nouns/$directory/$page.php";
+include($page);
+?>
