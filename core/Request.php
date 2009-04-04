@@ -24,11 +24,12 @@
 include("core/db/Table.php");
 class Request {
 
-	var $db;
-	var $payload;
-	var $errors;
-	var $path;
-	var $uri;
+	var $db;							// adodb_lite instance
+	var $payload;					// row in uris table - assoc
+	var $errors;					// errors - assoc
+	var $path;						// request path - string
+	var $uri;							// request path - array
+	var $file;						// result file path
 	var $groups;
 	var $statuses;
 
@@ -72,18 +73,17 @@ class Request {
 		}
 		$this->uri = split("/", $this->path);
 		if ($this->path == "missing") header("HTTP/1.1 404 Not Found");
-		else if ($this->payload['collective'] == 1) $this->check_path("core/app/nouns/", current($this->uri));
-		else $this->check_path("app/nouns/", current($this->uri));
-		reset($this->uri);
+		$this->file = ($this->payload['collective'] == 1) ? $this->check_path("core/app/nouns/", "", current($this->uri)) : $this->check_path("app/nouns/", "", current($this->uri));
 	}
 	
-	private function check_path($base, $current) {
-		if (file_exists("$base$current.php")) return;
-		else if (file_exists("$base$current")) $this->check_path("$base$current/", next($this->uri));
+	private function check_path($prefix, $base, $current) {
+		if (file_exists("$prefix$base$current.php")) return $prefix.$base.$current.".php";
+		else if (file_exists("$prefix$base$current")) return $this->check_path($prefix, "$base$current/", next($this->uri));
 		else {
 			header("HTTP/1.1 404 Not Found");
 			$this->path="missing";
 			$this->uri = array("missing");
+			return $prefix."missing.php";
 		}
 	}
 
