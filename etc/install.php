@@ -90,24 +90,24 @@
 
 	//INSERT RECORDS
 	$schemer->insert("users", "first_name, last_name, email, password, memberships", "'$admin_first', '$admin_last', '$admin_email', '$admin_pass', '1'");
-	$schemer->insert("uris", "path, template", "'uris', 'default'");
+	$schemer->insert("uris", "path, template", "'uris', 'Starbug'");
 	$schemer->insert("uris", "path, template, visible", "'uris/new', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'uris/get', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'uris/edit', 'Ajax', '0'");
-	$schemer->insert("uris", "path, template", "'models', 'default'");
+	$schemer->insert("uris", "path, template", "'models', 'Starbug'");
 	$schemer->insert("uris", "path, template, visible", "'models/new', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'models/get', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'models/edit', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'models/remove', 'Ajax', '0'");
-	$schemer->insert("uris", "path, template", "'users', 'default'");
+	$schemer->insert("uris", "path, template", "'users', 'Starbug'");
 	$schemer->insert("uris", "path, template, visible", "'users/new', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'users/get', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'users/edit', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'generate', 'generate', '0'");
-	$schemer->insert("uris", "path, template", "'permits', 'default'");
+	$schemer->insert("uris", "path, template", "'permits', 'Starbug'");
 	$schemer->insert("uris", "path, template, visible", "'permits/who', 'Ajax', '0'");
 	$schemer->insert("uris", "path, template, visible", "'permits/relid', 'Ajax', '0'");
-	$schemer->insert("uris", "path, template, visible, collective", "'login', 'default', '0', '0'");
+	$schemer->insert("uris", "path, template, visible, collective", "'login', 'Starbug', '0', '0'");
 	//PRIVILIGES
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'login', '".P('users')."'");
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'logout', '".P('users')."'");
