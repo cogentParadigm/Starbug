@@ -14,11 +14,3 @@
 		<div id="shell">
 			<h1><a href="./"><span>Starbug</span></a></h1>
 			<span id="subhead">PHP meta content manager</span>
-			<?php $page = current($this->uri); if (file_exists("app/nouns/".$page.".php")) include("app/nouns/".$page.".php"); ?>
-			<ul id="footer">
-				<li><a href="http://www.starbugphp.com">StarbugPHP WSDK</a> &copy; 2008-2009 <a href="http://www.aligangji.com">Ali Gangji</a></li>
-				<li><a href="http://www.starbugphp.com/freedoms">freedoms</a></li>
-			</ul>
-		</div>
-	</body>
-</html>
