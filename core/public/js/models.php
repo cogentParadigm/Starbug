@@ -1,7 +1,7 @@
 <script type="text/javascript">
 function new_key(loc) {
 	dojo.xhrGet({
-		url: '<?php echo uri("models/new/key"); ?>/'+loc,
+		url: '<?php echo uri("ajax/models/new/key"); ?>/'+loc,
 		load: function (data) {
 			dojo.byId(loc).innerHTML += data;
 		}
@@ -9,7 +9,7 @@ function new_key(loc) {
 }
 function save_new_key(loc) {
 	dojo.xhrPost({
-		url: '<?php echo uri("models/get/key"); ?>',
+		url: '<?php echo uri("ajax/models/get/key"); ?>',
 		form: 'new_key_form',
 		load: function(data) {
 			cancel_new_key();
@@ -23,7 +23,7 @@ function cancel_new_key() {
 }
 function edit_key(loc) {
 	dojo.xhrGet({
-		url: '<?php echo uri("models/edit/key/"); ?>'+loc,
+		url: '<?php echo uri("ajax/models/edit/key/"); ?>'+loc,
 		load: function(data) {
 			dojo.byId(loc).innerHTML = data;
 		}
@@ -31,7 +31,7 @@ function edit_key(loc) {
 }
 function save_edit_key(loc) {
 	dojo.xhrPost({
-		url: '<?php echo uri("models/get/key/"); ?>'+loc,
+		url: '<?php echo uri("ajax/models/get/key/"); ?>'+loc,
 		form: 'edit_key_form',
 		load: function(data) {
 			dojo.byId(loc).innerHTML = data;
@@ -40,7 +40,7 @@ function save_edit_key(loc) {
 }
 function cancel_edit_key(loc) {
 	dojo.xhrGet({
-		url: '<?php echo uri("models/get/key/"); ?>'+loc,
+		url: '<?php echo uri("ajax/models/get/key/"); ?>'+loc,
 		load: function(data) {
 			dojo.byId(loc).innerHTML = data;
 		}
@@ -49,7 +49,7 @@ function cancel_edit_key(loc) {
 function delete_key(loc) {
 	if (confirm('Are you sure you want to delete?')) {
 		dojo.xhrGet({
-			url: '<?php echo uri("models/remove/"); ?>'+loc,
+			url: '<?php echo uri("ajax/models/remove/"); ?>'+loc,
 			load: function(data) {
 				newrow = dojo.byId(loc);
 				newrow.parentNode.removeChild(newrow);
@@ -61,7 +61,7 @@ function delete_key(loc) {
 }
 function new_field(loc) {
 	dojo.xhrGet({
-		url: '<?php echo uri("models/new/field/"); ?>'+loc,
+		url: '<?php echo uri("ajax/models/new/field/"); ?>'+loc,
 		load: function (data) {
 			dojo.byId(loc+'-fields').innerHTML += data;
 		}
@@ -69,7 +69,7 @@ function new_field(loc) {
 }
 function save_new_field(loc) {
 	dojo.xhrPost({
-		url: '<?php echo uri("models/get/field"); ?>',
+		url: '<?php echo uri("ajax/models/get/field"); ?>',
 		form: 'new_field_form',
 		load: function(data) {
 			cancel_new_field();
@@ -83,7 +83,7 @@ function cancel_new_field() {
 }
 function edit_field(loc) {
 	dojo.xhrGet({
-		url: '<?php echo uri("models/edit/field/"); ?>'+loc,
+		url: '<?php echo uri("ajax/models/edit/field/"); ?>'+loc,
 		load: function(data) {
 			dojo.byId(loc+'-key').innerHTML = data;
 		}
@@ -91,7 +91,7 @@ function edit_field(loc) {
 }
 function save_edit_field(loc) {
 	dojo.xhrPost({
-		url: '<?php echo uri("models/get/field/"); ?>'+loc,
+		url: '<?php echo uri("ajax/models/get/field/"); ?>'+loc,
 		form: 'edit_field_form',
 		load: function(data) {
 			dojo.byId(loc+'-key').innerHTML = data;
@@ -100,7 +100,7 @@ function save_edit_field(loc) {
 }
 function cancel_edit_field(loc) {
 	dojo.xhrGet({
-		url: '<?php echo uri("models/get/field/"); ?>'+loc,
+		url: '<?php echo uri("ajax/models/get/field/"); ?>'+loc,
 		load: function(data) {
 			dojo.byId(loc+'-key').innerHTML = data;
 		}
@@ -108,7 +108,7 @@ function cancel_edit_field(loc) {
 }
 function new_model() {
 	dojo.xhrGet({
-		url: '<?php echo uri("models/new/model"); ?>',
+		url: '<?php echo uri("ajax/models/new/model"); ?>',
 		load: function (data) {
 			dojo.byId('models').innerHTML += data;
 		}
@@ -116,7 +116,7 @@ function new_model() {
 }
 function save_new_model() {
 	dojo.xhrPost({
-		url: '<?php echo uri("models/get/model"); ?>',
+		url: '<?php echo uri("ajax/models/get/model"); ?>',
 		form: 'new_model_form',
 		load: function(data) {
 			cancel_new_model();
@@ -131,7 +131,7 @@ function cancel_new_model() {
 function delete_model(loc) {
 	if (confirm('Are you sure you want to delete?')) {
 		dojo.xhrGet({
-			url: '<?php echo uri("models/remove/"); ?>'+loc,
+			url: '<?php echo uri("ajax/models/remove/"); ?>'+loc,
 			load: function(data) {
 				newrow = dojo.byId(loc);
 				newrow.parentNode.removeChild(newrow);
@@ -144,7 +144,7 @@ function activate_model(loc, backup) {
 		dojo.byId("restore_backup").setAttribute('value', 0);
 	}
 	dojo.xhrPost({
-		url: '<?php echo uri("models/get/model/"); ?>'+loc,
+		url: '<?php echo uri("ajax/models/get/model/"); ?>'+loc,
 		form: 'activate_'+loc,
 		load: function(data) {
 			var loc_node = dojo.byId(loc);
@@ -155,7 +155,7 @@ function activate_model(loc, backup) {
 }
 function activate_field(prefix, loc) {
 	dojo.xhrPost({
-		url: '<?php echo uri("models/get/model/"); ?>'+prefix+'-'+loc,
+		url: '<?php echo uri("ajax/models/get/model/"); ?>'+prefix+'-'+loc,
 		form: 'activate_'+prefix+'-'+loc,
 		load: function(data) {
 			var loc_node = dojo.byId(prefix);
@@ -165,7 +165,7 @@ function activate_field(prefix, loc) {
 }
 function deactivate_model(loc) {
 	dojo.xhrPost({
-		url: '<?php echo uri("models/get/model/"); ?>'+loc,
+		url: '<?php echo uri("ajax/models/get/model/"); ?>'+loc,
 		form: 'deactivate_'+loc,
 		load: function(data) {
 			var loc_node = dojo.byId(loc);
