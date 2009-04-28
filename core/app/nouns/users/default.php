@@ -57,6 +57,7 @@ $shown = $users->recordCount;
 	}
 </script>
 <h2>Users</h2>
+<?php include("core/app/nouns/settings/nav.php"); ?>
 <?php if ($total > 25) { ?>
 <ul class="pages">
 	<?php if ($page > 0) { ?>

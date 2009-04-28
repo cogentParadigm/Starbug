@@ -26,7 +26,7 @@
 		$models->activate($name);
 		$name = reset(split("-", $name));
 	}	
-	$has = $this->has($name);
+	$has = $models->is_active($name);
 	$fields = $models->get($name);
 ?>
 <h3>

@@ -5,10 +5,9 @@
 
 <xsl:template match="/model">
 <h2>Create <xsl:value-of select="@name"/></h2>
-<p>Create a new <xsl:value-of select="@name"/></p>
 <xsl:text disable-output-escaping="yes">&lt;?php $action = "create"; $submit_to = uri("</xsl:text>
 <xsl:value-of select="@name"/>
-<xsl:text disable-output-escaping="yes">/show"); include("app/nouns/</xsl:text>
+<xsl:text disable-output-escaping="yes">"); include("app/nouns/</xsl:text>
 <xsl:value-of select="@name"/>
 <xsl:text disable-output-escaping="yes">/form.php"); ?&gt;</xsl:text>
 </xsl:template>

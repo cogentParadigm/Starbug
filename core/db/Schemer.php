@@ -46,6 +46,11 @@ class Schemer {
 		fwrite($file, serialize($fields));
 		fclose($file);
 		$this->write_model($name, $backup);
+		$info = unserialize(file_get_contents("core/db/schema/.info/$name"));
+		$info['active'] = true;
+		$file = fopen("core/db/schema/.info/$name", "wb");
+		fwrite($file, serialize($info));
+		fclose($file);
 	}
 	
 	function add($table, $name) {
@@ -76,6 +81,11 @@ class Schemer {
 		$file = fopen("core/db/schema/$name", "wb");
 		fwrite($file, serialize($fields));
 		fclose($file);
+		$info = unserialize(file_get_contents("core/db/schema/.info/$name"));
+		$info['active'] = false;
+		$file = fopen("core/db/schema/.info/$name", "wb");
+		fwrite($file, serialize($info));
+		fclose($file);
 	}
 
 	function insert($table, $keys, $values) {$this->db->Execute("INSERT INTO ".P($table)." (".$keys.") VALUES (".$values.")");}
@@ -95,7 +105,8 @@ class Schemer {
 	function write_model($name, $backup) {
 		$loc = "app/models/".ucwords($name).".php";
 		if ($backup) rename("app/models/.".ucwords($name), $loc);
-		else if (!file_exists($loc)) exec("script/generate model ".$name);
+		else if (!file_exists($loc)) exec("./script/generate model ".$name);
+		chmod($loc, 0666);
 	}
 
 	function drop_model($name) {

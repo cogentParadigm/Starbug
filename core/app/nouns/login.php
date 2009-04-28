@@ -1,10 +1,10 @@
 <?php if (!empty($_SESSION[P('id')])) { ?>
-		<form id="logout_form" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
+		<form id="logout_form" action="<?php echo ($submit_to) ? $submit_to : htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
 		<input id="action['users']" name="action[users]" type="hidden" value="logout" />
 		<input class="button" type="submit" value="Log Out" />
 	</form>
 <?php } else { ?>
-	<form id="login_form" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
+	<form id="login_form" action="<?php echo ($submit_to) ? $submit_to : htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
 		<input id="action[users]" name="action[users]" type="hidden" value="login"/>
 		<div class="field">
 			<label for="email">Email</label>

@@ -5,7 +5,7 @@
 <xsl:template match="/form">&lt;form&lt;?php if (!empty($formid)) echo " id=\"$formid\""; ?&gt; class="<xsl:value-of select="@name"/>_form" action="&lt;?php echo (empty($submit_to) ? $_SERVER['REQUEST_URI'] : $submit_to); ?&gt;" method="<xsl:value-of select="@method"/>"<xsl:if test="@multipart='true'"> enctype="multipart/form-data"</xsl:if>&gt;
 	&lt;input class="action" name="action[<xsl:value-of select="@name"/>]" type="hidden" value="&lt;?php echo $action; ?&gt;" /&gt;
 	&lt;?php if (!empty($_POST['<xsl:value-of select="@name"/>']['id'])) { ?&gt;&lt;input id="id" name="<xsl:value-of select="@name"/>[id]" type="hidden" value="&lt;?php echo $_POST['<xsl:value-of select="@name"/>']['id']; ?&gt;" /&gt;&lt;?php } ?&gt;
-<xsl:apply-templates select="/form/field"/>	&lt;div&gt;&lt;input class="button" type="submit" value="Go" /&gt;&lt;/div&gt;
+<xsl:apply-templates select="/form/field"/>	&lt;div&gt;&lt;input class="button" type="submit" value="Save" /&gt;&lt;a class="button" href="&lt;?php echo uri("<xsl:value-of select="@name"/>"); ?&gt;">Cancel&lt;/a&gt;&lt;/div&gt;
 &lt;/form&gt;
 </xsl:template>
 
@@ -16,11 +16,11 @@
 <xsl:template name="input">
 <xsl:choose>
 	<xsl:when test="@type='text' or @type='password' or @type='hidden' or @type='submit' or @type='file' or @type='image'">
-		&lt;input id="<xsl:value-of select="@id"/>" name="<xsl:value-of select="/form/@name"/>[<xsl:value-of select="@name"/>]" type="<xsl:value-of select="@type"/>" &lt;?php if (!empty($_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>'])) { ?&gt; value="&lt;?php echo $_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="/form/@name"/>']; ?&gt;"&lt;?php } <xsl:choose>
+		&lt;input class="text" id="<xsl:value-of select="@id"/>" name="<xsl:value-of select="/form/@name"/>[<xsl:value-of select="@name"/>]" type="<xsl:value-of select="@type"/>" &lt;?php if (!empty($_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>'])) { ?&gt; value="&lt;?php echo $_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>']; ?&gt;"&lt;?php } <xsl:choose>
 			<xsl:when test="@default">else { ?&gt; value="<xsl:value-of select="@default"/>"&lt;?php } ?&gt;<xsl:if test="@onfocus"> onfocus="if(this.value=="<xsl:value-of select="@default"/>"){this.value="";}else{this.select();this.focus();}"</xsl:if></xsl:when>
 			<xsl:otherwise>?&gt;</xsl:otherwise></xsl:choose>/&gt;</xsl:when>
 	<xsl:when test="@type='checkbox'">
-		&lt;input id="<xsl:value-of select="@id"/>" name="<xsl:value-of select="/form/@name"/>[<xsl:value-of select="@name"/>]" type="<xsl:value-of select="@type"/>"&lt;?php if (isset($_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>'])) { ?&gt; value="&lt;?php echo $_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>']; ?>"&lt;?php } <xsl:choose>
+		&lt;input class="checkbox" id="<xsl:value-of select="@id"/>" name="<xsl:value-of select="/form/@name"/>[<xsl:value-of select="@name"/>]" type="<xsl:value-of select="@type"/>"&lt;?php if (isset($_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>'])) { ?&gt; value="&lt;?php echo $_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>']; ?>"&lt;?php } <xsl:choose>
 			<xsl:when test="@default">else { ?&gt; value="<xsl:value-of select="@default"/>"&lt;?php } ?&gt;</xsl:when>
 			<xsl:otherwise>?&gt;</xsl:otherwise></xsl:choose>/&gt;</xsl:when>
 	<xsl:when test="@type='select'">

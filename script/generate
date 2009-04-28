@@ -28,6 +28,7 @@ $help .= "    \t\tcrud - CRUD nouns\n";
 $help .= "    \t\tmodel - Object model\n";
 if ($argc==2) $argv[2] = "";
 include("etc/Etc.php");
+include("etc/init.php");
 include("etc/Theme.php");
 include("util/Args.php");
 $args = new Args();
@@ -89,17 +90,20 @@ if (!empty($argv[2])) {
 	$form .= ">\n$fieldstring\n</form>";
 
 	//WRITE XML
-	$file = fopen("core/db/schema/$argv[2]_model.xml", "wb");
+	$file = fopen("core/db/schema/.temp/$argv[2]_model.xml", "wb");
 	fwrite($file, $model);
 	fclose($file);
-	$file = fopen("core/db/schema/$argv[2]_form.xml", "wb");
+	chmod("core/db/schema/.temp/$argv[2]_model.xml", 0777);
+	$file = fopen("core/db/schema/.temp/$argv[2]_form.xml", "wb");
 	fwrite($file, $form);
 	fclose($file);
+	chmod("core/db/schema/.temp/$argv[2]_form.xml", 0777);
 }
 
 //SET VARS FOR Theme
 $model_name = $argv[2];
 $template = ($args->flag('t')) ? $args->flag('t') : Etc::DEFAULT_TEMPLATE;
+$collective = ($args->flag('c')) ? $args->flag('c') : "1";
 $dirs = array(); $from_form = array(); $from_model = array(); $paths = array(); $from_copy = array();
 
 //INCLUDE Theme GENERATOR FILE
@@ -107,14 +111,14 @@ if ($args->flag('u')) include("themes/".Theme::FOLDER."/$argv[1]/update.php");
 else include("themes/".Theme::FOLDER."/$argv[1]/$argv[1].php");
 
 //CREATE DIRECTORIES
-foreach ($dirs as $dir) if (!file_exists($dir)) mkdir($dir);
-
+foreach ($dirs as $dir) if (!file_exists($dir)) exec("./script/cgenerate dir $dir");
 //CREATE FILES
-foreach ($from_model as $stylesheet => $output) exec("saxon -o $output core/db/schema/$argv[2]_model.xml themes/".Theme::FOLDER."/$stylesheet");
-foreach ($from_form as $stylesheet => $output) exec("saxon -o $output core/db/schema/$argv[2]_form.xml themes/".Theme::FOLDER."/$stylesheet");
-print_r($from_copy);
+foreach ($from_model as $stylesheet => $output) exec("./script/cgenerate sax $output core/db/schema/.temp/$argv[2]_model.xml themes/".Theme::FOLDER."/$stylesheet");
+foreach ($from_form as $stylesheet => $output) exec("./script/cgenerate sax $output core/db/schema/.temp/$argv[2]_form.xml themes/".Theme::FOLDER."/$stylesheet");
 //COPY FILES
-foreach ($from_copy as $origin => $dest) exec("cp themes/".Theme::FOLDER."/$origin $dest");
+foreach ($from_copy as $origin => $dest) exec("./script/cgenerate copy $dest themes/".Theme::FOLDER."/$origin");
+//ADD URI
+foreach ($paths as $keys => $values) $db->Execute("INSERT INTO ".P("uris")." ($keys) VALUES ($values)");
 
 exit(0);
 ?>

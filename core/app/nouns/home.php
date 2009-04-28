@@ -29,23 +29,6 @@
 				<input class="button" type="submit" value="Login" />
 			</form>
 			<?php } else if (($_SESSION[P("memberships")] & 1)==1) { ?>
-			<h2>Getting Started</h2>
-			<p>Here are a few tips to help you get started.</p>
-			<ul class="decimal">
-				<li>To create a home page, add a new uri via the dashboard below using '<?php echo Etc::DEFAULT_PATH; ?>' as the path, and whatever you'd like as the template. The new page and template will be in <em>app/nouns/</em>.</li>
-				<li><p>To create a data model, such as Articles, go to the models page via the dashboard below and do the following:<p>
-						<ul class="decimal">
-							<li><p>click the 'new model' button, enter 'Article' and hit save.</p></li>
-							<li><p>click on the Article model, hit 'new field' and enter 'name'</p></li>
-							<li><p>click 'add key' and add descriptors for the Article's 'name'</p></li>
-							<li>These are simply key/value pairs, such as type=string, length=5:64 unique=true, default=0, input_type=select, and range=0:10 to name a few</li>
-							<li>Repeat steps 2 - 4 for all fields you want to add to your model</li>
-							<li>hit 'activate'</li>
-						</ul>
-				</li>
-				<li>Now you'll want some CRUD (create, read, update, delete), which we will generate in the form of SULC (show, update, list, create)
-					<div class="codeblock"><p>./script/generate crud article -l name</p></div>
-					<span class="note">Note: the -l option signifies the models labelling field. eg. This article model is labelled by it's name field</span>
-				</li>
-			</ul>
+			<h2>Why am I seeing this page?</h2>
+			<p>This page is temporary and will only be displayed as long as there is no Home page in your application.</p>
 			<?php } ?>

@@ -90,13 +90,14 @@
 
 	//INSERT RECORDS
 	$schemer->insert("users", "first_name, last_name, email, password, memberships", "'$admin_first', '$admin_last', '$admin_email', '$admin_pass', '1'");
-	$schemer->insert("uris", "path, template", "'uris', 'Starbug'");
+	$schemer->insert("uris", "path, template, visible", "'uris', 'Starbug', '0'");
 	$schemer->insert("uris", "path, template, visible", "'ajax', 'Ajax', '0'");
-	$schemer->insert("uris", "path, template", "'models', 'Starbug'");
-	$schemer->insert("uris", "path, template", "'users', 'Starbug'");
+	$schemer->insert("uris", "path, template, visible", "'models', 'Starbug', '0'");
+	$schemer->insert("uris", "path, template, visible", "'users', 'Starbug', '0'");
 	$schemer->insert("uris", "path, template, visible", "'generate', 'generate', '0'");
-	$schemer->insert("uris", "path, template", "'permits', 'Starbug'");
-	$schemer->insert("uris", "path, template, visible, collective", "'login', 'Starbug', '0', '0'");
+	$schemer->insert("uris", "path, template, visible", "'permits', 'Starbug', '0'");
+	$schemer->insert("uris", "path, template, visible", "'settings', 'Starbug', '0'");
+	$schemer->insert("uris", "path, template, visible, collective", "'admin', 'Starbug', '0', '0'");
 	//PRIVILIGES
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'login', '".P('users')."'");
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'logout', '".P('users')."'");
@@ -104,6 +105,6 @@
 	
 	//SET FILE PERMISSIONS
 	exec("chmod a+x script/generate");
-	exec("chmod u+s script/gen");
+	exec("chmod ug+s script/cgenerate");
 	exec("chmod -R a+w core/db/schema");
 ?>

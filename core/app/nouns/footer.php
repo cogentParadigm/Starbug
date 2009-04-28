@@ -34,11 +34,10 @@
 			</script>
 			<div id="dash_form"></div>
 			<ul id="dashlist">
-				<li class="first"><a href="<?php echo uri("models"); ?>">model</a></li>
-				<li><a href="<?php echo uri("generate"); ?>">generate</a></li>
-				<!--<li><a class="add" href="uris/create" onclick="add_uri();return false;">+</a><a href="<?php echo uri("uris"); ?>">uris</a></li>
-				<li><a class="add" href="users/create" onclick="add_user();return false;">+</a><a href="<?php echo uri("users"); ?>">users</a></li>
-				<li id="loading" style="visibility:hidden"></li>-->
+				<li class="first"><a href="<?php echo uri("admin"); ?>">admin</a></li>
+				<li><a href="<?php echo uri("models"); ?>">tools</a></li>
+				<li><a href="<?php echo uri("settings/general"); ?>">settings</a></li>
+				<li class="right"><a href="<?php echo uri("admin/logout"); ?>">logout</a></li>
 			</ul>
 		</div>
 		<?php } ?>

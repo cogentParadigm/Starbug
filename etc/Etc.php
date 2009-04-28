@@ -48,7 +48,7 @@ class Etc {
 	const IMG_DIR = "public/images/";
 
 	/* Default redirection time */
-	const REDIRECTION_TIME = 2;
+	const REDIRECTION_TIME = "2";
 
 	/* Elements table */
 	const PATH_COLUMN = "path";
@@ -57,6 +57,6 @@ class Etc {
 	const DEFAULT_PATH = "home";
 
 	/* Time before a user is considered offline (Minutes*60) */
-	const TIME_OUT = 900;
+	const TIME_OUT = "900";
 }
 ?>

@@ -43,7 +43,8 @@ class Request {
 			"inactive"    => 2,
 			"active"      => 4,
 			"cancelled"   => 8,
-			"pending"     => 16
+			"pending"     => 16,
+			"private"			=> 32
 		);
 		//connect to database
 		$this->db = $data;
@@ -72,11 +73,15 @@ class Request {
 			if (empty($this->payload)) $this->path = (($this->path == Etc::DEFAULT_PATH)?Etc::DEFAULT_PATH:"missing");
 		}
 		$this->uri = split("/", $this->path);
-		if ($this->path == "missing") header("HTTP/1.1 404 Not Found");
-		$this->file = ($this->payload['collective'] == 1) ? $this->check_path("core/app/nouns/", "", current($this->uri)) : $this->check_path("app/nouns/", "", current($this->uri));
+		if ($this->path == "missing") {
+			header("HTTP/1.1 404 Not Found");
+			$this->payload['visible'] = ($_SESSION[P('memberships')] == 1) ? 0 : 1;
+		}
+		$this->file = ($this->payload['visible'] == 0) ? $this->check_path("core/app/nouns/", "", current($this->uri)) : $this->check_path("app/nouns/", "", current($this->uri));
 	}
 	
 	private function check_path($prefix, $base, $current) {
+		if (empty($current)) $current = "default";
 		if (file_exists("$prefix$base$current.php")) return $prefix.$base.$current.".php";
 		else if (file_exists("$prefix$base$current")) return $this->check_path($prefix, "$base$current/", next($this->uri));
 		else {
@@ -90,7 +95,7 @@ class Request {
 	protected function post_act($key, $value) {
 		if (($object = $this->get($key)) && method_exists($object, $value)) {
 			$permits = isset($_POST[$key]['id']) ? $object->get_object_permits("*", $value, "obj.id='".$_POST[$key]['id']."'") : $object->get_table_permits($value);
-			if ($permits->RecordCount() > 0) $errors = $object->$value();
+			if (($permits->RecordCount() > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value();
 			else $errors = array("forbidden" => true);
 			$this->errors = array_merge_recursive($this->errors, array($key => $errors));
 		}
@@ -99,10 +104,9 @@ class Request {
 	private function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_act($key, $val);}
 
 	private function execute() {
-		if (file_exists("app/nouns/".$this->payload['template'].".php")) include("app/nouns/".$this->payload['template'].".php");
-		else if (file_exists("core/app/nouns/".$this->payload['template'].".php")) include("core/app/nouns/".$this->payload['template'].".php");
-		else if (file_exists("app/nouns/".Etc::DEFAULT_TEMPLATE.".php")) include("app/nouns/".Etc::DEFAULT_TEMPLATE.".php");
-		else include("core/app/nouns/Starbug.php");
+		if (($this->payload['visible'] == 1) && (file_exists("app/nouns/".$this->payload['template'].".php"))) include("app/nouns/".$this->payload['template'].".php");
+		else if (($this->payload['visible'] == 0) && (file_exists("core/app/nouns/".$this->payload['template'].".php"))) include("core/app/nouns/".$this->payload['template'].".php");
+		else include((($this->payload['visible'] == 1) ? "app/nouns/".Etc::DEFAULT_PATH.".php" : "core/app/nouns/Starbug.php"));
 	}
 
 }

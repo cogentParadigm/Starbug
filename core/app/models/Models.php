@@ -23,6 +23,11 @@ class Models {
 	}
 
 	function deactivate($name) { $this->schemer->drop($name); }
+	
+	function is_active($name) {
+		$info = unserialize(file_get_contents("core/db/schema/.info/$name"));
+		return (!empty($info['active']));
+	}
 
 	function dlfields($arr, $prefix, $has) {
 		if (is_array($arr)) {

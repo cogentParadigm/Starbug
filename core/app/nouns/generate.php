@@ -17,6 +17,7 @@ if (file_exists($themedir."$page.php")) {
 }
 include("core/app/nouns/header.php");
 echo $header;
+include("core/app/nouns/include/toolnav.php");
 include($page);
 include("core/app/nouns/footer.php");
 ?>

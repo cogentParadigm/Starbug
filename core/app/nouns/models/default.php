@@ -1,5 +1,8 @@
 <h2>Model</h2>
-<?php include("core/public/js/models.php"); ?>
+<?php
+include("core/app/nouns/include/toolnav.php");
+include("core/public/js/models.php");
+?>
 <script type="text/javascript">
 	function showhide(item) {
 		var node = dojo.byId(item);
@@ -15,7 +18,7 @@
 	$models = $models_object->get_all();
 ?>
 <ul id="models" class="lidls">
-<?php foreach ($models as $name => $fields) { $has = $this->has($name); $backup = file_exists("app/models/.".ucwords($name).".php");?>
+<?php foreach ($models as $name => $fields) { $has = $models_object->is_active($name); $backup = file_exists("app/models/.".ucwords($name).".php");?>
 	<li id="<?php echo $name; ?>"<?php if (!$has) echo " class=\"inactive\""; ?>>
 		<h3>
 			<a href="" onclick="delete_model('<?php echo $name; ?>');return false;">[X]</a>

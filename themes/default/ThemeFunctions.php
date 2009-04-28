@@ -29,7 +29,11 @@ class ThemeFunctions {
 		exec("script/generate model $_POST[modelname]");
 	}
 	function crud() {
-		exec("script/generate crud $_POST[modelname]");
+		$extra = "";
+		if ($_POST['update']) {
+			$extra .= " -u";
+		}
+		exec("script/generate crud $_POST[modelname]$extra");
 	}
 }
 ?>

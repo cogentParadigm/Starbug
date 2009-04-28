@@ -8,6 +8,7 @@ $list = $permits->afind("*", "", "ORDER BY id DESC LIMIT ".($page*25).", 25");
 $shown = $permits->recordCount;
 ?>
 <h2>Permits</h2>
+<?php include("core/app/nouns/settings/nav.php"); ?>
 <?php if ($total > 25) { ?>
 <ul class="pages">
 	<?php if ($page > 0) { ?>
@@ -43,4 +44,4 @@ $shown = $permits->recordCount;
 	</tr>
 <?php } ?>
 </table>
-<a id="add_permits" class="button" href="<?php echo uri("permits/create"); ?>">new permit</a>
+<a id="add_permits" class="big button" href="<?php echo uri("permits/create"); ?>">new permit</a>

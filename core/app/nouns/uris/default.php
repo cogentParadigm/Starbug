@@ -18,6 +18,7 @@ $shown = $uris->recordCount;
 </script>
 <?php include("core/public/js/uris.php"); ?>
 <h2>URIs</h2>
+<?php include("core/app/nouns/settings/nav.php"); ?>
 <?php if ($total > 25) { ?>
 <ul class="pages">
 	<?php if ($page > 0) { ?>
@@ -49,4 +50,4 @@ $shown = $uris->recordCount;
 	</tr>
 <?php } ?>
 </table>
-<a id="add_uri" class="button" href="uris/create" onclick="new_uri();return false;">New Element</a>
+<a id="add_uri" class="big button" href="uris/create" onclick="new_uri();return false;">New Element</a>

@@ -3,6 +3,10 @@
 
 <xsl:output method="text"/>
 
-<xsl:template match="/model">&lt;?php $page=next($this->uri); if (file_exists("app/nouns/<xsl:value-of select="@name"/>/$page.php")) include("app/nouns/<xsl:value-of select="@name"/>/$page.php"); else include("app/nouns/<xsl:value-of select="@name"/>/list.php"); ?&gt;
+<xsl:template match="/model">&lt;?php
+include("app/nouns/header.php");
+include($this-&gt;file);
+include("app/nouns/footer.php");
+?&gt;
 </xsl:template>
 </xsl:stylesheet>
