@@ -54,7 +54,10 @@ class Table {
 				if (!Validate::length($arr[$col], $length[0], $length[1])) $errors[$col."LengthError"] = true; //$col is too long
 			}
 		}
-		foreach ($this->uniques as $val) {$this->get($val, $val."='".$arr[$val]."'"); if($this->recordCount > 0) $errors[$val."ExistsError"] = true;}
+		foreach ($this->uniques as $val) {
+			$result = $this->get("*", $val."='".$arr[$val]."'")->fields();
+			if (((!empty($arr['id'])) && ($arr['id'] != $result['id'])) || ((empty($arr['id'])) ($this->recordCount > 0))) $errors[$val."ExistsError"] = true;
+		}
 		if(empty($errors)) { //no errors
 			if(!empty($arr['id'])) { //updating existing record
 				foreach($arr as $col => $value) {
