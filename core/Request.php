@@ -77,7 +77,7 @@ class Request {
 			header("HTTP/1.1 404 Not Found");
 			$this->payload['visible'] = ($_SESSION[P('memberships')] == 1) ? 0 : 1;
 		}
-		if ($this->payload['check_path']) $this->file = ($this->payload['visible'] == 0) ? $this->check_path("core/app/nouns/", "", current($this->uri)) : $this->check_path("app/nouns/", "", current($this->uri));
+		if ($this->payload['check_path'] !== '0') $this->file = ($this->payload['visible'] == 0) ? $this->check_path("core/app/nouns/", "", current($this->uri)) : $this->check_path("app/nouns/", "", current($this->uri));
 	}
 	
 	private function check_path($prefix, $base, $current) {

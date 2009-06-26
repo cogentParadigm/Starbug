@@ -55,8 +55,8 @@ class Table {
 			}
 		}
 		foreach ($this->uniques as $val) {
-			$result = $this->get("*", $val."='".$arr[$val]."'")->fields();
-			if (((!empty($arr['id'])) && ($arr['id'] != $result['id'])) || ((empty($arr['id'])) ($this->recordCount > 0))) $errors[$val."ExistsError"] = true;
+			$urow = $this->get("id, ".$val, $val."='".$arr[$val]."'")->fields();
+			if (((!empty($arr['id'])) || ($this->recordCount != 0)) && ((empty($arr['id'])) || ($this->recordCount > 1) || ($arr['id'] != $urow['id']))) $errors[$val."ExistsError"] = true;
 		}
 		if(empty($errors)) { //no errors
 			if(!empty($arr['id'])) { //updating existing record
@@ -121,20 +121,6 @@ class Table {
 		$records = $this->db->Execute("SELECT ".$select." FROM ".P($this->type).$whereclause);
 		$this->recordCount = $records->RecordCount();
 		return $records;
-	}
-
-	function afind($select, $where="", $other="") {return $this->to_array($this->find($select, $where, $other));}
-
-	function aget($select, $where="", $other="") {return $this->to_array($this->get($select, $where, $other));}
-
-	function to_array($records) {
-		$arr = array();
-		while (!$records->EOF) {
-			$arr[] = $records->fields;
-			$records->MoveNext();
-		}
-		$records->Close();
-		return $arr;
 	}
 
 }

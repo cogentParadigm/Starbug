@@ -1,0 +1,61 @@
+#!/usr/bin/php
+<?php
+/**
+* FILE: script/plugin
+* PURPOSE: used to manage plugins
+*
+* This file is part of StarbugPHP
+*
+* StarbugPHP - meta content manager
+* Copyright (C) 2008-2009 Ali Gangji
+*
+* StarbugPHP is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* StarbugPHP is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
+*/
+$help = "Usage: plugin MODE [OPTIONS]\n\n";
+$help .= "MODE\tWhat to do\n";
+$help .= "    \t\t-i [NAME] - install plugin\n";
+$help .= "    \t\t-l - list plugins\n";
+$help .= "    \t\t-r [NAME] - remove plugin\n";
+if ($argc==2) $argv[2] = "";
+include("etc/Etc.php");
+include("etc/init.php");
+include("util/Args.php");
+$args = new Args();
+
+if ($args->flag('i')) { //INSTALL PLUGIN
+	if (empty($argv[2])) {
+		fwrite(STDOUT, $help);
+		exit(0);
+	}
+	//SET VARS FOR PLUGIN
+	$plugin_name = $argv[2];
+	$template = ($args->flag('t')) ? $args->flag('t') : Etc::DEFAULT_TEMPLATE;
+	$collective = ($args->flag('c')) ? $args->flag('c') : "1";
+	$dirs = array(); $paths = array(); $from_copy = array();
+	//INCLUDE PLUGIN INSTALL FILE
+	if (file_exists("plugins/$plugin_name/install.php")) include("plugins/$plugin_name/install.php");
+	//CREATE DIRECTORIES
+	foreach ($dirs as $dir) if (!file_exists($dir)) exec("./script/cgenerate dir $dir");
+	//COPY FILES
+	foreach ($from_copy as $origin => $dest) exec("./script/cgenerate copy $dest plugins/$origin");
+	//ADD URIS
+	foreach ($paths as $keys => $values) $db->Execute("INSERT INTO ".P("uris")." ($keys) VALUES ($values)");
+	fwrite(STDOUT, "plugin $plugin_name installed...\n");
+	exit(0);
+} else if ($args->flag('l')) { //LIST PLUGINS
+	exit(0);
+} else if ($args->flag('r')) { //UNINSTALL PLUGIN
+	exit(0);
+}
+?>

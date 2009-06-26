@@ -32,4 +32,15 @@ function D_exists($obj) {return file_exists("app/models/".ucwords($obj).".php");
 function D($obj, $data) {$obj = ucwords($obj); if (include_once("app/models/".$obj.".php")) $obj = new $obj($data, strtolower($obj)); else return false; return $obj;}
 function P($var) {return Etc::PREFIX.$var;}
 function uri($path) {return Etc::WEBSITE_URL.$path;}
+class sb {
+	function load($what) {
+		if (strpos($what, "core/") === 0) $what = "core/plugins".substr($what, 4);
+		else $what = "plugins/".$what;
+		if (file_exists($what.".php")) include($what.".php");
+		else {
+			$token = split("/", $what); $token = $what."/".end($token).".php";
+			if (file_exists($token)) include($token);
+		}
+	}
+}
 ?>

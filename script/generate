@@ -1,8 +1,8 @@
 #!/usr/bin/php
 <?php
 /**
-* FILE: script/_generate/crud.php
-* PURPOSE: generates crud
+* FILE: script/generate
+* PURPOSE: used to generate code
 *
 * This file is part of StarbugPHP
 *

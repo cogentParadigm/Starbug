@@ -1,0 +1,1 @@
+<h2>Create page</h2><?php $action = "create"; $submit_to = uri("page"); include("app/nouns/page/form.php"); ?>
