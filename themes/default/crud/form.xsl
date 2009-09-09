@@ -55,7 +55,7 @@
 			$_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>'] = array("year" => date("Y", $<xsl:value-of select="@name"/>_dt), "month" => date("m", $<xsl:value-of select="@name"/>_dt), "day" => date("d", $<xsl:value-of select="@name"/>_dt));
 			<xsl:if test="@time_select">			$_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>_time'] = array("hour" => date("h", $<xsl:value-of select="@name"/>_dt), "minutes" => date("i", $<xsl:value-of select="@name"/>_dt), "ampm" => date("a", $<xsl:value-of select="@name"/>_dt));</xsl:if>
 		}
-		&gt;
+		?&gt;
 		<xsl:if test="@default">		&lt;?php dfault($_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>']['month'], date("m", strtotime(<xsl:value-of select="@default"/>))); ?&gt;</xsl:if>
 		&lt;select id="<xsl:value-of select="@id"/>-mm" name="<xsl:value-of select="/form/@name"/>[<xsl:value-of select="@name"/>][month]"&gt;
 		&lt;?php foreach ($month_options as $caption => $val) { ?&gt;
@@ -91,7 +91,7 @@
 		<xsl:if test="@default">		&lt;?php dfault($_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>']['minutes'], date("i", strtotime(<xsl:value-of select="@default"/>))); ?&gt;</xsl:if>
 		&lt;select id="<xsl:value-of select="@id"/>-minutes" name="<xsl:value-of select="/form/@name"/>[<xsl:value-of select="@name"/>][minutes]"&gt;
 		&lt;?php foreach ($minutes_options as $caption => $val) { ?&gt;
-		&lt;option value="&lt;?php echo $val; ?&lt;"&lt;?php if ($_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>']['minutes'] == "$val") { ?&gt; selected="true"&lt;?php } ?&gt;&gt;&lt;?php echo $caption; ?&gt;&lt;/option&gt;
+		&lt;option value="&lt;?php echo $val; ?&gt;"&lt;?php if ($_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>']['minutes'] == "$val") { ?&gt; selected="true"&lt;?php } ?&gt;&gt;&lt;?php echo $caption; ?&gt;&lt;/option&gt;
 		&lt;?php } ?&gt;
 		&lt;/select&gt;
 		<xsl:if test="@default">		&lt;?php dfault($_POST['<xsl:value-of select="/form/@name"/>']['<xsl:value-of select="@name"/>']['ampm'], date("a", strtotime(<xsl:value-of select="@default"/>))); ?&gt;</xsl:if>

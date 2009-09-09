@@ -2,10 +2,12 @@
 $permits = $this->get("permits");
 $page = next($this->uri);
 empty_nan($page, 0);
-$all = $permits->afind("*");
+$all = $permits->find("*")->GetRows();
 $total = $permits->recordCount;
-$list = $permits->afind("*", "", "ORDER BY id DESC LIMIT ".($page*25).", 25");
-$shown = $permits->recordCount;
+$start_from = $page*25;
+$remaining = $total - $start_from;
+$shown = ($remaining<25) ? ($remaining % 25) : 25;
+$go_to = $start_from + $shown;
 ?>
 <h2>Permits</h2>
 <?php include("core/app/nouns/settings/nav.php"); ?>
@@ -24,7 +26,7 @@ $shown = $permits->recordCount;
 	<tr>
 		<th>Role</th><th>Who</th><th>Action</th><th>Status</th><th>Priv Type</th><th>Related Table</th><th>Related ID</th>
 	</tr>
-<?php foreach($list as $entry) { ?>
+<?php for($i=$start_from;$i<=$go_to;$i++) { $entry = $all[$i]; ?>
 	<tr id ="permits_<?php echo $entry['id']; ?>">
 		<td><?php echo $entry['role']; ?></td>
 		<td><?php echo $entry['who']; ?></td>

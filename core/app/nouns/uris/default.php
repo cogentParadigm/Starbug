@@ -2,10 +2,12 @@
 $uris = $this->get("uris");
 $page = next($this->uri);
 empty_nan($page, 0);
-$all = $uris->afind("*");
+$all = $uris->find("*")->GetRows();
 $total = $uris->recordCount;
-$list = $uris->afind("*", "", "ORDER BY id DESC LIMIT ".($page*25).", 25");
-$shown = $uris->recordCount;
+$start_from = $page*25;
+$remaining = $total - $start_from;
+$shown = ($remaining<25) ? ($remaining % 25) : 25;
+$go_to = $start_from + $shown;
 ?>
 <script type="text/javascript">
 	function showhide(item) {
@@ -32,7 +34,7 @@ $shown = $uris->recordCount;
 <?php } ?>
 <table id="uris_table">
 <tr><th>Path</th><th>Template</th><th>Visibility</th><th>Importance</th><th>Owner</th><th>Collective</th><th>Options</th></tr>
-<?php foreach($list as $el) { ?>
+<?php for($i=$start_from;$i<=$go_to;$i++) { $el = $all[$i]; ?>
 	<tr id="uri_<?php echo $el['id']; ?>">
 		<td><?php echo $el['path']; ?></td>
 		<td><?php echo $el['template']; ?></td>

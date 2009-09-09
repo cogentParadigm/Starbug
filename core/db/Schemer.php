@@ -42,13 +42,13 @@ class Schemer {
 		$sql .= "owner int(11) NOT NULL default '1', collective int(11) NOT NULL default '1', status int(11) NOT NULL default '0', ";
 		$sql .= "PRIMARY KEY (`id`) ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 		$result = $this->db->Execute($sql);
-		$file = fopen("core/db/schema/$name", "wb");
+		$file = fopen("var/schema/$name", "wb");
 		fwrite($file, serialize($fields));
 		fclose($file);
 		$this->write_model($name, $backup);
 		$info = unserialize(file_get_contents("core/db/schema/.info/$name"));
 		$info['active'] = true;
-		$file = fopen("core/db/schema/.info/$name", "wb");
+		$file = fopen("var/schema/.info/$name", "wb");
 		fwrite($file, serialize($info));
 		fclose($file);
 	}
@@ -59,7 +59,7 @@ class Schemer {
 		unset($fields[$name]["inactive"]);
 		$sql = $name." ".$this->get_sql_type($field);
 		$this->db->Execute("ALTER TABLE ".P($table)." ADD ".$sql);
-		$file = fopen("core/db/schema/$table", "wb");
+		$file = fopen("var/schema/$table", "wb");
 		fwrite($file, serialize($fields));
 		fclose($file);
 	}
@@ -78,12 +78,12 @@ class Schemer {
 		$this->drop_model($name);
 		$fields = $this->schema_get($name);
 		foreach ($fields as $fieldname => $ops) $fields[$fieldname]["inactive"] = true;
-		$file = fopen("core/db/schema/$name", "wb");
+		$file = fopen("var/schema/$name", "wb");
 		fwrite($file, serialize($fields));
 		fclose($file);
 		$info = unserialize(file_get_contents("core/db/schema/.info/$name"));
 		$info['active'] = false;
-		$file = fopen("core/db/schema/.info/$name", "wb");
+		$file = fopen("var/schema/.info/$name", "wb");
 		fwrite($file, serialize($info));
 		fclose($file);
 	}
@@ -112,7 +112,7 @@ class Schemer {
 	function drop_model($name) {
 		$model_loc = "app/models/".ucwords($name).".php";
 		if (file_exists($model_loc)) {
-			$info = unserialize(file_get_contents("core/db/schema/.info/$name"));
+			$info = unserialize(file_get_contents("var/schema/.info/$name"));
 			if (filemtime($model_loc) == $info['mtime']) unlink($model_loc);
 			else rename($model_loc, "app/models/.".ucwords($name));
 		}
@@ -120,14 +120,14 @@ class Schemer {
 
 	function get_schemas() {
 		$schemas = array();
-		if ($handle = opendir("core/db/schema/")) {
-			while (false !== ($file = readdir($handle))) if ((strpos($file, ".") === false)) $schemas[$file] = unserialize(file_get_contents("core/db/schema/".$file));
+		if ($handle = opendir("var/schema/")) {
+			while (false !== ($file = readdir($handle))) if ((strpos($file, ".") === false)) $schemas[$file] = unserialize(file_get_contents("var/schema/".$file));
 			closedir($handle);
 		}
 		return $schemas;
 	}
 
-	function exists($name) { return file_exists("core/db/schema/$name"); }
+	function exists($name) { return file_exists("var/schema/$name"); }
 
 	function schema_write($what, $where) {
 		$parts = split("-", $where, 2);
@@ -139,14 +139,14 @@ class Schemer {
 			while (($prev = prev($arr)) !== false) $merge = array($prev => $merge);
 		}
 		$fields = array_merge_recursive($fields, $merge);
-		$file = fopen("core/db/schema/".$parts[0], "wb");	
+		$file = fopen("var/schema/".$parts[0], "wb");	
 		fwrite($file, serialize($fields));
 		fclose($file);
 	}
 
 	function schema_get($where) {
 		$parts = split("-", $where, 2);
-		$val = unserialize(file_get_contents("core/db/schema/".$parts[0]));
+		$val = unserialize(file_get_contents("var/schema/".$parts[0]));
 		if (count($parts) > 1) {
 			$arr = split("-", $parts[1]);
 			$k = current($arr);
@@ -165,14 +165,14 @@ class Schemer {
 		$merge = (is_array($val)) ? array($new => $val) : array($key => $new);
 		while(($prev = prev($arr)) !== false) $merge = array($prev => $merge);
 		$fields = array_merge_recursive($fields, $merge);
-		$file = fopen("core/db/schema/".$parts[0], "wb");
+		$file = fopen("var/schema/".$parts[0], "wb");
 		fwrite($file, serialize($fields));
 		fclose($file);
 	}
 
 	function schema_remove($loc) {
 		$parts = split("-", $loc, 2);
-		$filename = "core/db/schema/".$parts[0];
+		$filename = "var/schema/".$parts[0];
 		if (count($parts) == 1) unlink($filename);
 		else {
 			$arr = split("-", $parts[1]);

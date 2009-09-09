@@ -34,10 +34,10 @@
 			</script>
 			<div id="dash_form"></div>
 			<ul id="dashlist">
-				<li class="first"><a href="<?php echo uri("admin"); ?>">admin</a></li>
+				<li class="first"><a href="<?php echo uri("sb-admin"); ?>">admin</a></li>
 				<li><a href="<?php echo uri("models"); ?>">tools</a></li>
 				<li><a href="<?php echo uri("settings/general"); ?>">settings</a></li>
-				<li class="right"><a href="<?php echo uri("admin/logout"); ?>">logout</a></li>
+				<li class="right"><a href="<?php echo uri("sb-admin/logout"); ?>">logout</a></li>
 			</ul>
 		</div>
 		<?php } ?>

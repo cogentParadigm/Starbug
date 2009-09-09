@@ -43,7 +43,7 @@ class Table {
 		$errors = array();
 		foreach ($arr as $col => $value) {
 			//echo $col." '".$value."'\n";
-			$arr[$col] = Validate::toStore(trim($value));
+			$arr[$col] = trim($value);
 			if ($arr[$col] === "") {
 				if (isset($this->defaults[$col])) $arr[$col] = $this->defaults[$col];
 				else $errors[$col."Error"] = true; //missing required var $col

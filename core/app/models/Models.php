@@ -25,7 +25,7 @@ class Models {
 	function deactivate($name) { $this->schemer->drop($name); }
 	
 	function is_active($name) {
-		$info = unserialize(file_get_contents("core/db/schema/.info/$name"));
+		$info = unserialize(file_get_contents("var/schema/.info/$name"));
 		return (!empty($info['active']));
 	}
 

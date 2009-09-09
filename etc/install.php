@@ -97,7 +97,7 @@
 	$schemer->insert("uris", "path, template, visible", "'generate', 'generate', '0'");
 	$schemer->insert("uris", "path, template, visible", "'permits', 'Starbug', '0'");
 	$schemer->insert("uris", "path, template, visible", "'settings', 'Starbug', '0'");
-	$schemer->insert("uris", "path, template, visible, collective", "'admin', 'Starbug', '0', '0'");
+	$schemer->insert("uris", "path, template, visible, collective", "'sb-admin', 'Starbug', '0', '0'");
 	//PRIVILIGES
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'login', '".P('users')."'");
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'logout', '".P('users')."'");
@@ -106,5 +106,7 @@
 	//SET FILE PERMISSIONS
 	exec("chmod a+x script/generate");
 	exec("chmod ug+s script/cgenerate");
-	exec("chmod -R a+w core/db/schema");
+	exec("mkdir app/nouns");
+	exec("mkdir var/schema/.temp");
+	exec("chmod -R a+w var public/uploads public/thumbnails");
 ?>

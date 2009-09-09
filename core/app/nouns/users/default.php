@@ -2,18 +2,24 @@
 $users = $this->get("users");
 $page = next($this->uri);
 empty_nan($page, 0);
-$all = $users->afind("*");
+$all = $users->find("*")->GetRows();
 $total = $users->recordCount;
-$list = $users->afind("*", "", "ORDER BY id DESC LIMIT ".($page*25).", 25");
-$shown = $users->recordCount;
+$start_from = $page*25;
+$remaining = $total - $start_from;
+$shown = ($remaining<25) ? ($remaining % 25) : 25;
+$go_to = $start_from + $shown;
 ?>
 <script type="text/javascript">
+	function htar(data, xhr) {
+		if (xhr.args.keep) xhr.args.node.innerHTML += data;
+		else xhr.args.node.innerHTML = data;
+	}
 	function new_user() {
 		dojo.xhrGet({
 			url: '<?php echo uri("users/new"); ?>',
-			load: function (data) {
-				dojo.byId('users_table').innerHTML += data;
-			}
+			node: dojo.byId('users_table'),
+			keep: true,
+			load: htar
 		});
 	}
 	function save_new() {
@@ -71,7 +77,7 @@ $shown = $users->recordCount;
 <?php } ?>
 <table id="users_table">
 <tr><th>First Name</th><th>Last Name</th><th>Password</th><th>Email</th><th>Memberships</th><th>Options</th></tr>
-<?php foreach($list as $user) { ?>
+<?php for($i=$start_from;$i<=$go_to;$i++) { $user = $all[$i]; ?>
 	<tr id="user_<?php echo $user['id']; ?>">
 		<td><?php echo $user['first_name']; ?></td>
 		<td><?php echo $user['last_name']; ?></td>

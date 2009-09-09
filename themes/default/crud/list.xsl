@@ -5,7 +5,7 @@
 
 <xsl:template match="/model">&lt;?php
 $<xsl:value-of select="@name"/> = $this->get("<xsl:value-of select="@name"/>");
-$all = $<xsl:value-of select="@name"/>->get("*");
+$all = $<xsl:value-of select="@name"/>->get("*")->GetRows();
 $total = $<xsl:value-of select="@name"/>->recordCount;
 if (!empty($this->errors['<xsl:value-of select="@name"/>'])) {
 	$id = next($this->uri);
@@ -17,8 +17,10 @@ if (!empty($this->errors['<xsl:value-of select="@name"/>'])) {
 &lt;?php } else {
 	$page = next($this->uri);
 	empty_nan($page, 0);
-	$list = $<xsl:value-of select="@name"/>->get("*", "", "ORDER BY id DESC LIMIT ".($page*25).", 25")->GetRows();
-	$shown = $<xsl:value-of select="@name"/>->recordCount;
+	$start_from = $page*25;
+	$remaining = $total - $start_from;
+	$shown = ($remaining&lt;25) ? ($remaining % 25) : 25;
+	$go_to = $start_from + $shown;
 	?&gt;
 	&lt;h2&gt;<xsl:value-of select="@name"/> list&lt;/h2&gt;
 	&lt;?php if ($total > 25) { ?&gt;
@@ -37,7 +39,7 @@ if (!empty($this->errors['<xsl:value-of select="@name"/>'])) {
 	&lt;tr&gt;
 	<xsl:for-each select="field">&lt;th&gt;<xsl:value-of select="@name"/>&lt;/th&gt;</xsl:for-each>&lt;th&gt;options&lt;/th&gt;
 	&lt;/tr&gt;
-	&lt;?php foreach($list as $entry) { ?&gt;
+	&lt;?php foreach($i=$start_from;$i&lt;=$go_to;$i++) { ?&gt;
 		&lt;tr id ="<xsl:value-of select="@name"/>_&lt;?php echo $entry['id']; ?&gt;"&gt;
 			<xsl:apply-templates select="field[@display]"/>
 			&lt;td&gt;
