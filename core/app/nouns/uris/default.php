@@ -52,4 +52,4 @@ $go_to = $start_from + $shown;
 	</tr>
 <?php } ?>
 </table>
-<a id="add_uri" class="big button" href="uris/create" onclick="new_uri();return false;">New Element</a>
+<a id="add_uri" class="big button" href="<?php echo uri("uris/create"); ?>" onclick="new_uri();return false;">New Element</a>

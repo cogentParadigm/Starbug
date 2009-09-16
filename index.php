@@ -25,5 +25,5 @@ include("etc/Etc.php");
 include("etc/init.php");
 //go
 include("core/Request.php");
-new Request($db);
+new Request($sb->db);
 ?>

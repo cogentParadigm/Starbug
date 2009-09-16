@@ -22,17 +22,22 @@
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
 include("core/db/adodb_lite/adodb.inc.php");
-$db = ADONewConnection('mysql');
-$db->Connect(Etc::DB_HOST, Etc::DB_USERNAME, Etc::DB_PASSWORD, Etc::DB_NAME);
 function empty_nan(&$val, $default="") {if(!isset($val) || !is_numeric($val)) $val = $default;}
 function dfault(&$val, $default="") {if(!isset($val)) $val = $default;}
 function efault(&$val, $default="") {if(empty($val)) $val = $default;}
-function rA($str="") {return Starr::rstar($str);}
 function D_exists($obj) {return file_exists("app/models/".ucwords($obj).".php");}
 function D($obj, $data) {$obj = ucwords($obj); if (include_once("app/models/".$obj.".php")) $obj = new $obj($data, strtolower($obj)); else return false; return $obj;}
 function P($var) {return Etc::PREFIX.$var;}
 function uri($path) {return Etc::WEBSITE_URL.$path;}
 class sb {
+	var $db;
+	var $provided = array();
+	var $objects = array();
+	var $errors = array();
+	function sb() {
+		$this->db = ADONewConnection('mysql');
+		$this->db->Connect(Etc::DB_HOST, Etc::DB_USERNAME, Etc::DB_PASSWORD, Etc::DB_NAME);
+	}
 	function load($what) {
 		if (strpos($what, "core/") === 0) $what = "core/plugins".substr($what, 4);
 		else $what = "plugins/".$what;
@@ -42,5 +47,17 @@ class sb {
 			if (file_exists($token)) include($token);
 		}
 	}
+	function require($loc) {if (empty($this->provided[$loc])) include($loc.".php");}
+	function provide($loc) {$this->provided[$loc] = true;}
+	function get($name) {
+		$obj = ucwords($name);
+		if (!$objects[$name]) {
+			include("app/models/".$obj.".php");
+			$objects[$name] new $obj($this->db, $name);
+		}
+		return $objects[$name];
+	}
+	function has($name) {return file_exists("app/models/".ucwords($obj).".php");}
 }
+$sb = new sb();
 ?>

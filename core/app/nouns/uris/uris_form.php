@@ -1,3 +1,20 @@
+	<?php
+		/*
+		$sb->require("util/form");
+		$fields = array();
+		$path_errors = array("path" => "Please enter a path name.");
+		$fields["path"] = array("type" => "text", "errors" = $path_errors);
+		$template_errors = array("template" => "Please enter a template.");
+		$fields["template"] = array("type" => "text", "errors" = $template_errors);
+		$visibility_errors = array("visibility" => "Please select a visibility.");
+		$fields["visibility"] = array("type" => "select", "range" => "0,1", "errors" = $visibility_errors);
+		$importance_errors = array("importance" => "Please select an importance.");
+		$fields["importance"] = array("type" => "select", "range" => "0,10", "errors" = $importance_errors);
+		$collective_errors = array("collective" => "Please select a collective.");
+		$fields["collective"] = array("type" => "select", "options" => array_merge(array("everybody" => 0), $this->groups), "errors" = $collective_errors);
+		Form::render("uris", "post", $action, $submit_to, $fields);
+		*/
+	?>
 <form<?php if (!empty($formid)) echo " id=\"$formid\""; ?> class="uris_form" action="<?php echo (empty($submit_to) ? htmlentities($_SERVER['REQUEST_URI']) : $submit_to); ?>" method="post">
 	<input class="action" name="action[uris]" type="hidden" value="<?php echo $action; ?>" />
 <?php if (!empty($_POST['uris']['id'])) { ?><input id="id" name="uris[id]" type="hidden" value="<?php echo $_POST['uris']['id']; ?>" /><?php } ?>
