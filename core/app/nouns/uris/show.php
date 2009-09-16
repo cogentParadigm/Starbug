@@ -1,8 +1,8 @@
 <?php $id = next($this->uri);
-	if (!empty($this->errors['uris'])) include("core/app/nouns/uris/".(($id)?"update":"create").".php");
+	if (!empty($sb->errors['uris'])) include("core/app/nouns/uris/".(($id)?"update":"create").".php");
 	else {
-		if (!$id) $uri = $this->get("uris")->find("*", "", "LIMIT 1")->fields();
-		else $uri = $this->get("uris")->find("*", "id='".$id."'")->fields();
+		if (!$id) $uri = $sb->get("uris")->find("*", "", "LIMIT 1")->fields();
+		else $uri = $sb->get("uris")->find("*", "id='".$id."'")->fields();
 ?>
 <h2><?php echo $uri['path']; ?></h2>
 <dl>

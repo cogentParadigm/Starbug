@@ -1,4 +1,4 @@
-<?php $id = next($this->uri); $_POST['users'] = $this->get("users")->find("*", "id='$id'")->fields(); ?>
+<?php $id = next($this->uri); $_POST['users'] = $sb->get("users")->find("*", "id='$id'")->fields(); ?>
 <td colspan="5">
 	<?php $formid = "edit_user_form"; $action = "create"; include("core/app/nouns/users/users_form.php"); ?>
 </td>

@@ -1,5 +1,5 @@
 <?php
-$uris = $this->get("uris");
+$uris = $sb->get("uris");
 $page = next($this->uri);
 empty_nan($page, 0);
 $all = $uris->find("*")->GetRows();

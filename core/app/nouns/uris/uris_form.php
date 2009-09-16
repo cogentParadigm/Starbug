@@ -20,12 +20,12 @@
 <?php if (!empty($_POST['uris']['id'])) { ?><input id="id" name="uris[id]" type="hidden" value="<?php echo $_POST['uris']['id']; ?>" /><?php } ?>
 	<div class="field">
 		<label for="name">Path</label>
-		<?php if (!empty($this->errors['uris']['pathError'])) { ?><span class="error">Please enter a path name.</span><?php } ?>
+		<?php if (!empty($sb->errors['uris']['pathError'])) { ?><span class="error">Please enter a path name.</span><?php } ?>
 		<input id="name" name="uris[path]" class="text" type="text"<?php if (!empty($_POST['uris']['path'])) { ?> value="<?php echo $_POST['uris']['path']; ?>"<?php } ?> />
 	</div>
 	<div class="field">
 		<label for="template">Template</label>
-		<?php if (!empty($this->errors['uris']['templateError'])) { ?><span class="error">Please enter a template.</span><?php } ?>
+		<?php if (!empty($sb->errors['uris']['templateError'])) { ?><span class="error">Please enter a template.</span><?php } ?>
 		<input id="template" name="uris[template]" class="text" type="text"<?php if (!empty($_POST['uris']['template'])) { ?> value="<?php echo $_POST['uris']['template']; ?>"<?php } ?> />
 	</div>
 	<div class="field">

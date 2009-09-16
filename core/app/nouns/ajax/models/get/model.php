@@ -1,6 +1,6 @@
 <?php
 	include("core/app/models/Models.php");
-	$models = new Models($this->db);
+	$models = new Models($sb->db);
 	if (!empty($_POST['new_model'])) {
 		$models->create($_POST['modelname']);
 ?>

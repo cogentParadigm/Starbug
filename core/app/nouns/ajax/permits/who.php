@@ -1,7 +1,7 @@
 <?php
 $what = next($this->uri);
 if ($what == "user") {
-	$users = $this->get("users")->get("id, first_name, last_name")->GetRows();
+	$users = $sb->get("users")->get("id, first_name, last_name")->GetRows();
 	foreach ($users as $user) { ?>
 		<option value="<?php echo $user['id']; ?>"><?php echo $user['first_name']." ".$user['last_name']; ?></option>
 	<?php	}

@@ -1,5 +1,5 @@
 <div id="add_uri" class="box">
-		<?php if (($_POST['action']['uris'] == "create") && empty($this->errors['uris'])) { ?>
+		<?php if (($_POST['action']['uris'] == "create") && empty($sb->errors['uris'])) { ?>
 		<p><?php echo $_POST['uris']['path']; ?> has been added.</p>
 				<ul class="buttons">
 			<li><a class="button" href="#" onclick="cancel_add();return false;">Close</a></li>

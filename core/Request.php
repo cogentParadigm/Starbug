@@ -24,16 +24,14 @@
 include("core/db/Table.php");
 class Request {
 
-	var $db;							// adodb_lite instance
 	var $payload;					// row in uris table - assoc
-	var $errors;					// errors - assoc
 	var $path;						// request path - string
 	var $uri;							// request path - array
-	var $file;						// result file path
+	var $file;						// noun file path
 	var $groups;
 	var $statuses;
 
-	function Request($data) {
+	function Request() {
 		$this->groups = array(
 			"root"			=> 1,
 			"user"			=> 2
@@ -46,13 +44,9 @@ class Request {
 			"pending"     => 16,
 			"private"			=> 32
 		);
-		//connect to database
-		$this->db = $data;
 		//start session
 		session_start();
 		if (!isset($_SESSION[P('id')])) $_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
-		//init errors array
-		$this->errors = array();
 		//manipulate data if necessary
 		$this->check_post();
 		//locate request
@@ -63,13 +57,9 @@ class Request {
 		$this->execute();
  	}
 
-	protected function get($key) {return D($key, $this->db);}
-
-	protected function has($name) {return D_exists($name);}
-
 	protected function locate() {
 		if (Etc::DB_NAME != "") {
-			$this->payload = $this->get('uris')->find("*", "'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%')", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1")->fields();
+			$this->payload = $sb->get('uris')->find("*", "'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%')", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1")->fields();
 			if (empty($this->payload)) $this->path = (($this->path == Etc::DEFAULT_PATH)?Etc::DEFAULT_PATH:"missing");
 		}
 		$this->uri = split("/", $this->path);
@@ -93,11 +83,11 @@ class Request {
 	}
 
 	protected function post_act($key, $value) {
-		if (($object = $this->get($key)) && method_exists($object, $value)) {
+		if (($object = $sb->get($key)) && method_exists($object, $value)) {
 			$permits = isset($_POST[$key]['id']) ? $object->get_object_permits("*", $value, "obj.id='".$_POST[$key]['id']."'") : $object->get_table_permits($value);
 			if (($permits->RecordCount() > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value();
 			else $errors = array("forbidden" => true);
-			$this->errors = array_merge_recursive($this->errors, array($key => $errors));
+			$sb->errors = array_merge_recursive($sb->errors, array($key => $errors));
 		}
 	}
 

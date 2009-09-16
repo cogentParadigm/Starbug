@@ -1,10 +1,10 @@
 <?php
 	$id = next($this->uri);
-	if (!empty($this->errors['uris'])) include("core/app/nouns/Ajax/uris/".(($id)?"edit":"new").".php");
+	if (!empty($sb->errors['uris'])) include("core/app/nouns/Ajax/uris/".(($id)?"edit":"new").".php");
 	else {
 		$new = false;
-		if (!$id) { $id = $this->db->Insert_ID(); $new = true; }
-		$uri = $this->get("uris")->find("*", "id='".$id."'")->fields();
+		if (!$id) { $id = $sb->db->Insert_ID(); $new = true; }
+		$uri = $sb->get("uris")->find("*", "id='".$id."'")->fields();
 		if ($new) { ?><tr id="uri_<?php echo $id; ?>"><?php } ?>
 		<td><?php echo $uri['path']; ?></td>
 		<td><?php echo $uri['template']; ?></td>

@@ -14,7 +14,7 @@ include("core/public/js/models.php");
 </script>
 <?php
 	include("core/app/models/Models.php");
-	$models_object = new Models($this->db);
+	$models_object = new Models($sb->db);
 	$models = $models_object->get_all();
 ?>
 <ul id="models" class="lidls">

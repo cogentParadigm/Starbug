@@ -1,10 +1,10 @@
 <?php
 	$id = next($this->uri);
-	if (!empty($this->errors['users'])) include("core/app/elements/Ajax/users/".(($id)?"edit":"new").".php");
+	if (!empty($sb->errors['users'])) include("core/app/elements/Ajax/users/".(($id)?"edit":"new").".php");
 	else {
 		$new = false;
-		if (!$id) { $id = $this->db->Insert_ID(); $new = true; }
-		$user = $this->get("users")->find("*", "id='".$id."'")->fields();
+		if (!$id) { $id = $sb->db->Insert_ID(); $new = true; }
+		$user = $sb->get("users")->find("*", "id='".$id."'")->fields();
 		if ($new) { ?><tr id="user_<?php echo $id; ?>"><?php } ?>
 		<td><?php echo $user['first_name']; ?></td>
 		<td><?php echo $user['last_name']; ?></td>

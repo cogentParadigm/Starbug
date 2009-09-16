@@ -1,5 +1,5 @@
 <?php
-$users = $this->get("users");
+$users = $sb->get("users");
 $page = next($this->uri);
 empty_nan($page, 0);
 $all = $users->find("*")->GetRows();

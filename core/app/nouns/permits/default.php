@@ -1,5 +1,5 @@
 <?php
-$permits = $this->get("permits");
+$permits = $sb->get("permits");
 $page = next($this->uri);
 empty_nan($page, 0);
 $all = $permits->find("*")->GetRows();

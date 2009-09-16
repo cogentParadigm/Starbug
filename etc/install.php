@@ -82,9 +82,9 @@
 	include("etc/Etc.php");
 	include("etc/init.php");
 	include("core/db/Schemer.php");
-	$db->Execute("DROP TABLE IF EXISTS `".P('permits')."`");
-	$db->Execute("CREATE TABLE `".P("permits")."` (id int not null AUTO_INCREMENT, role varchar(30) not null, who int not null default 0, action varchar(100) not null, status int not null default '0', priv_type varchar(30) not null default 'table', related_table varchar(100) not null, related_id int not null default '0', PRIMARY KEY (`id`) )");
-	$schemer = new Schemer($db);
+	$sb->db->Execute("DROP TABLE IF EXISTS `".P('permits')."`");
+	$sb->db->Execute("CREATE TABLE `".P("permits")."` (id int not null AUTO_INCREMENT, role varchar(30) not null, who int not null default 0, action varchar(100) not null, status int not null default '0', priv_type varchar(30) not null default 'table', related_table varchar(100) not null, related_id int not null default '0', PRIMARY KEY (`id`) )");
+	$schemer = new Schemer($sb->db);
 	$schemer->create("uris");
 	$schemer->create("users");
 
@@ -106,7 +106,6 @@
 	//SET FILE PERMISSIONS
 	exec("chmod a+x script/generate");
 	exec("chmod ug+s script/cgenerate");
-	exec("mkdir app/nouns");
-	exec("mkdir var/schema/.temp");
+	exec("mkdir app/nouns var/schema/.temp public/uploads public/thumbnails");
 	exec("chmod -R a+w var public/uploads public/thumbnails");
 ?>

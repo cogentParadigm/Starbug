@@ -1,4 +1,4 @@
-<?php $id = next($this->uri); $_POST['uris'] = $this->get("uris")->find("*", "id='$id'")->fields(); ?>
+<?php $id = next($this->uri); $_POST['uris'] = $sb->get("uris")->find("*", "id='$id'")->fields(); ?>
 <td colspan="6">
 	<?php $formid = "edit_uri_form"; $action = "create"; include("core/app/nouns/uris/uris_form.php"); ?>
 </td>

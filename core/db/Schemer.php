@@ -46,7 +46,7 @@ class Schemer {
 		fwrite($file, serialize($fields));
 		fclose($file);
 		$this->write_model($name, $backup);
-		$info = unserialize(file_get_contents("core/db/schema/.info/$name"));
+		$info = unserialize(file_get_contents("var/schema/.info/$name"));
 		$info['active'] = true;
 		$file = fopen("var/schema/.info/$name", "wb");
 		fwrite($file, serialize($info));
@@ -81,7 +81,7 @@ class Schemer {
 		$file = fopen("var/schema/$name", "wb");
 		fwrite($file, serialize($fields));
 		fclose($file);
-		$info = unserialize(file_get_contents("core/db/schema/.info/$name"));
+		$info = unserialize(file_get_contents("var/schema/.info/$name"));
 		$info['active'] = false;
 		$file = fopen("var/schema/.info/$name", "wb");
 		fwrite($file, serialize($info));

@@ -1,9 +1,9 @@
 <?php
 	include("core/app/models/Models.php");
-	$models = new Models($this->db);
+	$models = new Models($sb->db);
 	if (!empty($_POST['new_field'])) {
 		$models->add_field($_POST['fieldname'], $_POST['new_field']);
-		$has = $this->has($_POST['new_field']);
+		$has = $sb->has($_POST['new_field']);
 ?>
 <dt id="<?php echo $_POST['new_field']."-".$_POST['fieldname']; ?>-key" class="sub inactive">
 	<a href="" class="right" onclick="if (confirm('Are you sure you want to delete?')) {delete_key('<?php echo $_POST['new_field']."-".$_POST['fieldname']; ?>');return false;}">delete</a>

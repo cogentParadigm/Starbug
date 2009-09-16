@@ -3,7 +3,7 @@
 	<?php if (!empty($_POST['permits']['id'])) { ?><input id="id" name="permits[id]" type="hidden" value="<?php echo $_POST['permits']['id']; ?>" /><?php } ?>
 	<div class="field">
 		<label for="role">Role</label>
-		<?php if (!empty($this->errors['permits']['roleError'])) { ?><span class="error">Please enter a Role</span><?php } ?>
+		<?php if (!empty($sb->errors['permits']['roleError'])) { ?><span class="error">Please enter a Role</span><?php } ?>
 		<select id="role" name="permits[role]" onChange="who_options()">
 		<option value="everyone"<?php if ($_POST["permits"]["role"] == "everyone") { ?> select="selected"<?php } ?>>everyone</option>
 			<option value="user"<?php if ($_POST["permits"]["role"] == "users") { ?> select="selected"<?php } ?>>user</option>
@@ -50,7 +50,7 @@
 	</div>
 	<div class="field">
 		<label for="action">Action</label>
-		<?php if (!empty($this->errors['permits']['actionError'])) { ?><span class="error">Please enter a Action</span><?php } ?>
+		<?php if (!empty($sb->errors['permits']['actionError'])) { ?><span class="error">Please enter a Action</span><?php } ?>
 		<input id="action" name="permits[action]" type="text" style="width:100px" <?php if (!empty($_POST['permits']['action'])) { ?> value="<?php echo $_POST['permits']['permits']; ?>"<?php } ?>/>
 	</div>
 	<div class="field">
@@ -76,7 +76,7 @@
 	</div>
 	<div class="field">
 		<label for="related_table">Related table</label>
-		<?php if (!empty($this->errors['permits']['related_tableError'])) { ?><span class="error">Please enter a Related table</span><?php } ?>
+		<?php if (!empty($sb->errors['permits']['related_tableError'])) { ?><span class="error">Please enter a Related table</span><?php } ?>
 		<select id="related_table" name="permits[related_table]" onchange="id_options()">
 			<option value="gpl_uris"<?php if ($_POST["permits"]["role"] == "gpl_uris") { ?> select="selected"<?php } ?>>uris</option>
 			<option value="gpl_users"<?php if ($_POST["permits"]["role"] == "gpl_users") { ?> select="selected"<?php } ?>>users</option>
@@ -102,7 +102,7 @@
 			}
 		</script>
 		<label for="related_id">Related id</label>
-		<?php if (!empty($this->errors['permits']['related_idError'])) { ?><span class="error">Please enter a Related id</span><?php } ?>
+		<?php if (!empty($sb->errors['permits']['related_idError'])) { ?><span class="error">Please enter a Related id</span><?php } ?>
 		<?php dfault($_POST['permits']['related_id'], 0); ?>
 		<select id="related_id" name="permits[related_id]">
 			<option value="0">nobody</option>

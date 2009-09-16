@@ -25,8 +25,8 @@ include("core/db/adodb_lite/adodb.inc.php");
 function empty_nan(&$val, $default="") {if(!isset($val) || !is_numeric($val)) $val = $default;}
 function dfault(&$val, $default="") {if(!isset($val)) $val = $default;}
 function efault(&$val, $default="") {if(empty($val)) $val = $default;}
-function D_exists($obj) {return file_exists("app/models/".ucwords($obj).".php");}
-function D($obj, $data) {$obj = ucwords($obj); if (include_once("app/models/".$obj.".php")) $obj = new $obj($data, strtolower($obj)); else return false; return $obj;}
+//function D_exists($obj) {return file_exists("app/models/".ucwords($obj).".php");}
+//function D($obj, $data) {$obj = ucwords($obj); if (include_once("app/models/".$obj.".php")) $obj = new $obj($data, strtolower($obj)); else return false; return $obj;}
 function P($var) {return Etc::PREFIX.$var;}
 function uri($path) {return Etc::WEBSITE_URL.$path;}
 class sb {
@@ -47,13 +47,13 @@ class sb {
 			if (file_exists($token)) include($token);
 		}
 	}
-	function require($loc) {if (empty($this->provided[$loc])) include($loc.".php");}
+	function _require($loc) {if (empty($this->provided[$loc])) include($loc.".php");}
 	function provide($loc) {$this->provided[$loc] = true;}
 	function get($name) {
 		$obj = ucwords($name);
 		if (!$objects[$name]) {
 			include("app/models/".$obj.".php");
-			$objects[$name] new $obj($this->db, $name);
+			$objects[$name] = new $obj($this->db, $name);
 		}
 		return $objects[$name];
 	}
