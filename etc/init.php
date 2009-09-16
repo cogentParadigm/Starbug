@@ -5,7 +5,7 @@
 * 
 * This file is part of StarbugPHP
 *
-* StarbugPHP - web service development kit
+* StarbugPHP - website development kit
 * Copyright (C) 2008-2009 Ali Gangji
 *
 * StarbugPHP is free software: you can redistribute it and/or modify
@@ -37,6 +37,8 @@ class sb {
 	function sb() {
 		$this->db = ADONewConnection('mysql');
 		$this->db->Connect(Etc::DB_HOST, Etc::DB_USERNAME, Etc::DB_PASSWORD, Etc::DB_NAME);
+		session_start();
+		if (!isset($_SESSION[P('id')])) $_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
 	}
 	function load($what) {
 		if (strpos($what, "core/") === 0) $what = "core/plugins".substr($what, 4);

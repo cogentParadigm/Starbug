@@ -5,7 +5,7 @@
 *
 * This file is part of StarbugPHP
 *
-* StarbugPHP - web service development kit
+* StarbugPHP - website development kit
 * Copyright (C) 2008-2009 Ali Gangji
 *
 * StarbugPHP is free software: you can redistribute it and/or modify
@@ -44,9 +44,6 @@ class Request {
 			"pending"     => 16,
 			"private"			=> 32
 		);
-		//start session
-		session_start();
-		if (!isset($_SESSION[P('id')])) $_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
 		//manipulate data if necessary
 		$this->check_post();
 		//locate request
@@ -56,6 +53,18 @@ class Request {
 		//execute
 		$this->execute();
  	}
+
+	private function check_path($prefix, $base, $current) {
+		if (empty($current)) $current = "default";
+		if (file_exists("$prefix$base$current.php")) return $prefix.$base.$current.".php";
+		else if (file_exists("$prefix$base$current")) return $this->check_path($prefix, "$base$current/", next($this->uri));
+		else {
+			header("HTTP/1.1 404 Not Found");
+			$this->path="missing";
+			$this->uri = array("missing");
+			return $prefix."missing.php";
+		}
+	}
 
 	protected function locate() {
 		if (Etc::DB_NAME != "") {
@@ -69,17 +78,11 @@ class Request {
 		}
 		if ($this->payload['check_path'] !== '0') $this->file = ($this->payload['visible'] == 0) ? $this->check_path("core/app/nouns/", "", current($this->uri)) : $this->check_path("app/nouns/", "", current($this->uri));
 	}
-	
-	private function check_path($prefix, $base, $current) {
-		if (empty($current)) $current = "default";
-		if (file_exists("$prefix$base$current.php")) return $prefix.$base.$current.".php";
-		else if (file_exists("$prefix$base$current")) return $this->check_path($prefix, "$base$current/", next($this->uri));
-		else {
-			header("HTTP/1.1 404 Not Found");
-			$this->path="missing";
-			$this->uri = array("missing");
-			return $prefix."missing.php";
-		}
+
+	protected function execute() {
+		if (($this->payload['visible'] == 1) && (file_exists("app/nouns/".$this->payload['template'].".php"))) include("app/nouns/".$this->payload['template'].".php");
+		else if (($this->payload['visible'] == 0) && (file_exists("core/app/nouns/".$this->payload['template'].".php"))) include("core/app/nouns/".$this->payload['template'].".php");
+		else include((($this->payload['visible'] == 1) ? "app/nouns/".Etc::DEFAULT_PATH.".php" : "core/app/nouns/Starbug.php"));
 	}
 
 	protected function post_act($key, $value) {
@@ -91,13 +94,7 @@ class Request {
 		}
 	}
 
-	private function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_act($key, $val);}
-
-	private function execute() {
-		if (($this->payload['visible'] == 1) && (file_exists("app/nouns/".$this->payload['template'].".php"))) include("app/nouns/".$this->payload['template'].".php");
-		else if (($this->payload['visible'] == 0) && (file_exists("core/app/nouns/".$this->payload['template'].".php"))) include("core/app/nouns/".$this->payload['template'].".php");
-		else include((($this->payload['visible'] == 1) ? "app/nouns/".Etc::DEFAULT_PATH.".php" : "core/app/nouns/Starbug.php"));
-	}
+	protected function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_act($key, $val);}
 
 }
-?>	
+?>

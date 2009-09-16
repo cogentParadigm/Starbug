@@ -5,7 +5,7 @@
 *
 * This file is part of StarbugPHP
 *
-* StarbugPHP - meta content manager
+* StarbugPHP - website development kit
 * Copyright (C) 2008-2009 Ali Gangji
 *
 * StarbugPHP is free software: you can redistribute it and/or modify
