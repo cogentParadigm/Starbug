@@ -29,6 +29,7 @@ class Table {
 	var $uniques;
 	var $defaults;
 	var $lengths;
+	var $relations;
 	var $recordCount;
 
 	function Table($data, $t, $u=array(), $d=array(), $l=array()) {
@@ -37,6 +38,18 @@ class Table {
 		if (!isset($this->uniques)) $this->uniques = $u;
 		if (!isset($this->defaults)) $this->defaults = $d;
 		if (!isset($this->lengths)) $this->lengths = $l;
+	}
+	
+	function has_one($name, $lookup, $ref_field) {
+		$this->relations[$name] = array("type" => "one", "lookup" => $lookup, "ref" => $ref_field);
+	}
+	
+	function has_many($name, $hook, $lookup="", $ref_field="") {
+		$this->relations[$name] = array("type" => "many", "hook" => $hook);
+		if ($lookup && $ref_field) {
+			$this->relations[$name]["lookup"] = $lookup;
+			$this->relations[$name]["ref"] = $ref_field;
+		}
 	}
 
 	protected function store($arr) {
@@ -115,10 +128,21 @@ class Table {
 	}
 
 	function get($select, $where="", $other="") {
+		$from = P($this->type);
+		if (false !== strpos($where, ".")) {
+			$from	.= " AS obj";
+			foreach($this->relations as $rel) {
+				if (false !== strpos($where, $rel)) {
+					$namejoin = " INNER JOIN ".P($rel['name'])." AS $rel[name] ON ";
+					if ($rel['type'] == "one") $from .= $namejoin."$rel[lookup].$rel[ref]=".(($rel['lookup'] == "obj") ? $rel['name'] : "obj").".id";
+					else if ($rel['type'] == "many") $from .= ($rel['lookup']) ? " INNER JOIN ".P($rel['lookup'])." AS $rel[lookup] ON obj.id=$rel[lookup].$rel[hook]".$namejoin." $rel[lookup].$rel[ref]=$rel[name].id" : $namejoin."obj.id=$rel[name].$rel[hook]";
+				}
+			}
+		}
 		$whereclause = ((empty($where)) ? "" : " WHERE ".$where);
 		if (!empty($other)) $whereclause .= " ".$other;
 		//echo "finding ".$select." FROM ".P($this->type).$whereclause;
-		$records = $this->db->Execute("SELECT ".$select." FROM ".P($this->type).$whereclause);
+		$records = $this->db->Execute("SELECT ".$select." FROM ".$from.$whereclause);
 		$this->recordCount = $records->RecordCount();
 		return $records;
 	}

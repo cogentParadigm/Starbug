@@ -11,7 +11,7 @@ body{background:url('../images/sbfade.png') repeat-x #efede8;font-family: Helvet
 /* structural elements */
 #shell, .shell{width:900px;margin:0 auto}
 #shell{padding-top:200px;position:relative;background:url('../images/starbug.png') 0px -3px no-repeat;height:500px;text-align:left;font-size:14px}
-#footer{list-style:none;float:right;font-size:10px;margin-bottom:30px;}
+#footer{list-style:none;float:right;font-size:10px;margin-bottom:30px;clear:both}
 #dash{width:100%;position:fixed;bottom:0px;}
 #dashlist{width:900px;list-style:none;background:#494;margin:0 auto;height:26px;clear:both;position:relative}
 /* headings */
@@ -43,6 +43,8 @@ em{color:#222}
 .codeblock{border:1px solid #222;padding:10px;margin:5px 0;width:50%;background:#fff;font-style:italic}
 .note{font-size:10px}
 #dash_form .box{width:900px;margin:0 auto;position:relative;height:75px;padding-bottom:16px;z-index:200}
+.green{color:#494}
+.red{color:#C00}
 /* forms */
 input.text{padding:2px;border:1px solid #555}
 select{padding:2px}
@@ -62,6 +64,8 @@ legend{background:#494;color:#EEE;font-weight:bold;padding:2px 5px}
 .big.button{font-size:36px;font-weight:normal;margin-right:5px;padding:5px 10px}
 a.big.button{padding:6px 10px}
 /* links */
+p a{color:#494;text-decoration:none}
+p a:hover{text-decoration:underline}
 h1 a{color:#494;text-decoration:none}
 a.button{padding:4px 5px}
 .button:hover{background:#5a5;}
@@ -93,7 +97,7 @@ table .users_form .field{padding:15px 10px}
 .lidls dd{margin-left:100px}
 .lidls dd .options{float:right}
 /*  models */ /* headings */
-.lidls h3{color:#fff;background:#494;font-size:14px;height:28px}
+.lidls h3{color:#fff;background:#494;font-size:14px;height:28px;padding:0}
 #models .inactive h3{background:#C22}
 .lidls h3 span{display:block;float:left;padding:5px 10px}
 .lidls h3 a{color:#fff;text-decoration:none;display:block;float:right;padding:5px;visibility:hidden}
@@ -115,3 +119,12 @@ dt.sub a.right{margin-left:10px}
 dt.sub.inactive a, dd.inactive dl a{color:#C22}
 dt.sub.inactive a:hover, dd.inactive dl a:hover{color:#D00}
 .lidls dd a.button{margin-top:20px;float:left}
+/* models */ /* tabs */
+.lidls .tab{padding-right:400px}
+.lidls .tab .note{background:#eee;font-size:11px}
+.lidls .tabs{float:right;width:100%;height:21px;margin-bottom:5px}
+.lidls .tabs .button{float:right;margin-left:5px;background:none;color:#494;position:relative;z-index:2;border-bottom:2px solid #494;padding-bottom:2px}
+.lidls .tabs .button.active{color:#fff}
+.lidls .tab h4.left{margin-right:10px}
+.tableft{position:relative;background:url(../images/tableft.png) top left no-repeat #494;padding-left:7px;height:21px;display:block;float:left}
+.tabright{background:url(../images/tabright.png) top right no-repeat #494;padding-right:7px;height:21px;display:block;float:left}

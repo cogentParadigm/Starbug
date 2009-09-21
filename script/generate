@@ -32,7 +32,7 @@ include("etc/init.php");
 include("etc/Theme.php");
 include("util/Args.php");
 $args = new Args();
-
+global $sb;
 if (!empty($argv[2])) {
 	$fields = unserialize(file_get_contents("var/schema/$argv[2]"));
 
@@ -94,7 +94,7 @@ if (!empty($argv[2])) {
 	fwrite($file, $model);
 	fclose($file);
 	chmod("var/schema/.temp/$argv[2]_model.xml", 0777);
-	$file = fopen("core/db/schema/.temp/$argv[2]_form.xml", "wb");
+	$file = fopen("var/schema/.temp/$argv[2]_form.xml", "wb");
 	fwrite($file, $form);
 	fclose($file);
 	chmod("var/schema/.temp/$argv[2]_form.xml", 0777);
@@ -118,7 +118,7 @@ foreach ($from_form as $stylesheet => $output) exec("./script/cgenerate sax $out
 //COPY FILES
 foreach ($from_copy as $origin => $dest) exec("./script/cgenerate copy $dest themes/".Theme::FOLDER."/$origin");
 //ADD URI
-foreach ($paths as $keys => $values) $db->Execute("INSERT INTO ".P("uris")." ($keys) VALUES ($values)");
+foreach ($paths as $keys => $values) $sb->db->Execute("INSERT INTO ".P("uris")." ($keys) VALUES ($values)");
 
 exit(0);
 ?>

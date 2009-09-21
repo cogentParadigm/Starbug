@@ -36,9 +36,9 @@ class Form {
 			$contents .= Form::$value['type']($value);
 		}
 		if ($enctype) $open .= " enctype=\"multipart/form-data\"";
-		return $open.">\n".$contents."\t<div><input class=\"big button\" type=\"submit\" value=\"Go\" /></div>\n</form>";
+		return $open.">\n".$contents."\t</form>";
 	}
-	
+
 	function fieldset($args) {
 		$ops = $args['options'];
 		unset($args['options']);
@@ -86,9 +86,7 @@ class Form {
 	}
 
 	function submit($ops) {
-		$ops['input_type']='submit';
-		$ops['default']=$ops['value'];
-		return Form::input($ops);
+		return '<input type="submit" class="'.$ops['class'].'" value="'.$ops['name'].'" />';
 	}
 
 	function bin($ops) {
@@ -110,7 +108,7 @@ class Form {
 		if (empty($ops['id'])) $ops['id'] = $ops['name'];
 		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
 		$input .= $tabs.Form::label($ops)."\n";
-		$input .= $tabs.'<input id="'.$ops['id'].'" name="'.$ops['postvar']."[".$ops['name'].']" type="'.$ops['input_type'].'"';
+		$input .= $tabs.'<input id="'.$ops['id'].'" name="'.$ops['postvar']."[".$ops['name'].']" type="'.$ops['input_type'].'" class="'.$ops['input_type'].'"';
 		//POSTed or default value
 		if (!empty($_POST[$ops['postvar']][$ops['name']])) $input .= " value=\"".$_POST[$ops['postvar']][$ops['name']]."\"";
 		else if (!empty($ops['default'])) {
@@ -135,7 +133,7 @@ class Form {
 		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
 		$input .= $tabs.'<input id="'.$ops['id'].'" name="'.$ops['postvar']."[".$ops['name'].']" type="'.$ops['input_type'].'"';
 		//POSTed or default value
-		if (isset($_POST[$ops['postvar']][$ops['name']]) $input .= " value=\"".$_POST[$ops['postvar']][$ops['name']]."\"";
+		if (isset($_POST[$ops['postvar']][$ops['name']])) $input .= " value=\"".$_POST[$ops['postvar']][$ops['name']]."\"";
 		else if (!empty($ops['default'])) $input .= " value=\"".$ops['default']."\"";
 		//size
 		if (!empty($ops['size'])) $input .= ' size="'.$ops['size'].'"';

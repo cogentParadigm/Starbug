@@ -67,6 +67,7 @@ class Request {
 	}
 
 	protected function locate() {
+		global $sb;
 		if (Etc::DB_NAME != "") {
 			$this->payload = $sb->get('uris')->find("*", "'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%')", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1")->fields();
 			if (empty($this->payload)) $this->path = (($this->path == Etc::DEFAULT_PATH)?Etc::DEFAULT_PATH:"missing");
@@ -80,12 +81,14 @@ class Request {
 	}
 
 	protected function execute() {
+		global $sb;
 		if (($this->payload['visible'] == 1) && (file_exists("app/nouns/".$this->payload['template'].".php"))) include("app/nouns/".$this->payload['template'].".php");
 		else if (($this->payload['visible'] == 0) && (file_exists("core/app/nouns/".$this->payload['template'].".php"))) include("core/app/nouns/".$this->payload['template'].".php");
 		else include((($this->payload['visible'] == 1) ? "app/nouns/".Etc::DEFAULT_PATH.".php" : "core/app/nouns/Starbug.php"));
 	}
 
 	protected function post_act($key, $value) {
+		global $sb;
 		if (($object = $sb->get($key)) && method_exists($object, $value)) {
 			$permits = isset($_POST[$key]['id']) ? $object->get_object_permits("*", $value, "obj.id='".$_POST[$key]['id']."'") : $object->get_table_permits($value);
 			if (($permits->RecordCount() > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value();

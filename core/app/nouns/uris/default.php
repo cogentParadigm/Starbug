@@ -34,7 +34,7 @@ $go_to = $start_from + $shown;
 <?php } ?>
 <table id="uris_table">
 <tr><th>Path</th><th>Template</th><th>Visibility</th><th>Importance</th><th>Owner</th><th>Collective</th><th>Options</th></tr>
-<?php for($i=$start_from;$i<=$go_to;$i++) { $el = $all[$i]; ?>
+<?php for($i=$start_from;$i<$go_to;$i++) { $el = $all[$i]; ?>
 	<tr id="uri_<?php echo $el['id']; ?>">
 		<td><?php echo $el['path']; ?></td>
 		<td><?php echo $el['template']; ?></td>
@@ -52,4 +52,4 @@ $go_to = $start_from + $shown;
 	</tr>
 <?php } ?>
 </table>
-<a id="add_uri" class="big button" href="<?php echo uri("uris/create"); ?>" onclick="new_uri();return false;">New Element</a>
+<a id="add_uri" class="big left button" href="<?php echo uri("uris/create"); ?>" onclick="new_uri();return false;">New Element</a>

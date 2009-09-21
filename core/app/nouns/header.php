@@ -11,4 +11,4 @@
 	<body>
 		<div id="shell">
 			<h1><a href="<?php echo Etc::WEBSITE_URL; ?>"><span>Starbug</span></a></h1>
-			<span id="subhead">PHP meta content manager</span>
+			<span id="subhead">PHP website development kit</span>

@@ -5,9 +5,8 @@
 		<meta name="keywords" content="Starbug, Website, Web Site, Web Development, Engine, Framework" />
 		<meta name="description" content="Built on the Starbug PHP Development Engine. A code and content management engine for PHP developers." />
 		<link rel="stylesheet" type="text/css" href="<?php echo Etc::WEBSITE_URL."core/".Etc::STYLESHEET_DIR."default.css"; ?>" media="screen" />
-		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.2.3/dijit/themes/tundra/tundra.css"/>
-		<!--[if lt IE 8]><script src="http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE8.js" type="text/javascript"></script><![endif]-->
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.2.3/dojo/dojo.xd.js"></script>
+		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.3.2/dijit/themes/tundra/tundra.css"/>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.3.2/dojo/dojo.xd.js"></script>
 		<title><?php echo Etc::WEBSITE_NAME; ?></title>
 	</head>
 	<body>

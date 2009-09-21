@@ -1,6 +1,6 @@
 			<ul id="footer">
-				<li><a href="http://www.starbugphp.com">StarbugPHP WSDK</a> &copy; 2008-2009 <a href="http://www.aligangji.com">Ali Gangji</a></li>
-				<li><a href="http://www.starbugphp.com/freedoms">freedoms</a></li>
+				<li><a target="_blank" href="http://www.starbugphp.com">StarbugPHP WSDK</a> &copy; 2008-2009 <a target="_blank" href="http://ali.spucket.com">Ali Gangji</a></li>
+				<li><a target="_blank" href="http://www.starbugphp.com/freedoms">freedoms</a></li>
 			</ul>
 		</div>
 		<?php if (($_SESSION[P('memberships')] & 1)==1) { ?>

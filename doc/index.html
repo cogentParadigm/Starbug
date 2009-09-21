@@ -5,11 +5,11 @@
 		<meta name="keywords" content="Starbug, Website, Web Site, Web Development, Engine, Framework" />
 		<meta name="description" content="Built on the Starbug PHP Development Engine. A code and content management engine for PHP developers." />
 		<link rel="stylesheet" type="text/css" href="../core/public/stylesheets/default.css" media="screen" />
-		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.2.3/dijit/themes/tundra/tundra.css"/>
-		<!--[if lt IE 8]><script src="http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE8.js" type="text/javascript"></script><![endif]-->
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.2.3/dojo/dojo.xd.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.3.2/dojo/dojo.xd.js"></script>
 		<title>Stabug - Documentation</title>
 		<style>
+			a{color:#494;text-decoration:none}
+			a:hover{text-decoration:underline}
 			.faq dt{font-weight:bold;font-size:18px;padding-left:38px;padding-bottom:10px;background:url(../core/public/images/question.gif) no-repeat}
 			.faq dd{padding-left:38px;padding-bottom:32px;background:url(../core/public/images/answer.gif) no-repeat}
 			.faq dl{margin-top:15px}
@@ -18,92 +18,111 @@
 			h2{font-size:24px}
 			h3{background:#999;color:#fff;border-top:2px solid #666;border-bottom:2px solid #666;padding:5px 10px;margin-bottom:10px}
 			h4{margin-bottom:5px;margin-top:15px}
+			.codeblock{margin-bottom:20px}
+			.filetree, .filetree ul{list-style-type:none}
 		</style>
 	</head>
 	<body>
 		<div id="shell">
 			<h1><a href="./"><span>Starbug</span></a></h1>
-			<span id="subhead">PHP meta content manager</span>
-			<h2>FAQ</h2>
-			<dl class="faq">
-				<dt>What is it?</dt>
-				<dd>It's a meta content management system.</dd>
-				<dt>What is it?</dt>
-				<dd>It's an environment for handling http requests, abstracting data, and generating content.</dd>
-				<dt>What is it?</dt>
-				<dd>It's a web development framework.</dd>
-				<dt>What does it do?</dt>
-				<dd>It provides a layer of abstraction to web development to facilitate database management and interaction, templating, and form generation among other things. The aim is to drastically increase development productivity.</dd>
-				<dt>OK. So.. SUPER QUICK. how does it work?</td>
-				<dd>Well 1.) rather than deal with lots of raw database interaction you deal with object models like Users, Posts, and Events and 2.) rather than writing out lots of form code and CRUD features (create, read, update, delete) you use these object models to generate them and then tweak em.</dd>
-				<dt>This is starting to sound like other frameworks, and there are so many. what makes yours different?</dt>
-				<dd>It provides many of the same features but is very different from anything we've seen out there. Here are some of the major differences:
-					<dl>
-						<dt>To MVC or not to MVC?</dt>
-						<dd>Most frameworks set you up to build an MVC (model, view, controller) application. Starbug does NOT. Though there are models and Starbug's operation might be considered MVC, the application is not framed in this way.</dd>
-						<dt>Generation vs Parsing</dt>
-						<dd>Starbug favours generating PHP/XHTML over using template languages. You simply use good old XHTML and CSS, just like mom used to serve! And Starbug helps you generate it.</dd>
-						<dt>Approach to Schema</dt>
-						<dd>Most frameworks provide little help managing the database, or what they do provide isn't integrated with the rest of the framework. This part is central to Starbug, providing an easy way to manage your models and your database. Together.</dd>
-					</dl>
-				</dd>
-				<dt>Does it work on Windows?</dt>
-				<dd>Probably not without some sort of Unix subsystem. Try it and tell me.</dd>
-				<dt>Where can I get more info?</dt>
-				<dd>We have documentation on The Philosophy and The Theory behind Starbug, as well as a Manual and a Quick Start Guide. Hope that helps! And remember that Starbug is open source so come back soon with your improvements!</dd>
-			</dl>
-			<h2>The Theory</h2>
-			<h3>Introduction</h3>
-			<p>There are many frameworks and content management systems out there in the rampaging wilderness from Ruby on Rails to Wordpress. I'm not trying to equate the two. One is a Ruby Web Development framework, and the other is a PHP blog content manager.
-			My point is that there is a lot out there to help you get stuff done. Most frameworks have the idea that we need to use an MVC (model, view, controller) architecture, or that we should use a template language.
-			In some way or another, they feel they need to integrally change the way we get stuff done. I didn't want to change it as much as I wanted to do it more efficiently.</p>
-			<h3>The Philosophy</h3>
-			<p>Before I explain what components there are and how they interact, let me take a minute to outline some of the driving principles of StarbugPHP.</p>
-			<h4>Abstraction</h4>
-			<p>Abstract when necessary. Be direct. After carefull thought, StarbugPHP was built around the HTTP Request.</p>
-			<h4>XHTML/CSS</h4>
-			<p>Use them as you always do. No template languages. Use generators to help you generate some. If you're dying to be able to write HTML with speed and style, use an editor like geany with its fancy auto-complete snippets.</p>
-			<h4>Scheme</h4>
-			<p>Define your models in one place and have other parts of the application take that and define your tables, write your model, and generate some CRUD.</p>
-			<h3>The Structure</h3>
-			<h4>The Request</h4>
-			<p>The main object in Starbug is the Request. After all, what we're dealing with are HTTP requests. You don't need to edit the Request or extend it, but it controls a few things.</p>
-			<ul>
-				<li>providing access to data</li>
-				<li>providing access to errors</li>
-				<li>determining the request path from the url</li>
-				<li>including the appropriate files</li>
-			</ul>
-			<h4>The Models</h4>
-			<p>In the running application, your data is represented my models, such as article, post, or event. These are fairly straight forward and extend from the Table class. The Table is simply a wrapper for adodb_lite.</p>
-			<h4>The nouns</h4>
-			<p>Going back to HTTP, a URI identifies a resource. The nouns are like the actual resources. They are just php files with php and XHTML. They're what the Request is responsible for locating.</p>
-			<p>here is how it breaks down when you're using a website built with starbug:</p>
-			<img src="../core/public/images/userdiagram.png" alt="" />
-			<h4>The core</h4>
-			<p>The core application is a set of nouns that make up the administrative areas. You'll use these to 'model' your models. Hence the meta content manager.</p>
-			<h4>The Schemer</h4>
-			<p>The Schemer sits between the core application and adodb_lite to take care of structural modifications to the db.</p>
-			<h4>The generators</h4>
-			<p>There are various generators, for generating models, forms and CRUD (create, read, update, delete) albeit in the form of CLUS (pronounced 'clues')(create, list, update, show).
-			The Schemer will automatically use the model generator when you activate a model. With a model activated, you can generate CLUS from the command line.</p>
-			<p>So here's how it looks when we tie in development:</p>
-			<img src="../core/public/images/fulldiagram.png" alt="" />
+			<span id="subhead">PHP website development kit</span>
 			<h2>Manual</h2>
+			<h3>Introduction</h3>
+			<p>Since web development is such a melange of technologies, the process of actually building a website convolutes the creative and architectural considerations. When you break it down, what is it that we're all really trying to acomplish?
+			I had to start building Starbug to really figure that out. Eventually <strong>two processes</strong> emerged. <strong>Application design</strong> and <strong>Interaction design</strong>. It is my goal to be free to focus on these things
+			while developing with Starbug.</p>
+			<h3>Terminology</h3>
+			<p>Before we move on, let's quickly go over some terms you'll run into.</p>
+			<h4>Models</h4>
+			<p>Models are objects that mediate access to data. They generally correspond to a table in the database and extend from the Table class.</p>
+			<h4>Nouns</h4>
+			<p>Nouns are much like views. They contain HTML and PHP code. They are different from views since there are no controllers in the context of your application.</p>
+			<h3>File Structure</h3>
+			<p>Now let's take a look at Starbug's file structure.</p>
+			<ul class="filetree">
+				<li>
+					<em>/app</em>
+					<p>The subfolders of <em>app</em> contain the main code of your application.</p>
+					<ul>
+						<li>
+							<em>./models</em>
+							<p>All of your Models will be kept in this folder. An new application will have Users.php, Uris.php and Permits.php in this folder.</p>
+						</li>
+						<li>
+							<em>./nouns</em>
+							<p>This folder contains your applications main resources, from which you can call upon models, utilities and plugins.</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<em>/public</em>
+					<p>This folder contains public resources such as images, stylesheets, and scripts.</p>
+				</li>
+				<li>
+					<em>/plugins</em>
+					<p>The <em>plugins</em> folder contains available and installed plugins. Note that some plugins are also in <em>/core/plugins</em></p>
+				</li>
+				<li>
+					<em>/themes</em>
+					<p>Themes provide templates for code generation. Generation is achieved with XSLT.</p>
+				</li>
+				<li>
+					<em>/util</em>
+					<p>This folder contains various utilites which can be imported in your application.</p>
+				</li>
+				<li>
+					<em>/script</em>
+					<p>This folder contains scripts which you can run from a terminal such as <em>./script/generate</em>, and <em>./script/plugin</em>. The corresponding interfaces use these scripts.</p>
+				</li>
+				<li>
+					<em>/core</em>
+					<p>This folder contains Starbug's core files.</p>
+				</li>
+				<li>
+					<em>/etc</em>
+					<p>As you've hopefully guessed, all configuration files are kept in this folder.</p>
+				</li>
+				<li>
+					<em>/doc</em>
+					<p>Here lies documentation.</p>
+				</li>
+				<li>
+					<em>/var</em>
+					<p>Various application data may be put in this folder.</p>
+				</li>
+			</ul>
+			<h3>Download</h3>
+			<p>You may download  Starbug PHP by either checking out a copy from GitHub or dowloading a copy from the website. You may check out a copy as follows:</p>
+			<div class="codeblock">
+				<p><strong>$</strong> git clone git://github.com/cogentParadigm/Starbug.git starbug</p>
+				<span class="note">Visit <a target="_blank" href="http://www.starbugphp.com">StarbugPHP.com</a> to download a copy.</span>
+			</div>
+			<p>Once you've checked out a copy, enter the new directory. All commands will be run from this folder.</p>
+			<div class="codeblock"><strong>$</strong> cd starbug</div>
 			<h3>Installation</h3>
-			<h3>Hello World</h3>
-			<h3>Hello Blog</h3>
-			<h3>Hello Pages</h3>
-			<h3>Hello Events</h3>
-			<h3>Models</h3>
-			<h4>Key reference</h4>
+				<p>Once you've downloaded or checked out a copy of Starbug, you need to run the installer in a terminal. The installer will ask you for some configuration information.</p>
+				<div class="codeblock">
+					<p><strong>$</strong> chmod +x etc/install.php</p>
+					<p><strong>$</strong> ./etc/install.php</p>
+				</div>
+			<h3>Generating a bare application</h3>
+			<p>Once you have have installed Starbug, you can get started by generating a bare application. You can do this by logging in at <em>http://www.yoursite.com/sb-admin</em> and clicking on <strong>generate</strong> under <strong>Tools</strong>, and then choosing <strong>Bare Application</strong>.</p>
+			<p>You may also generate it from a terminal like so:</p>
+			<div class="codeblock">
+				<p><strong>$</strong> ./script/generate app</p>
+			</div>
+			<p>You will have new files in <em>/app/nouns</em>. The generated files simply rely on public resources from the core such as images and stylesheets. You should put your own in <em>/public</em>.</p>
+			<h3>Model</h3>
+			<h4>Attribute Reference</h4>
 			<table>
-				<tr><th>Key</th><th>Possible values</th><th>Default</th></tr>
-				<tr><td>type</td><td>int, string, datetime, timestamp</td><td>none(required)</td></tr>
-				<tr><td>length</td><td>(int max_length), (int min_length):(int max_length)</td><td>type dependant</td></tr>
-				<tr><td>input_type</td><td>text, textarea, hidden, select, date_select, time_select</td><td>text</td></tr>
+				<tr><th>Key</th><th>Possible values</th><th>Default</th><th>Requires</th></tr>
+				<tr><td>type</td><td>int, string, bool, datetime, timestamp, file</td><td>none(required)</td><td></td></tr>
+				<tr><td>length</td><td>(int max_length), (int min_length):(int max_length)</td><td>type dependant</td><td></td></tr>
+				<tr><td>input_type</td><td>text, image, checkbox, submit, file, textarea, hidden, select, date_select, time_select</td><td>text</td><td></td></tr>
+				<tr><td>range</td><td>(int from):(int to)</td><td>none</td><td>input_type=select</td></tr>
+				<tr><td>time_select</td><td>true, false</td><td>false</td><td>type=datetime | input_type=date_select</td></tr>
 			</table>
-			<h3>Using generators</h3>
+			<h3>Generate CRUD</h3>
 			<h3>In the Request</h3>
 			<h3>Conclusion</h3>
 			<ul id="footer">

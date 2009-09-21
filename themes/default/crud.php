@@ -1,7 +1,7 @@
 <?php
 if (empty($_POST['modelname'])) {
 	$infos = array();
-	if ($handle = opendir("core/db/schema/")) {
+	if ($handle = opendir("var/schema/")) {
 		while (false !== ($file = readdir($handle))) if ((strpos($file, ".") === false)) $infos[] = $file;
 		closedir($handle);
 	}
@@ -28,18 +28,22 @@ if (empty($_POST['modelname'])) {
 		</fieldset>
 	</form>
 <?php } else { ?>
+	<p>the following path(s) will be added..</p>
+	<ul class="file_list">
+		<li><?php $rows = $sb->get("uris")->get("*", "path='$_POST[modelname]'")->GetRows(); if (!empty($rows)) echo "<strong class=\"right red\">already exists</strong>"; else echo "<strong class=\"right green\">does not exist</strong>"; ?><?php echo $_POST['modelname']; ?></li>
+	</ul>
 	<p>the following files will be created..</p>
 	<ul class="file_list">
-		<li><?php if (file_exists("app/nouns/$_POST[modelname]")) echo "<span class=\"right red\">exists</span>"; else echo "<span class=\"right green\">does not exist</span>"; ?>app/nouns/<?php echo $_POST['modelname']; ?></li>
-		<li><?php if (file_exists("app/nouns/$_POST[modelname]/default.php")) echo "<span class=\"right red\">exists</span>"; else echo "<span class=\"right green\">does not exist</span>"; ?>app/nouns/<?php echo $_POST['modelname']; ?>/default.php</li>
-		<li><?php if (file_exists("app/nouns/$_POST[modelname]/create.php")) echo "<span class=\"right red\">exists</span>"; else echo "<span class=\"right green\">does not exist</span>"; ?>app/nouns/<?php echo $_POST['modelname']; ?>/create.php</li>
-		<li><?php if (file_exists("app/nouns/$_POST[modelname]/update.php")) echo "<span class=\"right red\">exists</span>"; else echo "<span class=\"right green\">does not exist</span>"; ?>app/nouns/<?php echo $_POST['modelname']; ?>/update.php</li>
-		<li><?php if (file_exists("app/nouns/$_POST[modelname]/form.php")) echo "<span class=\"right red\">exists</span>"; else echo "<span class=\"right green\">does not exist</span>"; ?>app/nouns/<?php echo $_POST['modelname']; ?>/form.php</li>
+	<?php $newfiles = array("app/nouns/$_POST[modelname]", "app/nouns/$_POST[modelname]/default.php", "app/nouns/$_POST[modelname]/create.php", "app/nouns/$_POST[modelname]/update.php", "app/nouns/$_POST[modelname]/form.php"); foreach($newfiles as $newfile) { ?>
+		<li><?php if (file_exists($newfile)) echo "<strong class=\"right red\">already exists</strong>"; else echo "<strong class=\"right green\">does not exist</strong>"; ?><?php echo $newfile; ?></li>
+	<?php } ?>
 	</ul>
+	<br><br>
 	<form method="post" action="<?php echo uri("generate"); ?>">
 		<fieldset>
 			<legend>CRUD</legend>
 			<input type="hidden" name="generate" value="crud"/>
+			<?php if ($_POST['update']) { ?><input type="hidden" name="update" value="true"/><?php } ?>
 			<input type="hidden" name="modelname" value="<?php echo $_POST['modelname']; ?>"/>
 			<div>
 				<input type="submit" class="big button" value="Generate"/>
