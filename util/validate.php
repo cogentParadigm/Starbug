@@ -1,6 +1,6 @@
 <?php
 /**
-* FILE: util/Validate.php
+* FILE: util/validate.php
 * PURPOSE: Data validation utility
 *
 * This file is part of StarbugPHP
@@ -21,7 +21,7 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-class Validate {
+class validate {
 	function length($string, $minimum, $maximum) {
 		$length = strlen($string);
 		if($length >= $minimum && $length <= $maximum) return true;

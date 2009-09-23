@@ -21,7 +21,7 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-include("util/Validate.php");
+$sb->import("util/validate.php");
 class Table {
 
 	var $db;
@@ -64,7 +64,7 @@ class Table {
 			if (isset($this->lengths[$col])) { //check length
 				$length = split(":", $this->lengths[$col]);
 				if (!next($length)) $length = array(0, $length[0]);
-				if (!Validate::length($arr[$col], $length[0], $length[1])) $errors[$col."LengthError"] = true; //$col is too long
+				if (!validate::length($arr[$col], $length[0], $length[1])) $errors[$col."LengthError"] = true; //$col is too long
 			}
 		}
 		foreach ($this->uniques as $val) {

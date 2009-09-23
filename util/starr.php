@@ -20,7 +20,7 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-class Starr {
+class starr {
 
 	function star($str="") {
 		$arr = array();
@@ -37,20 +37,20 @@ class Starr {
 	function closer_pos($str, $offset=0) {
 		$close = strpos($str, "\t");
 		$nextopen = strpos($str, "\n");
-		if (($nextopen === false) || ($nextopen > $close)) return $offset+$close; else return $offset+Starr::closer_pos(substr($str, $close+1), $close+1);
+		if (($nextopen === false) || ($nextopen > $close)) return $offset+$close; else return $offset+starr::closer_pos(substr($str, $close+1), $close+1);
 	}
 
 	function rstar($str="") {
 		$arr = array(); $open = strpos($str, "\n"); $next = $open-1;
-		if ($open===false) return Starr::star($str);//no nesting, return flat array
-		else $close = Starr::closer_pos(substr($str, $open+1), $open+1);//find the close of the first open
+		if ($open===false) return starr::star($str);//no nesting, return flat array
+		else $close = starr::closer_pos(substr($str, $open+1), $open+1);//find the close of the first open
 		if ($open != 0) {//something is before the first open
 			while (($next > 0) && ($str{$next} != ",")) $next--;
-			if ($next != 0) $arr = Starr::star(substr($str, 0, $next));
+			if ($next != 0) $arr = starr::star(substr($str, 0, $next));
 		}
 		if ($next != 0) $next++;
-		$arr = (($str{$open-1} == "=") ? array_merge($arr, array(substr($str, $next, ($open-1)-$next) => Starr::rstar(substr($str, $open+1, $close-($open+1))))) : array_merge($arr, Starr::rstar(substr($str, $open+1, $close-($open+1)))));
-		if ((strlen($str) > ($close+1)) && ($str{$close+1} == ",")) $arr = array_merge($arr, Starr::rstar(substr($str, $close+2)));
+		$arr = (($str{$open-1} == "=") ? array_merge($arr, array(substr($str, $next, ($open-1)-$next) => starr::rstar(substr($str, $open+1, $close-($open+1))))) : array_merge($arr, Starr::rstar(substr($str, $open+1, $close-($open+1)))));
+		if ((strlen($str) > ($close+1)) && ($str{$close+1} == ",")) $arr = array_merge($arr, starr::rstar(substr($str, $close+2)));
 		return $arr;
 	}
 

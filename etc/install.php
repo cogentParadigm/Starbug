@@ -84,28 +84,33 @@
 	include("core/db/Schemer.php");
 	$sb->db->Execute("DROP TABLE IF EXISTS `".P('permits')."`");
 	$sb->db->Execute("CREATE TABLE `".P("permits")."` (id int not null AUTO_INCREMENT, role varchar(30) not null, who int not null default 0, action varchar(100) not null, status int not null default '0', priv_type varchar(30) not null default 'table', related_table varchar(100) not null, related_id int not null default '0', PRIMARY KEY (`id`) )");
+	$sb->db->Execute("DROP TABLE IF EXISTS `".P('system_tags')."`");
+	$sb->db->Execute("CREATE TABLE `".P("system_tags")."` (id int not null AUTO_INCREMENT, tag varchar(30) not null default '', raw_tag varchar(50) not null default '', PRIMARY KEY (`id`) )");
+	$sb->db->Execute("DROP TABLE IF EXISTS `".P("uris_tags")."`");
+	$sb->db->Execute("CREATE TABLE `".P("uris_tags")."` (tag_id int not null default '0', tagger_id int not null default '0', object_id int not null default '0', tagged_on datetime not null default '0000-00-00 00:00:00', PRIMARY KEY  (`tag_id`,`tagger_id`,`object_id`), KEY `tag_id_index` (`tag_id`), KEY `tagger_id_index` (`tagger_id`), KEY `object_id_index` (`object_id`) )");
 	$schemer = new Schemer($sb->db);
 	$schemer->create("uris");
 	$schemer->create("users");
 
 	//INSERT RECORDS
 	$schemer->insert("users", "first_name, last_name, email, password, memberships", "'$admin_first', '$admin_last', '$admin_email', '$admin_pass', '1'");
-	$schemer->insert("uris", "path, template, visible", "'uris', 'Starbug', '0'");
-	$schemer->insert("uris", "path, template, visible", "'ajax', 'Ajax', '0'");
-	$schemer->insert("uris", "path, template, visible", "'models', 'Starbug', '0'");
-	$schemer->insert("uris", "path, template, visible", "'users', 'Starbug', '0'");
-	$schemer->insert("uris", "path, template, visible", "'generate', 'generate', '0'");
-	$schemer->insert("uris", "path, template, visible", "'permits', 'Starbug', '0'");
-	$schemer->insert("uris", "path, template, visible", "'settings', 'Starbug', '0'");
-	$schemer->insert("uris", "path, template, visible, collective", "'sb-admin', 'Starbug', '0', '0'");
+	$schemer->insert("uris", "path, template, prefix", "'uris', 'Starbug', 'core/app/nouns/'");
+	$schemer->insert("uris", "path, template, prefix", "'ajax', 'Ajax', 'core/app/nouns/'");
+	$schemer->insert("uris", "path, template, prefix", "'models', 'Starbug', 'core/app/nouns/'");
+	$schemer->insert("uris", "path, template, prefix", "'users', 'Starbug', 'core/app/nouns/'");
+	$schemer->insert("uris", "path, template, prefix", "'generate', 'generate', 'core/app/nouns/'");
+	$schemer->insert("uris", "path, template, prefix", "'permits', 'Starbug', 'core/app/nouns/'");
+	$schemer->insert("uris", "path, template, prefix", "'settings', 'Starbug', 'core/app/nouns/'");
+	$schemer->insert("uris", "path, template, prefix, collective", "'sb-admin', 'Starbug', 'core/app/nouns/', '0'");
 	//PRIVILIGES
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'login', '".P('users')."'");
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'logout', '".P('users')."'");
 	$schemer->insert("permits", "role, action, priv_type, related_table", "'collective', 'read', 'global', '".P('uris')."'");
+	//APPLY TAGS
 	
 	//SET FILE PERMISSIONS
 	exec("chmod a+x script/generate");
 	exec("chmod ug+s script/cgenerate");
-	exec("mkdir app/nouns var/schema/.temp public/uploads public/thumbnails");
+	exec("mkdir app/nouns var/schema/.temp var/hooks public/uploads public/thumbnails");
 	exec("chmod -R a+w var public/uploads public/thumbnails");
 ?>

@@ -1,4 +1,5 @@
 <?php
+$sb->provide("util/search");
 function keywordClause($text, $fields) {
 	$text = strtolower(trim(str_replace("\\\"","&quot;",$text)));
 	//tokenize the text

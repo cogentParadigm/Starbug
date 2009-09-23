@@ -27,37 +27,7 @@ function dfault(&$val, $default="") {if(!isset($val)) $val = $default;}
 function efault(&$val, $default="") {if(empty($val)) $val = $default;}
 function P($var) {return Etc::PREFIX.$var;}
 function uri($path) {return Etc::WEBSITE_URL.$path;}
-class sb {
-	var $db;
-	var $provided = array();
-	var $objects = array();
-	var $errors = array();
-	function sb() {
-		$this->db = ADONewConnection('mysql');
-		$this->db->Connect(Etc::DB_HOST, Etc::DB_USERNAME, Etc::DB_PASSWORD, Etc::DB_NAME);
-		session_start();
-		if (!isset($_SESSION[P('id')])) $_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
-	}
-	function load($what) {
-		if (strpos($what, "core/") === 0) $what = "core/plugins".substr($what, 4);
-		else $what = "plugins/".$what;
-		if (file_exists($what.".php")) include($what.".php");
-		else {
-			$token = split("/", $what); $token = $what."/".end($token).".php";
-			if (file_exists($token)) include($token);
-		}
-	}
-	function import($loc) {global $sb; if (empty($this->provided[$loc])) include($loc.".php");}
-	function provide($loc) {$this->provided[$loc] = true;}
-	function get($name) {
-		$obj = ucwords($name);
-		if (!$this->objects[$name]) {
-			include("app/models/".$obj.".php");
-			$this->objects[$name] = new $obj($this->db, $name);
-		}
-		return $this->objects[$name];
-	}
-	function has($name) {return file_exists("app/models/".ucwords($obj).".php");}
-}
+include("core/sb.php");
 $sb = new sb();
+include("core/db/Table.php");
 ?>

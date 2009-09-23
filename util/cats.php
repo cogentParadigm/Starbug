@@ -1,4 +1,5 @@
 <?php
+$sb->provide("util/cats");
 	function cat_select($categories, $match=0, $parent=0, $iteration=0) {
 		$cats = $categories->get("*", "parent='".$parent."'")->GetRows();
 		foreach($cats as $row) { ?>

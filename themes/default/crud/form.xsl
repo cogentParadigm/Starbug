@@ -5,7 +5,7 @@
 	$sb-&gt;import("util/form");
 	$fields = array();
 <xsl:apply-templates select="/form/field"/>	$fields["Save"] = array("type" => "submit", "class" => "big left button");
-	echo Form::render("<xsl:value-of select="@name"/>", "post", $action, $submit_to, $fields);
+	echo form::render("<xsl:value-of select="@name"/>", "post", $action, $submit_to, $fields);
 ?&gt;</xsl:template>
 
 <xsl:template match="field">	$<xsl:value-of select="@name"/>_errors = array(<xsl:apply-templates select="error"/>);

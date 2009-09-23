@@ -1,6 +1,6 @@
 <?php
 /**
-* FILE: util/Form.php
+* FILE: util/form.php
 * PURPOSE: Form generation utility
 *
 * This file is part of StarbugPHP
@@ -22,7 +22,7 @@
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
 $sb->provide("util/form");
-class Form {
+class form {
 
 	function render($postvar, $meth, $action, $submit_to, $fields) {
 		if (empty($submit_to)) $submit_to = $_SERVER['REQUEST_URI'];
@@ -33,7 +33,7 @@ class Form {
 			$value['name'] = $key;
 			$value['postvar'] = $postvar;
 			if ($value['type'] == "bin") $enctype = true;
-			$contents .= Form::$value['type']($value);
+			$contents .= form::$value['type']($value);
 		}
 		if ($enctype) $open .= " enctype=\"multipart/form-data\"";
 		return $open.">\n".$contents."\t</form>";
@@ -47,7 +47,7 @@ class Form {
 		$fs = '<fieldset>';
 		foreach($args as $key => $value) {
 			$value['name'] = $key;
-			$fs .= Form::$value['type']($value);
+			$fs .= form::$value['type']($value);
 		}
 		return $fs.'</fieldset>';
 	}
@@ -59,7 +59,7 @@ class Form {
 		foreach ($args as $key => $value) {
 			$value['name'] = $key;
 			$value['fielded'] = true;
-			$field .= Form::$value['type']($value);
+			$field .= form::$value['type']($value);
 		}
 		return $field."\t".'</'.(isset($ops['type'])?$ops['type']:"div").'>'."\n";
 	}
@@ -72,17 +72,17 @@ class Form {
 
 	function text($ops) {
 		$ops['input_type']='text';
-		return Form::input($ops);
+		return form::input($ops);
 	}
 
 	function password($ops) {
 		$ops['input_type']='password';
-		return Form::input($ops);
+		return form::input($ops);
 	}
 
 	function hidden($ops) {
 		$ops['input_type']='hidden';
-		return Form::input($ops);
+		return form::input($ops);
 	}
 
 	function submit($ops) {
@@ -91,7 +91,7 @@ class Form {
 
 	function bin($ops) {
 		$ops['input_type'] = 'file';
-		return Form::input($ops);
+		return form::input($ops);
 	}
 
 	function image($ops) {
@@ -101,13 +101,13 @@ class Form {
 	function input($ops) {
 		if (!empty($ops['nofield'])) $tabs = "\t";
 		else if (!empty($ops['fielded'])) $tabs = "\t\t";
-		else return Form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
+		else return form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
 		$ops['tabs'] = $tabs;
 		//id, name, and type
 		$input = "";
 		if (empty($ops['id'])) $ops['id'] = $ops['name'];
 		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
-		$input .= $tabs.Form::label($ops)."\n";
+		$input .= $tabs.form::label($ops)."\n";
 		$input .= $tabs.'<input id="'.$ops['id'].'" name="'.$ops['postvar']."[".$ops['name'].']" type="'.$ops['input_type'].'" class="'.$ops['input_type'].'"';
 		//POSTed or default value
 		if (!empty($_POST[$ops['postvar']][$ops['name']])) $input .= " value=\"".$_POST[$ops['postvar']][$ops['name']]."\"";
@@ -124,7 +124,7 @@ class Form {
 	function checkbox($ops) {
 		if (!empty($ops['nofield'])) $tabs = "\t";
 		else if (!empty($ops['fielded'])) $tabs = "\t\t";
-		else return Form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
+		else return form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
 		$ops['tabs'] = $tabs;
 		$ops['input_type'] = "checkbox";
 		//id, name, and type
@@ -139,20 +139,20 @@ class Form {
 		if (!empty($ops['size'])) $input .= ' size="'.$ops['size'].'"';
 		//close
 		$input .= " />\n";
-		$input .= $tabs.Form::label($ops)."\n";
+		$input .= $tabs.form::label($ops)."\n";
 		return $input;
 	}
 
 	function select($ops) {
 		if (!empty($ops['nofield'])) $tabs = "\t";
 		else if (!empty($ops['fielded'])) $tabs = "\t\t";
-		else return Form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
+		else return form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
 		$ops['tabs'] = $tabs;
 		//id, name, and type
 		$select = "";
 		if (empty($ops['id'])) $ops['id'] = $ops['name'];
 		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
-		$select .= $tabs.Form::label($ops)."\n";
+		$select .= $tabs.form::label($ops)."\n";
 		if (!empty($ops['default'])) dfault($_POST[$ops['postvar']][$ops['name']], $ops['default']);
 		if (!empty($ops['range'])) {
 			$range = split(":", $ops['range']);
@@ -166,7 +166,7 @@ class Form {
 	function date_select($ops) {
 		if (!empty($ops['nofield'])) $tabs = "\t";
 		else if (!empty($ops['fielded'])) $tabs = "\t\t";
-		else return Form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
+		else return form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
 		//SETUP OPTION ARRAYS
 		$year = date("Y");
 		$year_options = array("Year" => "-1", $year => $year, (((int) $year)+1) => (((int) $year)+1));
@@ -182,7 +182,7 @@ class Form {
 		}
 		if (empty($ops['id'])) $ops['id'] = $ops['name'];
 		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
-		$select = $tabs.Form::label($ops)."\n";
+		$select = $tabs.form::label($ops)."\n";
 		//MONTH SELECT
 		if (!empty($ops['default'])) dfault($_POST[$ops['postvar']][$ops['name']]['month'], date("m", strtotime($ops['default'])));
 		$select .= $tabs."<select id=\"".$ops['id']."-mm\" name=\"".$ops['postvar']."[".$ops['name']."][month]\">\n";
@@ -199,14 +199,14 @@ class Form {
 		foreach ($year_options as $caption => $val) $select .= $tabs."\t<option value=\"$val\"".(($_POST[$ops['postvar']][$ops['name']]['year'] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
 		$select .= $tabs."</select>\n";
 		//TIME
-		if (!empty($ops['time_select'])) $select .= Form::time_select($ops);
+		if (!empty($ops['time_select'])) $select .= form::time_select($ops);
 		return $select;
 	}
 
 	function time_select($ops) {
 		if (!empty($ops['nofield'])) $tabs = "\t";
 		else if (!empty($ops['fielded'])) $tabs = "\t\t";
-		else return Form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
+		else return form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
 		//SETUP OPTION ARRAYS
 		$hour_options = array("Hour" => "-1");
 		for($i=1;$i<13;$i++) $hour_options[$i] = $i;
@@ -217,7 +217,7 @@ class Form {
 		$select = "";
 		if (empty($ops['id'])) $ops['id'] = $ops['name'];
 		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
-		$select .= $tabs.Form::label($ops)."\n";
+		$select .= $tabs.form::label($ops)."\n";
 		//HOUR SELECT
 		if (!empty($ops['default'])) dfault($_POST[$ops['postvar']][$ops['name']]['hour'], date("H", strtotime($ops['default'])));
 		$select .= $tabs."<select id=\"".$ops['id']."-hour\" name=\"".$ops['postvar']."[".$ops['name']."][hour]\">\n";
@@ -239,13 +239,13 @@ class Form {
 	function textarea($ops) {
 		if (!empty($ops['nofield'])) $tabs = "\t";
 		else if (!empty($ops['fielded'])) $tabs = "\t\t";
-		else return Form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
+		else return form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
 		$ops['tabs'] = $tabs;
 		//id, name, and type
 		$input = "";
 		if (empty($ops['id'])) $ops['id'] = $ops['name'];
 		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
-		$input .= $tabs.Form::label($ops)."\n";
+		$input .= $tabs.form::label($ops)."\n";
 		$sizestring = "cols=\"".((empty($ops['cols'])) ? "90" : $ops['cols'])."\" rows=\"".((empty($ops['rows'])) ? "10" : $ops['rows'])."\"";
 		$input .= $tabs.'<textarea id="'.$ops['id'].'" name="'.$ops['postvar']."[".$ops['name'].']" '.$sizestring.'>';
 		//POSTed or default value

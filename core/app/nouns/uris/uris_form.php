@@ -12,5 +12,5 @@
 		$collective_errors = array("collective" => "Please select a collective.");
 		$fields["collective"] = array("type" => "select", "options" => array_merge(array("everybody" => 0), $this->groups), "errors" => $collective_errors);
 		$fields["Save"] = array("type" => "submit", "class" => "big left button");
-		echo Form::render("uris", "post", $action, $submit_to, $fields);
+		echo form::render("uris", "post", $action, $submit_to, $fields);
 	?>
