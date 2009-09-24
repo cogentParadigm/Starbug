@@ -1,6 +1,6 @@
 <?php
 /**
-* FILE: themes/default/Default.php
+* FILE: app/themes/default/ThemeFunctions.php
 * PURPOSE: default theme generate functions
 *
 * This file is part of StarbugPHP

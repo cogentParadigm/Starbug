@@ -63,7 +63,7 @@ class Request {
 			header("HTTP/1.1 404 Not Found");
 			$this->path="missing";
 			$this->uri = array("missing");
-			//$this->payload = array("path" => "missing", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => $prefix);
+			$this->payload = array("path" => "missing", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => $prefix);
 			return $prefix."missing.php";
 		}
 	}
@@ -71,7 +71,8 @@ class Request {
 	protected function locate() {
 		global $sb;
 		if (Etc::DB_NAME != "") $this->payload = $sb->get('uris')->find("*", "'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%')", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1")->fields();
-		else $this->payload = array("path" => "home", "template" => "Starbug", "check_path" => "1", "prefix" => "core/app/nouns/");
+		else $this->payload = array("path" => "default", "template" => "Starbug", "check_path" => "1", "prefix" => "core/app/nouns/");
+		print_r($pthis->payload);
 		if (empty($this->payload)) {
 			$this->path = "";
 			$this->payload['prefix'] = ($_SESSION[P('memberships')] == 1) ? "core/app/nouns/" : "app/nouns/";

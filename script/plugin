@@ -44,11 +44,11 @@ if ($args->flag('i')) { //INSTALL PLUGIN
 	$collective = ($args->flag('c')) ? $args->flag('c') : "1";
 	$dirs = array(); $paths = array(); $from_copy = array();
 	//INCLUDE PLUGIN INSTALL FILE
-	if (file_exists("plugins/$plugin_name/install.php")) include("plugins/$plugin_name/install.php");
+	if (file_exists("app/plugins/$plugin_name/install.php")) include("plugins/$plugin_name/install.php");
 	//CREATE DIRECTORIES
 	foreach ($dirs as $dir) if (!file_exists($dir)) exec("./script/cgenerate dir $dir");
 	//COPY FILES
-	foreach ($from_copy as $origin => $dest) exec("./script/cgenerate copy $dest plugins/$origin");
+	foreach ($from_copy as $origin => $dest) exec("./script/cgenerate copy $dest app/plugins/$origin");
 	//ADD URIS
 	foreach ($paths as $keys => $values) $db->Execute("INSERT INTO ".P("uris")." ($keys) VALUES ($values)");
 	fwrite(STDOUT, "plugin $plugin_name installed...\n");

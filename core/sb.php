@@ -34,7 +34,7 @@ class sb {
 	}
 	function load($what) {
 		if (strpos($what, "core/") === 0) $what = "core/plugins".substr($what, 4);
-		else $what = "plugins/".$what;
+		else $what = "app/plugins/".$what;
 		if (file_exists($what.".php")) include($what.".php");
 		else {
 			$token = split("/", $what); $token = $what."/".end($token).".php";

@@ -1,13 +1,13 @@
 <?php
 include("etc/Theme.php");
-$themedir = "themes/".Theme::FOLDER."/";
+$themedir = "app/themes/".Theme::FOLDER."/";
 $header = "";
 $page=next($this->uri);
 if (empty($page)) $page = "list";
 if (file_exists($themedir."$page.php")) {
 	$page = $themedir."$page.php";
 	if (!empty($_POST['generate'])) {
-		include("themes/".Theme::FOLDER."/ThemeFunctions.php");
+		include($themedir."ThemeFunctions.php");
 		ThemeFunctions::$_POST['generate']();
 	}
 	$header = "<h2>Generate</h2>\n";

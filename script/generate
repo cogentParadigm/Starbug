@@ -107,16 +107,16 @@ $collective = ($args->flag('c')) ? $args->flag('c') : "2";
 $dirs = array(); $from_form = array(); $from_model = array(); $paths = array(); $from_copy = array();
 
 //INCLUDE Theme GENERATOR FILE
-if ($args->flag('u')) include("themes/".Theme::FOLDER."/$argv[1]/update.php");
-else include("themes/".Theme::FOLDER."/$argv[1]/$argv[1].php");
+if ($args->flag('u')) include("app/themes/".Theme::FOLDER."/$argv[1]/update.php");
+else include("app/themes/".Theme::FOLDER."/$argv[1]/$argv[1].php");
 
 //CREATE DIRECTORIES
 foreach ($dirs as $dir) if (!file_exists($dir)) exec("./script/cgenerate dir $dir");
 //CREATE FILES
-foreach ($from_model as $stylesheet => $output) exec("./script/cgenerate sax $output var/schema/.temp/$argv[2]_model.xml themes/".Theme::FOLDER."/$stylesheet");
-foreach ($from_form as $stylesheet => $output) exec("./script/cgenerate sax $output var/schema/.temp/$argv[2]_form.xml themes/".Theme::FOLDER."/$stylesheet");
+foreach ($from_model as $stylesheet => $output) exec("./script/cgenerate sax $output var/schema/.temp/$argv[2]_model.xml app/themes/".Theme::FOLDER."/$stylesheet");
+foreach ($from_form as $stylesheet => $output) exec("./script/cgenerate sax $output var/schema/.temp/$argv[2]_form.xml app/themes/".Theme::FOLDER."/$stylesheet");
 //COPY FILES
-foreach ($from_copy as $origin => $dest) exec("./script/cgenerate copy $dest themes/".Theme::FOLDER."/$origin");
+foreach ($from_copy as $origin => $dest) exec("./script/cgenerate copy $dest app/themes/".Theme::FOLDER."/$origin");
 //ADD URI
 foreach ($paths as $keys => $values) $sb->db->Execute("INSERT INTO ".P("uris")." ($keys) VALUES ($values)");
 
