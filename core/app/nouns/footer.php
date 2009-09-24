@@ -8,7 +8,7 @@
 			<script type="text/javascript">
 				function add_uri() {
 					dojo.xhrGet({
-						url: '<?php echo uri("uris/add"); ?>',
+						url: '<?php echo uri("sb/uris/add"); ?>',
 						load: function (data) {
 							dojo.byId('dash_form').innerHTML += data;
 						}
@@ -18,7 +18,7 @@
 					var loader = dojo.byId('loading');
 					dojo.style(loader, {visibility:"visible"});
 					dojo.xhrPost({
-						url: '<?php echo uri("uris/add"); ?>',
+						url: '<?php echo uri("sb/uris/add"); ?>',
 						form: 'add_uri_form',
 						load: function(data) {
 							cancel_add();
@@ -35,8 +35,8 @@
 			<div id="dash_form"></div>
 			<ul id="dashlist">
 				<li class="first"><a href="<?php echo uri("sb-admin"); ?>">admin</a></li>
-				<li><a href="<?php echo uri("models"); ?>">tools</a></li>
-				<li><a href="<?php echo uri("settings/general"); ?>">settings</a></li>
+				<li><a href="<?php echo uri("sb/models"); ?>">tools</a></li>
+				<li><a href="<?php echo uri("sb/settings/general"); ?>">settings</a></li>
 				<li class="right"><a href="<?php echo uri("sb-admin/logout"); ?>">logout</a></li>
 			</ul>
 		</div>

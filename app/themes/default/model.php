@@ -6,7 +6,7 @@ if (empty($_POST['modelname'])) {
 		closedir($handle);
 	}
 ?>
-	<form method="post" action="<?php echo uri("generate/model"); ?>">
+	<form method="post" action="<?php echo uri("sb/generate/model"); ?>">
 		<fieldset>
 			<legend>Database Model</legend>
 			<div class="field">
@@ -19,7 +19,7 @@ if (empty($_POST['modelname'])) {
 			</div>
 			<div>
 				<input type="submit" class="big button" value="Next"/>
-				<a class="big button" href="<?php echo uri("generate"); ?>">Cancel</a>
+				<a class="big button" href="<?php echo uri("sb/generate"); ?>">Cancel</a>
 			</div>
 		</fieldset>
 	</form>
@@ -31,12 +31,12 @@ if (empty($_POST['modelname'])) {
 	<?php } ?>
 	</ul>
 	<br><br>
-	<form method="post" action="<?php echo uri("generate"); ?>">
+	<form method="post" action="<?php echo uri("sb/generate"); ?>">
 		<input type="hidden" name="generate" value="model"/>
 		<input type="hidden" name="modelname" value="<?php echo $_POST['modelname']; ?>"/>
 		<div>
 			<input type="submit" class="big button" value="Generate"/>
-			<a class="big button" href="<?php echo uri("generate"); ?>">Cancel</a>
+			<a class="big button" href="<?php echo uri("sb/generate"); ?>">Cancel</a>
 		</div>
 	</form>
 <?php } ?>

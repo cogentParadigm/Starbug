@@ -48,7 +48,7 @@ class Request {
 		//manipulate data if necessary
 		$this->check_post();
 		//locate request
-		$this->path = (strpos($_SERVER['REQUEST_URI'], BASE_DIR) === false) ? substr($_SERVER['REQUEST_URI'], 1) : end(explode(BASE_DIR."/", $_SERVER['REQUEST_URI']));
+		$this->path = (false === ($base_pos = strpos($_SERVER['REQUEST_URI'], BASE_DIR))) ? substr($_SERVER['REQUEST_URI'], 1) : substr($_SERVER['REQUEST_URI'], $base_pos+strlen(BASE_DIR)+1);
 		efault($this->path, Etc::DEFAULT_PATH);
 		$this->locate();
 		//execute
@@ -72,7 +72,7 @@ class Request {
 		global $sb;
 		if (Etc::DB_NAME != "") $this->payload = $sb->get('uris')->find("*", "'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%')", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1")->fields();
 		else $this->payload = array("path" => "default", "template" => "Starbug", "check_path" => "1", "prefix" => "core/app/nouns/");
-		print_r($pthis->payload);
+		print_r($this->payload);
 		if (empty($this->payload)) {
 			$this->path = "";
 			$this->payload['prefix'] = ($_SESSION[P('memberships')] == 1) ? "core/app/nouns/" : "app/nouns/";

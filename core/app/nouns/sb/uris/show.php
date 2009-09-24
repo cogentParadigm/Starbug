@@ -1,5 +1,5 @@
 <?php $id = next($this->uri);
-	if (!empty($sb->errors['uris'])) include("core/app/nouns/uris/".(($id)?"update":"create").".php");
+	if (!empty($sb->errors['uris'])) include("core/app/nouns/sb/uris/".(($id)?"update":"create").".php");
 	else {
 		if (!$id) $uri = $sb->get("uris")->find("*", "", "LIMIT 1")->fields();
 		else $uri = $sb->get("uris")->find("*", "id='".$id."'")->fields();
@@ -7,12 +7,12 @@
 <h2><?php echo $uri['path']; ?></h2>
 <dl>
 	<dt>Template</dt><dd><?php echo $uri['template']; ?></dd>
-	<dt>Visible</dt><dd><?php echo $uri['visible']; ?></dd>
+	<dt>Visible</dt><dd><?php echo $uri['prefix']; ?></dd>
 	<dt>Importance</dt><dd><?php echo $uri['importance']; ?></dd>
 	<dt>Security</dt><dd><?php echo $uri['security']; ?></dd>
 	<dt>Options</dt>
 	<dd>
-		<a class="button" href="<?php echo uri("uris/update/$uri[id]"); ?>" style="float:left">Edit</a>
+		<a class="button" href="<?php echo uri("sb/uris/update/$uri[id]"); ?>" style="float:left">Edit</a>
 		<form id="del_form" action="<?php htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
 			<input name="action[uris]" type="hidden" value="delete"/>
 			<input type="hidden" name="uris[id]" value="<?php echo $uri['id']; ?>"/>

@@ -9,13 +9,13 @@
 <?php } ?>
 </ul>
 <br><br>
-<form method="post" action="<?php echo uri("generate"); ?>">
+<form method="post" action="<?php echo uri("sb/generate"); ?>">
 	<fieldset>
 		<legend>Bare Application</legend>
 		<input type="hidden" name="generate" value="app"/>
 		<div class="field">
 			<input type="submit" class="big button" value="Generate"/>
-			<a class="big button" href="<?php echo uri("generate"); ?>">Cancel</a>
+			<a class="big button" href="<?php echo uri("sb/generate"); ?>">Cancel</a>
 		</div>
 	</fieldset>
 </form>

@@ -31,6 +31,6 @@
 			<p>You've successfully started the Starbug engine on your server!</p>
 			<p>You can log in again by visiting <a href="<?php echo uri("sb-admin"); ?>">the admin panel</a></p>
 			<h2>Getting Started</h2>
-			<p>Get started by generating a basic app. Visit <a href="<?php echo uri("generate"); ?>">the generator</a> or run the following command:</p>
+			<p>Get started by generating a basic app. Visit <a href="<?php echo uri("sb/generate"); ?>">the generator</a> or run the following command:</p>
 			<div class="codeblock"><p><strong>$</strong> ./script/generate app</p></div>
 			<?php } ?>

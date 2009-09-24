@@ -6,7 +6,7 @@ if (empty($_POST['modelname'])) {
 		closedir($handle);
 	}
 ?>
-	<form method="post" action="<?php echo uri("generate/crud"); ?>">
+	<form method="post" action="<?php echo uri("sb/generate/crud"); ?>">
 		<fieldset>
 			<legend>CRUD</legend>
 			<div class="field">
@@ -23,7 +23,7 @@ if (empty($_POST['modelname'])) {
 			</div>
 			<div>
 				<input type="submit" class="big button" value="Next"/>
-				<a class="big button" href="<?php echo uri("generate"); ?>">Cancel</a>
+				<a class="big button" href="<?php echo uri("sb/generate"); ?>">Cancel</a>
 			</div>
 		</fieldset>
 	</form>
@@ -39,7 +39,7 @@ if (empty($_POST['modelname'])) {
 	<?php } ?>
 	</ul>
 	<br><br>
-	<form method="post" action="<?php echo uri("generate"); ?>">
+	<form method="post" action="<?php echo uri("sb/generate"); ?>">
 		<fieldset>
 			<legend>CRUD</legend>
 			<input type="hidden" name="generate" value="crud"/>

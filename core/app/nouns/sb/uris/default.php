@@ -20,25 +20,25 @@ $go_to = $start_from + $shown;
 </script>
 <?php include("core/public/js/uris.php"); ?>
 <h2>URIs</h2>
-<?php include("core/app/nouns/settings/nav.php"); ?>
+<?php include("core/app/nouns/sb/settings/nav.php"); ?>
 <?php if ($total > 25) { ?>
 <ul class="pages">
 	<?php if ($page > 0) { ?>
-	<li class="back"><a href="uris/list/<?php echo $page-1; ?>">Back</a></li>
+	<li class="back"><a href="sb/uris/list/<?php echo $page-1; ?>">Back</a></li>
 	<?php } for($i=0;$i<ceil($total/25);$i++) { ?>
-	<li><a<?php if($page == $i) { ?> class="active"<?php } ?> href="uris/list/<?php echo $i; ?>"><?php echo $i+1; ?></a></li>
+	<li><a<?php if($page == $i) { ?> class="active"<?php } ?> href="sb/uris/list/<?php echo $i; ?>"><?php echo $i+1; ?></a></li>
 	<?php } if($page < ceil($total/25)-1) { ?>
-	<li class="next"><a href="uris/list/<?php echo $page+1; ?>">Next</a></li>
+	<li class="next"><a href="sb/uris/list/<?php echo $page+1; ?>">Next</a></li>
 	<?php } ?>
 </ul>
 <?php } ?>
 <table id="uris_table">
-<tr><th>Path</th><th>Template</th><th>Visibility</th><th>Importance</th><th>Owner</th><th>Collective</th><th>Options</th></tr>
+<tr><th>Path</th><th>Template</th><th>Prefix</th><th>Importance</th><th>Owner</th><th>Collective</th><th>Options</th></tr>
 <?php for($i=$start_from;$i<$go_to;$i++) { $el = $all[$i]; ?>
 	<tr id="uri_<?php echo $el['id']; ?>">
 		<td><?php echo $el['path']; ?></td>
 		<td><?php echo $el['template']; ?></td>
-		<td><?php echo $el['visible']; ?></td>
+		<td><?php echo $el['prefix']; ?></td>
 		<td><?php echo $el['importance']; ?></td>
 		<td><?php echo $el['owner']; ?></td>
 		<td><?php echo $el['collective']; ?></td>
@@ -52,4 +52,4 @@ $go_to = $start_from + $shown;
 	</tr>
 <?php } ?>
 </table>
-<a id="add_uri" class="big left button" href="<?php echo uri("uris/create"); ?>" onclick="new_uri();return false;">New Element</a>
+<a id="add_uri" class="big left button" href="<?php echo uri("sb/uris/create"); ?>" onclick="new_uri();return false;">New Element</a>

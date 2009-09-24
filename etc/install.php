@@ -94,13 +94,8 @@
 
 	//INSERT RECORDS
 	$schemer->insert("users", "first_name, last_name, email, password, memberships", "'$admin_first', '$admin_last', '$admin_email', '$admin_pass', '1'");
-	$schemer->insert("uris", "path, template, prefix", "'uris', 'Starbug', 'core/app/nouns/'");
-	$schemer->insert("uris", "path, template, prefix", "'ajax', 'Ajax', 'core/app/nouns/'");
-	$schemer->insert("uris", "path, template, prefix", "'models', 'Starbug', 'core/app/nouns/'");
-	$schemer->insert("uris", "path, template, prefix", "'users', 'Starbug', 'core/app/nouns/'");
-	$schemer->insert("uris", "path, template, prefix", "'generate', 'generate', 'core/app/nouns/'");
-	$schemer->insert("uris", "path, template, prefix", "'permits', 'Starbug', 'core/app/nouns/'");
-	$schemer->insert("uris", "path, template, prefix", "'settings', 'Starbug', 'core/app/nouns/'");
+	$schemer->insert("uris", "path, template, prefix", "'sb/generate', 'sb/generate', 'core/app/nouns/'");
+	$schemer->insert("uris", "path, template, prefix", "'sb', 'Starbug', 'core/app/nouns/'");
 	$schemer->insert("uris", "path, template, prefix, collective", "'sb-admin', 'Starbug', 'core/app/nouns/', '0'");
 	//PRIVILIGES
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'login', '".P('users')."'");

@@ -5,7 +5,7 @@
 			<li><a class="button" href="#" onclick="cancel_add();return false;">Close</a></li>
 		</ul>
 		<?php } else { ?>
-		<?php $formid = "add_uri_form"; $action = "create"; include("core/app/nouns/uris/uris_form.php"); ?>
+		<?php $formid = "add_uri_form"; $action = "create"; include("core/app/nouns/sb/uris/uris_form.php"); ?>
 		<ul class="buttons">
 			<li><a class="button" href="#" onclick="save_add();return false;">Save</a></li>
 			<li><a class="button" href="#" onclick="cancel_add();return false;">Cancel</a></li>

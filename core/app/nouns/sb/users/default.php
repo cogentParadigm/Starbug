@@ -16,7 +16,7 @@ $go_to = $start_from + $shown;
 	}
 	function new_user() {
 		dojo.xhrGet({
-			url: '<?php echo uri("users/new"); ?>',
+			url: '<?php echo uri("sb/users/new"); ?>',
 			node: dojo.byId('users_table'),
 			keep: true,
 			load: htar
@@ -24,7 +24,7 @@ $go_to = $start_from + $shown;
 	}
 	function save_new() {
 		dojo.xhrPost({
-			url: '<?php echo uri("users/get"); ?>',
+			url: '<?php echo uri("sb/users/get"); ?>',
 			form: 'new_user_form',
 			load: function(data) {
 				cancel_new();
@@ -38,7 +38,7 @@ $go_to = $start_from + $shown;
 	}
 	function edit_user(id) {
 		dojo.xhrGet({
-			url: '<?php echo uri("users/edit/"); ?>'+id,
+			url: '<?php echo uri("sb/users/edit/"); ?>'+id,
 			load: function(data) {
 				dojo.byId('user_'+id).innerHTML = data;
 			}
@@ -46,7 +46,7 @@ $go_to = $start_from + $shown;
 	}
 	function save_edit(id) {
 		dojo.xhrPost({
-			url: '<?php echo uri("users/get/"); ?>'+id,
+			url: '<?php echo uri("sb/users/get/"); ?>'+id,
 			form: 'edit_user_form',
 			load: function(data) {
 				dojo.byId('user_'+id).innerHTML = data;
@@ -55,7 +55,7 @@ $go_to = $start_from + $shown;
 	}
 	function cancel_edit(id) {
 		dojo.xhrGet({
-			url: '<?php echo uri("users/get/"); ?>'+id,
+			url: '<?php echo uri("sb/users/get/"); ?>'+id,
 			load: function(data) {
 				dojo.byId('user_'+id).innerHTML = data;
 			}
@@ -63,15 +63,15 @@ $go_to = $start_from + $shown;
 	}
 </script>
 <h2>Users</h2>
-<?php include("core/app/nouns/settings/nav.php"); ?>
+<?php include("core/app/nouns/sb/settings/nav.php"); ?>
 <?php if ($total > 25) { ?>
 <ul class="pages">
 	<?php if ($page > 0) { ?>
-	<li class="back"><a href="users/list/<?php echo $page-1; ?>">Back</a></li>
+	<li class="back"><a href="sb/users/list/<?php echo $page-1; ?>">Back</a></li>
 	<?php } for($i=0;$i<ceil($total/25);$i++) { ?>
-	<li><a<?php if($page == $i) { ?> class="active"<?php } ?> href="users/list/<?php echo $i; ?>"><?php echo $i+1; ?></a></li>
+	<li><a<?php if($page == $i) { ?> class="active"<?php } ?> href="sb/users/list/<?php echo $i; ?>"><?php echo $i+1; ?></a></li>
 	<?php } if($page < ceil($total/25)-1) { ?>
-	<li class="next"><a href="users/list/<?php echo $page+1; ?>">Next</a></li>
+	<li class="next"><a href="sb/users/list/<?php echo $page+1; ?>">Next</a></li>
 	<?php } ?>
 </ul>
 <?php } ?>
@@ -94,4 +94,4 @@ $go_to = $start_from + $shown;
 	</tr>
 <?php } ?>
 </table>
-<a id="add_user" class="button" href="users/create" onclick="new_user();return false;">New User</a>
+<a id="add_user" class="button" href="sb/users/create" onclick="new_user();return false;">New User</a>

@@ -11,5 +11,5 @@ if (($_SESSION[P('memberships')] & 1) != 1) {
 <h3>tools</h3>
 <?php include("core/app/nouns/include/toolnav.php"); ?>
 <h3>settings</h3>
-<?php include("core/app/nouns/settings/nav.php"); ?>
+<?php include("core/app/nouns/sb/settings/nav.php"); ?>
 <?php } ?>

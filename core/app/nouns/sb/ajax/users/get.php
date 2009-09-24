@@ -1,6 +1,6 @@
 <?php
 	$id = next($this->uri);
-	if (!empty($sb->errors['users'])) include("core/app/elements/Ajax/users/".(($id)?"edit":"new").".php");
+	if (!empty($sb->errors['users'])) include("core/app/nouns/sb/ajax/users/".(($id)?"edit":"new").".php");
 	else {
 		$new = false;
 		if (!$id) { $id = $sb->db->Insert_ID(); $new = true; }

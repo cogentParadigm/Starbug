@@ -19,14 +19,14 @@
 				var who = dojo.byId("who");
 				if (role.selectedIndex == '1') {
 					dojo.xhrGet({
-						url: '<?php echo uri("ajax/permits/who/user"); ?>',
+						url: '<?php echo uri("sb/ajax/permits/who/user"); ?>',
 						load: function (data) {
 							who.innerHTML = data;
 						}
 					});
 				} else if (role.selectedIndex == '2') {
 					dojo.xhrGet({
-						url: '<?php echo uri("ajax/permits/who/group"); ?>',
+						url: '<?php echo uri("sb/ajax/permits/who/group"); ?>',
 						load: function (data) {
 							who.innerHTML = data;
 						}
@@ -93,7 +93,7 @@
 				if (token == false) who.innerHTML = '<option value="0" selected="selected">nobody or n/a</option>';
 				else {
 					dojo.xhrGet({
-						url: '<?php echo uri("ajax/permits/relid/"); ?>'+token,
+						url: '<?php echo uri("sb/ajax/permits/relid/"); ?>'+token,
 						load: function (data) {
 							rel_id.innerHTML = data;
 						}

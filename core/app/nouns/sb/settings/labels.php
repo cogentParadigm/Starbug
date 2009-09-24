@@ -17,7 +17,7 @@ if ($handle = opendir("var/schema/")) {
 }
 ?>
 <h2>Settings</h2>
-<?php include("core/app/nouns/settings/nav.php"); ?>
+<?php include("core/app/nouns/sb/settings/nav.php"); ?>
 <form id="settings_form" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
 	<input type="hidden" name="save_labels" value="true"/>
 	<fieldset>

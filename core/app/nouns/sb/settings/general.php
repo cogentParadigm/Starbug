@@ -8,11 +8,11 @@ if ($_POST['save_settings']) {
 	$file = fopen("etc/Etc.php", "wb");
 	fwrite($file, $etc);
 	fclose($file);
-	header("Location: ".uri("settings/general"));
+	header("Location: ".uri("sb/settings/general"));
 }
 ?>
 <h2>Settings</h2>
-<?php include("core/app/nouns/settings/nav.php"); ?>
+<?php include("core/app/nouns/sb/settings/nav.php"); ?>
 <form id="settings_form" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
 	<input type="hidden" name="save_settings" value="true"/>
 	<fieldset>

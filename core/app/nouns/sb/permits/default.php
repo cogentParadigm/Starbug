@@ -10,15 +10,15 @@ $shown = ($remaining<25) ? ($remaining % 25) : 25;
 $go_to = $start_from + $shown;
 ?>
 <h2>Permits</h2>
-<?php include("core/app/nouns/settings/nav.php"); ?>
+<?php include("core/app/nouns/sb/settings/nav.php"); ?>
 <?php if ($total > 25) { ?>
 <ul class="pages">
 	<?php if ($page > 0) { ?>
-	<li class="back"><a href="permits/list/<?php echo $page-1; ?>">Back</a></li>
+	<li class="back"><a href="sb/permits/list/<?php echo $page-1; ?>">Back</a></li>
 	<?php } for($i=0;$i<ceil($total/25);$i++) { ?>
-	<li><a<?php if($page == $i) { ?> class="active"<?php } ?> href="permits/list/<?php echo $i; ?>"><?php echo $i+1; ?></a></li>
+	<li><a<?php if($page == $i) { ?> class="active"<?php } ?> href="sb/permits/list/<?php echo $i; ?>"><?php echo $i+1; ?></a></li>
 	<?php } if($page < ceil($total/25)-1) { ?>
-	<li class="next"><a href="permits/list/<?php echo $page+1; ?>">Next</a></li>
+	<li class="next"><a href="sb/permits/list/<?php echo $page+1; ?>">Next</a></li>
 	<?php } ?>
 	</ul>
 <?php } ?>
@@ -36,7 +36,7 @@ $go_to = $start_from + $shown;
 		<td><?php echo $entry['related_table']; ?></td>
 		<td><?php echo $entry['related_id']; ?></td>
 		<td>
-			<a class="left button" href="<?php echo uri("permits/update/$entry[id]"); ?>">edit</a>
+			<a class="left button" href="<?php echo uri("sb/permits/update/$entry[id]"); ?>">edit</a>
 			<form style="float:left" id="del_form" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
 				<input id="action[permits]" name="action[permits]" type="hidden" value="delete"/>
 				<input type="hidden" name="permits[id]" value="<?php echo $entry['id']; ?>"/>
