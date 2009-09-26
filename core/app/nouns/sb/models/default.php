@@ -1,7 +1,7 @@
 <h2>Model</h2>
 <?php
 include("core/app/nouns/include/toolnav.php");
-include("core/public/js/models.php");
+include("core/app/public/js/models.php");
 ?>
 <script type="text/javascript">
 	dojo.require("dojo.fx");

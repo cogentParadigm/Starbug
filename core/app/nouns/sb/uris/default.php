@@ -18,7 +18,7 @@ $go_to = $start_from + $shown;
 		node.setAttribute('class', display);
 	}
 </script>
-<?php include("core/public/js/uris.php"); ?>
+<?php include("core/app/public/js/uris.php"); ?>
 <h2>URIs</h2>
 <?php include("core/app/nouns/sb/settings/nav.php"); ?>
 <?php if ($total > 25) { ?>

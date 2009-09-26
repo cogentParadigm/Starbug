@@ -51,8 +51,6 @@ class Request {
 		$this->path = (false === ($base_pos = strpos($_SERVER['REQUEST_URI'], BASE_DIR))) ? substr($_SERVER['REQUEST_URI'], 1) : substr($_SERVER['REQUEST_URI'], $base_pos+strlen(BASE_DIR)+1);
 		efault($this->path, Etc::DEFAULT_PATH);
 		$this->locate();
-		//execute
-		$this->execute();
  	}
 
 	private function check_path($prefix, $base, $current) {
@@ -72,7 +70,6 @@ class Request {
 		global $sb;
 		if (Etc::DB_NAME != "") $this->payload = $sb->get('uris')->find("*", "'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%')", "ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC LIMIT 1")->fields();
 		else $this->payload = array("path" => "default", "template" => "Starbug", "check_path" => "1", "prefix" => "core/app/nouns/");
-		print_r($this->payload);
 		if (empty($this->payload)) {
 			$this->path = "";
 			$this->payload['prefix'] = ($_SESSION[P('memberships')] == 1) ? "core/app/nouns/" : "app/nouns/";
@@ -81,7 +78,7 @@ class Request {
 		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
 	}
 
-	protected function execute() {
+	public function execute() {
 		global $sb;
 		if (file_exists($this->payload['prefix'].$this->payload['template'].".php")) include($this->payload['prefix'].$this->payload['template'].".php");
 		else include("core/app/nouns/Starbug.php");

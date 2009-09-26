@@ -15,8 +15,8 @@
 //
 // Output a list of files for jQuery File Tree
 //
-include("../../../../etc/Etc.php");
-include("../../../../util/thumb.php");
+include("../../../../../etc/Etc.php");
+include("../../../../../util/thumb.php");
 $_POST['dir'] = urldecode($_POST['dir']);
 if( file_exists($root . $_POST['dir']) ) {
 	$files = scandir($root . $_POST['dir']);
@@ -48,7 +48,7 @@ if( file_exists($root . $_POST['dir']) ) {
 		foreach( $files as $file ) {
 			if( file_exists($root . $_POST['dir'] . $file) && $file != '.' && $file != '..' && !is_dir($root . $_POST['dir'] . $file) ) {
 				$ext = preg_replace('/^.*\./', '', $file);
-				echo "<li class=\"file ext_$ext\"><a href=\"#\" rel=\"" . htmlentities($_POST['dir'] . $file) . "\">" . "<img src=\"".get_thumb("public/uploads/$file", 60)."\" />" . "</a></li>";
+				echo "<li class=\"file ext_$ext\"><a href=\"#\" rel=\"" . htmlentities($_POST['dir'] . $file) . "\">" . "<img src=\"".get_thumb("app/public/uploads/$file", 60)."\" />" . "</a></li>";
 			}
 		}		
 		echo "</ul>";	

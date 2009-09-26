@@ -9,11 +9,11 @@
 		<div class="field">
 			<label for="email">Email</label>
 			<?php if (!empty($sb->errors['users']['loginMatchError'])) { ?><span class="error">That email and password combination was not found.</span><?php } ?>
-			<input id="email" name="users[email]" type="text"<?php if (!empty($_POST['users']['email'])) { ?> value="<?php echo $_POST['users']['email']; ?>"<?php } ?> maxlength="64" />
+			<input id="email" class="text" name="users[email]" type="text"<?php if (!empty($_POST['users']['email'])) { ?> value="<?php echo $_POST['users']['email']; ?>"<?php } ?> maxlength="64" />
 		</div>
 		<div class="field">
 			<label for="password">Password</label>
-			<input id="password" name="users[password]" type="password" />
+			<input id="password" class="text" name="users[password]" type="password" />
 		</div>
 		<input class="button" type="submit" value="Log In" />
 	</form>

@@ -26,4 +26,5 @@ include("etc/init.php");
 //go
 include("core/Request.php");
 $request = new Request($sb->db);
+$request->execute();
 ?>

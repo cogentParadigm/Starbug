@@ -67,8 +67,8 @@
 	$data .= "\t/* URL of website */\n";
 	$data .= "\tconst WEBSITE_URL = \"$siteurl\";\n\n";
 	$data .= "\t/* Directories */\n";
-	$data .= "\tconst STYLESHEET_DIR = \"public/stylesheets/\";\n";
-	$data .= "\tconst IMG_DIR = \"public/images/\";\n\n";
+	$data .= "\tconst STYLESHEET_DIR = \"app/public/stylesheets/\";\n";
+	$data .= "\tconst IMG_DIR = \"app/public/images/\";\n\n";
 	$data .= "\t/* Default redirection time */\n";
 	$data .= "\tconst REDIRECTION_TIME = 2;\n\n";
 	$data .= "\t/* Elements table */\n\tconst PATH_COLUMN = \"path\";\n\tconst TEMPLATE_COLUMN = \"template\";\n\tconst DEFAULT_TEMPLATE = \"App\";\n\tconst DEFAULT_PATH = \"home\";\n\n";
@@ -82,6 +82,7 @@
 	include("etc/Etc.php");
 	include("etc/init.php");
 	include("core/db/Schemer.php");
+	$sb->import("util/tags");
 	$sb->db->Execute("DROP TABLE IF EXISTS `".P('permits')."`");
 	$sb->db->Execute("CREATE TABLE `".P("permits")."` (id int not null AUTO_INCREMENT, role varchar(30) not null, who int not null default 0, action varchar(100) not null, status int not null default '0', priv_type varchar(30) not null default 'table', related_table varchar(100) not null, related_id int not null default '0', PRIMARY KEY (`id`) )");
 	$sb->db->Execute("DROP TABLE IF EXISTS `".P('system_tags')."`");
@@ -94,18 +95,30 @@
 
 	//INSERT RECORDS
 	$schemer->insert("users", "first_name, last_name, email, password, memberships", "'$admin_first', '$admin_last', '$admin_email', '$admin_pass', '1'");
-	$schemer->insert("uris", "path, template, prefix", "'sb/generate', 'sb/generate', 'core/app/nouns/'");
-	$schemer->insert("uris", "path, template, prefix", "'sb', 'Starbug', 'core/app/nouns/'");
 	$schemer->insert("uris", "path, template, prefix, collective", "'sb-admin', 'Starbug', 'core/app/nouns/', '0'");
+	$admin_parent = $schemer->db->Insert_ID();
+	$schemer->insert("uris", "path, template, prefix, parent", "'sb', 'Starbug', 'core/app/nouns/', '$admin_parent'");
+	$schemer->insert("uris", "path, template, prefix, parent", "'sb/generate', 'sb/generate', 'core/app/nouns/', '$admin_parent'");
 	//PRIVILIGES
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'login', '".P('users')."'");
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'logout', '".P('users')."'");
 	$schemer->insert("permits", "role, action, priv_type, related_table", "'collective', 'read', 'global', '".P('uris')."'");
 	//APPLY TAGS
+	function uri_list($uid) {
+		$prefix = array($uid);
+		$children = $sb->get("uris")->get("*", "parent=$uid")->GetRows();
+		if (!empty($children)) foreach($children as $kid) $prefix = array_merge($prefix, uri_list($kid['id']));
+		return $prefix;
+	}
+	$admin_uris = uri_list($admin_parent);
+	foreach($admin_uris as $obj_id) tags::safe_tag("system_tags", "uris_tags", "1", $obj_id, "admin");
 	
 	//SET FILE PERMISSIONS
 	exec("chmod a+x script/generate");
 	exec("chmod ug+s script/cgenerate");
-	exec("mkdir app/nouns var/schema/.temp var/hooks public/uploads public/thumbnails");
-	exec("chmod -R a+w var public/uploads public/thumbnails");
+	exec("mkdir app/nouns var/schema/.temp var/hooks app/public/uploads app/public/thumbnails");
+	exec("chmod -R a+w var app/public/uploads app/public/thumbnails");
+	
+	//SUSBSCRIBE HOOKS
+	$sb->subscribe("header", "global", 10, "include", "core/app/hooks/header.php");
 ?>

@@ -44,7 +44,7 @@ if ($args->flag('i')) { //INSTALL PLUGIN
 	$collective = ($args->flag('c')) ? $args->flag('c') : "1";
 	$dirs = array(); $paths = array(); $from_copy = array();
 	//INCLUDE PLUGIN INSTALL FILE
-	if (file_exists("app/plugins/$plugin_name/install.php")) include("plugins/$plugin_name/install.php");
+	if (file_exists("app/plugins/$plugin_name/install.php")) include("app/plugins/$plugin_name/install.php");
 	//CREATE DIRECTORIES
 	foreach ($dirs as $dir) if (!file_exists($dir)) exec("./script/cgenerate dir $dir");
 	//COPY FILES

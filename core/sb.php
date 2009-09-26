@@ -33,7 +33,7 @@ class sb {
 		if (!isset($_SESSION[P('id')])) $_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
 	}
 	function load($what) {
-		if (strpos($what, "core/") === 0) $what = "core/plugins".substr($what, 4);
+		if (strpos($what, "core/") === 0) $what = "core/app/plugins".substr($what, 4);
 		else $what = "app/plugins/".$what;
 		if (file_exists($what.".php")) include($what.".php");
 		else {
@@ -46,14 +46,14 @@ class sb {
 		$args = func_get_args();
 		foreach($request->tags as $tag) {
 			$subscriptions = (file_exists("var/hooks/$tag[tag].$topic")) ? unserialize(file_get_contents("var/hooks/$tag[tag].$topic")) : array();
-			foreach($subscriptions as $priority) foreach($priority as $handle) $handle($args);
+			foreach($subscriptions as $priority) foreach($priority as $handle) call_user_func(explode("::", $handle['handle']), $handle['args'], $args);
 		}
 	}
-	function subscribe($topic, $tags, $priority, $handle) {
+	function subscribe($topic, $tags, $priority, $handle, $args=null) {
 		if (!is_array($tags)) $tags = array($tags);
 		foreach ($tags as $tag) {
 			$subscriptions = (file_exists("var/hooks/$tag.$topic")) ? unserialize(file_get_contents("var/hooks/$tag.$topic")) : array();
-			$subscriptions[$priority][] = $handle;
+			$subscriptions[$priority][] = ($args == null) ? array("handle" => $handle, "args" => array()) : array("handle" => $handle, "args" => $args);
 			$file = fopen("var/hooks/$tag.$topic", "wb");
 			fwrite($file, serialize($subscriptions));
 			fclose($file);
