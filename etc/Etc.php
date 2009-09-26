@@ -44,8 +44,8 @@ class Etc {
 	const WEBSITE_URL = "";
 
 	/* Directories */
-	const STYLESHEET_DIR = "public/stylesheets/";
-	const IMG_DIR = "public/images/";
+	const STYLESHEET_DIR = "app/public/stylesheets/";
+	const IMG_DIR = "app/public/images/";
 
 	/* Default redirection time */
 	const REDIRECTION_TIME = "2";

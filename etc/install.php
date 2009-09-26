@@ -116,7 +116,7 @@
 	//SET FILE PERMISSIONS
 	exec("chmod a+x script/generate");
 	exec("chmod ug+s script/cgenerate");
-	exec("mkdir app/nouns var/schema/.temp var/hooks app/public/uploads app/public/thumbnails");
+	exec("mkdir app/nouns var/schema/.temp var/hooks app/public app/public/uploads app/public/thumbnails");
 	exec("chmod -R a+w var app/public/uploads app/public/thumbnails");
 	
 	//SUSBSCRIBE HOOKS
