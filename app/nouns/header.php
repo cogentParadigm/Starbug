@@ -10,8 +10,8 @@
 	<body class="tundra">
 		<div id="shell">
 			<h1><a href="./"><span><?php echo Etc::WEBSITE_NAME; ?></span></a></h1>
-			<span id="subhead">Fresh XHTML and CSS, just like mom used to serve!</span>
-			<ul id="nav">
+			<span id="subhead"><?php echo Etc::TAGLINE; ?></span>
+			<ul id="nav" class="hnav">
 				<li><a class="active" href="">Home</a></li>
 				<li><a href="">About</a></li>
 			</ul>

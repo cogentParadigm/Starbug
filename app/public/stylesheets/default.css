@@ -1,0 +1,62 @@
+/* CSS for default Starbug theme */
+/* common styles */
+*{margin:0;padding:0}
+html{font-size:100%}
+.hidden{display:none}
+.left{float:left}
+.right{float:right}
+.clear{clear:both}
+a img{border:none;position:relative;top:2px}
+body{background:url('../../../core/app/public/images/sbfade.png') repeat-x #efede8;font-family: Helvetica, Arial, sans-serif;font-size:11px;text-align:center;color:#666}
+/* structural elements */
+#shell, .shell{width:900px;margin:0 auto}
+#shell{padding-top:90px;position:relative;text-align:left;font-size:14px}
+#main{float:left;margin-bottom:10px}
+#content{width:650px;float:left}
+#sidebar{width:233px;float:right;border-left:2px solid #494;padding-left:15px;font-size:12px}
+#footer{list-style:none;float:right;font-size:10px;margin-bottom:30px;clear:both}
+/* headings */
+h1{position:absolute;top:10px;left:0px;font-size:34px}
+#subhead{position:absolute;top:55px;left:5px;font-weight:bold;font-size:12px;color:#DDD}
+h2{color:#842;font-size:20px;margin:15px 0}
+h3{padding:5px 0}
+#sidebar h2{color:#494;font-size:14px}
+#sidebar h2.box_top{margin:0px;font-size:13px;color:#EEE;background:#5A5;float:left;padding:5px 10px}
+/* lists */
+#footer li{float:left;padding:0px 5px}
+ul{margin-left:20px}
+ul li{padding:5px}
+ul.decimal{list-style-type:decimal}
+.hnav{list-style-type:none;width:100%;height:40px;margin:0}
+.hnav li{float:left;padding:0;margin-right:5px}
+/* inline */
+p{margin-bottom:10px}
+em{color:#222}
+/* classes */
+.codeblock{border:1px solid #222;padding:10px;margin:5px 0;width:50%;background:#fff;font-style:italic}
+.note{font-size:10px}
+.green{color:#494}
+.red{color:#C00}
+#sidebar .box{clear:both;background:#5A5;border-top:2px solid #494;color:#FFF;font-size:11px;padding:10px}
+/* forms */
+input.text{padding:2px;border:1px solid #555}
+select{padding:2px}
+label{display:block;font-size:11px;font-weight:bold}
+input.left.checkbox{margin-right:5px}
+.field .error{display:block;font-size:9px;font-weight:bold;color:#C00}
+.field{margin-bottom:10px;padding:15px;background:#fff;border-bottom:1px solid #555;border-top:1px solid #555}
+.button{padding:3px 5px;border:none;color:#fff;background:#494;font-size:11px;font-weight:bold;text-decoration:none;font-family: Helvetica, Arial, sans-serif}
+fieldset{border:none;margin-bottom:15px}
+legend{background:#494;color:#EEE;font-weight:bold;padding:2px 5px}
+.big.button{font-size:36px;font-weight:normal;margin-right:5px;padding:5px 10px}
+a.big.button{padding:6px 10px}
+/* links */
+#nav a{padding:5px 10px;font-weight:bold}
+#nav a.active, #nav a:hover{background:#494;color:#FFF}
+a{color:#494;text-decoration:none}
+p a:hover{text-decoration:underline}
+h1 a{color:#efede8;text-decoration:none}
+a.button{padding:4px 5px}
+.button:hover{background:#5a5;}
+#footer a{color:#494;text-decoration:none}
+#footer a:hover{text-decoration:underline}

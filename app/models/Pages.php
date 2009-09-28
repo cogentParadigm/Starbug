@@ -1,5 +1,5 @@
 <?php
-class Page extends Table {
+class Pages extends Table {
 
 	var $defaults = array('sort_order' => '0');
 	var $uniques = array("name");
@@ -27,7 +27,7 @@ class Page extends Table {
 		global $sb;
 		global $request;
 		if (!$name) $name = current($request->uri);
-		$leafs = $this->db>Execute("SELECT * FROM ".P("leafs")." WHERE page='$name' && container='$container' ORDER BY position ASC")->GetRows();
+		$leafs = $this->db->Execute("SELECT * FROM ".P("leafs")." WHERE page='$name' && container='$container' ORDER BY position ASC")->GetRows();
 		foreach ($leafs as $leaf) {
 			include("app/nouns/leafs/$leaf[leaf].php");
 		}

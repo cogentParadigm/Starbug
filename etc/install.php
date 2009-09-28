@@ -150,8 +150,8 @@
 	//FRONTEND URIS
 	$schemer->insert("uris", "path, template, collective, check_path", "'".Etc::DEFAULT_PATH."', '".Etc::DEFAULT_TEMPLATE."', '0', '0'");
 	$schemer->insert("pages", "title, created, modified, name, layout", "'Home', '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."', '".Etc::DEFAULT_PATH."', '2-col-right'");
-	$schemer->insert("leafs", "leaf, page, container, position", "'text_leaf', 'home', 'content', '0'");
-	$schemer->insert("leafs", "leaf, page, container, position", "'text_leaf', 'home', 'sidebar', '0'");
+	$schemer->insert("leafs", "leaf, page, container, position", "'text-leaf', 'home', 'content', '0'");
+	$schemer->insert("leafs", "leaf, page, container, position", "'text-leaf', 'home', 'sidebar', '0'");
 	$schemer->insert("text_leaf", "page, container, position, content", "'home', 'content', '0', '\t\t\t\t<h2>Hello World</h2>\n\t\t\t\t<p>Hello to the World, and to the world hello.</p>'");
 	$schemer->insert("text_leaf", "page, container, position, content", "'home', 'sidebar', '0', '\t\t\t\t<h2 class=\"box_top\">Why am I seeing this page?</h2>\n\t\t\t\t<div class=\"box\">\n\t\t\t\t\t<p>This reality is unstable, and anomalies have merged from both dimensions to cope with the paradox.</p>\n\t\t\t\t\t<p>Just kidding, this is the default home page.</p>\n\t\t\t\t</div>'");
 	//PRIVILIGES
