@@ -1,7 +1,7 @@
 <?php
 /**
 * FILE: core/sb.php
-* PURPOSE: The global object. provides data, errors, import/provide/load, and pub/sub.
+* PURPOSE: The global object. provides data, errors, import/provide, load and pub/sub.
 * 
 * This file is part of StarbugPHP
 *
@@ -33,8 +33,8 @@ class sb {
 		if (!isset($_SESSION[P('id')])) $_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
 	}
 	function load($what) {
-		if (strpos($what, "core/") === 0) $what = "core/app/plugins".substr($what, 4);
-		else $what = "app/plugins/".$what;
+		//if (strpos($what, "core/") === 0) $what = "core/app/plugins".substr($what, 4);
+		//else $what = "app/plugins/".$what;
 		if (file_exists($what.".php")) include($what.".php");
 		else {
 			$token = split("/", $what); $token = $what."/".end($token).".php";
@@ -79,6 +79,6 @@ class sb {
 		}
 		return $this->objects[$name];
 	}
-	function has($name) {return file_exists("app/models/".ucwords($obj).".php");}
+	function has($name) {return (($this->objects[$name]) || (file_exists("app/models/".ucwords($obj).".php")));}
 }
 ?>

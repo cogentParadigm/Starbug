@@ -23,7 +23,7 @@
 */
 class Schemer {
 
-	private $db;
+	var $db;
 
 	function Schemer($data) {
 		$this->db = $data;

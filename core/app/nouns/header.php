@@ -8,5 +8,5 @@
 	</head>
 	<body class="tundra">
 		<div id="shell">
-			<h1><a href="<?php echo Etc::WEBSITE_URL; ?>"><span>Starbug</span></a></h1>
-			<span id="subhead">PHP website development kit</span>
+			<h1><a href="<?php echo Etc::WEBSITE_URL; ?>"><span><?php echo Etc::WEBSITE_NAME; ?></span></a></h1>
+			<span id="subhead"><?php echo Etc::TAGLINE; ?></span>

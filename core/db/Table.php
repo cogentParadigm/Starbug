@@ -40,11 +40,11 @@ class Table {
 		if (!isset($this->lengths)) $this->lengths = $l;
 	}
 	
-	function has_one($name, $lookup, $ref_field) {
+	protected function has_one($name, $lookup, $ref_field) {
 		$this->relations[$name] = array("type" => "one", "lookup" => $lookup, "ref" => $ref_field);
 	}
 	
-	function has_many($name, $hook, $lookup="", $ref_field="") {
+	protected function has_many($name, $hook, $lookup="", $ref_field="") {
 		$this->relations[$name] = array("type" => "many", "hook" => $hook);
 		if ($lookup && $ref_field) {
 			$this->relations[$name]["lookup"] = $lookup;
