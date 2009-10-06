@@ -26,24 +26,25 @@
 */
 
 	//COLLECT USER INPUT
-	fwrite(STDOUT, "\nWelcom to the StarbugPHP Installer\nPlease enter the following information:\n\nDatabase type:");
+	fwrite(STDOUT, "\nWelcom to the StarbugPHP Installer\nPlease enter the following information:\n\nDatabase Type [mysql]:");
 	$dbtype = fgets(STDIN);
-	fwrite(STDOUT, "Database host [localhost]:");
+	if (empty($dbtype)) $dbtype = "mysql";
+	fwrite(STDOUT, "Database Host [localhost]:");
 	$dbhost = fgets(STDIN);
 	if (empty($dbhost)) $dbhost = "localhost";
-	fwrite(STDOUT, "Database username:");
-	$dbuser = fgets(STDIN);
-	fwrite(STDOUT, "Database password:");
-	$dbpass = fgets(STDIN);
-	fwrite(STDOUT, "Database name:");
+	fwrite(STDOUT, "Database Name:");
 	$dbname = fgets(STDIN);
-	fwrite(STDOUT, "Site prefix:");
+	fwrite(STDOUT, "Database User:");
+	$dbuser = fgets(STDIN);
+	fwrite(STDOUT, "Database Password:");
+	$dbpass = fgets(STDIN);
+	fwrite(STDOUT, "Site Prefix:");
 	$prefix = fgets(STDIN);
 	fwrite(STDOUT, "Website URL:");
 	$siteurl = fgets(STDIN);
-	fwrite(STDOUT, "Super Admin email:");
+	fwrite(STDOUT, "Super Admin Email:");
 	$admin_email = str_replace("\n", "", fgets(STDIN));
-	fwrite(STDOUT, "Super Admin password:");
+	fwrite(STDOUT, "Super Admin Password:");
 	$admin_pass = md5(str_replace("\n", "", fgets(STDIN)));
 
 	//WRITE CONFIG FILE
@@ -87,7 +88,7 @@
 	include("core/db/Schemer.php");
 	$sb->import("util/tags");
 	$sb->db->Execute("DROP TABLE IF EXISTS `".P('permits')."`");
-	$sb->db->Execute("CREATE TABLE `".P("permits")."` (id int not null AUTO_INCREMENT, role varchar(30) not null, who int not null default 0, action varchar(100) not null, status int not null default '0', priv_type varchar(30) not null default 'table', related_table varchar(100) not null, related_id int not null default '0', PRIMARY KEY (`id`) )");
+	$sb->db->Execute("CREATE TABLE `".P("permits")."` (id int not null AUTO_INCREMENT, role varchar(30) not null, who int not null default 0, action varchar(100) not null, status int not null default '4', priv_type varchar(30) not null default 'table', related_table varchar(100) not null, related_id int not null default '0', PRIMARY KEY (`id`) )");
 	$sb->db->Execute("DROP TABLE IF EXISTS `".P('system_tags')."`");
 	$sb->db->Execute("CREATE TABLE `".P("system_tags")."` (id int not null AUTO_INCREMENT, tag varchar(30) not null default '', raw_tag varchar(50) not null default '', PRIMARY KEY (`id`) )");
 	$sb->db->Execute("DROP TABLE IF EXISTS `".P("uris_tags")."`");
@@ -101,6 +102,17 @@
 		"prefix" => array("type" => "string", "length" => "128", "default" => "app/nouns/"),
 		"parent" => array("type" => "int", "default" => "0")
 	);
+	$uris_info = array(
+		"label" => "%path%",
+		"relations" => array(
+			"system_tags" => array(
+				"type" => "many",
+				"hook" => "object_id",
+				"lookup" => "uris_tags",
+				"ref" => "tag_id"
+			)
+		)
+	);
 	$users = array(
 		"first_name" => array("type" => "string", "length" => "32"),
 		"last_name" => array("type" => "string", "length" => "64"),
@@ -108,6 +120,7 @@
 		"email" => array("type" => "string", "length" => "128", "unique" => "true"),
 		"memberships" => array("type" => "int")
 	);
+	$users_info = array("label" => "%email%");
 	$pages = array(
 		"title" => array("type" => "string", "length" => "128"),
 		"created" => array("type" => "timestamp"),
@@ -116,28 +129,35 @@
 		"modified" => array("type" => "timestamp"),
 		"layout" => array("type" => "string")
 	);
+	$pages_info = array("label" => "%title%");
 	$leafs = array(
 		"leaf" => array("type" => "string", "length" => "128"),
 		"page" => array("type" => "string", "length" => "64"),
 		"container" => array("type" => "string", "length" => "32"),
 		"position" => array("type" => "int")
 	);
+	$leafs_info = array("label" => "%leaf%");
 	$text_leaf = array(
 		"page" => array("type" => "string", "length" => "64"),
 		"container" => array("type" => "string", "length" => "32"),
 		"position" => array("type" => "int"),
 		"content" => array("type" => "text", "length" => "5000")
 	);
-	$schemer->schema_write($uris, "uris");
-	$schemer->schema_write($users, "users");
-	$schemer->schema_write($pages, "pages");
-	$schemer->schema_write($leafs, "leafs");
-	$schemer->schema_write($text_leaf, "text_leaf");
+	$text_leaf_info = array("label" => "%page% %container% %position%");
+	$writes = array(
+		"uris" => $uris, "users" => $users, "pages" => $pages, "leafs" => $leafs, "text_leaf" => $text_leaf,
+		".info/uris" => $uris_info, ".info/users" => $users_info, ".info/pages" => $pages_info, ".info/leafs" => $leafs_info, ".info/text_leaf" => $text_leaf_info
+	);
+	foreach($writes as $loc => $arr) {
+		$file = fopen("var/schema/$loc", "wb");
+		fwrite($file, serialize($arr));
+		fclose($file);
+	}
 	$schemer->create("uris");
 	$schemer->create("users");
 	$schemer->create("pages");
-	$schemer->create("leafs");
-	$schemer->create("text_leaf");
+	$schemer->create("leafs", false, false);
+	$schemer->create("text_leaf", false, false);
 
 	//INSERT RECORDS
 	//ADMIN USER
@@ -147,13 +167,19 @@
 	$admin_parent = $schemer->db->Insert_ID();
 	$schemer->insert("uris", "path, template, prefix, parent", "'sb', 'Starbug', 'core/app/nouns/', '$admin_parent'");
 	$schemer->insert("uris", "path, template, prefix, parent", "'sb/generate', 'sb/generate', 'core/app/nouns/', '$admin_parent'");
-	//FRONTEND URIS
+	$schemer->insert("uris", "path, template, prefix, parent", "'sb/xhr', 'Xhr', 'core/app/nouns/', '$admin_parent'");
+	$schemer->insert("uris", "path, template, prefix, collective, check_path", "'api', 'Api', 'core/app/nouns/', '0', '0'");
+	//HOME PAGE
 	$schemer->insert("uris", "path, template, collective, check_path", "'".Etc::DEFAULT_PATH."', '".Etc::DEFAULT_TEMPLATE."', '0', '0'");
 	$schemer->insert("pages", "title, created, modified, name, layout", "'Home', '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."', '".Etc::DEFAULT_PATH."', '2-col-right'");
 	$schemer->insert("leafs", "leaf, page, container, position", "'text-leaf', 'home', 'content', '0'");
-	$schemer->insert("leafs", "leaf, page, container, position", "'text-leaf', 'home', 'sidebar', '0'");
-	$schemer->insert("text_leaf", "page, container, position, content", "'home', 'content', '0', '\t\t\t\t<h2>Hello World</h2>\n\t\t\t\t<p>Hello to the World, and to the world hello.</p>'");
-	$schemer->insert("text_leaf", "page, container, position, content", "'home', 'sidebar', '0', '\t\t\t\t<h2 class=\"box_top\">Why am I seeing this page?</h2>\n\t\t\t\t<div class=\"box\">\n\t\t\t\t\t<p>This reality is unstable, and anomalies have merged from both dimensions to cope with the paradox.</p>\n\t\t\t\t\t<p>Just kidding, this is the default home page.</p>\n\t\t\t\t</div>'");
+	$schemer->insert("text_leaf", "page, container, position, content", "'home', 'content', '0', '\t\t\t\t<h2>Congratulations, she rides!</h2>\n\t\t\t\t<p><strong>You\'ve successfully installed Starbug PHP!</strong></p>'");
+	//404 PAGE
+	$schemer->insert("pages", "title, created, modified, name, layout", "'Missing', '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."', 'missing', '2-col-right'");
+	$schemer->insert("leafs", "leaf, page, container, position", "'text-leaf', 'missing', 'content', '0'");
+	$schemer->insert("leafs", "leaf, page, container, position", "'text-leaf', 'missing', 'sidebar', '0'");
+	$schemer->insert("text_leaf", "page, container, position, content", "'missing', 'content', '0', '\t\t\t\t<h2>Oops!</h2>\n\t\t\t\t<p>The page you are looking for was not found.</p>'");
+	$schemer->insert("text_leaf", "page, container, position, content", "'missing', 'sidebar', '0', '\t\t\t\t<h2 class=\"box_top\">Why am I seeing this page?</h2>\n\t\t\t\t<div class=\"box\">\n\t\t\t\t\t<p>This reality is unstable, and anomalies have merged from both dimensions to cope with the paradox.</p>\n\t\t\t\t\t<p>Just kidding, you\'ve navigated to a location that either does not exist or is missing.</p>\n\t\t\t\t</div>'");
 	//PRIVILIGES
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'login', '".P('users')."'");
 	$schemer->insert("permits", "role, action, related_table", "'everyone', 'logout', '".P('users')."'");
@@ -162,7 +188,7 @@
 	function uri_list($uid) {
 		global $sb;
 		$prefix = array($uid);
-		$children = $sb->get("uris")->get("*", "parent=$uid")->GetRows();
+		$children = $sb->query("uris", "where:parent=$uid");
 		if (!empty($children)) foreach($children as $kid) $prefix = array_merge($prefix, uri_list($kid['id']));
 		return $prefix;
 	}
@@ -171,4 +197,5 @@
 	
 	//SUSBSCRIBE HOOKS
 	$sb->subscribe("header", "global", 10, "sb::load", "core/app/hooks/header");
+	$sb->subscribe("footer", "dojo", 10, "sb::load", "core/app/hooks/footer.dojo");
 ?>

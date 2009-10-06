@@ -39,12 +39,12 @@ class Models {
 						$inact = " inactive";
 						unset($v['inactive']);
 					} else $inact = "";
-					$dl .= " class=\"sub$inact\"><a class=\"right\" href=\"\" onclick=\"delete_key('$prefix-$k');return false;\">delete</a><a class=\"right\" href=\"\" onclick=\"edit_field('$prefix-$k');return false;\">rename</a><a class=\"right\" href=\"\" onclick=\"new_key('$prefix-$k');return false\">add key</a>".((!empty($inact) && $has)?"<form style=\"display:none\" id=\"activate_$prefix-$k\"><input type=\"hidden\" name=\"activate_field\" value=\"1\"/></form><a class=\"right\" href=\"\" onclick=\"activate_field('$prefix', '$k');return false;\">activate</a>":"")."<a href=\"\" onclick=\"showhide('$prefix-$k-fields');return false;\">$k</a>";
+					$dl .= " class=\"sub$inact\"><a class=\"right delete_field\" href=\"\">delete</a><a class=\"right edit_field\" href=\"\">rename</a><a class=\"right new_key\" href=\"\">add key</a>".((!empty($inact) && $has)?"<form style=\"display:none\" id=\"activate_$prefix-$k\"><input type=\"hidden\" name=\"activate_field\" value=\"1\"/></form><a class=\"right\" href=\"\" onclick=\"activate_field('$prefix', '$k');return false;\">activate</a>":"")."<a href=\"\" onclick=\"showhide('$prefix-$k-fields');return false;\">$k</a>";
 				} else $dl .= ">$k";
 				$dl .= "</dt><dd id=\"$prefix-$k\"".(!empty($inact)?" class=\"".trim($inact)."\"":"").">".Models::dlfields($v, "$prefix-$k", $has)."</dd>\n";
 			}
 			return $dl."</dl>\n";
-		} else return "<span class=\"options\"><a href=\"\" onclick=\"edit_key('$prefix');return false;\">edit</a><a href=\"\" onclick=\"delete_key('$prefix');return false;\">delete</a></span>".$arr;
+		} else return "<span id=\"$prefix-options\" class=\"options\"><a href=\"\" class=\"edit_key\">edit</a><a href=\"\" class=\"delete_key\">delete</a></span>".$arr;
 	}
 
 	function add_field($field, $where) { $this->schemer->schema_write(array($field => array("inactive" => true)), $where); }

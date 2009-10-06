@@ -1,2 +1,2 @@
-<h2>404 Not Found</h2>
-<p>Sorry, that page was not found</p>
+<h2>Oops!</h2>
+<p>That page could not be found. In computer jargon - our plans have all gone tits up!</p>

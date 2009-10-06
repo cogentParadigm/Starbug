@@ -1,20 +1,24 @@
 <?php
 class Uris extends Table {
 
-	var $defaults = array('visible' => '1', 'importance' => '0');
-	var $uniques = array();
-	var $lengths = array('path' => '64', 'template' => '32', 'visible' => '2', 'importance' => '2');
+	var $filters = array(
+		"path" => "length:64",
+		"template" => "length:32",
+		"importance" => "length:2",
+		"check_path" => "default:1",
+		"prefix" => "default:/app/nouns/",
+		"parent" => "deflaut:0"
+	);
 
-	function Uris($data, $t) {
-		parent::Table($data, $t);
+	function Uris($type) {
+		parent::Table($type);
 		$this->has_many("system_tags", "object_id", "uris_tags", "tag_id");
 	}
 
 	function create() {
 		$uris = $_POST['uris'];
 		$uris['owner'] = $_SESSION[P("id")];
-		$errors = $this->store($uris);
-		return $errors;
+		return $this->store($uris);
 	}
 
 	function delete() {

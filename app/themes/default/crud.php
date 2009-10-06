@@ -30,7 +30,7 @@ if (empty($_POST['modelname'])) {
 <?php } else { ?>
 	<p>the following path(s) will be added..</p>
 	<ul class="file_list">
-		<li><?php $rows = $sb->get("uris")->get("*", "path='$_POST[modelname]'")->GetRows(); if (!empty($rows)) echo "<strong class=\"right red\">already exists</strong>"; else echo "<strong class=\"right green\">does not exist</strong>"; ?><?php echo $_POST['modelname']; ?></li>
+		<li><?php $rows = $sb->query("uris", "where:path='$_POST[modelname]'"); if (!empty($rows)) echo "<strong class=\"right red\">already exists</strong>"; else echo "<strong class=\"right green\">does not exist</strong>"; ?><?php echo $_POST['modelname']; ?></li>
 	</ul>
 	<p>the following files will be created..</p>
 	<ul class="file_list">

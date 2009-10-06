@@ -30,12 +30,33 @@ class form {
 		$contents = "\t<input class=\"action\" name=\"action[$postvar]\" type=\"hidden\" value=\"$action\" />\n";
 		if (!empty($_POST[$postvar]['id'])) $contents .= "\t<input id=\"id\" name=\"".$postvar."[id]\" type=\"hidden\" value=\"".$_POST[$postvar]['id']."\" />\n";
 		foreach($fields as $key => $value) {
-			$value['name'] = $key;
+			if ($value['type'] != 'field') $value['name'] = $key;
 			$value['postvar'] = $postvar;
 			if ($value['type'] == "bin") $enctype = true;
 			$contents .= form::$value['type']($value);
 		}
 		if ($enctype) $open .= " enctype=\"multipart/form-data\"";
+		return $open.">\n".$contents."\t</form>";
+	}
+	function build($postvar, $args, $fields) {
+		$args = starr::star($args);
+		efault($args['url'], $_SERVER['REQUEST_URI']);
+		efault($args['method'], "post");
+		$extras = func_get_args();
+		array_shift($extras); array_shift($extras); array_shift($extras);
+		$num_extras = count($extras);
+		$open = '<form class="'.$postvar.'_form" action="'.$args['url'].'" method="'.$args['method'].'"';
+		$contents = "\t".'<input class="action" name="action['.$postvar.']" type="hidden" value="'.$args['action'].'" />'."\n";
+		if (!empty($_POST[$postvar]['id'])) $contents .= "\t".'<input id="id" name="'.$postvar.'[id]" type="hidden" value="'.$_POST[$postvar]['id'].'" />'."\n";
+		foreach($fields as $key => $value) {
+			$value = starr::star($value);
+			foreach($value as $k => $v) for($i=0;$i<$num_extras;$i++) if ($v == '$'.$i) $value[$k] = $extras[$i];
+			if ($value['type'] != 'field') $value['name'] = $key;
+			$value['postvar'] = $postvar;
+			if ($value['type'] == "bin") $enctype = true;
+			$contents .= form::$value['type']($value);
+		}
+		if ($enctype) $open .= ' enctype="multipart/form-data"';
 		return $open.">\n".$contents."\t</form>";
 	}
 
@@ -55,11 +76,13 @@ class form {
 	function field($args) {
 		$ops = $args['options'];
 		unset($args['options']);
-		$field = "\t".'<'.(isset($ops['type'])?$ops['type']:"div").' class="field">'."\n";
+		$field = "\t".'<'.(isset($ops['type'])?$ops['type']:"div").' class="'.(($args['class']) ? $args['class'] : "field").'">'."\n";
 		foreach ($args as $key => $value) {
-			$value['name'] = $key;
-			$value['fielded'] = true;
-			$field .= form::$value['type']($value);
+			if (is_array($value)) {
+				$value['name'] = $key;
+				$value['fielded'] = true;
+				$field .= form::$value['type']($value);
+			}
 		}
 		return $field."\t".'</'.(isset($ops['type'])?$ops['type']:"div").'>'."\n";
 	}
@@ -81,12 +104,15 @@ class form {
 	}
 
 	function hidden($ops) {
-		$ops['input_type']='hidden';
-		return form::input($ops);
+		return '<input type="hidden" name="'.$ops['postvar'].'['.$ops['name'].']" value="'.$ops['value'].'" />';
 	}
 
 	function submit($ops) {
 		return '<input type="submit" class="'.$ops['class'].'" value="'.$ops['name'].'" />';
+	}
+	
+	function a($ops) {
+		return '<a href="'.$ops['href'].'"'.((!empty($ops['id'])) ? ' id="'.$ops['id'].'"' : "").((!empty($ops['class'])) ? ' class="'.$ops['class'].'"' : "").">$ops[name]</a>";
 	}
 
 	function bin($ops) {
@@ -119,6 +145,24 @@ class form {
 		if (!empty($ops['size'])) $input .= ' size="'.$ops['size'].'"';
 		//close
 		return $input." />\n";
+	}
+	
+	function custom($ops) {
+		return $ops['content'];
+	}
+	
+	function eip_text($ops) {
+		if (!empty($ops['nofield'])) $tabs = "\t";
+		else if (!empty($ops['fielded'])) $tabs = "\t\t";
+		else return form::field(array($ops['name'] => $ops, "options" => (isset($ops['field'])?$ops['field']:array())));
+		$ops['tabs'] = $tabs;
+		//id, name, and type
+		$input = "";
+		if (empty($ops['id'])) $ops['id'] = $ops['name'];
+		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
+		$input .= $tabs.form::label($ops)."\n";
+		$input .= $tabs.$ops['before'].'<span id="'.$ops['id'].'">'.$ops['prefix'].'<span class="editable"	onclick="edit_eip_text(\''.$ops['id'].'\', \''.$ops['postvar'].'['.$ops['name'].']\');return false;">'.((!empty($_POST[$ops['postvar']][$ops['name']])) ? $_POST[$ops['postvar']][$ops['name']] : $ops['default']).'</span>'.$ops['suffix'].'</span>'.$ops['after'];
+		return $input;
 	}
 	
 	function checkbox($ops) {
@@ -158,7 +202,7 @@ class form {
 			$range = split(":", $ops['range']);
 			for ($i=$range[0];$i<=$range[1];$i++) $ops['options'][$i] = $i;
 		}
-		$select .= $tabs."<select id=\"".$ops['id']."\" name=\"".$ops['postvar']."[".$ops['name']."]\">\n";
+		$select .= $tabs."<select id=\"".$ops['id']."\" name=\"$ops[postvar]"."[".$ops['name']."]\">\n";
 		foreach ($ops['options'] as $caption => $val) $select .= $tabs."\t<option value=\"$val\"".(($_POST[$ops['postvar']][$ops['name']] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
 		return $select.$tabs."</select>\n";
 	}

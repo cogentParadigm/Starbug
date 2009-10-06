@@ -1,9 +1,8 @@
 <?php
-$uris = $sb->get("uris");
 $page = next($this->uri);
 empty_nan($page, 0);
-$all = $uris->find("*")->GetRows();
-$total = $uris->recordCount;
+$all = $sb->query("uris", "action:read");
+$total = $sb->recordCount;
 $start_from = $page*25;
 $remaining = $total - $start_from;
 $shown = ($remaining<25) ? ($remaining % 25) : 25;

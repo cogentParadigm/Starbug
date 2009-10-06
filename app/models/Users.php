@@ -4,10 +4,10 @@ class Users extends Table {
 	function login() {
 		$errors = array();
 		$login = $_POST['users'];
-		$user = $this->get("id, memberships", "email='".$login['email']."' && password='".md5($login['password'])."'");
-		if (!$user->EOF) {
-				$_SESSION[P("id")] = $user->fields['id'];
-				$_SESSION[P("memberships")] = $user->fields['memberships'];
+		$user = $this->query("select:id, memberships	where:email='".$login['email']."' && password='".md5($login['password'])."'");
+		if (count($user) == 1) {
+				$_SESSION[P("id")] = $user[0]['id'];
+				$_SESSION[P("memberships")] = $user[0]['memberships'];
 			} else {
 				$errors['loginMatchError'] = true;
 			}

@@ -1,9 +1,13 @@
 <?php
 class Pages extends Table {
 
-	var $defaults = array('sort_order' => '0');
-	var $uniques = array("name");
-	var $lengths = array('title' => '128', 'content' => '5000', 'template' => '64', 'name' => '32');
+	var $filters = array(
+		"name" => "unique:	length:32",
+		"title" => "length:128",
+		"template" => "length:64",
+		"content" => "length:5000",
+		"sort_order" => "default:0"
+	);
 	
 	function create() {
 		$page = $_POST['page'];
@@ -27,10 +31,8 @@ class Pages extends Table {
 		global $sb;
 		global $request;
 		if (!$name) $name = current($request->uri);
-		$leafs = $this->db->Execute("SELECT * FROM ".P("leafs")." WHERE page='$name' && container='$container' ORDER BY position ASC")->GetRows();
-		foreach ($leafs as $leaf) {
-			include("app/nouns/leafs/$leaf[leaf].php");
-		}
+		$leafs = $sb->query("leafs", "where:page='$name' && container='$container' ORDER BY position ASC");
+		foreach ($leafs as $leaf) include("app/nouns/leafs/$leaf[leaf]/show.php");
 	}
 }
 ?>

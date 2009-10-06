@@ -1,9 +1,8 @@
 <?php
-$permits = $sb->get("permits");
 $page = next($this->uri);
 empty_nan($page, 0);
-$all = $permits->find("*")->GetRows();
-$total = $permits->recordCount;
+$all = $sb->query("permits", "action:read");
+$total = $sb-db->RecordCount();
 $start_from = $page*25;
 $remaining = $total - $start_from;
 $shown = ($remaining<25) ? ($remaining % 25) : 25;

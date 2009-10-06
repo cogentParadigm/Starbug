@@ -24,11 +24,12 @@ class starr {
 
 	function star($str="") {
 		$arr = array();
-		$keypairs = split(",", $str);
+		$keypairs = split("\t", $str);
 		foreach($keypairs as $keypair) {
-			if (ereg("=", $keypair)) {
-				$keypair = split("=", $keypair);
-				$arr[$keypair[0]] = $keypair[1];
+			if (false !== ($pos = strpos($keypair, ":"))) {
+				$key = substr($keypair, 0, $pos);
+				$value = substr($keypair, $pos+1);
+				$arr[$key] = $value;
 			} else if ($keypair!="") $arr[] = $keypair;
 		}
 		return $arr;

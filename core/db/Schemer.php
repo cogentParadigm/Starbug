@@ -29,7 +29,7 @@ class Schemer {
 		$this->db = $data;
 	}
 
-	function create($name, $backup=false) {
+	function create($name, $backup=false, $write=true) {
 		$fields = $this->schema_get($name);
 		$sql = "DROP TABLE IF EXISTS `".P($name)."`";
 		$this->db->Execute($sql);
@@ -39,13 +39,13 @@ class Schemer {
 			$sql .= $fieldname." ".$this->get_sql_type($options).", ";
 			unset($fields[$fieldname]["inactive"]);
 		}
-		$sql .= "owner int(11) NOT NULL default '1', collective int(11) NOT NULL default '1', status int(11) NOT NULL default '0', ";
+		$sql .= "owner int(11) NOT NULL default '1', collective int(11) NOT NULL default '1', status int(11) NOT NULL default '4', ";
 		$sql .= "PRIMARY KEY (`id`) ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 		$result = $this->db->Execute($sql);
 		$file = fopen("var/schema/$name", "wb");
 		fwrite($file, serialize($fields));
 		fclose($file);
-		$this->write_model($name, $backup);
+		if ($write) $this->write_model($name, $backup);
 		$info = unserialize(file_get_contents("var/schema/.info/$name"));
 		$info['active'] = true;
 		$file = fopen("var/schema/.info/$name", "wb");

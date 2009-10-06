@@ -4,7 +4,7 @@
 		<title><?php echo Etc::WEBSITE_NAME; ?></title>
 		<link rel="stylesheet" type="text/css" href="<?php echo Etc::WEBSITE_URL.Etc::STYLESHEET_DIR."default.css"; ?>" media="screen" />
 		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.3.2/dijit/themes/tundra/tundra.css"/>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.3.2/dojo/dojo.xd.js"></script>
+		<script type="text/javascript" src="http://o.aolcdn.com/dojo/1.3/dojo/dojo.xd.js" djConfig="parseOnLoad: false"></script>
 		<?php $sb->publish("header"); ?>
 	</head>
 	<body class="tundra">

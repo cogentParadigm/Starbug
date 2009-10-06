@@ -113,8 +113,8 @@ else include("app/themes/".Theme::FOLDER."/$argv[1]/$argv[1].php");
 //CREATE DIRECTORIES
 foreach ($dirs as $dir) if (!file_exists($dir)) exec("./script/cgenerate dir $dir");
 //CREATE FILES
-foreach ($from_model as $stylesheet => $output) exec("./script/cgenerate sax $output var/schema/.temp/$argv[2]_model.xml app/themes/".Theme::FOLDER."/$stylesheet");
-foreach ($from_form as $stylesheet => $output) exec("./script/cgenerate sax $output var/schema/.temp/$argv[2]_form.xml app/themes/".Theme::FOLDER."/$stylesheet");
+foreach ($from_model as $stylesheet => $output) exec("./script/cgenerate sax -o:$output -s:var/schema/.temp/$argv[2]_model.xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
+foreach ($from_form as $stylesheet => $output) exec("./script/cgenerate sax -o:$output -s:var/schema/.temp/$argv[2]_form.xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
 //COPY FILES
 foreach ($from_copy as $origin => $dest) exec("./script/cgenerate copy $dest app/themes/".Theme::FOLDER."/$origin");
 //ADD URI

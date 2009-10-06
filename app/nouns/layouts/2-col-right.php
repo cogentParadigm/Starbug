@@ -1,5 +1,5 @@
 <?php 
-/* containers: content, sidebar
+/* containers: content,sidebar
  */
 include("app/nouns/header.php"); ?>
 			<div id="content">

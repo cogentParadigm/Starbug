@@ -18,13 +18,23 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-define("BASE_DIR", end(explode("/",dirname(__FILE__))));
 //configure
 include("etc/Etc.php");
+$groups = array(
+	"root"			=> 1,
+	"user"			=> 2
+);
+$statuses = array(
+	"deleted"     => 1,
+	"pending"     => 2,
+	"public"		  => 4,
+	"private"			=> 8
+);
 //initialize
 include("etc/init.php");
 //go
 include("core/Request.php");
-$request = new Request($sb->db);
+$request = new Request($groups, $statuses);
+$request->set_path(end(explode("/",dirname(__FILE__))), $_SERVER['REQUEST_URI']);
 $request->execute();
 ?>
