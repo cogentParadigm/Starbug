@@ -14,9 +14,9 @@ dojo.mixin(sb, {
 		else dojo.xhrGet(xhr_object);
 	},
 	replace : function(data) {
-		if (typeof(data.args.node) == 'string') data.args.node = [data.args.node];
+		if (data.args.node.constructor.toString().indexOf('Array') == -1) data.args.node = [data.args.node];
 		for(var i in data.args.node) {
-			var node = dojo.query(data.args.node[i])[0];
+			var node = (typeof(data.args.node[i]) == "string") ? dojo.query(data.args.node[i])[0] : data.args.node[i];
 			node.innerHTML = data.args.data;
 		}
 	},

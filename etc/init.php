@@ -21,7 +21,6 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-ini_set('error_reporting',E_ALL); 
 include("core/db/adodb_lite/adodb.inc.php");
 function empty_nan(&$val, $default="") {if(!isset($val) || !is_numeric($val)) $val = $default;}
 function dfault(&$val, $default="") {if(!isset($val)) $val = $default;return $val;}
@@ -29,7 +28,8 @@ function efault(&$val, $default="") {if(empty($val)) $val = $default;return $val
 function P($var) {return Etc::PREFIX.$var;}
 function uri($path) {return Etc::WEBSITE_URL.$path;}
 include("core/sb.php");
-$sb = new sb();
 include("core/db/Table.php");
 include("util/starr.php");
+global $sb;
+$sb = new sb();
 ?>

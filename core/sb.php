@@ -83,14 +83,13 @@ class sb {
 	function query($froms, $args=array(), $mine=false) {
 		$froms = explode(",", $froms);
 		$first = array_shift($froms);
-		$from = P($first)." AS ".$first;
-		if (!$mine) foreach ($froms as $f) $from .= " INNER JOIN ".P($f)." AS ".$f;
+		$from = "`".P($first)."` AS `".$first."`";
+		if (!$mine) foreach ($froms as $f) $from .= " INNER JOIN `".P($f)."` AS `".$f."`";
 		else {
 			$relations = $this->get($first)->relations;
 			foreach ($froms as $f) {
 				$rel = $relations[$f];
-				echo $test;
-				$namejoin = " INNER JOIN ".P($f)." AS $f";
+				$namejoin = " INNER JOIN `".P($f)."` AS `$f`";
 				if (empty($rel)) $from .= $namejoin;
 				else {
 					$namejoin .= " ON ";
@@ -120,7 +119,7 @@ class sb {
 		return ($args['limit'] == 1) ? $records->fields() : $records->GetRows();
 	}
 	function store($name, $fields, $thefilters="mine") {
-		if (($thefilters == "mine") && ($this->has($name))) $thefilters = $this->get($name)->filters;
+		if ($thefilters == "mine") $thefilters = ($this->has($name)) ? $this->get($name)->filters : array();
 		$errors = array(); $byfilter = array();
 		foreach ($fields as $col => $value) {
 			$fields[$col] = trim($fields[$col]);
@@ -139,7 +138,8 @@ class sb {
 						else $setstr .= ", ".$col."='".$value."'";
 					}
 				}
-				$this->db->Execute("UPDATE $name SET ".$setstr." WHERE id='".$fields['id']."'");
+				//echo "UPDATE $name SET ".$setstr." WHERE id='".$fields['id']."'";
+				$this->db->Execute("UPDATE ".P($name)." SET ".$setstr." WHERE id='".$fields['id']."'");
 			} else { //creating new record
 				$keys = ""; $values = "";
 				foreach($fields as $col => $value) {
@@ -160,7 +160,6 @@ class sb {
 		if (!empty($where)) {
 			$records = $this->db->Execute("DELETE FROM ".P($from)." WHERE ".$where);
 			$this->recordCount = $records->RecordCount();
-			//return $records->GetRows();
 		}
 	}
 	function post_act($key, $value) {
@@ -171,7 +170,8 @@ class sb {
 			$this->errors = array_merge_recursive($this->errors, array($key => $errors));
 		}
 	}
-	function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_act($key, $val);}
+	function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_act($key, $val);
+	}
 	function grant($table, $permit) {
 		$filters = array(
 			"priv_type" 		=> "default:table",

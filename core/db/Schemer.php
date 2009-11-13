@@ -58,19 +58,19 @@ class Schemer {
 		$field = $fields[$name];
 		unset($fields[$name]["inactive"]);
 		$sql = $name." ".$this->get_sql_type($field);
-		$this->db->Execute("ALTER TABLE ".P($table)." ADD ".$sql);
+		$this->db->Execute("ALTER TABLE `".P($table)."` ADD ".$sql);
 		$file = fopen("var/schema/$table", "wb");
 		fwrite($file, serialize($fields));
 		fclose($file);
 	}
 	
 	function remove($table, $name) {
-		$this->db->Execute("ALTER TABLE ".P($table)." DROP COLUMN ".$name);
+		$this->db->Execute("ALTER TABLE `".P($table)."` DROP COLUMN ".$name);
 	}
 	
 	function modify($table, $name, $field) {
 		$sql = $name." ".$this->get_sql_type($field);
-		$this->db->Execute("ALTER TABLE ".P($table)." ALTER COLUMN ".$sql); 
+		$this->db->Execute("ALTER TABLE `".P($table)."` ALTER COLUMN ".$sql); 
 	}
 
 	function drop($name) {
@@ -88,7 +88,7 @@ class Schemer {
 		fclose($file);
 	}
 
-	function insert($table, $keys, $values) {$this->db->Execute("INSERT INTO ".P($table)." (".$keys.") VALUES (".$values.")");}
+	function insert($table, $keys, $values) {$this->db->Execute("INSERT INTO `".P($table)."` (".$keys.") VALUES (".$values.")");}
 
 	function get_sql_type($field) {
 		$type = "varchar(64)";

@@ -31,29 +31,6 @@ if ($_POST['save_settings']) {
 		</div>
 	</fieldset>
 	<fieldset>
-		<legend>Database details</legend>
-		<div class="field">
-			<label for="db_type">Type</label>
-			<input id="db_type" name="db_type" type="text" class="text" value="<?php echo Etc::DB_TYPE; ?>"/>
-		</div>
-		<div class="field">
-			<label for="db_host">Host</label>
-			<input id="db_host" name="db_host" type="text" class="text" value="<?php echo Etc::DB_HOST; ?>"/>
-		</div>
-		<div class="field">
-			<label for="db_username">Username</label>
-			<input id="db_username" name="db_username" type="text" class="text" value="<?php echo Etc::DB_USERNAME; ?>"/>
-		</div>
-		<div class="field">
-			<label for="db_password">Password</label>
-			<input id="db_name" name="db_password" type="password" class="text" value="<?php echo Etc::DB_PASSWORD; ?>"/>
-		</div>
-		<div class="field">
-			<label for="db_name">Database name</label>
-			<input id="db_name" name="db_name" type="text" class="text" value="<?php echo Etc::DB_NAME; ?>"/>
-		</div>
-	</fieldset>
-	<fieldset>
 		<legend>Email addresses</legend>
 		<div class="field">
 			<label for="webmaster_email">Webmaster email</label>

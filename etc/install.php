@@ -105,12 +105,7 @@
 	$uris_info = array(
 		"label" => "%path%",
 		"relations" => array(
-			"system_tags" => array(
-				"type" => "many",
-				"hook" => "object_id",
-				"lookup" => "uris_tags",
-				"ref" => "tag_id"
-			)
+			"system_tags" => array("type" => "many", "hook" => "object_id", "lookup" => "uris_tags", "ref" => "tag_id")
 		)
 	);
 	$users = array(
@@ -172,12 +167,12 @@
 	//HOME PAGE
 	$schemer->insert("uris", "path, template, collective, check_path", "'".Etc::DEFAULT_PATH."', '".Etc::DEFAULT_TEMPLATE."', '0', '0'");
 	$schemer->insert("pages", "title, created, modified, name, layout", "'Home', '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."', '".Etc::DEFAULT_PATH."', '2-col-right'");
-	$schemer->insert("leafs", "leaf, page, container, position", "'text-leaf', 'home', 'content', '0'");
+	$schemer->insert("leafs", "leaf, page, container, position", "'text_leaf', 'home', 'content', '0'");
 	$schemer->insert("text_leaf", "page, container, position, content", "'home', 'content', '0', '\t\t\t\t<h2>Congratulations, she rides!</h2>\n\t\t\t\t<p><strong>You\'ve successfully installed Starbug PHP!</strong></p>'");
 	//404 PAGE
 	$schemer->insert("pages", "title, created, modified, name, layout", "'Missing', '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."', 'missing', '2-col-right'");
-	$schemer->insert("leafs", "leaf, page, container, position", "'text-leaf', 'missing', 'content', '0'");
-	$schemer->insert("leafs", "leaf, page, container, position", "'text-leaf', 'missing', 'sidebar', '0'");
+	$schemer->insert("leafs", "leaf, page, container, position", "'text_leaf', 'missing', 'content', '0'");
+	$schemer->insert("leafs", "leaf, page, container, position", "'text_leaf', 'missing', 'sidebar', '0'");
 	$schemer->insert("text_leaf", "page, container, position, content", "'missing', 'content', '0', '\t\t\t\t<h2>Oops!</h2>\n\t\t\t\t<p>The page you are looking for was not found.</p>'");
 	$schemer->insert("text_leaf", "page, container, position, content", "'missing', 'sidebar', '0', '\t\t\t\t<h2 class=\"box_top\">Why am I seeing this page?</h2>\n\t\t\t\t<div class=\"box\">\n\t\t\t\t\t<p>This reality is unstable, and anomalies have merged from both dimensions to cope with the paradox.</p>\n\t\t\t\t\t<p>Just kidding, you\'ve navigated to a location that either does not exist or is missing.</p>\n\t\t\t\t</div>'");
 	//PRIVILIGES
@@ -197,5 +192,6 @@
 	
 	//SUSBSCRIBE HOOKS
 	$sb->subscribe("header", "global", 10, "sb::load", "core/app/hooks/header");
-	$sb->subscribe("footer", "dojo", 10, "sb::load", "core/app/hooks/footer.dojo");
+	$sb->subscribe("footer", "global", 10, "sb::load", "core/app/hooks/footer");
+	$sb->subscribe("footer", "dojo", 10, "sb::load", "core/app/hooks/dojo.footer");
 ?>

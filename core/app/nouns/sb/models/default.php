@@ -2,11 +2,10 @@
 <a href="models/create" class="new_model button right">new model</a>
 <script type="text/javascript">
 	dojo.require("dojo.fx");
-	dojo.require("dojo.behavior");
 	function showhide(item) {
 		dojo.toggleClass(item, "hidden");
 	}
-	function showtab(model, tabname) {
+	function showtab(model, tabname, xpos) {
 		dojo.query("#"+model+"_model .tab").addClass("hidden");
 		dojo.query("#"+model+"_model .tab."+tabname).removeClass("hidden");
 		dojo.query("#"+model+"_model .active.button").removeClass("active");
@@ -15,7 +14,7 @@
 		var tab_box = dojo.query("#"+model+"_model .tabright")[0];
 		var active_button = dojo.query("#"+model+"_model .active.button")[0];
 		var active_coords = dojo.coords(active_button);
-		var bg_move = dojo.animateProperty({node: tab_bg, properties: { left: {end: (active_coords.x-388), unit: "px"}}, duration: 250});
+		var bg_move = dojo.animateProperty({node: tab_bg, properties: { left: {end: xpos, unit: "px"}}, duration: 250});
 		dojo.fx.combine([bg_move, dojo.animateProperty({node: tab_box, properties: { width: {end: (active_coords.w-17), unit: "px"}}, duration: 250})]).play();
 	}
 	function init_tabs() {
@@ -47,8 +46,13 @@
 		id_options();
 	}
 	function permit_created(args) {
-		permit = args.args.data;
-		args.args.node.innerHTML = '<strong>'+permit.priv_type+' '+permit.action+'</strong>';
+		console.log(args.args.data.permits);
+		permit = args.args.data.permits[0];
+		var permit_str = '<strong>'+permit.priv_type+' '+permit.action+'</strong> access for <strong>'+permit.role;
+		if ((permit.role == 'user') || (permit.role = 'group')) permit_str += ' '+permit.who;
+		permit_str += '</strong>';
+		if (permit.priv_type == 'object') permit_str += 'on <strong>'+permit.related_id+'</strong>';
+		args.args.node.innerHTML = permit_str;
 	}
 </script>
 <?php
@@ -59,7 +63,7 @@ $dojo->xhr(".create_permit", "create_permit", "'sb/xhr/permits/form/'+mod.substr
 $dojo->attach("#role", "who_options", "", "onchange");
 $dojo->attach("#priv_type", "id_options", "", "onchange");
 $dojo->attach(".cancel_permit", "sb.destroy", "node:evt.target.parentNode.parentNode");
-$dojo->xhr(".save_permit", "permit_created", "'api/permits/get.json'", "form:evt.target.parentNode	node:evt.target.parentNode.parentNode");
+$dojo->xhr(".save_permit", "permit_created", "'api/permits/get.json'", "form:evt.target.parentNode	node:evt.target.parentNode.parentNode	handleAs:'json'");
 //model
 $dojo->xhr(".new_model", "sb.append", "'sb/xhr/models/new/model'", "node:'#models'");
 $dojo->attach(".cancel_new_model", "sb.destroy", "node:evt.target.parentNode.parentNode");
@@ -115,8 +119,8 @@ include("core/app/public/js/models.php");
 		<div id="<?php echo $name; ?>_model" class="hidden" style="padding:5px">
 			<div class="tabs">
 				<span class="tableft"><span class="tabright"></span></span>
-				<a class="fields button" href="" onclick="showtab('<?php echo $name; ?>', 'fields');return false;">fields</a>
-				<a class="active info button" href="" onclick="showtab('<?php echo $name; ?>', 'info');return false;">info</a>
+				<a class="fields button" href="" onclick="showtab('<?php echo $name; ?>', 'fields', 848);return false;">fields</a>
+				<a class="active info button" href="" onclick="showtab('<?php echo $name; ?>', 'info', 812);return false;">info</a>
 			</div>
 			<div class="info tab">
 				<?php $info = unserialize(file_get_contents("var/schema/.info/$name")); ?>
@@ -127,7 +131,7 @@ include("core/app/public/js/models.php");
 				<div class="permit_options"><a href="" class="inline_button create_permit" style="">create permit</a></div>
 				<div class="permitlist">
 				<?php $permits = $sb->query("permits", "where:related_table='".P($name)."'"); foreach($permits as $permit) { ?>
-					<div class="permit"><?php echo "<strong>$permit[priv_type] $permit[action]</strong> access for <strong>$permit[role] ".(($permit['who']) ? $permit['who'] : "")."</strong>".(($permit['related_id']) ? " on <strong>".$permit['related_id']."</strong>" : ""); ?><a style="padding-right:10px;border-right:1px solid;margin:0 10px" class="edit_permit" href="">change</a><a href="<?php echo uri("sb/models?action=delete_permit&id=$permit[id]"); ?>" onclick="return confirm('Are you sure you want to delete this page?');">delete</a></div>
+					<div class="permit"><?php echo "<strong>$permit[priv_type] $permit[action]</strong> access for <strong>$permit[role] ".(($permit['who']) ? $permit['who'] : "")."</strong>".(($permit['related_id']) ? " on <strong>".$permit['related_id']."</strong>" : ""); ?><a style="padding-right:10px;border-right:1px solid;margin:0 10px" class="edit_permit" href="">change</a><a href="<?php echo uri("sb/models?action=delete_permit&id=$permit[id]"); ?>" onclick="return confirm('Are you sure you want to delete this permit?');">delete</a></div>
 				<?php } ?>
 				</div>
 			</div>

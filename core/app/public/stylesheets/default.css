@@ -30,19 +30,6 @@ ul.decimal{list-style-type:decimal}
 .file_list{list-style-type:none;font-style:italic}
 .hnav{list-style-type:none;width:100%;height:40px;margin:0}
 .hnav li{float:left;padding:0;margin-right:5px}
-/* dash */
-#dash{width:100%;position:fixed;bottom:0px;}
-#dashlist{width:900px;list-style:none;background:#494;margin:0 auto;height:26px;clear:both;position:relative}
-#dashlist{-moz-border-radius-topleft:8px;-moz-border-radius-topright:8px;border-radius-topleft:8px;border-radius-topright:8px;-webkit-border-top-left-radius:8px;-webkit-border-top-right-radius:8px;overflow:hidden}
-#dashlist li{float:left;padding:0}
-#dashlist li.first{padding-left:0}
-#dashlist li.right{float:right}
-#dash a{color:#fff;font-size:12px;font-weight:bold;display:block;float:left;text-decoration:none;padding:6px 10px;border-right:2px solid}
-#dash .first a{-moz-border-radius-topleft:8px;border-radius-topleft:8px;-webkit-border--top-right-radius:8px}
-#dash .last a{-moz-border-radius-topright:8px;border-radius-topright:8px;-webkit-border-top-right-radius:8px}
-#dash li.right a{border-right:none;border-left:2px solid}
-#dash a:hover{background:#5a5}
-#dash .button{height:14px}
 /* inline */
 p{margin-bottom:10px}
 em{color:#222}
@@ -62,7 +49,7 @@ input.left.checkbox{margin-right:5px}
 .button{padding:3px 5px;border:none;color:#fff;background:#494;font-size:11px;font-weight:bold;text-decoration:none;font-family: Helvetica, Arial, sans-serif;cursor:pointer}
 #login{width:215px}
 .permits_form .field {float:left;}
-fieldset{border:none;margin-bottom:15px}
+fieldset{border:none;margin-bottom:15px;clear:both}
 legend{background:#494;color:#EEE;font-weight:bold;padding:2px 5px}
 .big.button{font-size:36px;font-weight:normal;margin-right:5px;padding:5px 10px}
 a.big.button{padding:6px 10px}
@@ -106,7 +93,8 @@ td:hover .row-actions{visibility:visible}
 #link-label{float:left;padding:6px 0;margin-right:5px}
 .link-span{display:block;float:left;padding:5px 0;font-size:12px}
 .link-span .editable{background:#FE9}
-.pages_form .big.button{-moz-border-radius:25px;border-radius:25px;margin:10px 0 0 48px}
+.editable a{background:#fff;padding:0px 5px}
+.pages_form .big.button{-moz-border-radius:25px;border-radius:25px;margin-top:10px;width:200px}
 .infield{float:right;border:1px solid #999;border-radius:10px;-moz-border-radius:10px;margin:10px 0;padding:10px;width:200px}
 .infield select{width:100%}
 .infield .text{width:194px}

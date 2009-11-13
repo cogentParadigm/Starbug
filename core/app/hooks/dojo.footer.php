@@ -1,4 +1,5 @@
 <script type="text/javascript">
+	dojo.require("dojo.behavior");
 <?php include("core/app/public/js/sb.js"); ?>
 	dojo.addOnLoad(function() {
 		<?php global $dojo; if (!empty($dojo->behaviors)) { ?>

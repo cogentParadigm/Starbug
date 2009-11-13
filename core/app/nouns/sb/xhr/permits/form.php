@@ -6,7 +6,7 @@
 	if ($sb->has($name)) {
 		$sb->get($name);
 		$methods = get_class_methods(ucwords($name));
-		foreach($methods as $method) if (!(($method == "Table") || ($method == "query") || ($method == ucwords($name)))) $options[$method] = $method;
+		foreach($methods as $method) if (!(($method == "Table") || ($method == "query") || ($method == ucwords($name)) || ($method == "_call"))) $options[$method] = $method;
 	}
 	$info = unserialize(file_get_contents("var/schema/.info/".$name));
 	foreach($sb->query($name) as $item) {
@@ -16,15 +16,20 @@
 	}
 	foreach(array("everone", "user", "group", "owner", "collective") as $role) $roles[$role] = $role;
 	$fields = array(
-		"related_table" => "type:hidden	value:$name",
-		"priv_type" => "type:select	options:$0",
-		"action" => "type:select	options:$1",
-		"role" => "type:select	options:$2",
-		"who" => "type:select",
-		"related_id" => "type:select	options:$3",
-		"save" => "type:submit	class:inline_button save_permit",
-		"cancel" => "type:a	class:inline_button cancel_permit"
+		
 	);
-	echo form::build($name, "action:grant	url:$submit_to", $fields, $privs, $options, $roles, $rels);
+	$fields = array();
+	for ($k=0;$k<=5;$k++) $fields[] = "div	class:field	fields:$$k";
+	$fields["save"] = "submit	class:inline_button save_permit";
+	$fields[] = "a	class:inline_button cancel_permit	content:cancel";
+	$extras = array(
+		array("related_table" => "hidden	value:".P($name)),
+		array("priv_type" => "select	options:$6"),
+		array("action" => "select	options:$7"),
+		array("role" => "select	options:$8"),
+		array("who" => "select"),
+		array("related_id" => "select	options:$9"),
+		$privs, $options, $roles, $rels);
+	echo form::build("permits", "action:grant	url:$submit_to", $fields, $extras);
 ?>
 </div>
