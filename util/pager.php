@@ -31,7 +31,9 @@ class pager {
 	var $finish;
 	var $current_page;
 	var $current_item;
-	function pager($item_array, $total_items, $items_per_page, $current_pg=1) {
+	function pager($item_array, $items_per_page, $current_pg=1, $total_items=null) {
+		global $sb;
+		if ($total_items == null) $total_items = $sb->recordCount;
 		$this->items = $item_array;
 		$this->count = $total_items;
 		$this->per = $items_per_page;
@@ -46,14 +48,14 @@ class pager {
 	}
 	function reset() {$this->current_item = $this->start;}
 	function links($prefix) {
-		if ($this->count > 25) { ?>
-			<ul class="pages">
-				<?php if ($this->current > 1) { ?>
-				<li class="back"><a href="<?php echo uri($prefix.($this->current-1)); ?>">Back</a></li>
+		if ($this->count > $this->per) { ?>
+			<ul class="pages hnav">
+				<?php if ($this->current_page > 1) { ?>
+				<li class="back"><a class="button" href="<?php echo uri($prefix.($this->current_page-1)); ?>">Back</a></li>
 				<?php } for($i=1;$i<=$this->last;$i++) { ?>
-				<li><a <?php if($this->current == $i) { ?>class="active" <?php } ?>href="<?php echo uri($prefix.$i); ?>"><?php echo $i; ?></a></li>
-				<?php } if ($this->current < $this->last) { ?>
-				<li class="next"><a href="<?php echo uri($prefix.($this->current+1)); ?>">Next</a></li>
+				<li><a class="button<?php if($this->current_page == $i) { ?> active<?php } ?>" href="<?php echo uri($prefix.$i); ?>"><?php echo $i; ?></a></li>
+				<?php } if ($this->current_page < $this->last) { ?>
+				<li class="next"><a class="button" href="<?php echo uri($prefix.($this->current_page+1)); ?>">Next</a></li>
 				<?php } ?>
 			</ul>
 		<?php }

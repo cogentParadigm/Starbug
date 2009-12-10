@@ -24,7 +24,7 @@
 $sb->provide("util/dojo");
 class dojo {
 	var $behaviors = array();
-	var $connects = array();
+	var $toggles = array();
 	function dojo() {
 		global $request;
 		$request->tags[] = array("tag" => "dojo", "raw_tag" => "dojo");
@@ -50,6 +50,13 @@ class dojo {
 		//$object .= "console.log(args);";
 		$action = $object.$action."({args : args});";
 		$this->behavior($query, $event, $action);
+	}
+	function toggle($query, $toggler, $node, $params="") {
+		$params = starr::star($params);
+		$default = $params['default'];
+		$this->attach($query, "sb.toggle", "node:'#$node'	toggler:$toggler");
+		$this->toggles[$toggler] = array("node" => $node, "default" => $default, "toggler" => $toggler);
+		if ($params['add']) $this->toggles[$toggler]['add'] = $params['add'];
 	}
 }
 global $dojo;

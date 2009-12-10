@@ -46,10 +46,10 @@
 		id_options();
 	}
 	function permit_created(args) {
-		console.log(args.args.data.permits);
+		//console.log(args.args.data.permits);
 		permit = args.args.data.permits[0];
 		var permit_str = '<strong>'+permit.priv_type+' '+permit.action+'</strong> access for <strong>'+permit.role;
-		if ((permit.role == 'user') || (permit.role = 'group')) permit_str += ' '+permit.who;
+		if ((permit.role == 'user') || (permit.role = 'group')) if (permit.who != 0) permit_str += ' '+permit.who;
 		permit_str += '</strong>';
 		if (permit.priv_type == 'object') permit_str += 'on <strong>'+permit.related_id+'</strong>';
 		args.args.node.innerHTML = permit_str;
@@ -131,7 +131,7 @@ include("core/app/public/js/models.php");
 				<div class="permit_options"><a href="" class="inline_button create_permit" style="">create permit</a></div>
 				<div class="permitlist">
 				<?php $permits = $sb->query("permits", "where:related_table='".P($name)."'"); foreach($permits as $permit) { ?>
-					<div class="permit"><?php echo "<strong>$permit[priv_type] $permit[action]</strong> access for <strong>$permit[role] ".(($permit['who']) ? $permit['who'] : "")."</strong>".(($permit['related_id']) ? " on <strong>".$permit['related_id']."</strong>" : ""); ?><a style="padding-right:10px;border-right:1px solid;margin:0 10px" class="edit_permit" href="">change</a><a href="<?php echo uri("sb/models?action=delete_permit&id=$permit[id]"); ?>" onclick="return confirm('Are you sure you want to delete this permit?');">delete</a></div>
+					<div class="permit"><?php echo "<strong>$permit[priv_type] $permit[action]</strong> access for <strong>$permit[role] ".(($permit['who']) ? $permit['who'] : "")."</strong>".(($permit['priv_type'] == "object") ? " on <strong>".$permit['related_id']."</strong>" : ""); ?><a style="padding-right:10px;border-right:1px solid;margin:0 10px" class="edit_permit" href="">change</a><a href="<?php echo uri("sb/models?action=delete_permit&id=$permit[id]"); ?>" onclick="return confirm('Are you sure you want to delete this permit?');">delete</a></div>
 				<?php } ?>
 				</div>
 			</div>

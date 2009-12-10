@@ -1,54 +1,52 @@
-<?php
-$page = next($this->uri);
-empty_nan($page, 0);
-$all = $sb->query("uris", "action:read");
-$total = $sb->recordCount;
-$start_from = $page*25;
-$remaining = $total - $start_from;
-$shown = ($remaining<25) ? ($remaining % 25) : 25;
-$go_to = $start_from + $shown;
-?>
 <script type="text/javascript">
-	function showhide(item) {
-		var node = dojo.byId(item);
-		var display = node.getAttribute('class');
-		if (display == 'hidden') display = '';
-		else display = 'hidden';
-		node.setAttribute('class', display);
+	function switch_icon(text) {
+		if (text == '--') return '&crarr;';
+		else return '--';
 	}
 </script>
-<?php include("core/app/public/js/uris.php"); ?>
 <h2>URIs</h2>
+<a id="add_uri" class="right round button" href="<?php echo uri("sb/uris/create"); ?>">Create URI</a>
 <?php include("core/app/nouns/sb/settings/nav.php"); ?>
-<?php if ($total > 25) { ?>
-<ul class="pages">
-	<?php if ($page > 0) { ?>
-	<li class="back"><a href="sb/uris/list/<?php echo $page-1; ?>">Back</a></li>
-	<?php } for($i=0;$i<ceil($total/25);$i++) { ?>
-	<li><a<?php if($page == $i) { ?> class="active"<?php } ?> href="sb/uris/list/<?php echo $i; ?>"><?php echo $i+1; ?></a></li>
-	<?php } if($page < ceil($total/25)-1) { ?>
-	<li class="next"><a href="sb/uris/list/<?php echo $page+1; ?>">Next</a></li>
-	<?php } ?>
-</ul>
-<?php } ?>
-<table id="uris_table">
-<tr><th>Path</th><th>Template</th><th>Prefix</th><th>Importance</th><th>Owner</th><th>Collective</th><th>Options</th></tr>
-<?php for($i=$start_from;$i<$go_to;$i++) { $el = $all[$i]; ?>
-	<tr id="uri_<?php echo $el['id']; ?>">
-		<td><?php echo $el['path']; ?></td>
-		<td><?php echo $el['template']; ?></td>
-		<td><?php echo $el['prefix']; ?></td>
-		<td><?php echo $el['importance']; ?></td>
-		<td><?php echo $el['owner']; ?></td>
-		<td><?php echo $el['collective']; ?></td>
-		<td class="options"><a class="left button" href="#" onclick="edit_uri(<?php echo $el['id']; ?>);return false;">Edit</a>
-			<form id="del_form" style="float:left" action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
-				<input id="action[uris]" name="action[uris]" type="hidden" value="delete"/>
-				<input type="hidden" name="uris[id]" value="<?php echo $el['id']; ?>"/>
-				<input class="button" type="submit" onclick="return confirm('Are you sure you want to delete?');" value="Delete"/>
-			</form>
+<table id="uris_table" class="clear lister">
+<?php foreach(array("thead", "tfoot") as $t) { ?><?php echo "<$t>"; ?><tr><th class="expand-col"></th><th class="path-col">Path</th><th class="parent-col">Parent</th><th class="owner-col">Owner</th><th class="collective-col">Collective</th></tr><?php echo "</$t>"; ?><?php } ?>
+<?php
+$sb->import("util/dojo");
+$uris = $sb->query("uris", "action:read");
+$kids = array();
+foreach($uris as $uri) $kids[$uri['parent']][] = $uri;
+function list_uri($row, $kids) { global $sb; global $request; global $dojo; ?>
+	<tr id="uris_<?php echo $row['id']; ?>">
+		<td class="expand-col"><?php if (!empty($kids[$row['id']])) echo '&crarr;'; ?></td>
+		<td class="path-col">
+			<a href="<?php echo uri("sb/uris/update/$row[id]"); ?>"><?php echo $row['path']; ?></a>
+			<ul class="row-actions">
+				<li class="first"><a href="<?php echo uri("sb/uris/update/$row[id]"); ?>">edit</a></li>
+				<li><a href="<?php echo uri($request->path."?action=delete&id=$row[id]"); ?>">delete</a></li>
+				<li><a href="<?php echo uri($row['path']); ?>">view</a></li>
+			</ul>
+		</td>
+		<td class="parent-col"><?php $parent = $sb->query("uris", "select:path	where:id='$row[parent]'	limit:1"); echo $parent['path']; ?></td>
+		<td class="owner-col"><?php $owner = $sb->query("users", "select:first_name, last_name	where:id='$row[owner]'	limit:1"); echo $owner['first_name']." ".$owner['last_name']; ?></td>
+		<td class="owner-col"><?php echo array_search($row['collective'], array_merge(array("everybody" => 0), $request->groups)); ?></td>
+	</tr>
+	<?php
+		if (!empty($kids[$row['id']])) { ?>
+	<tr id="parent_<?php echo $row['id']; ?>" style="display:none">
+		<td colspan="5">
+		<table class="lister">
+		<?php
+			$dojo->toggle("#uris_".$row['id']." .expand-col", "tg_".$row['id'], "parent_".$row['id'], "default:off	add:showFunc:dojo.fx.wipeIn, hideFunc:dojo.fx.wipeOut, duration:300");
+			$dojo->attach("#uris_".$row['id']." .expand-col", "sb.replace", "node:evt.target	data:switch_icon(evt.target.innerHTML)");
+			foreach($kids[$row['id']] as $uri) list_uri($uri, $kids); 
+		?>
+		</table>
 		</td>
 	</tr>
+	<?php
+		}
+	?>
 <?php } ?>
+<?php foreach($kids[0] as $uri) list_uri($uri, $kids); ?>
 </table>
-<a id="add_uri" class="big left button" href="<?php echo uri("sb/uris/create"); ?>" onclick="new_uri();return false;">New Element</a>
+
+<a id="add_uri" class="big left round button" href="<?php echo uri("sb/uris/create"); ?>">Create URI</a>

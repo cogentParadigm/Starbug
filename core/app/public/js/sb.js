@@ -34,5 +34,18 @@ dojo.mixin(sb, {
 			var node = (typeof(data.args.node[i]) == "string") ? dojo.query(data.args.node[i])[0] : data.args.node[i];
 			node.parentNode.removeChild(node);
 		}
+	},
+	toggle : function(data) {
+		var node = (typeof(data.args.node) == "string") ? dojo.query(data.args.node)[0] : data.args.node;
+		var toggler = data.args.toggler;
+		var display = dojo.attr(node, 'displayed');
+		if (display == 'on') {
+			toggler.hide();
+			display = 'off';
+		} else {
+			toggler.show();
+			display = 'on';
+		}
+		dojo.attr(node, 'displayed', display);
 	}
 });

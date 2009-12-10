@@ -1,7 +1,7 @@
 <?php
 /**
 * FILE: core/Request.php
-* PURPOSE: provide data and errors, start session, send form data to models, and locate the request path
+* PURPOSE: interprets the request URI and initiates action
 *
 * This file is part of StarbugPHP
 *
@@ -30,6 +30,7 @@ class Request {
 	var $tags;
 	var $groups;
 	var $statuses;
+	var $base_dir;
 
 	function Request($groups, $statuses) {
 		$this->tags = array(array("tag" => "global", "raw_tag" => "global"));
@@ -38,6 +39,7 @@ class Request {
  	}
  	
  	function set_path($base_dir, $request_path) {
+		$this->base_dir = $base_dir;
 		$this->path = (false === ($base_pos = strpos($request_path, $base_dir))) ? substr($request_path, 1) : substr($request_path, $base_pos+strlen($base_dir)+1);
 		if (false !== strpos($this->path, "?")) $this->path = reset(explode("?", $this->path));
 		efault($this->path, Etc::DEFAULT_PATH);
@@ -47,6 +49,7 @@ class Request {
 		if (empty($current)) $current = "default";
 		if (file_exists("$prefix$base$current.php")) return $prefix.$base.$current.".php";
 		else if (file_exists("$prefix$base$current")) return $this->check_path($prefix, "$base$current/", next($this->uri));
+		else if (file_exists($prefix.$base."default.php")) return $prefix.$base."default.php";
 		else {
 			header("HTTP/1.1 404 Not Found");
 			$this->path="missing";
@@ -57,6 +60,8 @@ class Request {
 			return $prefix."missing.php";
 		}
 	}
+	
+	function return_path() {$this->set_path($this->base_dir, $_SERVER['HTTP_REFERER']);}
 
 	function locate() {
 		global $sb;
@@ -66,7 +71,13 @@ class Request {
 		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
 	}
 
-	public function execute() {global $sb; $sb->check_post(); $this->locate(); include($this->payload['prefix'].$this->payload['template'].".php");}
+	public function execute() {
+		global $sb;
+		$sb->check_post();
+		$this->locate();
+		if ($_GET['x']) include($this->file);
+		else include($this->payload['prefix'].$this->payload['template'].".php");
+	}
 
 }
 ?>

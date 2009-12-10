@@ -122,14 +122,16 @@ class sb {
 		if ($thefilters == "mine") $thefilters = ($this->has($name)) ? $this->get($name)->filters : array();
 		$errors = array(); $byfilter = array();
 		foreach ($fields as $col => $value) {
+			$errors[$col] = array();
 			$fields[$col] = trim($fields[$col]);
 			$filters = starr::star($thefilters[$col]);
 			foreach($filters as $filter => $args) $byfilter[$filter][$col] = $args;
-			if ($value == "") $errors[$col."Error"] = true;
+			if ($value == "") $errors[$col]["required"] = "This field is required.";
 		}
 		foreach($byfilter as $filter => $args) {
 			include("util/$filter.php");
 		}
+		foreach($errors as $col => $err) if (empty($err)) unset($errors[$col]);
 		if(empty($errors)) { //no errors
 			if(!empty($fields['id'])) { //updating existing record
 				foreach($fields as $col => $value) {
@@ -168,6 +170,10 @@ class sb {
 			if (($this->recordCount > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value();
 			else $errors = array("forbidden" => true);
 			$this->errors = array_merge_recursive($this->errors, array($key => $errors));
+			if (!empty($errors)) {
+				global $request;
+				$request->return_path();
+			}
 		}
 	}
 	function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_act($key, $val);

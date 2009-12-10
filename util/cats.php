@@ -3,10 +3,14 @@ $sb->provide("util/cats");
 	function cat_select($categories, $match=0, $parent=0, $iteration=0) {
 		global $sb;
 		$cats = $sb->query($categories, "where:parent='".$parent."'");
-		foreach($cats as $row) { ?>
-			<option value="<?php echo $row["id"]; ?>" <?php if(!empty($match) && $match == $row["id"]) { ?>selected="selected" <?php } ?>><?php for($i=0;$i<$iteration+1;$i++) { ?>-<?php } ?> <?php echo $row["name"]; ?></option>
-			<?php cat_select($categories, $match, $row["id"], $iteration+1);
+		$select_str = "";
+		foreach($cats as $row) {
+			$select_str .= '<option value="'.$row["id"].'" '.((!empty($match) && $match == $row["id"]) ? 'selected="selected"' : '').'>\n';
+			for($i=0;$i<$iteration+1;$i++) $select_str .= '-';
+			$select_str .= $row["name"].'</option>';
+			$select_str .= cat_select($categories, $match, $row["id"], $iteration+1);
 		}
+		return $select_str;
 	}
 	function cat_query($categories, $cid, $prefix="") {
 		global $sb;

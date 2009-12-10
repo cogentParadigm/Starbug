@@ -15,21 +15,16 @@
 		$rels[$label] = $item['id'];
 	}
 	foreach(array("everone", "user", "group", "owner", "collective") as $role) $roles[$role] = $role;
-	$fields = array(
-		
-	);
-	$fields = array();
-	for ($k=0;$k<=5;$k++) $fields[] = "div	class:field	fields:$$k";
-	$fields["save"] = "submit	class:inline_button save_permit";
-	$fields[] = "a	class:inline_button cancel_permit	content:cancel";
-	$extras = array(
-		array("related_table" => "hidden	value:".P($name)),
-		array("priv_type" => "select	options:$6"),
-		array("action" => "select	options:$7"),
-		array("role" => "select	options:$8"),
-		array("who" => "select"),
-		array("related_id" => "select	options:$9"),
-		$privs, $options, $roles, $rels);
-	echo form::build("permits", "action:grant	url:$submit_to", $fields, $extras);
+	$f = new form($name, "action:grant	url:$submit_to");
+	echo $f->open();
 ?>
+		<div class="field"><?php echo $f->hidden("related_table	value:".P($name)); ?></div>
+		<div class="field"><?php echo $f->select("priv_type", $privs); ?></div>
+		<div class="field"><?php echo $f->select("action", $options); ?></div>
+		<div class="field"><?php echo $f->select("role", $roles); ?></div>
+		<div class="field"><?php echo $f->select("who"); ?></div>
+		<div class="field"><?php echo $f->select("related_id", $rels); ?></div>
+		<?php echo $f->submit("class:inline_button save_permit	value:save"); ?>
+		<?php echo $f->tag("a	class:inline_button cancel_permit	content:cancel"); ?>
+	</form>
 </div>

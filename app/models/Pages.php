@@ -28,7 +28,7 @@ class Pages extends Table {
 	function update() {
 		global $sb;
 		$page = $_POST['pages'];
-		if (!isset($page['id'])) return array("noIdError" => true);
+		if (!isset($page['id'])) return array("id" => array("missing" => true));
 		unset($page['created']);
 		$page['modified'] = date("Y-m-d H:i:s");
 		if (!empty($page['template'])) {
@@ -47,13 +47,17 @@ class Pages extends Table {
 			}
 			$leafs = $sb->query("leafs", "where:page='$pagename' ORDER BY container ASC, position ASC");
 			foreach($leafs as $leaf) include("app/nouns/leafs/$leaf[leaf]/save.php");
+			foreach($_POST['new-leaf'] as $container => $leaf) if (!empty($leaf)) include("app/nouns/leafs/$leaf/create.php");
+			unset($_POST['new-leaf']);
+			foreach($_POST['remove-leaf'] as $container => $leaf) if (!empty($leaf)) include("app/nouns/leafs/".end(explode(" ", $leaf))."/delete.php");
 		}
 		if (empty($errors) && ((!empty($collective)) || (!empty($collective)))) $this->db->Execute("UPDATE ".P("uris")." SET collective='$collective', template='$template' WHERE path='$pagename'");
 		return $errors;
 	} 
 
 	function delete() {
-		$this->remove("id='".$_POST['page']['id']."'");
+		$this->remove("id='".$_POST['pages']['id']."'");
+		unset($_POST['pages']);
 		return array();
 	}
 	
@@ -68,7 +72,6 @@ class Pages extends Table {
 		$sb->db->Execute("UPDATE `".P("leafs")."` SET page='$_POST[new_name]' WHERE page='$_POST[old_name]'");
 		foreach($leafs as $leaf) $sb->db->Execute("UPDATE `".P($leaf['leaf'])."` SET page='$_POST[new_name]' WHERE page='$_POST[old_name]'");
 		$page = $sb->query("pages", "where:name='$_POST[new_name]'	limit:1");
-		//$page = $sb->query("pages", "where:name='$_POST[old_name]'	limit:1");
 		$_POST['pages']['id'] = $page['id'];
 		return $errors;
 	}
@@ -83,12 +86,11 @@ class Pages extends Table {
 	
 	function fields($container, $name) {
 		global $sb;
-		$fieldset = array();
+		$fieldset = "";
 		$leafs = $sb->query("leafs", "where:page='$name' && container='$container' ORDER BY position ASC");
 		foreach ($leafs as $leaf) {
 			include("app/nouns/leafs/$leaf[leaf]/fields.php");
-			$fields = str_replace("\t", "%tab%", $fields);
-			$fieldset["$container-$leaf[position]"] = "type:custom	content:$fields";
+			$fieldset .= $fields;
 		}
 		return $fieldset;
 	}

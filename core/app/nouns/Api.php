@@ -8,6 +8,7 @@ $action = $action[0];
 $query = "";
 if ($action == "get") {
 	if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) $_GET['id'] = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : $sb->insert_id;
+	if ($model == "permits") $_GET['id'] = $sb->insert_id;
 	if (!empty($_GET['id'])) $query = "where:id='$_GET[id]'";
 	if ($format == "xml") {
 		header("Content-Type: text/xml");
