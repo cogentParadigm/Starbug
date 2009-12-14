@@ -38,8 +38,9 @@ class Request {
 		$this->statuses = $statuses;
  	}
  	
- 	function set_path($base_dir, $request_path) {
-		$this->base_dir = $base_dir;
+ 	function set_path($request_path, $base_dir="") {
+		if (empty($base_dir)) $base_dir = $this->base_dir;
+		else $this->base_dir = $base_dir;
 		$this->path = (false === ($base_pos = strpos($request_path, $base_dir))) ? substr($request_path, 1) : substr($request_path, $base_pos+strlen($base_dir)+1);
 		if (false !== strpos($this->path, "?")) $this->path = reset(explode("?", $this->path));
 		efault($this->path, Etc::DEFAULT_PATH);
@@ -61,7 +62,7 @@ class Request {
 		}
 	}
 	
-	function return_path() {$this->set_path($this->base_dir, $_SERVER['HTTP_REFERER']);}
+	function return_path() {$this->set_path($_SERVER['HTTP_REFERER']);}
 
 	function locate() {
 		global $sb;
@@ -77,6 +78,11 @@ class Request {
 		$this->locate();
 		if ($_GET['x']) include($this->file);
 		else include($this->payload['prefix'].$this->payload['template'].".php");
+	}
+	
+	public function success($model, $action) {
+		global $sb;
+		return (($_POST['action'][$model] == $action) && (empty($sb->errors[$model])));
 	}
 
 }

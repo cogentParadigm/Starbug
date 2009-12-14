@@ -8,6 +8,6 @@ if ($table == "uris") {
 } else if ($table == "users") {
 	$users = $sb->query("users", "action:read");
 	foreach ($users as $user) { ?>
-		<option value="<?php echo $user['id']; ?>"><?php echo $user['first_name']." ".$user['last_name']; ?></option>
+		<option value="<?php echo $user['id']; ?>"><?php echo $user['email']; ?></option>
 	<?php }
 } ?>

@@ -79,7 +79,7 @@ class sb {
 		}
 		return $this->objects[$name];
 	}
-	function has($name) {return (($this->objects[$name]) || (file_exists("app/models/".ucwords($obj).".php")));}
+	function has($name) {return (($this->objects[$name]) || (file_exists("app/models/".ucwords($name).".php")));}
 	function query($froms, $args=array(), $mine=false) {
 		$froms = explode(",", $froms);
 		$first = array_shift($froms);
@@ -129,7 +129,7 @@ class sb {
 			if ($value == "") $errors[$col]["required"] = "This field is required.";
 		}
 		foreach($byfilter as $filter => $args) {
-			include("util/$filter.php");
+			include("util/filters/$filter.php");
 		}
 		foreach($errors as $col => $err) if (empty($err)) unset($errors[$col]);
 		if(empty($errors)) { //no errors
@@ -168,7 +168,7 @@ class sb {
 		if (($object = $this->get($key)) && method_exists($object, $value)) {
 			$permits = isset($_POST[$key]['id']) ? $this->query($key, "action:$value	where:$key.id='".$_POST[$key]['id']."'") : $this->query($key, "action:$value	priv_type:table");
 			if (($this->recordCount > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value();
-			else $errors = array("forbidden" => true);
+			else $errors = array("forbidden" => "You do not have sufficient permission to complete your request.");
 			$this->errors = array_merge_recursive($this->errors, array($key => $errors));
 			if (!empty($errors)) {
 				global $request;

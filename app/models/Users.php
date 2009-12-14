@@ -9,7 +9,7 @@ class Users extends Table {
 				$_SESSION[P("id")] = $user[0]['id'];
 				$_SESSION[P("memberships")] = $user[0]['memberships'];
 			} else {
-				$errors['loginMatchError'] = true;
+				$errors['email']['loginMatch'] = "That email and password combination was not found.";
 			}
 		return $errors;
 	}

@@ -109,10 +109,8 @@
 		)
 	);
 	$users = array(
-		"first_name" => array("type" => "string", "length" => "32"),
-		"last_name" => array("type" => "string", "length" => "64"),
-		"password" => array("type" => "password"),
 		"email" => array("type" => "string", "length" => "128", "unique" => "true"),
+		"password" => array("type" => "password"),
 		"memberships" => array("type" => "int")
 	);
 	$users_info = array("label" => "%email%");
@@ -156,7 +154,7 @@
 
 	//INSERT RECORDS
 	//ADMIN USER
-	$schemer->insert("users", "first_name, last_name, email, password, memberships", "'Admin', '', '$admin_email', '$admin_pass', '1'");
+	$schemer->insert("users", "email, password, memberships", "'$admin_email', '$admin_pass', '1'");
 	//ADMIN URIS
 	$schemer->insert("uris", "path, template, prefix, collective", "'sb-admin', 'Starbug', 'core/app/nouns/', '0'");
 	$admin_parent = $schemer->db->Insert_ID();

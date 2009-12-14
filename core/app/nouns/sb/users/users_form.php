@@ -5,10 +5,8 @@
 	$fu = new form("users", "action:$action	url:$submit_to");
 	echo $fu->open();
 ?>
-	<div class="field"><?php echo $fu->text("first_name"); ?></div>
-	<div class="field"><?php echo $fu->text("last_name"); ?></div>
-	<div class="field"><?php echo $fu->password("password	class:text"); ?></div>
 	<div class="field"><?php echo $fu->text("email"); ?></div>
+	<div class="field"><?php echo $fu->password("password	class:text"); ?></div>
 	<div class="field"><?php echo $fu->text("memberships"); ?></div>
 	<?php echo $fu->submit("class:big round button	value:Save"); ?>
 </form>

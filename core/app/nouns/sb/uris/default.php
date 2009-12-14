@@ -26,7 +26,7 @@ function list_uri($row, $kids) { global $sb; global $request; global $dojo; ?>
 			</ul>
 		</td>
 		<td class="parent-col"><?php $parent = $sb->query("uris", "select:path	where:id='$row[parent]'	limit:1"); echo $parent['path']; ?></td>
-		<td class="owner-col"><?php $owner = $sb->query("users", "select:first_name, last_name	where:id='$row[owner]'	limit:1"); echo $owner['first_name']." ".$owner['last_name']; ?></td>
+		<td class="owner-col"><?php $owner = $sb->query("users", "select:email	where:id='$row[owner]'	limit:1"); echo $owner['email']; ?></td>
 		<td class="owner-col"><?php echo array_search($row['collective'], array_merge(array("everybody" => 0), $request->groups)); ?></td>
 	</tr>
 	<?php

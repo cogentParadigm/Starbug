@@ -37,7 +37,7 @@ class form {
 		$this->method = $args['method'];
 	}
 
-	function open($atts) {
+	function open($atts="") {
 		$open = '<form'.(($atts) ? " ".$atts : "").' action="'.$this->url.'" method="'.$this->method.'">'."\n";
 		$open .= '<input class="action" name="action['.$this->model.']" type="hidden" value="'.$this->action.'" />'."\n";
 		if (!empty($_POST[$this->model]['id'])) $open .= '<input id="id" name="'.$this->model.'[id]" type="hidden" value="'.$_POST[$this->model]['id'].'" />'."\n";
@@ -48,7 +48,7 @@ class form {
 		global $sb;
 		if (!($ops['nolabel'])) $lab = '<label for="'.$ops['id'].'"'.((empty($ops['identifier_class'])) ? '' : ' class="'.$ops['identifier_class'].'"').'>'.$ops['label']."</label>";
 		else unset($ops['nolabel']);
-		foreach($sb->errors[$this->model][$ops['name']] as $err => $message) $lab .= "\n"."<span class=\"error\">".((!empty($ops['error'][$err])) ? $ops['error'][$err] : $message)."</span>";
+		if (isset($sb->errors[$this->model][$ops['name']])) foreach($sb->errors[$this->model][$ops['name']] as $err => $message) $lab .= "\n"."<span class=\"error\">".((!empty($ops['error'][$err])) ? $ops['error'][$err] : $message)."</span>";
 		unset($ops['label']);
 		unset($ops['error']);
 		return $lab;

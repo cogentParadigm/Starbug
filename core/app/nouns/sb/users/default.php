@@ -7,19 +7,16 @@
 <?php include("core/app/nouns/sb/settings/nav.php"); ?>
 <?php $pager->links("sb/users/"); ?>
 <table id="users_table" class="clear lister">
-<?php foreach(array("thead", "tfoot") as $t) { ?><?php echo "<$t>"; ?><tr><th class="first-name-col">First Name</th><th class="last-name-col">Last Name</th><th class="password-col">Password</th><th class="email-col">Email</th><th class="meberships-col">Memberships</th></tr><?php echo "</$t>"; ?><?php } ?>
+<?php foreach(array("thead", "tfoot") as $t) { ?><?php echo "<$t>"; ?><tr><th class="email-col">Email</th><th class="meberships-col">Memberships</th></tr><?php echo "</$t>"; ?><?php } ?>
 <?php while($user = $pager->item()) { ?>
 	<tr id="user_<?php echo $user['id']; ?>">
 		<td>
-			<a href="<?php echo uri("sb/users/update/$user[id]"); ?>"><?php echo $user['first_name']; ?></a>
+			<a href="<?php echo uri("sb/users/update/$user[id]"); ?>"><?php echo $user['email']; ?></a>
 			<ul class="row-actions">
 				<li class="first"><a href="<?php echo uri("sb/users/update/$user[id]"); ?>">edit</a></li>
 				<li><a href="<?php echo uri($this->path."?action=delete&id=$user[id]"); ?>">delete</a></li>
 			</ul>
 		</td>
-		<td><?php echo $user['last_name']; ?></td>
-		<td>*****</td>
-		<td><?php echo $user['email']; ?></td>
 		<td><?php echo $user['memberships']; ?></td>
 	</tr>
 <?php } ?>

@@ -6,9 +6,15 @@
 	if ($sb->has($name)) {
 		$sb->get($name);
 		$methods = get_class_methods(ucwords($name));
-		foreach($methods as $method) if (!(($method == "Table") || ($method == "query") || ($method == ucwords($name)) || ($method == "_call"))) $options[$method] = $method;
+		foreach($methods as $method) if (!(($method == "Table") || ($method == "query") || ($method == ucwords($name)) || ($method == "__call"))) $options[$method] = $method;
 	}
-	$info = unserialize(file_get_contents("var/schema/.info/".$name));
+	if (file_exists("var/schema/.info/".$name)) $info = unserialize(file_get_contents("var/schema/.info/".$name));
+	else {
+		$info = array("label" => "%id%");
+		$file = fopen("var/schema/.info/".$name, "wb");
+		fwrite($file, serialize($info));
+		fclose($file);
+	}
 	foreach($sb->query($name) as $item) {
 		$label = $info['label'];
 		foreach($item as $field => $value) $label = str_replace("%".$field."%", $value, $label);
