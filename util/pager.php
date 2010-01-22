@@ -33,7 +33,7 @@ class pager {
 	var $current_item;
 	function pager($item_array, $items_per_page, $current_pg=1, $total_items=null) {
 		global $sb;
-		if ($total_items == null) $total_items = $sb->recordCount;
+		if ($total_items == null) $total_items = count($item_array);
 		$this->items = $item_array;
 		$this->count = $total_items;
 		$this->per = $items_per_page;
@@ -47,15 +47,15 @@ class pager {
 		$this->current_item = $this->start;
 	}
 	function reset() {$this->current_item = $this->start;}
-	function links($prefix) {
+	function links($prefix, $suffix="") {
 		if ($this->count > $this->per) { ?>
 			<ul class="pages hnav">
 				<?php if ($this->current_page > 1) { ?>
-				<li class="back"><a class="button" href="<?php echo uri($prefix.($this->current_page-1)); ?>">Back</a></li>
+				<li class="back"><a class="button" href="<?php echo uri($prefix.($this->current_page-1).$suffix); ?>">Back</a></li>
 				<?php } for($i=1;$i<=$this->last;$i++) { ?>
-				<li><a class="button<?php if($this->current_page == $i) { ?> active<?php } ?>" href="<?php echo uri($prefix.$i); ?>"><?php echo $i; ?></a></li>
+				<li><a class="button<?php if($this->current_page == $i) { ?> active<?php } ?>" href="<?php echo uri($prefix.$i.$suffix); ?>"><?php echo $i; ?></a></li>
 				<?php } if ($this->current_page < $this->last) { ?>
-				<li class="next"><a class="button" href="<?php echo uri($prefix.($this->current_page+1)); ?>">Next</a></li>
+				<li class="next"><a class="button" href="<?php echo uri($prefix.($this->current_page+1).$suffix); ?>">Next</a></li>
 				<?php } ?>
 			</ul>
 		<?php }

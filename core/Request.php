@@ -36,6 +36,7 @@ class Request {
 		$this->tags = array(array("tag" => "global", "raw_tag" => "global"));
 		$this->groups = $groups;
 		$this->statuses = $statuses;
+		if (!isset($_SESSION[P('postback')])) $_SESSION[P('postback')] = $_SERVER['REQUEST_URI'];
  	}
  	
  	function set_path($request_path, $base_dir="") {
@@ -52,22 +53,23 @@ class Request {
 		else if (file_exists("$prefix$base$current")) return $this->check_path($prefix, "$base$current/", next($this->uri));
 		else if (file_exists($prefix.$base."default.php")) return $prefix.$base."default.php";
 		else {
-			header("HTTP/1.1 404 Not Found");
-			$this->path="missing";
-			$this->uri = array("missing");
-			$this->payload["path"] = "missing";
-			efault($this->payload["template"], Etc::DEFAULT_TEMPLATE);
-			efault($this->payload["prefix"], "app/nouns/");
+			$this->missing();
 			return $prefix."missing.php";
 		}
 	}
 	
-	function return_path() {$this->set_path($_SERVER['HTTP_REFERER']);}
+	function return_path() {$this->path = $_SESSION[P('postback')];}
 
 	function locate() {
 		global $sb;
-		$this->payload = $sb->query("uris", "action:read	where:'".$this->path."' LIKE CONCAT(".Etc::PATH_COLUMN.", '%') ORDER BY CHAR_LENGTH(".Etc::PATH_COLUMN.") DESC	limit:1");
-		$this->tags = array_merge($this->tags, $sb->query("uris,system_tags", "select:DISTINCT tag, raw_tag	where:uris.id='".$this->payload['id']."'", true));
+		$query = "where:'".$this->path."' LIKE CONCAT(path, '%') ORDER BY CHAR_LENGTH(path) DESC	limit:1";
+		$this->payload = $sb->query("uris", $query."	action:read");
+		if (empty($this->payload)) {
+			$row = $sb->query("uris", $query);
+			if (!empty($row)) $this->forbidden();
+			else $this->missing();
+		}
+		$this->tags = array_merge($this->tags, $sb->query("uris,tags", "select:DISTINCT tag, raw_tag	where:uris.id='".$this->payload['id']."'", true));
 		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
 		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
 	}
@@ -76,13 +78,23 @@ class Request {
 		global $sb;
 		$sb->check_post();
 		$this->locate();
-		if ($_GET['x']) include($this->file);
+		if (!empty($_GET['x'])) include($this->file);
 		else include($this->payload['prefix'].$this->payload['template'].".php");
+		$_SESSION[P('postback')] = $this->path;
 	}
 	
-	public function success($model, $action) {
-		global $sb;
-		return (($_POST['action'][$model] == $action) && (empty($sb->errors[$model])));
+	public function missing() {
+		header("HTTP/1.1 404 Not Found");
+		$this->payload = array("path" => "missing", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/");
+		$this->path="missing";
+		$this->uri = array("missing");
+	}
+	
+	public function forbidden() {
+		header("HTTP/1.1 403 Forbidden");
+		$this->payload = array("path" => "forbidden", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/");
+		$this->path = "forbidden";
+		$this->uri = array("forbidden");
 	}
 
 }

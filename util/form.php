@@ -46,7 +46,7 @@ class form {
 
 	function label(&$ops) {
 		global $sb;
-		if (!($ops['nolabel'])) $lab = '<label for="'.$ops['id'].'"'.((empty($ops['identifier_class'])) ? '' : ' class="'.$ops['identifier_class'].'"').'>'.$ops['label']."</label>";
+		if (!isset($ops['nolabel'])) $lab = '<label for="'.$ops['id'].'"'.((empty($ops['identifier_class'])) ? '' : ' class="'.$ops['identifier_class'].'"').'>'.$ops['label']."</label>";
 		else unset($ops['nolabel']);
 		if (isset($sb->errors[$this->model][$ops['name']])) foreach($sb->errors[$this->model][$ops['name']] as $err => $message) $lab .= "\n"."<span class=\"error\">".((!empty($ops['error'][$err])) ? $ops['error'][$err] : $message)."</span>";
 		unset($ops['label']);

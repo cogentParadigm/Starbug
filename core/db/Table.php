@@ -26,13 +26,13 @@ class Table {
 	var $type;
 	var $filters;
 	var $relations;
-	var $recordCount;
+	var $record_count;
 	var $imported;
 	var $imported_functions; 
 
 	function Table($type, $filters=array()) {
 		$this->type = $type;
-		if (!isset($this->uniques)) $this->filters = $filters;
+		if (!isset($this->filters)) $this->filters = $filters;
 		$this->imports = array();
 		$this->imported_functions = array();
 	}
@@ -65,7 +65,9 @@ class Table {
 	
 	function query($args="", $froms="", $deep="auto") {
 		global $sb;
-		return $sb->query($this->type.((empty($froms)) ? "" : ", ".$froms), $args, (($deep=="auto") ? (!empty($froms)) : $deep));
+		$records = $sb->query($this->type.((empty($froms)) ? "" : ", ".$froms), $args, (($deep=="auto") ? (!empty($froms)) : $deep));
+		$this->record_count = $sb->record_count;
+		return $records;
 	}
 	
 	function grant() {

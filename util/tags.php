@@ -8,25 +8,25 @@ class tags {
 	function safe_tag($tagset, $linker, $tagger_id, $object_id, $tag) {
 		global $sb;
 		//if (is_numeric($tag) && (intval($tag) == $tag)) $tag = preg_replace('/^([0-9]+)$/', "$1"."_", $tag);
-		$normalized_tag = $sb->db->qstr(tags::normalize_tag($tag), get_magic_quotes_gpc());
-		$tag = $sb->db->qstr($tag, get_magic_quotes_gpc());
+		$normalized_tag = $sb->db->quote(tags::normalize_tag($tag));
+		$tag = $sb->db->quote($tag);
 		//$tagger_sql = " AND tagger_id='$tagger_id'";
-		$sql = "SELECT COUNT(*) as count FROM ".P($linker)." INNER JOIN ".P($tagset)." ON (tag_id = id) WHERE object_id='$object_id' AND tag='$normalized_tag'";
-		$rs = $sb->db->Execute($sql);
-		if($rs->fields['count'] > 0) return true;
+		$sql = "SELECT COUNT(*) as count FROM ".P($linker)." INNER JOIN ".P($tagset)." ON (tag_id = id) WHERE object_id='$object_id' AND tag=$normalized_tag";
+		$rs = $sb->db->query($sql)->fetch();
+		if($rs['count'] > 0) return true;
 		// Then see if a raw tag in this form exists.
 		$sql = "SELECT id FROM ".P($tagset)." WHERE raw_tag=$tag";
-		$rs = $sb->db->Execute($sql);
-		if(!$rs->EOF) $tag_id = $rs->fields['id'];
+		$rs = $sb->db->query($sql);
+		if($row = $rs->fetch()) $tag_id = $row['id'];
 		else {
 			// Add new tag! 
 			$sql = "INSERT INTO ".P($tagset)." (tag, raw_tag) VALUES ($normalized_tag, $tag)";
-			$rs = $sb->db->Execute($sql);
-			$tag_id = $sb->db->Insert_ID();
+			$rs = $sb->db->query($sql);
+			$tag_id = $sb->db->lastInsertId();
 		}
 		if(!($tag_id > 0)) return false;
-		$sql = "INSERT INTO ".P($linker)." (tag_id, tagger_id, object_id, tagged_on)	VALUES ($tag_id, $tagger_id, $object_id, NOW())";
-		$rs = $sb->db->Execute($sql);
+		$sql = "INSERT INTO ".P($linker)." (tag_id, owner, object_id, created)	VALUES ($tag_id, $tagger_id, $object_id, NOW())";
+		$rs = $sb->db->query($sql);
 		return true;
 	}
 	
@@ -38,8 +38,8 @@ class tags {
 	function delete_object_tag($tagset, $linker, $tagger_id, $object_id, $tag) {
 		$tag_id = tags::get_raw_tag_id($tag);
 		if($tag_id > 0) {
-			$sql = "DELETE FROM ".P($linker)." WHERE tagger_id='$tagger_id' AND object_id='$object_id' AND tag_id='$tag_id' LIMIT 1";	
-			$rs = $sb->db->Execute($sql) or die("Syntax Error: $sql");	
+			$sql = "DELETE FROM ".P($linker)." WHERE owner='$tagger_id' AND object_id='$object_id' AND tag_id='$tag_id' LIMIT 1";	
+			$rs = $sb->db->query($sql);	
 			return true;
 		} else return false;
 	}
@@ -47,23 +47,23 @@ class tags {
 	function delete_all_object_tags($linker, $object_id) {
 		if($object_id > 0) {
 			$sql = "DELETE FROM ".P($linker)." WHERE	object_id='$object_id'";	
-			$rs = $sb->db->Execute($sql) or die("Syntax Error: $sql");	
+			$rs = $sb->db->query($sql);	
 			return true;
 		} else return false;
 	}
 
 	function get_tag_id($tagset, $tag) {
-		$tag = $this->db->qstr($tag, get_magic_quotes_gpc());
+		$tag = $this->db->quote($tag);
 		$sql = "SELECT id FROM ".P($tagset)."	WHERE	tag='$tag' LIMIT 1";	
-		$rs = $this->db->Execute($sql) or die("Syntax Error: $sql");	
-		return $rs->fields['id'];
+		$rs = $this->db->query($sql)->fetch();	
+		return $rs['id'];
 	}
 	
 	function get_raw_tag_id($tagset, $tag) {
-		$tag = $sb->db->qstr($tag, get_magic_quotes_gpc());
+		$tag = $sb->db->quote($tag);
 		$sql = "SELECT id FROM ".P($tagset)."	WHERE	raw_tag='$tag' LIMIT 1";	
-		$rs = $sb->db->Execute($sql) or die("Syntax Error: $sql");	
-		return $rs->fields['id'];
+		$rs = $sb->db->query($sql)->fetch();	
+		return $rs['id'];
 	}
 	/* INCOMPLETE/NON-WORKING FUNCTIONS *//*
 	function tag_object($tagger_id_list, $object_id_list, $tag_string, $skip_updates = 1) {
@@ -132,11 +132,10 @@ class tags {
 		if(isset($tagger_id) && ($tagger_id > 0)) $tagger_sql = "AND tagger_id = $tagger_id";
 		else $tagger_sql = "";
 		$sql = "SELECT tag, COUNT(*) as count	FROM ".P("tag")." INNER JOIN ".P("tags")." ON (id=tag_id)	WHERE 1	$tagger_sql	GROUP BY tag ORDER BY count DESC, tag ASC	LIMIT $offset, $limit";
-		$rs = $this->db->Execute($sql) or die("Syntax Error: $sql");
+		$rs = $this->db->query($sql);
 		$retarr = array();
-		while(!$rs->EOF) {
-			$retarr[] = array('tag' => $rs->fields['tag'], 'count' => $rs->fields['count']);
-			$rs->MoveNext();
+		while($row = $rs->fetch()) {
+			$retarr[] = array('tag' => $row['tag'], 'count' => $row['count']);
 		}
 		return $retarr;
 	} */

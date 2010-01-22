@@ -24,81 +24,155 @@
 class Schemer {
 
 	var $db;
+	var $tables = array();
+	var $table_drops = array();
+	var $column_drops = array();
 
 	function Schemer($data) {
 		$this->db = $data;
 	}
-
-	function create($name, $backup=false, $write=true) {
-		$fields = $this->schema_get($name);
-		$sql = "DROP TABLE IF EXISTS `".P($name)."`";
-		$this->db->Execute($sql);
-		$sql = "CREATE TABLE `".P($name)."` (";
-		$sql .= "id int(11) NOT NULL AUTO_INCREMENT, ";
-		foreach ($fields as $fieldname => $options) {
-			$sql .= $fieldname." ".$this->get_sql_type($options).", ";
-			unset($fields[$fieldname]["inactive"]);
+	//RUN SQL TO MATCH SCHEMA
+	function update() {
+		$ts = 0;
+		$cs = 0;
+		$ms = 0;
+		$ds = 0;
+		foreach($this->tables as $table => $fields) {
+			$records = $this->db->query("SHOW TABLES LIKE '".P($table)."'");
+			if (false === ($row = $records->fetch())) {
+				//NEW TABLE
+				fwrite(STDOUT, "Creating table ".P($table)."...\n");
+				$this->create($table);
+				$ts++;
+			} else {
+				//OLD TABLE
+				foreach($fields as $name => $field) {
+					$records = $this->db->query("SHOW COLUMNS FROM ".P($table)." WHERE field='".$name."'");
+					if (false === ($row = $records->fetch())) {
+						//NEW COLUMN
+						fwrite(STDOUT, "Adding column $name...\n");
+						$this->add($table, $name);
+						$cs++;
+					} else {
+						//OLD COLUMN
+						$type = explode(" ", $this->get_sql_type($field));
+						if (($row['Type'] != $type[0]) || ((!empty($field['default'])) && ($row['Default'] != $field['default']))) {
+							fwrite(STDOUT, "Altering column $name...\n");
+							$this->modify($table, $name);
+							$ms++;
+						}
+					}
+				}
+			}
 		}
-		$sql .= "owner int(11) NOT NULL default '1', collective int(11) NOT NULL default '1', status int(11) NOT NULL default '4', ";
-		$sql .= "PRIMARY KEY (`id`) ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-		$result = $this->db->Execute($sql);
-		$file = fopen("var/schema/$name", "wb");
-		fwrite($file, serialize($fields));
-		fclose($file);
-		if ($write) $this->write_model($name, $backup);
-		$info = unserialize(file_get_contents("var/schema/.info/$name"));
-		$info['active'] = true;
-		$file = fopen("var/schema/.info/$name", "wb");
-		fwrite($file, serialize($info));
-		fclose($file);
+		foreach($this->table_drops as $table) {
+			$records = $this->db->query("SHOW TABLES LIKE '".P($table)."'");
+			if ($row = $records->fetch()) {
+				//DROP TABLE
+				fwrite(STDOUT, "Dropping table ".P($table)."...\n");
+				$this->drop_table($table);
+				$ds++;
+			}
+		}
+		foreach($this->column_drops as $table => $cols) {
+			$records = $this->db->query("SHOW TABLES LIKE '".P($table)."'");
+			if ($row = $records->fetch()) {
+				foreach($cols as $col) {
+					$records = $this->db->query("SHOW COLUMNS FROM ".P($table)." WHERE field='".$col."'");
+					if ($row = $records->fetch()) {
+						//DROP COLUMN
+						fwrite(STDOUT, "Dropping column ".P($table).".$col...\n");
+						$this->remove($table, $col);
+						$ds++;
+					}
+				}
+			}
+		}
+		if (($ts == 0) && ($cs == 0) && ($ms == 0) && ($ds == 0)) fwrite(STDOUT, "The Database already matches the schema\n");
 	}
-	
+	//RUN SQL TO CREATE TABLE
+	function create($name, $backup=false, $write=true) {
+		$fields = $this->tables[$name];
+		$this->drop_table($name);
+		$sql = "CREATE TABLE `".P($name)."` (";
+		$primary = array();
+		$index = array();
+		$sql_fields = "";
+		foreach ($fields as $fieldname => $options) {
+			$sql_fields .= $fieldname." ".$this->get_sql_type($options).", ";
+			if (!empty($options['key'])) {
+				if ($options['key'] == "primary") $primary[] = "`$fieldname`"; 
+			}
+			if (isset($options['index'])) $index[] = $fieldname;
+		}
+		if (empty($primary)) {
+			$sql_fields = "id int(11) NOT NULL AUTO_INCREMENT, ".$sql_fields;
+			$primary = "`id`";
+		} else $primary = join(", ", $primary);
+		$sql .= $sql_fields."owner int(11) NOT NULL default '1', collective int(11) NOT NULL default '1', status int(11) NOT NULL default '4', ";
+		$sql .= "created datetime	not null default '0000-00-00 00:00:00', modified datetime not null default '0000-00-00 00:00:00', ";
+		$sql .= "PRIMARY KEY ($primary)";
+		foreach ($index as $k) $sql .= ", KEY `".$k."_index` (`$k`)";
+		$result = $this->db->exec($sql." ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+		//if ($write) $this->write_model($name, $backup);
+	}
+	//RUN SQL TO DROP TABLE
+	function drop_table($name) {
+		$this->db->exec("DROP TABLE IF EXISTS `".P($name)."`");
+		//$this->drop_model($name);
+	}
+	//RUN SQL TO ADD COLUMN
 	function add($table, $name) {
-		$fields = $this->schema_get($table);
+		$fields = $this->tables[$table];
 		$field = $fields[$name];
-		unset($fields[$name]["inactive"]);
 		$sql = $name." ".$this->get_sql_type($field);
-		$this->db->Execute("ALTER TABLE `".P($table)."` ADD ".$sql);
-		$file = fopen("var/schema/$table", "wb");
-		fwrite($file, serialize($fields));
-		fclose($file);
+		$this->db->exec("ALTER TABLE `".P($table)."` ADD ".$sql);
 	}
-	
+	//RUN SQL TO REMOVE COLUMN
 	function remove($table, $name) {
-		$this->db->Execute("ALTER TABLE `".P($table)."` DROP COLUMN ".$name);
+		$this->db->exec("ALTER TABLE `".P($table)."` DROP COLUMN ".$name);
 	}
-	
-	function modify($table, $name, $field) {
-		$sql = $name." ".$this->get_sql_type($field);
-		$this->db->Execute("ALTER TABLE `".P($table)."` ALTER COLUMN ".$sql); 
+	//RUN SQL TO ALTER COLUMN
+	function modify($table, $name) {
+		$field = $this->tables[$table][$name];
+		$sql = $name." ".$name." ".$this->get_sql_type($field);
+		$this->db->exec("ALTER TABLE `".P($table)."` CHANGE ".$sql); 
 	}
-
-	function drop($name) {
-		$this->db->Execute("DROP TABLE IF EXISTS `".P($name)."`;");
-		$this->drop_model($name);
-		$fields = $this->schema_get($name);
-		foreach ($fields as $fieldname => $ops) $fields[$fieldname]["inactive"] = true;
-		$file = fopen("var/schema/$name", "wb");
-		fwrite($file, serialize($fields));
-		fclose($file);
-		$info = unserialize(file_get_contents("var/schema/.info/$name"));
-		$info['active'] = false;
-		$file = fopen("var/schema/.info/$name", "wb");
-		fwrite($file, serialize($info));
-		fclose($file);
+	//ADD TABLE DESCRIPTION
+	function table($arg) {
+		$args = func_get_args();
+		$name = array_shift($args);
+		$this->tables[$name] = array();
+		foreach($args as $field) $this->column($name, $field);
 	}
-
-	function insert($table, $keys, $values) {$this->db->Execute("INSERT INTO `".P($table)."` (".$keys.") VALUES (".$values.")");}
+	//ADD COLUMN TO DESCRIPTION
+	function column($table, $col) {
+		$col = starr::star($col);
+		$colname = array_shift($col);
+		$this->tables[$table][$colname] = $col;
+	}
+	//DROP TABLE OR COLUMN FROM DESCRIPTION
+	function drop($table, $col="") {
+		if (empty($col)) {
+			$this->table_drops[] = $table;
+			unset($this->tables[$table]);
+		} else {
+			if (!isset($this->column_drops[$table])) $this->column_drops[$table] = array();
+			$this->column_drops[$table][] = $col;
+			unset($this->tables[$table][$col]);
+		}
+	}
+	function insert($table, $keys, $values) {$this->db->query("INSERT INTO `".P($table)."` (".$keys.") VALUES (".$values.")");}
 
 	function get_sql_type($field) {
 		$type = "varchar(64)";
 		if ($field['type'] == 'string') $type = "varchar(".(isset($field['length'])?$field['length']:"64").")";
 		if ($field['type'] == 'password') $type = "varchar(32)";
-		else if ($field['type'] == 'text') $type = "text";
+		else if (($field['type'] == 'text') || ($field['type'] == 'longtext')) $type = $field["type"];
 		else if ($field['type'] == 'int') $type = "int(".(isset($field['length'])?$field['length']:"11").")";
 		else if ($field['type'] == 'bool') $type = "int(1)";
 		else if (($field['type'] == 'datetime') || ($field['type'] == 'timestamp')) $type = "datetime";
-		$type = $type." NOT NULL".((!isset($field['default'])) ? "" : " default '".$field['default']."'");
+		$type = $type." NOT NULL".((isset($field['auto_increment'])) ? " AUTO_INCREMENT" : "").((!isset($field['default'])) ? "" : " default '".$field['default']."'");
 		return $type;
 	}
 
@@ -115,82 +189,6 @@ class Schemer {
 			$info = unserialize(file_get_contents("var/schema/.info/$name"));
 			if (filemtime($model_loc) == $info['mtime']) unlink($model_loc);
 			else rename($model_loc, "app/models/.".ucwords($name));
-		}
-	}
-
-	function get_schemas() {
-		$schemas = array();
-		if ($handle = opendir("var/schema/")) {
-			while (false !== ($file = readdir($handle))) if ((strpos($file, ".") === false)) $schemas[$file] = unserialize(file_get_contents("var/schema/".$file));
-			closedir($handle);
-		}
-		return $schemas;
-	}
-
-	function exists($name) { return file_exists("var/schema/$name"); }
-
-	function schema_write($what, $where) {
-		$parts = split("-", $where, 2);
-		$fields = ($this->exists($parts[0])) ? $this->schema_get($parts[0]) : array();
-		if (count($parts) == 1) $merge = $what;
-		else {
-			$arr = split("-", $parts[1]);
-			$merge = array(end($arr) => $what);
-			while (($prev = prev($arr)) !== false) $merge = array($prev => $merge);
-		}
-		$fields = array_merge_recursive($fields, $merge);
-		$file = fopen("var/schema/".$parts[0], "wb");	
-		fwrite($file, serialize($fields));
-		fclose($file);
-	}
-
-	function schema_get($where) {
-		$parts = split("-", $where, 2);
-		$val = unserialize(file_get_contents("var/schema/".$parts[0]));
-		if (count($parts) > 1) {
-			$arr = split("-", $parts[1]);
-			$k = current($arr);
-			$val = $val[$k];
-			while (($k = next($arr)) !== false) $val = $val[$k];
-		}
-		return $val;
-	}
-
-	function schema_edit($new, $where) {
-		$parts = split("-", $where, 2);
-		$fields = $this->schema_get($parts[0]);
-		$arr = split("-", $parts[1]);
-		$val = $this->rmloc($fields, $arr);
-		$key = end($arr);
-		$merge = (is_array($val)) ? array($new => $val) : array($key => $new);
-		while(($prev = prev($arr)) !== false) $merge = array($prev => $merge);
-		$fields = array_merge_recursive($fields, $merge);
-		$file = fopen("var/schema/".$parts[0], "wb");
-		fwrite($file, serialize($fields));
-		fclose($file);
-	}
-
-	function schema_remove($loc) {
-		$parts = split("-", $loc, 2);
-		$filename = "var/schema/".$parts[0];
-		if (count($parts) == 1) unlink($filename);
-		else {
-			$arr = split("-", $parts[1]);
-			$fields = unserialize(file_get_contents($filename));
-			$this->rmloc($fields, $arr);
-			$file = fopen($filename, "wb");
-			fwrite($file, serialize($fields));
-			fclose($file);
-		}
-	}
-
-	private function rmloc(&$arr, &$locarr) {
-		if (($pos = current($locarr)) !== false) {
-			if (next($locarr) === false) {
-				$rem = $arr[$pos];
-				unset($arr[$pos]);
-				return $rem;
-			} else $this->rmloc($arr[$pos], $locarr);
 		}
 	}
 

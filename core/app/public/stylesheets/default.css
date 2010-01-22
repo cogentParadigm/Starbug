@@ -1,4 +1,4 @@
-/* CSS for Starbug PHP Request Engine */
+/* CSS for Starbug PHP */
 /* common styles */
 *{margin:0;padding:0}
 html{font-size:100%}
@@ -18,6 +18,15 @@ h1{position:absolute;top:90px;left:310px;font-size:34px}
 #subhead{position:absolute;top:130px;left:315px;font-weight:bold;font-size:12px}
 h2{color:#262;font-size:20px;margin:15px 0}
 h3{padding:5px 0}
+/* login */
+body.login{background:#efede8}
+.login #shell{background:transparent;padding-top:75px}
+#login_form{background:#FFF;width:500px;padding:20px;margin:0 auto 75px auto}
+#login_form .field{background:transparent;border:none;padding:5px 15px}
+#login_form input.text{font-weight:bold;color:#666}
+#login_form .button{margin-left:15px}
+.login h1{left:390px}
+.login #subhead{left:395px}
 /* lists */
 #footer li{float:left;padding:0px 5px}
 ul{margin-left:20px}
@@ -76,6 +85,8 @@ table form .field, #dash form .field, dd form .field, .permits_form .field{float
 table .uris_form .button, table .users_form .button, #dash_form form .button, .lidls dd form .button{display:none}
 table .users_form .text{width:125px}
 table .users_form .field{padding:15px 10px}
+#plugins a{color:#222}
+#plugins tr.active{background:#DFD;color:#FFF}
 
 /* pages */
 .lister{table-layout:fixed;width:100%;border-spacing:0;border:1px solid #999}
@@ -83,8 +94,11 @@ table .users_form .field{padding:15px 10px}
 .lister .parent-col{width:15%}
 .lister .owner-col{width:15%}
 .lister .collective-col{width:15%}
+.bridge .lister .collective-col{width:25%}
 .lister .title-col{font-weight:bold}
 .lister .date-col{width:20%}
+.bridge .lister .date-col{width:35%}
+.bridge .lister .status-col{width:15%}
 .lister td.date-col, .lister td.status-col, .lister td.owner-col, .lister td.collective-col{font-size:11px;vertical-align:top;font-weight:bold}
 .lister .status-col{width:10%}
 .lister th{color:#EEE;background:url(../images/lister_top.png) repeat-x;padding:5px}
@@ -158,4 +172,4 @@ a.inline_button{text-decoration:none;padding:2px 3px}
 /* rounding */
 .round.button, .lister, .inline_button, select, input.text{border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;}
 .infield{border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px}
-.big.round.button{border-radius:15px;-moz-border-radius:15px;-webkit-border-radius:15px}
+.big.round.button, #login_form{border-radius:15px;-moz-border-radius:15px;-webkit-border-radius:15px}

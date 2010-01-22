@@ -30,32 +30,28 @@ $help .= "    \t\t-r [NAME] - remove plugin\n";
 if ($argc==2) $argv[2] = "";
 include("etc/Etc.php");
 include("etc/init.php");
-include("util/Args.php");
-$args = new Args();
+$sb->import("util/plugins");
 
-if ($args->flag('i')) { //INSTALL PLUGIN
+if ($argv[1] == "-i") { //INSTALL PLUGIN
 	if (empty($argv[2])) {
 		fwrite(STDOUT, $help);
 		exit(0);
 	}
-	//SET VARS FOR PLUGIN
-	$plugin_name = $argv[2];
-	$template = ($args->flag('t')) ? $args->flag('t') : Etc::DEFAULT_TEMPLATE;
-	$collective = ($args->flag('c')) ? $args->flag('c') : "1";
-	$dirs = array(); $paths = array(); $from_copy = array();
-	//INCLUDE PLUGIN INSTALL FILE
-	if (file_exists("app/plugins/$plugin_name/install.php")) include("app/plugins/$plugin_name/install.php");
-	//CREATE DIRECTORIES
-	foreach ($dirs as $dir) if (!file_exists($dir)) exec("./script/cgenerate dir $dir");
-	//COPY FILES
-	foreach ($from_copy as $origin => $dest) exec("./script/cgenerate copy $dest app/plugins/$origin");
-	//ADD URIS
-	foreach ($paths as $keys => $values) $db->Execute("INSERT INTO ".P("uris")." ($keys) VALUES ($values)");
-	fwrite(STDOUT, "plugin $plugin_name installed...\n");
+	$loc = $argv[2];
+	include($loc."/activate.php");
 	exit(0);
-} else if ($args->flag('l')) { //LIST PLUGINS
+} else if ($argv[1] == "-l") { //LIST PLUGINS
+	$plugins = plugins::available();
+	foreach($plugins as $name => $info) fwrite(STDOUT, (($info['active']) ? " a  " : "    ").$name."\n");
 	exit(0);
-} else if ($args->flag('r')) { //UNINSTALL PLUGIN
+} else if ($argv[1] == "-r") { //UNINSTALL PLUGIN
+	if (empty($argv[2])) {
+		fwrite(STDOUT, $help);
+		exit(0);
+	}
+	$loc = $argv[2];
+	include($loc."/deactivate.php");
 	exit(0);
 }
+
 ?>

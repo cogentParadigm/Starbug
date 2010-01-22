@@ -18,6 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
+session_start();
 //configure
 include("etc/Etc.php");
 $groups = array(
