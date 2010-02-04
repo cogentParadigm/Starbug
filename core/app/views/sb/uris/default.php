@@ -9,7 +9,7 @@
 	URIs
 </h2>
 <table id="uris_table" class="clear lister">
-<?php foreach(array("thead", "tfoot") as $t) { ?><?php echo "<$t>"; ?><tr><th class="expand-col"></th><th class="title-col">Title</th><th class="collective-col">Collective</th><th class="date-col">Last Modified</th></tr><?php echo "</$t>"; ?><?php } ?>
+<?php foreach(array("thead", "tfoot") as $t) { ?><?php echo "<$t>"; ?><tr><th class="expand-col"></th><th class="title-col">Title</th><th class="status-col">Status</th></tr><?php echo "</$t>"; ?><?php } ?>
 <?php
 $sb->import("util/dojo");
 $sb->import("util/form");
@@ -20,15 +20,19 @@ function list_uri($row, $kids) { global $sb; global $request; global $dojo; ?>
 	<tr id="uris_<?php echo $row['id']; ?>">
 		<td class="expand-col"><?php if (!empty($kids[$row['id']])) echo '&crarr;'; ?></td>
 		<td class="title-col">
-			<a href="<?php echo uri("sb/uris/update/$row[id]"); ?>"><?php echo $row['title']; ?></a>
+			<a href="<?php echo uri("sb/uris/update/$row[id]"); ?>"><?php echo $row['title']; ?></a><br />
+			<small>/<?php echo $row['path']; ?></small>
 			<ul class="row-actions">
 				<li class="first"><a href="<?php echo uri("sb/uris/update/$row[id]"); ?>">edit</a></li>
 				<li><?php $f = new form("uris", "action:delete"); echo $f->open(); echo $f->hidden("id	value:".$row['id']); echo $f->submit("class:link	value:delete"); ?></form></li>
 				<li><a href="<?php echo uri($row['path']); ?>">view</a></li>
 			</ul>
 		</td>
-		<td class="collective-col"><?php echo array_search($row['collective'], array_merge(array("everybody" => 0), $request->groups)); ?></td>
-		<td class="date-col"><?php echo date("F jS, Y", strtotime($row['modified'])); ?></td>
+		<td class="status-col">
+			<?php echo date("Y/m/d", strtotime($row['modified'])); ?><br />
+			<?php echo (array_search($row['status'], $request->statuses)); ?><br />
+			<?php echo array_search($row['collective'], array_merge(array("everybody" => 0), $request->groups)); ?>
+		</td>
 	</tr>
 	<?php
 		if (!empty($kids[$row['id']])) { ?>

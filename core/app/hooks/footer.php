@@ -16,9 +16,7 @@
 		</style>
 		<div id="dash">
 			<ul id="dashlist">
-				<li class="first"><a href="<?php echo uri("sb/uris"); ?>">URIs</a></li>
-				<li><a href="<?php echo uri("sb/models"); ?>">Permits</a></li>
-				<li style="position:absolute;left:49%;border-left:2px solid #FFF"><a href="<?php echo uri("sb-admin"); ?>">Bridge</a></li>
+				<li class="first"><a href="<?php echo uri("sb-admin"); ?>">Bridge</a></li>
 				<li class="last right"><a href="<?php echo uri("sb-admin/logout"); ?>">logout</a></li>
 				<li class="right"><a href="<?php echo uri("sb/users"); ?>">users</a></li>
 				<li class="right"><a href="<?php echo uri("sb/plugins"); ?>">plugins</a></li>

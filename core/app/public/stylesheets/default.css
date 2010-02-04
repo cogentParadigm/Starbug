@@ -17,6 +17,7 @@ body, input{font-family: Helvetica, Arial, sans-serif}
 h1{position:absolute;top:90px;left:310px;font-size:34px}
 #subhead{position:absolute;top:130px;left:315px;font-weight:bold;font-size:12px}
 h2{color:#262;font-size:20px;margin:15px 0}
+h2.title{position:absolute;top:0px;right:0px;color:#FFF;font-size:42px}
 h3{padding:5px 0}
 /* login */
 body.login{background:#efede8}
@@ -57,7 +58,6 @@ input.left.checkbox{margin-right:5px}
 .field{margin-bottom:10px;padding:15px;background:#fff;border-bottom:1px solid #999;border-top:1px solid #999}
 .button{padding:3px 5px;border:none;color:#fff;background:#494;font-size:11px;font-weight:bold;text-decoration:none;font-family: Helvetica, Arial, sans-serif;cursor:pointer}
 #login{width:215px}
-.permits_form .field {float:left;}
 fieldset{border:none;margin-bottom:15px;clear:both}
 legend{background:#494;color:#EEE;font-weight:bold;padding:2px 5px}
 .big.button{font-size:36px;font-weight:normal;margin-right:5px;padding:5px 10px}
@@ -94,11 +94,12 @@ table .users_form .field{padding:15px 10px}
 .lister .parent-col{width:15%}
 .lister .owner-col{width:15%}
 .lister .collective-col{width:15%}
-.bridge .lister .collective-col{width:25%}
 .lister .title-col{font-weight:bold}
+.title-col small{font-size:10px;position:relative;top:-5px}
+.bridge .row-actions{margin:0px 0 5px}
 .lister .date-col{width:20%}
-.bridge .lister .date-col{width:35%}
-.bridge .lister .status-col{width:15%}
+.bridge .lister .status-col{width:20%;padding-left:0px}
+.bridge .lister td.status-col{padding-left:3px}
 .lister td.date-col, .lister td.status-col, .lister td.owner-col, .lister td.collective-col{font-size:11px;vertical-align:top;font-weight:bold}
 .lister .status-col{width:10%}
 .lister th{color:#EEE;background:url(../images/lister_top.png) repeat-x;padding:5px}
@@ -163,7 +164,8 @@ dt.sub.inactive a:hover, dd.inactive dl a:hover{color:#D00}
 .lidls .info .field-value{display:block;font-size:12px;margin-bottom:10px}
 .lidls .info .permit{margin-left:110px;font-size:12px;margin-bottom:5px;clear:both}
 .lidls .info .permit_options{margin-left:110px;font-size:12px}
-.permitlist .field{float:left;border:none;padding:20px 4px}
+.permitlist .field{float:left;border:none;padding:20px 4px;background:transparent}
+.permitlist select{font-size:10px}
 .inline_button{border:2px solid #999;margin:0px 4px;font-size:12px;float:left;font-weight:bold;color:#666;background:#EEE}
 input.inline_button{cursor:pointer;padding:1px 3px}
 a.inline_button{text-decoration:none;padding:2px 3px}

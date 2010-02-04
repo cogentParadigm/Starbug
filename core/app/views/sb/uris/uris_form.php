@@ -87,7 +87,7 @@ function editable_onchange(args) {
 			<?php
 				echo $form->select("template", $templates);
 				$options_file = $_POST['uris']['prefix'].str_replace("templates", "templates/options", $_POST['uris']['template']).".php";
-				if ($action == "update") include($options_file);
+				if (($action == "update") && (file_exists($options_file))) include($options_file);
 				echo $form->select("status", $this->statuses);
 				echo $form->select("collective", $collectives);
 				echo $form->select("parent", $parent_ops);
@@ -112,7 +112,7 @@ function editable_onchange(args) {
 					$rm = array("--Remove a Leaf--" => "");
 					foreach($leaves as $one) $rm[$one['position']." ".$one['leaf']] = $one['position']." ".$one['leaf'];
 					echo $r->select($container."	nolabel:true	class:left", $rm);
-					echo $f->submit("class:round right button	value:Update");
+					echo $form->submit("class:round right button	value:Update");
 				?>
 			</fieldset>
 		<?php } ?>
