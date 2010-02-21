@@ -208,7 +208,7 @@ class sb {
 	# @param key (the model name), @param value (the function name)
 	function post_act($key, $value) {
 		if (($object = $this->get($key)) && method_exists($object, $value)) {
-			$permits = isset($_POST[$key]['id']) ? $this->query($key, "action:$value	where:$key.id='".$_POST[$key]['id']."'") : $this->query($key, "action:$value	priv_type:table");
+			$permits = isset($_POST[$key]['id']) ? $this->query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : $this->query($key, "action:$value  priv_type:table");
 			if (($this->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value();
 			else $errors = array("forbidden" => "You do not have sufficient permission to complete your request.");
 			$this->errors = array_merge_recursive($this->errors, array($key => $errors));

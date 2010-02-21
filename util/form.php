@@ -63,11 +63,11 @@ class form {
 	}
 
 	function hidden($ops) {
-		return $this->input("hidden", $ops."	nolabel:true");
+		return $this->input("hidden", $ops."  nolabel:true");
 	}
 
 	function submit($ops="") {
-		return $this->tag("input	type:submit".((empty($ops))? "" : "\t".$ops), true);
+		return $this->tag("input  type:submit".((empty($ops))? "" : "\t".$ops), true);
 	}
 
 	function bin($ops) {

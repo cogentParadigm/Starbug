@@ -62,14 +62,14 @@ class Request {
 
 	function locate() {
 		global $sb;
-		$query = "where:'".$this->path."' LIKE CONCAT(path, '%') ORDER BY CHAR_LENGTH(path) DESC	limit:1";
-		$this->payload = $sb->query("uris", $query."	action:read");
+		$query = "where:'".$this->path."' LIKE CONCAT(path, '%') ORDER BY CHAR_LENGTH(path) DESC  limit:1";
+		$this->payload = $sb->query("uris", $query."  action:read");
 		if (empty($this->payload)) {
 			$row = $sb->query("uris", $query);
 			if (!empty($row)) $this->forbidden();
 			else $this->missing();
 		}
-		$this->tags = array_merge($this->tags, $sb->query("uris,tags", "select:DISTINCT tag, raw_tag	where:uris.id='".$this->payload['id']."'", true));
+		$this->tags = array_merge($this->tags, $sb->query("uris,tags", "select:DISTINCT tag, raw_tag  where:uris.id='".$this->payload['id']."'", true));
 		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
 		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
 	}

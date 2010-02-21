@@ -21,7 +21,7 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-class db {  
+class db {
 
 	var $pdo;
 	public $debug = false;
@@ -41,13 +41,13 @@ class db {
 		else $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
 	}
 
-  public function exec($statement) {   
-   	try {
+  public function exec($statement) {
+		try {
 			return $this->pdo->exec($statement);
 		} catch(PDOException $e) { 
 			die("DB Exception: ".$e->getMessage()."\n");
 		}
-  }
+	}
 
 	public function query($statement) { 
 		try {
@@ -57,7 +57,7 @@ class db {
 		}
 	}
 
-	public function __call($method, $args) {  
+	public function __call($method, $args) {
 		if(method_exists($this->pdo, $method)) return call_user_func_array(array($this->pdo, $method), $args);
 		throw new Exception ('Call to undefined method/class function: ' . $method);
 	}

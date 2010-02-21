@@ -25,7 +25,7 @@ class tags {
 			$tag_id = $sb->db->lastInsertId();
 		}
 		if(!($tag_id > 0)) return false;
-		$sql = "INSERT INTO ".P($linker)." (tag_id, owner, object_id, created)	VALUES ($tag_id, $tagger_id, $object_id, NOW())";
+		$sql = "INSERT INTO ".P($linker)." (tag_id, owner, object_id, created) VALUES ($tag_id, $tagger_id, $object_id, NOW())";
 		$rs = $sb->db->query($sql);
 		return true;
 	}
@@ -46,7 +46,7 @@ class tags {
 
 	function delete_all_object_tags($linker, $object_id) {
 		if($object_id > 0) {
-			$sql = "DELETE FROM ".P($linker)." WHERE	object_id='$object_id'";	
+			$sql = "DELETE FROM ".P($linker)." WHERE object_id='$object_id'";	
 			$rs = $sb->db->query($sql);	
 			return true;
 		} else return false;
@@ -54,14 +54,14 @@ class tags {
 
 	function get_tag_id($tagset, $tag) {
 		$tag = $this->db->quote($tag);
-		$sql = "SELECT id FROM ".P($tagset)."	WHERE	tag='$tag' LIMIT 1";	
+		$sql = "SELECT id FROM ".P($tagset)." WHERE tag='$tag' LIMIT 1";	
 		$rs = $this->db->query($sql)->fetch();	
 		return $rs['id'];
 	}
 	
 	function get_raw_tag_id($tagset, $tag) {
 		$tag = $sb->db->quote($tag);
-		$sql = "SELECT id FROM ".P($tagset)."	WHERE	raw_tag='$tag' LIMIT 1";	
+		$sql = "SELECT id FROM ".P($tagset)." WHERE raw_tag='$tag' LIMIT 1";	
 		$rs = $sb->db->query($sql)->fetch();	
 		return $rs['id'];
 	}
@@ -131,7 +131,7 @@ class tags {
 	function get_most_popular_tags($tagger_id = NULL, $offset = 0, $limit = 25) {
 		if(isset($tagger_id) && ($tagger_id > 0)) $tagger_sql = "AND tagger_id = $tagger_id";
 		else $tagger_sql = "";
-		$sql = "SELECT tag, COUNT(*) as count	FROM ".P("tag")." INNER JOIN ".P("tags")." ON (id=tag_id)	WHERE 1	$tagger_sql	GROUP BY tag ORDER BY count DESC, tag ASC	LIMIT $offset, $limit";
+		$sql = "SELECT tag, COUNT(*) as count FROM ".P("tag")." INNER JOIN ".P("tags")." ON (id=tag_id) WHERE 1 $tagger_sql GROUP BY tag ORDER BY count DESC, tag ASC LIMIT $offset, $limit";
 		$rs = $this->db->query($sql);
 		$retarr = array();
 		while($row = $rs->fetch()) {

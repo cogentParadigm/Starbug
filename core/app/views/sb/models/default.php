@@ -35,11 +35,11 @@
 if (($_GET['action'] == 'delete_permit') && (is_numeric($_GET['id']))) $sb->remove("permits", "id='$_GET[id]'");
 $sb->import("util/dojo");
 global $dojo;
-$dojo->xhr(".create_permit", "create_permit", "'sb/permits/form/'+dojo.byId('related_table').value+'?x=x'", "pre:var mod = evt.target.parentNode.parentNode.parentNode.id;console.log(mod);	node:'#'+mod+' .permitlist'");
+$dojo->xhr(".create_permit", "create_permit", "'sb/permits/form/'+dojo.byId('related_table').value+'?x=x'", "pre:var mod = evt.target.parentNode.parentNode.parentNode.id;console.log(mod);  node:'#'+mod+' .permitlist'");
 $dojo->attach("#role", "who_options", "", "onchange");
 $dojo->attach("#priv_type", "id_options", "", "onchange");
 $dojo->attach(".cancel_permit", "sb.destroy", "node:evt.target.parentNode.parentNode");
-$dojo->xhr(".save_permit", "permit_created", "'api/permits/get.json'", "form:evt.target.parentNode	node:evt.target.parentNode.parentNode	handleAs:'json'");
+$dojo->xhr(".save_permit", "permit_created", "'api/permits/get.json'", "form:evt.target.parentNode  node:evt.target.parentNode.parentNode  handleAs:'json'");
 
 ?>
 <?php

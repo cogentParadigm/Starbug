@@ -36,7 +36,7 @@ class dojo {
 	}
 	function xhr($query, $action, $url, $params="", $event="onclick") {
 		$url = "'".uri("")."'+".$url;
-		$this->attach($query, "sb.xhr", "action:$action	url:$url".(empty($params) ? "" : "\t".$params), $event);
+		$this->attach($query, "sb.xhr", "action:$action  url:$url".(empty($params) ? "" : "\t".$params), $event);
 	}
 	function attach($query, $action, $params="", $event="onclick") {
 		$params = starr::star($params);
@@ -54,7 +54,7 @@ class dojo {
 	function toggle($query, $toggler, $node, $params="") {
 		$params = starr::star($params);
 		$default = $params['default'];
-		$this->attach($query, "sb.toggle", "node:'#$node'	toggler:$toggler");
+		$this->attach($query, "sb.toggle", "node:'#$node'  toggler:$toggler");
 		$this->toggles[$toggler] = array("node" => $node, "default" => $default, "toggler" => $toggler);
 		if ($params['add']) $this->toggles[$toggler]['add'] = $params['add'];
 	}

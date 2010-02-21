@@ -24,7 +24,7 @@
 class ApiFunctions {
 	public function getXML($from, $query="") {
 		global $sb;
-		if (!empty($query)) $query .= "	";
+		if (!empty($query)) $query .= "  ";
 		$xml = new XmlWriter();
 		$xml->openMemory();
 		$xml->startDocument('1.0', 'UTF-8');
@@ -40,7 +40,7 @@ class ApiFunctions {
 	}
 	function getJSON($from, $query="") {
 		global $sb;
-		if (!empty($query)) $query .= "	";
+		if (!empty($query)) $query .= "  ";
 		$data = $sb->query($from, $query."action:api_get");
 		$json = '{ "'.$from.'" : [';
 		foreach($data as $row) $json .= ApiFunctions::rowToJSON($row).", ";
@@ -48,7 +48,7 @@ class ApiFunctions {
 	}
 	function getJSONP($from, $pad, $query="") {
 		global $sb;
-		if (!empty($query)) $query .= "	";
+		if (!empty($query)) $query .= "  ";
 		$data = $sb->query($from, $query."action:api_get");
 		return $pad."(".json_encode($data).");";
 	}

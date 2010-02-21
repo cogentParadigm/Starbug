@@ -73,14 +73,14 @@ function editable_onchange(args) {
 
 <?php
 	$sb->import("util/form");
-	$form = new form("uris", "action:$action	url:$submit_to");
+	$form = new form("uris", "action:$action  url:$submit_to");
 	echo $form->open('class="pages_form"');
 ?>
 	<div class="field">
 		<?php
 			echo $form->text("title");
-			echo $form->tag("label	id:link-label	content:Permalink:");
-			echo $form->tag("span	id:permalink	class:link-span	content:".uri("")."<span class=\"editable\">".(($_POST['uris']['path']) ? $_POST['uris']['path'] : ".." )."</span>");
+			echo $form->tag("label  id:link-label  content:Permalink:");
+			echo $form->tag("span  id:permalink  class:link-span  content:".uri("")."<span class=\"editable\">".(($_POST['uris']['path']) ? $_POST['uris']['path'] : ".." )."</span>");
 			if (isset($sb->errors['uris']['path']['exists'])) echo "<span class=\"clear error\">".$sb->errors['uris']['path']['exists']."</span><br />";
 		?>
 		<div class="infield">
@@ -91,11 +91,11 @@ function editable_onchange(args) {
 				echo $form->select("status", $this->statuses);
 				echo $form->select("collective", $collectives);
 				echo $form->select("parent", $parent_ops);
-				echo $form->submit("class:big round left button	value:".ucwords($action));
+				echo $form->submit("class:big round left button  value:".ucwords($action));
 			?>
 		</div>
 		<div class="left">
-			<?php echo $form->text("path	nolabel:	style:width:630px;display:none"); ?>
+			<?php echo $form->text("path  nolabel:  style:width:630px;display:none"); ?>
 		</div>
 	</div>
 	<?php
@@ -107,12 +107,12 @@ function editable_onchange(args) {
 				<legend><?php echo $container; ?></legend>
 				<?php
 					echo $sb->get("uris")->fields($container, $_POST['uris']['path']);
-					echo $l->select($container."	nolabel:true	class:left", $leaf_types);
+					echo $l->select($container."  nolabel:true  class:left", $leaf_types);
 					$leaves = $sb->query("leafs", "where:page='".$_POST['uris']['path']."' && container='$container' ORDER BY position ASC");
 					$rm = array("--Remove a Leaf--" => "");
 					foreach($leaves as $one) $rm[$one['position']." ".$one['leaf']] = $one['position']." ".$one['leaf'];
-					echo $r->select($container."	nolabel:true	class:left", $rm);
-					echo $form->submit("class:round right button	value:Update");
+					echo $r->select($container."  nolabel:true  class:left", $rm);
+					echo $form->submit("class:round right button  value:Update");
 				?>
 			</fieldset>
 		<?php } ?>

@@ -21,16 +21,16 @@
 		$rels[$label] = $item['id'];
 	}
 	foreach(array("everone", "user", "group", "owner", "collective") as $role) $roles[$role] = $role;
-	$f = new form($name, "action:grant	url:$submit_to");
+	$f = new form($name, "action:grant  url:$submit_to");
 	echo $f->open();
 ?>
-		<div class="field"><?php echo $f->hidden("related_table	value:".P($name)); ?></div>
+		<div class="field"><?php echo $f->hidden("related_table  value:".P($name)); ?></div>
 		<div class="field"><?php echo $f->select("priv_type", $privs); ?></div>
 		<div class="field"><?php echo $f->select("action", $options); ?></div>
 		<div class="field"><?php echo $f->select("role", $roles); ?></div>
 		<div class="field"><?php echo $f->select("who"); ?></div>
 		<div class="field"><?php echo $f->select("related_id", $rels); ?></div>
-		<?php echo $f->submit("class:inline_button save_permit	value:save"); ?>
-		<?php echo $f->tag("a	class:inline_button cancel_permit	content:cancel"); ?>
+		<?php echo $f->submit("class:inline_button save_permit  value:save"); ?>
+		<?php echo $f->tag("a  class:inline_button cancel_permit  content:cancel"); ?>
 	</form>
 </div>

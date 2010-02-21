@@ -24,7 +24,7 @@ function list_uri($row, $kids) { global $sb; global $request; global $dojo; ?>
 			<small>/<?php echo $row['path']; ?></small>
 			<ul class="row-actions">
 				<li class="first"><a href="<?php echo uri("sb/uris/update/$row[id]"); ?>">edit</a></li>
-				<li><?php $f = new form("uris", "action:delete"); echo $f->open(); echo $f->hidden("id	value:".$row['id']); echo $f->submit("class:link	value:delete"); ?></form></li>
+				<li><?php $f = new form("uris", "action:delete"); echo $f->open(); echo $f->hidden("id  value:".$row['id']); echo $f->submit("class:link  value:delete"); ?></form></li>
 				<li><a href="<?php echo uri($row['path']); ?>">view</a></li>
 			</ul>
 		</td>
@@ -40,8 +40,8 @@ function list_uri($row, $kids) { global $sb; global $request; global $dojo; ?>
 		<td colspan="3">
 		<table class="lister">
 		<?php
-			$dojo->toggle("#uris_".$row['id']." .expand-col", "tg_".$row['id'], "parent_".$row['id'], "default:off	add:showFunc:dojo.fx.wipeIn, hideFunc:dojo.fx.wipeOut, duration:300");
-			$dojo->attach("#uris_".$row['id']." .expand-col", "sb.replace", "node:evt.target	data:switch_icon(evt.target.innerHTML)");
+			$dojo->toggle("#uris_".$row['id']." .expand-col", "tg_".$row['id'], "parent_".$row['id'], "default:off  add:showFunc:dojo.fx.wipeIn, hideFunc:dojo.fx.wipeOut, duration:300");
+			$dojo->attach("#uris_".$row['id']." .expand-col", "sb.replace", "node:evt.target  data:switch_icon(evt.target.innerHTML)");
 			foreach($kids[$row['id']] as $uri) list_uri($uri, $kids); 
 		?>
 		</table>

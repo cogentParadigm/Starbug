@@ -2,7 +2,7 @@
 class Uris extends Table {
 
 	public $filters = array(
-		"path" => "length:64	unique:true",
+		"path" => "length:64  unique:true",
 		"template" => "length:32",
 		"title" => "length:128",
 		"parent" => "default:0",
@@ -38,7 +38,7 @@ class Uris extends Table {
 		if (!isset($uris['id'])) return array("title" => array("missing_id" => "unidentified submission"));
 		if (!empty($uris['template'])) $uris['template'] = "templates/$page[template]";
 		unset($uris['path']);
-		$row = $this->query("where:id='$uris[id]'	limit:1");
+		$row = $this->query("where:id='$uris[id]'  limit:1");
 		$template = file_get_contents("$row[prefix]$uris[template]");
 		if (false !== ($start = strpos($template, "* cascade:"))) {
 			$start += 10;
@@ -81,10 +81,10 @@ class Uris extends Table {
 		$this->query("where:path='$_POST[new_name]'");
 		if ($this->record_count > 0) return array("path" => array("exists" => "That path already exists"));
 		$sb->db->exec("UPDATE `".P("uris")."` SET path='$_POST[new_name]' WHERE path='$_POST[old_name]'");
-		$leafs = $sb->query("leafs", "select:DISTINCT leaf	where:page='$_POST[old_name]'");
+		$leafs = $sb->query("leafs", "select:DISTINCT leaf  where:page='$_POST[old_name]'");
 		$sb->db->exec("UPDATE `".P("leafs")."` SET page='$_POST[new_name]' WHERE page='$_POST[old_name]'");
 		foreach($leafs as $leaf) $sb->db->exec("UPDATE `".P($leaf['leaf'])."` SET page='$_POST[new_name]' WHERE page='$_POST[old_name]'");
-		$uris = $sb->query("uris", "where:path='$_POST[new_name]'	limit:1");
+		$uris = $sb->query("uris", "where:path='$_POST[new_name]'  limit:1");
 		$_POST['uris']['id'] = $uris['id'];
 		return $errors;
 	}

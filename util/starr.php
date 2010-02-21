@@ -24,7 +24,7 @@ class starr {
 
 	function star($str="") {
 		$arr = array();
-		$keypairs = explode("\t", $str);
+		$keypairs = explode("  ", $str);
 		foreach($keypairs as $keypair) {
 			if (false !== ($pos = strpos($keypair, ":"))) {
 				$key = substr($keypair, 0, $pos);

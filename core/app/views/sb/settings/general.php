@@ -16,27 +16,27 @@ $f = new form("etc");
 <h2>Settings</h2>
 <?php include("core/app/views/sb/settings/nav.php"); ?>
 <?php echo $f->open('id="settings_form"'); ?>
-	<?php echo $f->hidden("save_settings	value:true"); ?>
+	<?php echo $f->hidden("save_settings  value:true"); ?>
 	<fieldset>
 		<legend>Website info</legend>
 		<div class="field">
-			<?php echo $f->text("website_name	default:".Etc::WEBSITE_NAME); ?>
+			<?php echo $f->text("website_name  default:".Etc::WEBSITE_NAME); ?>
 		</div>
 		<div class="field">
-			<?php echo $f->text("website_url	label:Website URL	default:".Etc::WEBSITE_URL); ?>
+			<?php echo $f->text("website_url  label:Website URL  default:".Etc::WEBSITE_URL); ?>
 		</div>
 		<div class="field">
-			<?php echo $f->text("tagline	label:Tagline or Description	default:".Etc::TAGLINE); ?>
+			<?php echo $f->text("tagline  label:Tagline or Description  default:".Etc::TAGLINE); ?>
 		</div>
 	</fieldset>
 	<fieldset>
 		<legend>Email addresses</legend>
 		<div class="field">
-			<?php echo $f->text("webmaster_email	default:".Etc::WEBMASTER_EMAIL); ?>
+			<?php echo $f->text("webmaster_email  default:".Etc::WEBMASTER_EMAIL); ?>
 		</div>
 		<div class="field">
-			<?php echo $f->text("contact_email	default:".Etc::CONTACT_EMAIL); ?>
+			<?php echo $f->text("contact_email  default:".Etc::CONTACT_EMAIL); ?>
 		</div>
 	</fieldset>
-	<div><?php echo $f->submit("class:big round button	value:Save"); ?></div>
+	<div><?php echo $f->submit("class:big round button  value:Save"); ?></div>
 </form>

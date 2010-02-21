@@ -1,6 +1,6 @@
 <?php
 /**
-* FILE: etc/Etc.php
+* FILE: etc/Site.php
 * PURPOSE: This is the main configuration file
 *
 * This file is part of StarbugPHP
@@ -21,21 +21,15 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-include("etc/Site.php");
-class Etc extends Site {
-	/* Prefix for prefixed variables (ie. database tables) */
-	const PREFIX = "sb_";
-	/* Name of website */
-	const WEBSITE_NAME = "Starbug";
-	/* Tagline Description */
-	const TAGLINE = "Fresh XHTML and CSS, just like mom used to serve!";
+class Site {
+	/* Log in details for database */
+	const DB_TYPE = "mysql";
+	const DB_HOST = "localhost";
+	const DB_USERNAME = "root";
+	const DB_PASSWORD = "";
+	const DB_NAME = "test";
 
-	/* Directories */
-	const STYLESHEET_DIR = "app/public/stylesheets/";
-	const IMG_DIR = "app/public/images/";
-
-	/* path defaults */
-	const DEFAULT_TEMPLATE = "templates/Page";
-	const DEFAULT_PATH = "home";
+	/* URL of website */
+	const WEBSITE_URL = "http://localhost/";
 }
 ?>

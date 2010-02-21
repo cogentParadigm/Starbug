@@ -110,7 +110,7 @@ class Schemer {
 			$primary = "`id`";
 		} else $primary = join(", ", $primary);
 		$sql .= $sql_fields."owner int(11) NOT NULL default '1', collective int(11) NOT NULL default '1', status int(11) NOT NULL default '4', ";
-		$sql .= "created datetime	not null default '0000-00-00 00:00:00', modified datetime not null default '0000-00-00 00:00:00', ";
+		$sql .= "created datetime not null default '0000-00-00 00:00:00', modified datetime not null default '0000-00-00 00:00:00', ";
 		$sql .= "PRIMARY KEY ($primary)";
 		foreach ($index as $k) $sql .= ", KEY `".$k."_index` (`$k`)";
 		$result = $this->db->exec($sql." ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
