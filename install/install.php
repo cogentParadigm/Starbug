@@ -40,7 +40,7 @@
 
 	//INIT TABLES
 	include("etc/Etc.php");
-	include("etc/init.php");
+	include("core/init.php");
 	include("core/db/Schemer.php");
 	$schemer = new Schemer($sb->db);
 	include("etc/schema.php");
@@ -48,52 +48,18 @@
 
 	//INSERT RECORDS
 	//ADMIN USER
-	$sb->store("users", array(
-		"email" => $admin_email,
-		"password" => $admin_pass,
-		"memberships" => 1
-	));
+	$sb->store("users", "email:$admin_email  password:$admin_pass  memberships:1");
 	//ADMIN URIS
-	$sb->store("uris", array(
-		"path" => "sb-admin",
-		"template" => "Login",
-		"title" => "Bridge",
-		"prefix" => "core/app/views/",
-		"collective" => "0"
-	));
+	$sb->store("uris", "path:sb-admin  template:Login  title:Bridge  prefix:core/app/views/  collective:0");
 	$admin_parent = $sb->insert_id;
-	$sb->store("uris", array(
-		"path" => "sb",
-		"template" => "Starbug",
-		"title" => "Core",
-		"prefix" => "core/app/views/",
-		"parent" => $admin_parent
-	));
-	$sb->store("uris", array(
-		"path" => "sb/generate",
-		"template" => "sb/generate",
-		"title" => "Generate",
-		"prefix" => "core/app/views/",
-		"parent" => $admin_parent
-	));
-	$sb->store("uris", array(
-		"path" => "api",
-		"template" => "Api",
-		"title" => "API",
-		"prefix" => "core/app/views/",
-		"collective" => 0,
-		"check_path" => 0
-	));
+	$sb->store("uris", "path:sb  template:Starbug  title:Core  prefix:core/app/views/  parent:$admin_parent");
+	$sb->store("uris", "path:sb/generate  template:sb/generate  title:Generate  prefix:core/app/views/  parent:$admin_parent");
+	$sb->store("uris", "path:api  template:Api  title:API  prefix:core/app/views/  collective:0  check_path:0");
 	//HOME PAGE
-	$sb->store("uris", array(
-		"path" => Etc::DEFAULT_PATH,
-		"template" => Etc::DEFAULT_TEMPLATE,
-		"title" => "Home",
-		"prefix" => "app/views/",
-		"collective" => 0,
-		"check_path" => 0,
-		"options" => serialize(array("layout" => '2-col-right'))
-	));
+	$sb->store(
+		"uris",
+		"path:".Etc::DEFAULT_PATH."  template:".Etc::DEFAULT_TEMPLATE."  title:Home  prefix:app/views/  collective:0  check_path:0  options:".serialize(array("layout" => '2-col-right'))
+	);
 	$sb->store("leafs", array(
 		"leaf" => "text_leaf",
 		"page" => "home",

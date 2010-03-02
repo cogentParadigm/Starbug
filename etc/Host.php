@@ -1,6 +1,6 @@
 <?php
 /**
-* FILE: etc/Site.php
+* FILE: etc/Host.php
 * PURPOSE: This is the main configuration file
 *
 * This file is part of StarbugPHP
@@ -21,7 +21,7 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-class Site {
+class Host {
 	/* Log in details for database */
 	const DB_TYPE = "mysql";
 	const DB_HOST = "localhost";

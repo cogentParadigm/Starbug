@@ -1,5 +1,8 @@
 <?php
 /**
+* FILE: etc/Etc.php
+* PURPOSE: This is the main configuration file
+*
 * This file is part of StarbugPHP
 *
 * StarbugPHP - website development kit
@@ -18,14 +21,22 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-session_start();
-//configure
-include("etc/Etc.php");
-//initialize
-include("core/init.php");
-//go
-include("core/Request.php");
-$request = new Request($groups, $statuses);
-$request->set_path($_SERVER['REQUEST_URI'], end(explode("/",dirname(__FILE__))));
-$request->execute();
+include("etc/Host.php");
+class Etc extends Host {
+	/* Prefix for prefixed variables (ie. database tables) */
+	const PREFIX = "sb_";
+	/* Name of website */
+	const WEBSITE_NAME = "Starbug";
+	/* Tagline Description */
+	const TAGLINE = "Fresh XHTML and CSS, just like mom used to serve!";
+
+	/* Directories */
+	const STYLESHEET_DIR = "app/public/stylesheets/";
+	const IMG_DIR = "app/public/images/";
+
+	/* path defaults */
+	const DEFAULT_TEMPLATE = "templates/Page";
+	const DEFAULT_PATH = "home";
+}
+include("etc/constraints.php");
 ?>

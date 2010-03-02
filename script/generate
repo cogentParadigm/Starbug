@@ -28,7 +28,7 @@ $help .= "    \t\tcrud - CRUD nouns\n";
 $help .= "    \t\tmodel - Object model\n";
 if ($argc==2) $argv[2] = "";
 include("etc/Etc.php");
-include("etc/init.php");
+include("core/init.php");
 include("etc/Theme.php");
 include("util/Args.php");
 $args = new Args();

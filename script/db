@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 	include("etc/Etc.php");
-	include("etc/init.php");
+	include("core/init.php");
 	include("core/db/Schemer.php");
 	$schemer = new Schemer($sb->db);
 	include("etc/schema.php");

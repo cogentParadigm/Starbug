@@ -148,6 +148,7 @@ class sb {
 	function store($name, $fields, $thefilters="mine") {
 		if ($thefilters == "mine") $thefilters = ($this->has($name)) ? $this->get($name)->filters : array();
 		$errors = array(); $byfilter = array();
+		if (!is_array($fields)) $fields = star::starr($fields);
 		foreach ($fields as $col => $value) {
 			$errors[$col] = array();
 			$fields[$col] = trim($fields[$col]);

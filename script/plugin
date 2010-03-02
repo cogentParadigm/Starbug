@@ -29,7 +29,7 @@ $help .= "    \t\t-l - list plugins\n";
 $help .= "    \t\t-r [NAME] - remove plugin\n";
 if ($argc==2) $argv[2] = "";
 include("etc/Etc.php");
-include("etc/init.php");
+include("core/init.php");
 $sb->import("util/plugins");
 
 if ($argv[1] == "-i") { //INSTALL PLUGIN

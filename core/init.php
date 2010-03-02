@@ -1,8 +1,8 @@
 <?php
 /**
-* FILE: etc/Etc.php
-* PURPOSE: This is the main configuration file
-*
+* FILE: core/init.php
+* PURPOSE: provide application wide functionality
+* 
 * This file is part of StarbugPHP
 *
 * StarbugPHP - website development kit
@@ -21,21 +21,17 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-include("etc/Site.php");
-class Etc extends Site {
-	/* Prefix for prefixed variables (ie. database tables) */
-	const PREFIX = "sb_";
-	/* Name of website */
-	const WEBSITE_NAME = "Starbug";
-	/* Tagline Description */
-	const TAGLINE = "Fresh XHTML and CSS, just like mom used to serve!";
-
-	/* Directories */
-	const STYLESHEET_DIR = "app/public/stylesheets/";
-	const IMG_DIR = "app/public/images/";
-
-	/* path defaults */
-	const DEFAULT_TEMPLATE = "templates/Page";
-	const DEFAULT_PATH = "home";
-}
+date_default_timezone_set('UTC');
+error_reporting(E_ALL ^ E_NOTICE);
+function empty_nan(&$val, $default="") {if(!isset($val) || !is_numeric($val)) $val = $default;}
+function dfault(&$val, $default="") {if(!isset($val)) $val = $default;return $val;}
+function efault(&$val, $default="") {if(empty($val)) $val = $default;return $val;}
+function P($var) {return Etc::PREFIX.$var;}
+function uri($path) {return Etc::WEBSITE_URL.$path;}
+include("core/db/db.php");
+include("core/sb.php");
+include("core/db/Table.php");
+include("util/starr.php");
+global $sb;
+$sb = new sb();
 ?>

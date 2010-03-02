@@ -1,8 +1,8 @@
 <?php
 /**
-* FILE: etc/init.php
-* PURPOSE: provide application wide functionality
-* 
+* FILE: etc/constraints.php
+* PURPOSE: configuration for access control
+*
 * This file is part of StarbugPHP
 *
 * StarbugPHP - website development kit
@@ -21,17 +21,14 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-date_default_timezone_set('UTC');
-error_reporting(E_ALL ^ E_NOTICE);
-function empty_nan(&$val, $default="") {if(!isset($val) || !is_numeric($val)) $val = $default;}
-function dfault(&$val, $default="") {if(!isset($val)) $val = $default;return $val;}
-function efault(&$val, $default="") {if(empty($val)) $val = $default;return $val;}
-function P($var) {return Etc::PREFIX.$var;}
-function uri($path) {return Etc::WEBSITE_URL.$path;}
-include("core/db/db.php");
-include("core/sb.php");
-include("core/db/Table.php");
-include("util/starr.php");
-global $sb;
-$sb = new sb();
+$groups = array(
+	"root"			=> 1,
+	"user"			=> 2
+);
+$statuses = array(
+	"deleted"     => 1,
+	"pending"     => 2,
+	"public"		  => 4,
+	"private"			=> 8
+);
 ?>
