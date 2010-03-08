@@ -10,7 +10,7 @@
 	if ($what == "sync") $schemer->update();
 	if ($what == "store") {
 		$name = array_shift($argv);
-		$params = join("\t", $argv);
+		$params = join("  ", $argv);
 		$params = starr::star($params);
 		$errors = $sb->store($name, $params);
 		if (empty($errors)) {
@@ -19,8 +19,9 @@
 			$argv = array($name, "where:id='$id'");
 		} else {
 			foreach($errors as $col => $arr) {
+				echo $col.":\n";
 				foreach($arr as $e => $m) {
-					echo $m."\n";
+					echo "\t".$m."\n";
 				}
 			}
 		}
@@ -36,7 +37,7 @@
 	}
 	if ($what == "query") {
 		$name = array_shift($argv);
-		$params = join("\t", $argv);
+		$params = join("  ", $argv);
 		$records = $sb->query($name, $params);
 		$lengths = array();
 		$one = $two = $three = "";

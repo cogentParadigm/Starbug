@@ -29,12 +29,15 @@ $help .= "    \t\tmodel - Object model\n";
 if ($argc==2) $argv[2] = "";
 include("etc/Etc.php");
 include("core/init.php");
+include("core/db/Schemer.php");
+$schemer = new Schemer($sb->db);
+include("etc/schema.php");
 include("etc/Theme.php");
 include("util/Args.php");
 $args = new Args();
 global $sb;
 if (!empty($argv[2])) {
-	$fields = unserialize(file_get_contents("var/schema/$argv[2]"));
+	$fields = $schemer->tables[$argv[2]];
 
 	//CREATE MODEL XML
 	$model = "<model name=\"$argv[2]\" label=\"".ucwords($argv[2])."\">\n";
@@ -90,14 +93,14 @@ if (!empty($argv[2])) {
 	$form .= ">\n$fieldstring\n</form>";
 
 	//WRITE XML
-	$file = fopen("var/schema/.temp/$argv[2]_model.xml", "wb");
+	$file = fopen("var/xml/$argv[2]_model.xml", "wb");
 	fwrite($file, $model);
 	fclose($file);
-	chmod("var/schema/.temp/$argv[2]_model.xml", 0777);
-	$file = fopen("var/schema/.temp/$argv[2]_form.xml", "wb");
+	chmod("var/xml/$argv[2]_model.xml", 0777);
+	$file = fopen("var/xml/$argv[2]_form.xml", "wb");
 	fwrite($file, $form);
 	fclose($file);
-	chmod("var/schema/.temp/$argv[2]_form.xml", 0777);
+	chmod("var/xml/$argv[2]_form.xml", 0777);
 }
 
 //SET VARS FOR Theme
@@ -113,8 +116,8 @@ else include("app/themes/".Theme::FOLDER."/$argv[1]/$argv[1].php");
 //CREATE DIRECTORIES
 foreach ($dirs as $dir) if (!file_exists($dir)) exec("./script/cgenerate dir $dir");
 //CREATE FILES
-foreach ($from_model as $stylesheet => $output) exec("./script/cgenerate sax -o:$output -s:var/schema/.temp/$argv[2]_model.xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
-foreach ($from_form as $stylesheet => $output) exec("./script/cgenerate sax -o:$output -s:var/schema/.temp/$argv[2]_form.xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
+foreach ($from_model as $stylesheet => $output) exec("./script/cgenerate sax -o:$output -s:var/xml/$argv[2]_model.xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
+foreach ($from_form as $stylesheet => $output) exec("./script/cgenerate sax -o:$output -s:var/xml/$argv[2]_form.xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
 //COPY FILES
 foreach ($from_copy as $origin => $dest) exec("./script/cgenerate copy $dest app/themes/".Theme::FOLDER."/$origin");
 //ADD URI

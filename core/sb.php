@@ -171,6 +171,7 @@ class sb {
 						else $setstr .= ", ".$col."= ?";
 					}
 				}
+				print_r($prize);
 				$stmt = $this->db->prepare("UPDATE ".P($name)." SET ".$setstr." WHERE id='".$fields['id']."'");
 				$this->record_count = $stmt->execute($prize);
 			} else { //creating new record

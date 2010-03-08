@@ -72,6 +72,7 @@ class Table {
 	
 	function grant() {
 		global $sb;
+		$_POST[$this->type]['status'] = array_sum($_POST['status']);
 		$sb->grant($this->type, $_POST[$this->type]);
 	}
 

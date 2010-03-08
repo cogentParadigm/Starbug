@@ -3,6 +3,6 @@
  * cascade: disabled
  */
 $name = current($this->uri);
-$options = unserialize($this->payload['options']);
+$options = (isset($this->payload['options'])) ? unserialize($this->payload['options']) : array("layout" => "2-col-right");
 include("app/views/layouts/$options[layout].php");
 ?>

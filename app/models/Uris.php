@@ -36,7 +36,7 @@ class Uris extends Table {
 	function update() {
 		$uris = $_POST['uris'];
 		if (!isset($uris['id'])) return array("title" => array("missing_id" => "unidentified submission"));
-		if (!empty($uris['template'])) $uris['template'] = "templates/$page[template]";
+		if (!empty($uris['template'])) $uris['template'] = "templates/$uris[template]";
 		unset($uris['path']);
 		$row = $this->query("where:id='$uris[id]'  limit:1");
 		$template = file_get_contents("$row[prefix]$uris[template]");
@@ -106,6 +106,29 @@ class Uris extends Table {
 			$fieldset .= $fields;
 		}
 		return $fieldset;
+	}
+	
+	function apply_tags() {
+		global $sb;
+		$sb->import("util/tags");
+		$tags = explode(",", $_POST['tags']);
+		$uid = $_POST['uris']['id'];
+		foreach($tags as $tag) tags::safe_tag("tags", "uris_tags", $_SESSION[P('id')], $uid, trim($tag));
+	}
+	
+	function remove_tag() {
+		global $sb;
+		$sb->import("util/tags");
+		$tag = $_POST['tag'];
+		$uri = $_POST['uris']['id'];
+		tags::delete_object_tag("tags", "uris_tags", $uri, $tag);
+	}
+	
+	function child_ids($uid) {
+		$prefix = array($uid);
+		$children = $this->query("where:parent=$uid");
+		if (!empty($children)) foreach($children as $kid) $prefix = array_merge($prefix, uri_list($kid['id']));
+		return $prefix;
 	}
 
 }

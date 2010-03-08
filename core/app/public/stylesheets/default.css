@@ -26,8 +26,8 @@ body.login{background:#efede8}
 #login_form .field{background:transparent;border:none;padding:5px 15px}
 #login_form input.text{font-weight:bold;color:#666}
 #login_form .button{margin-left:15px}
-.login h1{left:390px}
-.login #subhead{left:395px}
+.login h1{left:415px}
+.login #subhead{left:420px}
 /* lists */
 #footer li{float:left;padding:0px 5px}
 ul{margin-left:20px}
@@ -40,6 +40,8 @@ ul.decimal{list-style-type:decimal}
 .file_list{list-style-type:none;font-style:italic}
 .hnav{list-style-type:none;width:100%;height:40px;margin:0}
 .hnav li{float:left;padding:0;margin-right:5px}
+#applied_tags{clear:both;list-style-type:none;font-size:10px;margin:0}
+#applied_tags li{float:left}
 /* inline */
 p{margin-bottom:10px}
 em{color:#222}
@@ -75,6 +77,8 @@ a.button{padding:4px 5px}
 .thumbnails a:hover{background:#494;color:#FFF}
 input.link{background:none;border:none;color:#494;font-size:10px;position:relative;top:-1px;cursor:pointer}
 input.link:hover{text-decoration:underline}
+#applied_tags a{border:1px solid #494;padding:0px 4px 1px}
+#applied_tags a:hover{background:#494;color:#FFF;text-decoration:none}
 
 /* tables */
 table{margin-bottom:10px}
@@ -120,58 +124,17 @@ td:hover .row-actions{visibility:visible}
 .infield select{width:100%}
 .infield .text{width:194px}
 .leftfield{float:left;clear:left}
-/* models */
-.lidls{list-style:none;margin-left:0}
-.lidls li{padding:0;margin-bottom:10px;background:#fff;float:left;width:100%}
-.lidls dl dl{padding-left:15px;clear:both;border-bottom:1px solid #999;border-top:1px solid #999}
-.lidls dt, .lidls dd{padding:2px}
-.lidls dt{font-weight:bold;float:left;width:100px;padding-left:5px;color:#555;clear:left}
-.lidls dt.sub{float:none;display:block;width:98%}
-.lidls dd{margin-left:100px}
-.lidls dd .options{float:right}
-/*  models */ /* headings */
-.lidls h3{color:#fff;background:#494;font-size:14px;height:28px;padding:0}
-#models .inactive h3{background:#C22}
-.lidls h3 span{display:block;float:left;padding:5px 10px}
-.lidls h3 a{color:#fff;text-decoration:none;display:block;float:right;padding:5px;visibility:hidden}
-.lidls h3:hover a, .lidls h3:hover form{visibility:visible}
-.lidls h3 a:hover{background:#5a5}
-.lidls h3 a.title{float:none;padding:5px 10px;visibility:visible}
-#models .inactive h3 a:hover{background:#D00;}
-/*  models */ /* forms */
-dd form .field{padding:2px 5px;border-top:none}
-#new_key{height:48px}
-.lidls h3 form{float:right;visibility:hidden}
-.lidls h3 #new_model_form {visibility:visible;}
-.lidls h3 form .button{padding:5px}
-/*  models */ /* links */
-dd .options a{padding:0px 5px;color:#494;text-decoration:none}
-dd .options a:hover, dt.sub a:hover{text-decoration:underline;color:#5a5}
-dt.sub a{color:#494;text-decoration:none}
-dt.sub a.right{margin-left:10px}
-dt.sub.inactive a, dd.inactive dl a{color:#C22}
-dt.sub.inactive a:hover, dd.inactive dl a:hover{color:#D00}
-.lidls dd a.button{margin-top:20px;float:left}
-/* models */ /* tabs */
-.lidls .tab{padding-right:0px}
-.lidls .tab .note{background:#eee;font-size:11px}
-.lidls .tabs{float:right;width:100%;height:21px;margin-bottom:5px}
-.lidls .tabs .button{float:right;margin-left:5px;background:none;color:#494;position:relative;z-index:2;border-bottom:2px solid #494;padding-bottom:2px}
-.lidls .tabs .button.active{color:#fff}
-.lidls .tab h4.left{margin-right:10px;width:100px;clear:left;margin-bottom:10px;position:relative;top:-2px}
+/* permits */
 .tableft{position:relative;background:url(../images/tableft.png) top left no-repeat #494;padding-left:7px;height:21px;display:block;float:left}
 .tabright{background:url(../images/tabright.png) top right no-repeat #494;padding-right:7px;height:21px;display:block;float:left}
-.lidls .info .field-value{display:block;font-size:12px;margin-bottom:10px}
-.lidls .info .permit{margin-left:110px;font-size:12px;margin-bottom:5px;clear:both}
-.lidls .info .permit_options{margin-left:110px;font-size:12px}
-.permitlist .field{float:left;border:none;padding:20px 4px;background:transparent}
+.permit form{padding-top:20px}
+.permitlist .field{float:left;border:none;padding:0px 4px;background:transparent}
 .permitlist select{font-size:10px}
 .inline_button{border:2px solid #999;margin:0px 4px;font-size:12px;float:left;font-weight:bold;color:#666;background:#EEE}
 input.inline_button{cursor:pointer;padding:1px 3px}
 a.inline_button{text-decoration:none;padding:2px 3px}
 .inline_button:hover{background:#fff}
-.permit .inline_button{margin:33px 4px}
 /* rounding */
 .round.button, .lister, .inline_button, select, input.text{border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;}
-.infield{border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px}
+.infield, #applied_tags a{border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px}
 .big.round.button, #login_form{border-radius:15px;-moz-border-radius:15px;-webkit-border-radius:15px}

@@ -99,7 +99,7 @@ class Schemer {
 		$index = array();
 		$sql_fields = "";
 		foreach ($fields as $fieldname => $options) {
-			$sql_fields .= $fieldname." ".$this->get_sql_type($options).", ";
+			$sql_fields .= "`".$fieldname."` ".$this->get_sql_type($options).", ";
 			if (!empty($options['key'])) {
 				if ($options['key'] == "primary") $primary[] = "`$fieldname`"; 
 			}

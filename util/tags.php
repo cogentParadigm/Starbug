@@ -35,16 +35,18 @@ class tags {
 		return strtolower($normalized_tag);
 	}
 
-	function delete_object_tag($tagset, $linker, $tagger_id, $object_id, $tag) {
-		$tag_id = tags::get_raw_tag_id($tag);
+	function delete_object_tag($tagset, $linker, $object_id, $tag, $tagger_id=false) {
+		$tag_id = tags::get_tag_id($tagset, $tag);
+		global $sb;
 		if($tag_id > 0) {
-			$sql = "DELETE FROM ".P($linker)." WHERE owner='$tagger_id' AND object_id='$object_id' AND tag_id='$tag_id' LIMIT 1";	
+			$sql = "DELETE FROM ".P($linker)." WHERE".(($tagger_id) ? " owner='$tagger_id' AND" : "")." object_id='$object_id' AND tag_id='$tag_id' LIMIT 1";	
 			$rs = $sb->db->query($sql);	
 			return true;
 		} else return false;
 	}
 
 	function delete_all_object_tags($linker, $object_id) {
+		global $sb;
 		if($object_id > 0) {
 			$sql = "DELETE FROM ".P($linker)." WHERE object_id='$object_id'";	
 			$rs = $sb->db->query($sql);	
@@ -53,13 +55,15 @@ class tags {
 	}
 
 	function get_tag_id($tagset, $tag) {
-		$tag = $this->db->quote($tag);
-		$sql = "SELECT id FROM ".P($tagset)." WHERE tag='$tag' LIMIT 1";	
-		$rs = $this->db->query($sql)->fetch();	
+		global $sb;
+		$tag = $sb->db->quote($tag);
+		$sql = "SELECT id FROM ".P($tagset)." WHERE tag=$tag LIMIT 1";	
+		$rs = $sb->db->query($sql)->fetch();
 		return $rs['id'];
 	}
 	
 	function get_raw_tag_id($tagset, $tag) {
+		global $sb;
 		$tag = $sb->db->quote($tag);
 		$sql = "SELECT id FROM ".P($tagset)." WHERE raw_tag='$tag' LIMIT 1";	
 		$rs = $sb->db->query($sql)->fetch();	

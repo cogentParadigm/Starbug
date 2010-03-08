@@ -22,14 +22,15 @@
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
 class ApiFunctions {
-	public function getXML($from, $query="") {
+	public function getXML($models, $query="") {
 		global $sb;
+		$from = $models[0];
 		if (!empty($query)) $query .= "  ";
 		$xml = new XmlWriter();
 		$xml->openMemory();
 		$xml->startDocument('1.0', 'UTF-8');
 		$xml->startElement($from);
-		$data = $sb->query($from, $query."action:api_get");
+		$data = $sb->query(join(",", $models), $query."action:api_get", true);
 		foreach($data as $row) {
 			$xml->startElement("entry");
 			ApiFunctions::write($xml, $row);
@@ -38,18 +39,19 @@ class ApiFunctions {
 		$xml->endElement();
 		return $xml->outputMemory(true);
 	}
-	function getJSON($from, $query="") {
+	function getJSON($models, $query="") {
 		global $sb;
+		$from = $models[0];
 		if (!empty($query)) $query .= "  ";
-		$data = $sb->query($from, $query."action:api_get");
+		$data = $sb->query(join(",", $models), $query."action:api_get", true);
 		$json = '{ "'.$from.'" : [';
 		foreach($data as $row) $json .= ApiFunctions::rowToJSON($row).", ";
 		return rtrim($json, ", ")." ] }";
 	}
-	function getJSONP($from, $pad, $query="") {
+	function getJSONP($models, $pad, $query="") {
 		global $sb;
 		if (!empty($query)) $query .= "  ";
-		$data = $sb->query($from, $query."action:api_get");
+		$data = $sb->query(join(",", $models), $query."action:api_get", true);
 		return $pad."(".json_encode($data).");";
 	}
 	protected function write(XMLWriter $xml, $data){

@@ -36,7 +36,7 @@ class dojo {
 	}
 	function xhr($query, $action, $url, $params="", $event="onclick") {
 		$url = "'".uri("")."'+".$url;
-		$this->attach($query, "sb.xhr", "action:$action  url:$url".(empty($params) ? "" : "\t".$params), $event);
+		$this->attach($query, "sb.xhr", "action:$action  url:$url".(empty($params) ? "" : "  ".$params), $event);
 	}
 	function attach($query, $action, $params="", $event="onclick") {
 		$params = starr::star($params);

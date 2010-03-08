@@ -24,13 +24,24 @@
 	$f = new form($name, "action:grant  url:$submit_to");
 	echo $f->open();
 ?>
-		<div class="field"><?php echo $f->hidden("related_table  value:".P($name)); ?></div>
+		<div class="hidden field"><?php echo $f->hidden("related_table  value:".P($name)); ?></div>
 		<div class="field"><?php echo $f->select("priv_type", $privs); ?></div>
 		<div class="field"><?php echo $f->select("action", $options); ?></div>
 		<div class="field"><?php echo $f->select("role", $roles); ?></div>
 		<div class="field"><?php echo $f->select("who"); ?></div>
 		<div class="field"><?php echo $f->select("related_id", $rels); ?></div>
-		<?php echo $f->submit("class:inline_button save_permit  value:save"); ?>
-		<?php echo $f->tag("a  class:inline_button cancel_permit  content:cancel"); ?>
+		<br />
+		<div class="clear field">
+			<label for="statuses">Statuses</label>
+			<?php foreach($this->statuses as $c => $v) { ?>
+				<input type="checkbox" name="status[]" value="<?php echo $v; ?>" class="left checkbox" checked="checked" />
+				<span style="display:block;margin-right:5px;font-weight:bold;font-size:11px" class="left caption"><?php echo $c; ?></span>
+				
+			<?php } ?>
+		</div>
+		<div class="clear right">
+			<?php echo $f->submit("class:inline_button save_permit  value:save"); ?>
+			<?php echo $f->tag("a  class:inline_button cancel_permit  content:cancel"); ?>
+		</div>
 	</form>
 </div>

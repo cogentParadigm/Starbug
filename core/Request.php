@@ -70,6 +70,7 @@ class Request {
 			else $this->missing();
 		}
 		$this->tags = array_merge($this->tags, $sb->query("uris,tags", "select:DISTINCT tag, raw_tag  where:uris.id='".$this->payload['id']."'", true));
+		print_r($tthis->tags);
 		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
 		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
 	}
@@ -85,14 +86,14 @@ class Request {
 	
 	public function missing() {
 		header("HTTP/1.1 404 Not Found");
-		$this->payload = array("path" => "missing", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/");
+		$this->payload = array("path" => "missing", "template" => "templates/Page", "prefix" => "app/views/", "check_path" => '0');
 		$this->path="missing";
 		$this->uri = array("missing");
 	}
 	
 	public function forbidden() {
 		header("HTTP/1.1 403 Forbidden");
-		$this->payload = array("path" => "forbidden", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/");
+		$this->payload = array("path" => "forbidden", "template" => "templates/Page", "prefix" => "app/views/", "check_path" => '0');
 		$this->path = "forbidden";
 		$this->uri = array("forbidden");
 	}

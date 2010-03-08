@@ -67,7 +67,7 @@ class form {
 	}
 
 	function submit($ops="") {
-		return $this->tag("input  type:submit".((empty($ops))? "" : "\t".$ops), true);
+		return $this->tag("input  type:submit".((empty($ops))? "" : "  ".$ops), true);
 	}
 
 	function bin($ops) {
@@ -228,7 +228,7 @@ class form {
 	function tag($tag, $self=false) {
 		if (is_array($tag)) $name = array_shift($tag);
 		else {
-			$parts = explode("\t", $tag, 2);
+			$parts = explode("  ", $tag, 2);
 			$name = $parts[0];
 			if (count($parts) > 1) $tag = starr::star($parts[1]);
 		}

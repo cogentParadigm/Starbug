@@ -33,6 +33,49 @@ function editable_onchange(args) {
 	var textbox = dojo.byId('path');
 	textbox.value = editable.innerHTML;
 }
+<?php if ($action == "update") { ?>
+function apply_tags() {
+	sb.xhr({
+		args: {
+			url: '<?php echo uri("api/uris.tags/get.json"); ?>',
+			content: {
+				'action[uris]': 'apply_tags',
+				'uris[id]': '<?php echo $_POST['uris']['id']; ?>',
+				'tags': dojo.byId('tagbox').value
+			},
+			method: 'post',
+			handleAs: 'json',
+			action: display_tags,
+			node: dojo.byId('applied_tags')
+		}
+	});
+}
+function remove_tag(tag) {
+	sb.xhr({
+		args: {
+			url: '<?php echo uri("api/uris.tags/get.json"); ?>',
+			content: {
+				'action[uris]': 'remove_tag',
+				'uris[id]': '<?php echo $_POST['uris']['id']; ?>',
+				'tag': tag
+			},
+			method: 'post',
+			handleAs: 'json',
+			action: display_tags,
+			node: dojo.byId('applied_tags')
+		}
+	});
+}
+function display_tags(args) {
+	var list = "";
+	for(var i=0;i<args.args.data.uris.length;i++) {
+		console.log(args.args.data.uris[i]);
+		var item = args.args.data.uris[i];
+		list += '<li><a href="javascript:remove_tag(\''+item.tag+'\');">x</a> '+item.tag+'</li>\n';
+	}
+	args.args.node.innerHTML = list;
+}
+<?php } ?>
 </script>
 <?php
 	$sb->import("util/dojo");
@@ -83,6 +126,17 @@ function editable_onchange(args) {
 			echo $form->tag("span  id:permalink  class:link-span  content:".uri("")."<span class=\"editable\">".(($_POST['uris']['path']) ? $_POST['uris']['path'] : ".." )."</span>");
 			if (isset($sb->errors['uris']['path']['exists'])) echo "<span class=\"clear error\">".$sb->errors['uris']['path']['exists']."</span><br />";
 		?>
+		<?php if ($action == "update") { ?>
+			<div class="infield" style="float:left;clear:left;width:250px">
+				<h3>Tags</h3>
+				<input type="text" id="tagbox" class="text left" style="width:195px" /><a class="round right button" href="javascript:apply_tags();">apply</a>
+				<ul id="applied_tags">
+					<?php foreach($sb->query("uris,tags", "select:DISTINCT tag, raw_tag  where:uris.id='".$_POST['uris']['id']."'", true) as $tag) { ?>
+						<li><a href="javascript:remove_tag('<?php echo $tag['tag']; ?>');">x</a> <?php echo $tag['tag']; ?></li>
+					<?php } ?>
+				</ul>
+			</div>
+		<?php } ?>
 		<div class="infield">
 			<?php
 				echo $form->select("template", $templates);
