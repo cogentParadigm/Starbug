@@ -148,7 +148,7 @@ class sb {
 	function store($name, $fields, $thefilters="mine") {
 		if ($thefilters == "mine") $thefilters = ($this->has($name)) ? $this->get($name)->filters : array();
 		$errors = array(); $byfilter = array();
-		if (!is_array($fields)) $fields = star::starr($fields);
+		if (!is_array($fields)) $fields = starr::star($fields);
 		foreach ($fields as $col => $value) {
 			$errors[$col] = array();
 			$fields[$col] = trim($fields[$col]);
@@ -171,11 +171,11 @@ class sb {
 						else $setstr .= ", ".$col."= ?";
 					}
 				}
-				print_r($prize);
 				$stmt = $this->db->prepare("UPDATE ".P($name)." SET ".$setstr." WHERE id='".$fields['id']."'");
 				$this->record_count = $stmt->execute($prize);
 			} else { //creating new record
 				$fields['created'] = date("Y-m-d H:i:s");
+				if (!isset($fields['owner'])) $fields['owner'] = $_SESSION[P('id')];
 				$keys = ""; $values = "";
 				foreach($fields as $col => $value) {
 					$prize[] = $value;
@@ -214,7 +214,7 @@ class sb {
 			if (($this->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value();
 			else $errors = array("forbidden" => "You do not have sufficient permission to complete your request.");
 			$this->errors = array_merge_recursive($this->errors, array($key => $errors));
-			if (!empty($errors)) {
+			if (!empty($this->errors[$key])) {
 				global $request;
 				$request->return_path();
 			}

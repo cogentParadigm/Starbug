@@ -20,7 +20,7 @@
 		foreach($item as $field => $value) $label = str_replace("%".$field."%", $value, $label);
 		$rels[$label] = $item['id'];
 	}
-	foreach(array("everone", "user", "group", "owner", "collective") as $role) $roles[$role] = $role;
+	foreach(array("everyone", "user", "group", "owner", "collective") as $role) $roles[$role] = $role;
 	$f = new form($name, "action:grant  url:$submit_to");
 	echo $f->open();
 ?>

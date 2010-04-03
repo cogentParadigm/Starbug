@@ -43,6 +43,17 @@ class form {
 		if (!empty($_POST[$this->model]['id'])) $open .= '<input id="id" name="'.$this->model.'[id]" type="hidden" value="'.$_POST[$this->model]['id'].'" />'."\n";
 		return $open;
 	}
+	
+	function fill_ops(&$ops) {
+		$ops = starr::star($ops);
+		$name = array_shift($ops);
+		$ops['name'] = $name;
+		//id, label, and class
+		if (empty($ops['id'])) $ops['id'] = $ops['name'];
+		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
+		if (empty($ops['error'][$ops['name']])) $ops['error'][$ops['name']] = "This field is required.";
+		$ops['class'] = (empty($ops['class'])) ? $ops['type'] : $ops['class']." ".$ops['type'];
+	}
 
 	function label(&$ops) {
 		global $sb;
@@ -52,6 +63,12 @@ class form {
 		unset($ops['label']);
 		unset($ops['error']);
 		return $lab;
+	}
+	
+	function form_control($tag, $ops, $self=false) {
+		$ops['name'] = $this->model."[".$ops['name']."]";
+		$ops = array_merge(array($tag), $ops);
+		return $this->tag($ops, $self);
 	}
 
 	function text($ops) {
@@ -79,7 +96,10 @@ class form {
 	}
 
 	function checkbox($ops) {
-		return $this->input("checkbox", $ops);
+		$this->fill_ops($ops."  type:checkbox");
+		$input = $this->label($ops)."\n";
+		if ($_POST[$this->model][$ops['name']] == $ops['value']) $ops['checked'] = 'checked';
+		return $input.$this->form_control("input", $ops, true);
 	}
 
 	function radio($ops) {
@@ -87,37 +107,19 @@ class form {
 	}
 
 	function input($type, $ops) {
-		$ops = starr::star($ops);
-		$name = array_shift($ops);
-		$ops['type'] = $type;
-		$ops['name'] = $name;
-		//id, label, and class
-		if (empty($ops['id'])) $ops['id'] = $ops['name'];
-		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
-		if (empty($ops['error'][$ops['name']])) $ops['error'][$ops['name']] = "This field is required.";
+		$this->fill_ops($ops."  type:$type");
 		$input = $this->label($ops)."\n";
-		$ops['class'] = (empty($ops['class'])) ? $ops['type'] : $ops['class']." ".$ops['type'];
 		//POSTed or default value
 		if (!empty($_POST[$this->model][$ops['name']])) $ops['value'] = $_POST[$this->model][$ops['name']];
 		else if (!empty($ops['default'])) {
 			$ops['value'] = $ops['default'];
 			unset($ops['default']);
 		}
-		//name and close
-		$ops['name'] = $this->model."[".$ops['name']."]";
-		$ops = array_merge(array("input"), $ops);
-		$input .= $this->tag($ops, true);
-		return $input;
+		return $input.$this->form_control("input", $ops, true);
 	}
 
 	function select($ops, $options=array()) {
-		$ops = starr::star($ops);
-		$name = array_shift($ops);
-		$ops['name'] = $name;
-		//id, name, and type
-		if (empty($ops['id'])) $ops['id'] = $ops['name'];
-		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
-		if (empty($ops['error'][$ops['name']])) $ops['error'][$ops['name']] = "This field is required.";
+		$this->fill_ops($ops);
 		$select = $this->label($ops)."\n";
 		if ((empty($_POST[$this->model][$ops['name']])) && (!empty($ops['default']))) {
 			$_POST[$this->model][$ops['name']] = $ops['default'];
@@ -128,11 +130,9 @@ class form {
 			for ($i=$range[0];$i<=$range[1];$i++) $options[$i] = $i;
 			unset($ops['range']);
 		}
-		$ops['name'] = $this->model."[".$ops['name']."]";
 		$ops['content'] = "";
-		foreach ($options as $caption => $val) $ops['content'] .= "<option value=\"$val\"".(($_POST[$this->model][$name] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
-		$ops = array_merge(array("select"), $ops);
-		return $select.$this->tag($ops);
+		foreach ($options as $caption => $val) $ops['content'] .= "<option value=\"$val\"".(($_POST[$this->model][$ops['name']] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
+		return $select.$this->form_control("select", $ops);
 	}
 
 	function date_select($ops) {

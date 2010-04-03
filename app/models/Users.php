@@ -1,5 +1,9 @@
 <?php
 class Users extends Table {
+	
+	$filters = array(
+		"email" => "unique:",
+		"password" => "confirm:password_confirm  md5:  optional_update:"
 
 	function login() {
 		$errors = array();
@@ -21,12 +25,7 @@ class Users extends Table {
 	}
 
 	function create() {
-		//$errors = array();
-		$new_user = $_POST['users'];
-		//if ($new_user['password'] != $new_user['password_confirm']) $errors['passwordConfirmError'] = true;
-		//if ($new_user['email'] != $new_user['email_confirm']) $errors['emailConfirmError'] = true;
-		if (!empty($new_user['password'])) $new_user['password'] = md5($new_user['password']);
-		else if (!empty($new_user['id'])) unset($new_user['password']);
+		$user = $_POST['users'];
 		return $this->store($new_user);
 	}
 

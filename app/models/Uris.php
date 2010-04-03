@@ -19,45 +19,23 @@ class Uris extends Table {
 
 	function create() {
 		$uris = $_POST['uris'];
-		efault($uris['prefix'], "app/views/");
-		$uris['owner'] = $_SESSION[P("id")];
-		if (!empty($uris['id'])) unset($uris['id']); 
 		$uris['template'] = "templates/$uris[template]";
-		$template = file_get_contents("$uris[prefix]$uris[template]");
-		if (false !== ($start = strpos($template, "* cascade:"))) {
-			$start += 10;
-			$end = strpos($template, "\n", $start);
-			$value = trim(substr($template, $start, $end-$start));
-			if ($value == "disabled") $uris['check_path'] = "0";
-		}
+		$this->set_check_path($uris, file_get_contents("$uris[prefix]$uris[template]"));
 		return $this->store($uris);
 	}
 	
 	function update() {
 		$uris = $_POST['uris'];
-		if (!isset($uris['id'])) return array("title" => array("missing_id" => "unidentified submission"));
-		if (!empty($uris['template'])) $uris['template'] = "templates/$uris[template]";
 		unset($uris['path']);
+		if (!empty($uris['template'])) $uris['template'] = "templates/$uris[template]";
 		$row = $this->query("where:id='$uris[id]'  limit:1");
-		$template = file_get_contents("$row[prefix]$uris[template]");
-		if (false !== ($start = strpos($template, "* cascade:"))) {
-			$start += 10;
-			$end = strpos($template, "\n", $start);
-			$value = trim(substr($template, $start, $end-$start));
-			if ($value == "disabled") $uris['check_path'] = "0";
-			else $uris['check_path'] = 1;
-		} else $uris['check_path'] = 1;
-		if (false !== ($start = strpos($template, "* options:"))) {
-			$start += 10;
-			$end = strpos($template, "\n", $start);
-			$values = explode(",", trim(substr($template, $start, $end-$start)));
-			$uris['options'] = array();
-			foreach($values as $op) {
-				$uris['options'][$op] = $uris[$op];
-				unset($uris[$op]);
-			}
-			$uris['options'] = serialize($uris['options']);
-		}
+		//UNSET OLD TEMPLATE OPTIONS
+		$this->remove_template_options($uris, file_get_contents("$row[prefix]$row[template].php"));
+		// SET NEW TEMPLATE OPTIONS
+		$template = file_get_contents("$row[prefix]$uris[template].php");
+		$this->set_template_options($uris, $template);
+		// SET CHECK_PATH VALUE
+		$this->set_check_path($uris, $template);
 		$errors = $this->store($uris);
 		if (empty($errors)) {
 			$leafs = $sb->query("leafs", "where:page='$row[path]' ORDER BY container ASC, position ASC");
@@ -129,6 +107,39 @@ class Uris extends Table {
 		$children = $this->query("where:parent=$uid");
 		if (!empty($children)) foreach($children as $kid) $prefix = array_merge($prefix, uri_list($kid['id']));
 		return $prefix;
+	}
+
+	function remove_template_options(&$fields, $t) {
+		if (false !== ($start = strpos($t, "* options:"))) {
+			$start += 10;
+			$end = strpos($t, "\n", $start);
+			$values = explode(",", trim(substr($t, $start, $end-$start)));
+			foreach($values as $op) unset($fields[$op]);
+		}
+	}
+
+	function set_template_options(&fields, $t) {
+		if (false !== ($start = strpos($t, "* options:"))) {
+			$start += 10;
+			$end = strpos($t, "\n", $start);
+			$values = explode(",", trim(substr($t, $start, $end-$start)));
+			$fields['options'] = array();
+			foreach($values as $op) {
+				$fields['options'][$op] = $fields[$op];
+				unset($fields[$op]);
+			}
+			$fields['options'] = serialize($fields['options']);
+		}
+	}
+	
+	function set_check_path(&$fields, $t) {
+		if (false !== ($start = strpos($t, "* cascade:"))) {
+			$start += 10;
+			$end = strpos($t, "\n", $start);
+			$value = trim(substr($t, $start, $end-$start));
+			if ($value == "disabled") $fields['check_path'] = "0";
+		}
+		dfault($fields['check_path'], 1);
 	}
 
 }

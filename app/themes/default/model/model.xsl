@@ -5,10 +5,6 @@
 <xsl:template match="/model">&lt;?php
 class <xsl:value-of select="@label"/> extends Table {
 
-	var $defaults = array(<xsl:value-of select="defaults"/>);
-	var $uniques = array(<xsl:value-of select="uniques"/>);
-	var $lengths = array(<xsl:value-of select="lengths"/>);
-	
 	function create() {
 		$<xsl:value-of select="@name"/> = $_POST['<xsl:value-of select="@name"/>'];<xsl:apply-templates select="field"/>
 		/* more */

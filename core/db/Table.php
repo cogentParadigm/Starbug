@@ -27,6 +27,7 @@ class Table {
 	var $filters;
 	var $relations;
 	var $record_count;
+	var $insert_id;
 	var $imported;
 	var $imported_functions; 
 
@@ -55,12 +56,14 @@ class Table {
 
 	protected function store($arr) {
 		global $sb;
-		return $sb->store($this->type, $arr, $this->filters);
+		$errors = $sb->store($this->type, $arr, $this->filters);
+		if ((empty($errors)) && (empty($arr['id']))) $this->insert_id = $sb->insert_id;
+		return $errors;
 	}
 
 	protected function remove($where) {
 		global $sb;
-		$sb->remove($this->type, $where);
+		return $sb->remove($this->type, $where);
 	}
 	
 	function query($args="", $froms="", $deep="auto") {
