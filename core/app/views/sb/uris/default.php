@@ -24,7 +24,7 @@ function list_uri($row, $kids) { global $sb; global $request; global $dojo; ?>
 			<small>/<?php echo $row['path']; ?></small>
 			<ul class="row-actions">
 				<li class="first"><a href="<?php echo uri("sb/uris/update/$row[id]"); ?>">edit</a></li>
-				<li><?php $f = new form("uris", "action:delete"); echo $f->open(); echo $f->hidden("id  value:".$row['id']); echo $f->submit("class:link  value:delete"); ?></form></li>
+				<li><?php $f = new form("uris", "action:delete"); $_POST['uris']['id'] = $row['id']; echo $f->open(); echo $f->submit("class:link  value:delete"); ?></form></li>
 				<li><a href="<?php echo uri($row['path']); ?>">view</a></li>
 			</ul>
 		</td>
@@ -51,7 +51,7 @@ function list_uri($row, $kids) { global $sb; global $request; global $dojo; ?>
 		}
 	?>
 <?php } ?>
-<?php foreach($kids[0] as $uri) list_uri($uri, $kids); ?>
+<?php foreach($kids[0] as $uri) if (($uri['path'] == "sb-admin") || ($uri['path'] == "api")) unset($kids[$uri['id']]); else list_uri($uri, $kids); ?>
 </table>
 <?php if ($this->uri[1] == "uris") { ?>
 <a id="add_uri" class="big left round button" href="<?php echo uri("sb/uris/create"); ?>">Create URI</a>

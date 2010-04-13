@@ -3,11 +3,25 @@
 	include("etc/Etc.php");
 	include("core/init.php");
 	include("core/db/Schemer.php");
+	global $schemer;
 	$schemer = new Schemer($sb->db);
 	include("etc/schema.php");
+	$sb->import("util/cli");
 	$script = array_shift($argv);
 	$what = array_shift($argv);
-	if ($what == "sync") $schemer->update();
+	if ($what == "sync") $schemer->migrate();
+	if ($what == "migrate") {
+		$next = array_shift($argv);
+		if (false !== strpos($next, ":")) {
+			$next = explode(":", $next);
+			$from = $next[0];
+			$to = $next[1];
+			$schemer->migrate($to, $from);
+		} else {
+			$to = $next;
+			$schemer->migrate($to);
+		}
+	}
 	if ($what == "store") {
 		$name = array_shift($argv);
 		$params = join("  ", $argv);
@@ -39,41 +53,7 @@
 		$name = array_shift($argv);
 		$params = join("  ", $argv);
 		$records = $sb->query($name, $params);
-		$lengths = array();
-		$one = $two = $three = "";
 		echo "query $name $params\n";
-		foreach($records[0] as $key => $value) {
-			$current = strlen($key);
-			$lengths[$key] = $current;
-			foreach ($records as $r) {
-				$l = strlen($r[$key]);
-				if ($l > $lengths[$key]) $lengths[$key] = $l;
-			}
-			$colsize = $lengths[$key];
-			$dif = $colsize - $current;
-			for($i=0;$i<$colsize;$i++) {
-				$one .= "-";
-				$three .= "-";
-			}
-			$two .= $key;
-			for($i=0;$i<$dif;$i++) $two .= " ";
-			$one .= "---";
-			$three .= "---";
-			$two .= " | ";
-			
-		}
-		echo $one."\n".$two."\n".$three."\n";
-		foreach($records as $r) {
-			foreach ($r as $k => $v) {
-				$colsize = $lengths[$k];
-				$current = strlen($v);
-				$dif = $colsize - $current;
-				echo $v;
-				for($i=0;$i<$dif;$i++) echo " ";
-				echo " | ";
-			}
-			echo "\n";
-		}
-		echo "\n";
+		cli::table($records);
 	}
 ?>

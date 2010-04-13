@@ -7,9 +7,9 @@
 	<form id="login_form" action="<?php echo ($submit_to) ? $submit_to : htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
 		<input id="action[users]" name="action[users]" type="hidden" value="login"/>
 		<div class="field">
-			<label for="email">Email</label>
-			<?php if (!empty($sb->errors['users']['loginMatchError'])) { ?><span class="error">That email and password combination was not found.</span><?php } ?>
-			<input id="email" class="text" name="users[email]" type="text"<?php if (!empty($_POST['users']['email'])) { ?> value="<?php echo $_POST['users']['email']; ?>"<?php } ?> maxlength="64" />
+			<label for="username">Username</label>
+			<?php if (!empty($sb->errors['users']['username']['loginMatch'])) { ?><span class="error"><?php echo $sb->errors['users']['username']['loginMatch']; ?></span><?php } ?>
+			<input id="username" class="text" name="users[username]" type="text"<?php if (!empty($_POST['users']['username'])) { ?> value="<?php echo $_POST['users']['username']; ?>"<?php } ?> maxlength="64" />
 		</div>
 		<div class="field">
 			<label for="password">Password</label>

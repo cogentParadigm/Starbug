@@ -80,7 +80,8 @@ class form {
 	}
 
 	function hidden($ops) {
-		return $this->input("hidden", $ops."  nolabel:true");
+		$ops = $ops."  nolabel:true";
+		return $this->input("hidden", $ops);
 	}
 
 	function submit($ops="") {
@@ -96,7 +97,8 @@ class form {
 	}
 
 	function checkbox($ops) {
-		$this->fill_ops($ops."  type:checkbox");
+		$ops = $ops."  type:checkbox";
+		$this->fill_ops($ops);
 		$input = $this->label($ops)."\n";
 		if ($_POST[$this->model][$ops['name']] == $ops['value']) $ops['checked'] = 'checked';
 		return $input.$this->form_control("input", $ops, true);
@@ -107,7 +109,8 @@ class form {
 	}
 
 	function input($type, $ops) {
-		$this->fill_ops($ops."  type:$type");
+		$ops = $ops."  type:$type";
+		$this->fill_ops($ops);
 		$input = $this->label($ops)."\n";
 		//POSTed or default value
 		if (!empty($_POST[$this->model][$ops['name']])) $ops['value'] = $_POST[$this->model][$ops['name']];
@@ -136,35 +139,30 @@ class form {
 	}
 
 	function date_select($ops) {
-		$ops = starr::star($ops);
-		$name = array_shift($ops);
-		$ops['name'] = $name;
-		//SETUP OPTION ARRAYS
-		$year = date("Y");
-		$year_options = array("Year" => "-1", $year => $year, (((int) $year)+1) => (((int) $year)+1));
-		$month_options = array("Month" => "-1", "January" => "1", "February" => "2", "March" => "3", "April" => "4", "May" => "5", "June" => "6", "July" => "7", "August" => "8", "September" => "9", "October" => "10", "November" => "11", "December" => "12");
-		$day_options = array("Day" => "-1");
-		for($i=1;$i<32;$i++) $day_options["$i"] = $i;
-		//ID, NAME, LABEL, ERRORS
+		$this->fill_ops($ops);
+		$select = $this->label($ops)."\n";
+		//FILL VALUES FROM POST
 		if (!empty($_POST[$this->model][$name])) {
 			$dt = strtotime($_POST[$this->model][$name]);
 			$_POST[$this->model][$name] = array("year" => date("Y", $dt), "month" => date("m", $dt), "day" => date("d", $dt));
 			if (!empty($ops['time_select'])) $_POST[$this->model][$name."_time"] = array("hour" => date("h", $dt), "minutes" => date("i", $dt), "ampm" => date("a", $dt));
 		}
-		if (empty($ops['id'])) $ops['id'] = $name;
-		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($name));
-		$select = $this->label($ops)."\n";
 		//MONTH SELECT
+		$month_options = array("Month" => "-1", "January" => "1", "February" => "2", "March" => "3", "April" => "4", "May" => "5", "June" => "6", "July" => "7", "August" => "8", "September" => "9", "October" => "10", "November" => "11", "December" => "12");
 		if (!empty($ops['default'])) dfault($_POST[$this->model][$name]['month'], date("m", strtotime($ops['default'])));
 		$select .= "<select id=\"".$ops['id']."-mm\" name=\"".$this->model."[".$name."][month]\">\n";
 		foreach ($month_options as $caption => $val) $select .= "\t<option value=\"$val\"".(($_POST[$this->model][$name]['month'] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
 		$select .= "</select>\n";
 		//DAY SELECT
+		$day_options = array("Day" => "-1");
+		for($i=1;$i<32;$i++) $day_options["$i"] = $i;
 		if (!empty($ops['default'])) dfault($_POST[$this->model][$name]['day'], date("d", strtotime($ops['default'])));
 		$select .= "<select id=\"".$ops['id']."-dd\" name=\"".$this->model."[".$name."][day]\">\n";
 		foreach ($day_options as $caption => $val) $select .= "\t<option value=\"$val\"".(($_POST[$this-model][$name]['day'] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
 		$select .= "</select>\n";
 		//YEAR SELECT
+		$year = date("Y");
+		$year_options = array("Year" => "-1", $year => $year, (((int) $year)+1) => (((int) $year)+1));
 		if (!empty($ops['default'])) dfault($_POST[$this->model][$name]['month'], date("m", strtotime($ops['default'])));
 		$select .= "<select id=\"".$ops['id']."\" class=\"split-date range-low-".date("Y-m-d")." no-transparency\" name=\"".$this->model."[".$name."][year]\">\n";
 		foreach ($year_options as $caption => $val) $select .= "\t<option value=\"$val\"".(($_POST[$this->model][$name]['year'] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";

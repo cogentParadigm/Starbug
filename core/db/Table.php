@@ -73,6 +73,14 @@ class Table {
 		return $records;
 	}
 	
+	function id_list($top, $role) {
+		global $sb;
+		$prefix = array($top);
+		$children = $this->query("where:$role=$top");
+		if (!empty($children)) foreach($children as $kid) $prefix = array_merge($prefix, $this->id_list($kid['id'], $role));
+		return $prefix;
+	}
+	
 	function grant() {
 		global $sb;
 		$_POST[$this->type]['status'] = array_sum($_POST['status']);

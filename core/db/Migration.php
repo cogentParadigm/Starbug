@@ -1,7 +1,7 @@
 <?php
 /**
-* FILE: etc/Etc.php
-* PURPOSE: This is the main configuration file
+* FILE: core/db/Migration.php
+* PURPOSE: This is the Migration class. It wraps the Schemer.
 *
 * This file is part of StarbugPHP
 *
@@ -21,22 +21,30 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-include("etc/Host.php");
-class Etc extends Host {
-	/* Prefix for prefixed variables (ie. database tables) */
-	const PREFIX = "sb_";
-	/* Name of website */
-	const WEBSITE_NAME = "Starbug";
-	/* Tagline Description */
-	const TAGLINE = "Fresh XHTML and CSS, just like mom used to serve!";
-
-	/* Directories */
-	const STYLESHEET_DIR = "app/public/stylesheets/";
-	const IMG_DIR = "app/public/images/";
-
-	/* path defaults */
-	const DEFAULT_TEMPLATE = "templates/View";
-	const DEFAULT_PATH = "home";
+class Migration {
+	//ADD TABLE DESCRIPTION
+	function table($arg) {
+		global $schemer;
+		$args = func_get_args();
+		call_user_func_array(array($schemer, "table"), $args);
+	}
+	//ADD COLUMN TO DESCRIPTION
+	function column($table, $col) {
+		global $schemer;
+		$schemer->column($table, $col);
+	}
+	//DROP TABLE OR COLUMN FROM DESCRIPTION
+	function drop($table, $col="") {
+		global $schemer;
+		$schemer->drop($table, $col);
+	}
+	function insert($table, $keys, $values) {
+		global $schemer;
+		$schemer->insert($table, $keys, $values);
+	}
+	function up() {}
+	function down() {}
+	function created() {}
+	function removed() {}
 }
-include("etc/constraints.php");
 ?>

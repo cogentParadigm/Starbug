@@ -52,7 +52,7 @@ class Uris extends Table {
 		$id = $_POST['uris']['id'];
 		return $this->remove("id='".$id."'");
 	}
-	
+
 	function change_name() {
 		global $sb;
 		$errors = array();
@@ -101,13 +101,6 @@ class Uris extends Table {
 		$uri = $_POST['uris']['id'];
 		tags::delete_object_tag("tags", "uris_tags", $uri, $tag);
 	}
-	
-	function child_ids($uid) {
-		$prefix = array($uid);
-		$children = $this->query("where:parent=$uid");
-		if (!empty($children)) foreach($children as $kid) $prefix = array_merge($prefix, uri_list($kid['id']));
-		return $prefix;
-	}
 
 	function remove_template_options(&$fields, $t) {
 		if (false !== ($start = strpos($t, "* options:"))) {
@@ -118,7 +111,7 @@ class Uris extends Table {
 		}
 	}
 
-	function set_template_options(&fields, $t) {
+	function set_template_options(&$fields, $t) {
 		if (false !== ($start = strpos($t, "* options:"))) {
 			$start += 10;
 			$end = strpos($t, "\n", $start);

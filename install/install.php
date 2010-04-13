@@ -25,12 +25,6 @@
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-	//COLLECT USER INPUT
-	fwrite(STDOUT, "\nWelcom to the StarbugPHP Installer\nPlease enter the following information:\n\n");
-	fwrite(STDOUT, "Super Admin Email:");
-	$admin_email = str_replace("\n", "", fgets(STDIN));
-	fwrite(STDOUT, "Super Admin Password:");
-	$admin_pass = md5(str_replace("\n", "", fgets(STDIN)));
 	
 	//CREATE FOLDERS & SET FILE PERMISSIONS
 	exec("chmod a+x script/generate");
@@ -44,42 +38,7 @@
 	include("core/db/Schemer.php");
 	$schemer = new Schemer($sb->db);
 	include("etc/schema.php");
-	$schemer->update();
-
-	//INSERT RECORDS
-	//ADMIN USER
-	$sb->store("users", "email:$admin_email  password:$admin_pass  memberships:1");
-	//ADMIN URIS
-	$sb->store("uris", "path:sb-admin  template:Login  title:Bridge  prefix:core/app/views/  collective:0");
-	$admin_parent = $sb->insert_id;
-	$sb->store("uris", "path:sb  template:Starbug  title:Core  prefix:core/app/views/  parent:$admin_parent");
-	$sb->store("uris", "path:sb/generate  template:sb/generate  title:Generate  prefix:core/app/views/  parent:$admin_parent");
-	$sb->store("uris", "path:api  template:Api  title:API  prefix:core/app/views/  collective:0  check_path:0");
-	//HOME PAGE
-	$sb->store("uris", "path:".Etc::DEFAULT_PATH."  template:".Etc::DEFAULT_TEMPLATE."  title:Home  prefix:app/views/  collective:0  check_path:0  options:".serialize(array("layout" => '2-col-right')));
-	$sb->store("leafs", "leaf:text_leaf  page:home  container:content  position:0");
-	$sb->store("text_leaf",	"page:home  container:content  position:0  content:\t\t\t\t<h2>Congratulations, she rides!</h2>\n\t\t\t\t<p><strong>You&#39;ve successfully installed Starbug PHP!</strong></p>");
-	//404 PAGE
-	$sb->store("uris", "path:missing  template:".Etc::DEFAULT_TEMPLATE."  title:Missing  prefix:app/views/  collective:0  check_path:0  options:".serialize(array("layout" => '2-col-right')));
-	$sb->store("leafs", "leaf:text_leaf  page:missing  container:content  position:0");
-	$sb->store("leafs", "leaf:text_leaf  page:missing  container:sidebar  position:0");
-	$sb->store("text_leaf", "page:missing  container:content  position:0  content:\t\t\t\t<h2>Oops!</h2>\n\t\t\t\t<p>The page you are looking for was not found.</p>");
-	$sb->store("text_leaf", "page:missing  container:sidebar  position:0  content:\t\t\t\t<h2 class=\"box_top\">Why am I seeing this page?</h2>\n\t\t\t\t<div class=\"box\">\n\t\t\t\t\t<p>This reality is unstable, and anomalies have merged from both dimensions to cope with the paradox.</p>\n\t\t\t\t\t<p>Just kidding, you&#39;ve navigated to a location that either does not exist or is missing.</p>\n\t\t\t\t</div>");
-	//PRIVILIGES
-	$sb->store("permits", "role:everyone  action:login  related_table:".P("users"));
-	$sb->store("permits", "role:everyone  action:logout  related_table:".P("users"));
-	$sb->store("permits", "role:collective  action:read  priv_type:global  related_table:".P("uris"));
-	//APPLY TAGS
-	$sb->import("util/tags");
-	function uri_list($uid) {
-		global $sb;
-		$prefix = array($uid);
-		$children = $sb->query("uris", "where:parent=$uid");
-		if (!empty($children)) foreach($children as $kid) $prefix = array_merge($prefix, uri_list($kid['id']));
-		return $prefix;
-	}
-	$admin_uris = uri_list($admin_parent);
-	foreach($admin_uris as $obj_id) tags::safe_tag("tags", "uris_tags", "1", $obj_id, "admin");
+	$schemer->migrate(1, 0);
 	
 	//SUSBSCRIBE HOOKS
 	$sb->import("util/subscribe");

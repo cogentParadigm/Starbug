@@ -1,19 +1,20 @@
 <?php
 class Users extends Table {
 	
-	$filters = array(
+	var $filters = array(
 		"email" => "unique:",
 		"password" => "confirm:password_confirm  md5:  optional_update:"
+	);
 
 	function login() {
 		$errors = array();
 		$login = $_POST['users'];
-		$user = $this->query("select:id, memberships  where:email='".$login['email']."' && password='".md5($login['password'])."'  limit:1");
+		$user = $this->query("select:id, memberships  where:username='".$login['username']."' && password='".md5($login['password'])."'  limit:1");
 		if (!empty($user)) {
 				$_SESSION[P("id")] = $user[0]['id'];
 				$_SESSION[P("memberships")] = $user[0]['memberships'];
 			} else {
-				$errors['email']['loginMatch'] = "That email and password combination was not found.";
+				$errors['username']['loginMatch'] = "That username and password combination was not found.";
 			}
 		return $errors;
 	}

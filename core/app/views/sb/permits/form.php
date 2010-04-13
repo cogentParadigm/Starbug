@@ -8,15 +8,8 @@
 		$methods = get_class_methods(ucwords($name));
 		foreach($methods as $method) if (!(($method == "Table") || ($method == "query") || ($method == ucwords($name)) || ($method == "__call"))) $options[$method] = $method;
 	}
-	if (file_exists("var/schema/.info/".$name)) $info = unserialize(file_get_contents("var/schema/.info/".$name));
-	else {
-		$info = array("label" => "%id%");
-		$file = fopen("var/schema/.info/".$name, "wb");
-		fwrite($file, serialize($info));
-		fclose($file);
-	}
 	foreach($sb->query($name) as $item) {
-		$label = $info['label'];
+		$label = "%id%";
 		foreach($item as $field => $value) $label = str_replace("%".$field."%", $value, $label);
 		$rels[$label] = $item['id'];
 	}

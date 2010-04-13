@@ -21,12 +21,14 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
+include("core/db/Migration.php");
 class Schemer {
 
 	var $db;
 	var $tables = array();
 	var $table_drops = array();
 	var $column_drops = array();
+	var $migrations = array();
 
 	function Schemer($data) {
 		$this->db = $data;
@@ -189,6 +191,53 @@ class Schemer {
 			$info = unserialize(file_get_contents("var/schema/.info/$name"));
 			if (filemtime($model_loc) == $info['mtime']) unlink($model_loc);
 			else rename($model_loc, "app/models/.".ucwords($name));
+		}
+	}
+	
+	function add_migrations($arg) {
+		$args = func_get_args();
+		foreach($args as $i => $a) {
+			include("etc/migrations/$a.php");
+		}
+		$this->migrations = array_merge($this->migrations, $args);
+	}
+	
+	function migrate($to="top", $from=1) {
+		if ($to == "top") $to = count($this->migrations);
+		//MOVE TO FROM
+		$current = 0;
+		while ($current < $from) {
+			$migration = new $this->migrations[$current]();
+				$migration->up();
+				$current++;
+		}
+		//MIGRATE
+		if ($to < $from) { //DOWN
+			while($current > $to) {
+				$migration = new $this->migrations[$current-1]();
+				$migration->down();
+				$current--;
+			}
+			$this->update();
+			$current = $from;
+			while($current > $to) {
+				$migration = new $this->migrations[$current-1]();
+				$migration->removed();
+				$current--;
+			}
+		} else {  //UP
+			while($current < $to) {
+				$migration = new $this->migrations[$current]();
+				$migration->up();
+				$current++;
+			}
+			$this->update();
+			$current = $from;
+			while($current < $to) {
+				$migration = new $this->migrations[$current]();
+				$migration->created();
+				$current++;
+			}
 		}
 	}
 

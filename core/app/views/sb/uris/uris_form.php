@@ -140,7 +140,7 @@ function display_tags(args) {
 		<div class="infield">
 			<?php
 				echo $form->select("template", $templates);
-				$options_file = $_POST['uris']['prefix'].str_replace("templates", "templates/options", $_POST['uris']['template']).".php";
+				$options_file = $_POST['uris']['prefix']."templates/options/".$_POST['uris']['template'].".php";
 				if (($action == "update") && (file_exists($options_file))) include($options_file);
 				echo $form->select("status", $this->statuses);
 				echo $form->select("collective", $collectives);

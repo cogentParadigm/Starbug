@@ -23,7 +23,7 @@ h3{padding:5px 0}
 body.login{background:#efede8}
 .login #shell{background:transparent;padding-top:75px}
 #login_form{background:#FFF;width:500px;padding:20px;margin:0 auto 75px auto}
-#login_form .field{background:transparent;border:none;padding:5px 15px}
+#login_form .field{background:transparent;border:none;padding:5px 15px;width:195px}
 #login_form input.text{font-weight:bold;color:#666}
 #login_form .button{margin-left:15px}
 .login h1{left:415px}

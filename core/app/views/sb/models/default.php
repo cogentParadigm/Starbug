@@ -44,8 +44,13 @@ $dojo->xhr(".save_permit", "permit_created", "'api/permits/get.json'", "form:evt
 ?>
 <?php
 	include("core/db/Schemer.php");
+	global $schemer;
 	$schemer = new Schemer($sb->db);
 	include("etc/schema.php");
+	foreach($schemer->migrations as $m) {
+		$m = new $m();
+		$m->up();
+	}
 ?>
 	<div class="permitlist">
 		<div class="permit_options">
