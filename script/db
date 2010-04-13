@@ -1,11 +1,12 @@
 #!/usr/bin/php
 <?php
-	include("etc/Etc.php");
-	include("core/init.php");
-	include("core/db/Schemer.php");
+	define('BASE_DIR', str_replace("/script", "", dirname(__FILE__)));
+	include(BASE_DIR."/etc/Etc.php");
+	include(BASE_DIR."/core/init.php");
+	include(BASE_DIR."/core/db/Schemer.php");
 	global $schemer;
 	$schemer = new Schemer($sb->db);
-	include("etc/schema.php");
+	include(BASE_DIR."/etc/schema.php");
 	$sb->import("util/cli");
 	$script = array_shift($argv);
 	$what = array_shift($argv);

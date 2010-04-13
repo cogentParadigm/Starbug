@@ -33,11 +33,12 @@
 	exec("chmod -R a+w var app/public/uploads app/public/thumbnails");
 
 	//INIT TABLES
-	include("etc/Etc.php");
-	include("core/init.php");
-	include("core/db/Schemer.php");
+	define('BASE_DIR', str_replace("/install", "", dirname(__FILE__)));
+	include(BASE_DIR."/etc/Etc.php");
+	include(BASE_DIR."/core/init.php");
+	include(BASE_DIR."/core/db/Schemer.php");
 	$schemer = new Schemer($sb->db);
-	include("etc/schema.php");
+	include(BASE_DIR."/etc/schema.php");
 	$schemer->migrate(1, 0);
 	
 	//SUSBSCRIBE HOOKS

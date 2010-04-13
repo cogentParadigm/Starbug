@@ -19,12 +19,13 @@
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
 session_start();
+define('BASE_DIR', dirname(__FILE__));
 //configure
-include("etc/Etc.php");
+include(BASE_DIR."/etc/Etc.php");
 //initialize
-include("core/init.php");
+include(BASE_DIR."/core/init.php");
 //go
-include("core/Request.php");
+include(BASE_DIR"/core/Request.php");
 $request = new Request($groups, $statuses);
 $request->set_path($_SERVER['REQUEST_URI'], end(explode("/",dirname(__FILE__))));
 $request->execute();

@@ -28,8 +28,9 @@ $help .= "    \t\t-i [NAME] - install plugin\n";
 $help .= "    \t\t-l - list plugins\n";
 $help .= "    \t\t-r [NAME] - remove plugin\n";
 if ($argc==2) $argv[2] = "";
-include("etc/Etc.php");
-include("core/init.php");
+define('BASE_DIR', str_replace("/script", "", dirname(__FILE__)));
+include(BASE_DIR."/etc/Etc.php");
+include(BASE_DIR."/core/init.php");
 $sb->import("util/plugins");
 
 if ($argv[1] == "-i") { //INSTALL PLUGIN
