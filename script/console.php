@@ -1,5 +1,5 @@
 <?php
-	define('BASE_DIR', str_replace("/install", "", dirname(__FILE__)));
+	define('BASE_DIR', str_replace("/script", "", dirname(__FILE__)));
 	set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);
 	define("STDOUT", fopen("php://stdout", "wb"));
 	define("STDIN", fopen("php://stdin", "r"));
