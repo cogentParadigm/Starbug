@@ -25,7 +25,7 @@ include(BASE_DIR."/etc/Etc.php");
 //initialize
 include(BASE_DIR."/core/init.php");
 //go
-include(BASE_DIR"/core/Request.php");
+include(BASE_DIR."/core/Request.php");
 $request = new Request($groups, $statuses);
 $request->set_path($_SERVER['REQUEST_URI'], end(explode("/",dirname(__FILE__))));
 $request->execute();

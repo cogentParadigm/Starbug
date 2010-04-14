@@ -66,7 +66,7 @@ class sb {
 
 	# import function. only imports once when used with provide
 	# @param loc - path of file to import without '.php' at the end
-	function import($loc) {global $sb; if (!$this->provided[$loc]) include($loc.".php");}
+	function import($loc) {global $sb; if (!$this->provided[$loc]) include(BASE_DIR."/".$loc.".php");}
 
 	# when imported use provide to prevent further imports from attempting to include it again
 	# @param loc - the imported location. if i were to use $sb->import("util/form"), util/form.php would have $sb->provide("util/form") at the top
@@ -77,7 +77,7 @@ class sb {
 	function get($name) {
 		$obj = ucwords($name);
 		if (!isset($this->objects[$name])) {
-			include("app/models/".$obj.".php");
+			include(BASE_DIR."/app/models/".$obj.".php");
 			$this->objects[$name] = new $obj($name);
 		}
 		return $this->objects[$name];
@@ -85,7 +85,7 @@ class sb {
 
 	# check if a model exists
 	# @param name (the name of the model), @return bool (true if model exists, false otherwise)
-	function has($name) {return (($this->objects[$name]) || (file_exists("app/models/".ucwords($name).".php")));}
+	function has($name) {return (($this->objects[$name]) || (file_exists(BASE_DIR."/app/models/".ucwords($name).".php")));}
 
 	# query the database
 	# @param froms - comma delimeted list of tables to join. 'users' or 'uris,system_tags'
@@ -157,7 +157,7 @@ class sb {
 			if ($value === "") $errors[$col]["required"] = "This field is required.";
 		}
 		foreach($byfilter as $filter => $args) {
-			include("util/filters/$filter.php");
+			include(BASE_DIR."/util/filters/$filter.php");
 		}
 		foreach($errors as $col => $err) if (empty($err)) unset($errors[$col]);
 		if((empty($errors)) && (empty($this->errors[$name]))) { //no errors

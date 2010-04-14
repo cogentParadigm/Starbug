@@ -32,8 +32,9 @@
 	//CREATE FOLDERS & SET FILE PERMISSIONS
 	exec("chmod a+x script/generate");
 	exec("chmod ug+s script/cgenerate");
-	exec("mkdir var var/hooks var/xml app/public/uploads app/public/thumbnails");
-	exec("chmod -R a+w var app/public/uploads app/public/thumbnails");
+	$dirs = array("var", "var/hooks", "var/xml", "app/public/uploads", "app/public/thumbnails");
+	foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) exec("mkdir ".BASE_DIR."/".$dir);
+	exec("chmod -R a+w ".BASE_DIR."/var ".BASE_DIR."/app/public/uploads ".BASE_DIR."/app/public/thumbnails");
 
 	//INIT TABLES
 	include(BASE_DIR."/etc/Etc.php");
