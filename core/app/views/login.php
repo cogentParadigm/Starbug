@@ -6,6 +6,7 @@
 <?php } else { ?>
 	<form id="login_form" action="<?php echo ($submit_to) ? $submit_to : htmlentities($_SERVER['REQUEST_URI']); ?>" method="post">
 		<input id="action[users]" name="action[users]" type="hidden" value="login"/>
+		<input name="postback" type="hidden" value="sb-admin"/>
 		<div class="field">
 			<label for="username">Username</label>
 			<?php if (!empty($sb->errors['users']['username']['loginMatch'])) { ?><span class="error"><?php echo $sb->errors['users']['username']['loginMatch']; ?></span><?php } ?>

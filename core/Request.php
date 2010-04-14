@@ -58,7 +58,7 @@ class Request {
 		}
 	}
 	
-	function return_path() {$this->path = $_SESSION[P('postback')];}
+	function return_path() {$this->path = (!empty($_POST['postback'])) ? $_POST['postback'] : $_SESSION[P('postback')];}
 
 	function locate() {
 		global $sb;
