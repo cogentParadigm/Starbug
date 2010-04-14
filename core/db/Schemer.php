@@ -49,7 +49,7 @@ class Schemer {
 			} else {
 				//OLD TABLE
 				foreach($fields as $name => $field) {
-					$records = $this->db->query("SHOW COLUMNS FROM ".P($table)." WHERE field='".$name."'");
+					$records = $this->db->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
 					if (false === ($row = $records->fetch())) {
 						//NEW COLUMN
 						fwrite(STDOUT, "Adding column $name...\n");
@@ -197,7 +197,7 @@ class Schemer {
 	function add_migrations($arg) {
 		$args = func_get_args();
 		foreach($args as $i => $a) {
-			include("etc/migrations/$a.php");
+			include(BASE_DIR."/etc/migrations/$a.php");
 		}
 		$this->migrations = array_merge($this->migrations, $args);
 	}

@@ -21,7 +21,7 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-include("etc/Host.php");
+include(BASE_DIR."/etc/Host.php");
 class Etc extends Host {
 	/* Prefix for prefixed variables (ie. database tables) */
 	const PREFIX = "sb_";
@@ -38,5 +38,5 @@ class Etc extends Host {
 	const DEFAULT_TEMPLATE = "templates/View";
 	const DEFAULT_PATH = "home";
 }
-include("etc/constraints.php");
+include(BASE_DIR."/etc/constraints.php");
 ?>

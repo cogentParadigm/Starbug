@@ -24,7 +24,10 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+	define('BASE_DIR', str_replace("/install", "", dirname(__FILE__)));
+	set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);
+	define("STDOUT", fopen("php://stdout", "wb"));
+	define("STDIN", fopen("php://stdin", "r"));
 	
 	//CREATE FOLDERS & SET FILE PERMISSIONS
 	exec("chmod a+x script/generate");
@@ -33,10 +36,10 @@
 	exec("chmod -R a+w var app/public/uploads app/public/thumbnails");
 
 	//INIT TABLES
-	define('BASE_DIR', str_replace("/install", "", dirname(__FILE__)));
 	include(BASE_DIR."/etc/Etc.php");
 	include(BASE_DIR."/core/init.php");
 	include(BASE_DIR."/core/db/Schemer.php");
+	global $schemer;
 	$schemer = new Schemer($sb->db);
 	include(BASE_DIR."/etc/schema.php");
 	$schemer->migrate(1, 0);
