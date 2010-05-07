@@ -1,3 +1,3 @@
 <?php
-	plugins::activate("core/app/plugins/jsforms", "footer");
+	plugins::activate("core/app/plugins/jsforms", "footer", "form");
 ?>

@@ -67,6 +67,7 @@ function remove_tag(tag) {
 	});
 }
 function display_tags(args) {
+	console.log(args);
 	var list = "";
 	for(var i=0;i<args.args.data.uris.length;i++) {
 		console.log(args.args.data.uris[i]);
@@ -109,14 +110,14 @@ function display_tags(args) {
 		closedir($handle);
 	}
 
-	efault($_POST['uris']['template'], "Page");
+	efault($_POST['uris']['template'], "View");
 	efault($_POST['uris']['status'], 4);
 	efault($_POST['uris']['prefix'], "app/views/");
 ?>
 
 <?php
 	$sb->import("util/form");
-	$form = new form("uris", "action:$action  url:$submit_to");
+	$form = new form("model:uris  action:$action  url:$submit_to");
 	echo $form->open('class="pages_form"');
 ?>
 	<div class="field">
@@ -154,8 +155,8 @@ function display_tags(args) {
 	</div>
 	<?php
 	if (($action == "update") && (!empty($containers))) {
-		$l = new form("new-leaf");
-		$r = new form("remove-leaf");
+		$l = new form("model:new-leaf");
+		$r = new form("model:remove-leaf");
 		foreach($containers as $container) { ?>
 			<fieldset>
 				<legend><?php echo $container; ?></legend>
@@ -172,4 +173,3 @@ function display_tags(args) {
 		<?php } ?>
 	<?php } ?>
 </form>
-<?php sb::load("core/app/plugins/jsforms"); ?>

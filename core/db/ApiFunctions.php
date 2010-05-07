@@ -67,7 +67,7 @@ class ApiFunctions {
 	}
 	protected function rowToJSON($row) {
 		$json = "{";
-		foreach($row as $k => $v) $json .= '"'.$k.'"'.' : "'.$v.'", ';
+		foreach($row as $k => $v) $json .= '"'.$k.'"'.' : "'.str_replace(array("{", "}"), array("", ""), addslashes($v)).'", ';
 		return rtrim($json, ", ")."}";
 	}
 }

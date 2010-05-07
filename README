@@ -1,0 +1,28 @@
+README
+======
+
+Starbug PHP pre-release alpha
+
+What is Starbug PHP?
+----------------
+
+Starbug is a full featured PHP web application framework that employs a Model-View design
+pattern. It is modeled around the HTTP Protocol and has a small footprint.
+
+
+Design Principles
+----------------
+
+Starbug PHP was designed to be a small and efficient codebase that is highly
+extensible.
+
+Requirements
+------------
+
+Starbug PHP requires PHP 5 with the PDO extension. Using the code generator
+requires Saxon XSLT processor.
+
+Documentation
+-------------
+
+http://www.starbugphp.com/documentation

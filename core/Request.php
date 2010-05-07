@@ -26,6 +26,8 @@ class Request {
 	var $payload;					// row in uris table
 	var $path;						// request path - string
 	var $uri;							// request path - array
+	var $query;							// query string
+	var $format;							// format string
 	var $file;						// noun file path
 	var $tags;
 	var $groups;
@@ -39,14 +41,62 @@ class Request {
 		if (!isset($_SESSION[P('postback')])) $_SESSION[P('postback')] = $_SERVER['REQUEST_URI'];
  	}
  	
- 	function set_path($request_path, $base_dir="") {
+ 	public function set_path($request_path, $base_dir="") {
 		if (empty($base_dir)) $base_dir = $this->base_dir;
 		else $this->base_dir = $base_dir;
 		$this->path = (false === ($base_pos = strpos($request_path, $base_dir))) ? substr($request_path, 1) : substr($request_path, $base_pos+strlen($base_dir)+1);
-		if (false !== strpos($this->path, "?")) $this->path = reset(explode("?", $this->path));
+		if (false !== strpos($this->path, "?")) {
+			$this->path = explode("?", $this->path, 2);
+			$this->query = $this->path[1];
+			$this->path = reset($this->path);
+		}
+		if (false !== strpos($this->path, ".")) {
+			$this->path = explode(".", $this->path, 2);
+			$this->format = $this->path[1];
+			$this->path = reset($this->path);
+		}
 		efault($this->path, Etc::DEFAULT_PATH);
 	}
+	
+	public function return_path() {$this->path = (empty($_POST['postback'])) ? $_SESSION[P('postback')] : $_POST['postback'];}
 
+	public function locate() {
+		global $sb;
+		$query = "where:'".$this->path."' LIKE CONCAT(path, '%') ORDER BY CHAR_LENGTH(path) DESC  limit:1";
+		$this->payload = $sb->query("uris", $query."  action:read");
+		if (empty($this->payload)) {
+			$row = $sb->query("uris", $query);
+			if (!empty($row)) $this->forbidden();
+			else $this->missing();
+		}
+		$this->tags = array_merge($this->tags, $sb->query("uris,tags", "select:DISTINCT tag, raw_tag  where:uris.id='".$this->payload['id']."'", true));
+		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
+		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
+	}
+
+	public function execute() {
+		global $sb;
+		$the_postback = $this->path;
+		$sb->check_post();
+		$this->locate();
+		if ((!empty($_GET['x'])) || ($this->format == "xhr")) include($this->file);
+		else include($this->payload['prefix'].$this->payload['template'].".php");
+		$_SESSION[P('postback')] = $the_postback;
+	}
+	
+	public function missing() {
+		header("HTTP/1.1 404 Not Found");
+		$this->payload = array("path" => "missing", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/");
+		$this->path="missing";
+		$this->uri = array("missing");
+	}
+	
+	public function forbidden() {
+		header("HTTP/1.1 403 Forbidden");
+		$this->payload = array("path" => "forbidden", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/");
+		$this->path = "forbidden";
+		$this->uri = array("forbidden");
+	}
 	private function check_path($prefix, $base, $current) {
 		if (empty($current)) $current = "default";
 		if (file_exists("$prefix$base$current.php")) return $prefix.$base.$current.".php";
@@ -57,46 +107,5 @@ class Request {
 			return $prefix."missing.php";
 		}
 	}
-	
-	function return_path() {$this->path = (!empty($_POST['postback'])) ? $_POST['postback'] : $_SESSION[P('postback')];}
-
-	function locate() {
-		global $sb;
-		$query = "where:'".$this->path."' LIKE CONCAT(path, '%') ORDER BY CHAR_LENGTH(path) DESC  limit:1";
-		$this->payload = $sb->query("uris", $query."  action:read");
-		if (empty($this->payload)) {
-			$row = $sb->query("uris", $query);
-			if (!empty($row)) $this->forbidden();
-			else $this->missing();
-		}
-		$this->tags = array_merge($this->tags, $sb->query("uris,tags", "select:DISTINCT tag, raw_tag  where:uris.id='".$this->payload['id']."'", true));
-		print_r($tthis->tags);
-		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
-		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
-	}
-
-	public function execute() {
-		global $sb;
-		$sb->check_post();
-		$this->locate();
-		if (!empty($_GET['x'])) include($this->file);
-		else include($this->payload['prefix'].$this->payload['template'].".php");
-		$_SESSION[P('postback')] = $this->path;
-	}
-	
-	public function missing() {
-		header("HTTP/1.1 404 Not Found");
-		$this->payload = array("path" => "missing", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/", "check_path" => '0');
-		$this->path="missing";
-		$this->uri = array("missing");
-	}
-	
-	public function forbidden() {
-		header("HTTP/1.1 403 Forbidden");
-		$this->payload = array("path" => "forbidden", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/", "check_path" => '0');
-		$this->path = "forbidden";
-		$this->uri = array("forbidden");
-	}
-
 }
 ?>

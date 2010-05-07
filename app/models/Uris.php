@@ -25,6 +25,7 @@ class Uris extends Table {
 	}
 	
 	function update() {
+		global $sb;
 		$uris = $_POST['uris'];
 		unset($uris['path']);
 		if (!empty($uris['template'])) $uris['template'] = "templates/$uris[template]";

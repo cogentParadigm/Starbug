@@ -66,7 +66,7 @@ class sb {
 
 	# import function. only imports once when used with provide
 	# @param loc - path of file to import without '.php' at the end
-	function import($loc) {global $sb; if (!$this->provided[$loc]) include(BASE_DIR."/".$loc.".php");}
+	function import($loc) {global $sb; $args = func_get_args(); foreach($args as $l) if (!$this->provided[$l]) include(BASE_DIR."/".$l.".php");}
 
 	# when imported use provide to prevent further imports from attempting to include it again
 	# @param loc - the imported location. if i were to use $sb->import("util/form"), util/form.php would have $sb->provide("util/form") at the top
@@ -127,13 +127,18 @@ class sb {
 			." && ".$roles.")"
 			.((empty($args['where'])) ? "" : " && ".$args['where']);
 		}
+		if (!empty($args['keywords'])) {
+			$this->import("util/search");
+			$args['where'] = ((empty($args['where'])) ? "" : $args['where']." && ").keywordClause($args['keywords'], split(",", $args['search']));
+		}
 		if (!empty($args['where'])) $args['where'] = " WHERE ".$args['where'];
 		$limit = (!(empty($args['limit']))) ? " LIMIT $args[limit]" : "";
-		$sql = " FROM $from$args[where]$limit";
+		$order = (!(empty($args['orderby']))) ? " ORDER BY $args[orderby]" : "";
+		$sql = " FROM $from$args[where]$order$limit";
 		try {
 			$res = $this->db->query("SELECT COUNT(*)".$sql);
 			$this->record_count = $res->fetchColumn();
-			$records = $this->db->prepare("SELECT $args[select] FROM $from$args[where]$limit");
+			$records = $this->db->prepare("SELECT $args[select] FROM $from$args[where]$order$limit");
 			$records->execute();
 		} catch(PDOException $e) {
 			die("DB Exception: ".$e->getMessage());

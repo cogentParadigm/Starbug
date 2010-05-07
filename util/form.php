@@ -27,21 +27,61 @@ class form {
 	var $action;
 	var $url;
 	var $method;
-	function form($postvar, $args="") {
+	var $postback;
+	function form($args="") {
+		global $request;
+		$request->tags = array_merge($request->tags, array(array("tag" => "form", "raw_tag" => "form")));
 		$args = starr::star($args);
+		efault($args['url'], $args['uri']);
 		efault($args['url'], $_SERVER['REQUEST_URI']);
 		efault($args['method'], "post");
-		$this->model = $postvar;
+		efault($args['postback'], $request->path);
+		$this->model = $args['model'];
 		$this->action = $args['action'];
 		$this->url = $args['url'];
 		$this->method = $args['method'];
+		$this->postback = $args['postback'];
 	}
 
 	function open($atts="") {
 		$open = '<form'.(($atts) ? " ".$atts : "").' action="'.$this->url.'" method="'.$this->method.'">'."\n";
-		$open .= '<input class="action" name="action['.$this->model.']" type="hidden" value="'.$this->action.'" />'."\n";
+		if (!empty($this->action)) $open .= '<input class="action" name="action['.$this->model.']" type="hidden" value="'.$this->action.'" />'."\n";
 		if (!empty($_POST[$this->model]['id'])) $open .= '<input id="id" name="'.$this->model.'[id]" type="hidden" value="'.$_POST[$this->model]['id'].'" />'."\n";
 		return $open;
+	}
+	
+	function get_name($name) {
+		if (empty($this->model)) return $name;
+		else if (false !== strpos($name, "[")) {
+			$parts = explode("[", $name, 2);
+			return $this->model."[".$parts[0]."][".$parts[1];
+		} else return $this->model."[".$name."]";
+	}
+
+	function get($name) {
+		$parts = explode("[", $name);
+		if ($this->method == "post") $var = (empty($this->model)) ? $_POST : $_POST[$this->model];
+		else $var = (empty($this->model)) ? $_GET : $_GET[$this->model];
+		foreach($parts as $p) {
+			$var = $var[rtrim($p, "]")];
+		}
+		return $var;
+	}
+	
+	function set($name, $value) {
+		$parts = explode("[", $name);
+		$key = array_pop($parts);
+		if (empty($this->model)) {
+			if ($this->method == "post") $var = &$_POST;
+			else $var = &$_GET;
+		} else {
+			if ($this->method == "post") $var = &$_POST[$this->model];
+			else $var = &$_GET[$this->model];
+		}
+		foreach($parts as $p) {
+			$var = &$var[rtrim($p, "]")];
+		}
+		$var[$key] = $value;
 	}
 	
 	function fill_ops(&$ops) {
@@ -57,16 +97,17 @@ class form {
 
 	function label(&$ops) {
 		global $sb;
+		$name = reset(explode("[", $ops['name']));
 		if (!isset($ops['nolabel'])) $lab = '<label for="'.$ops['id'].'"'.((empty($ops['identifier_class'])) ? '' : ' class="'.$ops['identifier_class'].'"').'>'.$ops['label']."</label>";
 		else unset($ops['nolabel']);
-		if (isset($sb->errors[$this->model][$ops['name']])) foreach($sb->errors[$this->model][$ops['name']] as $err => $message) $lab .= "\n"."<span class=\"error\">".((!empty($ops['error'][$err])) ? $ops['error'][$err] : $message)."</span>";
+		if (isset($sb->errors[$this->model][$name])) foreach($sb->errors[$this->model][$name] as $err => $message) $lab .= "\n"."<span class=\"error\">".((!empty($ops['error'][$err])) ? $ops['error'][$err] : $message)."</span>";
 		unset($ops['label']);
 		unset($ops['error']);
 		return $lab;
 	}
 	
 	function form_control($tag, $ops, $self=false) {
-		$ops['name'] = $this->model."[".$ops['name']."]";
+		$ops['name'] = $this->get_name($ops['name']);
 		$ops = array_merge(array($tag), $ops);
 		return $this->tag($ops, $self);
 	}
@@ -100,7 +141,7 @@ class form {
 		$ops = $ops."  type:checkbox";
 		$this->fill_ops($ops);
 		$input = $this->label($ops)."\n";
-		if ($_POST[$this->model][$ops['name']] == $ops['value']) $ops['checked'] = 'checked';
+		if ($this->get($ops['name']) == $ops['value']) $ops['checked'] = 'checked';
 		return $input.$this->form_control("input", $ops, true);
 	}
 
@@ -113,7 +154,8 @@ class form {
 		$this->fill_ops($ops);
 		$input = $this->label($ops)."\n";
 		//POSTed or default value
-		if (!empty($_POST[$this->model][$ops['name']])) $ops['value'] = $_POST[$this->model][$ops['name']];
+		$var = $this->get($ops['name']);
+		if (!empty($var)) $ops['value'] = $var;
 		else if (!empty($ops['default'])) {
 			$ops['value'] = $ops['default'];
 			unset($ops['default']);
@@ -124,8 +166,9 @@ class form {
 	function select($ops, $options=array()) {
 		$this->fill_ops($ops);
 		$select = $this->label($ops)."\n";
-		if ((empty($_POST[$this->model][$ops['name']])) && (!empty($ops['default']))) {
-			$_POST[$this->model][$ops['name']] = $ops['default'];
+		$var = $this->get($ops['name']);
+		if ((empty($var)) && (!empty($ops['default']))) {
+			$this->set($ops['name'], $ops['default']);
 			unset($ops['default']);
 		}
 		if (!empty($ops['range'])) {
@@ -134,93 +177,73 @@ class form {
 			unset($ops['range']);
 		}
 		$ops['content'] = "";
-		foreach ($options as $caption => $val) $ops['content'] .= "<option value=\"$val\"".(($_POST[$this->model][$ops['name']] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
+		foreach ($options as $caption => $val) $ops['content'] .= "<option value=\"$val\"".(($this->get($ops['name']) == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
 		return $select.$this->form_control("select", $ops);
 	}
 
 	function date_select($ops) {
 		$this->fill_ops($ops);
 		$select = $this->label($ops)."\n";
-		//FILL VALUES FROM POST
-		if (!empty($_POST[$this->model][$name])) {
-			$dt = strtotime($_POST[$this->model][$name]);
-			$_POST[$this->model][$name] = array("year" => date("Y", $dt), "month" => date("m", $dt), "day" => date("d", $dt));
-			if (!empty($ops['time_select'])) $_POST[$this->model][$name."_time"] = array("hour" => date("h", $dt), "minutes" => date("i", $dt), "ampm" => date("a", $dt));
+		//FILL VALUES FROM POST OR DEFAULT
+		$name = $ops['name'];
+		$value = $this->get($name);
+		efault($value, $ops['default']);
+		if (!empty($value)) {
+			$dt = strtotime($value);
+			$this->set($name, array("year" => date("Y", $dt), "month" => date("m", $dt), "day" => date("d", $dt)));
+			if (!empty($ops['time_select'])) $this->set($name."_time", array("hour" => date("h", $dt), "minutes" => date("i", $dt), "ampm" => date("a", $dt)));
 		}
-		//MONTH SELECT
+		//SETUP OPTION ARRAYS
 		$month_options = array("Month" => "-1", "January" => "1", "February" => "2", "March" => "3", "April" => "4", "May" => "5", "June" => "6", "July" => "7", "August" => "8", "September" => "9", "October" => "10", "November" => "11", "December" => "12");
-		if (!empty($ops['default'])) dfault($_POST[$this->model][$name]['month'], date("m", strtotime($ops['default'])));
-		$select .= "<select id=\"".$ops['id']."-mm\" name=\"".$this->model."[".$name."][month]\">\n";
-		foreach ($month_options as $caption => $val) $select .= "\t<option value=\"$val\"".(($_POST[$this->model][$name]['month'] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
-		$select .= "</select>\n";
-		//DAY SELECT
 		$day_options = array("Day" => "-1");
-		for($i=1;$i<32;$i++) $day_options["$i"] = $i;
-		if (!empty($ops['default'])) dfault($_POST[$this->model][$name]['day'], date("d", strtotime($ops['default'])));
-		$select .= "<select id=\"".$ops['id']."-dd\" name=\"".$this->model."[".$name."][day]\">\n";
-		foreach ($day_options as $caption => $val) $select .= "\t<option value=\"$val\"".(($_POST[$this-model][$name]['day'] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
-		$select .= "</select>\n";
-		//YEAR SELECT
+		for($i=1;$i<32;$i++) $day_options["$i"] = $i;		
 		$year = date("Y");
 		$year_options = array("Year" => "-1", $year => $year, (((int) $year)+1) => (((int) $year)+1));
-		if (!empty($ops['default'])) dfault($_POST[$this->model][$name]['month'], date("m", strtotime($ops['default'])));
-		$select .= "<select id=\"".$ops['id']."\" class=\"split-date range-low-".date("Y-m-d")." no-transparency\" name=\"".$this->model."[".$name."][year]\">\n";
-		foreach ($year_options as $caption => $val) $select .= "\t<option value=\"$val\"".(($_POST[$this->model][$name]['year'] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
-		$select .= "</select>\n";
+		//BUILD SELECT BOXES
+		$select .= $this->select($name."[month]  id:".$ops['id']."-mm  nolabel:", $month_options);
+		$select .= $this->select($name."[day]  id:".$ops['id']."-dd  nolabel:", $day_options);
+		$select .= $this->select($name."[year]  id:".$ops['id']."  class:split-date range-low-".date("Y-m-d")." no-transparency  nolabel:", $year_options);
 		//TIME
 		if (!empty($ops['time_select'])) $select .= $this->time_select(array_merge(array($name), $ops));
 		return $select;
 	}
 
 	function time_select($ops) {
+		$this->fill_ops($ops);
+		$select = $this->label($ops)."\n";
+		//GET POSTED OR DEFAULT VALUE
+		$value = $this->get($ops['name']);
+		efault($value, $ops['default']);
+		if ((!empty($value)) && (!is_array($value))) {
+			$dt = strtotime($value);
+			$this->set($ops['name'], array("hour" => date("h", $dt), "minutes" => date("i", $dt), "ampm" => date("a", $dt)));
+		}
 		//SETUP OPTION ARRAYS
 		$hour_options = array("Hour" => "-1");
 		for($i=1;$i<13;$i++) $hour_options[$i] = $i;
 		$minutes_options = array("Minutes" => "-1", "00" => "00", "15" => "15", "30" => "30", "45" => "45");
 		$ampm_options = array("AM" => "am", "PM" => "pm");
-		//ID, NAME, LABEL, ERRORS
-		$select = "";
-		if (empty($ops['id'])) $ops['id'] = $ops['name'];
-		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
-		$select .= form::label($ops)."\n";
-		//HOUR SELECT
-		if (!empty($ops['default'])) dfault($_POST[$ops['postvar']][$ops['name']]['hour'], date("H", strtotime($ops['default'])));
-		$select .= "<select id=\"".$ops['id']."-hour\" name=\"".$ops['postvar']."[".$ops['name']."][hour]\">\n";
-		foreach ($hour_options as $caption => $val) $select .= "<option value=\"$val\"".(($_POST[$ops['postvar']][$ops['name']]['hour'] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
-		$select .= "</select>\n";
-		//MINUTE SELECT
-		if (!empty($ops['default'])) dfault($_POST[$ops['postvar']][$ops['name']]['minutes'], date("i", strtotime($ops['default'])));
-		$select .= "<select id=\"".$ops['id']."-minutes\" name=\"".$ops['postvar']."[".$ops['name']."][minutes]\">\n";
-		foreach ($minutes_options as $caption => $val) $select .= "\t<option value=\"$val\"".(($_POST[$ops['postvar']][$ops['name']]['minutes'] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
-		$select .= "</select>\n";
-		//AMPM SELECT
-		if (!empty($ops['default'])) dfault($_POST[$ops['postvar']][$ops['name']]['ampm'], date("a", strtotime($ops['default'])));
-		$select .= "<select id=\"".$ops['id']."\" name=\"".$ops['postvar']."[".$ops['name']."][ampm]\">\n";
-		foreach ($ampm_options as $caption => $val) $select .= $tabs."\t<option value=\"$val\"".(($_POST[$ops['postvar']][$ops['name']]['ampm'] == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
-		$select .= "</select>\n";
+		//BUILD SELECT BOXES
+		$select .= $this->select($ops['name']."[hour]  id:".$ops['id']."-hour  nolabel:", $hour_options);
+		$select .= $this->select($ops['name']."[minutes]  id:".$ops['id']."-minutes  nolabel:", $minutes_options);
+		$select .= $this->select($ops['name']."[ampm]  id:".$ops['id']."  nolabel:", $ampm_options);
 		return $select;
 	}
 	
 	function textarea($ops) {
-		$ops = starr::star($ops);
-		$name = array_shift($ops);
-		$ops['name'] = $name;
-		//id, name, and type
-		if (empty($ops['id'])) $ops['id'] = $ops['name'];
-		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
+		$this->fill_ops($ops);
 		$input = $this->label($ops)."\n";
-		if (empty($ops['cols'])) $ops['cols'] = "90";
-		if (empty($ops['rows'])) $ops['rows'] = "90";
+		efault($ops['cols'], "90");
+		efault($ops['rows'], "90");
 		//POSTed or default value
-		if (!empty($_POST[$this->model][$ops['name']])) $ops['content'] = $_POST[$this->model][$ops['name']];
-		else if (!empty($ops['default'])) {
-			$ops['content'] = $ops['default'];
+		$value = $this->get($ops['name']);
+		if (!empty($ops['default'])) {
+			efault($value, $ops['default']);
 			unset($ops['default']);
 		}
+		efault($ops['content'], $value);
 		//name close
-		$ops['name'] = $this->model."[".$ops['name']."]";
-		$ops = array_merge(array("textarea"), $ops);
-		return $input.$this->tag($ops);
+		return $input.$this->form_control("textarea", $ops);
 	}
 
 	function tag($tag, $self=false) {

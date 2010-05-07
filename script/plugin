@@ -22,11 +22,11 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-$help = "Usage: plugin MODE [OPTIONS]\n\n";
-$help .= "MODE\tWhat to do\n";
-$help .= "    \t\t-i [NAME] - install plugin\n";
-$help .= "    \t\t-l - list plugins\n";
-$help .= "    \t\t-r [NAME] - remove plugin\n";
+$help = "Usage: plugin MODE [OPTIONS]\n";
+$help .= "MODE\n";
+$help .= "  -i [NAME] - install plugin\n";
+$help .= "  -l - list plugins\n";
+$help .= "  -r [NAME] - remove plugin\n\n";
 if ($argc==2) $argv[2] = "";
 define('BASE_DIR', str_replace("/script", "", dirname(__FILE__)));
 include(BASE_DIR."/etc/Etc.php");
@@ -53,6 +53,6 @@ if ($argv[1] == "-i") { //INSTALL PLUGIN
 	$loc = $argv[2];
 	include($loc."/deactivate.php");
 	exit(0);
-}
+} else echo $help;
 
 ?>

@@ -37,6 +37,7 @@ class Subscriber {
 			$file = fopen(BASE_DIR."/var/hooks/$tag.$topic", "wb");
 			fwrite($file, serialize($subscriptions));
 			fclose($file);
+			chmod(BASE_DIR."/var/hooks/$tag.$topic", 0666);
 		}
 	}
 	# unsubscribe to remove a subscription

@@ -14,7 +14,7 @@
 		$rels[$label] = $item['id'];
 	}
 	foreach(array("everyone", "user", "group", "owner", "collective") as $role) $roles[$role] = $role;
-	$f = new form($name, "action:grant  url:$submit_to");
+	$f = new form("model:$name  action:grant  url:$submit_to");
 	echo $f->open();
 ?>
 		<div class="hidden field"><?php echo $f->hidden("related_table  value:".P($name)); ?></div>

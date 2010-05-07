@@ -39,7 +39,7 @@ $dojo->xhr(".create_permit", "create_permit", "'sb/permits/form/'+dojo.byId('rel
 $dojo->attach("#role", "who_options", "", "onchange");
 $dojo->attach("#priv_type", "id_options", "", "onchange");
 $dojo->attach(".cancel_permit", "sb.destroy", "node:evt.target.parentNode.parentNode");
-$dojo->xhr(".save_permit", "permit_created", "'api/permits/get.json'", "form:evt.target.parentNode  node:evt.target.parentNode.parentNode  handleAs:'json'");
+$dojo->xhr(".save_permit", "permit_created", "'api/permits/get.json'", "form:evt.target.parentNode.parentNode  node:evt.target.parentNode.parentNode  handleAs:'json'");
 
 ?>
 <?php
