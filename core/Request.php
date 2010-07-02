@@ -51,9 +51,15 @@ class Request {
 			$this->path = reset($this->path);
 		}
 		if (false !== strpos($this->path, ".")) {
-			$this->path = explode(".", $this->path, 2);
-			$this->format = $this->path[1];
-			$this->path = reset($this->path);
+			$this->path = explode("/", $this->path);
+			$index = count($this->path)-1;
+			if (false !== strpos($this->path[$index], ".")) {
+				$end = explode(".", $this->path[$index]);
+				$this->format = end($end);
+				array_pop($end);
+				$this->path[$index] = join(".", $end);
+			}
+			$this->path = join("/", $this->path);
 		}
 		efault($this->path, Etc::DEFAULT_PATH);
 	}

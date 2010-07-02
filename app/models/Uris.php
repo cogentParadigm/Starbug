@@ -39,6 +39,7 @@ class Uris extends Table {
 		$this->set_check_path($uris, $template);
 		$errors = $this->store($uris);
 		if (empty($errors)) {
+			$pagename = $row['path'];
 			$leafs = $sb->query("leafs", "where:page='$row[path]' ORDER BY container ASC, position ASC");
 			foreach($leafs as $leaf) include("$row[prefix]leafs/$leaf[leaf]/save.php");
 			foreach($_POST['new-leaf'] as $container => $leaf) if (!empty($leaf)) include("$row[prefix]leafs/$leaf/create.php");

@@ -6,9 +6,7 @@ if (false !== strpos($model, ".")) {
 	$model = $models[0];
 } else $models = array($model);
 $action = next($this->uri);
-$action = explode(".", $action);
-$format = $action[1];
-$action = $action[0];
+$format = $this->format;
 $query = "";
 if ($action == "get") {
 	if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) $_GET['id'] = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : $sb->insert_id;
@@ -25,3 +23,4 @@ if ($action == "get") {
 		echo ApiFunctions::getJSONP($models, $query);
 	}
 }
+?>

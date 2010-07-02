@@ -67,7 +67,7 @@ function remove_tag(tag) {
 	});
 }
 function display_tags(args) {
-	console.log(args);
+	//console.log(args.args.data);
 	var list = "";
 	for(var i=0;i<args.args.data.uris.length;i++) {
 		console.log(args.args.data.uris[i]);

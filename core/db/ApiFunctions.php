@@ -49,6 +49,7 @@ class ApiFunctions {
 		return rtrim($json, ", ")." ] }";
 	}
 	function getJSONP($models, $pad, $query="") {
+		echo "Test";
 		global $sb;
 		if (!empty($query)) $query .= "  ";
 		$data = $sb->query(join(",", $models), $query."action:api_get", true);
