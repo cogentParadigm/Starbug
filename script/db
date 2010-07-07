@@ -40,7 +40,8 @@
 			$user = str_replace($search, $replace, Etc::DB_USERNAME);
 			$pass = str_replace($search, $replace, Etc::DB_PASSWORD);
 			$dbname = str_replace($search, $replace, Etc::DB_NAME);
-			exec("mysqldump -c -u ".$user." -p".$pass." ".$dbname." ".$table." > ".BASE_DIR."/var/dump/$table.sql");
+			$host = str_replace($search, $replace, Etc::DB_HOST);
+			exec("mysqldump -c --host=".$host." -u ".$user." -p".$pass." ".$dbname." ".$table." > ".BASE_DIR."/var/dump/$table.sql");
 			chmod(BASE_DIR."/var/dump/$table.sql", 0777);
 		}
 	}

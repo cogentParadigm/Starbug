@@ -85,6 +85,7 @@ class Request {
 		$the_postback = $this->path;
 		$sb->check_post();
 		$this->locate();
+		$sb->import("util/templates");
 		if ((!empty($_GET['x'])) || ($this->format == "xhr")) include($this->file);
 		else include($this->payload['prefix'].$this->payload['template'].".php");
 		$_SESSION[P('postback')] = $the_postback;

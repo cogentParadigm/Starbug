@@ -30,7 +30,8 @@ class form {
 	var $postback;
 	function form($args="") {
 		global $request;
-		$request->tags = array_merge($request->tags, array(array("tag" => "form", "raw_tag" => "form")));
+		$request_tag = array("tag" => "form", "raw_tag" => "form");
+		if (!in_array($request_tag, $request->tags)) $request->tags = array_merge($request->tags, array($request_tag));
 		$args = starr::star($args);
 		efault($args['url'], $args['uri']);
 		efault($args['url'], $_SERVER['REQUEST_URI']);
@@ -258,4 +259,18 @@ class form {
 		return ($self) ? "<$name$str />" : "<$name$str>$content</$name>";
 	}
 	
+}
+//shortcut function for basic forms
+function form($arg) {
+	$args = func_get_args();
+	$init = array_shift($args);
+	$form = new form($init);
+	$data = $form->open();
+	foreach($args as $field) {
+		$parts = explode("  ", $field, 2);
+		$name = $parts[0];
+		$data .= $form->$name($parts[1]);
+	}
+	$data .= "</form>";
+	return $data;
 }

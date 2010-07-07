@@ -51,11 +51,11 @@ class pager {
 		if ($this->count > $this->per) { ?>
 			<ul class="pages hnav">
 				<?php if ($this->current_page > 1) { ?>
-				<li class="back"><a class="button" href="<?php echo uri($prefix.($this->current_page-1).$suffix); ?>">Back</a></li>
+				<li class="back"><a class="button" href="<?php echo $prefix.($this->current_page-1).$suffix; ?>">Back</a></li>
 				<?php } for($i=1;$i<=$this->last;$i++) { ?>
-				<li><a class="button<?php if($this->current_page == $i) { ?> active<?php } ?>" href="<?php echo uri($prefix.$i.$suffix); ?>"><?php echo $i; ?></a></li>
+				<li><a class="button<?php if($this->current_page == $i) { ?> active<?php } ?>" href="<?php echo $prefix.$i.$suffix; ?>"><?php echo $i; ?></a></li>
 				<?php } if ($this->current_page < $this->last) { ?>
-				<li class="next"><a class="button" href="<?php echo uri($prefix.($this->current_page+1).$suffix); ?>">Next</a></li>
+				<li class="next"><a class="button" href="<?php echo $prefix.($this->current_page+1).$suffix; ?>">Next</a></li>
 				<?php } ?>
 			</ul>
 		<?php }
