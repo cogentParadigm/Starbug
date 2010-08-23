@@ -24,5 +24,6 @@
 class Theme {
 	/* Theme details */
 	const FOLDER = "default";
+
 }
 ?>

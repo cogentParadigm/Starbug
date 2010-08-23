@@ -9,7 +9,8 @@
 	include(BASE_DIR."/core/db/Schemer.php");
 	global $schemer;
 	$schemer = new Schemer($sb->db);
-	include(BASE_DIR."/etc/schema.php");
+	$migrations = unserialize(reset($sb->query("options", "select:value  where:name='migrations'  limit:1")));
+	call_user_func_array(array($schemer, "add_migrations"), $migrations);
 	$sb->import("util/cli");
 	$script = array_shift($argv);
 	$what = array_shift($argv);

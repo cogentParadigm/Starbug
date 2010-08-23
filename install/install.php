@@ -42,7 +42,7 @@
 	include(BASE_DIR."/core/db/Schemer.php");
 	global $schemer;
 	$schemer = new Schemer($sb->db);
-	include(BASE_DIR."/etc/schema.php");
+	$schemer->add_migrations("CoreMigration");
 	$schemer->migrate(1, 0);
 	
 	//SUSBSCRIBE HOOKS

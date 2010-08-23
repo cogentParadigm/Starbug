@@ -3,16 +3,15 @@
 <xsl:output method="text"/>
 <xsl:template match="/form">&lt;?php
 	$sb-&gt;import("util/form");
-	$fields = array();
-<xsl:apply-templates select="/form/field"/>	$fields["Save"] = array("type" => "submit", "class" => "big left button");
-	echo form::render("<xsl:value-of select="@name"/>", "post", $action, $submit_to, $fields);
-?&gt;</xsl:template>
+	$form = new form("model:<xsl:value-of select="@name"/>  action:$action  url:$submit_to");
+	echo $form-&gt;open('id="<xsl:value-of select="@name"/>_form"');
+?&gt;
+<xsl:apply-templates select="/form/field"/>	&lt;div class="field"&gt;&lt;?php echo $form->submit("class:big round button  value:Save"); ?&gt;&lt;/div&gt;
+&lt;/form&gt;</xsl:template>
 
-<xsl:template match="field">	$<xsl:value-of select="@name"/>_errors = array(<xsl:apply-templates select="error"/>);
-	$fields["<xsl:value-of select="@name"/>"] = array(<xsl:apply-templates select="@*"/>"errors" => $<xsl:value-of select="@name"/>_errors);</xsl:template>
+<xsl:template match="field">	&lt;div class="field"&gt;&lt;?php echo $form-&gt;<xsl:value-of select="@type"/>("<xsl:value-of select="@name"/><xsl:apply-templates select="@*"/>"); ?&gt;&lt;/div&gt;
+</xsl:template>
 
-<xsl:template match="@*">"<xsl:value-of select="name()"/>" => "<xsl:value-of select="."/>", </xsl:template>
-
-<xsl:template match="error">"<xsl:value-of select="@name"/>" => "<xsl:value-of select="."/>"<xsl:if test="position() != last()">, </xsl:if></xsl:template>
+<xsl:template match="@*"><xsl:if test="(name() != 'name') and (name() != 'type')"><xsl:text>  </xsl:text><xsl:value-of select="name()"/>:<xsl:value-of select="."/></xsl:if></xsl:template>
 
 </xsl:stylesheet>

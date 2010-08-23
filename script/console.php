@@ -8,6 +8,15 @@
 	include("core/db/Schemer.php");
 	global $schemer;
 	$schemer = new Schemer($sb->db);
-	include("etc/schema.php");
+	$migrations = unserialize(reset($sb->query("options", "select:value  where:name='migrations'  limit:1")));
+	call_user_func_array(array($schemer, "add_migrations"), $migrations);
+	$to = reset($sb->query("options", "select:value  where:name='migration'  limit:1"));
+	//MOVE TO CURRENT MIGRATION
+	$current = 0;
+	while ($current < $to) {
+		$migration = new $schemer->migrations[$current]();
+		$migration->up();
+		$current++;
+	}
 	$sb->import("util/cli");
 ?>

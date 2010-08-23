@@ -31,13 +31,23 @@ define('BASE_DIR', str_replace("/script", "", dirname(__FILE__)));
 include(BASE_DIR."/etc/Etc.php");
 include(BASE_DIR."/core/init.php");
 include(BASE_DIR."/core/db/Schemer.php");
+global $schemer;
 $schemer = new Schemer($sb->db);
-include(BASE_DIR."/etc/schema.php");
+$migrations = unserialize(reset($sb->query("options", "select:value  where:name='migrations'  limit:1")));
+call_user_func_array(array($schemer, "add_migrations"), $migrations);
+$to = reset($sb->query("options", "select:value  where:name='migration'  limit:1"));
+//MOVE TO CURRENT MIGRATION
+$current = 0;
+while ($current < $to) {
+	$migration = new $schemer->migrations[$current]();
+	$migration->up();
+	$current++;
+}
 include(BASE_DIR."/etc/Theme.php");
 include(BASE_DIR."/util/Args.php");
 $args = new Args();
 global $sb;
-if (!empty($argv[2])) {
+if ((!empty($argv[2])) && (isset($schemer->tables[$argv[2]]))) {
 	$fields = $schemer->tables[$argv[2]];
 
 	//CREATE MODEL XML
@@ -117,8 +127,10 @@ else include("app/themes/".Theme::FOLDER."/$argv[1]/$argv[1].php");
 //CREATE DIRECTORIES
 foreach ($dirs as $dir) if (!file_exists($dir)) exec("./script/cgenerate dir $dir");
 //CREATE FILES
-foreach ($from_model as $stylesheet => $output) exec("./script/cgenerate sax -o:$output -s:var/xml/$argv[2]_model.xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
-foreach ($from_form as $stylesheet => $output) exec("./script/cgenerate sax -o:$output -s:var/xml/$argv[2]_form.xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
+foreach ($from_model as $stylesheet => $output) exec("./script/cgenerate sax ".Etc::JAVA_PATH." ".Etc::SAXON_PATH." -o:$output -s:var/xml/$argv[2]_model.xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
+foreach ($from_form as $stylesheet => $output) {
+	exec(BASE_DIR."/script/cgenerate sax ".Etc::JAVA_PATH." ".Etc::SAXON_PATH." -o:$output -s:var/xml/$argv[2]_form.xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
+}
 //COPY FILES
 foreach ($from_copy as $origin => $dest) exec("./script/cgenerate copy $dest app/themes/".Theme::FOLDER."/$origin");
 //ADD URI

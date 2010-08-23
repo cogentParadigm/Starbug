@@ -202,8 +202,11 @@ class Schemer {
 		$this->migrations = array_merge($this->migrations, $args);
 	}
 	
-	function migrate($to="top", $from=1) {
+	function migrate($to="top", $from="current") {
+		global $sb;
+		$current_op = $sb->query("options", "select:id,value  where:name='migration'  limit:1");
 		if ($to == "top") $to = count($this->migrations);
+		if ($from == "current") $from = $current_op['value'];
 		//MOVE TO FROM
 		$current = 0;
 		while ($current < $from) {
@@ -239,6 +242,8 @@ class Schemer {
 				$current++;
 			}
 		}
+		//UPDATE CURRENT
+		$sb->store("options", "id:$current_op[id]  value:$to");
 	}
 
 }

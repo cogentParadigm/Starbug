@@ -23,7 +23,7 @@ class CoreMigration extends Migration {
 			"sort_order  type:int  default:0",
 			"check_path  type:bool  default:1",
 			"prefix  type:string  length:128  default:app/views/",
-			"options  type:longtext"
+			"options  type:text"
 		);
 		$this->table("tags",
 			"tag  type:string  length:30  default:",
@@ -51,6 +51,11 @@ class CoreMigration extends Migration {
 			"filename  type:string  length:128",
 			"caption  type:string  length:255"
 		);
+		$this->table("options",
+			"name  type:string  length:64",
+			"value  type:text",
+			"autoload  type:bool  default:0"
+		);
 	}
 	function created() {
 		global $sb;
@@ -60,6 +65,9 @@ class CoreMigration extends Migration {
 		fwrite(STDOUT, "\n\nYou may log in with these credentials -");
 		fwrite(STDOUT, "\nusername: admin");
 		fwrite(STDOUT, "\npassword: $admin_pass\n\n");
+		//OPTIONS
+		$sb->store("options", "name:migrations  value:".serialize(array("CoreMigration")));
+		$sb->store("options", "name:migration  value:1");
 		//ADMIN USER
 		$errors = $sb->store("users", "username:admin  password:$admin_pass  memberships:1");
 		//ADMIN URIS
