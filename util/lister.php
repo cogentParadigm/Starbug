@@ -48,7 +48,7 @@ class lister {
 		if ($this->ops['show']) {
 			$sb->import("util/pager");
 			$this->pager = new pager($this->items, $this->ops['show'], $this->ops['page']);
-			$this->items = $this->pager->items;
+			$this->items = array_slice($this->pager->items, $this->pager-start, $this->pager->finsh-$this->pager->start);
 		}
 	}
 	function query($froms, $args, $mine=false) {
@@ -57,7 +57,7 @@ class lister {
 	}
 	function render($tag) {
 		$lsearch = array('[orderby]', '[direction]');
-		$lreplace = array($this->ops['orderby'][0], $this->ops['orderby'][0]);
+		$lreplace = array($this->ops['orderby'][0], $this->ops['orderby'][1]);
 		$pager_url = explode("[page]", str_replace($lsearch, $lreplace, $this->url));
 		$this->pager->links($pager_url[0], $pager_url[1]);
 		$sort_url = str_replace("[page]", $this->ops['page'], $this->url);
