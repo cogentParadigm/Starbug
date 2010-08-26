@@ -1,5 +1,9 @@
 <?php
 class Files extends Table {
+	
+	var $filters = array(
+		"caption" => "default:"
+	);
 
 	function create() {
 		$record = $_POST['files'];

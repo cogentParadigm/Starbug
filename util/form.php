@@ -46,6 +46,7 @@ class form {
 
 	function open($atts="") {
 		$open = '<form'.(($atts) ? " ".$atts : "").' action="'.$this->url.'" method="'.$this->method.'">'."\n";
+		$open .= '<input class="postback" name="postback" type="hidden" value="'.$this->postback.'" />'."\n";
 		if (!empty($this->action)) $open .= '<input class="action" name="action['.$this->model.']" type="hidden" value="'.$this->action.'" />'."\n";
 		if (!empty($_POST[$this->model]['id'])) $open .= '<input id="id" name="'.$this->model.'[id]" type="hidden" value="'.$_POST[$this->model]['id'].'" />'."\n";
 		return $open;
@@ -130,9 +131,14 @@ class form {
 		return $this->tag("input  type:submit".((empty($ops))? "" : "  ".$ops), true);
 	}
 
-	function bin($ops) {
-		return $this->input("file", $ops);
-	}
+    function file($ops) {
+        $ops = $ops."  type:file";
+        $this->fill_ops($ops);
+        $input = $this->label($ops)."\n";
+        if (!empty($_POST[$ops['name']])) $ops['value'] = $_POST[$ops['name']];
+        $ops = array_merge(array("input"), $ops);
+        return $input.$this->tag($ops, true);
+    }
 
 	function image($ops) {
 		return $this->input("image", $ops);
@@ -183,6 +189,8 @@ class form {
 	}
 
 	function date_select($ops) {
+		global $sb;
+		$sb->import("util/datepicker");
 		$this->fill_ops($ops);
 		$select = $this->label($ops)."\n";
 		//FILL VALUES FROM POST OR DEFAULT
@@ -269,7 +277,13 @@ function form($arg) {
 	foreach($args as $field) {
 		$parts = explode("  ", $field, 2);
 		$name = $parts[0];
-		$data .= $form->$name($parts[1]);
+		$ops = starr::star($parts[1]);
+        $before = $after = "";
+        if (isset($ops['before'])) { $before = $ops['before']; unset($ops['before']); }
+        if (isset($ops['after'])) { $after = $ops['after']; unset($ops['after']); }
+        $str = "";
+        foreach($ops as $k => $v) $str .= "$k:$v  ";
+        $data .= $before.$form->$name(trim($str)).$after;
 	}
 	$data .= "</form>";
 	return $data;

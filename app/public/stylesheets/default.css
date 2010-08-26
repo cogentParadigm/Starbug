@@ -7,13 +7,17 @@ html{font-size:100%}
 .right{float:right}
 .clear{clear:both}
 a img{border:none;position:relative;top:2px}
-body{background:url('../../../core/app/public/images/sbfade.png') repeat-x #efede8;font-family: Helvetica, Arial, sans-serif;font-size:11px;text-align:center;color:#666}
+body{background:url('../../../core/app/public/images/sbfade.png') repeat-x #efede8;font-size:11px;text-align:center;color:#666}
+
+/********************* fonts *********************/
+body, .button{font-family: Helvetica, Arial, sans-serif}
 
 /********************* structural elements *********************/
 #shell, .shell{width:900px;margin:0 auto}
-#shell{padding-top:90px;position:relative;text-align:left;font-size:14px}
+#shell{padding-top:90px;position:relative;text-align:left;font-size:12px}
 #main{float:left;margin-bottom:10px}
 #content{width:650px;float:left}
+#content.wide{width:898px}
 #sidebar{width:233px;float:right;border-left:2px solid #494;padding-left:15px;font-size:12px}
 #footer{list-style:none;float:right;font-size:10px;margin-bottom:30px;clear:both}
 
@@ -32,6 +36,10 @@ ul li{padding:5px}
 ul.decimal{list-style-type:decimal}
 .hnav{list-style-type:none;width:100%;height:40px;margin:0}
 .hnav li{float:left;padding:0;margin-right:5px}
+.vnav{list-style-type:none}
+.vnav li{padding:0}
+.vnav li a{display:block;padding:5px;border-top:2px solid #494;font-weight:bold}
+.vnav li a:hover{background:#494;color:#FFF}
 
 /********************* inline *********************/
 p{margin-bottom:10px}
@@ -51,7 +59,7 @@ label{display:block;font-size:11px;font-weight:bold}
 input.left.checkbox{margin-right:5px}
 .field .error{display:block;font-size:9px;font-weight:bold;color:#C00}
 .field{margin-bottom:10px;padding:15px;background:#fff;border-bottom:1px solid #555;border-top:1px solid #555}
-.button{padding:3px 5px;border:none;color:#fff;background:#494;font-size:11px;font-weight:bold;text-decoration:none;font-family: Helvetica, Arial, sans-serif;cursor:pointer}
+.button{padding:4px 5px;border:none;color:#fff;background:#494;font-size:12px;font-weight:bold;text-decoration:none;cursor:pointer}
 fieldset{border:none;margin-bottom:15px}
 legend{background:#494;color:#EEE;font-weight:bold;padding:2px 5px}
 .big.button{font-size:36px;font-weight:normal;margin-right:5px;padding:5px 10px}
@@ -69,6 +77,8 @@ a.button{padding:4px 5px}
 #footer a:hover{text-decoration:underline}
 input.link{background:none;border:none;color:#494;font-size:10px;position:relative;top:-1px;cursor:pointer}
 input.link:hover{text-decoration:underline}
+th a{color:#FFF}
+th a.active{text-decoration:underline}
 
 /********************* tables *********************/
 table{margin-bottom:10px}
@@ -88,3 +98,19 @@ td:hover .row-actions{visibility:visible}
 .round.button, .lister, .inline_button, select, input.text{border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;}
 .infield, #applied_tags a{border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px}
 .big.round.button, #login_form{border-radius:15px;-moz-border-radius:15px;-webkit-border-radius:15px}
+div .round-right{
+	-moz-border-radius-topright:5px;-moz-border-radius-bottomright:5px;
+	-webkit-border-top-right-radius:5px;-webkit-border-bottom-right-radius:5px;
+	border-top-right-radius:5px;border-bottom-right-radius:5px;
+		-moz-border-radius-topleft:0;-moz-border-radius-bottomleft:0;
+	-webkit-border-top-left-radius:0;-webkit-border-bottom-left-radius:0;
+	border-top-left-radius:0;border-bottom-left-radius:0
+}
+div .round-left{
+	-moz-border-radius-topleft:5px;-moz-border-radius-bottomleft:5px;
+	-webkit-border-top-left-radius:5px;-webkit-border-bottom-left-radius:5px;
+	border-top-left-radius:5px;border-bottom-left-radius:5px;
+	-moz-border-radius-topright:0;-moz-border-radius-bottomright:0;
+	-webkit-border-top-right-radius:0;-webkit-border-bottom-right-radius:0;
+	border-top-right-radius:0;border-bottom-right-radius:0;
+}

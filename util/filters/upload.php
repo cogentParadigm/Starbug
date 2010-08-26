@@ -4,7 +4,11 @@ foreach($args as $field => $upload) {
 	if (!empty($fields[$field])) $records['id'] = $fields[$field];
 	$file = $_FILES[$upload];
 	$file_errors = $this->get("files")->upload($record, $file);
-	foreach($file_errors['filename'] as $type => $message) $errors[$field][$type] = $message;
-	$fields[$field] = (empty($record['id'])) ? $this->insert_id : $record['id'];
+    if (empty($file_errors)) {
+        $fields[$field] = (empty($record['id'])) ? $this->insert_id : $record['id'];
+        unset($errors[$field]['required']);
+    } else {
+        foreach($file_errors['filename'] as $type => $message) $errors[$field][$type] = $message;
+    }
 }
 ?>

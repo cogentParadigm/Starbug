@@ -11,8 +11,8 @@ class Users extends Table {
 		$login = $_POST['users'];
 		$user = $this->query("select:id, memberships  where:username='".$login['username']."' && password='".md5($login['password'])."'  limit:1");
 		if (!empty($user)) {
-				$_SESSION[P("id")] = $user[0]['id'];
-				$_SESSION[P("memberships")] = $user[0]['memberships'];
+				$_SESSION[P("id")] = $user['id'];
+				$_SESSION[P("memberships")] = $user['memberships'];
 			} else {
 				$errors['username']['loginMatch'] = "That username and password combination was not found.";
 			}

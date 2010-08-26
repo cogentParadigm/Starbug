@@ -56,4 +56,8 @@ class starr {
 	}
 
 }
+//SHORTCUT FUNCTION
+function star($str) {
+	return starr::star($str);
+}
 ?>
