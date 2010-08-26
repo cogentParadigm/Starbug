@@ -24,10 +24,10 @@
 * You should have received a copy of the GNU General Public License
 * along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
 */
-	define('BASE_DIR', str_replace("/install", "", dirname(__FILE__)));
+	if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("/install", "", dirname(__FILE__)));
 	set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);
-	define("STDOUT", fopen("php://stdout", "wb"));
-	define("STDIN", fopen("php://stdin", "r"));
+	if (!defined('STDOUT')) define("STDOUT", fopen("php://stdout", "wb"));
+	if (!defined('STDIN')) define("STDIN", fopen("php://stdin", "r"));
 	
 	//CREATE FOLDERS & SET FILE PERMISSIONS
 	exec("chmod a+x script/generate");
@@ -43,7 +43,10 @@
 	global $schemer;
 	$schemer = new Schemer($sb->db);
 	$schemer->add_migrations("CoreMigration");
-	$schemer->migrate(1, 0);
+	$migration = new CoreMigration();
+	$migration->up();
+	$schemer->update();
+	$migration->created();
 	
 	//SUSBSCRIBE HOOKS
 	$sb->import("util/subscribe");
