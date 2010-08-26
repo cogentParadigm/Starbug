@@ -10,7 +10,7 @@ a img{border:none;position:relative;top:2px}
 body{background:url('../../../core/app/public/images/sbfade.png') repeat-x #efede8;font-size:11px;text-align:center;color:#666}
 
 /********************* fonts *********************/
-body, .button{font-family: Helvetica, Arial, sans-serif}
+body, .button, input{font-family: Helvetica, Arial, sans-serif}
 
 /********************* structural elements *********************/
 #shell, .shell{width:900px;margin:0 auto}

@@ -46,7 +46,7 @@ class form {
 
 	function open($atts="") {
 		$open = '<form'.(($atts) ? " ".$atts : "").' action="'.$this->url.'" method="'.$this->method.'">'."\n";
-		$open .= '<input class="postback" name="postback" type="hidden" value="'.$this->postback.'" />'."\n";
+		if ($this->method == "post") $open .= '<input class="postback" name="postback" type="hidden" value="'.$this->postback.'" />'."\n";
 		if (!empty($this->action)) $open .= '<input class="action" name="action['.$this->model.']" type="hidden" value="'.$this->action.'" />'."\n";
 		if (!empty($_POST[$this->model]['id'])) $open .= '<input id="id" name="'.$this->model.'[id]" type="hidden" value="'.$_POST[$this->model]['id'].'" />'."\n";
 		return $open;

@@ -15,7 +15,7 @@ body, input{font-family: Helvetica, Arial, sans-serif}
 #footer{list-style:none;float:right;font-size:10px;margin-bottom:30px;clear:both}
 /* headings */
 h1{position:absolute;top:90px;left:310px;font-size:34px}
-#subhead{position:absolute;top:130px;left:315px;font-weight:bold;font-size:12px}
+#subhead{position:absolute;top:130px;left:315px;font-weight:bold;font-size:12px;width:295px}
 h2{color:#262;font-size:20px;margin:15px 0}
 h2.title{position:absolute;top:0px;right:0px;color:#FFF;font-size:42px}
 h3{padding:5px 0}
@@ -58,7 +58,7 @@ label{display:block;font-size:11px;font-weight:bold}
 input.left.checkbox{margin-right:5px}
 .field .error{display:block;font-size:9px;font-weight:bold;color:#C00}
 .field{margin-bottom:10px;padding:15px;background:#fff;border-bottom:1px solid #999;border-top:1px solid #999}
-.button{padding:3px 5px;border:none;color:#fff;background:#494;font-size:11px;font-weight:bold;text-decoration:none;font-family: Helvetica, Arial, sans-serif;cursor:pointer}
+.button{padding:4px 5px;border:none;color:#fff;background:#494;font-size:11px;font-weight:bold;text-decoration:none;font-family: Helvetica, Arial, sans-serif;cursor:pointer}
 #login{width:215px}
 fieldset{border:none;margin-bottom:15px;clear:both}
 legend{background:#494;color:#EEE;font-weight:bold;padding:2px 5px}

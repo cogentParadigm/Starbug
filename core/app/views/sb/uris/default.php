@@ -9,12 +9,13 @@
 		$sb->import("util/form", "util/lister", "util/dojo");
 		efault($_GET['orderby'], "modified");
 		efault($_GET['direction'], "desc");
+		efault($_GET['page'], "1");
 		echo form("method:get",
 			"hidden  orderby", "hidden  direction", "text  keywords  id:uris-keywords  class:left round-left", "submit  class:round-right button  value:Search"
 		)."<br/>";
 		$lister = new lister(
 			"orderby:$_GET[orderby] $_GET[direction]  renderer:uris_row  show:25  page:".end($this->uri),
-			uri("sb-admin/[page]?keywords=$_GET[keywords]&orderby=[orderby]&direction=[direction]")
+			uri("sb-admin?page[page]?keywords=$_GET[keywords]&orderby=[orderby]&direction=[direction]")
 		);
 		$lister->add_column("expand  caption:");
 		$lister->add_column("title  sortable:");

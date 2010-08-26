@@ -48,7 +48,7 @@ class lister {
 		if ($this->ops['show']) {
 			$sb->import("util/pager");
 			$this->pager = new pager($this->items, $this->ops['show'], $this->ops['page']);
-			$this->items = array_slice($this->pager->items, $this->pager-start, $this->pager->finsh-$this->pager->start);
+			$this->items = array_slice($this->pager->items, $this->pager->start, $this->pager->finish - $this->pager->start);
 		}
 	}
 	function query($froms, $args, $mine=false) {
