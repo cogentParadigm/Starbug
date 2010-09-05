@@ -30,6 +30,10 @@ class Host {
 	const DB_NAME = "test";
 
 	/* URL of website */
-	const WEBSITE_URL = "http://localhost/";
+	const WEBSITE_URL = "localhost/";
+
+	/* Java paths */
+	const JAVA_PATH = "/usr/bin/java";
+	const SAXON_PATH = "/usr/local/saxon/saxon9.jar";
 }
 ?>
