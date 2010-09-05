@@ -71,17 +71,17 @@ class CoreMigration extends Migration {
 		//ADMIN USER
 		$errors = store_once("users", "username:admin  password:$admin_pass  memberships:1");
 		//ADMIN URIS
-		store_once("uris", "path:sb-admin  template:templates/Login  title:Bridge  prefix:core/app/views/  collective:0");
+		register_uri("path:sb-admin  template:templates/Login  title:Bridge  prefix:core/app/views/  collective:0");
 		$admin_parent = $sb->insert_id;
-		store_once("uris", "path:sb  template:templates/Starbug  title:Core  prefix:core/app/views/  parent:$admin_parent");
-		store_once("uris", "path:sb/generate  template:sb/generate  title:Generate  prefix:core/app/views/  parent:$admin_parent");
-		store_once("uris", "path:api  template:Api  title:API  prefix:core/app/views/  collective:0  check_path:0");
+		register_uri("path:sb  template:templates/Starbug  title:Core  prefix:core/app/views/  parent:$admin_parent");
+		register_uri("path:sb/generate  template:sb/generate  title:Generate  prefix:core/app/views/  parent:$admin_parent");
+		register_uri("path:api  template:Api  title:API  prefix:core/app/views/  collective:0  check_path:0");
 		//HOME PAGE
-		store_once("uris", "path:".Etc::DEFAULT_PATH."  template:".Etc::DEFAULT_TEMPLATE."  title:Home  prefix:app/views/  collective:0");
+		register_uri("path:".Etc::DEFAULT_PATH."  template:".Etc::DEFAULT_TEMPLATE."  title:Home  prefix:app/views/  collective:0");
 		//404 PAGE
-		store_once("uris", "path:missing  template:".Etc::DEFAULT_TEMPLATE."  title:Missing  prefix:app/views/  collective:0");
+		register_uri("path:missing  template:".Etc::DEFAULT_TEMPLATE."  title:Missing  prefix:app/views/  collective:0");
 		//403 PAGE
-		store_once("uris", "path:forbidden  template:".Etc::DEFAULT_TEMPLATE."  title:Forbidden  prefix:app/views/  collective:0");
+		register_uri("path:forbidden  template:".Etc::DEFAULT_TEMPLATE."  title:Forbidden  prefix:app/views/  collective:0");
 		//PRIVILIGES
 		register_permit("role:everyone  model:users  action:login");
 		register_permit("role:everyone  model:users  action:logout");
