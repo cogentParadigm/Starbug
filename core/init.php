@@ -27,11 +27,17 @@ function empty_nan(&$val, $default="") {if(!isset($val) || !is_numeric($val)) $v
 function dfault(&$val, $default="") {if(!isset($val)) $val = $default;return $val;}
 function efault(&$val, $default="") {if(empty($val)) $val = $default;return $val;}
 function P($var) {return Etc::PREFIX.$var;}
-function uri($path) {return Etc::WEBSITE_URL.$path;}
+function uri($path, $flags="") {
+	if ($flags == "s") $prefix = "https://";
+	else if ($flags == "f") $prefix = "";
+	else $prefix = "http://";
+	return $prefix.Etc::WEBSITE_URL.$path;
+}
 include(BASE_DIR."/core/db/db.php");
 include(BASE_DIR."/core/sb.php");
 include(BASE_DIR."/core/db/Table.php");
 include(BASE_DIR."/util/starr.php");
 global $sb;
 $sb = new sb();
+include(BASE_DIR."/etc/autoload.php");
 ?>

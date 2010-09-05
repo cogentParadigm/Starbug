@@ -205,6 +205,7 @@ class Schemer {
 	function migrate($to="top", $from="current") {
 		global $sb;
 		$current_op = $sb->query("options", "select:id,value  where:name='migration'  limit:1");
+		if (empty($to)) $to = "top";
 		if ($to == "top") $to = count($this->migrations);
 		if ($from == "current") $from = $current_op['value'];
 		//MOVE TO FROM

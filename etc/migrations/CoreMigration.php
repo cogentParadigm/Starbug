@@ -66,26 +66,26 @@ class CoreMigration extends Migration {
 		fwrite(STDOUT, "\nusername: admin");
 		fwrite(STDOUT, "\npassword: $admin_pass\n\n");
 		//OPTIONS
-		$sb->store("options", "name:migrations  value:".serialize(array("CoreMigration")));
-		$sb->store("options", "name:migration  value:1");
+		store_once("options", "name:migrations  value:".serialize(array("CoreMigration")));
+		store_once("options", "name:migration  value:1");
 		//ADMIN USER
-		$errors = $sb->store("users", "username:admin  password:$admin_pass  memberships:1");
+		$errors = store_once("users", "username:admin  password:$admin_pass  memberships:1");
 		//ADMIN URIS
-		$sb->store("uris", "path:sb-admin  template:templates/Login  title:Bridge  prefix:core/app/views/  collective:0");
+		store_once("uris", "path:sb-admin  template:templates/Login  title:Bridge  prefix:core/app/views/  collective:0");
 		$admin_parent = $sb->insert_id;
-		$sb->store("uris", "path:sb  template:templates/Starbug  title:Core  prefix:core/app/views/  parent:$admin_parent");
-		$sb->store("uris", "path:sb/generate  template:sb/generate  title:Generate  prefix:core/app/views/  parent:$admin_parent");
-		$sb->store("uris", "path:api  template:Api  title:API  prefix:core/app/views/  collective:0  check_path:0");
+		store_once("uris", "path:sb  template:templates/Starbug  title:Core  prefix:core/app/views/  parent:$admin_parent");
+		store_once("uris", "path:sb/generate  template:sb/generate  title:Generate  prefix:core/app/views/  parent:$admin_parent");
+		store_once("uris", "path:api  template:Api  title:API  prefix:core/app/views/  collective:0  check_path:0");
 		//HOME PAGE
-		$sb->store("uris", "path:".Etc::DEFAULT_PATH."  template:".Etc::DEFAULT_TEMPLATE."  title:Home  prefix:app/views/  collective:0");
+		store_once("uris", "path:".Etc::DEFAULT_PATH."  template:".Etc::DEFAULT_TEMPLATE."  title:Home  prefix:app/views/  collective:0");
 		//404 PAGE
-		$sb->store("uris", "path:missing  template:".Etc::DEFAULT_TEMPLATE."  title:Missing  prefix:app/views/  collective:0");
+		store_once("uris", "path:missing  template:".Etc::DEFAULT_TEMPLATE."  title:Missing  prefix:app/views/  collective:0");
 		//403 PAGE
-		$sb->store("uris", "path:forbidden  template:".Etc::DEFAULT_TEMPLATE."  title:Forbidden  prefix:app/views/  collective:0");
+		store_once("uris", "path:forbidden  template:".Etc::DEFAULT_TEMPLATE."  title:Forbidden  prefix:app/views/  collective:0");
 		//PRIVILIGES
-		$sb->store("permits", "role:everyone  action:login  related_table:".P("users"));
-		$sb->store("permits", "role:everyone  action:logout  related_table:".P("users"));
-		$sb->store("permits", "role:collective  action:read  priv_type:global  related_table:".P("uris"));
+		register_permit("role:everyone  model:users  action:login");
+		register_permit("role:everyone  model:users  action:logout");
+		register_permit("type:global  model:uris  action:read  role:collective");
 		//APPLY TAGS
 		$sb->import("util/tags");
 		$admin_uris = $sb->get("uris")->id_list($admin_parent, "parent");
