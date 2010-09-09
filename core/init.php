@@ -39,6 +39,6 @@ include(BASE_DIR."/core/db/Table.php");
 include(BASE_DIR."/util/starr.php");
 global $sb;
 $sb = new sb();
-include(BASE_DIR."/etc/autoload.php");
+if (!is_array($autoload)) include(BASE_DIR."/etc/autoload.php");
 call_user_func_array(array($sb, "import"), $autoload);
 ?>

@@ -5,5 +5,4 @@
 											"crud/list.xsl" => "app/views/$model_name/default.php"
 	);
 	$from_form = array("crud/form.xsl" => "app/views/$model_name/form.php");
-	$paths = array("path, template, collective" => "'$model_name', '$template', '$collective'");
 ?>

@@ -99,6 +99,7 @@ class Schemer {
 		$sql = "CREATE TABLE `".P($name)."` (";
 		$primary = array();
 		$index = array();
+		$foreign = array();
 		$sql_fields = "";
 		foreach ($fields as $fieldname => $options) {
 			$sql_fields .= "`".$fieldname."` ".$this->get_sql_type($options).", ";
@@ -106,6 +107,13 @@ class Schemer {
 				if ($options['key'] == "primary") $primary[] = "`$fieldname`"; 
 			}
 			if (isset($options['index'])) $index[] = $fieldname;
+			if (!empty($options['references'])) {
+				$ref = explode(" ", $options['references']);
+				$rec = array("table" => $ref[0], "column" => $ref[1]);
+				if (!empty($options['update'])) $rec['update'] = $options['update'];
+				if (!empty($options['delete'])) $rec['delete'] = $options['delete'];
+				$foreign[$fieldname] = $rec;
+			}
 		}
 		if (empty($primary)) {
 			$sql_fields = "id int(11) NOT NULL AUTO_INCREMENT, ".$sql_fields;
@@ -113,8 +121,15 @@ class Schemer {
 		} else $primary = join(", ", $primary);
 		$sql .= $sql_fields."owner int(11) NOT NULL default '1', collective int(11) NOT NULL default '1', status int(11) NOT NULL default '4', ";
 		$sql .= "created datetime not null default '0000-00-00 00:00:00', modified datetime not null default '0000-00-00 00:00:00', ";
-		$sql .= "PRIMARY KEY ($primary)";
-		foreach ($index as $k) $sql .= ", KEY `".$k."_index` (`$k`)";
+		$sql .= "PRIMARY KEY ($primary), KEY `owner_index` (`owner`)";
+		foreach($index as $k) $sql .= ", KEY `".$k."_index` (`$k`)";
+		foreach($foreign as $k => $v) $sql .= ", KEY `".$k."_index` (`$k`)";
+		$sql .= ", CONSTRAINT `owner_fk` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON UPDATE CASCADE ON DELETE CASCADE";
+		foreach($foreign as $k => $v) {
+			$sql .=", CONSTRAINT `".$k."_fk` FOREIGN KEY (`$k`) REFERENCES `".P($v['table'])."` (`".$v['column']."`)";
+			if ($v['update']) $sql .= " ON UPDATE ".$v['update'];
+			if ($v['delete']) $sql .= " ON DELETE ".$v['delete'];
+		}
 		$result = $this->db->exec($sql." ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 		//if ($write) $this->write_model($name, $backup);
 	}
