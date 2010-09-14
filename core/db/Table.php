@@ -56,7 +56,7 @@ class Table {
 
 	protected function store($arr) {
 		global $sb;
-		$errors = $sb->store($this->type, $arr, $this->filters);
+		$errors = $sb->store($this->type, $arr);
 		if ((empty($errors)) && (empty($arr['id']))) $this->insert_id = $sb->insert_id;
 		return $errors;
 	}

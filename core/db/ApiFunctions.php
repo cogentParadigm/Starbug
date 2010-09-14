@@ -1,27 +1,26 @@
 <?php
+// FILE: core/db/ApiFunctions.php
 /**
-* FILE: core/db/ApiFunctions.php
-* PURPOSE: Extends the Table to provide data in json and xml
-*
-* This file is part of StarbugPHP
-*
-* StarbugPHP - website development kit
-* Copyright (C) 2008-2009 Ali Gangji
-*
-* StarbugPHP is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* StarbugPHP is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * ApiFunctions class
+ * 
+ * @package StarbugPHP
+ * @subpackage core
+ * @author Ali Gangji <ali@neonrain.com>
+ * @copyright 2008-2010 Ali Gangji
+ */
+/**
+ * ApiFunctions class. provides data in xml and json format
+ * @package StarbugPHP
+ * @subpackage core
+ */
 class ApiFunctions {
+
+	/**
+	 * get an xml formatted recordset
+	 * @param string $models a comma delimited list of models
+	 * @param string $query the parameters of the query
+	 * @return string xml output of records
+	 */
 	public function getXML($models, $query="") {
 		global $sb;
 		$from = $models[0];
@@ -39,6 +38,13 @@ class ApiFunctions {
 		$xml->endElement();
 		return $xml->outputMemory(true);
 	}
+
+	/**
+	 * get a json formatted recordset
+	 * @param string $models a comma delimited list of models
+	 * @param string $query the parameters of the query
+	 * @return string json output of records
+	 */
 	function getJSON($models, $query="") {
 		global $sb;
 		$from = $models[0];
@@ -48,6 +54,13 @@ class ApiFunctions {
 		foreach($data as $row) $json .= ApiFunctions::rowToJSON($row).", ";
 		return rtrim($json, ", ")." ] }";
 	}
+
+	/**
+	 * get an padded json formatted recordset
+	 * @param string $models a comma delimited list of models
+	 * @param string $query the parameters of the query
+	 * @return string padded json string of records
+	 */
 	function getJSONP($models, $pad, $query="") {
 		echo "Test";
 		global $sb;
@@ -55,6 +68,7 @@ class ApiFunctions {
 		$data = $sb->query(join(",", $models), $query."action:api_get", true);
 		return $pad."(".json_encode($data).");";
 	}
+
 	protected function write(XMLWriter $xml, $data){
 		foreach($data as $key => $value){
 			if(is_array($value)){
@@ -66,6 +80,7 @@ class ApiFunctions {
 			$xml->writeElement($key, $value);
 		}
 	}
+
 	protected function rowToJSON($row) {
 		$json = "{";
 		foreach($row as $k => $v) $json .= '"'.$k.'"'.' : "'.str_replace(array("{", "}"), array("", ""), addslashes($v)).'", ';

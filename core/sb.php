@@ -1,46 +1,73 @@
 <?php
+// FILE: core/sb.php
 /**
-* FILE: core/sb.php
-* PURPOSE: The global $sb object. provides data, errors, import/provide, load and pub/sub. The backbone of Starbug.
-* 
-* This file is part of StarbugPHP
-*
-* StarbugPHP - website development kit
-* Copyright (C) 2008-2009 Ali Gangji
-*
-* StarbugPHP is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* StarbugPHP is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * The global $sb object. provides data, errors, import/provide, load and pub/sub. The backbone of Starbug
+ * 
+ * @package StarbugPHP
+ * @subpackage core
+ * @author Ali Gangji <ali@neonrain.com>
+ * @copyright 2008-2010 Ali Gangji
+ */
+/**
+ * The sb class. Provides data, errors, import/provide, pub/sub, and load to the rest of the application. The core component of StarbugPHP.
+ * @package StarbugPHP
+ * @subpackage core
+ */
 class sb {
+	/**#@+
+	* @access public
+	*/
+	/**
+	 * @var db The db class is a PDO wrapper
+	 */
 	var $db;
+	/**
+	 * @var int holds the number of records returned by last query
+	 */
 	var $record_count;
+	/**
+	 * @var int holds the id of the last inserted record
+	 */
 	var $insert_id;
+	/**
+	 * @var array holds the utils that have been provided
+	 */
 	var $provided = array();
+	/**
+	 * @var array holds instantiated models
+	 */
 	var $objects = array();
+	/**
+	 * @var array holds validation errors
+	 */
 	var $errors = array();
+	/**
+	 * @var array holds alerts
+	 */
 	var $alerts = array();
+	/**
+	 * @var array holds mixed in objects
+	 */
 	var $imported = array();
+	/**
+	 * @var array holds function names of mixed in objects
+	 */
 	var $imported_functions = array();
+	/**#@-*/
 
-	# constructor. connects to database and initializes the session.
-	function sb() {
+	/**
+	 * constructor. connects to db and sets default $_SESSION values
+	 */
+	function __construct() {
 		$this->db = new db('mysql:host='.Etc::DB_HOST.';dbname='.Etc::DB_NAME, Etc::DB_USERNAME, Etc::DB_PASSWORD);
 		$this->db->set_debug(true);
 		if (!isset($_SESSION[P('id')])) $_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
 	}
 
-	# since you can't subscribe the handle 'include', use sb::load
-	# @param what - 'jsforms' works for either 'jsforms.php' or 'jsforms/jsforms.php'
+	/**
+	 * since you can't subscribe the handle 'include', use sb::load
+	 * @param string $what 'jsforms' works for either 'jsforms.php' or 'jsforms/jsforms.php'
+	 */
 	function load($what) {
 		if (file_exists($what.".php")) include($what.".php");
 		else {
@@ -49,9 +76,11 @@ class sb {
 		}
 	}
 
-	# publish a topic to any subscribers
-	# @param topic - a string value for subscribers to subscribe to
-	# @params args - any additional parameters will be passed in an array to the subscriber
+	/**
+	 * publish a topic to any subscribers
+	 * @param string $topic the topic name you would like to publish
+	 * @param mixed $args any additional parameters will be passed in an array to the subscriber
+	 */
 	function publish($topic, $args=null) {
 		global $request;
 		$return = array();
@@ -64,16 +93,23 @@ class sb {
 		return $return;
 	}
 
-	# import function. only imports once when used with provide
-	# @param loc - path of file to import without '.php' at the end
+	/**
+	 * import function. only imports once when used with provide
+	 * @param string $loc path of file to import without '.php' at the end
+	 */
 	function import($loc) {global $sb; $args = func_get_args(); foreach($args as $l) if (!$this->provided[$l]) include(BASE_DIR."/".$l.".php");}
 
-	# when imported use provide to prevent further imports from attempting to include it again
-	# @param loc - the imported location. if i were to use $sb->import("util/form"), util/form.php would have $sb->provide("util/form") at the top
+	/**
+	 * when imported use provide to prevent further imports from attempting to include it again
+	 * @param string $loc the imported location. if i were to use $sb->import("util/form"), util/form.php would have $sb->provide("util/form") at the top
+	 */
 	function provide($loc) {$this->provided[$loc] = true;}
 
-	# get a model by name
-	# @param name - the name of the model, such as 'users'
+	/**
+	 * get a model by name
+	 * @param string $name the name of the model, such as 'users'
+	 * @return the instantiated model
+	 */
 	function get($name) {
 		$obj = ucwords($name);
 		if (!isset($this->objects[$name])) {
@@ -83,14 +119,20 @@ class sb {
 		return $this->objects[$name];
 	}
 
-	# check if a model exists
-	# @param name (the name of the model), @return bool (true if model exists, false otherwise)
+	/**
+	 * check if a model exists
+	 * @param string $name the name of the model
+	 * @return bool true if model exists, false otherwise
+	 */
 	function has($name) {return (($this->objects[$name]) || (file_exists(BASE_DIR."/app/models/".ucwords($name).".php")));}
 
-	# query the database
-	# @param froms - comma delimeted list of tables to join. 'users' or 'uris,system_tags'
-	# @param args - tab-colon query string for params: select, where, limit, and action/priv_type
-	# @param mine - optional. if true, joining models will be checked for relationships and ON statements will be added
+	/**
+	 * query the database
+	 * @param string $froms comma delimeted list of tables to join. 'users' or 'uris,system_tags'
+	 * @param string $args starbug query string for params: select, where, limit, and action/priv_type
+	 * @param bool $mine optional. if true, joining models will be checked for relationships and ON statements will be added
+	 * @return array record or records
+	 */
 	function query($froms, $args="", $mine=false) {
 		$froms = explode(",", $froms);
 		$first = array_shift($froms);
@@ -146,12 +188,15 @@ class sb {
 		return ((!empty($args['limit'])) && ($args['limit'] == 1)) ? $records->fetch() : $records->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	# store data in the database
-	# @param name - the name of the table
-	# @param fields - an associative array representation of the record or update
-	# @param thefilters - optional. filters to apply on the data. if not passed and a model exists, it will be checked for filters
-	function store($name, $fields, $thefilters="mine") {
-		if ($thefilters == "mine") $thefilters = ($this->has($name)) ? $this->get($name)->filters : array();
+	/**
+	 * store data in the database
+	 * @param string $name the name of the table
+	 * @param string/array $fields keypairs of columns/values to be stored
+	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
+	 * @return array validation errors
+	 */
+	function store($name, $fields, $from="auto") {
+		$thefilters = ($this->has($name)) ? $this->get($name)->filters : array();
 		$errors = array(); $byfilter = array();
 		if (!is_array($fields)) $fields = starr::star($fields);
 		foreach ($fields as $col => $value) {
@@ -168,19 +213,28 @@ class sb {
 		if((empty($errors)) && (empty($this->errors[$name]))) { //no errors
 			$prize = array();
 			$fields['modified'] = date("Y-m-d H:i:s");
-			if(!empty($fields['id'])) { //updating existing record
-				foreach($fields as $col => $value) {
-					if ($col != 'id') {
-						$prize[] = $value;
-						if(empty($setstr)) $setstr = $col."= ?";
-						else $setstr .= ", ".$col."= ?";
-					}
+			if ($from == "auto") {
+				if (!empty($fields['id'])) {
+					$from = array("id" => $fields['id']);
+					unset($fields['id']);
 				}
-				$stmt = $this->db->prepare("UPDATE ".P($name)." SET ".$setstr." WHERE id='".$fields['id']."'");
-				$this->record_count = $stmt->execute($prize);
+			} else if ((false !== $from) && (!is_array($from))) $from = starr::star($from);
+			if(is_array($from)) { //updating existing record
+				foreach($fields as $col => $value) {
+					$prize[] = $value;
+					if(empty($setstr)) $setstr = $col."= ?";
+					else $setstr .= ", ".$col."= ?";
+				}
+				foreach($from as $c => $v) {
+					$prize[] = $v;
+					if (empty($wherestr)) $wherestr = $c." = ?";
+					else $wherestr .= " && ".$c." = ?";
+				}
+				$stmt = $this->db->prepare("UPDATE ".P($name)." SET ".$setstr." WHERE ".$wherestr);
+				//$this->record_count = $stmt->execute($prize);
 			} else { //creating new record
 				$fields['created'] = date("Y-m-d H:i:s");
-				if (!isset($fields['owner'])) $fields['owner'] = $_SESSION[P('id')];
+				if (!isset($fields['owner'])) $fields['owner'] = ($_SESSION[P('id')] > 0) ? $_SESSION[P('id')] : 1;
 				$keys = ""; $values = "";
 				foreach($fields as $col => $value) {
 					$prize[] = $value;
@@ -197,22 +251,29 @@ class sb {
 		return $errors;
 	}
 
-	# remove from the database
-	# @param from (the name of the table), @param where (the WHERE conditions on the DELETE)
+	/**
+	 * remove from the database
+	 * @param string $from the name of the table
+	 * @param string $where the WHERE conditions on the DELETE
+	 */
 	function remove($from, $where) {
 		if (!empty($where)) {
 			try {
 				$del = $this->db->prepare("DELETE FROM ".P($from)." WHERE ".$where);
 				$del->execute();
 				$this->record_count = $del->rowCount();
+				return array();
 			} catch(PDOException $e) {
 				die("DB Exception: ".$e->getMessage());
 			}
 		}
 	}
 
-	# run a model action if permitted
-	# @param key (the model name), @param value (the function name)
+	/**
+	 * run a model action if permitted
+	 * @param string $key the model name
+	 * @param string $value the function name
+	 */
 	function post_act($key, $value) {
 		if (($object = $this->get($key)) && method_exists($object, $value)) {
 			$permits = isset($_POST[$key]['id']) ? $this->query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : $this->query($key, "action:$value  priv_type:table");
@@ -226,11 +287,17 @@ class sb {
 		}
 	}
 
-	# check $_POST['action'] for posted actions and run them through post_act
+	/**
+	 * check $_POST['action'] for posted actions and run them through post_act
+	 */
 	function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_act($key, $val);}
 
-	# grant permissions
-	# @param table (the table on which to apply the permit), @param permit (an associate array of the permit record)
+	/**
+	 * grant permissions
+	 * @param string $table the table on which to apply the permit
+	 * @param array $permit the permit record
+	 * @return errors array
+	 */
 	function grant($table, $permit) {
 		$filters = array(
 			"priv_type" 		=> "default:table",
@@ -242,9 +309,18 @@ class sb {
 		return $this->store("permits", $permit, $filters);
 	}
 
-	# check that an action was called and no errors occurred
+	/**
+	 * check that an action was called and no errors occurred
+	 * @param string $model the model name
+	 * @param string $action the function name
+	 * @return bool true if the function was called without returning errors
+	 */
 	public function success($model, $action) { return (($_POST['action'][$model] == $action) && (empty($this->errors[$model]))); }
 	
+	/**
+	 * mixin an object to import its functions into this object
+	 * @param object $object the object to mixin
+	 */
 	protected function mixin($object) {
 		$new_import = new $object();
 		$import_name = get_class($new_import);  
@@ -253,6 +329,9 @@ class sb {
 		foreach($import_functions as $key => $function_name) $this->imported_functions[$function_name] = &$new_import;
 	}
 
+	/**
+	 * Handler for calls to non-existant functions. Allows calling of mixed in functions.
+	 */
 	public function __call($method, $args) {
 		if(array_key_exists($method, $this->imported_functions)) {  
 			$args[] = $this;  

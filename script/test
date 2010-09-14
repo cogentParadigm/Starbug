@@ -1,0 +1,52 @@
+#!/usr/bin/php
+<?php
+// FILE: script/test
+/**
+ *  Used to test an application with syntax checking and unit testing
+ * 
+ *  @package StarbugPHP
+ *  @subpackage script
+ *  @author Ali Gangji <ali@neonrain.com>
+ * 	@copyright 2008-2010 Ali Gangji
+ */
+	if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("/script", "", dirname(__FILE__)));
+	set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);
+	if (!defined('STDOUT')) define("STDOUT", fopen("php://stdout", "wb"));
+	if (!defined('STDIN')) define("STDIN", fopen("php://stdin", "r"));
+	$script = array_shift($argv);
+	$what = array_shift($argv);
+	if ($what == "-s") {
+		$no_errors = true;
+		exec("find ".BASE_DIR." -type f -name \*.php -exec php -l {} \;", $output);
+		foreach($output as $line) {
+			unset($err);
+			if (false === (strpos($line, "No syntax errors detected"))) {
+				$no_errors = false;
+				$filename = str_replace("Errors parsing ", "", $line);
+				fwrite(STDOUT, "-----------------------------------------------------------------------\n");
+				fwrite(STDOUT, $line."\n");
+				exec("php -d display_errors=1 -l $filename", $err);
+				foreach($err as $e) if ($e != $line) fwrite(STDOUT, $e."\n");
+				fwrite(STDOUT, "-----------------------------------------------------------------------\n\n");
+			}
+		}
+		if ($no_errors) fwrite(STDOUT, "\nNo syntax errors detected!\n\n");
+		else exit(0);
+	}
+	include(BASE_DIR."/core/cli.php");
+	if (! defined('SIMPLE_TEST')) define('SIMPLE_TEST', BASE_DIR.'/util/simpletest/');
+	require_once(SIMPLE_TEST."unit_tester.php");
+	require_once(SIMPLE_TEST."web_tester.php");
+	require_once(SIMPLE_TEST."extensions/ViewTestCase.php");
+	require_once(SIMPLE_TEST."reporter.php");
+	$group = new TestSuite("Models Test");
+	$files = array();
+	if ($handle = opendir(BASE_DIR."/app/tests/models")) while(false !== ($file = readdir($handle))) if (!is_dir(BASE_DIR."/app/tests/models/$file")) $files[$file] = $file;
+	foreach($files as $file) $group->addFile(BASE_DIR."/app/tests/models/$file");
+	$group->run(new TextReporter());
+	$group = new TestSuite("Views Test");
+	$files = array();
+	if ($handle = opendir(BASE_DIR."/app/tests/views")) while(false !== ($file = readdir($handle))) if (!is_dir(BASE_DIR."/app/tests/views/$file")) $files[$file] = $file;
+	foreach($files as $file) $group->addFile(BASE_DIR."/app/tests/views/$file");
+	$group->run(new TextReporter());
+?>

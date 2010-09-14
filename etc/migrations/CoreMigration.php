@@ -1,6 +1,12 @@
 <?php
 class CoreMigration extends Migration {
 	function up() {
+		$this->table("users",
+			"username  type:string  length:128",
+			"email  type:string  length:128",
+			"password  type:password",
+			"memberships  type:int"
+		);
 		$this->table("permits",
 			"role  type:string  length:30",
 			"who  type:int  default:0",
@@ -8,12 +14,6 @@ class CoreMigration extends Migration {
 			"priv_type  type:string  length:30  default:table",
 			"related_table  type:string  length:100",
 			"related_id  type:int  default:0"
-		);
-		$this->table("users",
-			"username  type:string  length:128",
-			"email  type:string  length:128",
-			"password  type:password",
-			"memberships  type:int"
 		);
 		$this->table("uris",
 			"path  type:string  length:64",

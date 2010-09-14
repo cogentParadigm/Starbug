@@ -99,6 +99,15 @@
 				$i++;
 				fwrite(STDOUT, $i." -> ".$m."\n");
 			}
+		} else if (($next == "remove") || ($next == "rm")) {
+			$val = array_shift($argv);
+			if (is_numeric($val)) {
+				array_splice($schemer->migrations, $val-1, 1);
+			} else if (!empty($val)) {
+				$idx = array_search($val, $schemer->migrations);
+				if (false !== $idx) array_splice($schemer->migrations, $idx, 1);
+			}
+			store("options", "value:".serialize($schemer->migrations), "name:migrations");
 		}
 	}
 ?>
