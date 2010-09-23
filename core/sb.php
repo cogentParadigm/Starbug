@@ -62,6 +62,7 @@ class sb {
 		$this->db = new db('mysql:host='.Etc::DB_HOST.';dbname='.Etc::DB_NAME, Etc::DB_USERNAME, Etc::DB_PASSWORD);
 		$this->db->set_debug(true);
 		if (!isset($_SESSION[P('id')])) $_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
+		$this->publish("init");
 	}
 
 	/**

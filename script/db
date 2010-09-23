@@ -1,32 +1,19 @@
 #!/usr/bin/php
 <?php
+// FILE: script/db
 /**
-* FILE: script/db
-* PURPOSE: used to query and manipulate data in the db
-*
-* This file is part of StarbugPHP
-*
-* StarbugPHP - website development kit
-* Copyright (C) 2008-2009 Ali Gangji
-*
-* StarbugPHP is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* StarbugPHP is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * used to query and manipulate data in the db
+ * 
+ * @package StarbugPHP
+ * @subpackage script
+ * @author Ali Gangji <ali@neonrain.com>
+ * @copyright 2008-2010 Ali Gangji
+ */
 	include(dirname(__FILE__)."/../core/cli.php");
 	$script = array_shift($argv);
 	$what = array_shift($argv);
-	if ($what == "sync") $schemer->migrate();
-	if ($what == "migrate") {
+	if ("sync" == $what) $schemer->migrate();
+	if ("migrate" == $what) {
 		$next = array_shift($argv);
 		if (false !== strpos($next, ":")) {
 			$next = explode(":", $next);
@@ -38,26 +25,38 @@
 			$schemer->migrate($to);
 		}
 	}
-	if ($what == "dump") {
+	if ("dump" == $what) {
 		$tables = $sb->db->query("SHOW TABLES LIKE '".Etc::PREFIX."%'")->fetchAll(PDO::FETCH_ASSOC);
 		if (!file_exists(BASE_DIR."/var/dump")) {
 			mkdir(BASE_DIR."/var/dump");
 			chmod(BASE_DIR."/var/dump", 0777);
 		}
-		foreach($tables as $t) {
+		$search = array(";");
+		$replace = array("\;");
+		$user = str_replace($search, $replace, Etc::DB_USERNAME);
+		$pass = str_replace($search, $replace, Etc::DB_PASSWORD);
+		$dbname = str_replace($search, $replace, Etc::DB_NAME);
+		$host = str_replace($search, $replace, Etc::DB_HOST);
+		$filename = date("YmdHis");
+		foreach($tables as $idx => $t) {
 			$table = array_shift($t);
 			echo "Dumping Table $table...\n";
-			$search = array(";");
-			$replace = array("\;");
-			$user = str_replace($search, $replace, Etc::DB_USERNAME);
-			$pass = str_replace($search, $replace, Etc::DB_PASSWORD);
-			$dbname = str_replace($search, $replace, Etc::DB_NAME);
-			$host = str_replace($search, $replace, Etc::DB_HOST);
-			exec("mysqldump -c --host=".$host." -u ".$user." -p".$pass." ".$dbname." ".$table." > ".BASE_DIR."/var/dump/$table.sql");
-			chmod(BASE_DIR."/var/dump/$table.sql", 0777);
+			$operator = (0 == $idx) ? ">" : ">>";
+			exec("mysqldump -c --host=".$host." -u ".$user." -p".$pass." ".$dbname." ".$table." $operator ".BASE_DIR."/var/dump/$filename.sql");
+			chmod(BASE_DIR."/var/dump/$filename.sql", 0777);
 		}
 	}
-	if ($what == "store") {
+	if ("load" == $what) {
+		$search = array(";");
+		$replace = array("\;");
+		$user = str_replace($search, $replace, Etc::DB_USERNAME);
+		$pass = str_replace($search, $replace, Etc::DB_PASSWORD);
+		$dbname = str_replace($search, $replace, Etc::DB_NAME);
+		$host = str_replace($search, $replace, Etc::DB_HOST);
+		$file = array_shift($argv);
+		exec("mysql -u $user --host=$host --password=$pass --database=$dbname < $file");
+	}
+	if ("store" == $what) {
 		$name = array_shift($argv);
 		$params = join("  ", $argv);
 		$params = starr::star($params);
@@ -75,7 +74,7 @@
 			}
 		}
 	}
-	if ($what == "remove") {
+	if ("remove" == $what) {
 		$name = array_shift($argv);
 		foreach($argv as $index => $arg) {
 			$arg = explode(":", $arg, 2);
@@ -84,14 +83,14 @@
 		$params = join(" ", $argv);
 		$sb->remove($name, $params);
 	}
-	if ($what == "query") {
+	if ("query" == $what) {
 		$name = array_shift($argv);
 		$params = join("  ", $argv);
 		$records = $sb->query($name, $params);
 		echo "query $name $params\n";
 		cli::table($records);
 	}
-	if (($what == "m") || ($what == "migrations")) {
+	if (("m" == $what) || ("migrations" == $what)) {
 		$next = array_shift($argv);
 		if (($next == "list") || ($next == "l")) {
 			$i = 0;

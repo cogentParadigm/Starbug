@@ -1,34 +1,46 @@
 <?php
+// FILE: util/form.php
 /**
-* FILE: util/form.php
-* PURPOSE: Form generation utility
-*
-* This file is part of StarbugPHP
-*
-* StarbugPHP - website development kit
-* Copyright (C) 2008-2009 Ali Gangji
-*
-* StarbugPHP is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* StarbugPHP is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ *  form class and function
+ * 
+ *  @package StarbugPHP
+ *  @subpackage util
+ *  @author Ali Gangji <ali@neonrain.com>
+ * 	@copyright 2008-2010 Ali Gangji
+ */
 $sb->provide("util/form");
+/**
+ * Used to build XHTML forms
+ * @package StarbugPHP
+ * @subpackage util
+ */
 class form {
+	/**
+	 * @var string The name of the model, if this form submits to a model
+	 */
 	var $model;
+	/**
+	 * @var string The name of the function, if this form submits to a model
+	 */
 	var $action;
+	/**
+	 * @var string The URL to submit to
+	 */
 	var $url;
+	/**
+	 * @var string The submission method (get or post)
+	 */
 	var $method;
+	/**
+	 * @var string The URL to post back to if there is an error
+	 */
 	var $postback;
-	function form($args="") {
+
+	/**
+	 * constructor. initializes properties
+	 * @param string $args a named parameter string with any initial values
+	 */
+	function __construct($args="") {
 		global $request;
 		$request_tag = array("tag" => "form", "raw_tag" => "form");
 		if (!in_array($request_tag, $request->tags)) $request->tags = array_merge($request->tags, array($request_tag));
@@ -44,6 +56,10 @@ class form {
 		$this->postback = $args['postback'];
 	}
 
+	/**
+	 * outputs the opening form tag and some hidden inputs
+	 * @param string $atts attributes for the form tag
+	 */
 	function open($atts="") {
 		$open = '<form'.(($atts) ? " ".$atts : "").' action="'.$this->url.'" method="'.$this->method.'">'."\n";
 		if ($this->method == "post") $open .= '<input class="postback" name="postback" type="hidden" value="'.$this->postback.'" />'."\n";
@@ -52,6 +68,13 @@ class form {
 		return $open;
 	}
 	
+	/**
+	 * get the full name attribute
+	 * eg. name becomes users[name]
+	 * eg. name[] becomes users[name][]
+	 * @param string $name the relative name
+	 * @return the full name
+	 */
 	function get_name($name) {
 		if (empty($this->model)) return $name;
 		else if (false !== strpos($name, "[")) {
@@ -60,16 +83,24 @@ class form {
 		} else return $this->model."[".$name."]";
 	}
 
+	/**
+	 * get the POST or GET value from the relative name
+	 * @param string $name the relative name
+	 * @return string the GET or POST value
+	 */
 	function get($name) {
 		$parts = explode("[", $name);
 		if ($this->method == "post") $var = (empty($this->model)) ? $_POST : $_POST[$this->model];
 		else $var = (empty($this->model)) ? $_GET : $_GET[$this->model];
-		foreach($parts as $p) {
-			$var = $var[rtrim($p, "]")];
-		}
+		foreach($parts as $p) $var = $var[rtrim($p, "]")];
 		return $var;
 	}
 	
+	/**
+	 * set the GET or POST value
+	 * @param string $name the relative name
+	 * @param string $value the value
+	 */
 	function set($name, $value) {
 		$parts = explode("[", $name);
 		$key = array_pop($parts);
@@ -85,7 +116,8 @@ class form {
 		}
 		$var[$key] = $value;
 	}
-	
+
+
 	function fill_ops(&$ops) {
 		$ops = starr::star($ops);
 		$name = array_shift($ops);
@@ -131,14 +163,14 @@ class form {
 		return $this->tag("input  type:submit".((empty($ops))? "" : "  ".$ops), true);
 	}
 
-    function file($ops) {
-        $ops = $ops."  type:file";
-        $this->fill_ops($ops);
-        $input = $this->label($ops)."\n";
-        if (!empty($_POST[$ops['name']])) $ops['value'] = $_POST[$ops['name']];
-        $ops = array_merge(array("input"), $ops);
-        return $input.$this->tag($ops, true);
-    }
+	function file($ops) {
+			$ops = $ops."  type:file";
+			$this->fill_ops($ops);
+			$input = $this->label($ops)."\n";
+			if (!empty($_POST[$ops['name']])) $ops['value'] = $_POST[$ops['name']];
+			$ops = array_merge(array("input"), $ops);
+			return $input.$this->tag($ops, true);
+	}
 
 	function image($ops) {
 		return $this->input("image", $ops);
@@ -268,7 +300,11 @@ class form {
 	}
 	
 }
-//shortcut function for basic forms
+/**
+ * shortcut function for outputing small forms
+ * @params string $arg the first parameter is the form options, the rest are form controls
+ * @return string the form
+ */
 function form($arg) {
 	$args = func_get_args();
 	$init = array_shift($args);
@@ -287,4 +323,128 @@ function form($arg) {
 	}
 	$data .= "</form>";
 	return $data;
+}
+/**
+ * creates a new form and outputs the opening form tag and some hidden inputs
+ * @param string $options the options for the form
+ * @param string $atts attributes for the form tag
+ */
+function open_form($options, $atts="") {
+	global $global_form;
+	$global_form = new form($options);
+	$open = "";
+	$atts = starr::star($atts);
+	foreach($atts as $k => $v) $open .= $k.'="'.$v.'" ';
+	echo $global_form->open(rtrim($open, " "));
+}
+/**
+ * outputs a text field
+ * @param string $ops the options
+ */
+function text($ops) {
+	global $global_form;
+	echo $global_form->text($ops);
+}
+/**
+ * outputs a password
+ * @param string $ops the options
+ */
+function password($ops) {
+	global $global_form;
+	echo $global_form->password($ops);
+}
+/**
+ * outputs a hidden field
+ * @param string $ops the options
+ */
+function hidden($ops) {
+	global $global_form;
+	echo $global_form->hidden($ops);
+}
+/**
+ * outputs a submit button
+ * @param string $ops the options
+ */
+function submit($ops="") {
+	global $global_form;
+	echo $global_form->submit($ops);
+}
+/**
+ * outputs a file input
+ * @param string $ops the options
+ */
+function file_select($ops) {
+	global $global_form;
+	echo $global_form->file($ops);
+}
+/**
+ * outputs an image input
+ * @param string $ops the options
+ */
+function image($ops) {
+	global $global_form;
+	echo $global_form->image($ops);
+}
+/**
+ * outputs a checkbox input
+ * @param string $ops the options
+ */
+function checkbox($ops) {
+	global $global_form;
+	echo $global_form->checkbox($ops);
+}
+/**
+ * outputs a radio button
+ * @param string $ops the options
+ */
+function radio($ops) {
+	global $global_form;
+	echo $global_form->radio($ops);
+}
+/**
+ * outputs an input
+ * @param string $ops the options
+ */
+function input($type, $ops) {
+	global $global_form;
+	echo $global_form->input($type, $ops);
+}
+/**
+ * outputs a select field
+ * @param string $ops the field info
+ * @param array $options the option elements
+ */
+function select($ops, $options=array()) {
+	global $global_form;
+	echo $global_form->select($ops, $options);
+}
+/**
+ * outputs a date select
+ * @param string $ops the options
+ */
+function date_select($ops) {
+	global $global_form;
+	echo $global_form->date_select($ops);
+}
+/**
+ * outputs a time select
+ * @param string $ops the options
+ */
+function time_select($ops) {
+	global $global_form;
+	echo $global_form->time_select($ops);
+}
+/**
+ * outputs a textarea
+ * @param string $ops the options
+ */
+function textarea($ops) {
+	global $global_form;
+	echo $global_form->textarea($ops);
+}
+/**
+ * outputs a closing form tag
+ */
+function close_form() {
+	echo "</form>";
 }
