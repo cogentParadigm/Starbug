@@ -57,71 +57,38 @@ if ((!empty($argv[2])) && (isset($schemer->tables[$argv[2]]))) {
 	$model = "<model name=\"$argv[2]\" label=\"".ucwords($argv[2])."\">\n";
 	$uniques = array(); $defaults = array(); $lengths = array();
 	foreach($fields as $name => $field) {
-		if (isset($field['default'])) $defaults[$name] = $field['default'];
-		if (isset($field['unique'])) $uniques[] = "\"$name\"";
-		if (isset($field['length'])) $lengths[$name] = $field['length'];
 		$model .= "\t<field name=\"$name\"";
 		$kids = "";
+		if (!isset($field['input_type'])) {
+			if ($field['type'] == "text") $field['input_type'] = "textarea";
+			else if ($field['type'] == "password") $field['input_type'] = "password";
+			else if ($field['type'] == "bool") $field['input_type'] = "checkbox";
+			else if ($field['type'] == "datetime") $field['input_type'] = "date_select";
+			else if (isset($field['upload'])) $field['input_type'] = "file";
+			else $field['input_type'] = "text";
+		}
+		if ($field['input_type'] == "file") $model .= " multipart=\"true\"";
 		foreach ($field as $k => $v) {
-			if (is_array($v)) foreach ($v as $key => $val) $kids .= "\t\t<$k name=\"$key\">$val</$k>\n";
+			if (file_exists(BASE_DIR."/util/filters/$k.php")) $kids .= "\t\t<filter name=\"$k\" value=\"$v\"/>\n";
 			else $model .= " $k=\"$v\"";
 		}
 		if ($args->flag('l') == $name) $model .= " label=\"true\""; else $model .= " display=\"true\"";
 		if (empty($kids)) $model .= "/>\n"; else $model .= ">\n$kids\t</field>\n";
 	}
-	foreach ($defaults as $name => $val) $d = (empty($d) ? "'".$name."' => '".$val."'" : $d.", '".$name."' => '".$val."'");
-	foreach ($lengths as $name => $val) $l = (empty($l) ? "'".$name."' => '".$val."'" : $l.", '".$name."' => '".$val."'");
-	$model .= "\t<defaults>$d</defaults>\n";
-	$model .= "\t<uniques>".implode(", ", $uniques)."</uniques>\n";
-	$model .= "\t<lengths>$l</lengths>\n";
 	$model .= "</model>";
 
-	//CREATE FORM XML
-	$form = "<form name=\"$argv[2]\" method=\"post\"";
-	$fieldstring = "";
-	$mult = false;
-	foreach ($fields as $name => $field) {
-		if (!isset($field['id'])) $field['id'] = $name;
-		if (!isset($field['label'])) $field['label'] = str_replace("_", " ", ucwords($name));
-		if (!isset($field['default'])) if (!isset($field['error'][$name])) $field['error'][$name] = "Please enter a ".$field['label'];
-		if (!empty($field['unique'])) if(!isset($field['error'][$name."Exists"])) $field['error'][$name."Exists"] = "That $field[label] already exists";
-		if ($field['type'] == 'file') $mult = true;
-		if ($field['type'] == 'timestamp') continue;
-		if ($field["type"] == "password") $field["input_type"] = "password";
-		if ($field["type"] == "datetime") $field["input_type"] = "date_select";
-		if ($field["type"] == "timestamp") $field["input_type"] = "timestamp";
-		if ($field["type"] == "bool") $field["input_type"] = "checkbox";
-		if (isset($field["input_type"])) {
-			$field["type"] = $field["input_type"];
-			unset($field["input_type"]);
-		} else $field["type"] = "text";
-		$fieldstring .= "\t<field name=\"$name\"";
-		$kids = "";
-		foreach ($field as $k => $v) {
-			if (is_array($v)) foreach ($v as $key => $val) $kids .= "\t\t<$k name=\"$key\">$val</$k>\n";
-			else $fieldstring .= " $k=\"$v\"";
-		}
-		if (empty($kids)) $fieldstring .= "/>\n"; else $fieldstring .= ">\n$kids\t</field>\n";
-	}
-	if ($mult) $form .= " multipart=\"true\"";
-	$form .= ">\n$fieldstring\n</form>";
-
 	//WRITE XML
-	$file = fopen("var/xml/$argv[2]_model.xml", "wb");
+	$file = fopen("var/xml/$argv[2].xml", "wb");
 	fwrite($file, $model);
 	fclose($file);
-	chmod("var/xml/$argv[2]_model.xml", 0777);
-	$file = fopen("var/xml/$argv[2]_form.xml", "wb");
-	fwrite($file, $form);
-	fclose($file);
-	chmod("var/xml/$argv[2]_form.xml", 0777);
+	chmod("var/xml/$argv[2].xml", 0777);
 }
 
 //SET VARS FOR Theme
 $model_name = $argv[2];
 $template = ($args->flag('t')) ? $args->flag('t') : Etc::DEFAULT_TEMPLATE;
 $collective = ($args->flag('c')) ? $args->flag('c') : "2";
-$dirs = array(); $from_form = array(); $from_model = array(); $paths = array(); $from_copy = array();
+$dirs = array(); $generate = array(); $paths = array(); $copy = array();
 
 //INCLUDE Theme GENERATOR FILE
 if ($args->flag('u')) include("app/themes/".Theme::FOLDER."/$argv[1]/update.php");
@@ -130,12 +97,11 @@ else include("app/themes/".Theme::FOLDER."/$argv[1]/$argv[1].php");
 //CREATE DIRECTORIES
 foreach ($dirs as $dir) if (!file_exists($dir)) exec("./script/cgenerate dir $dir");
 //CREATE FILES
-foreach ($from_model as $stylesheet => $output) exec("./script/cgenerate sax ".Etc::JAVA_PATH." ".Etc::SAXON_PATH." -o:$output -s:var/xml/$argv[2]_model.xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
-foreach ($from_form as $stylesheet => $output) {
-	exec(BASE_DIR."/script/cgenerate sax ".Etc::JAVA_PATH." ".Etc::SAXON_PATH." -o:$output -s:var/xml/$argv[2]_form.xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
+foreach ($generate as $stylesheet => $output) {
+	exec(BASE_DIR."/script/cgenerate sax ".Etc::JAVA_PATH." ".Etc::SAXON_PATH." -o:$output -s:var/xml/$argv[2].xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
 }
 //COPY FILES
-foreach ($from_copy as $origin => $dest) exec("./script/cgenerate copy $dest app/themes/".Theme::FOLDER."/$origin");
+foreach ($copy as $origin => $dest) exec("./script/cgenerate copy $dest app/themes/".Theme::FOLDER."/$origin");
 //ADD URI
 foreach ($paths as $keys => $values) $sb->db->Execute("INSERT INTO ".P("uris")." ($keys) VALUES ($values)");
 
