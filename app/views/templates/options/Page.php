@@ -16,3 +16,4 @@ if (false !== ($handle = opendir("app/views/layouts/"))) {
 }
 $containers = $layouts[$_POST['uris']['layout']];
 echo $form->select("layout", $layouts);
+?>

@@ -1,46 +1,80 @@
 <?php
+// FILE: core/Request.php
 /**
-* FILE: core/Request.php
-* PURPOSE: interprets the request URI and initiates action
-*
-* This file is part of StarbugPHP
-*
-* StarbugPHP - website development kit
-* Copyright (C) 2008-2009 Ali Gangji
-*
-* StarbugPHP is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* StarbugPHP is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Request class
+ * 
+ * @package StarbugPHP
+ * @subpackage core
+ * @author Ali Gangji <ali@neonrain.com>
+ * @copyright 2008-2010 Ali Gangji
+ */
+/**
+ * Request class. interprets the request URI and serves the appropriate content
+ * @package StarbugPHP
+ * @subpackage core
+ */
 class Request {
 
-	var $payload;					// row in uris table
-	var $path;						// request path - string
-	var $uri;							// request path - array
-	var $query;							// query string
-	var $format;							// format string
-	var $file;						// noun file path
+	/**#@+
+	* @access public
+	*/
+	/**
+	 * @var array the row in the uris table of the requested path
+	 */
+	var $payload;
+	/**
+	 * @var string the request path
+	 */
+	var $path;
+	/**
+	 * @var array the request path split by segment
+	 */
+	var $uri;
+	/**
+	 * @var string the query string
+	 */
+	var $query;
+	/**
+	 * @var string the requested format (xml, json, xhr)
+	 */
+	var $format;
+	/**
+	 * @var string the file path of the view
+	 */
+	var $file;
+	/**
+	 * @var array the tags applied to the requested URI
+	 */
 	var $tags;
+	/**
+	 * @var array the groups
+	 */
 	var $groups;
+	/**
+	 * @var statuses the statuses
+	 */
 	var $statuses;
+	/**
+	 * @var string the path of the base directory
+	 */
 	var $base_dir;
+	/**#@-*/
 
-	function Request($groups, $statuses) {
+	/**
+	 * constructor. initiates tags and postback
+	 */
+	function __construct($groups, $statuses) {
 		$this->tags = array(array("tag" => "global", "raw_tag" => "global"));
 		$this->groups = $groups;
 		$this->statuses = $statuses;
 		if (!isset($_SESSION[P('postback')])) $_SESSION[P('postback')] = $_SERVER['REQUEST_URI'];
  	}
- 	
+
+	/**
+	 * set the path
+	 * @param string $request_path the path
+	 * @param string $base_dir the base directory
+	 */
  	public function set_path($request_path, $base_dir="") {
 		if (empty($base_dir)) $base_dir = $this->base_dir;
 		else $this->base_dir = $base_dir;
@@ -63,9 +97,15 @@ class Request {
 		}
 		efault($this->path, Etc::DEFAULT_PATH);
 	}
-	
+
+	/**
+	 * return the path to the postback. called when a form submission contains errors
+	 */
 	public function return_path() {$this->path = (empty($_POST['postback'])) ? $_SESSION[P('postback')] : $_POST['postback'];}
 
+	/**
+	 * lookup the path in the uris table and set the payload, tags, uri, and file. also will delivers 404, or 403 headers if needed
+	 */
 	public function locate() {
 		global $sb;
 		$query = "where:'".$this->path."' LIKE CONCAT(path, '%') ORDER BY CHAR_LENGTH(path) DESC  limit:1";
@@ -80,17 +120,22 @@ class Request {
 		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
 	}
 
+	/**
+	 * calls $sb to to check for any post actions, runs locate, and loads the requested file
+	 */
 	public function execute() {
 		global $sb;
 		$the_postback = $this->path;
 		$sb->check_post();
 		$this->locate();
-		$sb->import("util/templates");
 		if ((!empty($_GET['x'])) || ($this->format == "xhr")) include($this->file);
 		else include($this->payload['prefix'].$this->payload['template'].".php");
 		$_SESSION[P('postback')] = $the_postback;
 	}
-	
+
+	/**
+	 * sends a 404 and sets the payload, path, and uri
+	 */
 	public function missing() {
 		header("HTTP/1.1 404 Not Found");
 		$this->payload = array("path" => "missing", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/");
@@ -98,12 +143,20 @@ class Request {
 		$this->uri = array("missing");
 	}
 	
+	/**
+	 * sends a 403 and sets the payload, path, and uri
+	 */
 	public function forbidden() {
 		header("HTTP/1.1 403 Forbidden");
 		$this->payload = array("path" => "forbidden", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/");
 		$this->path = "forbidden";
 		$this->uri = array("forbidden");
 	}
+
+	/**
+	 * checks the path to see if a matching file exists
+	 * @return the file to be loaded
+	 */
 	private function check_path($prefix, $base, $current) {
 		if (empty($current)) $current = "default";
 		if (file_exists("$prefix$base$current.php")) return $prefix.$base.$current.".php";

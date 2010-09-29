@@ -27,17 +27,7 @@ $help .= "TYPE\tWhat to generate\n";
 $help .= "    \t\tcrud - CRUD nouns\n";
 $help .= "    \t\tmodel - Object model\n";
 if ($argc==2) $argv[2] = "";
-if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("/script", "", dirname(__FILE__)));
-set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);
-if (!defined('STDOUT')) define("STDOUT", fopen("php://stdout", "wb"));
-if (!defined('STDIN')) define("STDIN", fopen("php://stdin", "r"));
-include(BASE_DIR."/etc/Etc.php");
-include(BASE_DIR."/core/init.php");
-include(BASE_DIR."/core/db/Schemer.php");
-global $schemer;
-$schemer = new Schemer($sb->db);
-$migrations = unserialize(reset($sb->query("options", "select:value  where:name='migrations'  limit:1")));
-call_user_func_array(array($schemer, "add_migrations"), $migrations);
+include(dirname(__FILE__)."/../core/cli.php");
 $to = reset($sb->query("options", "select:value  where:name='migration'  limit:1"));
 //MOVE TO CURRENT MIGRATION
 $current = 0;
@@ -91,17 +81,19 @@ $collective = ($args->flag('c')) ? $args->flag('c') : "2";
 $dirs = array(); $generate = array(); $paths = array(); $copy = array();
 
 //INCLUDE Theme GENERATOR FILE
-if ($args->flag('u')) include("app/themes/".Theme::FOLDER."/$argv[1]/update.php");
-else include("app/themes/".Theme::FOLDER."/$argv[1]/$argv[1].php");
+if ($args->flag('u')) include(BASE_DIR."/app/themes/".Theme::FOLDER."/$argv[1]/update.php");
+else include(BASE_DIR."/app/themes/".Theme::FOLDER."/$argv[1]/$argv[1].php");
 
 //CREATE DIRECTORIES
-foreach ($dirs as $dir) if (!file_exists($dir)) exec("./script/cgenerate dir $dir");
+foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) exec("./script/cgenerate dir ".BASE_DIR."/$dir");
 //CREATE FILES
 foreach ($generate as $stylesheet => $output) {
-	exec(BASE_DIR."/script/cgenerate sax ".Etc::JAVA_PATH." ".Etc::SAXON_PATH." -o:$output -s:var/xml/$argv[2].xml -xsl:app/themes/".Theme::FOLDER."/$stylesheet");
+	$content = shell_exec(BASE_DIR."/script/cgenerate sax ".Etc::JAVA_PATH." ".Etc::SAXON_PATH." -o:".BASE_DIR."/$output -s:".BASE_DIR."/var/xml/$argv[2].xml -xsl:".BASE_DIR."/app/themes/".Theme::FOLDER."/$stylesheet");
+	fwrite(STDOUT, $content);
 }
+echo $content;
 //COPY FILES
-foreach ($copy as $origin => $dest) exec("./script/cgenerate copy $dest app/themes/".Theme::FOLDER."/$origin");
+foreach ($copy as $origin => $dest) fwrite(STDOUT, shell_exec(BASE_DIR."/script/cgenerate copy ".BASE_DIR."/$dest ".BASE_DIR."/app/themes/".Theme::FOLDER."/$origin"));
 //ADD URI
 foreach ($paths as $keys => $values) $sb->db->Execute("INSERT INTO ".P("uris")." ($keys) VALUES ($values)");
 

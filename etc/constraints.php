@@ -1,30 +1,29 @@
 <?php
+// FILE: etc/constraints.php
 /**
-* FILE: etc/constraints.php
-* PURPOSE: configuration for access control
-*
-* This file is part of StarbugPHP
-*
-* StarbugPHP - website development kit
-* Copyright (C) 2008-2009 Ali Gangji
-*
-* StarbugPHP is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* StarbugPHP is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ *  configuration for access control
+ * 
+ *  @package StarbugPHP
+ *  @subpackage etc
+ *  @author Ali Gangji <ali@neonrain.com>
+ * 	@copyright 2008-2010 Ali Gangji
+ */
+/**
+ * list of groups and their membership value (must be a power of 2)
+ * @global array $groups
+ * @name $groups
+ */
+global $groups;
 $groups = array(
 	"root"			=> 1,
 	"user"			=> 2
 );
+/**
+ * list of statuses and their numeric value (must be a power of 2)
+ * @global array $statuses
+ * @name $statuses
+ */
+global $statuses;
 $statuses = array(
 	"deleted"     => 1,
 	"pending"     => 2,

@@ -12,6 +12,6 @@
 <xsl:template match="field">	&lt;div class="field"&gt;&lt;?php echo $form-&gt;<xsl:value-of select="@type"/>("<xsl:value-of select="@name"/><xsl:apply-templates select="@*"/>"); ?&gt;&lt;/div&gt;
 </xsl:template>
 
-<xsl:template match="@*"><xsl:if test="(name() != 'name') and (name() != 'type')"><xsl:text>  </xsl:text><xsl:value-of select="name()"/>:<xsl:value-of select="."/></xsl:if></xsl:template>
+<xsl:template match="@*"><xsl:if test="(name() != 'name') and (name() != 'type') and (name() != 'id') and (name() != 'label')"><xsl:text>  </xsl:text><xsl:value-of select="name()"/>:<xsl:value-of select="."/></xsl:if></xsl:template>
 
 </xsl:stylesheet>

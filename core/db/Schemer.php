@@ -35,10 +35,10 @@ class Schemer {
 	}
 	//RUN SQL TO MATCH SCHEMA
 	function update() {
-		$ts = 0;
-		$cs = 0;
-		$ms = 0;
-		$ds = 0;
+		$ts = 0; //tables
+		$cs = 0; //cols
+		$ms = 0; //mods
+		$ds = 0; //drops
 		foreach($this->tables as $table => $fields) {
 			$records = $this->db->query("SHOW TABLES LIKE '".P($table)."'");
 			if (false === ($row = $records->fetch())) {
@@ -62,6 +62,14 @@ class Schemer {
 							fwrite(STDOUT, "Altering column $name...\n");
 							$this->modify($table, $name);
 							$ms++;
+						}
+					}
+					if (isset($field['references'])) {
+						$fks = $this->db->query("SELECT * FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME='".$table."_".$name."_fk'");
+						if (false === ($row = $fks->fetch())) {
+							//ADD CONSTRAINT
+							fwrite(STDOUT, "Adding foreign key ".$table."_".$name."_fk...\n");
+							$this->add_foreign_key($table, $name);
 						}
 					}
 				}
@@ -99,6 +107,7 @@ class Schemer {
 		$sql = "CREATE TABLE `".P($name)."` (";
 		$primary = array();
 		$index = array();
+		$foreign = array();
 		$sql_fields = "";
 		foreach ($fields as $fieldname => $options) {
 			$sql_fields .= "`".$fieldname."` ".$this->get_sql_type($options).", ";
@@ -106,6 +115,13 @@ class Schemer {
 				if ($options['key'] == "primary") $primary[] = "`$fieldname`"; 
 			}
 			if (isset($options['index'])) $index[] = $fieldname;
+			if (!empty($options['references'])) {
+				$ref = explode(" ", $options['references']);
+				$rec = array("table" => $ref[0], "column" => $ref[1]);
+				if (!empty($options['update'])) $rec['update'] = $options['update'];
+				if (!empty($options['delete'])) $rec['delete'] = $options['delete'];
+				$foreign[$fieldname] = $rec;
+			}
 		}
 		if (empty($primary)) {
 			$sql_fields = "id int(11) NOT NULL AUTO_INCREMENT, ".$sql_fields;
@@ -113,8 +129,15 @@ class Schemer {
 		} else $primary = join(", ", $primary);
 		$sql .= $sql_fields."owner int(11) NOT NULL default '1', collective int(11) NOT NULL default '1', status int(11) NOT NULL default '4', ";
 		$sql .= "created datetime not null default '0000-00-00 00:00:00', modified datetime not null default '0000-00-00 00:00:00', ";
-		$sql .= "PRIMARY KEY ($primary)";
-		foreach ($index as $k) $sql .= ", KEY `".$k."_index` (`$k`)";
+		$sql .= "PRIMARY KEY ($primary), KEY `owner` (`owner`)";
+		foreach($index as $k) $sql .= ", KEY `".$k."` (`$k`)";
+		foreach($foreign as $k => $v) $sql .= ", KEY `".$k."` (`$k`)";
+		$sql .= ", CONSTRAINT `".$name."_owner_fk` FOREIGN KEY (`owner`) REFERENCES `sb_users` (`id`) ON UPDATE CASCADE ON DELETE CASCADE";
+		foreach($foreign as $k => $v) {
+			$sql .=", CONSTRAINT `".$name."_".$k."_fk` FOREIGN KEY (`$k`) REFERENCES `".P($v['table'])."` (`".$v['column']."`)";
+			if ($v['update']) $sql .= " ON UPDATE ".$v['update'];
+			if ($v['delete']) $sql .= " ON DELETE ".$v['delete'];
+		}
 		$result = $this->db->exec($sql." ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 		//if ($write) $this->write_model($name, $backup);
 	}
@@ -140,7 +163,15 @@ class Schemer {
 		$sql = $name." ".$name." ".$this->get_sql_type($field);
 		$this->db->exec("ALTER TABLE `".P($table)."` CHANGE ".$sql); 
 	}
-	//ADD TABLE DESCRIPTION
+	function add_foreign_key($table, $name) {
+		$field = $this->tables[$table][$name];
+		$ref = explode(" ", $field['references']);
+		$append = "";
+		if ($field['update']) $append .= " ON UPDATE ".$field['update'];
+		if ($field['delete']) $append .= " ON DELETE ".$field['delete'];
+		$this->db->exec("ALTER TABLE `".P($table)."` ADD CONSTRAINT `".$table."_".$name."_fk` FOREIGN KEY (`$name`) REFERENCES `".P($ref[0])."` (`".$ref[1]."`)".$append);
+	}
+	//ADD TABLE TO DESCRIPTION
 	function table($arg) {
 		$args = func_get_args();
 		$name = array_shift($args);
@@ -205,6 +236,7 @@ class Schemer {
 	function migrate($to="top", $from="current") {
 		global $sb;
 		$current_op = $sb->query("options", "select:id,value  where:name='migration'  limit:1");
+		if (empty($to)) $to = "top";
 		if ($to == "top") $to = count($this->migrations);
 		if ($from == "current") $from = $current_op['value'];
 		//MOVE TO FROM

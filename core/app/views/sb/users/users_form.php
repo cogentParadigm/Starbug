@@ -1,5 +1,4 @@
 <?php
-	sb::load("core/app/plugins/jsforms");
 	$sb->import("util/form");
 	$collectives = array_merge(array("everybody" => 0), $this->groups);
 	$fu = new form("model:users  action:$action  url:$submit_to");

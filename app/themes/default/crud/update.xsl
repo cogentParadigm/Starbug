@@ -3,7 +3,7 @@
 
 <xsl:output method="text"/>
 
-<xsl:template match="/model">&lt;?php $id = next($this->uri); $_POST['<xsl:value-of select="@name"/>'] = $sb->query("<xsl:value-of select="@name"/>", "action:read  where:id='$id'  limit:1"); ?&gt;
+<xsl:template match="/model">&lt;?php $id = end($this->uri); $_POST['<xsl:value-of select="@name"/>'] = query("<xsl:value-of select="@name"/>", "action:create  where:id='$id'  limit:1"); ?&gt;
 &lt;h2&gt;Update <xsl:value-of select="@name"/>&lt;/h2&gt;
 &lt;?php $action = "create"; $submit_to = uri("<xsl:value-of select="@name"/>"); include("app/views/<xsl:value-of select="@name"/>/<xsl:value-of select="@name"/>_form.php"); ?&gt;
 </xsl:template>

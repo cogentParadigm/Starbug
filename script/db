@@ -1,21 +1,19 @@
 #!/usr/bin/php
 <?php
-	if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("/script", "", dirname(__FILE__)));
-	set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);
-	if (!defined('STDOUT')) define("STDOUT", fopen("php://stdout", "wb"));
-	if (!defined('STDIN')) define("STDIN", fopen("php://stdin", "r"));
-	include(BASE_DIR."/etc/Etc.php");
-	include(BASE_DIR."/core/init.php");
-	include(BASE_DIR."/core/db/Schemer.php");
-	global $schemer;
-	$schemer = new Schemer($sb->db);
-	$migrations = unserialize(reset($sb->query("options", "select:value  where:name='migrations'  limit:1")));
-	call_user_func_array(array($schemer, "add_migrations"), $migrations);
-	$sb->import("util/cli");
+// FILE: script/db
+/**
+ * used to query and manipulate data in the db
+ * 
+ * @package StarbugPHP
+ * @subpackage script
+ * @author Ali Gangji <ali@neonrain.com>
+ * @copyright 2008-2010 Ali Gangji
+ */
+	include(dirname(__FILE__)."/../core/cli.php");
 	$script = array_shift($argv);
 	$what = array_shift($argv);
-	if ($what == "sync") $schemer->migrate();
-	if ($what == "migrate") {
+	if ("sync" == $what) $schemer->migrate();
+	if ("migrate" == $what) {
 		$next = array_shift($argv);
 		if (false !== strpos($next, ":")) {
 			$next = explode(":", $next);
@@ -27,26 +25,38 @@
 			$schemer->migrate($to);
 		}
 	}
-	if ($what == "dump") {
+	if ("dump" == $what) {
 		$tables = $sb->db->query("SHOW TABLES LIKE '".Etc::PREFIX."%'")->fetchAll(PDO::FETCH_ASSOC);
 		if (!file_exists(BASE_DIR."/var/dump")) {
 			mkdir(BASE_DIR."/var/dump");
 			chmod(BASE_DIR."/var/dump", 0777);
 		}
-		foreach($tables as $t) {
+		$search = array(";");
+		$replace = array("\;");
+		$user = str_replace($search, $replace, Etc::DB_USERNAME);
+		$pass = str_replace($search, $replace, Etc::DB_PASSWORD);
+		$dbname = str_replace($search, $replace, Etc::DB_NAME);
+		$host = str_replace($search, $replace, Etc::DB_HOST);
+		$filename = date("YmdHis");
+		foreach($tables as $idx => $t) {
 			$table = array_shift($t);
 			echo "Dumping Table $table...\n";
-			$search = array(";");
-			$replace = array("\;");
-			$user = str_replace($search, $replace, Etc::DB_USERNAME);
-			$pass = str_replace($search, $replace, Etc::DB_PASSWORD);
-			$dbname = str_replace($search, $replace, Etc::DB_NAME);
-			$host = str_replace($search, $replace, Etc::DB_HOST);
-			exec("mysqldump -c --host=".$host." -u ".$user." -p".$pass." ".$dbname." ".$table." > ".BASE_DIR."/var/dump/$table.sql");
-			chmod(BASE_DIR."/var/dump/$table.sql", 0777);
+			$operator = (0 == $idx) ? ">" : ">>";
+			exec("mysqldump -c --host=".$host." -u ".$user." -p".$pass." ".$dbname." ".$table." $operator ".BASE_DIR."/var/dump/$filename.sql");
+			chmod(BASE_DIR."/var/dump/$filename.sql", 0777);
 		}
 	}
-	if ($what == "store") {
+	if ("load" == $what) {
+		$search = array(";");
+		$replace = array("\;");
+		$user = str_replace($search, $replace, Etc::DB_USERNAME);
+		$pass = str_replace($search, $replace, Etc::DB_PASSWORD);
+		$dbname = str_replace($search, $replace, Etc::DB_NAME);
+		$host = str_replace($search, $replace, Etc::DB_HOST);
+		$file = array_shift($argv);
+		exec("mysql -u $user --host=$host --password=$pass --database=$dbname < $file");
+	}
+	if ("store" == $what) {
 		$name = array_shift($argv);
 		$params = join("  ", $argv);
 		$params = starr::star($params);
@@ -64,7 +74,7 @@
 			}
 		}
 	}
-	if ($what == "remove") {
+	if ("remove" == $what) {
 		$name = array_shift($argv);
 		foreach($argv as $index => $arg) {
 			$arg = explode(":", $arg, 2);
@@ -73,11 +83,30 @@
 		$params = join(" ", $argv);
 		$sb->remove($name, $params);
 	}
-	if ($what == "query") {
+	if ("query" == $what) {
 		$name = array_shift($argv);
 		$params = join("  ", $argv);
 		$records = $sb->query($name, $params);
 		echo "query $name $params\n";
 		cli::table($records);
+	}
+	if (("m" == $what) || ("migrations" == $what)) {
+		$next = array_shift($argv);
+		if (($next == "list") || ($next == "l")) {
+			$i = 0;
+			foreach($schemer->migrations as $m) {
+				$i++;
+				fwrite(STDOUT, $i." -> ".$m."\n");
+			}
+		} else if (($next == "remove") || ($next == "rm")) {
+			$val = array_shift($argv);
+			if (is_numeric($val)) {
+				array_splice($schemer->migrations, $val-1, 1);
+			} else if (!empty($val)) {
+				$idx = array_search($val, $schemer->migrations);
+				if (false !== $idx) array_splice($schemer->migrations, $idx, 1);
+			}
+			store("options", "value:".serialize($schemer->migrations), "name:migrations");
+		}
 	}
 ?>

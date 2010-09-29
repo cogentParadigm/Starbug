@@ -1,6 +1,6 @@
 <?php
 $sb->provide("util/cli");
-function query($model, $args="") {
+function cli_query($model, $args="") {
 	global $sb;
 	cli::table($sb->query($model, $args));
 }
