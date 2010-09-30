@@ -1,29 +1,14 @@
 #!/usr/bin/php
 <?php
+// FILE: install/intall.php
 /**
-* FILE: etc/install.php
-* PURPOSE: This is the installation file
-* NOTE: you should run this from the command line, and then delete it.
-* 			If you need to reinstall, you can get a copy later.
-*
-* This file is part of StarbugPHP
-*
-* StarbugPHP - website development kit
-* Copyright (C) 2008-2009 Ali Gangji
-*
-* StarbugPHP is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* StarbugPHP is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * install script
+ * 
+ * @package StarbugPHP
+ * @subpackage install
+ * @author Ali Gangji <ali@neonrain.com>
+ * @copyright 2008-2010 Ali Gangji
+ */
 	if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("/install", "", dirname(__FILE__)));
 	set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);
 	if (!defined('STDOUT')) define("STDOUT", fopen("php://stdout", "wb"));

@@ -37,13 +37,11 @@
 		$pass = str_replace($search, $replace, Etc::DB_PASSWORD);
 		$dbname = str_replace($search, $replace, Etc::DB_NAME);
 		$host = str_replace($search, $replace, Etc::DB_HOST);
-		$filename = date("YmdHis");
 		foreach($tables as $idx => $t) {
 			$table = array_shift($t);
 			echo "Dumping Table $table...\n";
-			$operator = (0 == $idx) ? ">" : ">>";
-			exec("mysqldump -c --host=".$host." -u ".$user." -p".$pass." ".$dbname." ".$table." $operator ".BASE_DIR."/var/dump/$filename.sql");
-			chmod(BASE_DIR."/var/dump/$filename.sql", 0777);
+			exec("mysqldump -c --host=".$host." -u ".$user." -p".$pass." ".$dbname." ".$table." > ".BASE_DIR."/var/dump/$table.sql");
+			chmod(BASE_DIR."/var/dump/$table.sql", 0777);
 		}
 	}
 	if ("load" == $what) {
@@ -53,8 +51,9 @@
 		$pass = str_replace($search, $replace, Etc::DB_PASSWORD);
 		$dbname = str_replace($search, $replace, Etc::DB_NAME);
 		$host = str_replace($search, $replace, Etc::DB_HOST);
-		$file = array_shift($argv);
-		exec("mysql -u $user --host=$host --password=$pass --database=$dbname < $file");
+		foreach ($schemer->tables as $table => $cols) {
+			exec("mysql -u $user --host=$host --password=$pass --database=$dbname < ".BASE_DIR."/var/dump/$table.sql");
+		}
 	}
 	if ("store" == $what) {
 		$name = array_shift($argv);
