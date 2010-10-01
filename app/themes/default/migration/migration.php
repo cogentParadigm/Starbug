@@ -9,9 +9,6 @@
 		fwrite($file, $migration);
 		fclose($file);
 	}
-	$option = $sb->query("options", "select:id,value  where:name='migrations'  limit:1");
-	$migrations = unserialize($option['value']);
-	$id = $option['id'];
-	$migrations[] = $name;
-	$sb->store("options", "id:$id  value:".serialize($migrations));
+	global $sb;
+	$sb->subscribe("migrations", "global", 10, "return_it", $name);
 ?>

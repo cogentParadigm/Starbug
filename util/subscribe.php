@@ -1,72 +1,65 @@
 <?php
+// FILE: util/subscribe.php
 /**
-* FILE: util/subscribe.php
-* PURPOSE: sb mixin. adds subscriber functions
-* 
-* This file is part of StarbugPHP
-*
-* StarbugPHP - website development kit
-* Copyright (C) 2008-2009 Ali Gangji
-*
-* StarbugPHP is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* StarbugPHP is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * sb mixin to add subscriber functions
+ * 
+ * @package StarbugPHP
+ * @subpackage util
+ * @author Ali Gangji <ali@neonrain.com>
+ * @copyright 2008-2010 Ali Gangji
+ */
 $sb->provide("util/subscribe");
 class Subscriber {
-	# subscribe to a topic
-	# @param topic - topic to subscribe to
-	# @param tags - a string tag or array of tags to which your subscription applies. all uris are tagged 'global'
-	# @param priority - method of controlling the execution order. All subscriptions made by starbug use 10
-	# @param handle - static function handle. use 'sb::load' to include a file
-	# @param $args - passed to the function
+	/**
+	 * subscribe to a topic
+	 * @param topic - topic to subscribe to
+	 * @param tags - a string tag or array of tags to which your subscription applies. all uris are tagged 'global'
+	 * @param priority - method of controlling the execution order. All subscriptions made by starbug use 10
+	 * @param handle - static function handle. use 'sb::load' to include a file
+	 * @param $args - passed to the function
+	 */
 	function subscribe($topic, $tags, $priority, $handle, $args=null) {
 		if (!is_array($tags)) $tags = array($tags);
 		foreach ($tags as $tag) {
-			$subscriptions = (file_exists(BASE_DIR."/var/hooks/$tag.$topic")) ? unserialize(file_get_contents(BASE_DIR."/var/hooks/$tag.$topic")) : array();
+			$subscriptions = (file_exists(BASE_DIR."/app/hooks/$tag.$topic")) ? unserialize(file_get_contents(BASE_DIR."/app/hooks/$tag.$topic")) : array();
 			$subscriptions[$priority][] = ($args == null) ? array("handle" => $handle, "args" => array()) : array("handle" => $handle, "args" => $args);
-			$file = fopen(BASE_DIR."/var/hooks/$tag.$topic", "wb");
+			$file = fopen(BASE_DIR."/app/hooks/$tag.$topic", "wb");
 			fwrite($file, serialize($subscriptions));
 			fclose($file);
-			chmod(BASE_DIR."/var/hooks/$tag.$topic", 0666);
+			chmod(BASE_DIR."/app/hooks/$tag.$topic", 0666);
 		}
 	}
-	# unsubscribe to remove a subscription
-	# @param topic - the topic you subscribed to
-	# @param tags - the tags which you want to remove the subscription from
-	# @param priority - the priority you used to subscribe
-	# @param handle - the handle that is subscribed
+	/**
+	 * unsubscribe to remove a subscription
+	 * @param topic - the topic you subscribed to
+	 * @param tags - the tags which you want to remove the subscription from
+	 * @param priority - the priority you used to subscribe
+	 * @param handle - the handle that is subscribed
+	 */
 	function unsubscribe($topic, $tags, $priority, $handle, $args=array()) {
 		if (!is_array($tags)) $tags = array($tags);
 		foreach ($tags as $tag) {
-			$subscriptions = (file_exists(BASE_DIR."/var/hooks/$tag.$topic")) ? unserialize(file_get_contents(BASE_DIR."/var/hooks/$tag.$topic")) : array();
+			$subscriptions = (file_exists(BASE_DIR."/app/hooks/$tag.$topic")) ? unserialize(file_get_contents(BASE_DIR."/app/hooks/$tag.$topic")) : array();
 			foreach($subscriptions[$priority] as $index => $ball) if (($ball['handle'] == $handle) && ($ball['args'] == $args)) unset($subscriptions[$priority][$index]);
-			$file = fopen(BASE_DIR."/var/hooks/$tag.$topic", "wb");
+			$file = fopen(BASE_DIR."/app/hooks/$tag.$topic", "wb");
 			fwrite($file, serialize($subscriptions));
 			fclose($file);
 		}
 	}
-	# get all subscriptions
-	# @return an array where $arr[$tag][$topic] = $subscriptions
+	/**
+	 * get all subscriptions
+	 * @return an array where $arr[$tag][$topic] = $subscriptions
+	 */
 	function subscriptions() {
 		$subs = array();
-		if (false !== ($handle = opendir(BASE_DIR."/var/hooks/"))) {
+		if (false !== ($handle = opendir(BASE_DIR."/app/hooks/"))) {
 			while (false !== ($file = readdir($handle))) {
 				if ((strpos($file, ".") !== 0)) {
 					$parts = explode(".", $file);
 					$tag = $parts[0];
 					$topic = $parts[1];
 					if (!isset($subs[$tag])) $subs[$tag] = array();
-					$subs[$tag][$topic] = unserialize(file_get_contents(BASE_DIR."/var/hooks/$file"));
+					$subs[$tag][$topic] = unserialize(file_get_contents(BASE_DIR."/app/hooks/$file"));
 				}
 			}
 			closedir($handle);

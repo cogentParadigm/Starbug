@@ -24,9 +24,11 @@
 */
 $help = "Usage: plugin MODE [OPTIONS]\n";
 $help .= "MODE\n";
-$help .= "  -i [NAME] - install plugin\n";
-$help .= "  -l - list plugins\n";
-$help .= "  -r [NAME] - remove plugin\n\n";
+$help .= "  -l                    - list plugins\n";
+$help .= "  -a [PLUGIN] [MODEL]   - activate plugin\n";
+$help .= "  -d [PLUGIN] [MODEL]   - deactivate plugin\n";
+$help .= "  -i [PLUGIN]           - install plugin\n";
+$help .= "  -u [PLUGIN]           - uninstall plugin\n\n";
 if ($argc==2) $argv[2] = "";
 if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("/script", "", dirname(__FILE__)));
 if (!defined('STDOUT')) define("STDOUT", fopen("php://stdout", "wb"));
@@ -43,11 +45,23 @@ if ($argv[1] == "-i") { //INSTALL PLUGIN
 	$loc = $argv[2];
 	include($loc."/activate.php");
 	exit(0);
+} else if ($argv[1] == "-a") { //ACTIVATE PLUGIN
+	if ($argc < 4) {
+		fwrite(STDOUT, $help);
+		exit(0);
+	}
+	plugins::activate($argv[2], $argv[3]);
+} else if ($argv[1] == "-d") { //DEACTIVATE PLUGIN
+	if ($argc < 4) {
+		fwrite(STDOUT, $help);
+		exit(0);
+	}
+	plugins::deactivate($argv[2], $argv[3]);
 } else if ($argv[1] == "-l") { //LIST PLUGINS
-	$plugins = plugins::available();
+	$plugins = plugins::available($argv[2]);
 	foreach($plugins as $name => $info) fwrite(STDOUT, (($info['active']) ? " a  " : "    ").$name."\n");
 	exit(0);
-} else if ($argv[1] == "-r") { //UNINSTALL PLUGIN
+} else if ($argv[1] == "-u") { //UNINSTALL PLUGIN
 	if (empty($argv[2])) {
 		fwrite(STDOUT, $help);
 		exit(0);

@@ -3,8 +3,8 @@ class CoreMigration extends Migration {
 	function up() {
 		$this->table("users",
 			"username  type:string  length:128",
-			"email  type:string  length:128",
-			"password  type:password",
+			"email  type:string  length:128  unique:",
+			"password  type:password  confirm:password_confirm  md5:  optional_update:",
 			"memberships  type:int"
 		);
 		$this->table("permits",
@@ -30,9 +30,9 @@ class CoreMigration extends Migration {
 			"raw_tag  type:string  length:50  default:"
 		);
 		$this->table("uris_tags",
-			"tag_id  type:int  default:0  key:primary  index:",
-			"tagger_id  type:int  default:0  key:primary  index:",
-			"object_id  type:int  default:0  key:primary  index:"
+			"tag_id  type:int  default:0  key:primary  index:  references:tags id  update:cascade  delete:cascade",
+			"owner  type:int  default:1  key:primary  index:  references:users id  update:cascade  delete:cascade",
+			"object_id  type:int  default:0  key:primary  index:  references:uris id  update:cascade  delete:cascade"
 		);
 		$this->table("leafs",
 			"leaf  type:string  length:128",

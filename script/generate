@@ -31,8 +31,8 @@ if ((!empty($argv[2])) && (isset($schemer->tables[$argv[2]]))) {
 	$fields = $schemer->tables[$argv[2]];
 
 	//CREATE MODEL XML
-	$model = "<model name=\"$argv[2]\" label=\"".ucwords($argv[2])."\">\n";
-	$uniques = array(); $defaults = array(); $lengths = array();
+	$model = "<model name=\"$argv[2]\" label=\"".ucwords($argv[2])."\" package=\"".Etc::WEBSITE_NAME."\">\n";
+	$relations = array();
 	foreach($fields as $name => $field) {
 		$model .= "\t<field name=\"$name\"";
 		$kids = "";
@@ -47,10 +47,22 @@ if ((!empty($argv[2])) && (isset($schemer->tables[$argv[2]]))) {
 		if ($field['input_type'] == "file") $model .= " multipart=\"true\"";
 		foreach ($field as $k => $v) {
 			if (file_exists(BASE_DIR."/util/filters/$k.php")) $kids .= "\t\t<filter name=\"$k\" value=\"$v\"/>\n";
-			else $model .= " $k=\"$v\"";
+			else if ("references" == $k) {
+				$ref = explode(" ", $v);
+				$kids .= "\t\t<references model=\"$ref[0]\" field=\"$ref[1]\"/>\n";
+			} else $model .= " $k=\"$v\"";
 		}
 		if ($args->flag('l') == $name) $model .= " label=\"true\""; else $model .= " display=\"true\"";
 		if (empty($kids)) $model .= "/>\n"; else $model .= ">\n$kids\t</field>\n";
+	}
+	foreach ($schemer->tables as $table => $fields) {
+		foreach ($fields as $name => $field) {
+			foreach ($field as $k => $v) {
+				if (("references" == $k) && (0 === strpos($v, $argv[2]))) { //it references this table
+					$model .= "\t<relation model=\"$table\" field=\"$name\"/>\n";
+				}
+			}
+		}
 	}
 	$model .= "</model>";
 
@@ -75,7 +87,7 @@ else include(BASE_DIR."/app/themes/".Theme::FOLDER."/$argv[1]/$argv[1].php");
 foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) exec("./script/cgenerate dir ".BASE_DIR."/$dir");
 //CREATE FILES
 foreach ($generate as $stylesheet => $output) {
-	$content = shell_exec(BASE_DIR."/script/cgenerate sax ".Etc::JAVA_PATH." ".Etc::SAXON_PATH." -o:".BASE_DIR."/$output -s:".BASE_DIR."/var/xml/$argv[2].xml -xsl:".BASE_DIR."/app/themes/".Theme::FOLDER."/$stylesheet");
+	$content = shell_exec(BASE_DIR."/script/cgenerate sax ".Etc::JAVA_PATH." ".Etc::SAXON_PATH." -o:".BASE_DIR."/$output -s:".BASE_DIR."/var/xml/$argv[2].xml -xsl:".BASE_DIR."/app/themes/".Theme::FOLDER."/$stylesheet 2>&1");
 	fwrite(STDOUT, $content);
 }
 echo $content;

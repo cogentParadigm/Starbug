@@ -29,6 +29,12 @@ function dfault(&$val, $default="") {if(!isset($val)) $val = $default;return $va
  */
 function efault(&$val, $default="") {if(empty($val)) $val = $default;return $val;}
 /**
+ * just returns back a variable
+ * @param mixed $val the value to return
+ * @return mixed $val
+ */
+function return_it($val) {return $val;}
+/**
  * prefix a variable with the site prefix
  * @param string $var the value to prefix
  * @return string the prefixed value

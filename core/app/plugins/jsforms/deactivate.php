@@ -1,3 +1,3 @@
 <?php
-	plugins::deactivate("core/app/plugins/jsforms", "footer", "form");
+	plugins::unload("core/app/plugins/jsforms", "footer", "form");
 ?>

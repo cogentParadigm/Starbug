@@ -1,0 +1,47 @@
+#!/usr/bin/php
+<?php
+// FILE: script/migrations
+/**
+ * used to manage the migration list
+ * 
+ * @package StarbugPHP
+ * @subpackage script
+ * @author Ali Gangji <ali@neonrain.com>
+ * @copyright 2008-2010 Ali Gangji
+ */
+	include(dirname(__FILE__)."/../core/cli.php");
+	$script = array_shift($argv);
+	$what = array_shift($argv);
+	if ("sync" == $what) $schemer->migrate();
+	if ("migrate" == $what) {
+		$next = array_shift($argv);
+		if (false !== strpos($next, ":")) {
+			$next = explode(":", $next);
+			$from = $next[0];
+			$to = $next[1];
+			$schemer->migrate($to, $from);
+		} else {
+			$to = $next;
+			$schemer->migrate($to);
+		}
+	}
+	if (("list" == $what) || ("-l" == $what)) {
+		$i = 0;
+		foreach($schemer->migrations as $m) {
+			$i++;
+			fwrite(STDOUT, $i." -> ".$m."\n");
+		}
+	}
+	if (("add" == $what) || ("-a" == $what)) {
+		$val = array_shift($argv);
+		$schemer->add_migrations($val);
+	}
+	if (("remove" == $what) || ("-r" == $what)) {
+		$val = array_shift($argv);
+		if (is_numeric($val)) {
+			$val = $schemer->migrations[$val-1];
+		}
+		$sb->import("util/subscribe");
+		$sb->unsubscribe("migrations", "global", 10, "return_it", $val);
+	}
+?>

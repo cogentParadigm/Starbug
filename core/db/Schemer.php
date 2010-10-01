@@ -1,27 +1,19 @@
 <?php
+// FILE: core/db/Schemer.php
 /**
-* FILE: core/db/Schemer.php
-* PURPOSE: This is the Schemer class, it is used for managing the schema files and db.
-*
-* This file is part of StarbugPHP
-*
-* StarbugPHP - website development kit
-* Copyright (C) 2008-2009 Ali Gangji
-*
-* StarbugPHP is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* StarbugPHP is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * The DB Schemer - Uses the migrations to manage the database schema
+ * 
+ * @package StarbugPHP
+ * @subpackage core
+ * @author Ali Gangji <ali@neonrain.com>
+ * @copyright 2008-2010 Ali Gangji
+ */
 include("core/db/Migration.php");
+/**
+ * The Schemer class. Manages a schema of the database using migrations and handles synching a database with the schema
+ * @package StarbugPHP
+ * @subpackage core
+ */
 class Schemer {
 
 	var $db;
@@ -31,7 +23,12 @@ class Schemer {
 	var $migrations = array();
 
 	function Schemer($data) {
+		global $sb;
 		$this->db = $data;
+		$this->migrations = $sb->publish("migrations");
+		foreach($this->migrations as $i => $a) {
+			include(BASE_DIR."/etc/migrations/$a.php");
+		}
 	}
 	//RUN SQL TO MATCH SCHEMA
 	function update() {
@@ -65,11 +62,12 @@ class Schemer {
 						}
 					}
 					if (isset($field['references'])) {
-						$fks = $this->db->query("SELECT * FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME='".$table."_".$name."_fk'");
+						$fks = $this->db->query("SELECT * FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME='".P($table)."_".$name."_fk'");
 						if (false === ($row = $fks->fetch())) {
 							//ADD CONSTRAINT
-							fwrite(STDOUT, "Adding foreign key ".$table."_".$name."_fk...\n");
+							fwrite(STDOUT, "Adding foreign key ".P($table)."_".$name."_fk...\n");
 							$this->add_foreign_key($table, $name);
+							$ms++;
 						}
 					}
 				}
@@ -132,9 +130,9 @@ class Schemer {
 		$sql .= "PRIMARY KEY ($primary), KEY `owner` (`owner`)";
 		foreach($index as $k) $sql .= ", KEY `".$k."` (`$k`)";
 		foreach($foreign as $k => $v) $sql .= ", KEY `".$k."` (`$k`)";
-		$sql .= ", CONSTRAINT `".$name."_owner_fk` FOREIGN KEY (`owner`) REFERENCES `sb_users` (`id`) ON UPDATE CASCADE ON DELETE CASCADE";
+		$sql .= ", CONSTRAINT `".P($name)."_owner_fk` FOREIGN KEY (`owner`) REFERENCES `sb_users` (`id`) ON UPDATE CASCADE ON DELETE CASCADE";
 		foreach($foreign as $k => $v) {
-			$sql .=", CONSTRAINT `".$name."_".$k."_fk` FOREIGN KEY (`$k`) REFERENCES `".P($v['table'])."` (`".$v['column']."`)";
+			$sql .=", CONSTRAINT `".P($name)."_".$k."_fk` FOREIGN KEY (`$k`) REFERENCES `".P($v['table'])."` (`".$v['column']."`)";
 			if ($v['update']) $sql .= " ON UPDATE ".$v['update'];
 			if ($v['delete']) $sql .= " ON DELETE ".$v['delete'];
 		}
@@ -169,7 +167,7 @@ class Schemer {
 		$append = "";
 		if ($field['update']) $append .= " ON UPDATE ".$field['update'];
 		if ($field['delete']) $append .= " ON DELETE ".$field['delete'];
-		$this->db->exec("ALTER TABLE `".P($table)."` ADD CONSTRAINT `".$table."_".$name."_fk` FOREIGN KEY (`$name`) REFERENCES `".P($ref[0])."` (`".$ref[1]."`)".$append);
+		$this->db->exec("ALTER TABLE `".P($table)."` ADD CONSTRAINT `".P($table)."_".$name."_fk` FOREIGN KEY (`$name`) REFERENCES `".P($ref[0])."` (`".$ref[1]."`)".$append);
 	}
 	//ADD TABLE TO DESCRIPTION
 	function table($arg) {
@@ -203,6 +201,7 @@ class Schemer {
 		if ($field['type'] == 'password') $type = "varchar(32)";
 		else if (($field['type'] == 'text') || ($field['type'] == 'longtext')) $type = $field["type"];
 		else if ($field['type'] == 'int') $type = "int(".(isset($field['length'])?$field['length']:"11").")";
+		else if ($field['type'] == 'decimal') $type = "decimal(".$field['length'].")";
 		else if ($field['type'] == 'bool') $type = "int(1)";
 		else if (($field['type'] == 'datetime') || ($field['type'] == 'timestamp')) $type = "datetime";
 		$type = $type." NOT NULL".((isset($field['auto_increment'])) ? " AUTO_INCREMENT" : "").((!isset($field['default'])) ? "" : " default '".$field['default']."'");
@@ -226,11 +225,16 @@ class Schemer {
 	}
 	
 	function add_migrations($arg) {
+		global $sb;
+		$sb->import("util/subscribe");
 		$args = func_get_args();
 		foreach($args as $i => $a) {
-			include(BASE_DIR."/etc/migrations/$a.php");
+			if (!in_array($a, $this->migrations)) {
+				if (file_exists(BASE_DIR."/etc/migrations/$a.php")) include(BASE_DIR."/etc/migrations/$a.php");
+				$sb->subscribe("migrations", "global", 10, "return_it", $a);
+				$this->migrations[] = $a;
+			}
 		}
-		$this->migrations = array_merge($this->migrations, $args);
 	}
 	
 	function migrate($to="top", $from="current") {

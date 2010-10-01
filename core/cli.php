@@ -18,6 +18,4 @@
 	include(BASE_DIR."/core/db/Schemer.php");
 	global $schemer;
 	$schemer = new Schemer($sb->db);
-	$migrations = unserialize(reset($sb->query("options", "select:value  where:name='migrations'  limit:1")));
-	call_user_func_array(array($schemer, "add_migrations"), $migrations);
 ?>

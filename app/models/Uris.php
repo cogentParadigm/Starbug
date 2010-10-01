@@ -12,8 +12,8 @@ class Uris extends Table {
 		"options" => "default:"
 	);
 
-	function Uris($type) {
-		parent::Table($type);
+	function __construct($type) {
+		parent::__construct($type);
 		$this->has_many("tags", "object_id", "uris_tags", "tag_id");
 	}
 

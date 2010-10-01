@@ -5,9 +5,9 @@ class plugins {
 	function info($plugin) {
 		return $plugin;
 	}
-	function available() {
+	function available($tag="") {
 		$plugs = array();
-		$active = sb::publish("plugins");
+		$active = (!empty($tag)) ? sb::publish($tag.".plugins") : sb::publish("plugins");
 		if (false !== ($handle = opendir("core/app/plugins/"))) {
 			while (false !== ($file = readdir($handle))) {
 				if ((strpos($file, ".") !== 0)) {
@@ -26,15 +26,23 @@ class plugins {
 		}
 		return $plugs;
 	}
-	function activate($plugin, $topic, $tag="global", $priority=10) {
+	function load($plugin, $topic, $tag="global", $priority=10) {
 		global $sb;
 		$sb->subscribe("plugins", "global", $priority, "plugins::info", end(explode("/", $plugin)));
 		$sb->subscribe($topic, $tag, $priority, "sb::load", $plugin);
 	}
-	function deactivate($plugin, $topic, $tag="global", $priority=10) {
+	function unload($plugin, $topic, $tag="global", $priority=10) {
 		global $sb;
 		$sb->unsubscribe($topic, $tag, $priority, "sb::load", $plugin);
 		$sb->unsubscribe("plugins", "global", $priority, "plugins::info", end(explode("/", $plugin)));
+	}
+	function activate($plugin, $tag, $priority=10) {
+		global $sb;
+		$sb->subscribe("plugins", $tag, $priority, "return_it", $plugin);
+	}
+	function deactivate($plugin, $tag, $priority=10) {
+		global $sb;
+		$sb->unsubscribe("plugins", $tag, $priority, "return_it", $plugin);
 	}
 }
 ?>

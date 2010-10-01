@@ -86,10 +86,18 @@ class sb {
 		global $request;
 		$return = array();
 		$args = func_get_args();
-		$tags = (isset($request->tags)) ? $request->tags : array(array("tag" => "global"));
-		foreach($tags as $tag) {
-			$subscriptions = (file_exists("var/hooks/$tag[tag].$topic")) ? unserialize(file_get_contents("var/hooks/$tag[tag].$topic")) : array();
-			foreach($subscriptions as $priority) foreach($priority as $handle) $return[] = call_user_func(explode("::", $handle['handle']), $handle['args'], $args);
+		if (false !== strpos($topic, ".")) {
+			list($tags, $topic) = explode(".", $topic);
+			$tags = array(array("tag" => $tags));
+		} else $tags = (isset($request->tags)) ? $request->tags : array(array("tag" => "global"));
+		foreach ($tags as $tag) {
+			$subscriptions = (file_exists(BASE_DIR."/app/hooks/$tag[tag].$topic")) ? unserialize(file_get_contents(BASE_DIR."/app/hooks/$tag[tag].$topic")) : array();
+			foreach ($subscriptions as $priority) {
+				foreach($priority as $handle) {
+					if (false !== strpos($handle['handle'], "::")) $handle['handle'] = explode("::", $handle['handle']);
+					$return[] = call_user_func($handle['handle'], $handle['args'], $args);
+				}
+			}
 		}
 		return $return;
 	}
@@ -276,7 +284,7 @@ class sb {
 	 * @param string $value the function name
 	 */
 	function post_act($key, $value) {
-		if (($object = $this->get($key)) && method_exists($object, $value)) {
+		if ($object = $this->get($key)) {
 			$permits = isset($_POST[$key]['id']) ? $this->query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : $this->query($key, "action:$value  priv_type:table");
 			if (($this->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value();
 			else $errors = array("forbidden" => "You do not have sufficient permission to complete your request.");
