@@ -27,6 +27,22 @@ include(BASE_DIR."/etc/Theme.php");
 include(BASE_DIR."/util/Args.php");
 $args = new Args();
 global $sb;
+function get_relations($from, $to) {
+	global $schemer;
+	$fields = $schemer->tables[$from];
+	$return = array($from => array());
+	$hook = "";
+	foreach($fields as $column => $options) {
+		if (isset($options['references'])) {
+			$ref = explode(" ", $options['references']);
+			if (0 === strpos($options['references'], $to)) $hook = $column;
+			else $return[$ref[0]] = array("lookup" => $from, "ref_field" => $column);
+		}
+	}
+	if (empty($hook)) return array();
+	foreach ($return as $idx => $arr) $return[$idx]["hook"] = $hook;
+	return $return;
+}
 if ((!empty($argv[2])) && (isset($schemer->tables[$argv[2]]))) {
 	$fields = $schemer->tables[$argv[2]];
 
@@ -56,12 +72,9 @@ if ((!empty($argv[2])) && (isset($schemer->tables[$argv[2]]))) {
 		if (empty($kids)) $model .= "/>\n"; else $model .= ">\n$kids\t</field>\n";
 	}
 	foreach ($schemer->tables as $table => $fields) {
-		foreach ($fields as $name => $field) {
-			foreach ($field as $k => $v) {
-				if (("references" == $k) && (0 === strpos($v, $argv[2]))) { //it references this table
-					$model .= "\t<relation model=\"$table\" field=\"$name\"/>\n";
-				}
-			}
+		$relations = get_relations($table, $argv[2]);
+		foreach ($relations as $m => $r) {
+			$model .= "\t<relation model=\"$m\" field=\"$r[hook]\"".((!empty($r['lookup'])) ? " lookup=\"$r[lookup]\" ref_field=\"$r[ref_field]\"" : "")."/>\n";
 		}
 	}
 	$model .= "</model>";

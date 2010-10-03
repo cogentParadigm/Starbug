@@ -17,7 +17,7 @@ class <xsl:value-of select="@label"/> extends Table {
 
 	function onload() {<xsl:for-each select="field[references]">
 		$this->has_one("<xsl:value-of select="references/@model"/>", "<xsl:value-of select="@name"/>");</xsl:for-each><xsl:for-each select="relation">
-		$this->has_many("<xsl:value-of select="@model"/>", "<xsl:value-of select="@field"/>");</xsl:for-each>
+		$this->has_many("<xsl:value-of select="@model"/>", "<xsl:value-of select="@field"/>"<xsl:if test="@lookup">, "<xsl:value-of select="@lookup"/>", "<xsl:value-of select="@ref_field"/>"</xsl:if>);</xsl:for-each>
 	}
 
 }

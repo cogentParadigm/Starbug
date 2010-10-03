@@ -54,7 +54,7 @@ class Table {
 		$this->imports = array();
 		$this->imported_functions = array();
 		global $sb;
-		foreach ($sb->publish("users.plugins") as $plugin) $this->mixin($plugin);
+		foreach ($sb->publish($this->type.".plugins") as $plugin) $this->mixin($plugin);
 		$this->onload();
 	}
 

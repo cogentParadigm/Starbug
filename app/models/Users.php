@@ -15,6 +15,8 @@ class Users extends Table {
 
 	function onload() {
 		$this->has_many("uris_tags", "owner");
+		$this->has_many("tags", "owner", "uris_tags", "tag_id");
+		$this->has_many("uris", "owner", "uris_tags", "object_id");
 	}
 
 }

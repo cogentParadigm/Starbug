@@ -15,12 +15,30 @@ include("core/db/Migration.php");
  * @subpackage core
  */
 class Schemer {
-
+	/**#@+
+	* @access public
+	*/
+	/**
+	 * @var db The db class is a PDO wrapper
+	 */
 	var $db;
+	/**
+	 * @var array Holds tables, columns and column options
+	 */
 	var $tables = array();
+	/**
+	 * @var array Tables that have been dropped
+	 */
 	var $table_drops = array();
+	/**
+	 * @var array Columns that have been dropped
+	 */
 	var $column_drops = array();
+	/**
+	 * @var array Ordered list of migrations
+	 */
 	var $migrations = array();
+	/**#@-*/
 
 	function Schemer($data) {
 		global $sb;
