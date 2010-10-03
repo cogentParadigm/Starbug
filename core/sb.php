@@ -145,12 +145,24 @@ class sb {
 	function query($froms, $args="", $mine=false) {
 		$froms = explode(",", $froms);
 		$first = array_shift($froms);
+		$args = starr::star($args);
+		efault($args['select'], "*");
 		$from = "`".P($first)."` AS `".$first."`";
 		if (!$mine) foreach ($froms as $f) $from .= " INNER JOIN `".P($f)."` AS `".$f."`";
 		else {
 			$relations = $this->get($first)->relations;
+			if (!isset($args['via'])) {
+				
+			}
 			foreach ($froms as $f) {
-				$rel = $relations[$f];
+				$f = explode(" via ", $f);
+				if (1 == count($f)) {
+					if (isset($relations[$f[0]][$first])) $rel = $relations[$f[0]][$first];
+					else if (isset($relations[$f[0]][$f[0]])) $rel = $relations[$f[0]][$first];
+					else $rel = reset($relations[$f[0]]);
+				} else $rel = $relations[$f[0]][$f[1]];
+				$lookup = $f[1];
+				$f = $f[0];
 				$namejoin = " INNER JOIN `".P($f)."` AS `$f`";
 				if (empty($rel)) $from .= $namejoin;
 				else {
@@ -160,8 +172,6 @@ class sb {
 				}
 			}
 		}
-		$args = starr::star($args);
-		efault($args['select'], "*");
 		if ((!empty($args['action'])) && (($_SESSION[P("memberships")] & 1) != 1)) {
 			$roles = "(permits.role='everyone' || (permits.role='user' && permits.who='".$_SESSION[P('id')]."') || (permits.role='group' && (('".$_SESSION[P('memberships')]."' & permits.who)=permits.who))";
 			if ((!empty($args['priv_type'])) && ($args['priv_type'] == "table")) {
@@ -332,9 +342,9 @@ class sb {
 	 */
 	protected function mixin($object) {
 		$new_import = new $object();
-		$import_name = get_class($new_import);  
-		$import_functions = get_class_methods($new_import);  
-		array_push($this->imported, array($import_name, $new_import));  
+		$import_name = get_class($new_import);
+		$import_functions = get_class_methods($new_import);
+		array_push($this->imported, array($import_name, $new_import));
 		foreach($import_functions as $key => $function_name) $this->imported_functions[$function_name] = &$new_import;
 	}
 
@@ -342,7 +352,7 @@ class sb {
 	 * Handler for calls to non-existant functions. Allows calling of mixed in functions.
 	 */
 	public function __call($method, $args) {
-		if(array_key_exists($method, $this->imported_functions)) {  
+		if(array_key_exists($method, $this->imported_functions)) {
 			$args[] = $this;  
 			return call_user_func_array(array($this->imported_functions[$method], $method), $args);
 		}

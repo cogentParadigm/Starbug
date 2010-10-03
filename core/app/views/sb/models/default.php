@@ -63,7 +63,7 @@ $dojo->xhr(".save_permit", "permit_created", "'api/permits/get.json'", "form:evt
 			<a href="" class="inline_button create_permit">create permit</a>
 		</div>
 		<div class="clear"></div>
-		<?php foreach ($schemer->tables as $name => $fields) { ?>
+		<?php foreach ($schemer->tables as $name => $fields) { $fields = $schemer->get_table($name); ?>
 			<?php $permits = $sb->query("permits", "where:related_table='".P($name)."'"); ?>
 			<?php if (!empty($permits)) { ?>
 				<h3 style="color:#000;border-bottom:2px solid;padding:3px 0px;margin:15px 0 5px"><?php echo $name; ?></h3>

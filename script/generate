@@ -29,8 +29,8 @@ $args = new Args();
 global $sb;
 function get_relations($from, $to) {
 	global $schemer;
-	$fields = $schemer->tables[$from];
-	$return = array($from => array());
+	$fields = $schemer->get_table($from);
+	$return = (isset($fields['id'])) ? array($from => array()) : array();
 	$hook = "";
 	foreach($fields as $column => $options) {
 		if (isset($options['references'])) {
@@ -44,7 +44,7 @@ function get_relations($from, $to) {
 	return $return;
 }
 if ((!empty($argv[2])) && (isset($schemer->tables[$argv[2]]))) {
-	$fields = $schemer->tables[$argv[2]];
+	$fields = $schemer->get_table($argv[2]);
 
 	//CREATE MODEL XML
 	$model = "<model name=\"$argv[2]\" label=\"".ucwords($argv[2])."\" package=\"".Etc::WEBSITE_NAME."\">\n";
@@ -63,7 +63,7 @@ if ((!empty($argv[2])) && (isset($schemer->tables[$argv[2]]))) {
 		if ($field['input_type'] == "file") $model .= " multipart=\"true\"";
 		foreach ($field as $k => $v) {
 			if (file_exists(BASE_DIR."/util/filters/$k.php")) $kids .= "\t\t<filter name=\"$k\" value=\"$v\"/>\n";
-			else if ("references" == $k) {
+			else if (("references" == $k) && (false === strpos($v, $argv[2]))) {
 				$ref = explode(" ", $v);
 				$kids .= "\t\t<references model=\"$ref[0]\" field=\"$ref[1]\"/>\n";
 			} else $model .= " $k=\"$v\"";

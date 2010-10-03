@@ -40,7 +40,10 @@ class Schemer {
 	var $migrations = array();
 	/**#@-*/
 
-	function Schemer($data) {
+	/**
+	 * constructor. loads migrations
+	 */
+	function __construct($data) {
 		global $sb;
 		$this->db = $data;
 		$this->migrations = $sb->publish("migrations");
@@ -48,13 +51,36 @@ class Schemer {
 			include(BASE_DIR."/etc/migrations/$a.php");
 		}
 	}
-	//RUN SQL TO MATCH SCHEMA
+
+	/**
+	 * Get the schema of a table
+	 * @param string $table the name of the table
+	 * @return array the table schema with default fields added
+	 */
+	function get_table($table) {
+		$fields = $this->tables[$table];
+		$primary = array();
+		foreach ($fields as $column => $options) {
+			if ((isset($options['key'])) && ("primary" == $options['key'])) $primary[] = $column;
+		}
+		if (empty($primary)) $fields['id'] = star("type:int  auto_increment:  key:primary");
+		if (empty($fields["owner"])) $fields["owner"] = star("type:int  default:1  references:users id");
+		if (empty($fields["status"])) $fields["status"] = star("type:int  default:4");
+		if (empty($fields["created"])) $fields["created"] = star("type:datetime  default:000-00-00 00:00:00");
+		if (empty($fields["modified"])) $fields["modified"] = star("type:datetime  default:000-00-00 00:00:00");
+		return $fields;
+	}
+
+	/**
+	 * Update DB to match the schema state
+	 */
 	function update() {
 		$ts = 0; //tables
 		$cs = 0; //cols
 		$ms = 0; //mods
 		$ds = 0; //drops
 		foreach($this->tables as $table => $fields) {
+			$fields = $this->get_table($table);
 			$records = $this->db->query("SHOW TABLES LIKE '".P($table)."'");
 			if (false === ($row = $records->fetch())) {
 				//NEW TABLE
@@ -116,20 +142,25 @@ class Schemer {
 		}
 		if (($ts == 0) && ($cs == 0) && ($ms == 0) && ($ds == 0)) fwrite(STDOUT, "The Database already matches the schema\n");
 	}
-	//RUN SQL TO CREATE TABLE
+
+	/**
+	 * Run SQL to create a table
+	 */
 	function create($name, $backup=false, $write=true) {
-		$fields = $this->tables[$name];
+		$fields = $this->get_table($name);
 		$this->drop_table($name);
 		$sql = "CREATE TABLE `".P($name)."` (";
 		$primary = array();
 		$index = array();
 		$foreign = array();
 		$sql_fields = "";
+		$primary_fields = "";
 		foreach ($fields as $fieldname => $options) {
-			$sql_fields .= "`".$fieldname."` ".$this->get_sql_type($options).", ";
-			if (!empty($options['key'])) {
-				if ($options['key'] == "primary") $primary[] = "`$fieldname`"; 
-			}
+			$field_sql = "`".$fieldname."` ".$this->get_sql_type($options).", ";
+			if (isset($options['key']) && ("primary" == $options['key'])) {
+				$primary[] = "`$fieldname`";
+				$primary_fields .= $field_sql;
+			} else $sql_fields .= $field_sql;
 			if (isset($options['index'])) $index[] = $fieldname;
 			if (!empty($options['references'])) {
 				$ref = explode(" ", $options['references']);
@@ -139,16 +170,10 @@ class Schemer {
 				$foreign[$fieldname] = $rec;
 			}
 		}
-		if (empty($primary)) {
-			$sql_fields = "id int(11) NOT NULL AUTO_INCREMENT, ".$sql_fields;
-			$primary = "`id`";
-		} else $primary = join(", ", $primary);
-		$sql .= $sql_fields."owner int(11) NOT NULL default '1', collective int(11) NOT NULL default '1', status int(11) NOT NULL default '4', ";
-		$sql .= "created datetime not null default '0000-00-00 00:00:00', modified datetime not null default '0000-00-00 00:00:00', ";
-		$sql .= "PRIMARY KEY ($primary), KEY `owner` (`owner`)";
+		$primary = join(", ", $primary);
+		$sql .= $primary_fields.$sql_fields."PRIMARY KEY ($primary)";
 		foreach($index as $k) $sql .= ", KEY `".$k."` (`$k`)";
 		foreach($foreign as $k => $v) $sql .= ", KEY `".$k."` (`$k`)";
-		$sql .= ", CONSTRAINT `".P($name)."_owner_fk` FOREIGN KEY (`owner`) REFERENCES `sb_users` (`id`) ON UPDATE CASCADE ON DELETE CASCADE";
 		foreach($foreign as $k => $v) {
 			$sql .=", CONSTRAINT `".P($name)."_".$k."_fk` FOREIGN KEY (`$k`) REFERENCES `".P($v['table'])."` (`".$v['column']."`)";
 			if ($v['update']) $sql .= " ON UPDATE ".$v['update'];
@@ -157,50 +182,77 @@ class Schemer {
 		$result = $this->db->exec($sql." ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 		//if ($write) $this->write_model($name, $backup);
 	}
-	//RUN SQL TO DROP TABLE
+
+	/**
+	 * run SQL to drop a table
+	 */
 	function drop_table($name) {
 		$this->db->exec("DROP TABLE IF EXISTS `".P($name)."`");
 		//$this->drop_model($name);
 	}
-	//RUN SQL TO ADD COLUMN
+
+	/**
+	 * Run SQL to add a column
+	 */
 	function add($table, $name) {
-		$fields = $this->tables[$table];
+		$fields = $this->get_table($table);
 		$field = $fields[$name];
 		$sql = $name." ".$this->get_sql_type($field);
 		$this->db->exec("ALTER TABLE `".P($table)."` ADD ".$sql);
 	}
-	//RUN SQL TO REMOVE COLUMN
+
+	/**
+	 * Run SQL to drop a column
+	 */
 	function remove($table, $name) {
 		$this->db->exec("ALTER TABLE `".P($table)."` DROP COLUMN ".$name);
 	}
-	//RUN SQL TO ALTER COLUMN
+
+	/**
+	 * Run SQL to alter a column
+	 */
 	function modify($table, $name) {
-		$field = $this->tables[$table][$name];
+		$fields = $this->get_table($table);
+		$field = $fields[$name];
 		$sql = $name." ".$name." ".$this->get_sql_type($field);
 		$this->db->exec("ALTER TABLE `".P($table)."` CHANGE ".$sql); 
 	}
+
+	/**
+	 * Run SQL to add a foreign key
+	 */
 	function add_foreign_key($table, $name) {
-		$field = $this->tables[$table][$name];
+		$fields = $this->get_table($table);
+		$field = $fields[$name];
 		$ref = explode(" ", $field['references']);
 		$append = "";
 		if ($field['update']) $append .= " ON UPDATE ".$field['update'];
 		if ($field['delete']) $append .= " ON DELETE ".$field['delete'];
 		$this->db->exec("ALTER TABLE `".P($table)."` ADD CONSTRAINT `".P($table)."_".$name."_fk` FOREIGN KEY (`$name`) REFERENCES `".P($ref[0])."` (`".$ref[1]."`)".$append);
 	}
-	//ADD TABLE TO DESCRIPTION
+
+	/**
+	 * Add table to schema
+	 */
 	function table($arg) {
 		$args = func_get_args();
 		$name = array_shift($args);
 		$this->tables[$name] = array();
 		foreach($args as $field) $this->column($name, $field);
 	}
-	//ADD COLUMN TO DESCRIPTION
+
+	/**
+	 * Add column to schema
+	 */
 	function column($table, $col) {
 		$col = starr::star($col);
 		$colname = array_shift($col);
 		$this->tables[$table][$colname] = $col;
 	}
-	//DROP TABLE OR COLUMN FROM DESCRIPTION
+
+	/**
+	 * Drop table or column from schema
+	 */
 	function drop($table, $col="") {
 		if (empty($col)) {
 			$this->table_drops[] = $table;
@@ -254,7 +306,10 @@ class Schemer {
 			}
 		}
 	}
-	
+
+	/**
+	 * Migrate from one state to another
+	 */
 	function migrate($to="top", $from="current") {
 		global $sb;
 		$current_op = $sb->query("options", "select:id,value  where:name='migration'  limit:1");

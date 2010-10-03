@@ -72,7 +72,8 @@ class Table {
 			$ref_field = $lookup;
 			$lookup = $this->type;
 		}
-		$this->relations[$name] = array("type" => "one", "lookup" => $lookup, "ref" => $ref_field);
+		if (!isset($this->relations[$name])) $this->relations[$name] = array();
+		$this->relations[$name] = array_merge($this->relations[$name], array($lookup => array("type" => "one", "lookup" => $lookup, "ref" => $ref_field)));
 	}
 
 	/**
@@ -83,11 +84,14 @@ class Table {
 	 * @param string $ref_field optional the column that contains the id of the related record (used with lookup)
 	 */
 	protected function has_many($name, $hook, $lookup="", $ref_field="") {
-		$this->relations[$name] = array("type" => "many", "hook" => $hook);
+		efault($lookup, $name);
+		$merge = array($lookup => array("type" => "many", "hook" => $hook));
 		if ($lookup && $ref_field) {
-			$this->relations[$name]["lookup"] = $lookup;
-			$this->relations[$name]["ref"] = $ref_field;
+			$merge[$lookup]["lookup"] = $lookup;
+			$merge[$lookup]["ref"] = $ref_field;
 		}
+		if (!isset($this->relations[$name])) $this->relations[$name] = array();
+		$this->relations[$name] = array_merge($this->relations[$name], $merge);
 	}
 
 
