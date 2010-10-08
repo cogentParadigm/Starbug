@@ -1,12 +1,13 @@
 <?php
-// FILE: etc/Theme.php
 /**
- * Theme config file
- * 
- * @package StarbugPHP
- * @subpackage etc
+ * This file is part of StarbugPHP
+ * @file etc/Theme.php Theme config file
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup etc
+ */
+/**
+ * Theme constants
+ * @ingroup etc
  */
 class Theme {
 	/* Theme details */

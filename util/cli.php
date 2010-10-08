@@ -1,10 +1,35 @@
 <?php
+/**
+ * This file is part of StarbugPHP
+ * @file util/cli.php
+ * @author Ali Gangji <ali@neonrain.com>
+ * @ingroup cli
+ */
+/**
+ * @defgroup cli
+ * cli output utility
+ * @ingroup util
+ */
 $sb->provide("util/cli");
-function cli_query($model, $args="") {
+/**
+ * query the database and output the results in a table formatted for cli output
+ * @see sb::query
+ * @see cli::table
+ * @ingroup cli
+ */
+function cli_query($model, $args="", $mine=false) {
 	global $sb;
-	cli::table($sb->query($model, $args));
+	cli::table($sb->query($model, $args, $mine));
 }
+/**
+ * class for cli output functions
+ * @ingroup cli
+ */
 class cli {
+/**
+ * output an array of records in a table formatted for command line output
+ * @param array $records an array of records
+ */
 function table($records) {
 		$lengths = array();
 		$one = $two = $three = "";

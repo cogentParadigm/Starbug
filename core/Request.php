@@ -1,23 +1,16 @@
 <?php
-// FILE: core/Request.php
 /**
- * Request class
- * 
- * @package StarbugPHP
- * @subpackage core
+ * This file is part of StarbugPHP
+ * @file core/Request.php
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup core
  */
 /**
  * Request class. interprets the request URI and serves the appropriate content
- * @package StarbugPHP
- * @subpackage core
+ * @ingroup core
  */
 class Request {
 
-	/**#@+
-	* @access public
-	*/
 	/**
 	 * @var array the row in the uris table of the requested path
 	 */
@@ -58,7 +51,6 @@ class Request {
 	 * @var string the path of the base directory
 	 */
 	var $base_dir;
-	/**#@-*/
 
 	/**
 	 * constructor. initiates tags and postback

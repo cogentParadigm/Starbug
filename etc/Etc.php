@@ -1,26 +1,42 @@
 <?php
-// FILE: etc/Etc.php
 /**
- * This is the project wide configuration file
- * 
- * @package StarbugPHP
- * @subpackage etc
+ * This file is part of StarbugPHP
+ * @file etc/Etc.php The project wide configuration file
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup etc
  */
 include(BASE_DIR."/etc/Host.php");
+/**
+ * holds configuration constants
+ * access configuration constants via this class using Etc::CONSTANT_NAME
+ * @ingroup etc
+ */
 class Etc extends Host {
-	/* Name of website */
+	/**
+	* the name of your application
+	*/
 	const WEBSITE_NAME = "Starbug";
-	/* Tagline Description */
+	/**
+	* a tagline or short description for your application
+	*/
 	const TAGLINE = "Fresh XHTML and CSS, just like mom used to serve!";
 
-	/* Directories */
+	/**
+	* CSS directory
+	*/
 	const STYLESHEET_DIR = "app/public/stylesheets/";
+	/**
+	* image directory
+	*/
 	const IMG_DIR = "app/public/images/";
 
-	/* path defaults */
+/**
+ * default template used for missing and forbidden pages
+ */
 	const DEFAULT_TEMPLATE = "templates/View";
+	/**
+	* default page to load when request uri is /
+	*/
 	const DEFAULT_PATH = "home";
 }
 include(BASE_DIR."/etc/constraints.php");

@@ -1,1 +1,1 @@
-a:1:{i:10;a:3:{i:0;a:2:{s:6:"handle";s:9:"return_it";s:4:"args";s:18:"UserAuthentication";}i:1;a:2:{s:6:"handle";s:9:"return_it";s:4:"args";s:14:"StandardCreate";}i:2;a:2:{s:6:"handle";s:9:"return_it";s:4:"args";s:14:"StandardDelete";}}}
+a:1:{i:10;a:1:{i:0;a:2:{s:6:"handle";s:9:"return_it";s:4:"args";s:18:"UserAuthentication";}}}

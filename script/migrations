@@ -1,13 +1,10 @@
 #!/usr/bin/php
 <?php
-// FILE: script/migrations
 /**
- * used to manage the migration list
- * 
- * @package StarbugPHP
- * @subpackage script
+ * This file is part of StarbugPHP
+ * @file script/migrations used to manage the migration list
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup script
  */
 	include(dirname(__FILE__)."/../core/cli.php");
 	$script = array_shift($argv);

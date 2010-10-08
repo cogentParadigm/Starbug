@@ -1,14 +1,20 @@
 <?php
-// FILE: util/subscribe.php
 /**
- * sb mixin to add subscriber functions
- * 
- * @package StarbugPHP
- * @subpackage util
+ * This file is part of StarbugPHP
+ * @file util/subscribe.php
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup subscribe
+ */
+/**
+ * @defgroup subscribe
+ * subscribe utility
+ * @ingroup util
  */
 $sb->provide("util/subscribe");
+/**
+ * sb mixin to add subscriber functions
+ * @ingroup subscribe
+ */
 class Subscriber {
 	/**
 	 * subscribe to a topic

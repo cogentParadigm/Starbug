@@ -1,17 +1,13 @@
 <?php
-// FILE: core/db/db.php
 /**
- * The db class
- * 
- * @package StarbugPHP
- * @subpackage core
+ * This file is part of StarbugPHP
+ * @file core/db/db.php
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup db
  */
 /**
  * The db class. A simple PDO wrapper
- * @package StarbugPHP
- * @subpackage core
+ * @ingroup db
  */
 class db {
 

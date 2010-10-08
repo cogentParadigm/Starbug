@@ -9,15 +9,15 @@
  * @package <xsl:value-of select="@package"/>
  * @subpackage models
  */
-class <xsl:value-of select="@label"/> extends Table {
+class <xsl:value-of select="@label"/> extends <xsl:value-of select="@label"/>Model {
 
-	var $filters = array(<xsl:for-each select="field[filter]">
-		"<xsl:value-of select="@name"/>" => "<xsl:for-each select="filter"><xsl:value-of select="@name"/>:<xsl:value-of select="@value"/><xsl:if test="position()!=last()"><xsl:text>  </xsl:text></xsl:if></xsl:for-each>"<xsl:if test="position()!=last()">,</xsl:if></xsl:for-each>
-	);
+	function create() {
+		$<xsl:value-of select="@name"/> = $_POST['<xsl:value-of select="@name"/>'];
+		return $this->store($<xsl:value-of select="@name"/>);
+	}
 
-	function onload() {<xsl:for-each select="field[references]">
-		$this->has_one("<xsl:value-of select="references/@model"/>", "<xsl:value-of select="@name"/>");</xsl:for-each><xsl:for-each select="relation">
-		$this->has_many("<xsl:value-of select="@model"/>", "<xsl:value-of select="@field"/>"<xsl:if test="@lookup">, "<xsl:value-of select="@lookup"/>", "<xsl:value-of select="@ref_field"/>"</xsl:if>);</xsl:for-each>
+	function delete() {
+		return $this->remove('id='.$_POST['<xsl:value-of select="@name"/>']['id']);
 	}
 
 }

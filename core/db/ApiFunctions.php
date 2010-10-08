@@ -1,17 +1,13 @@
 <?php
-// FILE: core/db/ApiFunctions.php
 /**
- * ApiFunctions class
- * 
- * @package StarbugPHP
- * @subpackage core
+ * This file is part of StarbugPHP
+ * @file core/db/ApiFunctions.php
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup db
  */
 /**
  * ApiFunctions class. provides data in xml and json format
- * @package StarbugPHP
- * @subpackage core
+ * @ingroup db
  */
 class ApiFunctions {
 

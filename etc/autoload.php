@@ -1,15 +1,14 @@
 <?php
-// FILE: etc/autoload.php
 /**
- * list of modules to import after initializing
- * 
- * @package StarbugPHP
- * @subpackage etc
+ * @file etc/autoload.php list of modules to import after initializing
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup etc
+ */
+/**
+ * modules to autoload
+ * @ingroup etc
  */
 $autoload = array(
-	"util/db",
 	"util/uris",
 	"util/permits",
 	"util/templates"

@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of StarbugPHP
+ * @file script/console.php initiates the console
+ * @see console
+ * @author Ali Gangji <ali@neonrain.com>
+ * @ingroup script
+ */
 	if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("/script", "", dirname(__FILE__)));
 	set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);
 	if (!defined('STDOUT')) define("STDOUT", fopen("php://stdout", "wb"));

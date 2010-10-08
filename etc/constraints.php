@@ -1,17 +1,12 @@
 <?php
-// FILE: etc/constraints.php
 /**
- *  configuration for access control
- * 
- *  @package StarbugPHP
- *  @subpackage etc
- *  @author Ali Gangji <ali@neonrain.com>
- * 	@copyright 2008-2010 Ali Gangji
+ * @file etc/constraints.php configuration for access control
+ * @author Ali Gangji <ali@neonrain.com>
+ * @ingroup etc
  */
 /**
  * list of groups and their membership value (must be a power of 2)
- * @global array $groups
- * @name $groups
+ * @ingroup etc
  */
 global $groups;
 $groups = array(
@@ -20,8 +15,7 @@ $groups = array(
 );
 /**
  * list of statuses and their numeric value (must be a power of 2)
- * @global array $statuses
- * @name $statuses
+ * @ingroup etc
  */
 global $statuses;
 $statuses = array(

@@ -1,19 +1,20 @@
 <?php
-// FILE: util/dojo.php
 /**
- * The dojo wrapper
- * 
- * @package StarbugPHP
- * @subpackage util
+ * This file is part of StarbugPHP
+ * @file util/dojo.php
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup dojo
  */
 /**
- * The dojo class. A wrapper for dojo javascript toolkit
- * @package StarbugPHP
- * @subpackage util
+ * @defgroup dojo
+ * dojo utility
+ * @ingroup util
  */
 $sb->provide("util/dojo");
+/**
+ * The dojo class. A wrapper for dojo javascript toolkit
+ * @ingroup dojo
+ */
 class dojo {
 	var $behaviors = array();
 	var $toggles = array();
@@ -51,6 +52,10 @@ class dojo {
 		if ($params['add']) $this->toggles[$toggler]['add'] = $params['add'];
 	}
 }
+/**
+ * A global instance of the dojo class
+ * @ingroup dojo
+ */
 global $dojo;
 $dojo = new dojo();
 ?>

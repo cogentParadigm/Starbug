@@ -1,35 +1,30 @@
 <?php
-// FILE: index.php
 /**
- * index file. handles browser requests
- * 
- * @package StarbugPHP
- * @subpackage core
+ * This file is part of StarbugPHP
+ * @file index.php index file. handles browser requests
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup core
  */
 session_start();
 /**
- * base directory
+ * the base directory
  */
 define('BASE_DIR', dirname(__FILE__));
-/**
- * include the configuration class
- */
+
+// include the config file
 include(BASE_DIR."/etc/Etc.php");
-/**
- * include the init file
- */
+
+// include init file
 include(BASE_DIR."/core/init.php");
-/**
- * include the Request class
- */
+
+// include Request
 include(BASE_DIR."/core/Request.php");
+
 /**
- * the global instance of the Request class
- * @global Request $request
- * @name $request
+ * global instance of the Request class
+ * @ingroup core
  */
+global $request;
 $request = new Request($groups, $statuses);
 $request->set_path($_SERVER['REQUEST_URI'], end(explode("/",dirname(__FILE__))));
 $request->execute();

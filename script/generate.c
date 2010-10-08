@@ -1,3 +1,9 @@
+/**
+ * This file is part of StarbugPHP
+ * @file script/generate.c C wrapper for SAXON XSLT Processor that can be setuid to run generator from web interface
+ * @author Ali Gangji <ali@neonrain.com>
+ * @ingroup script
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

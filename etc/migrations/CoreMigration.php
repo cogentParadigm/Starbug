@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of StarbugPHP
+ * @file etc/migrations/CoreMigration.php
+ * @author Ali Gangji <ali@neonrain.com>
+ * @ingroup db
+ */
+/**
+ * CoreMigration class. The base migration which contains the initial database schema
+ * @ingroup db
+ */
 class CoreMigration extends Migration {
 	function up() {
 		$this->table("users",

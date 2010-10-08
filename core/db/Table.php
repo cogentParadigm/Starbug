@@ -1,17 +1,13 @@
 <?php
-// FILE: core/db/Table.php
 /**
- * Table class
- * 
- * @package StarbugPHP
- * @subpackage core
+ * This file is part of Starbug PHP
+ * @file core/db/Table.php
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup db
  */
 /**
  * This class wraps a databse table, it is the base class for database models
- * @package StarbugPHP
- * @subpackage core
+ * @ingroup db
  */
 class Table {
 	/**
@@ -58,7 +54,7 @@ class Table {
 		$this->onload();
 	}
 
-	function onload() {
+	protected function onload() {
 	}
 
 	/**

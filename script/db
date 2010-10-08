@@ -1,13 +1,10 @@
 #!/usr/bin/php
 <?php
-// FILE: script/db
 /**
- * used to query and manipulate data in the db
- * 
- * @package StarbugPHP
- * @subpackage script
+ * This file is part of StarbugPHP
+ * @file script/db cli script used to query and manipulate data in the db
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup script
  */
 	include(dirname(__FILE__)."/../core/cli.php");
 	$script = array_shift($argv);
@@ -20,9 +17,11 @@
 			$from = $next[0];
 			$to = $next[1];
 			$schemer->migrate($to, $from);
-		} else {
+		} else if (!empty($next)) {
 			$to = $next;
 			$schemer->migrate($to);
+		} else {
+			$schemer->migrate();
 		}
 	}
 	if ("dump" == $what) {
@@ -51,8 +50,10 @@
 		$pass = str_replace($search, $replace, Etc::DB_PASSWORD);
 		$dbname = str_replace($search, $replace, Etc::DB_NAME);
 		$host = str_replace($search, $replace, Etc::DB_HOST);
-		foreach ($schemer->tables as $table => $cols) {
-			exec("mysql -u $user --host=$host --password=$pass --database=$dbname < ".BASE_DIR."/var/dump/$table.sql");
+		if ($handle = opendir(BASE_DIR."/var/dump")) {
+			while (false !== ($file = readdir($handle))) {
+				if (false !== strpos($file, ".sql")) exec("mysql -u $user --host=$host --password=$pass --database=$dbname < ".BASE_DIR."/var/dump/$file");
+			}
 		}
 	}
 	if ("store" == $what) {

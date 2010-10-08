@@ -1,18 +1,19 @@
 <?php
-// FILE: util/form.php
 /**
- *  form class and function
- * 
- *  @package StarbugPHP
- *  @subpackage util
- *  @author Ali Gangji <ali@neonrain.com>
- * 	@copyright 2008-2010 Ali Gangji
+ * This file is part of StarbugPHP
+ * @file util/form.php
+ * @author Ali Gangji <ali@neonrain.com>
+ * @ingroup form
+ */
+/**
+ * @defgroup form
+ * form utility
+ * @ingroup util
  */
 $sb->provide("util/form");
 /**
  * Used to build XHTML forms
- * @package StarbugPHP
- * @subpackage util
+ * @ingroup form
  */
 class form {
 	/**
@@ -304,6 +305,7 @@ class form {
  * shortcut function for outputing small forms
  * @params string $arg the first parameter is the form options, the rest are form controls
  * @return string the form
+ * @ingroup form
  */
 function form($arg) {
 	$args = func_get_args();
@@ -328,6 +330,7 @@ function form($arg) {
  * creates a new form and outputs the opening form tag and some hidden inputs
  * @param string $options the options for the form
  * @param string $atts attributes for the form tag
+ * @ingroup form
  */
 function open_form($options, $atts="") {
 	global $global_form;
@@ -340,6 +343,7 @@ function open_form($options, $atts="") {
 /**
  * outputs a text field
  * @param string $ops the options
+ * @ingroup form
  */
 function text($ops) {
 	global $global_form;
@@ -348,6 +352,7 @@ function text($ops) {
 /**
  * outputs a password
  * @param string $ops the options
+ * @ingroup form
  */
 function password($ops) {
 	global $global_form;
@@ -356,6 +361,7 @@ function password($ops) {
 /**
  * outputs a hidden field
  * @param string $ops the options
+ * @ingroup form
  */
 function hidden($ops) {
 	global $global_form;
@@ -364,6 +370,7 @@ function hidden($ops) {
 /**
  * outputs a submit button
  * @param string $ops the options
+ * @ingroup form
  */
 function submit($ops="") {
 	global $global_form;
@@ -372,6 +379,7 @@ function submit($ops="") {
 /**
  * outputs a file input
  * @param string $ops the options
+ * @ingroup form
  */
 function file_select($ops) {
 	global $global_form;
@@ -380,6 +388,7 @@ function file_select($ops) {
 /**
  * outputs an image input
  * @param string $ops the options
+ * @ingroup form
  */
 function image($ops) {
 	global $global_form;
@@ -388,6 +397,7 @@ function image($ops) {
 /**
  * outputs a checkbox input
  * @param string $ops the options
+ * @ingroup form
  */
 function checkbox($ops) {
 	global $global_form;
@@ -396,6 +406,7 @@ function checkbox($ops) {
 /**
  * outputs a radio button
  * @param string $ops the options
+ * @ingroup form
  */
 function radio($ops) {
 	global $global_form;
@@ -404,6 +415,7 @@ function radio($ops) {
 /**
  * outputs an input
  * @param string $ops the options
+ * @ingroup form
  */
 function input($type, $ops) {
 	global $global_form;
@@ -413,6 +425,7 @@ function input($type, $ops) {
  * outputs a select field
  * @param string $ops the field info
  * @param array $options the option elements
+ * @ingroup form
  */
 function select($ops, $options=array()) {
 	global $global_form;
@@ -421,6 +434,7 @@ function select($ops, $options=array()) {
 /**
  * outputs a date select
  * @param string $ops the options
+ * @ingroup form
  */
 function date_select($ops) {
 	global $global_form;
@@ -429,6 +443,7 @@ function date_select($ops) {
 /**
  * outputs a time select
  * @param string $ops the options
+ * @ingroup form
  */
 function time_select($ops) {
 	global $global_form;
@@ -437,6 +452,7 @@ function time_select($ops) {
 /**
  * outputs a textarea
  * @param string $ops the options
+ * @ingroup form
  */
 function textarea($ops) {
 	global $global_form;
@@ -444,6 +460,7 @@ function textarea($ops) {
 }
 /**
  * outputs a closing form tag
+ * @ingroup form
  */
 function close_form() {
 	echo "</form>";

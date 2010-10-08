@@ -1,18 +1,12 @@
 <?php
-// FILE: core/external.php
 /**
- * external init file. can be included by 3rd party apps
- * 
- * @package StarbugPHP
- * @subpackage core
+ * This file is part of StarbugPHP
+ * @file core/external.php external init file. can be included by 3rd party apps
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup core
  */
 session_start();
-/**
- * the base directory
- */
-define('BASE_DIR', str_replace("core", "", dirname(__FILE__)));
+if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("core", "", dirname(__FILE__)));
 /**
  * include the configuration file
  */

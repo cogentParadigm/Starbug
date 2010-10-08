@@ -1,21 +1,5 @@
 <?php
-class Uris extends Table {
-
-	public $filters = array(
-		"path" => "length:64  unique:true",
-		"template" => "length:32",
-		"title" => "length:128",
-		"parent" => "default:0",
-		"sort_order" => "default:0",
-		"check_path" => "default:1",
-		"prefix" => "default:app/views/",
-		"options" => "default:"
-	);
-
-	function __construct($type) {
-		parent::__construct($type);
-		$this->has_many("tags", "object_id", "uris_tags", "tag_id");
-	}
+class Uris extends UrisModel {
 
 	function create() {
 		$uris = $_POST['uris'];

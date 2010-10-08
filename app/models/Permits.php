@@ -1,11 +1,6 @@
 <?php
-class Permits extends Table {
-	var $filters = array(
-		"priv_type" 		=> "default:table",
-		"who" 					=> "default:0",
-		"status" 				=> "default:0",
-		"related_id" 		=> "default:0"
-	);
+class Permits extends PermitsModel {
+
 	function grant() {
 		$permit = $_POST['permits'];
 		if ($permit['priv_type'] != "object") $permit['related_id'] = '0';
@@ -15,5 +10,6 @@ class Permits extends Table {
 		$this->remove("id='".$_POST['permits']['id']."'");
 		return array();
 	}
+
 }
 ?>

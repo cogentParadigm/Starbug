@@ -1,17 +1,14 @@
 <?php
-// FILE: core/sb.php
 /**
- * The global $sb object. provides data, errors, import/provide, load and pub/sub. The backbone of Starbug
- * 
- * @package StarbugPHP
- * @subpackage core
+ * This file is part of StarbugPHP
+ * @file core/sb.php
+ * The global sb object. provides data, errors, import/provide, load and pub/sub. The backbone of Starbug
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup core
  */
 /**
  * The sb class. Provides data, errors, import/provide, pub/sub, and load to the rest of the application. The core component of StarbugPHP.
- * @package StarbugPHP
- * @subpackage core
+ * @ingroup core
  */
 class sb {
 	/**#@+
@@ -54,6 +51,10 @@ class sb {
 	 */
 	var $imported_functions = array();
 	/**#@-*/
+	/**
+	 * @var array holds records waiting to be stored
+	 */
+	var $to_store = array();
 
 	/**
 	 * constructor. connects to db and sets default $_SESSION values
@@ -122,7 +123,9 @@ class sb {
 	function get($name) {
 		$obj = ucwords($name);
 		if (!isset($this->objects[$name])) {
-			include(BASE_DIR."/app/models/".$obj.".php");
+			include(BASE_DIR."/core/app/models/".$obj."Model.php");
+			if (file_exists(BASE_DIR."/app/models/$obj.php")) include(BASE_DIR."/app/models/$obj.php");
+			else $obj .= "Model";
 			$this->objects[$name] = new $obj($name);
 		}
 		return $this->objects[$name];
@@ -133,7 +136,7 @@ class sb {
 	 * @param string $name the name of the model
 	 * @return bool true if model exists, false otherwise
 	 */
-	function has($name) {return (($this->objects[$name]) || (file_exists(BASE_DIR."/app/models/".ucwords($name).".php")));}
+	function has($name) {return (($this->objects[$name]) || (file_exists(BASE_DIR."/core/app/models/".ucwords($name)."Model.php")));}
 
 	/**
 	 * query the database
@@ -142,7 +145,7 @@ class sb {
 	 * @param bool $mine optional. if true, joining models will be checked for relationships and ON statements will be added
 	 * @return array record or records
 	 */
-	function query($froms, $args="", $mine=false) {
+	function query($froms, $args="", $mine=true) {
 		$froms = explode(",", $froms);
 		$first = array_shift($froms);
 		$args = starr::star($args);
@@ -151,14 +154,11 @@ class sb {
 		if (!$mine) foreach ($froms as $f) $from .= " INNER JOIN `".P($f)."` AS `".$f."`";
 		else {
 			$relations = $this->get($first)->relations;
-			if (!isset($args['via'])) {
-				
-			}
 			foreach ($froms as $f) {
 				$f = explode(" via ", $f);
 				if (1 == count($f)) {
 					if (isset($relations[$f[0]][$first])) $rel = $relations[$f[0]][$first];
-					else if (isset($relations[$f[0]][$f[0]])) $rel = $relations[$f[0]][$first];
+					else if (isset($relations[$f[0]][$f[0]])) $rel = $relations[$f[0]][$f[0]];
 					else $rel = reset($relations[$f[0]]);
 				} else $rel = $relations[$f[0]][$f[1]];
 				$lookup = $f[1];
@@ -172,30 +172,12 @@ class sb {
 				}
 			}
 		}
-		if ((!empty($args['action'])) && (($_SESSION[P("memberships")] & 1) != 1)) {
-			$roles = "(permits.role='everyone' || (permits.role='user' && permits.who='".$_SESSION[P('id')]."') || (permits.role='group' && (('".$_SESSION[P('memberships')]."' & permits.who)=permits.who))";
-			if ((!empty($args['priv_type'])) && ($args['priv_type'] == "table")) {
-				$from = P("permits")." AS permits";
-				$permit_type = "permits.priv_type='table'";
-			} else {
-				$from .= " INNER JOIN ".P("permits")." AS permits";
-				$permit_type = "(permits.priv_type='global' || (permits.priv_type='object' && permits.related_id=".$first.".id))"." && ((permits.status & ".$first.".status)=".$first.".status)";
-				$roles .= " || (permits.role='owner' && ".$first.".owner='".$_SESSION[P('id')]."') || (permits.role='collective' && (('".$_SESSION[P('memberships')]."' & ".$first.".collective)=".$first.".collective))";
-			}
-			$args['where'] = "permits.related_table='".P($first)."'"
-			." && permits.action='$args[action]'"
-			." && ".$permit_type
-			." && ".$roles.")"
-			.((empty($args['where'])) ? "" : " && ".$args['where']);
-		}
-		if (!empty($args['keywords'])) {
-			$this->import("util/search");
-			$args['where'] = ((empty($args['where'])) ? "" : $args['where']." && ").keywordClause($args['keywords'], split(",", $args['search']));
-		}
+		foreach ($args as $k => $v) if (file_exists(BASE_DIR."/app/filters/query/$k.php")) include(BASE_DIR."/app/filters/query/$k.php");
 		if (!empty($args['where'])) $args['where'] = " WHERE ".$args['where'];
 		$limit = (!(empty($args['limit']))) ? " LIMIT $args[limit]" : "";
 		$order = (!(empty($args['orderby']))) ? " ORDER BY $args[orderby]" : "";
 		$sql = " FROM $from$args[where]$order$limit";
+		if (isset($args['echo'])) echo "SELECT $args[select] ".$sql;
 		try {
 			$res = $this->db->query("SELECT COUNT(*)".$sql);
 			$this->record_count = $res->fetchColumn();
@@ -215,8 +197,23 @@ class sb {
 	 * @return array validation errors
 	 */
 	function store($name, $fields, $from="auto") {
+		$this->queue($name, $fields, $from);
+		$last = array_pop($this->to_store);
+		$this->to_store = array_merge(array($last), $this->to_store);
+		$this->store_queue();
+	}
+
+	/**
+	 * queue data to be stored in the database pending validation of other data
+	 * @param string $name the name of the table
+	 * @param string/array $fields keypairs of columns/values to be stored
+	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
+	 * @return array validation errors
+	 */
+	function queue($name, $fields, $from="auto") {
 		$thefilters = ($this->has($name)) ? $this->get($name)->filters : array();
-		$errors = array(); $byfilter = array();
+		$errors = $byfilter = array();
+		$storing = false;
 		if (!is_array($fields)) $fields = starr::star($fields);
 		foreach ($fields as $col => $value) {
 			$errors[$col] = array();
@@ -226,48 +223,69 @@ class sb {
 			if ($value === "") $errors[$col]["required"] = "This field is required.";
 		}
 		foreach($byfilter as $filter => $args) {
-			include(BASE_DIR."/util/filters/$filter.php");
+			$on_store = false;
+			include(BASE_DIR."/app/filters/store/$filter.php");
+			if (!$on_store) unset($byfilter[$filter]);
 		}
 		foreach($errors as $col => $err) if (empty($err)) unset($errors[$col]);
-		if((empty($errors)) && (empty($this->errors[$name]))) { //no errors
-			$prize = array();
-			$fields['modified'] = date("Y-m-d H:i:s");
+		if (!empty($errors)) $this->errors = array_merge_recursive($this->errors, array($name => $errors));
+		$this->to_store[] = array("model" => $name, "fields" => $fields, "from" => $from, "filters" => $byfilter);
+	}
+
+	/**
+	 * proccess the queue of data for storage
+	 */
+	function store_queue() {
+		foreach ($this->to_store as $store) {
+			$storing = true;
+			$inserting = $updating = false;
+			$name = $store['model'];
+			$fields = $store['fields'];
+			$from = $store["from"];
+			$filters = $store["filters"];
+			$errors = $prize = array();
 			if ($from == "auto") {
 				if (!empty($fields['id'])) {
 					$from = array("id" => $fields['id']);
 					unset($fields['id']);
 				}
 			} else if ((false !== $from) && (!is_array($from))) $from = starr::star($from);
-			if(is_array($from)) { //updating existing record
-				foreach($fields as $col => $value) {
-					$prize[] = $value;
-					if(empty($setstr)) $setstr = $col."= ?";
-					else $setstr .= ", ".$col."= ?";
+			if (is_array($from)) $updating = true; else $inserting = true;
+			foreach ($filters as $filter => $args) include(BASE_DIR."/app/filters/store/$filter.php");
+			foreach($errors as $col => $err) if (empty($err)) unset($errors[$col]);
+			if (!empty($errors)) $this->errors = array_merge_recursive($this->errors, array($name => $errors));
+			if (empty($this->errors)) { //no errors
+				$fields['modified'] = date("Y-m-d H:i:s");
+				if(is_array($from)) { //updating existing record
+					foreach($fields as $col => $value) {
+						$prize[] = $value;
+						if(empty($setstr)) $setstr = $col."= ?";
+						else $setstr .= ", ".$col."= ?";
+					}
+					foreach($from as $c => $v) {
+						$prize[] = $v;
+						if (empty($wherestr)) $wherestr = $c." = ?";
+						else $wherestr .= " && ".$c." = ?";
+					}
+					$stmt = $this->db->prepare("UPDATE ".P($name)." SET ".$setstr." WHERE ".$wherestr);
+					$this->record_count = $stmt->execute($prize);
+				} else { //creating new record
+					$fields['created'] = date("Y-m-d H:i:s");
+					if (!isset($fields['owner'])) $fields['owner'] = ($_SESSION[P('id')] > 0) ? $_SESSION[P('id')] : 1;
+					$keys = ""; $values = "";
+					foreach($fields as $col => $value) {
+						$prize[] = $value;
+						if(empty($keys)) $keys = $col;
+						else $keys .= ", ".$col;
+						if(empty($values)) $values = "?";
+						else $values .= ", ?";
+					}
+					$stmt = $this->db->prepare("INSERT INTO ".P($name)." (".$keys.") VALUES (".$values.")");
+					$this->record_count = $stmt->execute($prize);
+					$this->insert_id = $this->db->lastInsertId();
 				}
-				foreach($from as $c => $v) {
-					$prize[] = $v;
-					if (empty($wherestr)) $wherestr = $c." = ?";
-					else $wherestr .= " && ".$c." = ?";
-				}
-				$stmt = $this->db->prepare("UPDATE ".P($name)." SET ".$setstr." WHERE ".$wherestr);
-				//$this->record_count = $stmt->execute($prize);
-			} else { //creating new record
-				$fields['created'] = date("Y-m-d H:i:s");
-				if (!isset($fields['owner'])) $fields['owner'] = ($_SESSION[P('id')] > 0) ? $_SESSION[P('id')] : 1;
-				$keys = ""; $values = "";
-				foreach($fields as $col => $value) {
-					$prize[] = $value;
-					if(empty($keys)) $keys = $col;
-					else $keys .= ", ".$col;
-					if(empty($values)) $values = "?";
-					else $values .= ", ?";
-				}
-				$stmt = $this->db->prepare("INSERT INTO ".P($name)." (".$keys.") VALUES (".$values.")");
-				$this->record_count = $stmt->execute($prize);
-				$this->insert_id = $this->db->lastInsertId();
 			}
 		}
-		return $errors;
 	}
 
 	/**
@@ -357,6 +375,58 @@ class sb {
 			return call_user_func_array(array($this->imported_functions[$method], $method), $args);
 		}
 		throw new Exception ('Call to undefined method/class function: ' . $method);
-	}  
+	}
+}
+/**
+ * @copydoc sb::query
+ * @ingroup core
+ */
+function query($froms, $args="", $mine=false) {
+	global $sb;
+	return $sb->query($froms, $args, $mine);
+}
+/**
+ * perform a raw query
+ * @param string $query the sql query string
+ * @ingroup core
+ */
+function raw_query($query) {
+	global $sb;
+	if (strtolower(substr($query, 0, 6)) == "select") return $sb->db->query($query);
+	else return $sb->db->exec($query);
+}
+/**
+ * @copydoc sb::store
+ * @ingroup core
+ */
+function store($name, $fields, $from="auto") {
+	global $sb;
+	return $sb->store($name, $fields, $from);
+}
+/**
+ * store only if a record with matching fields does not exist
+ * @copydoc sb::store
+ * @ingroup core
+ */
+function store_once($name, $fields, $from="auto") {
+	global $sb;
+	if (!is_array($fields)) $fields = starr::star($fields);
+	$where = "";
+	foreach ($fields as $k => $v) {
+		if (!empty($where)) $where .= " && ";
+		$where .= "$k=".$sb->db->quote($v);
+	}
+	$records = $sb->query($name, "where:$where");
+	if ($sb->record_count == 0) {
+		return $sb->store($name, $fields, $from);
+	} else return false;
+}
+/**
+ * @copydoc sb::remove
+ * @ingroup core
+ */
+function remove($from, $where) {
+	global $sb;
+	return $sb->remove($from, $where);
 }
 ?>

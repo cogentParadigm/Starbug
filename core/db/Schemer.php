@@ -1,18 +1,14 @@
 <?php
-// FILE: core/db/Schemer.php
 /**
- * The DB Schemer - Uses the migrations to manage the database schema
- * 
- * @package StarbugPHP
- * @subpackage core
+ * This file is part of StarbugPHP
+ * @file core/db/Schemer.php
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup db
  */
 include("core/db/Migration.php");
 /**
  * The Schemer class. Manages a schema of the database using migrations and handles synching a database with the schema
- * @package StarbugPHP
- * @subpackage core
+ * @ingroup db
  */
 class Schemer {
 	/**#@+
@@ -34,6 +30,14 @@ class Schemer {
 	 * @var array Columns that have been dropped
 	 */
 	var $column_drops = array();
+	/**
+	 * @var array Holds uris
+	 */
+	var $uris = array();
+	/**
+	 * @var array Holds permits
+	 */
+	var $permits = array();
 	/**
 	 * @var array Ordered list of migrations
 	 */
@@ -72,7 +76,7 @@ class Schemer {
 	}
 
 	/**
-	 * Update DB to match the schema state
+	 * Updates the DB to match the schema state
 	 */
 	function update() {
 		$ts = 0; //tables
@@ -144,7 +148,8 @@ class Schemer {
 	}
 
 	/**
-	 * Run SQL to create a table
+	 * Run SQL to create a table in the DB from the schema
+	 * @param string $name the name of the table from tables array
 	 */
 	function create($name, $backup=false, $write=true) {
 		$fields = $this->get_table($name);
@@ -185,6 +190,7 @@ class Schemer {
 
 	/**
 	 * run SQL to drop a table
+	 * @param string $name the name of the table from tables array
 	 */
 	function drop_table($name) {
 		$this->db->exec("DROP TABLE IF EXISTS `".P($name)."`");
@@ -192,7 +198,9 @@ class Schemer {
 	}
 
 	/**
-	 * Run SQL to add a column
+	 * Run SQL to add a column to the DB from the schema
+	 * @param string $table the name of the table from tables array
+	 * @param string $name the name of column
 	 */
 	function add($table, $name) {
 		$fields = $this->get_table($table);
@@ -203,13 +211,17 @@ class Schemer {
 
 	/**
 	 * Run SQL to drop a column
+	 * @param string $table the name of the table from tables array
+	 * @param string $name the name of column
 	 */
 	function remove($table, $name) {
 		$this->db->exec("ALTER TABLE `".P($table)."` DROP COLUMN ".$name);
 	}
 
 	/**
-	 * Run SQL to alter a column
+	 * Run SQL to alter a column in the DB to match the schema
+	 * @param string $table the name of the table from tables array
+	 * @param string $name the name of column
 	 */
 	function modify($table, $name) {
 		$fields = $this->get_table($table);
@@ -219,7 +231,9 @@ class Schemer {
 	}
 
 	/**
-	 * Run SQL to add a foreign key
+	 * Run SQL to add a foreign key to the DB from the schema
+	 * @param string $table the name of the table from tables array
+	 * @param string $name the name of column
 	 */
 	function add_foreign_key($table, $name) {
 		$fields = $this->get_table($table);
@@ -232,7 +246,9 @@ class Schemer {
 	}
 
 	/**
-	 * Add table to schema
+	 * Add a table to the schema
+	 * @param string $arg0 the name of the table
+	 * @param string $arg1-$arg(N-1) A star formatted column string
 	 */
 	function table($arg) {
 		$args = func_get_args();
@@ -243,6 +259,8 @@ class Schemer {
 
 	/**
 	 * Add column to schema
+	 * @param string $table the name of the table
+	 * @param string $col A star formatted column string
 	 */
 	function column($table, $col) {
 		$col = starr::star($col);
@@ -252,6 +270,8 @@ class Schemer {
 
 	/**
 	 * Drop table or column from schema
+	 * @param string $table the name of the table
+	 * @param string $col (optional) column name
 	 */
 	function drop($table, $col="") {
 		if (empty($col)) {
@@ -272,9 +292,14 @@ class Schemer {
 		else if (($field['type'] == 'text') || ($field['type'] == 'longtext')) $type = $field["type"];
 		else if ($field['type'] == 'int') $type = "int(".(isset($field['length'])?$field['length']:"11").")";
 		else if ($field['type'] == 'decimal') $type = "decimal(".$field['length'].")";
-		else if ($field['type'] == 'bool') $type = "int(1)";
+		else if ($field['type'] == 'bool') $type = "tinyint(1)";
 		else if (($field['type'] == 'datetime') || ($field['type'] == 'timestamp')) $type = "datetime";
-		$type = $type." NOT NULL".((isset($field['auto_increment'])) ? " AUTO_INCREMENT" : "").((!isset($field['default'])) ? "" : " default '".$field['default']."'");
+		$type .= " NOT NULL"
+						.((isset($field['unsigned'])) ? " UNSIGNED" : "")
+						.((isset($field['zerofill'])) ? " ZEROFILL" : "")
+						.((isset($field['auto_increment'])) ? " AUTO_INCREMENT" : "")
+						.((isset($field['unique'])) ? " UNIQUE" : "")
+						.((!isset($field['default'])) ? "" : " default '".$field['default']."'");
 		return $type;
 	}
 

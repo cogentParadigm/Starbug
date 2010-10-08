@@ -1,13 +1,10 @@
 #!/usr/bin/php
 <?php
-// FILE: install/intall.php
 /**
- * install script
- * 
- * @package StarbugPHP
- * @subpackage install
+ * This file is part of StarbugPHP
+ * @file install/install.php cli installer script
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup core
  */
 	if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("/install", "", dirname(__FILE__)));
 	set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);

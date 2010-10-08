@@ -1,2 +1,7 @@
 #!/bin/sh
+
+#/// This file is part of StarbugPHP
+#/// @file console Starbug console. Run ./console to enter the console
+#/// @author Ali Gangji <ali@neonrain.com>
+#/// @ingroup script
 php -d auto_prepend_file=script/console.php -a

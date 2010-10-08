@@ -1,13 +1,10 @@
 #!/usr/bin/php
 <?php
-// FILE: script/generate
 /**
- * script to generate code from xslt stylesheets
- * 
- * @package StarbugPHP
- * @subpackage script
+ * This file is part of StarbugPHP <br/>
+ * @file script/generate generates code from XSLT stylesheets
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup script
  */
 $help = "Usage: generate TYPE NAME [OPTIONS]\n\n";
 $help .= "TYPE\tWhat to generate\n";
@@ -18,6 +15,7 @@ include(dirname(__FILE__)."/../core/cli.php");
 $to = reset($sb->query("options", "select:value  where:name='migration'  limit:1"));
 //MOVE TO CURRENT MIGRATION
 $current = 0;
+
 while ($current < $to) {
 	$migration = new $schemer->migrations[$current]();
 	$migration->up();
@@ -62,11 +60,12 @@ if ((!empty($argv[2])) && (isset($schemer->tables[$argv[2]]))) {
 		}
 		if ($field['input_type'] == "file") $model .= " multipart=\"true\"";
 		foreach ($field as $k => $v) {
-			if (file_exists(BASE_DIR."/util/filters/$k.php")) $kids .= "\t\t<filter name=\"$k\" value=\"$v\"/>\n";
-			else if (("references" == $k) && (false === strpos($v, $argv[2]))) {
+			if (("references" == $k) && (false === strpos($v, $argv[2]))) {
 				$ref = explode(" ", $v);
 				$kids .= "\t\t<references model=\"$ref[0]\" field=\"$ref[1]\"/>\n";
-			} else $model .= " $k=\"$v\"";
+			}
+			if (file_exists(BASE_DIR."/app/filters/store/$k.php")) $kids .= "\t\t<filter name=\"$k\" value=\"$v\"/>\n";
+			else $model .= " $k=\"$v\"";
 		}
 		if ($args->flag('l') == $name) $model .= " label=\"true\""; else $model .= " display=\"true\"";
 		if (empty($kids)) $model .= "/>\n"; else $model .= ">\n$kids\t</field>\n";
