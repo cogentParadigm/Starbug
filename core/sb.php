@@ -256,7 +256,7 @@ class sb {
 			if (!empty($errors)) $this->errors = array_merge_recursive($this->errors, array($name => $errors));
 			if (empty($this->errors)) { //no errors
 				$fields['modified'] = date("Y-m-d H:i:s");
-				if(is_array($from)) { //updating existing record
+				if ($updating) { //updating existing record
 					foreach($fields as $col => $value) {
 						$prize[] = $value;
 						if(empty($setstr)) $setstr = $col."= ?";
@@ -286,6 +286,7 @@ class sb {
 				}
 			}
 		}
+		$this->to_store = array();
 	}
 
 	/**
@@ -418,7 +419,8 @@ function store_once($name, $fields, $from="auto") {
 	}
 	$records = $sb->query($name, "where:$where");
 	if ($sb->record_count == 0) {
-		return $sb->store($name, $fields, $from);
+		$err = $sb->store($name, $fields, $from);
+		return $err;
 	} else return false;
 }
 /**

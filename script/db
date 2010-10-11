@@ -17,7 +17,7 @@
 			$from = $next[0];
 			$to = $next[1];
 			$schemer->migrate($to, $from);
-		} else if (!empty($next)) {
+		} else if ((!empty($next)) && (0 !== $next)) {
 			$to = $next;
 			$schemer->migrate($to);
 		} else {

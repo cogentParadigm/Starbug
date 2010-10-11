@@ -17,8 +17,9 @@
 	$dirs = array("var", "var/xml", "app/public/uploads", "app/public/thumbnails");
 	foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) exec("mkdir ".BASE_DIR."/".$dir);
 	exec("chmod -R a+w ".BASE_DIR."/var ".BASE_DIR."/app/hooks ".BASE_DIR."/app/public/uploads ".BASE_DIR."/app/public/thumbnails");
+	if (!file_exists(BASE_DIR."/var/migration")) exec("echo 0 > ".BASE_DIR."/var/migration");
 
-	//INITIALIZE SCHEMER
+	//LOAD CORE
 	include(BASE_DIR."/etc/Etc.php");
 	include(BASE_DIR."/core/init.php");
 	include(BASE_DIR."/core/db/Schemer.php");
@@ -26,9 +27,15 @@
 	//INIT TABLES
 	global $schemer;
 	$schemer = new Schemer($sb->db);
-	$migration = new CoreMigration();
-	$migration->up();
-	$schemer->update();
-	$migration->created();
+	$schemer->migrate();
+
+	//COLLECT USER INPUT
+	fwrite(STDOUT, "\nPlease choose a root password:");
+	$admin_pass = str_replace("\n", "", fgets(STDIN));
+	fwrite(STDOUT, "\n\nYou may log in with these credentials -");
+	fwrite(STDOUT, "\nusername: root");
+	fwrite(STDOUT, "\npassword: $admin_pass\n\n");
+	//UPDATE PASSWORD
+	$errors = store("users", "password:$admin_pass", "username:root");
 
 ?>

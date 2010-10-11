@@ -47,7 +47,7 @@ class Table {
 	function __construct($type, $filters=array()) {
 		$this->type = $type;
 		if (!isset($this->filters)) $this->filters = $filters;
-		$this->imports = array();
+		$this->imported = array();
 		$this->imported_functions = array();
 		global $sb;
 		foreach ($sb->publish($this->type.".plugins") as $plugin) $this->mixin($plugin);

@@ -1,6 +1,7 @@
 <?php
+# Copyright 2008-2010 Ali Gangji
+# Distributed under the terms of the GNU General Public License v3
 /**
- * This file is part of StarbugPHP
  * @file core/db/Schemer.php
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup db
@@ -11,9 +12,6 @@ include("core/db/Migration.php");
  * @ingroup db
  */
 class Schemer {
-	/**#@+
-	* @access public
-	*/
 	/**
 	 * @var db The db class is a PDO wrapper
 	 */
@@ -42,7 +40,10 @@ class Schemer {
 	 * @var array Ordered list of migrations
 	 */
 	var $migrations = array();
-	/**#@-*/
+	/**
+	 * @var array Holds records to be inserted immediately after a table is created
+	 */
+	var $population = array();
 
 	/**
 	 * constructor. loads migrations
@@ -69,9 +70,10 @@ class Schemer {
 		}
 		if (empty($primary)) $fields['id'] = star("type:int  auto_increment:  key:primary");
 		if (empty($fields["owner"])) $fields["owner"] = star("type:int  default:1  references:users id");
+		if (empty($fields["collective"])) $fields["collective"] = star("type:int  default:1");
 		if (empty($fields["status"])) $fields["status"] = star("type:int  default:4");
-		if (empty($fields["created"])) $fields["created"] = star("type:datetime  default:000-00-00 00:00:00");
-		if (empty($fields["modified"])) $fields["modified"] = star("type:datetime  default:000-00-00 00:00:00");
+		if (empty($fields["created"])) $fields["created"] = star("type:datetime  default:0000-00-00 00:00:00");
+		if (empty($fields["modified"])) $fields["modified"] = star("type:datetime  default:0000-00-00 00:00:00");
 		return $fields;
 	}
 
@@ -83,25 +85,29 @@ class Schemer {
 		$cs = 0; //cols
 		$ms = 0; //mods
 		$ds = 0; //drops
-		foreach($this->tables as $table => $fields) {
+		$us = 0; //uris
+		$ps = 0; //permits
+		$is = 0; //inserts
+		foreach ($this->tables as $table => $fields) {
 			$fields = $this->get_table($table);
 			$records = $this->db->query("SHOW TABLES LIKE '".P($table)."'");
 			if (false === ($row = $records->fetch())) {
-				//NEW TABLE
+				// NEW TABLE																																													// NEW TABLE
 				fwrite(STDOUT, "Creating table ".P($table)."...\n");
 				$this->create($table);
 				$ts++;
+				$is += $this->populate($table);
 			} else {
-				//OLD TABLE
-				foreach($fields as $name => $field) {
+				// OLD TABLE																																													// OLD TABLE
+				foreach ($fields as $name => $field) {
 					$records = $this->db->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
 					if (false === ($row = $records->fetch())) {
-						//NEW COLUMN
+						// NEW COLUMN																																											// NEW COLUMN
 						fwrite(STDOUT, "Adding column $name...\n");
 						$this->add($table, $name);
 						$cs++;
 					} else {
-						//OLD COLUMN
+						// OLD COLUMN																																											// OLD COLUMN
 						$type = explode(" ", $this->get_sql_type($field));
 						if (($row['Type'] != $type[0]) || ((!empty($field['default'])) && ($row['Default'] != $field['default']))) {
 							fwrite(STDOUT, "Altering column $name...\n");
@@ -112,7 +118,7 @@ class Schemer {
 					if (isset($field['references'])) {
 						$fks = $this->db->query("SELECT * FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME='".P($table)."_".$name."_fk'");
 						if (false === ($row = $fks->fetch())) {
-							//ADD CONSTRAINT
+							// ADD CONSTRAINT																																								// CONSTRAINT
 							fwrite(STDOUT, "Adding foreign key ".P($table)."_".$name."_fk...\n");
 							$this->add_foreign_key($table, $name);
 							$ms++;
@@ -121,22 +127,62 @@ class Schemer {
 				}
 			}
 		}
-		foreach($this->table_drops as $table) {
+		foreach ($this->uris as $path => $uri) {
+			$rows = query("uris", "where:path='$path'");
+			if (empty($rows)) {
+				// ADD URI																																														// ADD URI
+				fwrite(STDOUT, "Adding URI '$path'...\n");
+				$this->add_uri($path);
+				$us++;
+			} else {
+				$query = ''; foreach ($uri as $k => $v) $query .= $k."='$v' && ";
+				$rows = query("uris", "where:".rtrim($query, '& '));
+				if (empty($rows)) {
+					// UPDATE URI																																												// UPDATE URI
+					fwrite(STDOUT, "Updating URI '$path'...\n");
+					$this->update_uri($path);
+					$us++;
+				}
+			}
+		}
+		foreach ($this->permits as $model => $actions) {
+			foreach ($actions as $action => $roles) {
+				foreach ($roles as $role => $ops) {
+					$permits = $this->get_permits($model, $action, $role);
+					foreach ($permits as $permit) {
+						$query = ''; foreach ($permit as $k => $v) if ("status" != $k) $query .= $k."='$v' && ";
+						$row = query("permits", "where:".rtrim($query, '& ')."  limit:1");
+						if (empty($row)) {
+							// ADD PERMIT																																										// ADD PERMIT
+							fwrite(STDOUT, "Adding $permit[priv_type] permit on $model::$action for $role...\n");
+							$this->add_permit($permit);
+							$ps++;
+						} else if ($row['status'] != $permit['status']) {
+							// UPDATE PERMIT																																								// UPDATE PERMIT
+							fwrite(STDOUT, "Updating $permit[priv_type] permit on $model::$action for $role...\n");
+							$this->update_permit($permit);
+							$ps++;
+						}
+					}
+				}
+			}
+		}
+		foreach ($this->table_drops as $table) {
 			$records = $this->db->query("SHOW TABLES LIKE '".P($table)."'");
 			if ($row = $records->fetch()) {
-				//DROP TABLE
+				// DROP TABLE																																													// DROP TABLE
 				fwrite(STDOUT, "Dropping table ".P($table)."...\n");
 				$this->drop_table($table);
 				$ds++;
 			}
 		}
-		foreach($this->column_drops as $table => $cols) {
+		foreach ($this->column_drops as $table => $cols) {
 			$records = $this->db->query("SHOW TABLES LIKE '".P($table)."'");
 			if ($row = $records->fetch()) {
 				foreach($cols as $col) {
 					$records = $this->db->query("SHOW COLUMNS FROM ".P($table)." WHERE field='".$col."'");
 					if ($row = $records->fetch()) {
-						//DROP COLUMN
+						// DROP COLUMN																																										// DROP COLUMN
 						fwrite(STDOUT, "Dropping column ".P($table).".$col...\n");
 						$this->remove($table, $col);
 						$ds++;
@@ -144,7 +190,7 @@ class Schemer {
 				}
 			}
 		}
-		if (($ts == 0) && ($cs == 0) && ($ms == 0) && ($ds == 0)) fwrite(STDOUT, "The Database already matches the schema\n");
+		if (($ts == 0) && ($cs == 0) && ($ms == 0) && ($ds == 0) && ($us == 0) && ($ps == 0) && ($is == 0)) fwrite(STDOUT, "The Database already matches the schema\n");
 	}
 
 	/**
@@ -246,6 +292,28 @@ class Schemer {
 	}
 
 	/**
+	 * Get an SQL type string for a column
+	 * @param array $field the column options from the schema
+	 */
+	function get_sql_type($field) {
+		$type = "varchar(64)";
+		if ($field['type'] == 'string') $type = "varchar(".(isset($field['length'])?$field['length']:"64").")";
+		if ($field['type'] == 'password') $type = "varchar(32)";
+		else if (($field['type'] == 'text') || ($field['type'] == 'longtext')) $type = $field["type"];
+		else if ($field['type'] == 'int') $type = "int(".(isset($field['length'])?$field['length']:"11").")";
+		else if ($field['type'] == 'decimal') $type = "decimal(".$field['length'].")";
+		else if ($field['type'] == 'bool') $type = "tinyint(1)";
+		else if (($field['type'] == 'datetime') || ($field['type'] == 'timestamp')) $type = "datetime";
+		$type .= " NOT NULL"
+						.((isset($field['unsigned'])) ? " UNSIGNED" : "")
+						.((isset($field['zerofill'])) ? " ZEROFILL" : "")
+						.((isset($field['auto_increment'])) ? " AUTO_INCREMENT" : "")
+						.((isset($field['unique'])) ? " UNIQUE" : "")
+						.((!isset($field['default'])) ? "" : " default '".$field['default']."'");
+		return $type;
+	}
+
+	/**
 	 * Add a table to the schema
 	 * @param string $arg0 the name of the table
 	 * @param string $arg1-$arg(N-1) A star formatted column string
@@ -283,42 +351,160 @@ class Schemer {
 			unset($this->tables[$table][$col]);
 		}
 	}
-	function insert($table, $keys, $values) {$this->db->query("INSERT INTO `".P($table)."` (".$keys.") VALUES (".$values.")");}
 
-	function get_sql_type($field) {
-		$type = "varchar(64)";
-		if ($field['type'] == 'string') $type = "varchar(".(isset($field['length'])?$field['length']:"64").")";
-		if ($field['type'] == 'password') $type = "varchar(32)";
-		else if (($field['type'] == 'text') || ($field['type'] == 'longtext')) $type = $field["type"];
-		else if ($field['type'] == 'int') $type = "int(".(isset($field['length'])?$field['length']:"11").")";
-		else if ($field['type'] == 'decimal') $type = "decimal(".$field['length'].")";
-		else if ($field['type'] == 'bool') $type = "tinyint(1)";
-		else if (($field['type'] == 'datetime') || ($field['type'] == 'timestamp')) $type = "datetime";
-		$type .= " NOT NULL"
-						.((isset($field['unsigned'])) ? " UNSIGNED" : "")
-						.((isset($field['zerofill'])) ? " ZEROFILL" : "")
-						.((isset($field['auto_increment'])) ? " AUTO_INCREMENT" : "")
-						.((isset($field['unique'])) ? " UNIQUE" : "")
-						.((!isset($field['default'])) ? "" : " default '".$field['default']."'");
-		return $type;
+	/**
+	 * Add a uri to the db from the schema
+	 * @param string $path the path of the uri
+	 */
+	function add_uri($path) {
+		$uri = $this->uris[$path];
+		$errors = store("uris", $uri);
 	}
 
-	function write_model($name, $backup) {
-		$loc = "app/models/".ucwords($name).".php";
-		if ($backup) rename("app/models/.".ucwords($name), $loc);
-		else if (!file_exists($loc)) exec("./script/generate model ".$name);
-		chmod($loc, 0666);
+	/**
+	 * Update a uri in the db from the schema
+	 * @param string $path the path of the uri
+	 */
+	function update_uri($path) {
+		$uri = $this->uris[$path];
+		store("uris", $uri, "path:$path");
 	}
 
-	function drop_model($name) {
-		$model_loc = "app/models/".ucwords($name).".php";
-		if (file_exists($model_loc)) {
-			$info = unserialize(file_get_contents("var/schema/.info/$name"));
-			if (filemtime($model_loc) == $info['mtime']) unlink($model_loc);
-			else rename($model_loc, "app/models/.".ucwords($name));
+	/**
+	 * Add a uri to the schema
+	 * @param string $path the path
+	 * @param star $args other fields
+	 */
+	function uri($path, $args) {
+		global $statuses;
+		$args = starr::star($args);
+		$args['path'] = $path;
+		efault($args['title'], ucwords(str_replace("-", " ", $path)));
+		efault($args['template'], "templates/View");
+		efault($args['collective'], 0);
+		efault($args['status'], array_sum($statuses));
+		$this->uris[$path] = $args;
+	}
+
+	/**
+	 * Add a permit to the db from the schema
+	 * @param array $permit the permit to add
+	 */
+	function add_permit($permit) {
+		store("permits", $permit);
+	}
+
+	/**
+	 * Update a permit in the db from the schema
+	 * @param string $permit the updated record
+	 */
+	function update_permit($permit) {
+		$old = $permit;
+		unset($old['status']);
+		store("permits", $permit, $old);
+	}
+
+	/**
+	 * Add a permit to the schema
+	 * @param string $on the model and action to apply the permit on
+	 * @param star $args a field string where keys are roles and values are priv_type and status
+	 */
+	function permit($on, $args) {
+		global $groups;
+		$on = explode("::", $on);
+		$args = starr::star($args);
+		$merge = array($on[0] => array($on[1] => $args));
+		$this->permits = array_merge_recursive($this->permits, $merge);
+	}
+
+	/**
+	 * Get permits as records from a schema entry
+	 * @param string $model the model the permit is applied to
+	 * @param string $action the function on the model that the permit is applied to
+	 * @param string $role the role that the permit is applied to
+	 */
+	function get_permits($model, $action, $role) {
+		global $groups;
+		global $statuses;
+		$permit = array("related_table" => P($model), "action" => $action);
+		$ops = $this->permits[$model][$action][$role];
+		if (isset($groups[$role])) {
+			$permit['role'] = "group";
+			$permit['who'] = $groups[$role];
+		} else $permit['role'] = $role;
+		$ops = explode(" ", $ops);
+		if (1 == count($ops)) {
+			if (is_numeric($ops[0])) {
+				$ops[1] = $ops[0];
+				$ops[0] = "table,global";
+			} else $ops[1] = array_sum($statuses);
 		}
+		$permit['status'] = $ops[1];
+		$return = array();
+		$types = explode(",", $ops[0]);
+		foreach ($types as $type) {
+			$copy = $permit;
+			if (is_numeric($type)) {
+				$copy['priv_type'] = "object";
+				$copy['related_id'] = $type;
+			} else $copy['priv_type'] = $type;
+			$return[] = $copy;
+		}
+		return $return;
 	}
-	
+
+	/**
+	 * add records to be populated immediately upon the creation of a table
+	 * @param string $table the name of the table
+	 * @param star $match the fields which if exist, do not store this record
+	 * @param star $others the other, non-unique fields
+	 */
+	function store($table, $match, $others) {
+		$merge = array($table => array(array("match" => starr::star($match), "others" => starr::star($others))));
+		$this->population = array_merge_recursive($this->population, $merge);
+	}
+
+	/**
+	 * insert records from population
+	 * @param string $table the name of the table to populate
+	 */
+	function populate($table) {
+		$rs = 0;
+		$pop = $this->population[$table];
+		foreach ($pop as $record) {
+			$query = ""; foreach ($record['match'] as $k => $v) $query .= "$k='$v' && ";
+			$match = query($table, "where:".rtrim($query, '& '));
+			if (empty($match)) {
+				$store = array_merge($record['match'], $record['others']);
+				fwrite(STDOUT, "Inserting $table record...\n");
+				store($table, $store);
+				$rs++;
+			}
+		}
+		return $rs;
+	}
+
+	/**
+	 * Write a model file
+	 * @param string $name the name of the model
+	 */
+	function write_model($name, $backup) {
+		exec("./script/generate model ".$name);
+	}
+
+	/**
+	 * Delete a model
+	 * @param string $name the name of the model
+	 */
+	function drop_model($name) {
+		$model_loc = BASE_DIR."/core/app/models/".ucwords($name)."Model.php";
+		if (file_exists($model_loc)) unlink($model_loc);
+	}
+
+	/**
+	 * Permanently add migrations to the migration list
+	 * @param string $arg0-$argN the name of the migration
+	 */
 	function add_migrations($arg) {
 		global $sb;
 		$sb->import("util/subscribe");
@@ -334,13 +520,15 @@ class Schemer {
 
 	/**
 	 * Migrate from one state to another
+	 * @param int $to the migration to go to
+	 * @param int $from the migration to start from
 	 */
 	function migrate($to="top", $from="current") {
 		global $sb;
-		$current_op = $sb->query("options", "select:id,value  where:name='migration'  limit:1");
-		if (empty($to)) $to = "top";
+		$last_at = file_get_contents(BASE_DIR."/var/migration");
+		if (empty($to) && ("0" !== $to)) $to = "top";
 		if ($to == "top") $to = count($this->migrations);
-		if ($from == "current") $from = $current_op['value'];
+		if ($from == "current") $from = $last_at;
 		//MOVE TO FROM
 		$current = 0;
 		while ($current < $from) {
@@ -377,7 +565,9 @@ class Schemer {
 			}
 		}
 		//UPDATE CURRENT
-		$sb->store("options", "id:$current_op[id]  value:$to");
+		$file = fopen(BASE_DIR."/var/migration", "wb");
+		fwrite($file, $to);
+		fclose($file);
 	}
 
 }
