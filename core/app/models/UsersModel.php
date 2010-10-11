@@ -12,9 +12,10 @@ class UsersModel extends Table {
 		"email" => "length:128  unique:",
 		"password" => "confirm:password_confirm  md5:  optional_update:",
 		"owner" => "default:1  references:users id",
+		"collective" => "default:1",
 		"status" => "default:4",
-		"created" => "default:000-00-00 00:00:00",
-		"modified" => "default:000-00-00 00:00:00"
+		"created" => "default:0000-00-00 00:00:00",
+		"modified" => "default:0000-00-00 00:00:00"
 	);
 
 	function onload() {

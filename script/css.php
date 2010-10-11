@@ -1,12 +1,11 @@
-#!/usr/bin/php
 <?php
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
-$script = array_shift($argv);
 $filename = array_shift($argv);
 foreach($argv as $i => $q) $argv[$i] = explode(":", $q);
 $css = file_get_contents($filename);
 
+//CLEAR EXTRA CHARS
 $css = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $css);
 $css = str_replace("\n", "", $css);
 $search = array("/{\s+/", "/\s+{/", "/;\s+/", "/:\s+/", "/}\s+/", "/;}/", "/\s+}/");
@@ -14,9 +13,12 @@ $replace = array("{", "{", ";", ":", "}", "}", "}");
 $css = preg_replace($search, $replace, $css);
 $css = str_replace("}", "}\n", $css);
 $css = explode("\n", rtrim($css, "\n"));
+// NOW THERE IS ONLY ONE RULE PER LINE
 
 $rules = $properties = array();
 
+// NOW WE LOOP THROUGH EACH RULE AND FILL THE RULES ARRAY
+// array("selector" => array("property" => "value"))
 foreach($css as $rule) {
 	$rule = explode("{", rtrim($rule, '}'));
 	$selectors = explode(",", $rule[0]);

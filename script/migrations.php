@@ -1,29 +1,13 @@
-#!/usr/bin/php
 <?php
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP
- * @file script/migrations used to manage the migration list
+ * @file script/migrations.php used to manage the migration list
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
-	include(dirname(__FILE__)."/../core/cli.php");
-	$script = array_shift($argv);
 	$what = array_shift($argv);
-	if ("sync" == $what) $schemer->migrate();
-	if ("migrate" == $what) {
-		$next = array_shift($argv);
-		if (false !== strpos($next, ":")) {
-			$next = explode(":", $next);
-			$from = $next[0];
-			$to = $next[1];
-			$schemer->migrate($to, $from);
-		} else {
-			$to = $next;
-			$schemer->migrate($to);
-		}
-	}
 	if (("list" == $what) || ("-l" == $what)) {
 		$i = 0;
 		foreach($schemer->migrations as $m) {

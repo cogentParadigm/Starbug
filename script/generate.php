@@ -1,10 +1,9 @@
-#!/usr/bin/php
 <?php
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP <br/>
- * @file script/generate generates code from XSLT stylesheets
+ * @file script/generate.php generates code from XSLT stylesheets
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
@@ -12,17 +11,8 @@ $help = "Usage: generate TYPE NAME [OPTIONS]\n\n";
 $help .= "TYPE\tWhat to generate\n";
 $help .= "    \t\tcrud - CRUD nouns\n";
 $help .= "    \t\tmodel - Object model\n";
-if ($argc==2) $argv[2] = "";
-include(dirname(__FILE__)."/../core/cli.php");
-$to = reset($sb->query("options", "select:value  where:name='migration'  limit:1"));
-//MOVE TO CURRENT MIGRATION
-$current = 0;
-
-while ($current < $to) {
-	$migration = new $schemer->migrations[$current]();
-	$migration->up();
-	$current++;
-}
+$generator = array_shift($argv);
+$model = array_shift($argv);
 include(BASE_DIR."/etc/Theme.php");
 include(BASE_DIR."/util/Args.php");
 $args = new Args();
@@ -43,14 +33,14 @@ function get_relations($from, $to) {
 	foreach ($return as $idx => $arr) $return[$idx]["hook"] = $hook;
 	return $return;
 }
-if ((!empty($argv[2])) && (isset($schemer->tables[$argv[2]]))) {
-	$fields = $schemer->get_table($argv[2]);
+if ((!empty($model)) && (isset($schemer->tables[$model]))) {
+	$fields = $schemer->get_table($model);
 
 	//CREATE MODEL XML
-	$model = "<model name=\"$argv[2]\" label=\"".ucwords($argv[2])."\" package=\"".Etc::WEBSITE_NAME."\">\n";
+	$xml = "<model name=\"$model\" label=\"".ucwords($model)."\" package=\"".Etc::WEBSITE_NAME."\">\n";
 	$relations = array();
 	foreach($fields as $name => $field) {
-		$model .= "\t<field name=\"$name\"";
+		$xml .= "\t<field name=\"$name\"";
 		$kids = "";
 		if (!isset($field['input_type'])) {
 			if ($field['type'] == "text") $field['input_type'] = "textarea";
@@ -60,55 +50,52 @@ if ((!empty($argv[2])) && (isset($schemer->tables[$argv[2]]))) {
 			else if (isset($field['upload'])) $field['input_type'] = "file";
 			else $field['input_type'] = "text";
 		}
-		if ($field['input_type'] == "file") $model .= " multipart=\"true\"";
+		if ($field['input_type'] == "file") $xml .= " multipart=\"true\"";
 		foreach ($field as $k => $v) {
-			if (("references" == $k) && (false === strpos($v, $argv[2]))) {
+			if (("references" == $k) && (false === strpos($v, $model))) {
 				$ref = explode(" ", $v);
 				$kids .= "\t\t<references model=\"$ref[0]\" field=\"$ref[1]\"/>\n";
 			}
 			if (file_exists(BASE_DIR."/app/filters/store/$k.php")) $kids .= "\t\t<filter name=\"$k\" value=\"$v\"/>\n";
-			else $model .= " $k=\"$v\"";
+			else $xml .= " $k=\"$v\"";
 		}
-		if ($args->flag('l') == $name) $model .= " label=\"true\""; else $model .= " display=\"true\"";
-		if (empty($kids)) $model .= "/>\n"; else $model .= ">\n$kids\t</field>\n";
+		if ($args->flag('l') == $name) $xml .= " label=\"true\""; else $xml .= " display=\"true\"";
+		if (empty($kids)) $xml .= "/>\n"; else $xml .= ">\n$kids\t</field>\n";
 	}
 	foreach ($schemer->tables as $table => $fields) {
-		$relations = get_relations($table, $argv[2]);
+		$relations = get_relations($table, $model);
 		foreach ($relations as $m => $r) {
-			$model .= "\t<relation model=\"$m\" field=\"$r[hook]\"".((!empty($r['lookup'])) ? " lookup=\"$r[lookup]\" ref_field=\"$r[ref_field]\"" : "")."/>\n";
+			$xml .= "\t<relation model=\"$m\" field=\"$r[hook]\"".((!empty($r['lookup'])) ? " lookup=\"$r[lookup]\" ref_field=\"$r[ref_field]\"" : "")."/>\n";
 		}
 	}
-	$model .= "</model>";
+	$xml .= "</model>";
 
 	//WRITE XML
-	$file = fopen("var/xml/$argv[2].xml", "wb");
-	fwrite($file, $model);
+	$file = fopen("var/xml/$model.xml", "wb");
+	fwrite($file, $xml);
 	fclose($file);
-	chmod("var/xml/$argv[2].xml", 0777);
+	chmod("var/xml/$model.xml", 0777);
 }
 
 //SET VARS FOR Theme
-$model_name = $argv[2];
+$model_name = $model;
 $template = ($args->flag('t')) ? $args->flag('t') : Etc::DEFAULT_TEMPLATE;
 $collective = ($args->flag('c')) ? $args->flag('c') : "2";
 $dirs = array(); $generate = array(); $paths = array(); $copy = array();
 
 //INCLUDE Theme GENERATOR FILE
-if ($args->flag('u')) include(BASE_DIR."/app/themes/".Theme::FOLDER."/$argv[1]/update.php");
-else include(BASE_DIR."/app/themes/".Theme::FOLDER."/$argv[1]/$argv[1].php");
+if ($args->flag('u')) include(BASE_DIR."/app/themes/".Theme::FOLDER."/$generator/update.php");
+else include(BASE_DIR."/app/themes/".Theme::FOLDER."/$generator/$generator.php");
 
 //CREATE DIRECTORIES
-foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) exec("./script/cgenerate dir ".BASE_DIR."/$dir");
+foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) passthru("mkdir ".BASE_DIR."/$dir");
 //CREATE FILES
 foreach ($generate as $stylesheet => $output) {
-	$content = shell_exec(BASE_DIR."/script/cgenerate sax ".Etc::JAVA_PATH." ".Etc::SAXON_PATH." -o:".BASE_DIR."/$output -s:".BASE_DIR."/var/xml/$argv[2].xml -xsl:".BASE_DIR."/app/themes/".Theme::FOLDER."/$stylesheet 2>&1");
-	fwrite(STDOUT, $content);
+	$o = BASE_DIR."/$output"; //output
+	$s = BASE_DIR."/var/xml/$model.xml"; //source
+	$xsl = BASE_DIR."/app/themes/".Theme::FOLDER."/$stylesheet"; //xsl
+	passthru(Etc::JAVA_PATH." -jar ".Etc::SAXON_PATH." -o:$o -s:$s -xsl:$xsl 2>&1");
 }
-echo $content;
 //COPY FILES
-foreach ($copy as $origin => $dest) fwrite(STDOUT, shell_exec(BASE_DIR."/script/cgenerate copy ".BASE_DIR."/$dest ".BASE_DIR."/app/themes/".Theme::FOLDER."/$origin"));
-//ADD URI
-foreach ($paths as $keys => $values) $sb->db->Execute("INSERT INTO ".P("uris")." ($keys) VALUES ($values)");
-
-exit(0);
+foreach ($copy as $origin => $dest) passthru("cp ".BASE_DIR."/$dest ".BASE_DIR."/app/themes/".Theme::FOLDER."/$origin");
 ?>

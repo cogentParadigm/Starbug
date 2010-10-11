@@ -26,4 +26,12 @@
 	 */
 	global $schemer;
 	$schemer = new Schemer($sb->db);
+	$to = file_get_contents(BASE_DIR."/var/migration");
+	//MOVE TO CURRENT MIGRATION
+	$current = 0;
+	while ($current < $to) {
+		$migration = new $schemer->migrations[$current]();
+		$migration->up();
+		$current++;
+	}
 ?>

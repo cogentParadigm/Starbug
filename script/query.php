@@ -3,9 +3,13 @@
 # Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP
- * @file script/console.php initiates the console
+ * @file script/query.php
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
-	passthru("php -d auto_prepend_file=core/cli.php -a");
+$name = array_shift($argv);
+$params = join("  ", $argv);
+$records = $sb->query($name, $params);
+echo "query $name $params\n";
+cli::table($records);
 ?>
