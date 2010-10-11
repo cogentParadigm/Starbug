@@ -1,4 +1,6 @@
 <?php
+# Copyright (C) 2008-2010 Ali Gangji
+# Distributed under the terms of the GNU General Public License v3
 /**
  * @file etc/autoload.php list of modules to import after initializing
  * @author Ali Gangji <ali@neonrain.com>
@@ -9,8 +11,6 @@
  * @ingroup etc
  */
 $autoload = array(
-	"util/uris",
-	"util/permits",
-	"util/templates"
+
 );
 ?>

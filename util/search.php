@@ -1,4 +1,6 @@
 <?php
+# Copyright (C) 2008-2010 Ali Gangji
+# Distributed under the terms of the GNU General Public License v3
 $sb->provide("util/search");
 function keywordClause($text, $fields) {
 	$text = strtolower(trim(str_replace("\\\"","&quot;",$text)));

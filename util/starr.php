@@ -1,27 +1,21 @@
 <?php
+# Copyright (C) 2008-2010 Ali Gangji
+# Distributed under the terms of the GNU General Public License v3
 /**
-* string to array converter utility
-*
-* This file is part of StarbugPHP
-*
-* StarbugPHP - website development kit
-* Copyright (C) 2008-2009 Ali Gangji
-*
-* StarbugPHP is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* StarbugPHP is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * This file is part of StarbugPHP
+ * @file util/starr.php
+ * @author Ali Gangji <ali@neonrain.com>
+ * @ingroup core
+ */
+/**
+ * provides string to array conversion
+ * @ingroup core
+ */
 class starr {
-
+	/**
+	 * provides string to array conversion
+	 * @param string $str string of key/value pairs where the key is separate from the value by a colon (:) and the pairs are separated by 2 spaces
+	 */
 	function star($str="") {
 		$arr = array();
 		$keypairs = explode("  ", $str);
@@ -34,30 +28,34 @@ class starr {
 		}
 		return $arr;
 	}
-
-	function closer_pos($str, $offset=0) {
+	/**
+	 * used by rstar to find the closing \t for a nested array
+	 * @param string $str the string to search
+	 * @param int $offset character offset
+	 * @private
+	 */
+	private function closer_pos($str, $offset=0) {
 		$close = strpos($str, "\t");
 		$nextopen = strpos($str, "\n");
 		if (($nextopen === false) || ($nextopen > $close)) return $offset+$close; else return $offset+starr::closer_pos(substr($str, $close+1), $close+1);
 	}
-
+	/**
+	 * provides recursive string to array conversion that allows nested arrays
+	 * @param string $str key/value pairs like starr::star but you can open arrays with \n and close them with \t
+	 */
 	function rstar($str="") {
 		$arr = array(); $open = strpos($str, "\n"); $next = $open-1;
 		if ($open===false) return starr::star($str);//no nesting, return flat array
 		else $close = starr::closer_pos(substr($str, $open+1), $open+1);//find the close of the first open
 		if ($open != 0) {//something is before the first open
-			while (($next > 0) && ($str{$next} != ",")) $next--;
+			while (($next > 0) && (($str{$next} != " ") || ($str{$next+1} != " "))) $next--;
 			if ($next != 0) $arr = starr::star(substr($str, 0, $next));
 		}
 		if ($next != 0) $next++;
-		$arr = (($str{$open-1} == "=") ? array_merge($arr, array(substr($str, $next, ($open-1)-$next) => starr::rstar(substr($str, $open+1, $close-($open+1))))) : array_merge($arr, Starr::rstar(substr($str, $open+1, $close-($open+1)))));
-		if ((strlen($str) > ($close+1)) && ($str{$close+1} == ",")) $arr = array_merge($arr, starr::rstar(substr($str, $close+2)));
+		$arr = (($str{$open-1} == ":") ? array_merge($arr, array(substr($str, $next, ($open-1)-$next) => starr::rstar(substr($str, $open+1, $close-($open+1))))) : array_merge($arr, Starr::rstar(substr($str, $open+1, $close-($open+1)))));
+		if ((strlen($str) > ($close+1)) && ($str{$close+1} == " ")) $arr = array_merge($arr, starr::rstar(substr($str, $close+3)));
 		return $arr;
 	}
 
-}
-//SHORTCUT FUNCTION
-function star($str) {
-	return starr::star($str);
 }
 ?>

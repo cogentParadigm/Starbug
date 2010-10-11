@@ -1,4 +1,6 @@
 <?php
+# Copyright (C) 2008-2010 Ali Gangji
+# Distributed under the terms of the GNU General Public License v3
 /**
  * @file etc/constraints.php configuration for access control
  * @author Ali Gangji <ali@neonrain.com>

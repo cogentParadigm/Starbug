@@ -1,5 +1,5 @@
 <?php
-# Copyright 2008-2010 Ali Gangji
+# Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
  * @file core/db/Schemer.php

@@ -1,4 +1,6 @@
 <?php
+# Copyright (C) 2008-2010 Ali Gangji
+# Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP
  * @file util/form.php
@@ -302,45 +304,6 @@ class form {
 	
 }
 /**
- * shortcut function for outputing small forms
- * @params string $arg the first parameter is the form options, the rest are form controls
- * @return string the form
- * @ingroup form
- */
-function form($arg) {
-	$args = func_get_args();
-	$init = array_shift($args);
-	$form = new form($init);
-	$data = $form->open();
-	foreach($args as $field) {
-		$parts = explode("  ", $field, 2);
-		$name = $parts[0];
-		$ops = starr::star($parts[1]);
-        $before = $after = "";
-        if (isset($ops['before'])) { $before = $ops['before']; unset($ops['before']); }
-        if (isset($ops['after'])) { $after = $ops['after']; unset($ops['after']); }
-        $str = "";
-        foreach($ops as $k => $v) $str .= "$k:$v  ";
-        $data .= $before.$form->$name(trim($str)).$after;
-	}
-	$data .= "</form>";
-	return $data;
-}
-/**
- * creates a new form and outputs the opening form tag and some hidden inputs
- * @param string $options the options for the form
- * @param string $atts attributes for the form tag
- * @ingroup form
- */
-function open_form($options, $atts="") {
-	global $global_form;
-	$global_form = new form($options);
-	$open = "";
-	$atts = starr::star($atts);
-	foreach($atts as $k => $v) $open .= $k.'="'.$v.'" ';
-	echo $global_form->open(rtrim($open, " "));
-}
-/**
  * outputs a text field
  * @param string $ops the options
  * @ingroup form
@@ -465,3 +428,4 @@ function textarea($ops) {
 function close_form() {
 	echo "</form>";
 }
+?>

@@ -1,5 +1,7 @@
 #!/usr/bin/php
 <?php
+# Copyright (C) 2008-2010 Ali Gangji
+# Distributed under the terms of the GNU General Public License v3
 $script = array_shift($argv);
 $filename = array_shift($argv);
 foreach($argv as $i => $q) $argv[$i] = explode(":", $q);

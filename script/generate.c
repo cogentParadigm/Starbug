@@ -1,3 +1,5 @@
+# Copyright (C) 2008-2010 Ali Gangji
+# Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP
  * @file script/generate.c C wrapper for SAXON XSLT Processor that can be setuid to run generator from web interface

@@ -1,4 +1,6 @@
 <?php
+# Copyright (C) 2008-2010 Ali Gangji
+# Distributed under the terms of the GNU General Public License v3
 /**
 * FILE: util/validate.php
 * PURPOSE: Data validation utility
