@@ -9,7 +9,7 @@ class UsersTest extends UnitTestCase {
 		
 	function test_create() {
 		global $sb;
-		store("users", "username:simpletest  password:test  memberships:2");
+		store("users", "username:simpletest  password:test  email:simpletest@localhost  memberships:2");
 		$user = query("users", "where:username='simpletest' && password='".md5('test')."'  limit:1");
 		$this->assertEqual($sb->record_count, 1);
 	}

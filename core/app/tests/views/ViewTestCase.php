@@ -1,17 +1,15 @@
 <?php
-// FILE: core/app/tests/ViewTestCase.php
+# Copyright (C) 2008-2010 Ali Gangji
+# Distributed under the terms of the GNU General Public License v3
 /**
- *  ViewTestCase class
- * 
- *  @package StarbugPHP
- *  @subpackage core
- *  @author Ali Gangji <ali@neonrain.com>
- * 	@copyright 2008-2010 Ali Gangji
+ * This file is part of StarbugPHP
+ * @file core/app/tests/views/ViewTestCase.php
+ * @author Ali Gangji <ali@neonrain.com>
+ * @ingroup core
  */
 /**
  * Used to test views. Extends the WebTestCase from SimpleTest
- * @package StarbugPHP
- * @subpackage core
+ * @ingroup core
  */
 class ViewTestCase extends WebTestCase {
 
@@ -30,12 +28,12 @@ class ViewTestCase extends WebTestCase {
 	 * logout the test user
 	 */
 	function logout() {
-		$this->click("Log Out");
+		$this->get(uri("sb-admin/logout"));
 	}
 
 	function setUp() {
 		global $groups;
-		foreach($groups as $name => $value) store("users", "username:test_$name  password:test  memberships:$value");
+		foreach($groups as $name => $value) store("users", "username:test_$name  email:$name@localhost  password:test  memberships:$value");
 	}
 	
 	function tearDown() {

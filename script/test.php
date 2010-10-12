@@ -32,11 +32,10 @@
 	}
 	if ($no_errors) fwrite(STDOUT, "\nNo syntax errors detected!\n\n");
 	else exit(1);
-	include(BASE_DIR."/core/cli.php");
 	if (! defined('SIMPLE_TEST')) define('SIMPLE_TEST', BASE_DIR.'/util/simpletest/');
 	require_once(SIMPLE_TEST."unit_tester.php");
 	require_once(SIMPLE_TEST."web_tester.php");
-	require_once(SIMPLE_TEST."extensions/ViewTestCase.php");
+	require_once(BASE_DIR."/core/app/tests/views/ViewTestCase.php");
 	require_once(SIMPLE_TEST."reporter.php");
 	$group = new TestSuite("Models Test");
 	$files = array();
