@@ -4,7 +4,7 @@
 <xsl:output method="html"/>
 
 <xsl:template match="/model">
-<h2>Create <xsl:value-of select="@name"/></h2>
+<h2>Add <xsl:value-of select="@name"/></h2>
 <xsl:text disable-output-escaping="yes">
 &lt;?php $action = "create"; $submit_to = uri("</xsl:text>
 <xsl:value-of select="@name"/>

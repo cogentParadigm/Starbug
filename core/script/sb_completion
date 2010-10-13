@@ -20,6 +20,11 @@ _sb() {
 			COMPREPLY=( $(compgen -W "${models}" -- ${cur}) )
 			return 0
 			;;
+		generate )
+			local gens=$(for x in `ls -d app/themes/default/*`; do echo ${x} ; done | xargs -n1 basename )
+			COMPREPLY=( $(compgen -W "${gens}" -- ${cur}) )
+			return 0
+			;;
 		* )
 		;;
 	esac

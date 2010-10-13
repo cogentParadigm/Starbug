@@ -191,6 +191,10 @@ class Schemer {
 			}
 		}
 		if (($ts == 0) && ($cs == 0) && ($ms == 0) && ($ds == 0) && ($us == 0) && ($ps == 0) && ($is == 0)) fwrite(STDOUT, "The Database already matches the schema\n");
+		else {
+			fwrite(STDOUT, "Generating models (this may take a minute)...\n");
+			passthru("sb generate models");
+		}
 	}
 
 	/**
