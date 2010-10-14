@@ -2,47 +2,42 @@
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
-* FILE: util/validate.php
-* PURPOSE: Data validation utility
-*
-* This file is part of StarbugPHP
-*
-* StarbugPHP - website development kit
-* Copyright (C) 2008-2009 Ali Gangji
-*
-* StarbugPHP is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* StarbugPHP is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with StarbugPHP.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * This file is part of StarbugPHP
+ * @file util/validate.php
+ * @author Ali Gangji <ali@neonrain.com>
+ * @ingroup validate
+ */
+/**
+ * @defgroup validate
+ * data validation utility
+ * @ingroup util
+ */
+$sb->provide("util/validate");
+/**
+ * provides some data validation functions
+ * @ingroup validate
+ */
 class validate {
+	/**
+	 * check the length of string against a min and max
+	 * @param string $string the string to check
+	 * @param int $minimum the minimum number of characters
+	 * @param int $maximum the maximum number of characters
+	 * @return bool true if the strings length is between minimum and maximum, false otherwise
+	 */
 	function length($string, $minimum, $maximum) {
 		$length = strlen($string);
 		if($length >= $minimum && $length <= $maximum) return true;
 		return false;
 	}
-
+	/**
+	 * check if a string fits the pattern of an email address
+	 * @param string $email the string to check
+	 * @return bool true if the string looks like an email address, false otherwise
+	 */
 	function email($email) {
 		if(!eregi("^[_\\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\\.)+[a-z]{2,3}$", $email)) return false;
 		else return true;
-	}
-
-	function username($username) {
-		if(preg_match('/^[a-z0-9]+$/i', $username))
-			return true;
-		return false;
-	}
-
-	function toStore($string) {
-		return mysql_real_escape_string($string);
 	}
 }
 ?>

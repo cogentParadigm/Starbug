@@ -5,11 +5,16 @@
  * This file is part of StarbugPHP
  * @file core/app/tests/views/ViewTestCase.php
  * @author Ali Gangji <ali@neonrain.com>
- * @ingroup core
+ * @ingroup simpletest
+ */
+/**
+ * @defgroup simpletest
+ * simpletest extensions to test apps
+ * @ingroup util
  */
 /**
  * Used to test views. Extends the WebTestCase from SimpleTest
- * @ingroup core
+ * @ingroup simpletest
  */
 class ViewTestCase extends WebTestCase {
 
@@ -31,11 +36,17 @@ class ViewTestCase extends WebTestCase {
 		$this->get(uri("sb-admin/logout"));
 	}
 
+	/**
+	 * hook to set up tempory users before testing
+	 */
 	function setUp() {
 		global $groups;
 		foreach($groups as $name => $value) store("users", "username:test_$name  email:$name@localhost  password:test  memberships:$value");
 	}
-	
+
+	/**
+	 * hook to remove tempory users after testing
+	 */
 	function tearDown() {
 		global $groups;
 		foreach($groups as $name => $value) remove("users", "username='test_$name'");

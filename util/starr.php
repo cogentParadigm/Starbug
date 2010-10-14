@@ -5,11 +5,16 @@
  * This file is part of StarbugPHP
  * @file util/starr.php
  * @author Ali Gangji <ali@neonrain.com>
- * @ingroup core
+ * @ingroup starr
+ */
+/**
+ * @defgroup starr
+ * string to array conversion utility
+ * @ingroup util
  */
 /**
  * provides string to array conversion
- * @ingroup core
+ * @ingroup starr
  */
 class starr {
 	/**

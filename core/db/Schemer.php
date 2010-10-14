@@ -437,12 +437,15 @@ class Schemer {
 			$permit['who'] = $groups[$role];
 		} else $permit['role'] = $role;
 		$ops = explode(" ", $ops);
-		if (1 == count($ops)) {
+		$count = count($ops);
+		if (1 == $count) {
 			if (is_numeric($ops[0])) {
 				$ops[1] = $ops[0];
 				$ops[0] = "table,global";
-			} else $ops[1] = array_sum($statuses);
+			}
 		}
+		efault($ops[0], "table,global");
+		efault($ops[1], array_sum($statuses));
 		$permit['status'] = $ops[1];
 		$return = array();
 		$types = explode(",", $ops[0]);
@@ -534,12 +537,7 @@ class Schemer {
 		if ($to == "top") $to = count($this->migrations);
 		if ($from == "current") $from = $last_at;
 		//MOVE TO FROM
-		$current = 0;
-		while ($current < $from) {
-			$migration = new $this->migrations[$current]();
-				$migration->up();
-				$current++;
-		}
+		$current = $from;
 		//MIGRATE
 		if ($to < $from) { //DOWN
 			while($current > $to) {
