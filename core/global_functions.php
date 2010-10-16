@@ -82,6 +82,22 @@ function store($name, $fields, $from="auto") {
 	return $sb->store($name, $fields, $from);
 }
 /**
+ * @copydoc sb::queue
+ * @ingroup core
+ */
+function queue($name, $fields, $from="auto") {
+	global $sb;
+	return $sb->queue($name, $fields, $from);
+}
+/**
+ * @copydoc sb::store_queue
+ * @ingroup core
+ */
+function store_queue() {
+	global $sb;
+	$sb->store_queue();
+}
+/**
  * store only if a record with matching fields does not exist
  * @copydoc sb::store
  * @ingroup core
@@ -107,6 +123,15 @@ function store_once($name, $fields, $from="auto") {
 function remove($from, $where) {
 	global $sb;
 	return $sb->remove($from, $where);
+}
+/**
+ * fetch any data validation errors
+ * @return array errors indexed by model and field, empty if no errors
+ * @ingroup core
+ */
+function errors() {
+	global $sb;
+	return $sb->errors;
 }
 /**
  * shortcut function for outputing small forms

@@ -169,7 +169,7 @@ class sb {
 				if (empty($rel)) $from .= $namejoin;
 				else {
 					$namejoin .= " ON ";
-					if ($rel['type'] == "one") $from .= $namejoin."$rel[lookup].$rel[ref]=".(($rel['lookup'] == $first) ? $f : $first).".id";
+					if ($rel['type'] == "one") $from .= $namejoin."$rel[lookup].$rel[ref]=".(($rel['lookup'] == $f) ? $first : $f).".id";
 					else if ($rel['type'] == "many") $from .= ($rel['lookup']) ? " INNER JOIN ".P($rel['lookup'])." AS $rel[lookup] ON ".$first.".id=$rel[lookup].$rel[hook]".$namejoin." $rel[lookup].$rel[ref]=$f.id" : $namejoin.$first.".id=$f.$rel[hook]";
 				}
 			}
@@ -319,7 +319,7 @@ class sb {
 			$permits = isset($_POST[$key]['id']) ? $this->query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : $this->query($key, "action:$value  priv_type:table");
 			if (($this->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value();
 			else $errors = array("forbidden" => "You do not have sufficient permission to complete your request.");
-			$this->errors = array_merge_recursive($this->errors, array($key => $errors));
+			if (!empty($errors)) $this->errors = array_merge_recursive($this->errors, array($key => $errors));
 			if (!empty($this->errors[$key])) {
 				global $request;
 				$request->return_path();
