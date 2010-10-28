@@ -1,0 +1,43 @@
+/* Custom CSS for StarbugPHP */
+/********************* structural elements *********************/
+body{background:url('../../../core/app/public/images/sbfade.png') repeat-x #efede8;color:#666}
+#shell{position:relative}
+#subhead{display:block;margin:5px 0 15px 5px;font-weight:bold;color:#DDD}
+#main{margin-bottom:10px}
+#footer, #footer li{list-style-type:none;margin:0 0 30px 0;float:left;padding:0 0 0 8px}
+label{display:block}
+
+/********************* nav *********************/
+.hnav{list-style-type:none;width:100%;height:40px;margin:0;padding:0}
+.hnav li{float:left;padding:0;margin-right:5px}
+.vnav{list-style-type:none}
+.vnav li{padding:0}
+.vnav li a{display:block;padding:5px;border-top:2px solid #494;font-weight:bold}
+.vnav li a:hover{background:#494;color:#FFF}
+
+/********************* classes *********************/
+.colborder{border-color:#111;border-width:2px;margin-right:24px}
+.green{color:#494}
+.red{color:#C00}
+span.error{display:block;width:300px;padding:5px}
+
+/********************* links *********************/
+#nav a{padding:5px 10px;font-weight:bold}
+#nav a.active, #nav a:hover{background:#494;color:#FFF}
+a{color:#494;text-decoration:none}
+h1, h1 a, h1 a:hover{color:#efede8;text-decoration:none;margin:10px 0 0 0}
+a:hover{color:#494;text-decoration:underline}
+input.link{background:none;border:none;color:#494;position:relative;top:-1px;cursor:pointer}
+input.link:hover{text-decoration:underline}
+.lister th a{color:#FFF}
+.lister th a.active{text-decoration:underline}
+
+/********************* lister *********************/
+.lister a.button{display:block;float:left}
+.lister{table-layout:fixed;border:1px solid #999}
+.lister th{color:#EEE;background:url('../../../core/app/public/images/lister_top.png') repeat-x}
+.lister td{border-bottom:1px solid #999}
+.row-actions{list-style-type:none;margin:10px 0;visibility:hidden}
+.row-actions li{float:left;font-size:10px;border-left:1px solid #999;padding:0px 5px}
+.row-actions li.first{border-left:0;padding-left:0}
+td:hover .row-actions{visibility:visible}

@@ -2,10 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 		<title><?php echo Etc::WEBSITE_NAME; ?></title>
-		<link rel="stylesheet" type="text/css" href="<?php echo uri(Etc::STYLESHEET_DIR."default.css"); ?>" media="screen" />
+		<?php $sb->publish("header"); ?>
 		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.3.2/dijit/themes/tundra/tundra.css"/>
 		<script type="text/javascript" src="http://o.aolcdn.com/dojo/1.3/dojo/dojo.xd.js" djConfig="parseOnLoad: false"></script>
-		<?php $sb->publish("header"); ?>
 	</head>
 	<body class="tundra">
 		<div id="shell">

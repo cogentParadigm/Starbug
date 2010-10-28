@@ -10,11 +10,5 @@
 			new nicEditor({fullPanel : true}).panelInstance(node.getAttribute("id"));
 		});
 	});
-	dojo.require("dijit.form.TextBox");
-	function dojifyElements() {
-		dojo.query('.text').attr("dojoType", "dijit.form.TextBox");
-		dojo.parser.parse();
-	}
-	dojo.addOnLoad(dojifyElements);
 //]]>
 </script>
