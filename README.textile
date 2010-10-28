@@ -34,7 +34,7 @@ cd starbug</code></pre>
 sudo cp core/script/sb /usr/bin/
 sudo chmod +x /usr/bin/sb
 sudo cp core/script/sb_completion /etc/bash_completion.d/sb</code></pre>
-# Enter your database and other details into <pre>etc/Host.php</pre>.
+# Enter your database and other details into <code>etc/Host.php</code>.
 # Run setup:<pre><code>
 sb setup</code></pre>
 # Open up your browser and point it to your installation directory!

@@ -126,6 +126,14 @@ class Table {
 		$sb->grant($this->type, $_POST[$this->type]);
 	}
 
+	function json($args="", $froms="", $deep="auto") {
+		header("Content-Type: application/json");
+		$data = $this->query($args, $froms, $deep);
+		$json = '[';
+		foreach($data as $row) $json .= ApiFunctions::rowToJSON($row).", ";
+		return rtrim($json, ", ")."]";
+	}
+
 	protected function mixin($object) {
 		if (!class_exists($object)) include(BASE_DIR."/app/plugins/$object/$object.php");
 		$new_import = new $object();

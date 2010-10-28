@@ -2,7 +2,6 @@
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
- * This file is part of StarbugPHP
  * @file core/db/ApiFunctions.php
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup db
@@ -27,7 +26,7 @@ class ApiFunctions {
 		$xml->openMemory();
 		$xml->startDocument('1.0', 'UTF-8');
 		$xml->startElement($from);
-		$data = $sb->query(join(",", $models), $query."action:api_get", true);
+		$data = $sb->query(join(",", $models), $query."action:read", true);
 		foreach($data as $row) {
 			$xml->startElement("entry");
 			ApiFunctions::write($xml, $row);
@@ -46,9 +45,10 @@ class ApiFunctions {
 	function getJSON($models, $query="") {
 		global $sb;
 		$from = $models[0];
-		if (!empty($query)) $query .= "  ";
-		$data = $sb->query(join(",", $models), $query."action:api_get", true);
-		$json = '{ "'.$from.'" : [';
+		if (!empty($query)) $query .= "  action:read";
+		foreach ($_GET as $k => $v) $query .= "  $k:$v";
+		$data = $sb->query(join(",", $models), $query, true);
+		$json = '{ "items" : [';
 		foreach($data as $row) $json .= ApiFunctions::rowToJSON($row).", ";
 		return rtrim($json, ", ")." ] }";
 	}
@@ -60,10 +60,9 @@ class ApiFunctions {
 	 * @return string padded json string of records
 	 */
 	function getJSONP($models, $pad, $query="") {
-		echo "Test";
 		global $sb;
 		if (!empty($query)) $query .= "  ";
-		$data = $sb->query(join(",", $models), $query."action:api_get", true);
+		$data = $sb->query(join(",", $models), $query."action:read", true);
 		return $pad."(".json_encode($data).");";
 	}
 
