@@ -1,0 +1,57 @@
+h1. Starbug PHP Web Development Framework
+
+Starbug PHP is an open source framework for PHP. Starbug is a fast and exstensible toolkit that employs a Model-View paradigm. Here are some of the core features SB provides:
+
+* Templating
+* Role-based access control (RBAC)
+* Database management and abstraction
+* Data validation
+* XSLT 2.0 code generation
+* Utilities for data grids, form building, pagination, tagging, thumbnailing and more..
+* Plugins and hooks built on a flexible publish/subscribe layer
+
+h2. Project Info
+
+* *Web*: "http://starbugphp.com":http://starbugphp.com
+* *Source*: "http://github.com/cogentParadigm/Starbug":http://github.com/cogentParadigm/Starbug
+* *Author*: "http://aligangji.com":http://aligangji.com
+
+h2. Dependencies
+
+You will need the following to use this toolkit:
+
+* "PDO extension for PHP":http://php.net/manual/en/book.pdo.php
+* "Saxon XSLT Processor":http://saxon.sourceforge.net (requires Java Runtime Environment)
+
+h2. Getting Started
+
+Follow these steps to get Starbug set up:
+
+# Clone a copy from github, and change to that directory:<pre><code>
+git clone git://github.com/cogentParadigm/Starbug.git starbug
+cd starbug</code></pre>
+# If this is the first time you are installing Starbug, copy <pre>core/script/sb</pre> into your path, and <pre>core/script/sb_completion</pre> into your bash_completion directory:<pre><code>
+sudo cp core/script/sb /usr/bin/
+sudo chmod +x /usr/bin/sb
+sudo cp core/script/sb_completion /etc/bash_completion.d/sb</code></pre>
+# Enter your database and other details into <pre>etc/Host.php</pre>.
+# Run setup:<pre><code>
+sb setup</code></pre>
+# Open up your browser and point it to your installation directory!
+
+h2. Links
+
+Starbug integrates several 3rd party tools you may want to check out:
+
+* "Git":http://www.git-scm.com
+* "Dojo":http://www.dojotoolkit.org
+* "Blueprint CSS":http://blueprintcss.org
+* "Nicedit":http://www.nicedit.com
+* "PHPThumb":http://phpthumb.sourceforge.net
+* "Saxon XSLT processor":http://saxon.sourceforge.net
+* "Doxygen":http://www.doxygen.org
+* "SimpleTest":www.simpletest.org
+
+h2. License
+
+Starbug PHP is distributed under the terms of the GNU General Public License v3
