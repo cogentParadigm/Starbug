@@ -27,16 +27,13 @@ h2. Getting Started
 
 Follow these steps to get Starbug set up:
 
-# Clone a copy from github, and change to that directory:<pre><code>
-git clone git://github.com/cogentParadigm/Starbug.git starbug
+# Clone a copy from github, and change to that directory:<pre><code>git clone git://github.com/cogentParadigm/Starbug.git starbug
 cd starbug</code></pre>
-# If this is the first time you are installing Starbug, copy <pre>core/script/sb</pre> into your path, and <pre>core/script/sb_completion</pre> into your bash_completion directory:<pre><code>
-sudo cp core/script/sb /usr/bin/
+# If this is the first time you are installing Starbug, copy <code>core/script/sb</code> into your path, and <code>core/script/sb_completion</code> into your bash_completion directory:<pre><code>sudo cp core/script/sb /usr/bin/
 sudo chmod +x /usr/bin/sb
 sudo cp core/script/sb_completion /etc/bash_completion.d/sb</code></pre>
 # Enter your database and other details into <code>etc/Host.php</code>.
-# Run setup:<pre><code>
-sb setup</code></pre>
+# Run setup:<pre><code>sb setup</code></pre>
 # Open up your browser and point it to your installation directory!
 
 h2. Links
