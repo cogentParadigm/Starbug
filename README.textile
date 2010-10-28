@@ -14,7 +14,7 @@ h2. Project Info
 
 * *Web*: "http://starbugphp.com":http://starbugphp.com
 * *Source*: "http://github.com/cogentParadigm/Starbug":http://github.com/cogentParadigm/Starbug
-* *Author*: "http://aligangji.com":http://aligangji.com
+* *Author*: "Ali Gangji":http://aligangji.com
 
 h2. Dependencies
 
