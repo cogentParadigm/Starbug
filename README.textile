@@ -6,4 +6,11 @@ This package contains scripts used for deploying and running a Starbug PHP appli
 * *Source*: "github.com/cogentParadigm/Starbug":http://github.com/cogentParadigm/Starbug
 * *Author*: "Ali Gangji":http://aligangji.com
 
+h2. Instructions
+
+Simply run <code>install.sh</code> with root privilages:<pre><code>sudo sh install.sh</code></pre>
+
+h2. License
+
+Starbug PHP is distributed under the terms of the GNU General Public License v3
 
