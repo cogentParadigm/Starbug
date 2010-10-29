@@ -1,0 +1,9 @@
+h1. Starbug PHP Installer
+
+This package contains scripts used for deploying and running a Starbug PHP application.
+
+* *Web*: "StarbugPHP.com":http://starbugphp.com
+* *Source*: "github.com/cogentParadigm/Starbug":http://github.com/cogentParadigm/Starbug
+* *Author*: "Ali Gangji":http://aligangji.com
+
+
