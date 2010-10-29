@@ -76,6 +76,7 @@ class CoreMigration extends Migration {
 		$this->uri("sb", "template:templates/Starbug  prefix:core/app/views/  collective:1"); //parent:sb-admin
 		$this->uri("sb/generate", "template:sb/generate  prefix:core/app/views/  collective:1"); //parent:sb-admin
 		$this->uri("api", "template:Api  prefix:core/app/views/  check_path:0");
+		$this->uri("documentation", "template:templates/Documentation  prefix:core/app/views/  collective:1  check_path:0");
 		//HOME PAGE
 		$this->uri(Etc::DEFAULT_PATH, "template:".Etc::DEFAULT_TEMPLATE);
 		//404 PAGE

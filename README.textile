@@ -1,6 +1,6 @@
 h1. Starbug PHP Web Development Framework
 
-Starbug PHP is an open source framework for PHP. Starbug is a fast and exstensible toolkit that employs a Model-View paradigm. Here are some of the core features SB provides:
+Starbug PHP is an open source framework for PHP. Starbug is a fast and exstensible toolkit that employs a Model-View design pattern. Here are some of the core features SB provides:
 
 * Templating
 * Role-based access control (RBAC)
@@ -12,8 +12,8 @@ Starbug PHP is an open source framework for PHP. Starbug is a fast and exstensib
 
 h2. Project Info
 
-* *Web*: "http://starbugphp.com":http://starbugphp.com
-* *Source*: "http://github.com/cogentParadigm/Starbug":http://github.com/cogentParadigm/Starbug
+* *Web*: "StarbugPHP.com":http://starbugphp.com
+* *Source*: "github.com/cogentParadigm/Starbug":http://github.com/cogentParadigm/Starbug
 * *Author*: "Ali Gangji":http://aligangji.com
 
 h2. Dependencies

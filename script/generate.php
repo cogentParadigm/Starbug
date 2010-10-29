@@ -13,7 +13,6 @@ $help .= "    \t\tcrud - CRUD nouns\n";
 $help .= "    \t\tmodel - Object model\n";
 $generator = array_shift($argv);
 $model = array_shift($argv);
-include(BASE_DIR."/etc/Theme.php");
 include(BASE_DIR."/util/Args.php");
 $args = new Args();
 global $sb;
@@ -77,15 +76,15 @@ if ((!empty($model)) && (isset($schemer->tables[$model]))) {
 	chmod("var/xml/$model.xml", 0777);
 }
 
-//SET VARS FOR Theme
+//SET VARS FOR GENERATOR 
 $model_name = $model;
 $template = ($args->flag('t')) ? $args->flag('t') : Etc::DEFAULT_TEMPLATE;
 $collective = ($args->flag('c')) ? $args->flag('c') : "2";
 $dirs = array(); $generate = array(); $paths = array(); $copy = array();
 
-//INCLUDE Theme GENERATOR FILE
-if ($args->flag('u')) include(BASE_DIR."/app/themes/".Theme::FOLDER."/$generator/update.php");
-else include(BASE_DIR."/app/themes/".Theme::FOLDER."/$generator/$generator.php");
+//INCLUDE GENERATOR FILE
+if ($args->flag('u')) include(BASE_DIR."/app/generators/$generator/update.php");
+else include(BASE_DIR."/app/generators/$generator/$generator.php");
 
 //CREATE DIRECTORIES
 foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) passthru("mkdir ".BASE_DIR."/$dir");
@@ -93,9 +92,9 @@ foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) passthru("mkdir ".B
 foreach ($generate as $stylesheet => $output) {
 	$o = BASE_DIR."/$output"; //output
 	$s = BASE_DIR."/var/xml/$model.xml"; //source
-	$xsl = BASE_DIR."/app/themes/".Theme::FOLDER."/$stylesheet"; //xsl
+	$xsl = BASE_DIR."/app/generators/$stylesheet"; //xsl
 	passthru(Etc::JAVA_PATH." -jar ".Etc::SAXON_PATH." -o:$o -s:$s -xsl:$xsl 2>&1");
 }
 //COPY FILES
-foreach ($copy as $origin => $dest) passthru("cp ".BASE_DIR."/$dest ".BASE_DIR."/app/themes/".Theme::FOLDER."/$origin");
+foreach ($copy as $origin => $dest) passthru("cp ".BASE_DIR."/$dest ".BASE_DIR."/app/generators/$origin");
 ?>
