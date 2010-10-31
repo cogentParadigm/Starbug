@@ -25,6 +25,11 @@ _sb() {
 			COMPREPLY=( $(compgen -W "${gens}" -- ${cur}) )
 			return 0
 			;;
+		install )
+			local installers=$(for x in `ls install/*`; do echo ${x} ; done | xargs -n1 basename )
+			COMPREPLY=( $(compgen -W "${installers}" -- ${cur}) )
+			return 0
+			;;
 		* )
 		;;
 	esac
