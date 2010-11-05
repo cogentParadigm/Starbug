@@ -202,4 +202,12 @@ function tag($tag, $self=false) {
 function star($str) {
 	return starr::star($str);
 }
+/**
+ * check if user is logged in
+ * @ingroup core
+ */
+function logged_in($group="") {
+	global $groups;
+	return ((empty($group) && (!empty($_SESSION[P('id')]))) || ($_SESSION[P('memberships')] & $groups[$group]));
+}
 ?>
