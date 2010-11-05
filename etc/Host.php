@@ -1,12 +1,15 @@
 <?php
-// FILE: etc/Host.php
+# Copyright (C) 2008-2010 Ali Gangji
+# Distributed under the terms of the GNU General Public License v3
 /**
- * This is the host specific configuration file
- * 
- * @package StarbugPHP
- * @subpackage etc
+ * @file etc/Host.php The host specific configuration file
  * @author Ali Gangji <ali@neonrain.com>
- * @copyright 2008-2010 Ali Gangji
+ * @ingroup etc
+ */
+/**
+ * holds host specific configuration constants
+ * access configuration constants via this class using Etc::CONSTANT_NAME
+ * @ingroup etc
  */
 class Host {
 	/* details for database */

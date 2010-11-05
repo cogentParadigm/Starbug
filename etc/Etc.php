@@ -2,7 +2,6 @@
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
- * This file is part of StarbugPHP
  * @file etc/Etc.php The project wide configuration file
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup etc
