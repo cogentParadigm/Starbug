@@ -32,20 +32,22 @@
 	}
 	if ($no_errors) fwrite(STDOUT, "\nNo syntax errors detected!\n\n");
 	else exit(1);
-	if (! defined('SIMPLE_TEST')) define('SIMPLE_TEST', BASE_DIR.'/util/simpletest/');
-	require_once(SIMPLE_TEST."unit_tester.php");
-	require_once(SIMPLE_TEST."web_tester.php");
-	require_once(BASE_DIR."/core/app/tests/views/ViewTestCase.php");
-	require_once(SIMPLE_TEST."reporter.php");
-	$group = new TestSuite("Models Test");
-	$files = array();
-	if ($handle = opendir(BASE_DIR."/app/tests/models")) while(false !== ($file = readdir($handle))) if (!is_dir(BASE_DIR."/app/tests/models/$file")) $files[$file] = $file;
-	foreach($files as $file) $group->addFile(BASE_DIR."/app/tests/models/$file");
-	$success1 = $group->run(new TextReporter());
-	$group = new TestSuite("Views Test");
-	$files = array();
-	if ($handle = opendir(BASE_DIR."/app/tests/views")) while(false !== ($file = readdir($handle))) if (!is_dir(BASE_DIR."/app/tests/views/$file")) $files[$file] = $file;
-	foreach($files as $file) $group->addFile(BASE_DIR."/app/tests/views/$file");
-	$success2 = $group->run(new TextReporter());
-	exit((($success1 && $success2) ? 0 : 1));
+	if (is_dir(BASE_DIR."/util/simpletest")) {
+		if (! defined('SIMPLE_TEST')) define('SIMPLE_TEST', BASE_DIR.'/util/simpletest/');
+		require_once(SIMPLE_TEST."unit_tester.php");
+		require_once(SIMPLE_TEST."web_tester.php");
+		require_once(BASE_DIR."/core/app/tests/views/ViewTestCase.php");
+		require_once(SIMPLE_TEST."reporter.php");
+		$group = new TestSuite("Models Test");
+		$files = array();
+		if ($handle = opendir(BASE_DIR."/app/tests/models")) while(false !== ($file = readdir($handle))) if (!is_dir(BASE_DIR."/app/tests/models/$file")) $files[$file] = $file;
+		foreach($files as $file) $group->addFile(BASE_DIR."/app/tests/models/$file");
+		$success1 = $group->run(new TextReporter());
+		$group = new TestSuite("Views Test");
+		$files = array();
+		if ($handle = opendir(BASE_DIR."/app/tests/views")) while(false !== ($file = readdir($handle))) if (!is_dir(BASE_DIR."/app/tests/views/$file")) $files[$file] = $file;
+		foreach($files as $file) $group->addFile(BASE_DIR."/app/tests/views/$file");
+		$success2 = $group->run(new TextReporter());
+		exit((($success1 && $success2) ? 0 : 1));
+	} else exit(0);
 ?>
