@@ -1,0 +1,7 @@
+mkdir var/install
+cd var/install
+wget "http://downloads.sourceforge.net/project/getid3/getID3%28%29%201.x/1.7.9/getid3-1.7.9.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fgetid3%2Ffiles%2FgetID3%2528%2529%25201.x%2F&ts=1288918554&use_mirror=softlayer"
+unzip getid3-1.7.9.zip
+cd ../../
+mv var/install/getid3 util/
+rm -rf var/install

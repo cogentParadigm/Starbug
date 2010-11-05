@@ -1,0 +1,4 @@
+cd util
+wget "http://downloads.sourceforge.net/project/simpletest/simpletest/simpletest_1.1/simpletest_1.1alpha.tar.gz?ts=1288917890&use_mirror=voxel"
+tar -xzf simpletest_1.1alpha.tar.gz
+rm simpletest_1.1alpha.tar.gz

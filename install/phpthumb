@@ -1,0 +1,9 @@
+if [ ! -d app/public/php ]; then
+  mkdir app/public/php
+fi
+mkdir app/public/php/phpthumb
+cd app/public/php/phpthumb
+wget "http://downloads.sourceforge.net/project/phpthumb/phpThumb%28%29/1.7.9/phpThumb_1.7.9.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fphpthumb%2Ffiles%2FphpThumb%2528%2529%2F&ts=1288389668&use_mirror=cdnetworks-us-1"
+unzip phpThumb_1.7.9.zip
+rm phpThumb_1.7.9.zip
+mv phpThumb.config.php.default phpThumb.config.php

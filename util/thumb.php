@@ -2,7 +2,6 @@
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
- * This file is part of StarbugPHP
  * @file util/thumb.php
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup thumb
@@ -20,8 +19,8 @@ $sb->provide("util/thumb");
  * @param int $max_width the width of the thumbnail to be generated
  */
 function get_thumb($current_file, $max_width) {
-	$loc = Etc::WEBSITE_URL."core/app/public/php/phpthumb/phpThumb.php";
-	$loc .= "?w=$max_width&src=../../../../".$current_file;
+	$loc = uri("app/public/php/phpthumb/phpThumb.php");
+	$loc .= "?w=$max_width&src=".$current_file;
 	return $loc;
 }
 ?>
