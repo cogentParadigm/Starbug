@@ -8,7 +8,7 @@ This package contains scripts used for deploying and running a Starbug PHP appli
 
 h2. Instructions
 
-Simply run <code>install.sh</code> with root privilages:<pre><code>sudo sh install.sh</code></pre>
+Simply run <code>make install</code> with root privilages:<pre><code>sudo make install</code></pre>
 
 h2. License
 
