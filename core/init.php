@@ -32,5 +32,5 @@ include(BASE_DIR."/util/starr.php");
 global $sb;
 $sb = new sb();
 if (!is_array($autoload)) include(BASE_DIR."/etc/autoload.php");
-call_user_func_array(array($sb, "import"), $autoload);
+if (!empty($autoload)) call_user_func_array(array($sb, "import"), $autoload);
 ?>
