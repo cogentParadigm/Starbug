@@ -8,10 +8,14 @@
  */
 
 	//CREATE FOLDERS & SET FILE PERMISSIONS
-	$dirs = array("var", "var/xml", "app/public/uploads", "app/public/thumbnails", "core/app/models");
+	$dirs = array("var", "var/xml", "var/tmp", "app/public/uploads", "app/public/thumbnails", "core/app/models");
 	foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) exec("mkdir ".BASE_DIR."/".$dir);
 	exec("chmod -R a+w ".BASE_DIR."/var ".BASE_DIR."/app/hooks ".BASE_DIR."/app/public/uploads ".BASE_DIR."/app/public/thumbnails");
-	if (!file_exists(BASE_DIR."/var/migration")) exec("echo 0 > ".BASE_DIR."/var/migration");
+	if (!file_exists(BASE_DIR."/var/migration")) {
+		$file = fopen(BASE_DIR."/var/migration", "wb");
+		fwrite($file, "0");
+		fclose($file);
+	}
 
 	//INIT TABLES
 	$schemer->migrate();
