@@ -195,6 +195,7 @@ class Schemer {
 			fwrite(STDOUT, "Generating models (this may take a minute)...\n");
 			passthru("sb generate models");
 		}
+		passthru("sb generate css");
 	}
 
 	/**
@@ -538,6 +539,10 @@ class Schemer {
 		if ($from == "current") $from = $last_at;
 		//MOVE TO FROM
 		$current = $from;
+		//UPDATE CURRENT
+		$file = fopen(BASE_DIR."/var/migration", "wb");
+		fwrite($file, $to);
+		fclose($file);
 		//MIGRATE
 		if ($to < $from) { //DOWN
 			while($current > $to) {
@@ -566,10 +571,6 @@ class Schemer {
 				$current++;
 			}
 		}
-		//UPDATE CURRENT
-		$file = fopen(BASE_DIR."/var/migration", "wb");
-		fwrite($file, $to);
-		fclose($file);
 	}
 
 }
