@@ -7,5 +7,5 @@
  * @ingroup script
  */
 	$i = array_shift($argv);
-	passthru("sh install/$i");
+	passthru("sh script/install/$i");
 ?>
