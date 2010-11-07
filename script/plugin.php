@@ -1,9 +1,7 @@
-#!/usr/bin/php
 <?php
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
- * This file is part of StarbugPHP
  * @file script/plugin.php used to manage plugins
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
@@ -16,7 +14,7 @@ $help .= "  -d [PLUGIN] [MODEL]   - deactivate plugin\n";
 $help .= "  -i [PLUGIN]           - install plugin\n";
 $help .= "  -u [PLUGIN]           - uninstall plugin\n\n";
 $sb->import("util/plugins");
-$what = array_shift($arv);
+$what = array_shift($argv);
 if ("-i" == $what) { //INSTALL PLUGIN
 	include(array_shift($argv)."/activate.php");
 } else if ("-a" == $what) { //ACTIVATE PLUGIN
