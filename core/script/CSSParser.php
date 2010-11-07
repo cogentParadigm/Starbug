@@ -6,9 +6,9 @@ class CSSParser {
 		$this->css = array();
 		$args = func_get_args();
 		$count = count($args);
-		if ($count == 1) {
+		if ($count == 1) { //IF THERE IS ONLY ONE PARAM, USE IT AS THE OUTPUT PATH
 			$this->path = $args[0];
-		} else {
+		} else { //IF THERE ARE MORE PARAMS, USE THE LAST ONE AS THE OUTPUT PATH
 			$this->path = array_pop($args);
 			foreach ($args as $a) $this->add_file($a);
 		}
