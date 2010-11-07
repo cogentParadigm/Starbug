@@ -174,7 +174,7 @@ class sb {
 				}
 			}
 		}
-		foreach ($args as $k => $v) if (file_exists(BASE_DIR."/app/filters/query/$k.php")) include(BASE_DIR."/app/filters/query/$k.php");
+		foreach ($args as $k => $v) if (file_exists(BASE_DIR."/core/app/filters/query/$k.php")) include(BASE_DIR."/core/app/filters/query/$k.php");
 		if (!empty($args['where'])) $args['where'] = " WHERE ".$args['where'];
 		$limit = (!(empty($args['limit']))) ? " LIMIT $args[limit]" : "";
 		$order = (!(empty($args['orderby']))) ? " ORDER BY $args[orderby]" : "";
@@ -226,7 +226,7 @@ class sb {
 		}
 		foreach($byfilter as $filter => $args) {
 			$on_store = false;
-			include(BASE_DIR."/app/filters/store/$filter.php");
+			include(BASE_DIR."/core/app/filters/store/$filter.php");
 			if (!$on_store) unset($byfilter[$filter]);
 		}
 		foreach($errors as $col => $err) if (empty($err)) unset($errors[$col]);
@@ -253,7 +253,7 @@ class sb {
 				}
 			} else if ((false !== $from) && (!is_array($from))) $from = starr::star($from);
 			if (is_array($from)) $updating = true; else $inserting = true;
-			foreach ($filters as $filter => $args) include(BASE_DIR."/app/filters/store/$filter.php");
+			foreach ($filters as $filter => $args) include(BASE_DIR."/core/app/filters/store/$filter.php");
 			foreach($errors as $col => $err) if (empty($err)) unset($errors[$col]);
 			if (!empty($errors)) $this->errors = array_merge_recursive($this->errors, array($name => $errors));
 			if (empty($this->errors)) { //no errors

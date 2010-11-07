@@ -55,7 +55,7 @@ if ((!empty($model)) && (isset($schemer->tables[$model]))) {
 				$ref = explode(" ", $v);
 				$kids .= "\t\t<references model=\"$ref[0]\" field=\"$ref[1]\"/>\n";
 			}
-			if (file_exists(BASE_DIR."/app/filters/store/$k.php")) $kids .= "\t\t<filter name=\"$k\" value=\"$v\"/>\n";
+			if (file_exists(BASE_DIR."/core/app/filters/store/$k.php")) $kids .= "\t\t<filter name=\"$k\" value=\"$v\"/>\n";
 			else $xml .= " $k=\"$v\"";
 		}
 		if ($args->flag('l') == $name) $xml .= " label=\"true\""; else $xml .= " display=\"true\"";
