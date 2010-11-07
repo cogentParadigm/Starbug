@@ -53,7 +53,7 @@ class Schemer {
 		$this->db = $data;
 		$this->migrations = $sb->publish("migrations");
 		foreach($this->migrations as $i => $a) {
-			include(BASE_DIR."/etc/migrations/$a.php");
+			include(BASE_DIR."/app/migrations/$a.php");
 		}
 	}
 
@@ -519,7 +519,7 @@ class Schemer {
 		$args = func_get_args();
 		foreach($args as $i => $a) {
 			if (!in_array($a, $this->migrations)) {
-				if (file_exists(BASE_DIR."/etc/migrations/$a.php")) include(BASE_DIR."/etc/migrations/$a.php");
+				if (file_exists(BASE_DIR."/app/migrations/$a.php")) include(BASE_DIR."/app/migrations/$a.php");
 				$sb->subscribe("migrations", "global", 10, "return_it", $a);
 				$this->migrations[] = $a;
 			}

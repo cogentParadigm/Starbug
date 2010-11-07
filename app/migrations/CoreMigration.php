@@ -2,14 +2,13 @@
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
- * This file is part of StarbugPHP
- * @file etc/migrations/CoreMigration.php
+ * @file app/migrations/CoreMigration.php
  * @author Ali Gangji <ali@neonrain.com>
- * @ingroup db
+ * @ingroup app 
  */
 /**
  * CoreMigration class. The base migration which contains the initial database schema
- * @ingroup db
+ * @ingroup app
  */
 class CoreMigration extends Migration {
 	function up() {
