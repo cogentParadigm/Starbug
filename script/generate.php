@@ -28,8 +28,8 @@ if ((!empty($model)) && (isset($schemer->tables[$model]))) {
 }
 
 //INCLUDE GENERATOR FILE
-if ($args->flag('u')) include(BASE_DIR."/script/generators/$generator/update.php");
-else include(BASE_DIR."/script/generators/$generator/$generator.php");
+if ($args->flag('u')) include(BASE_DIR."/script/generate/$generator/update.php");
+else include(BASE_DIR."/script/generate/$generator/$generator.php");
 
 //CREATE DIRECTORIES
 foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) passthru("mkdir ".BASE_DIR."/$dir");
@@ -37,9 +37,9 @@ foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) passthru("mkdir ".B
 foreach ($generate as $stylesheet => $output) {
 	$o = BASE_DIR."/$output"; //output
 	$s = BASE_DIR."/var/xml/$model.xml"; //source
-	$xsl = BASE_DIR."/script/generators/$stylesheet"; //xsl
+	$xsl = BASE_DIR."/script/generate/$stylesheet"; //xsl
 	passthru(Etc::JAVA_PATH." -jar ".Etc::SAXON_PATH." -o:$o -s:$s -xsl:$xsl 2>&1");
 }
 //COPY FILES
-foreach ($copy as $origin => $dest) passthru("cp ".BASE_DIR."/$dest ".BASE_DIR."/script/generators/$origin");
+foreach ($copy as $origin => $dest) passthru("cp ".BASE_DIR."/$dest ".BASE_DIR."/script/generate/$origin");
 ?>

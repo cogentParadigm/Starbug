@@ -1,5 +1,5 @@
 <?php
-	$migration = file_get_contents(BASE_DIR."/script/generators/migration/BlankMigration.php");
+	$migration = file_get_contents(BASE_DIR."/script/generate/migration/BlankMigration.php");
 	$name = $argv[2];
 	if (empty($name)) {
 		fwrite(STDOUT, "You must provide a name for your new migration");
