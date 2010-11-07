@@ -505,7 +505,7 @@ class Schemer {
 	 * @param string $name the name of the model
 	 */
 	function drop_model($name) {
-		$model_loc = BASE_DIR."/core/app/models/".ucwords($name)."Model.php";
+		$model_loc = BASE_DIR."/var/models/".ucwords($name)."Model.php";
 		if (file_exists($model_loc)) unlink($model_loc);
 	}
 

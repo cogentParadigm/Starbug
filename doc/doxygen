@@ -610,7 +610,7 @@ RECURSIVE              = YES
 # excluded from the INPUT source files. This way you can easily exclude a
 # subdirectory from a directory tree whose root is specified with the INPUT tag.
 
-EXCLUDE                = core/app/public/php core/app/public/js/nicedit app/public/js util/getid3 util/simpletest core/app/models core/app/views/documentation
+EXCLUDE                = core/app/public/php core/app/public/js/nicedit app/public/js util/getid3 util/simpletest core/app/views/documentation var
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or
 # directories that are symbolic links (a Unix filesystem feature) are excluded

@@ -125,7 +125,7 @@ class sb {
 	function get($name) {
 		$obj = ucwords($name);
 		if (!isset($this->objects[$name])) {
-			include(BASE_DIR."/core/app/models/".$obj."Model.php");
+			include(BASE_DIR."/var/models/".$obj."Model.php");
 			if (file_exists(BASE_DIR."/app/models/$obj.php")) include(BASE_DIR."/app/models/$obj.php");
 			else $obj .= "Model";
 			$this->objects[$name] = new $obj($name);
@@ -138,7 +138,7 @@ class sb {
 	 * @param string $name the name of the model
 	 * @return bool true if model exists, false otherwise
 	 */
-	function has($name) {return (($this->objects[$name]) || (file_exists(BASE_DIR."/core/app/models/".ucwords($name)."Model.php")));}
+	function has($name) {return (($this->objects[$name]) || (file_exists(BASE_DIR."/var/models/".ucwords($name)."Model.php")));}
 
 	/**
 	 * query the database
