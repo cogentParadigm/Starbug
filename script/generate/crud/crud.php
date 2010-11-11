@@ -1,5 +1,5 @@
 <?php
-	$dirs = array("app/views/$model");
+	$dirs = array("app/views/$prefix$model");
 	$prefix = ($args->flag("p")) ? $args->flag("p") : "";
 	$generate = array(
 		"crud/create.xsl" => "app/views/$prefix$model/create.php",
