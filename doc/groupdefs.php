@@ -6,6 +6,31 @@
  * PHP website development framework
  */
 	/**
+	 * @defgroup app
+	 * @ingroup StarbugPHP
+	 * application files
+	 */
+		/**
+		 * @defgroup models
+		 * @ingroup app
+		 * models
+		 */
+		/**
+		 * @defgroup views
+		 * @ingroup app
+		 * views
+		 */
+		/**
+		 * @defgroup migrations
+		 * @ingroup app
+		 * migrations
+		 */
+		/**
+		 * @defgroup tests
+		 * @ingroup app
+		 * tests
+		 */
+	/**
 	 * @defgroup core
 	 * @ingroup StarbugPHP
 	 * Starbug core

@@ -64,6 +64,19 @@ class XMLBuilder {
 			foreach ($roles as $role => $value) $xml .= " $role=\"$value\"";
 			$xml .= "/>\n";
 		}
+		if ($model == "uris") {
+			$uris = query("uris");
+			foreach($uris as $uri) {
+				$xml .= "\t<uri path=\"$uri[path]\"";
+				if ($uri['title'] != ucwords(str_replace("-", " ", $uri['path']))) $xml .= " title=\"$uri[title]\"";
+				if ($uri['template'] != "templates/View") $xml .= " template=\"$uri[template]\"";
+				if ($uri['collective'] != "0") $xml .= " collective=\"$uri[collective]\"";
+				if ($uri['status'] != array_sum($statuses)) $xml .= " status=\"$uri[status]\"";
+				if ($uri['prefix'] != "app/views/") $xml .= " prefix=\"$uri[prefix]\"";
+				if ($uri['check_path'] != "0") $xml .= " check_path=\"$uri[check_path]\"";
+				$xml .= "/>\n";
+			}
+		}
 		$xml .= "</model>";
 		//WRITE XML
 		$file = fopen("var/xml/$model.xml", "wb");

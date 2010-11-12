@@ -4,11 +4,11 @@
 /**
  * @file app/migrations/CoreMigration.php
  * @author Ali Gangji <ali@neonrain.com>
- * @ingroup app 
+ * @ingroup migrations
  */
 /**
  * CoreMigration class. The base migration which contains the initial database schema
- * @ingroup app
+ * @ingroup migrations
  */
 class CoreMigration extends Migration {
 	function up() {
