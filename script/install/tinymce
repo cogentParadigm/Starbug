@@ -1,0 +1,6 @@
+cd var/tmp
+wget 'http://downloads.sourceforge.net/project/tinymce/TinyMCE/3.3.9.2/tinymce_3_3_9_2.zip?r=&ts=1289546712&use_mirror=iweb'
+unzip tinymce_3_3_9_2.zip
+cd ../../
+mv var/tmp/tinymce/jscripts/tiny_mce app/public/js/
+rm -rf var/tmp/tinymce*
