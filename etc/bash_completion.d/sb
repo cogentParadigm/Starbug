@@ -16,21 +16,15 @@ _sb() {
 	#
 	case "${prev}" in
 		query | store | remove )
-			local models=$(for x in `ls core/app/models/*.php`; do echo ${x:0:${#x}-9} ; done | xargs -n1 basename | tr '[A-Z]' '[a-z]' )
+			local models=$(for x in `ls var/models/*.php`; do echo ${x:0:${#x}-9} ; done | xargs -n1 basename | tr '[A-Z]' '[a-z]' )
 			COMPREPLY=( $(compgen -W "${models}" -- ${cur}) )
 			return 0
 			;;
-		generate )
-			local gens=$(for x in `ls -d app/generators/*`; do echo ${x} ; done | xargs -n1 basename )
-			COMPREPLY=( $(compgen -W "${gens}" -- ${cur}) )
-			return 0
-			;;
-		install )
-			local installers=$(for x in `ls install/*`; do echo ${x} ; done | xargs -n1 basename )
-			COMPREPLY=( $(compgen -W "${installers}" -- ${cur}) )
-			return 0
-			;;
 		* )
+			if [ -d script/${prev} ]; then
+				local options=$(for x in `ls script/${prev}`; do echo ${x} ; done | xargs -n1 basename )
+				COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
+			fi
 		;;
 	esac
 
