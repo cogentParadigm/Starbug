@@ -173,3 +173,4 @@ function display_tags(args) {
 		<?php } ?>
 	<?php } ?>
 </form>
+<?php $sb->import("util/tinymce"); ?>

@@ -6,12 +6,18 @@
 		// General options
 		mode : "textareas",
 		theme : "advanced",
-		plugins : "pagebreak,style,table,save,advhr,advimage,advlink,iespell,insertdatetime,media,paste,fullscreen,xhtmlxtras,wordcount",
+		plugins : "safari,spellchecker,pagebreak,style,table,advlink,iespell,inlinepopups,insertdatetime,paste,fullscreen,xhtmlxtras",
 
-		theme_advanced_resizing : true,
+		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect,|,cut,copy,paste,pastetext,pasteword,|,forecolor,backcolor,|,cleanup,code,|,fullscreen",
+		theme_advanced_buttons2 : "bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,|,tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,iespell,|,styleprops,spellchecker,attribs,|,blockquote,pagebreak",
+		theme_advanced_buttons3 : "",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_statusbar_location : "bottom",
+		theme_advanced_resizing : true
 
 		// Example content CSS (should be your site CSS)
-		content_css : "<?php echo uri("var/public/stylesheets/screen.css"); ?>"
+		//content_css : "<?php echo uri("var/public/stylesheets/screen.css"); ?>"
 	});
 </script>
 <!-- /TinyMCE -->
