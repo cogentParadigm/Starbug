@@ -73,7 +73,7 @@ class XMLBuilder {
 				if ($uri['collective'] != "0") $xml .= " collective=\"$uri[collective]\"";
 				if ($uri['status'] != array_sum($statuses)) $xml .= " status=\"$uri[status]\"";
 				if ($uri['prefix'] != "app/views/") $xml .= " prefix=\"$uri[prefix]\"";
-				if ($uri['check_path'] != "0") $xml .= " check_path=\"$uri[check_path]\"";
+				if ($uri['check_path'] != "1") $xml .= " check_path=\"$uri[check_path]\"";
 				$xml .= "/>\n";
 			}
 		}
