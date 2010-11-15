@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="text"/>
-<xsl:template match="/model">&lt;tr id="<xsl:value-of select="@name"/>_&lt;?php echo $item[&apos;id&apos;]; ?&gt;"&gt;<xsl:apply-templates select="/form/field[@display=true]"/>
-&lt;/tr?&gt;</xsl:template>
+<xsl:template match="/model">&lt;tr id="<xsl:value-of select="@name"/>_&lt;?php echo $item[&apos;id&apos;]; ?&gt;"&gt;<xsl:apply-templates select="/model/field[@display=true]"/>
+&lt;/tr&gt;</xsl:template>
 
 <xsl:template match="field">
 	&lt;td&gt;
