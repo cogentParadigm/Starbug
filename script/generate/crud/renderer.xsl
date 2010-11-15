@@ -4,7 +4,7 @@
 <xsl:template match="/model">&lt;tr id="<xsl:value-of select="@name"/>_&lt;?php echo $item[&apos;id&apos;]; ?&gt;"&gt;<xsl:apply-templates select="/model/field"/>
 &lt;/tr&gt;</xsl:template>
 
-<xsl:template match="field">
+<xsl:template match="field"><xsl:if test="@display = true">
 	&lt;td&gt;
 		<xsl:choose>
 			<xsl:when test="position() = 1">&lt;a href="&lt;?php echo uri("<xsl:value-of select="/model/@name"/>/update/$item[id]"); ?&gt;"&gt;&lt;?php echo $item[&apos;<xsl:value-of select="@name"/>&apos;]; ?&gt;&lt;/a&gt;
@@ -15,5 +15,5 @@
 			<xsl:otherwise>&lt;?php echo $item[&apos;<xsl:value-of select="@name"/>&apos;]; ?&gt;</xsl:otherwise>
 		</xsl:choose>
 	&lt;/td&gt;
-</xsl:template>
+</xsl:if></xsl:template>
 </xsl:stylesheet>
