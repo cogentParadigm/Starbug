@@ -84,7 +84,7 @@ class CoreMigration extends Migration {
 		$this->uri("forbidden", "template:".Etc::DEFAULT_TEMPLATE);
 		// PERMITS
 		$this->permit("users::login", "everyone:table");
-		$this->permit("users::out", "everyone:table");
+		$this->permit("users::logout", "everyone:table");
 		$this->permit("uris::read", "collective:global");
 	}
 

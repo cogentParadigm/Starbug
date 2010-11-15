@@ -10,5 +10,8 @@
 		if (!file_exists(BASE_DIR."/patch/app/hooks/global.migrations")) $hook = array(10 => array());
 		else $hook = unserialize(file_get_contents(BASE_DIR."/patch/app/hooks/global.migrations"));
 		$hook[10][] = array("handle" => "return_it", "args" => ucwords($model)."Migration.php");
+		$file = fopen(BASE_DIR."/patch/app/hooks/global.migrations", "wb");
+		fwrite($file, serialize($hook));
+		fclose($file);
 	}
 ?>
