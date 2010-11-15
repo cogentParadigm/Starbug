@@ -16,7 +16,7 @@ $sb->provide("util/XMLBuilder");
  */
 class XMLBuilder {
 	function write_model($model, $fields) {
-		global $groups; global $statuses;
+		global $groups; global $statuses; global $schemer;
 		//CREATE MODEL XML
 		$xml = "<model name=\"$model\" label=\"".ucwords($model)."\" package=\"".Etc::WEBSITE_NAME."\">\n";
 		$relations = array();
