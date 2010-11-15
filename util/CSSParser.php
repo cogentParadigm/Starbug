@@ -1,4 +1,5 @@
 <?php
+$sb->provide("util/CSSParser");
 class CSSParser {
 	var $path;
 	var $css;

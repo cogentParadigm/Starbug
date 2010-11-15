@@ -1,19 +1,13 @@
 {
-	"screen" : {
-		"custom" : ["app/public/stylesheets/custom-screen.css"],
-		"plugins" : ["buttons", "rounding"],
-		"classes" : {
-			"#shell" : ".container",
-			"#main" : ".span-24",
-			"#content" : ".span-17 .colborder",
-			"#sidebar" : ".span-6 .last",
-			"#footer" : ".small .right .clear"
-		}
-	},
-	"print" : {
-		"custom" : ["app/public/stylesheets/custom-print.css"]
-	},
-	"ie" : {
-		"custom" : ["app/public/stylesheets/custom-ie.css"]
+	"screen" : ["app/public/stylesheets/custom-screen.css"],
+	"print" : ["app/public/stylesheets/custom-print.css"],
+	"ie" : ["app/public/stylesheets/custom-ie.css"],
+	"plugins" : ["buttons", "rounding"],
+	"classes" : {
+		"#shell" : ".container",
+		"#main" : ".span-24",
+		"#content" : ".span-17 .colborder",
+		"#sidebar" : ".span-6 .last",
+		"#footer" : ".small .right .clear"
 	}
 }
