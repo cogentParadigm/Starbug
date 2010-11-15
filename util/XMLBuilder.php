@@ -22,6 +22,7 @@ class XMLBuilder {
 		$relations = array();
 		foreach($fields as $name => $field) {
 			$xml .= "\t<field name=\"$name\"";
+			$xml .= (isset($schemer->tables[$model][$name])) ? ' display="true"' : ' display="false"';
 			$kids = "";
 			if (!isset($field['input_type'])) {
 				if ($field['type'] == "text") $field['input_type'] = "textarea";

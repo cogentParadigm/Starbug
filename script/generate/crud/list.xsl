@@ -3,7 +3,7 @@
 
 <xsl:output method="text"/>
 
-<xsl:template match="/model">&lt;h2&gt;&lt;a id="add_<xsl:value-of select="@name"/>" class="right round button" href="&lt;?php echo uri("<xsl:value-of select="@name"/>/create"); ?&gt;"&gt;Create <xsl:value-of select="@name"/>&lt;/a&gt;<xsl:value-of select="@name"/>&lt;/h2&gt;
+<xsl:template match="/model">&lt;h2&gt;&lt;a id="add_<xsl:value-of select="@name"/>" class="right round button" href="&lt;?php echo uri("<xsl:value-of select="@name"/>/create"); ?&gt;"&gt;Add <xsl:value-of select="@name"/>&lt;/a&gt;<xsl:value-of select="@name"/>&lt;/h2&gt;
 	&lt;?php
 		$sb-&gt;import("util/form", "util/lister");
 		efault($_GET['orderby'], "<xsl:value-of select="@name"/>.created");
@@ -12,10 +12,10 @@
 			"hidden  orderby", "hidden  direction", "text  keywords  class:left round-left", "submit  class:round-right button  value:Search"
 		)."<br/>";
 		$lister = new lister(
-			"orderby:$_GET[orderby] $_GET[direction]  renderer:<xsl:value-of select="@name"/>_row  show:25  page:".end($this->uri),
+			"orderby:$_GET[orderby] $_GET[direction]  renderer:<xsl:value-of select="@name"/>_row  show:25  page:$_GET[page]",
 			uri("<xsl:value-of select="@name"/>?page=[page]?keywords=$_GET[keywords]&amp;orderby=[orderby]&amp;direction=[direction]")
 		);
-<xsl:apply-templates select="field[@display]"/>
+<xsl:apply-templates select="field[@display=true]"/>
 		$lister->query("<xsl:value-of select="@name"/>", "action:read  keywords:$_GET[keywords]  search:status<xsl:for-each select="field">,<xsl:value-of select="@name"/></xsl:for-each>");
 		$lister->render("id:<xsl:value-of select="@name"/>_table  class:clear lister");
 	?&gt;
