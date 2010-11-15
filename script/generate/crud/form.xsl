@@ -7,7 +7,7 @@
 <xsl:apply-templates select="/model/field"/>	&lt;div class="field"&gt;&lt;?php submit("class:big round button  value:Save"); ?&gt;&lt;/div&gt;
 &lt;?php close_form(); &gt;</xsl:template>
 
-<xsl:template match="field"><xsl:if test="@display = 'true'"/>	&lt;div class="field"&gt;&lt;?php <xsl:value-of select="@input_type"/>("<xsl:value-of select="@name"/><xsl:apply-templates select="@*"/>"); ?&gt;&lt;/div&gt;
+</xsl:template match="field"><xsl:if test="@display = 'true'"/>	&lt;div class="field"&gt;&lt;?php <xsl:value-of select="@input_type"/>("<xsl:value-of select="@name"/><xsl:apply-templates select="@*"/>"); ?&gt;&lt;/div&gt;
 </xsl:if></xsl:template>
 
 <xsl:template match="@*"><xsl:if test="(name() != 'name') and (name() != 'type') and (name() != 'input_type') and (name() != 'display')"><xsl:text>  </xsl:text><xsl:value-of select="name()"/>:<xsl:value-of select="."/></xsl:if></xsl:template>
