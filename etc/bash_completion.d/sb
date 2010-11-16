@@ -24,6 +24,7 @@ _sb() {
 			if [ -d script/${prev} ]; then
 				local options=$(for x in `ls script/${prev}`; do echo ${x} ; done | xargs -n1 basename )
 				COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
+				return 0
 			fi
 		;;
 	esac
