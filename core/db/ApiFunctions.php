@@ -46,9 +46,10 @@ class ApiFunctions {
 		global $sb;
 		$from = $models[0];
 		if (!empty($query)) $query .= "  action:read";
-		foreach ($_GET as $k => $v) $query .= "  $k:$v";
+		if (!empty($_GET['query'])) $query .= base64_decode($_GET['query']);
+		else foreach ($_GET as $k => $v) $query .= "  $k:$v";
 		$data = $sb->query(join(",", $models), $query, true);
-		$json = '{ "items" : [';
+		$json = '{ "identifier" : "id", "items" : [';
 		foreach($data as $row) $json .= ApiFunctions::rowToJSON($row).", ";
 		return rtrim($json, ", ")." ] }";
 	}

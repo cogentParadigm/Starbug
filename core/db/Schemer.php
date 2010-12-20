@@ -114,7 +114,7 @@ class Schemer {
 							$ms++;
 						}
 					}
-					if (isset($field['references'])) {
+					if (isset($field['references']) && ($field['constraint'] != "false")) {
 						$fks = $this->db->query("SELECT * FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME='".P($table)."_".$name."_fk'");
 						if (false === ($row = $fks->fetch())) {
 							// ADD CONSTRAINT																																								// CONSTRAINT
@@ -309,7 +309,7 @@ class Schemer {
 		else if ($field['type'] == 'decimal') $type = "decimal(".$field['length'].")";
 		else if ($field['type'] == 'bool') $type = "tinyint(1)";
 		else if (($field['type'] == 'datetime') || ($field['type'] == 'timestamp')) $type = "datetime";
-		$type .= " NOT NULL"
+		$type .= ((isset($field['null'])) ? " NULL" : " NOT NULL")
 						.((isset($field['unsigned'])) ? " UNSIGNED" : "")
 						.((isset($field['zerofill'])) ? " ZEROFILL" : "")
 						.((isset($field['auto_increment'])) ? " AUTO_INCREMENT" : "")
@@ -479,7 +479,7 @@ class Schemer {
 	function populate($table) {
 		$rs = 0;
 		$pop = $this->population[$table];
-		foreach ($pop as $record) {
+		if (!empty($pop)) foreach ($pop as $record) {
 			$query = ""; foreach ($record['match'] as $k => $v) $query .= "$k='$v' && "; $query = rtrim($query, '& ');
 			$match = query($table, "where:$query");
 			if (empty($match)) {

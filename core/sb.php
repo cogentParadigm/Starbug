@@ -159,12 +159,19 @@ class sb {
 		if (!$mine) foreach ($froms as $f) $from .= " INNER JOIN `".P($f)."` AS `".$f."`";
 		else {
 			$relations = $this->get($first)->relations;
+			$last = "";
+			$joined = array();
 			foreach ($froms as $f) {
 				$f = explode(" via ", $f);
 				if (1 == count($f)) {
-					if (isset($relations[$f[0]][$first])) $rel = reset(reset($relations[$f[0]][$first]));
+					if (isset($relations[$f[0]][$last])) $rel = reset(reset($relations[$f[0]][$last]));
+					else if (isset($relations[$f[0]][$first])) $rel = reset(reset($relations[$f[0]][$first]));
 					else if (isset($relations[$f[0]][$f[0]])) $rel = reset(reset($relations[$f[0]][$f[0]]));
-					else $rel = reset(reset(reset($relations[$f[0]])));
+					else if (isset($relations[$f[0]])) $rel = reset(reset(reset($relations[$f[0]])));
+					else if (!empty($last)) {
+						$set = $this->get($last)->relations;
+						if (isset($set[$f[0]])) $rel = reset(reset(reset($set[$f[0]])));
+					}
 				} else {
 					$parts = explode(" ", $f[1]);
 					$f[1] = $parts[0];
@@ -173,14 +180,26 @@ class sb {
 					else if (2 == count($parts)) $rel = reset($rel[$parts[1]]);
 					else $rel = $rel[$parts[1]][$parts[2]];
 				}
+				$last = $f[0];
 				$lookup = $f[1];
 				$f = $f[0];
 				$namejoin = " INNER JOIN `".P($f)."` AS `$f`";
+				$joined[] = $f;
 				if (empty($rel)) $from .= $namejoin;
 				else {
 					$namejoin .= " ON ";
 					if ($rel['type'] == "one") $from .= $namejoin."$rel[lookup].$rel[ref]=".(($rel['lookup'] == $f) ? $first : $f).".id";
-					else if ($rel['type'] == "many") $from .= ($rel['lookup']) ? " INNER JOIN ".P($rel['lookup'])." AS $rel[lookup] ON ".$first.".id=$rel[lookup].$rel[hook]".$namejoin." $rel[lookup].$rel[ref]=$f.id" : $namejoin.$first.".id=$f.$rel[hook]";
+					else if ($rel['type'] == "many") {
+						if ($rel['lookup']) {
+							if (false === array_search($rel['lookup'], $joined)) {
+								$from .= " INNER JOIN ".P($rel['lookup'])." AS $rel[lookup] ON ".$first.".id=$rel[lookup].$rel[hook]";
+								$joined[] = $rel['lookup'];
+							}
+							$from .= $namejoin." $rel[lookup].$rel[ref]=$f.id";
+						} else {
+							$from .= $namejoin.$first.".id=$f.$rel[hook]";
+						}
+					}
 				}
 			}
 		}
@@ -270,9 +289,13 @@ class sb {
 				$fields['modified'] = date("Y-m-d H:i:s");
 				if ($updating) { //updating existing record
 					foreach($fields as $col => $value) {
-						$prize[] = $value;
-						if(empty($setstr)) $setstr = $col."= ?";
-						else $setstr .= ", ".$col."= ?";
+						if ($value == "NULL") $s = "NULL";
+						else {
+							$prize[] = $value;
+							$s = "?";
+						}
+						if(empty($setstr)) $setstr = $col."= $s";
+						else $setstr .= ", ".$col."= $s";
 					}
 					foreach($from as $c => $v) {
 						$prize[] = $v;
@@ -286,11 +309,15 @@ class sb {
 					if (!isset($fields['owner'])) $fields['owner'] = ($_SESSION[P('id')] > 0) ? $_SESSION[P('id')] : 1;
 					$keys = ""; $values = "";
 					foreach($fields as $col => $value) {
-						$prize[] = $value;
+						if ($value == "NULL") $s = "NULL";
+						else {
+							$prize[] = $value;
+							$s = "?";
+						}
 						if(empty($keys)) $keys = $col;
 						else $keys .= ", ".$col;
-						if(empty($values)) $values = "?";
-						else $values .= ", ?";
+						if(empty($values)) $values = "$s";
+						else $values .= ", $s";
 					}
 					$stmt = $this->db->prepare("INSERT INTO ".P($name)." (".$keys.") VALUES (".$values.")");
 					$this->record_count = $stmt->execute($prize);

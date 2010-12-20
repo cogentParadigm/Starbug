@@ -221,4 +221,20 @@ function userinfo($field="") {
 	if ("group" == $field) return array_search($_SESSION[P('user')]['collective'], $groups);
 	else return $_SESSION[P("user")][$field];
 }
+function remote_form($trigger, $args) {
+	global $sb;
+	$sb->import("util/dojo");
+	global $dojo;
+	$args = starr::star($args);
+	efault($args['form'], '');
+	efault($args['title'], '');
+	efault($args['callback'], 'null');
+	$d = $dojo->dialog($trigger, "title:$args[title]  url:$args[form]");
+	$dojo->xhr("#dijit_Dialog_$d form", "sb.post_form", $args['action'], "form:dojo.query('#dijit_Dialog_$d form')[0]  handleAs:'json'  callback:$args[callback]  close_dialog:$d", "onsubmit");
+	$dojo->attach("#dijit_Dialog_$d form .cancel", "sb.close_dialog", "dialog:$d");
+}
+function is_home() {
+	global $request;
+	return ($request->path == Etc::DEFAULT_PATH);
+}
 ?>

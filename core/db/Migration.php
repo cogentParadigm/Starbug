@@ -51,7 +51,7 @@ class Migration {
 	/**
 	 * @copydoc Schemer::store
 	 */
-	function store($table, $match, $others) {
+	function store($table, $match, $others="") {
 		global $schemer;
 		$schemer->store($table, $match, $others);
 	}
