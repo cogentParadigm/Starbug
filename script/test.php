@@ -32,7 +32,7 @@
 	}
 	if ($no_errors) fwrite(STDOUT, "\nNo syntax errors detected!\n\n");
 	else exit(1);
-	if (is_dir(BASE_DIR."/util/simpletest")) {
+	if ((Etc::SIMPLETEST_ENABLED) && is_dir(BASE_DIR."/util/simpletest")) {
 		if (! defined('SIMPLE_TEST')) define('SIMPLE_TEST', BASE_DIR.'/util/simpletest/');
 		require_once(SIMPLE_TEST."unit_tester.php");
 		require_once(SIMPLE_TEST."web_tester.php");

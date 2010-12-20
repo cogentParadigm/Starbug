@@ -83,5 +83,21 @@ class ApiFunctions {
 		foreach($row as $k => $v) $json .= '"'.$k.'"'.' : "'.str_replace(array("{", "}"), array("", ""), addslashes($v)).'", ';
 		return rtrim($json, ", ")."}";
 	}
+
+	/**
+	 * get json formatted errors
+	 * @param string $model the model
+	 * @return string json output of errors
+	 */
+	function JSONerrors($model) {
+		global $sb;
+		$json = '{ "errors" : [';
+		foreach($sb->errors[$model] as $k => $v) {
+			$json .= '{ "field":"'.$k.'", "errors": [ ';
+			foreach ($v as $e) $json .= '"'.$e.'", ';
+			$json = rtrim($json, ", ")." ] }, ";
+		}
+		return rtrim($json, ", ")." ] }";
+	}
 }
 ?>

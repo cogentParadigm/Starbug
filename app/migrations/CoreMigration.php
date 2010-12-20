@@ -20,7 +20,7 @@ class CoreMigration extends Migration {
 			"memberships  type:int"
 		);
 		//This will be stored immediately after the creation of the users table
-		$this->store("users", "username:root", "memberships:1  password:".md5(uniqid(rand(), true)));
+		$this->store("users", "username:root", "memberships:1");
 		$this->table("permits",
 			"role  type:string  length:30",
 			"who  type:int  default:0",
@@ -67,7 +67,7 @@ class CoreMigration extends Migration {
 		);
 		$this->table("options",
 			"name  type:string  length:64",
-			"value  type:text",
+			"value  type:text  default:",
 			"autoload  type:bool  default:0"
 		);
 		// URIS

@@ -71,7 +71,7 @@ class Table {
 			$lookup = $this->type;
 		}
 		if (!isset($this->relations[$name])) $this->relations[$name] = array();
-		$this->relations[$name] = array_merge($this->relations[$name], array($lookup => array("type" => "one", "lookup" => $lookup, "ref" => $ref_field)));
+		$this->relations[$name] = array_merge_recursive($this->relations[$name], array($lookup => array($ref_field => array("id" => array("type" => "one", "lookup" => $lookup, "ref" => $ref_field)))));
 	}
 
 	/**
@@ -83,13 +83,14 @@ class Table {
 	 */
 	protected function has_many($name, $hook, $lookup="", $ref_field="") {
 		efault($lookup, $name);
-		$merge = array($lookup => array("type" => "many", "hook" => $hook));
+		$key = ($ref_field) ? $ref_field : "id";
+		$merge = array($lookup => array($key => array($hook => array("type" => "many", "hook" => $hook))));
 		if ($lookup && $ref_field) {
-			$merge[$lookup]["lookup"] = $lookup;
-			$merge[$lookup]["ref"] = $ref_field;
+			$merge[$lookup][$key][$hook]["lookup"] = $lookup;
+			$merge[$lookup][$key][$hook]["ref"] = $ref_field;
 		}
 		if (!isset($this->relations[$name])) $this->relations[$name] = array();
-		$this->relations[$name] = array_merge($this->relations[$name], $merge);
+		$this->relations[$name] = array_merge_recursive($this->relations[$name], $merge);
 	}
 
 
@@ -107,7 +108,7 @@ class Table {
 
 	function query($args="", $froms="", $deep="auto") {
 		global $sb;
-		$records = $sb->query($this->type.((empty($froms)) ? "" : ", ".$froms), $args, (($deep=="auto") ? (!empty($froms)) : $deep));
+		$records = $sb->query($this->type.((empty($froms)) ? "" : ",".$froms), $args, (($deep=="auto") ? (!empty($froms)) : $deep));
 		$this->record_count = $sb->record_count;
 		return $records;
 	}

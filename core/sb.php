@@ -64,7 +64,10 @@ class sb {
 	function __construct() {
 		$this->db = new db('mysql:host='.Etc::DB_HOST.';dbname='.Etc::DB_NAME, Etc::DB_USERNAME, Etc::DB_PASSWORD);
 		$this->db->set_debug(true);
-		if (!isset($_SESSION[P('id')])) $_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
+		if (!isset($_SESSION[P('id')])) {
+			$_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
+			$_SESSION[P('user')] = array();
+		}
 		$this->publish("init");
 	}
 
@@ -159,10 +162,17 @@ class sb {
 			foreach ($froms as $f) {
 				$f = explode(" via ", $f);
 				if (1 == count($f)) {
-					if (isset($relations[$f[0]][$first])) $rel = $relations[$f[0]][$first];
-					else if (isset($relations[$f[0]][$f[0]])) $rel = $relations[$f[0]][$f[0]];
-					else $rel = reset($relations[$f[0]]);
-				} else $rel = $relations[$f[0]][$f[1]];
+					if (isset($relations[$f[0]][$first])) $rel = reset(reset($relations[$f[0]][$first]));
+					else if (isset($relations[$f[0]][$f[0]])) $rel = reset(reset($relations[$f[0]][$f[0]]));
+					else $rel = reset(reset(reset($relations[$f[0]])));
+				} else {
+					$parts = explode(" ", $f[1]);
+					$f[1] = $parts[0];
+					$rel = $relations[$f[0]][$f[1]];
+					if (1 == count($parts)) $rel = reset(reset($rel));
+					else if (2 == count($parts)) $rel = reset($rel[$parts[1]]);
+					else $rel = $rel[$parts[1]][$parts[2]];
+				}
 				$lookup = $f[1];
 				$f = $f[0];
 				$namejoin = " INNER JOIN `".P($f)."` AS `$f`";
@@ -322,7 +332,7 @@ class sb {
 			if (!empty($errors)) $this->errors = array_merge_recursive($this->errors, array($key => $errors));
 			if (!empty($this->errors[$key])) {
 				global $request;
-				$request->return_path();
+				if ($request->format != "json") $request->return_path();
 			}
 		}
 	}

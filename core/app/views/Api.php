@@ -14,13 +14,13 @@ if ($action == "get") {
 	if (!empty($_GET['id'])) $query = "where:$model.id='$_GET[id]'";
 	if ($format == "xml") {
 		header("Content-Type: text/xml");
-		echo ApiFunctions::getXML($models, $query);
+		echo (empty($sb->errors[$model])) ? ApiFunctions::getXML($models, $query) : ApiFunctions::XMLerrors($model);
 	} else if ($format == "json") {
 		header("Content-Type: application/json");
-		echo ApiFunctions::getJSON($models, $query);
+		echo (empty($sb->errors[$model])) ? ApiFunctions::getJSON($models, $query) : ApiFunctions::JSONerrors($model);
 	} else if ($format == "jsonp") {
 		header("Content-Type: application/x-javascript");
-		echo ApiFunctions::getJSONP($models, $query);
+		echo (empty($sb->errors[$model])) ? ApiFunctions::getJSONP($models, $query) : ApiFunctions::JSONPerrors($model);
 	}
 }
 ?>

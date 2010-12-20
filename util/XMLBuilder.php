@@ -57,7 +57,7 @@ class XMLBuilder {
 				else $val = $p['priv_type'];
 				if ($p['status'] != array_sum($statuses)) $val .= " ".$p['status'];
 			if ("group" == $p['role']) { //GROUP PERMIT
-				$actions[$p['action']][$groups[$p['who']]] = (empty($actions[$p['action']][$groups[$p['who']]])) ? $val : ",".$val;
+				$actions[$p['action']][array_search($p['who'], $groups)] = (empty($actions[$p['action']][$groups[$p['who']]])) ? $val : ",".$val;
 			} else $actions[$p['action']][$p['role']] = (empty($actions[$p['action']][$p['role']])) ? $val : ",".$val;
 		}
 		foreach ($actions as $a => $roles) {

@@ -96,7 +96,6 @@ class Schemer {
 				fwrite(STDOUT, "Creating table ".P($table)."...\n");
 				$this->create($table);
 				$ts++;
-				$is += $this->populate($table);
 			} else {
 				// OLD TABLE																																													// OLD TABLE
 				foreach ($fields as $name => $field) {
@@ -126,6 +125,7 @@ class Schemer {
 					}
 				}
 			}
+			$is += $this->populate($table);
 		}
 		foreach ($this->uris as $path => $uri) {
 			$rows = query("uris", "where:path='$path'");
@@ -480,13 +480,21 @@ class Schemer {
 		$rs = 0;
 		$pop = $this->population[$table];
 		foreach ($pop as $record) {
-			$query = ""; foreach ($record['match'] as $k => $v) $query .= "$k='$v' && ";
-			$match = query($table, "where:".rtrim($query, '& '));
+			$query = ""; foreach ($record['match'] as $k => $v) $query .= "$k='$v' && "; $query = rtrim($query, '& ');
+			$match = query($table, "where:$query");
 			if (empty($match)) {
 				$store = array_merge($record['match'], $record['others']);
 				fwrite(STDOUT, "Inserting $table record...\n");
-				store($table, $store);
+				store($table, $store, true);
 				$rs++;
+			} else if (!empty($record['others'])) {
+				foreach ($record['others'] as $k => $v) $query .= " && $k='$v'";
+				$match = query($table, "where:$query");
+				if (empty($match)) {
+					fwrite(STDOUT, "Updating $table record...\n");
+					store($table, $record['others'], $record['match']);
+					$rs++;
+				}
 			}
 		}
 		return $rs;

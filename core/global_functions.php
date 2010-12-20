@@ -59,7 +59,7 @@ function uri($path="", $flags="") {
  * @copydoc sb::query
  * @ingroup core
  */
-function query($froms, $args="", $mine=false) {
+function query($froms, $args="", $mine=true) {
 	global $sb;
 	return $sb->query($froms, $args, $mine);
 }
@@ -205,9 +205,20 @@ function star($str) {
 /**
  * check if user is logged in
  * @ingroup core
+ * @param string $group return true only if the user is in the specified group (optional)
  */
 function logged_in($group="") {
 	global $groups;
 	return ((empty($group) && (!empty($_SESSION[P('id')]))) || ($_SESSION[P('memberships')] & $groups[$group]));
+}
+/**
+ * get user info
+ * @ingroup core
+ * @param string $field the name of the field
+ */
+function userinfo($field="") {
+	global $groups;
+	if ("group" == $field) return array_search($_SESSION[P('user')]['collective'], $groups);
+	else return $_SESSION[P("user")][$field];
 }
 ?>

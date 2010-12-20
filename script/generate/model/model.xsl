@@ -5,9 +5,7 @@
 <xsl:template match="/model">&lt;?php
 /**
  * <xsl:value-of select="@name"/> model
- * 
- * @package <xsl:value-of select="@package"/>
- * @subpackage models
+ * @ingroup models
  */
 class <xsl:value-of select="@label"/> extends <xsl:value-of select="@label"/>Model {
 
