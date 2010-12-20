@@ -20,6 +20,7 @@ $sb->provide("util/dojo");
 class dojo {
 	var $behaviors = array();
 	var $toggles = array();
+	var $dialogs = 0;
 	function dojo() {
 		global $request;
 		$request->tags[] = array("tag" => "dojo", "raw_tag" => "dojo");
@@ -30,7 +31,7 @@ class dojo {
 		$this->behaviors[$query] = array_merge_recursive($this->behaviors[$query], $merge);
 	}
 	function xhr($query, $action, $url, $params="", $event="onclick") {
-		$url = "'".uri("")."'+".$url;
+		if (false === strpos($url, $base)) $url = "'$base'+$url";
 		$this->attach($query, "sb.xhr", "action:$action  url:$url".(empty($params) ? "" : "  ".$params), $event);
 	}
 	function attach($query, $action, $params="", $event="onclick") {
@@ -52,6 +53,13 @@ class dojo {
 		$this->attach($query, "sb.toggle", "node:'#$node'  toggler:$toggler");
 		$this->toggles[$toggler] = array("node" => $node, "default" => $default, "toggler" => $toggler);
 		if ($params['add']) $this->toggles[$toggler]['add'] = $params['add'];
+	}
+	function dialog($trigger, $args, $event="onclick") {
+		$args = starr::star($args);
+		if (empty($args['url'])) $args['url'] = "dojo.attr(evt.target, 'href')+'.xhr'";
+		if (empty($args['title'])) $args['title'] = "dojo.attr(evt.target, 'title')";
+		$this->xhr($trigger, "sb.open_dialog", $args['url'], "title:$args[title]  dialog:".$this->dialogs, $event);
+		return $this->dialogs++;
 	}
 }
 /**

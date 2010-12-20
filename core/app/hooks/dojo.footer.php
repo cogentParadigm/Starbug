@@ -1,7 +1,10 @@
+<script type="text/javascript" src="<?php echo uri("core/app/public/js/sb.js"); ?>"></script>
 <script type="text/javascript">
 	dojo.require("dojo.behavior");
 	<?php global $dojo; if (!empty($dojo->toggles)) { ?>dojo.require("dojo.fx");<?php } ?>
-<?php include("core/app/public/js/sb.js"); ?>
+	<?php if ($dojo->dialogs) { ?>
+	dojo.require("dijit.Dialog");
+	<?php } ?>
 	dojo.addOnLoad(function() {
 		<?php foreach ($dojo->toggles as $toggle => $ops) { ?>
 		var <?php echo $toggle; ?> = new dojo.fx.Toggler({node:'<?php echo $ops['node']; ?>'<?php if ($ops['add']) echo ", ".$ops['add']; ?>});
@@ -15,6 +18,7 @@
 			"<?php echo $query; ?>" : {<?php $pairs = count($events); $j = 0; foreach($events as $event => $actions) { $j++; ?> <?php echo $event; ?> : function(evt) {evt.preventDefault();<?php foreach($actions as $act) echo str_replace(array("\n", "\t"), "", $act); ?>}<?php if ($j < $pairs) echo ","; echo "\n"; ?><?php } ?> }<?php if ($i < $queries) echo ","; echo "\n"; ?>
 			<?php } ?>
 		});
+		dojo.behavior.apply();
 		<?php } ?>
 	});
 </script>
