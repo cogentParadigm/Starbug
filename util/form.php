@@ -218,6 +218,11 @@ class form {
 			for ($i=$range[0];$i<=$range[1];$i++) $options[$i] = $i;
 			unset($ops['range']);
 		}
+		if (!empty($ops['caption'])) {
+			$list = array();
+			foreach ($options as $o) $list[$o[$ops['caption']]] = $o[$ops['value']];
+			$options = $list; unset($ops['caption']); unset($ops['value']);
+		}
 		$ops['content'] = "";
 		foreach ($options as $caption => $val) $ops['content'] .= "<option value=\"$val\"".(($this->get($ops['name']) == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
 		return $select.$this->form_control("select", $ops);
