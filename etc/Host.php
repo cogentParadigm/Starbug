@@ -26,5 +26,8 @@ class Host {
 	/* Java paths */
 	const JAVA_PATH = "/usr/bin/java";
 	const SAXON_PATH = "/usr/local/saxon/saxon9.jar";
+
+	/* script settings */
+	const SIMPLETEST_ENABLED = false;
 }
 ?>
