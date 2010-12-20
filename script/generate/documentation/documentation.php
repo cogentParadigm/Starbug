@@ -1,3 +1,3 @@
 <?php
-	passthru("doxygen etc/docs/doxygen");
+	passthru("doxygen doc/doxyfile");
 ?>
