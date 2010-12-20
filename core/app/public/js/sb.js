@@ -47,5 +47,43 @@ dojo.mixin(sb, {
 			display = 'on';
 		}
 		dojo.attr(node, 'displayed', display);
+	},
+	open_dialog : function(data) {
+		dialog = dijit.byId('dijit_Dialog_'+data.args.dialog);
+		if (dialog == null) dialog = new dijit.Dialog({});
+		dialog.attr('title', data.args.title);
+		dialog.attr('content', data.args.data);
+		dojo.parser.parse();
+		dialog.show();
+	},
+	close_dialog : function(args) {
+		if (typeof args == "object") var d = args.args.dialog;
+		else var d = args;
+		dijit.byId('dijit_Dialog_'+d).hide();
+		var dlg = dijit.byId('dijit_Dialog_'+d-1);
+		if (dlg != null) dialog = dlg;
+	},
+	post_form : function(data) {
+		dojo.query('.error', data.args.form).forEach(dojo.destroy);
+		if (data.args.data.items) {
+			if (data.args.callback != null) data.args.callback(data.args.data.items, data.args);
+			if (data.args.close_dialog != null) {
+				sb.close_dialog(data.args.close_dialog);
+			}
+		} else if (data.args.data.errors) {
+			var node = null;
+			var span = null;
+			for (var field in data.args.data.errors) {
+				field = data.args.data.errors[field];
+				node = dojo.query('#'+field.field, data.args.form);
+				if (node != null) {
+					node = node[0];
+					for (var e in field.errors) {
+						span = '<span class="error">'+field.errors[e]+'</span>';
+						dojo.place(span, node, "before");
+					}
+				}
+			}
+		}
 	}
 });
