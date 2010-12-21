@@ -14,6 +14,8 @@ class CoreMigration extends Migration {
 	function up() {
 		// This adds a table to the schema, The Schemer builds up a schema with all of the migrations that are to be run, and then updates the db
 		$this->table("users",
+			"first_name  type:string  length:64",
+			"last_name  type:string  length:64",
 			"username  type:string  length:128",
 			"email  type:string  length:128  unique:",
 			"password  type:password  confirm:password_confirm  md5:  optional_update:",
@@ -82,10 +84,15 @@ class CoreMigration extends Migration {
 		$this->uri("missing", "template:".Etc::DEFAULT_TEMPLATE);
 		//403 PAGE
 		$this->uri("forbidden", "template:".Etc::DEFAULT_TEMPLATE);
-		// PERMITS
+
+		// URI PERMITS
+		$this->permit("uris::read", "collective:global");
+		// USER PERMITS
 		$this->permit("users::login", "everyone:table");
 		$this->permit("users::logout", "everyone:table");
-		$this->permit("uris::read", "collective:global");
+		$this->permit("users::create", "admin:");
+		$this->permit("users::register", "everyone:table");
+		$this->permit("users::update_profile", "owner:global");
 	}
 
 	function down() {

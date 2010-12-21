@@ -56,6 +56,15 @@ function uri($path="", $flags="") {
 	return $prefix.Etc::WEBSITE_URL.$path;
 }
 /**
+ * utility import function
+ * @ingroup core
+ * @param string $util the utility
+ * @param string $module the module
+ */
+function import($util, $module="util") {
+	$sb->import($module."/".$util);
+}
+/**
  * @copydoc sb::query
  * @ingroup core
  */
