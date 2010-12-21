@@ -219,6 +219,7 @@ class form {
 			unset($ops['range']);
 		}
 		if (!empty($ops['caption'])) {
+			if (!empty($ops['from'])) $options = query($ops['from']);
 			$list = array();
 			foreach ($options as $o) $list[$o[$ops['caption']]] = $o[$ops['value']];
 			$options = $list; unset($ops['caption']); unset($ops['value']);

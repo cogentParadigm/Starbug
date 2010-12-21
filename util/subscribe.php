@@ -29,12 +29,12 @@ class Subscriber {
 	function subscribe($topic, $tags, $priority, $handle, $args=null) {
 		if (!is_array($tags)) $tags = array($tags);
 		foreach ($tags as $tag) {
-			$subscriptions = (file_exists(BASE_DIR."/app/hooks/$tag.$topic")) ? unserialize(file_get_contents(BASE_DIR."/app/hooks/$tag.$topic")) : array();
+			$subscriptions = (file_exists(BASE_DIR."/etc/hooks/$tag.$topic")) ? unserialize(file_get_contents(BASE_DIR."/etc/hooks/$tag.$topic")) : array();
 			$subscriptions[$priority][] = ($args == null) ? array("handle" => $handle, "args" => array()) : array("handle" => $handle, "args" => $args);
-			$file = fopen(BASE_DIR."/app/hooks/$tag.$topic", "wb");
+			$file = fopen(BASE_DIR."/etc/hooks/$tag.$topic", "wb");
 			fwrite($file, serialize($subscriptions));
 			fclose($file);
-			chmod(BASE_DIR."/app/hooks/$tag.$topic", 0666);
+			chmod(BASE_DIR."/etc/hooks/$tag.$topic", 0666);
 		}
 	}
 	/**
@@ -47,9 +47,9 @@ class Subscriber {
 	function unsubscribe($topic, $tags, $priority, $handle, $args=array()) {
 		if (!is_array($tags)) $tags = array($tags);
 		foreach ($tags as $tag) {
-			$subscriptions = (file_exists(BASE_DIR."/app/hooks/$tag.$topic")) ? unserialize(file_get_contents(BASE_DIR."/app/hooks/$tag.$topic")) : array();
+			$subscriptions = (file_exists(BASE_DIR."/etc/hooks/$tag.$topic")) ? unserialize(file_get_contents(BASE_DIR."/etc/hooks/$tag.$topic")) : array();
 			foreach($subscriptions[$priority] as $index => $ball) if (($ball['handle'] == $handle) && ($ball['args'] == $args)) unset($subscriptions[$priority][$index]);
-			$file = fopen(BASE_DIR."/app/hooks/$tag.$topic", "wb");
+			$file = fopen(BASE_DIR."/etc/hooks/$tag.$topic", "wb");
 			fwrite($file, serialize($subscriptions));
 			fclose($file);
 		}
@@ -60,14 +60,14 @@ class Subscriber {
 	 */
 	function subscriptions() {
 		$subs = array();
-		if (false !== ($handle = opendir(BASE_DIR."/app/hooks/"))) {
+		if (false !== ($handle = opendir(BASE_DIR."/etc/hooks/"))) {
 			while (false !== ($file = readdir($handle))) {
 				if ((strpos($file, ".") !== 0)) {
 					$parts = explode(".", $file);
 					$tag = $parts[0];
 					$topic = $parts[1];
 					if (!isset($subs[$tag])) $subs[$tag] = array();
-					$subs[$tag][$topic] = unserialize(file_get_contents(BASE_DIR."/app/hooks/$file"));
+					$subs[$tag][$topic] = unserialize(file_get_contents(BASE_DIR."/etc/hooks/$file"));
 				}
 			}
 			closedir($handle);

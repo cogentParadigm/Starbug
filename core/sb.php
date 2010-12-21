@@ -97,7 +97,7 @@ class sb {
 			$tags = array(array("tag" => $tags));
 		} else $tags = (isset($request->tags)) ? $request->tags : array(array("tag" => "global"));
 		foreach ($tags as $tag) {
-			$subscriptions = (file_exists(BASE_DIR."/app/hooks/$tag[tag].$topic")) ? unserialize(file_get_contents(BASE_DIR."/app/hooks/$tag[tag].$topic")) : array();
+			$subscriptions = (file_exists(BASE_DIR."/etc/hooks/$tag[tag].$topic")) ? unserialize(file_get_contents(BASE_DIR."/etc/hooks/$tag[tag].$topic")) : array();
 			foreach ($subscriptions as $priority) {
 				foreach($priority as $handle) {
 					if (false !== strpos($handle['handle'], "::")) $handle['handle'] = explode("::", $handle['handle']);
