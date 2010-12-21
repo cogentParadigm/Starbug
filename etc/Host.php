@@ -29,7 +29,8 @@ class Host {
 
 	/* integration */
 	const BLUEPRINT_ENABLED = true;
-	const DOJO_ENABLED = false;
+	const DOJO_ENABLED = true;
+	const PHPMAILER_ENABLED = true;
 	const SIMPLETEST_ENABLED = false;
 }
 ?>
