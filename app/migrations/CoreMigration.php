@@ -84,6 +84,8 @@ class CoreMigration extends Migration {
 		$this->uri("missing", "template:".Etc::DEFAULT_TEMPLATE);
 		//403 PAGE
 		$this->uri("forbidden", "template:".Etc::DEFAULT_TEMPLATE);
+		//Rogue IDE
+		$this->uri("rogue", "title:Rogue IDE  template:templates/Blank  prefix:core/app/views/  collective:0");
 
 		// URI PERMITS
 		$this->permit("uris::read", "collective:global");

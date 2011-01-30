@@ -12,6 +12,9 @@
  * @ingroup etc
  */
 class Host {
+	/* the type of environment this is: development or production */
+	const ENVIRONMENT = "development";
+
 	/* details for database */
 	const DB_TYPE = "mysql";
 	const DB_HOST = "localhost";

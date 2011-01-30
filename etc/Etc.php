@@ -14,30 +14,30 @@ include(BASE_DIR."/etc/Host.php");
  */
 class Etc extends Host {
 	/**
-	* the name of your application
-	*/
+	 * the name of your application
+	 */
 	const WEBSITE_NAME = "Starbug";
 	/**
-	* a tagline or short description for your application
-	*/
+	 * a tagline or short description for your application
+	 */
 	const TAGLINE = "Fresh XHTML and CSS, just like mom used to serve!";
 
 	/**
-	* CSS directory
-	*/
+	 * CSS directory
+	 */
 	const STYLESHEET_DIR = "app/public/stylesheets/";
 	/**
-	* image directory
-	*/
+	 * image directory
+	 */
 	const IMG_DIR = "app/public/images/";
 
-/**
- * default template used for missing and forbidden pages
- */
+	/**
+	 * default template used for missing and forbidden pages
+	 */
 	const DEFAULT_TEMPLATE = "templates/View";
 	/**
-	* default page to load when request uri is /
-	*/
+	 * default page to load when request uri is /
+	 */
 	const DEFAULT_PATH = "home";
 }
 include(BASE_DIR."/etc/constraints.php");
