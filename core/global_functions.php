@@ -230,6 +230,42 @@ function userinfo($field="") {
 	if ("group" == $field) return array_search($_SESSION[P('user')]['collective'], $groups);
 	else return $_SESSION[P("user")][$field];
 }
+/**
+ * connect javascript events to css selectors
+ * @ingroup core
+ * @param star $ops the css selector, action: the js function, url: optional url for xhr submission, event: js event (default onclick)
+ * @param star $params additional paramteres to be passed to your function
+ */
+function dojo_connect($ops, $params="") {
+	$ops = starr::star($ops);
+	$query = array_shift($ops);
+	efault($ops['event'], 'onclick');
+	global $sb;
+	$sb->import("util/dojo");
+	global $dojo;
+	if (isset($ops['url'])) $dojo->xhr($query, $ops['action'], $ops['url'], $params, $ops['event']);
+	$dojo->attach($query, $ops['action'], $params, $ops['event']);
+}
+/**
+ * open a dojo dialog
+ * @ingroup core
+ * @param string $ops the css selector of the trigger, title: the js function, url: the url to load in the dialog
+ */
+function dojo_dialog($ops) {
+	$ops = starr::star($ops);
+	$query = array_shift($ops);
+	efault($ops['event'], 'onclick');
+	global $sb;
+	$sb->import("util/dojo");
+	global $dojo;
+	$dojo->dialog($query, "title:$ops[title]  url:$args[url]", $args['event']);
+}
+/**
+ * connect a link to trigger a form to be opened in a dojo dialog
+ * @ingroup core
+ * @param string $trigger a css selector, selecting the link(s)
+ * @param star $args form: the url of the form, title: the title of the dialog, callback: the function to call after submitted
+ */
 function remote_form($trigger, $args) {
 	global $sb;
 	$sb->import("util/dojo");
@@ -242,6 +278,11 @@ function remote_form($trigger, $args) {
 	$dojo->xhr("#dijit_Dialog_$d form", "sb.post_form", $args['action'], "form:dojo.query('#dijit_Dialog_$d form')[0]  handleAs:'json'  callback:$args[callback]  close_dialog:$d", "onsubmit");
 	$dojo->attach("#dijit_Dialog_$d form .cancel", "sb.close_dialog", "dialog:$d");
 }
+/**
+ * check to see if this the front page
+ * @ingroup core
+ * @return bool true if it is, false if it isn't
+ */
 function is_home() {
 	global $request;
 	return ($request->path == Etc::DEFAULT_PATH);
