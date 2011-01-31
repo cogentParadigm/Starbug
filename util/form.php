@@ -96,7 +96,7 @@ class form {
 		if ($this->method == "post") $var = (empty($this->model)) ? $_POST : $_POST[$this->model];
 		else $var = (empty($this->model)) ? $_GET : $_GET[$this->model];
 		foreach($parts as $p) $var = $var[rtrim($p, "]")];
-		return $var;
+		return stripslashes($var);
 	}
 	
 	/**
@@ -166,6 +166,10 @@ class form {
 		return $this->tag("input  type:submit".((empty($ops))? "" : "  ".$ops), true);
 	}
 
+	function button($ops="") {
+		return $this->tag("button".((empty($ops))? "" : "  ".$ops));
+	}
+
 	function file($ops) {
 			$ops = $ops."  type:file";
 			$this->fill_ops($ops);
@@ -197,7 +201,7 @@ class form {
 		$input = $this->label($ops)."\n";
 		//POSTed or default value
 		$var = $this->get($ops['name']);
-		if (!empty($var)) $ops['value'] = $var;
+		if (!empty($var)) $ops['value'] = htmlentities($var);
 		else if (!empty($ops['default'])) {
 			$ops['value'] = $ops['default'];
 			unset($ops['default']);
@@ -225,10 +229,11 @@ class form {
 			$options = $list; unset($ops['caption']); unset($ops['value']);
 		}
 		$ops['content'] = "";
-		foreach ($options as $caption => $val) $ops['content'] .= "<option value=\"$val\"".(($this->get($ops['name']) == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
+		foreach ($options as $caption => $val) $ops['content'] .= "<option value=\"".htmlentities($val)."\"".(($this->get($ops['name']) == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
 		return $select.$this->form_control("select", $ops);
 	}
 
+	//DEPRECATED: use text field with dojoType:dijit.form.DateTextBox
 	function date_select($ops) {
 		global $sb;
 		$sb->import("util/datepicker");
@@ -238,7 +243,7 @@ class form {
 		$name = $ops['name'];
 		$value = $this->get($name);
 		efault($value, $ops['default']);
-		if (!empty($value)) {
+		if ((!empty($value)) && (!is_array($value))) {
 			$dt = strtotime($value);
 			$this->set($name, array("year" => date("Y", $dt), "month" => date("m", $dt), "day" => date("d", $dt)));
 			if (!empty($ops['time_select'])) $this->set($name."_time", array("hour" => date("h", $dt), "minutes" => date("i", $dt), "ampm" => date("a", $dt)));
@@ -291,7 +296,7 @@ class form {
 			efault($value, $ops['default']);
 			unset($ops['default']);
 		}
-		efault($ops['content'], $value);
+		efault($ops['content'], htmlentities($value));
 		//name close
 		return $input.$this->form_control("textarea", $ops);
 	}
@@ -344,6 +349,15 @@ function hidden($ops) {
 function submit($ops="") {
 	global $global_form;
 	echo $global_form->submit($ops);
+}
+/**
+ * outputs a button
+ * @param string $ops the options
+ * @ingroup form
+ */
+function button($ops="") {
+	global $global_form;
+	echo $global_form->button($ops);
 }
 /**
  * outputs a file input
