@@ -1,6 +1,6 @@
 <?php
 	$migration = file_get_contents(BASE_DIR."/script/generate/migration/BlankMigration.php");
-	$name = $argv[2];
+	$name = $model_name;
 	if (empty($name)) {
 		fwrite(STDOUT, "You must provide a name for your new migration");
 	} else {
@@ -10,5 +10,6 @@
 		fclose($file);
 	}
 	global $sb;
+	$sb->import("util/subscribe");
 	$sb->subscribe("migrations", "global", 10, "return_it", $name);
 ?>
