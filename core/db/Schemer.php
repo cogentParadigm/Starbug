@@ -115,7 +115,7 @@ class Schemer {
 						}
 					}
 					if (isset($field['references']) && ($field['constraint'] != "false")) {
-						$fks = $this->db->query("SELECT * FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME='".P($table)."_".$name."_fk'");
+						$fks = $this->db->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && INDEX_NAME='$name'");
 						if (false === ($row = $fks->fetch())) {
 							// ADD CONSTRAINT																																								// CONSTRAINT
 							fwrite(STDOUT, "Adding foreign key ".P($table)."_".$name."_fk...\n");
@@ -256,7 +256,7 @@ class Schemer {
 	function add($table, $name) {
 		$fields = $this->get_table($table);
 		$field = $fields[$name];
-		$sql = $name." ".$this->get_sql_type($field);
+		$sql = "`".$name."` ".$this->get_sql_type($field);
 		$this->db->exec("ALTER TABLE `".P($table)."` ADD ".$sql);
 	}
 
@@ -266,7 +266,7 @@ class Schemer {
 	 * @param string $name the name of column
 	 */
 	function remove($table, $name) {
-		$this->db->exec("ALTER TABLE `".P($table)."` DROP COLUMN ".$name);
+		$this->db->exec("ALTER TABLE `".P($table)."` DROP COLUMN `".$name."`");
 	}
 
 	/**
@@ -277,7 +277,7 @@ class Schemer {
 	function modify($table, $name) {
 		$fields = $this->get_table($table);
 		$field = $fields[$name];
-		$sql = $name." ".$name." ".$this->get_sql_type($field);
+		$sql = "`".$name."` `".$name."` ".$this->get_sql_type($field);
 		$this->db->exec("ALTER TABLE `".P($table)."` CHANGE ".$sql); 
 	}
 
