@@ -11,7 +11,7 @@
  * @ingroup core
  */
 class version {
-	const starbug = "0.9.1 unstable";
+	const starbug = "0.9.2 unstable";
 
 	const phpmailer = "5.1";
 	const dojo = "1.5.0";
