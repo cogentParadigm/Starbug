@@ -157,7 +157,7 @@ class sb {
 		efault($args['select'], "*");
 		$from = "`".P($first)."` AS `".$first."`";
 		if (!$mine) foreach ($froms as $f) $from .= " INNER JOIN `".P($f)."` AS `".$f."`";
-		else {
+		else if (!empty($froms)) {
 			$relations = $this->get($first)->relations;
 			$last = "";
 			$joined = array();
@@ -217,7 +217,9 @@ class sb {
 		} catch(PDOException $e) {
 			die("DB Exception: ".$e->getMessage());
 		}
-		return ((!empty($args['limit'])) && ($args['limit'] == 1)) ? $records->fetch() : $records->fetchAll(PDO::FETCH_ASSOC);
+		$rows = $records->fetchAll(PDO::FETCH_ASSOC);
+		foreach ($rows as $idx => $row) foreach ($row as $col => $value) $rows[$idx][$col] = stripslashes($value);
+		return ((!empty($args['limit'])) && ($args['limit'] == 1)) ? $rows[0] : $rows;
 	}
 
 	/**
@@ -310,6 +312,7 @@ class sb {
 					$keys = ""; $values = "";
 					foreach($fields as $col => $value) {
 						if ($value == "NULL") $s = "NULL";
+						else if ($value == "now()") $s = "now()";
 						else {
 							$prize[] = $value;
 							$s = "?";
