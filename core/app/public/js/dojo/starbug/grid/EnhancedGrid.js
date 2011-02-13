@@ -26,9 +26,16 @@ dojo.declare('starbug.grid.EnhancedGrid', dojox.grid.EnhancedGrid, {
 		dojo.connect(this, "onMouseDown", this, 'setMouseDown');
 		dojo.connect(this, "onMouseUp", this, 'setMouseUp');
 		if (this.orderColumn != '') dojo.subscribe(this.rowMovedTopic, this, 'dropSelectedRows');
-		if (this.refreshInterval > 0) this.timer = setInterval(dojo.hitch(this, 'reloadStore'), this.refreshInterval*1000);
+		if (this.refreshInterval > 0) {
+			this.timer = setInterval(dojo.hitch(this, 'reloadStore'), this.refreshInterval*1000);
+			dojo.connect(window, "onscroll", this, 'resetInterval');
+		}
 		if (this.onReload != null) this.onReload();
 		dojo.behavior.apply();
+	},
+	resetInterval: function() {
+		clearInterval(this.timer);
+		this.timer = setInterval(dojo.hitch(this, 'reloadStore'), this.refreshInterval*1000);
 	},
 	reloadStore: function() {
 		if (this.store) {
@@ -79,7 +86,7 @@ dojo.declare('starbug.grid.EnhancedGrid', dojox.grid.EnhancedGrid, {
 		this.moveRows([this.getItem(rowIndex)], this._by_idx.length-1);
 	},
 	moveRows: function(rows, toIndex) {
-		var new_order = this.store._arrayOfAllItems[toIndex].order_internal[0];
+		var new_order = this.store._arrayOfAllItems[toIndex][this.orderColumn][0];
 		for (var i in rows) {
 			i = rows[i];
 			this.store.setValue(this.store._arrayOfAllItems[i._0], this.orderColumn, new_order);

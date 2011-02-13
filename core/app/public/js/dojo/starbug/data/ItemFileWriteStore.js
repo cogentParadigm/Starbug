@@ -19,7 +19,6 @@ dojo.declare('starbug.data.ItemFileWriteStore', dojo.data.ItemFileWriteStore, {
 					var values = this.getValues(item, attributes[i]);
 					if (values) {
 						//simplified to handle only single-valued attributes, full function at dojocampus itemFileWriteStore page
-						if (typeof values[0] == "object") values[0] = dojo.date.stamp.toISOString(values[0], {selector: 'date'})+' 00:00:00'
 						js[this.model+'['+attributes[i]+']'] = values[0];
 					}
 				}

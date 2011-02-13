@@ -142,7 +142,15 @@ class form {
 		unset($ops['error']);
 		return $lab;
 	}
-	
+
+	/**
+	 * generate a form control (a tag with a name attribute such as input, select, textarea, file)
+	 * @param string $tag the name of the tag (input, select, textarea, file)
+	 * @param star $ops the attributes for the html tag - special ones below
+	 *									name: the relative name, eg. 'group[]' might become 'users[group][]'
+	 *									content: the inner HTML of the tag if it is not self closing
+	 * @param bool $self if true, will use a self closing tag. If false, will use an opening tag and a closing tag (default is false)
+	 */
 	function form_control($tag, $ops, $self=false) {
 		$ops['name'] = $this->get_name($ops['name']);
 		$ops = array_merge(array($tag), $ops);
@@ -225,7 +233,13 @@ class form {
 		if (!empty($ops['caption'])) {
 			if (!empty($ops['from'])) $options = query($ops['from']);
 			$list = array();
-			foreach ($options as $o) $list[$o[$ops['caption']]] = $o[$ops['value']];
+			$keys = array();
+			if (!empty($options)) foreach ($options[0] as $k => $v) if (false !== strpos($ops['caption'], "%$k%")) $keys[] = $k;
+			foreach ($options as $o) {
+				$cap = $ops['caption'];
+				foreach($keys as $k) $cap = str_replace("%$k%", $o[$k], $cap);
+				$list[$cap] = $o[$ops['value']];
+			}
 			$options = $list; unset($ops['caption']); unset($ops['value']);
 		}
 		$ops['content'] = "";

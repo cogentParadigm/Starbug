@@ -22,17 +22,16 @@ class XMLBuilder {
 		$relations = array();
 		foreach($fields as $name => $field) {
 			$xml .= "\t<field name=\"$name\"";
-			$xml .= (isset($schemer->tables[$model][$name])) ? ' display="true"' : ' display="false"';
+			$xml .= ((isset($schemer->tables[$model][$name])) && ($field['display'] !== "false")) ? ' display="true"' : ' display="false"';
 			$kids = "";
 			if (!isset($field['input_type'])) {
 				if ($field['type'] == "text") $field['input_type'] = "textarea";
 				else if ($field['type'] == "password") $field['input_type'] = "password";
 				else if ($field['type'] == "bool") $field['input_type'] = "checkbox";
-				else if ($field['type'] == "datetime") $field['input_type'] = "date_select";
-				else if (isset($field['upload'])) $field['input_type'] = "file";
+				else if (isset($field['upload'])) $field['input_type'] = "file_select";
 				else $field['input_type'] = "text";
 			}
-			if ($field['input_type'] == "file") $xml .= " multipart=\"true\"";
+			$field[$field['type']] = "";
 			foreach ($field as $k => $v) {
 				if (("references" == $k) && (false === strpos($v, $model))) {
 					$ref = explode(" ", $v);

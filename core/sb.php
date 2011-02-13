@@ -290,6 +290,7 @@ class sb {
 			if (empty($this->errors)) { //no errors
 				$fields['modified'] = date("Y-m-d H:i:s");
 				if ($updating) { //updating existing record
+					$setstr = $wherestr = "";
 					foreach($fields as $col => $value) {
 						if ($value == "NULL") $s = "NULL";
 						else {
