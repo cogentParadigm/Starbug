@@ -12,7 +12,16 @@
  */
 class CoreMigration extends Migration {
 	function up() {
+		global $schemer;
 		// This adds a table to the schema, The Schemer builds up a schema with all of the migrations that are to be run, and then updates the db
+		$this->table("log",
+			"table_name  type:string  length:100",
+			"object_id  type:int  default:0",
+			"action  type:string  length:16",
+			"column_name  type:string  length:128",
+			"old_value  type:text",
+			"new_value  type:text"
+		);
 		$this->table("users",
 			"first_name  type:string  length:64",
 			"last_name  type:string  length:64",
@@ -21,6 +30,9 @@ class CoreMigration extends Migration {
 			"password  type:password  confirm:password_confirm  md5:  optional_update:",
 			"memberships  type:int"
 		);
+		$this->after("users::insert", $this->get_logging_trigger("users", "insert"));
+		$this->after("users::update", $this->get_logging_trigger("users", "update"));
+		$this->after("users::delete", $this->get_logging_trigger("users", "delete"));
 		//This will be stored immediately after the creation of the users table
 		$this->store("users", "username:root", "memberships:1");
 		$this->table("permits",

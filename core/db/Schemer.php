@@ -44,6 +44,14 @@ class Schemer {
 	 * @var array Holds records to be inserted immediately after a table is created
 	 */
 	var $population = array();
+	/**
+	 * @var array Holds sql triggers
+	 */
+	var $triggers = array();
+	/**
+	 * @var array triggers to drop
+	 */
+	var $trigger_drops = array();
 
 	/**
 	 * constructor. loads migrations
@@ -54,6 +62,21 @@ class Schemer {
 		$this->migrations = $sb->publish("migrations");
 		foreach($this->migrations as $i => $a) {
 			include(BASE_DIR."/app/migrations/$a.php");
+		}
+	}
+
+	function  clean() {
+		$this->tables = $this->table_drops = $this->column_drops = $this->uris = $this->permits = $this->population = $this->triggers = $this->trigger_drops = array();
+	}
+
+	function fill() {
+		$to = trim(file_get_contents(BASE_DIR."/var/migration"));
+		//MOVE TO CURRENT MIGRATION
+		$current = 0;
+		while ($current < $to) {
+			$migration = new $this->migrations[$current]();
+			$migration->up();
+			$current++;
 		}
 	}
 
@@ -82,12 +105,19 @@ class Schemer {
 	 */
 	function update() {
 		$ts = 0; //tables
+		$td = 0; //dropped tables
 		$cs = 0; //cols
+		$cd = 0; //dropped tables
 		$ms = 0; //mods
-		$ds = 0; //drops
 		$us = 0; //uris
+		$ud = 0; //dropped uris
 		$ps = 0; //permits
+		$pd = 0; //dropped permits
 		$is = 0; //inserts
+		$ds = 0; //drops
+		$gs = 0; //created triggers
+		$gu = 0; //updated triggers
+		$gd = 0; //dropped triggers
 		foreach ($this->tables as $table => $fields) {
 			$fields = $this->get_table($table);
 			$records = $this->db->query("SHOW TABLES LIKE '".P($table)."'");
@@ -126,6 +156,23 @@ class Schemer {
 				}
 			}
 			$is += $this->populate($table);
+		}
+		foreach ($this->triggers as $name => $triggers) {
+			foreach ($triggers as $event => $trigger) {
+				$record = $this->db->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($trigger['table']."_".$event."_".$trigger['action'])."'")->fetch();
+				if (empty($record)) {
+					// ADD TRIGGER																																											// ADD TRIGGER
+					fwrite(STDOUT, "Creating trigger ".P($trigger['table'])."_".$event."_$trigger[action]...\n");
+					$this->add_trigger($name, $event);
+					$gs++;
+				} else if ($record['ACTION_STATEMENT'] != $trigger['trigger']) {
+					// UPDATE TRIGGER																																										// UPDATE TRIGGER
+					fwrite(STDOUT, "Updating trigger ".P($trigger['table'])."_".$event."_$trigger[action]...\n");
+					$this->remove_trigger($name, $event);
+					$this->add_trigger($name, $event);
+					$gu++;
+				}
+			}
 		}
 		foreach ($this->uris as $path => $uri) {
 			$rows = query("uris", "where:path='$path'");
@@ -173,7 +220,7 @@ class Schemer {
 				// DROP TABLE																																													// DROP TABLE
 				fwrite(STDOUT, "Dropping table ".P($table)."...\n");
 				$this->drop_table($table);
-				$ds++;
+				$td++;
 			}
 		}
 		foreach ($this->column_drops as $table => $cols) {
@@ -185,17 +232,28 @@ class Schemer {
 						// DROP COLUMN																																										// DROP COLUMN
 						fwrite(STDOUT, "Dropping column ".P($table).".$col...\n");
 						$this->remove($table, $col);
-						$ds++;
+						$cd++;
 					}
 				}
 			}
 		}
-		if (($ts == 0) && ($cs == 0) && ($ms == 0) && ($ds == 0) && ($us == 0) && ($ps == 0) && ($is == 0)) fwrite(STDOUT, "The Database already matches the schema\n");
-		else {
-			fwrite(STDOUT, "Generating models (this may take a minute)...\n");
-			passthru("sb generate models");
+		foreach ($this->trigger_drops as $name => $event) {
+			// DROP TRIGGER																																													// DROP TRIGGER
+			$parts = explode("::", $name);
+			$record = $this->db->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($parts[0]."_".$event."_".$parts[1])."'")->fetch();
+			if (false !== $record) {
+				fwrite(STDOUT, "Dropping trigger ".P($parts[0])."_".$event."_$parts[1]...\n");
+				$this->remove_trigger($name, $event);
+				$gd++;
+			}
 		}
-		passthru("sb generate css");
+		if (($ts == 0) && ($cs == 0) && ($ms == 0) && ($ds == 0) && ($us == 0) && ($ps == 0) && ($is == 0) && ($td == 0) && ($cd == 0) && ($gs == 0) && ($gd == 0) && ($gu == 0)) {
+			fwrite(STDOUT, "The Database already matches the schema\n");
+			return false;
+		} else {
+			fwrite(STDOUT, "Generating models (this may take a minute)...\n");
+			return true;
+		}
 	}
 
 	/**
@@ -325,9 +383,7 @@ class Schemer {
 	 */
 	function table($arg) {
 		$args = func_get_args();
-		$name = array_shift($args);
-		$this->tables[$name] = array();
-		foreach($args as $field) $this->column($name, $field);
+		call_user_func_array(array($this, "column"), $args);
 	}
 
 	/**
@@ -336,9 +392,14 @@ class Schemer {
 	 * @param string $col A star formatted column string
 	 */
 	function column($table, $col) {
-		$col = starr::star($col);
-		$colname = array_shift($col);
-		$this->tables[$table][$colname] = $col;
+		$args = func_get_args();
+		$table = array_shift($args);
+		efault($this->tables[$table], array());
+		foreach ($args as $col) {
+			$col = starr::star($col);
+			$colname = array_shift($col);
+			$this->tables[$table][$colname] = $col;
+		}
 	}
 
 	/**
@@ -501,6 +562,62 @@ class Schemer {
 	}
 
 	/**
+	 * add a before trigger on a table
+	 * @param string $name in the form model::action, where action is insert, update, or delete
+	 * @param string $trig the statement to attach
+	 */
+	function before($name, $trig, $each=true) {
+		$parts = explode("::", $name);
+		efault($this->triggers[$name], array());
+		$trigger = array("table" => $parts[0], "action" => $parts[1], "type" => "before", "each" => $each, "trigger" => $trig);
+		$this->triggers[$name]["before"] = $trigger;
+	}
+
+	/**
+	 * add an after trigger on a table
+	 * @param string $name in the form model::action, where action is insert, update, or delete
+	 * @param string $trig the statement to attach
+	 */
+	function after($name, $trig, $each=true) {
+		$parts = explode("::", $name);
+		efault($this->triggers[$name], array());
+		$trigger = array("table" => $parts[0], "action" => $parts[1], "type" => "after", "each" => $each, "trigger" => $trig);
+		$this->triggers[$name]["after"] = $trigger;
+	}
+
+	/**
+	 * drop a trigger
+	 * @param string $name in the form model::action, where action is insert, update, or delete
+	 * @param string $event before or after
+	 */
+	function drop_trigger($name, $event) {
+		efault($this->trigger_drops[$name], array());
+		$this->trigger_drops[$name][$event] = "";
+	}
+
+	/**
+	 * run sql to create a trigger
+	 * @param string $name in the form model::action, where action is insert, update, or delete
+	 * @param string $type before or after
+	 */
+	function add_trigger($name, $type) {
+		$trigger = $this->triggers[$name][$type];
+		$sql = "CREATE TRIGGER `".P($trigger['table']."_".$type."_".$trigger['action'])."` $type $trigger[action] ON ".P($trigger['table']).(($trigger['each']) ? " FOR EACH ROW" : "")." ".$trigger['trigger'].";";
+		$this->db->exec($sql);
+	}
+
+	/**
+	 * run sql to create a trigger
+	 * @param string $name in the form model::action, where action is insert, update, or delete
+	 * @param string $type before or after
+	 */
+	function remove_trigger($name, $type) {
+		$parts = explode("::", $name);
+		$sql = "DROP TRIGGER `".P($parts[0]."_".$type."_".$parts[1])."`;";
+		$this->db->exec($sql);
+	}
+
+	/**
 	 * Write a model file
 	 * @param string $name the name of the model
 	 */
@@ -541,7 +658,7 @@ class Schemer {
 	 */
 	function migrate($to="top", $from="current") {
 		global $sb;
-		$last_at = file_get_contents(BASE_DIR."/var/migration");
+		$last_at = trim(file_get_contents(BASE_DIR."/var/migration"));
 		if (empty($to) && ("0" !== $to)) $to = "top";
 		if ($to == "top") $to = count($this->migrations);
 		if ($from == "current") $from = $last_at;
@@ -552,33 +669,29 @@ class Schemer {
 		fwrite($file, $to);
 		fclose($file);
 		//MIGRATE
+		$result = false;
 		if ($to < $from) { //DOWN
 			while($current > $to) {
+				$this->clean();
 				$migration = new $this->migrations[$current-1]();
 				$migration->down();
-				$current--;
-			}
-			$this->update();
-			$current = $from;
-			while($current > $to) {
-				$migration = new $this->migrations[$current-1]();
+				if ($this->update()) $result = true;
 				$migration->removed();
 				$current--;
 			}
 		} else {  //UP
 			while($current < $to) {
+				$this->clean();
 				$migration = new $this->migrations[$current]();
 				$migration->up();
-				$current++;
-			}
-			$this->update();
-			$current = $from;
-			while($current < $to) {
-				$migration = new $this->migrations[$current]();
+				if ($this->update()) $result = true;
 				$migration->created();
 				$current++;
 			}
 		}
+		$this->fill();
+		if ($result) passthru("sb generate models");
+		passthru("sb generate css");
 	}
 
 	function get_relations($from, $to) {
@@ -595,6 +708,31 @@ class Schemer {
 		if (empty($hook)) return array();
 		foreach ($return as $idx => $arr) $return[$idx]["hook"] = $hook;
 		return $return;
+	}
+
+	function get_logging_trigger($table, $type) {
+		if ($type == "insert") {
+			$trigger = "BEGIN
+				INSERT INTO ".P("log")." (table_name, object_id, action, created, modified) VALUES ('users', NEW.id, 'INSERT', NOW(), NOW());
+			END";
+		} else if ($type == "update") {
+			$trigger = "BEGIN";
+			$fields = $this->get_table($table);
+			unset($fields['modified']);
+			foreach ($fields as $name => $ops) { $trigger .= "
+				IF OLD.$name != NEW.$name THEN
+					INSERT INTO ".P("log")." (table_name, object_id, action, column_name, old_value, new_value, created, modified) VALUES ('users', NEW.id, 'UPDATE', '$name', OLD.$name, NEW.$name, NOW(), NOW());
+				END IF;";
+			}
+			$trigger .= "
+			END";
+		} else if ($type == "delete") {
+			$trigger = "BEGIN
+				INSERT INTO ".P("log")." (table_name, object_id, action, created, modified) VALUES ('users', OLD.id, 'DELETE', NOW(), NOW());
+			END";
+		}
+		echo $trigger;
+		return $trigger;
 	}
 
 }

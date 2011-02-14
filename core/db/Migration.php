@@ -25,7 +25,8 @@ class Migration {
 	 */
 	function column($table, $col) {
 		global $schemer;
-		$schemer->column($table, $col);
+		$args = func_get_args();
+		call_user_func_array(array($schemer, "column"), $args);
 	}
 	/**
 	 * @copydoc Schemer::drop
@@ -56,6 +57,20 @@ class Migration {
 		$schemer->store($table, $match, $others);
 	}
 	/**
+	 * @copydoc Schemer::before
+	 */
+	function before($name, $trig, $each=true) {
+		global $schemer;
+		$schemer->before($name, $trig, $each);
+	}
+	/**
+	 * @copydoc Schemer::after
+	 */
+	function after($name, $trig, $each=true) {
+		global $schemer;
+		$schemer->after($name, $trig, $each);
+	}
+	/**
 	 * Called when moving forward from one migration to the next
 	 */
 	function up() {}
@@ -71,5 +86,11 @@ class Migration {
 	 * Called after schema is updated if this migration was run down
 	 */
 	function removed() {}
+
+	public function __call($method, $args) {
+		global $schemer;
+		if(method_exists($schemer, $method)) return call_user_func_array(array($schemer, $method), $args);
+		throw new Exception ('Call to undefined method/class function: ' . $method);
+	}
 }
 ?>
