@@ -155,8 +155,9 @@ class sb {
 		$first = array_shift($froms);
 		$args = starr::star($args);
 		efault($args['select'], "*");
+		efault($args['join'], "INNER");
 		$from = "`".P($first)."` AS `".$first."`";
-		if (!$mine) foreach ($froms as $f) $from .= " INNER JOIN `".P($f)."` AS `".$f."`";
+		if (!$mine) foreach ($froms as $f) $from .= " $args[join] JOIN `".P($f)."` AS `".$f."`";
 		else if (!empty($froms)) {
 			$relations = $this->get($first)->relations;
 			$last = "";
@@ -183,7 +184,7 @@ class sb {
 				$last = $f[0];
 				$lookup = $f[1];
 				$f = $f[0];
-				$namejoin = " INNER JOIN `".P($f)."` AS `$f`";
+				$namejoin = " $args[join] JOIN `".P($f)."` AS `$f`";
 				$joined[] = $f;
 				if (empty($rel)) $from .= $namejoin;
 				else {
@@ -192,7 +193,7 @@ class sb {
 					else if ($rel['type'] == "many") {
 						if ($rel['lookup']) {
 							if (false === array_search($rel['lookup'], $joined)) {
-								$from .= " INNER JOIN ".P($rel['lookup'])." AS $rel[lookup] ON ".$first.".id=$rel[lookup].$rel[hook]";
+								$from .= " $args[join] JOIN ".P($rel['lookup'])." AS $rel[lookup] ON ".$first.".id=$rel[lookup].$rel[hook]";
 								$joined[] = $rel['lookup'];
 							}
 							$from .= $namejoin." $rel[lookup].$rel[ref]=$f.id";

@@ -45,7 +45,7 @@ class ApiFunctions {
 	function getJSON($models, $query="") {
 		global $sb;
 		$from = $models[0];
-		if (!empty($query)) $query .= "  action:read";
+		$query .= ((empty($query)) ? "  " : "")."action:read";
 		if (!empty($_GET['query'])) $query .= base64_decode($_GET['query']);
 		else foreach ($_GET as $k => $v) $query .= "  $k:$v";
 		$data = $sb->query(join(",", $models), $query, true);
@@ -77,12 +77,6 @@ class ApiFunctions {
 			}
 			$xml->writeElement($key, $value);
 		}
-	}
-
-	protected function rowToJSON($row) {
-		$json = "{";
-		foreach($row as $k => $v) $json .= '"'.$k.'"'.' : "'.str_replace(array("{", "}"), array("", ""), addslashes($v)).'", ';
-		return rtrim($json, ", ")."}";
 	}
 
 	/**

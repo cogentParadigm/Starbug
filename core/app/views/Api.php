@@ -8,7 +8,7 @@ if (false !== strpos($model, ".")) {
 $action = next($this->uri);
 $format = $this->format;
 $query = "";
-if ($action == "get") {
+if (($action == "get") || ($action == "poll")) {
 	if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) $_GET['id'] = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : $sb->insert_id;
 	if ($model == "permits") $_GET['id'] = $sb->insert_id;
 	if (!empty($_GET['id'])) $query = "where:$model.id='$_GET[id]'";

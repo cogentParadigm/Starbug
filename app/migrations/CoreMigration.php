@@ -30,9 +30,6 @@ class CoreMigration extends Migration {
 			"password  type:password  confirm:password_confirm  md5:  optional_update:",
 			"memberships  type:int"
 		);
-		$this->after("users::insert", $this->get_logging_trigger("users", "insert"));
-		$this->after("users::update", $this->get_logging_trigger("users", "update"));
-		$this->after("users::delete", $this->get_logging_trigger("users", "delete"));
 		//This will be stored immediately after the creation of the users table
 		$this->store("users", "username:root", "memberships:1");
 		$this->table("permits",
@@ -107,6 +104,13 @@ class CoreMigration extends Migration {
 		$this->permit("users::create", "admin:");
 		$this->permit("users::register", "everyone:table");
 		$this->permit("users::update_profile", "owner:global");
+
+		//ENABLE LOGGING
+		foreach (array("users", "permits", "uris", "tags", "uris_tags", "leafs", "text_leaf", "files", "options") as $tbl) {
+			$this->after("$tbl::insert", $this->get_logging_trigger("$tbl", "insert"));
+			$this->after("$tbl::update", $this->get_logging_trigger("$tbl", "update"));
+			$this->after("$tbl::delete", $this->get_logging_trigger("$tbl", "delete"));
+		}
 	}
 
 	function down() {

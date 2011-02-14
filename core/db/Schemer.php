@@ -731,7 +731,6 @@ class Schemer {
 				INSERT INTO ".P("log")." (table_name, object_id, action, created, modified) VALUES ('users', OLD.id, 'DELETE', NOW(), NOW());
 			END";
 		}
-		echo $trigger;
 		return $trigger;
 	}
 
