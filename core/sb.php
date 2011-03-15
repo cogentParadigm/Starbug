@@ -206,6 +206,8 @@ class sb {
 		}
 		foreach ($args as $k => $v) if (file_exists(BASE_DIR."/core/app/filters/query/$k.php")) include(BASE_DIR."/core/app/filters/query/$k.php");
 		if (!empty($args['where'])) $args['where'] = " WHERE ".$args['where'];
+		$groupby = (!(empty($args['groupby']))) ? " LIMIT $args[groupby]" : "";
+		$having = (!(empty($args['having']))) ? " LIMIT $args[having]" : "";
 		$limit = (!(empty($args['limit']))) ? " LIMIT $args[limit]" : "";
 		$order = (!(empty($args['orderby']))) ? " ORDER BY $args[orderby]" : "";
 		$sql = " FROM $from$args[where]$order$limit";
@@ -213,7 +215,7 @@ class sb {
 		try {
 			$res = $this->db->query("SELECT COUNT(*)".$sql);
 			$this->record_count = $res->fetchColumn();
-			$records = $this->db->prepare("SELECT $args[select] FROM $from$args[where]$order$limit");
+			$records = $this->db->prepare("SELECT $args[select] FROM $from$args[where]$groupby$having$order$limit");
 			$records->execute();
 		} catch(PDOException $e) {
 			die("DB Exception: ".$e->getMessage());
@@ -360,7 +362,7 @@ class sb {
 		if ($object = $this->get($key)) {
 			$permits = isset($_POST[$key]['id']) ? $this->query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : $this->query($key, "action:$value  priv_type:table");
 			if (($this->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value();
-			else $errors = array("forbidden" => "You do not have sufficient permission to complete your request.");
+			else $errors = array("global" => array("forbidden" => "You do not have sufficient permission to complete your request."));
 			if (!empty($errors)) $this->errors = array_merge_recursive($this->errors, array($key => $errors));
 			if (!empty($this->errors[$key])) {
 				global $request;

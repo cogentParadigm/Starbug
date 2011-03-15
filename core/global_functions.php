@@ -79,7 +79,7 @@ function query($froms, $args="", $mine=true) {
  */
 function raw_query($query) {
 	global $sb;
-	if (strtolower(substr($query, 0, 6)) == "select") return $sb->db->query($query);
+	if (strtolower(substr(trim($query), 0, 6)) == "select") return $sb->db->query($query);
 	else return $sb->db->exec($query);
 }
 /**
@@ -138,9 +138,12 @@ function remove($from, $where) {
  * @return array errors indexed by model and field, empty if no errors
  * @ingroup core
  */
-function errors() {
+function errors($key="") {
 	global $sb;
-	return $sb->errors;
+	$parts = explode("[", $key);
+	$errors = $sb->errors;
+	foreach ($parts as $p) $errors = $errors[rtrim($p, ']')];
+	return $errors;
 }
 /**
  * shortcut function for outputing small forms
@@ -286,5 +289,20 @@ function remote_form($trigger, $args) {
 function is_home() {
 	global $request;
 	return ($request->path == Etc::DEFAULT_PATH);
+}
+/**
+ * redirect to another page
+ * @ingroup core
+ * @param string $url the url to redirect to
+ * @param int $delay number of seconds to wait before redirecting (default 0)
+ */
+function redirect($url, $delay=0){
+	if(!headers_sent()) {
+		header('location: '.$url);
+		exit();
+	} else {
+		echo '<script type="text/JavaScript">setTimeout("location.href = \''.$url.'\';", '.($delay*1000).');</script>';
+		exit();
+	}
 }
 ?>

@@ -1,4 +1,3 @@
-<script type="text/javascript" src="<?php echo uri("core/app/public/js/sb.js"); ?>"></script>
 <script type="text/javascript">
 	dojo.require("dojo.behavior");
 	<?php global $dojo; if (!empty($dojo->toggles)) { ?>dojo.require("dojo.fx");<?php } ?>

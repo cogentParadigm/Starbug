@@ -7,7 +7,7 @@
 		} else {
 			$from .= " INNER JOIN ".P("permits")." AS permits";
 			$permit_type = "(permits.priv_type='global' || (permits.priv_type='object' && permits.related_id=".$first.".id))"." && ((permits.status & ".$first.".status)=".$first.".status)";
-			$roles .= " || (permits.role='owner' && ".$first.".owner='".$_SESSION[P('id')]."') || (permits.role='collective' && (('".$_SESSION[P('memberships')]."' & ".$first.".collective)=".$first.".collective))";
+			$roles .= " || (permits.role='owner' && ".$first.".owner='".$_SESSION[P('id')]."') || (permits.role='collective' && ((('".$_SESSION[P('memberships')]."' & ".$first.".collective)>'0') || (('".$_SESSION[P('memberships')]."' & ".$first.".collective)=$first.collective)))";
 		}
 		$args['where'] = "permits.related_table='".P($first)."'"
 		." && permits.action='$args[action]'"

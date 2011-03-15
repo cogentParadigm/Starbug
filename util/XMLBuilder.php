@@ -79,9 +79,9 @@ class XMLBuilder {
 		}
 		$xml .= "</model>";
 		//WRITE XML
-		$file = fopen("var/xml/$model.xml", "wb");
+		$file = fopen(BASE_DIR."/var/xml/$model.xml", "wb");
 		fwrite($file, $xml);
 		fclose($file);
-		chmod("var/xml/$model.xml", 0777);
+		passthru("chmod 0777 ".BASE_DIR."/var/xml/$model.xml");
 	}
 }

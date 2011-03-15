@@ -57,7 +57,7 @@ function FindFileType($path){
 	$types["xml"] = "xml";
 	
 	$path = strtolower($path) ;
-	$ext = split("[/\\.]", $path) ;
+	$ext = preg_split("[/\\.]", $path) ;
 	$n = count($ext)-1;
 	$ext = $ext[$n];
 	

@@ -27,6 +27,23 @@
 		<?php } ?>
 		<?php if (Etc::DOJO_ENABLED) { ?>
 			<link rel="stylesheet" type="text/css" href="<?php echo uri("app/public/js/dojo/dijit/themes/tundra/tundra.css"); ?>"/>
-			<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/dojo/dojo.js"); ?>" djConfig="parseOnLoad: true, modulePaths:{'starbug':'../../../../../core/app/public/js/dojo/starbug'}"></script>
+			<?php
+				$profile = file_get_contents(BASE_DIR."/app/public/js/dojo.profile.js");
+				$profile = explode("\n", substr($profile, 15));
+				foreach ($profile as $i => $p) if (0 === strpos(trim($p), "//")) unset($profile[$i]);
+				$profile = str_replace(array("dependencies:", "layers:", "name:", "prefixes:", "'"), array('"dependencies":', '"layers":', '"name":', '"prefixes":', '"'), implode(" ", $profile));
+				$profile = json_decode($profile, true);
+				$paths = "";
+				foreach ($profile['prefixes'] as $p) $paths .= "'$p[0]':'$p[1]', ";
+			?>
+			<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/dojo/dojo.js"); ?>" djConfig="parseOnLoad: true, modulePaths:{<?php echo rtrim($paths, ', '); ?>}"></script>
+			<script type="text/javascript">
+			<?php foreach ($profile['layers'] as $l) { foreach ($l['dependencies'] as $d) { ?>
+				dojo.require("<?php echo $d; ?>");
+			<?php } } ?>
+			</script>
 		<?php } ?>
 	<?php } ?>
+	<script type="text/javascript">
+		var WEBSITE_URL = '<?php echo uri(); ?>';
+	</script>

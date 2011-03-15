@@ -7,7 +7,8 @@ dependencies = {
 			name: "dojo.js",
 			dependencies: [
 				'dojo.behavior',
-				'dijit.Dialog'
+				'dijit.Dialog',
+				'starbug.base'
 			]
 		}
 	],

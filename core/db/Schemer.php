@@ -248,10 +248,8 @@ class Schemer {
 			}
 		}
 		if (($ts == 0) && ($cs == 0) && ($ms == 0) && ($ds == 0) && ($us == 0) && ($ps == 0) && ($is == 0) && ($td == 0) && ($cd == 0) && ($gs == 0) && ($gd == 0) && ($gu == 0)) {
-			fwrite(STDOUT, "The Database already matches the schema\n");
 			return false;
 		} else {
-			fwrite(STDOUT, "Generating models (this may take a minute)...\n");
 			return true;
 		}
 	}
@@ -656,7 +654,7 @@ class Schemer {
 	 * @param int $to the migration to go to
 	 * @param int $from the migration to start from
 	 */
-	function migrate($to="top", $from="current") {
+	function migrate($to="top", $from=0) {
 		global $sb;
 		$last_at = trim(file_get_contents(BASE_DIR."/var/migration"));
 		if (empty($to) && ("0" !== $to)) $to = "top";
@@ -690,7 +688,15 @@ class Schemer {
 			}
 		}
 		$this->fill();
-		if ($result) passthru("sb generate models");
+		if ($result) {
+			fwrite(STDOUT, "Generating models (this may take a minute)...\n");
+			passthru("sb generate models");
+		} else {
+			fwrite(STDOUT, "The Database already matches the schema.\n");
+		}
+		fwrite(STDOUT, "Run 'sb generate models' to generate models manually.\n");
+		fwrite(STDOUT, "Generating CSS...\n");
+		fwrite(STDOUT, "Run 'sb generate css' to generate CSS manually.\n");
 		passthru("sb generate css");
 	}
 

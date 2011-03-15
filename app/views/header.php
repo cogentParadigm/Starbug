@@ -6,8 +6,6 @@
 	<head>
 		<title><?php echo Etc::WEBSITE_NAME; ?></title>
 		<?php $sb->publish("header"); ?>
-		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.3.2/dijit/themes/tundra/tundra.css"/>
-		<script type="text/javascript" src="http://o.aolcdn.com/dojo/1.3/dojo/dojo.xd.js" djConfig="parseOnLoad: false"></script>
 	</head>
 	<body class="tundra">
 		<div id="shell">
