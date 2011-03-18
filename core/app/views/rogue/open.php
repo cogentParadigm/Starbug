@@ -56,8 +56,8 @@ function FindFileType($path){
 	$types["vb"] = "vb";
 	$types["xml"] = "xml";
 	
-	$path = strtolower($path) ;
-	$ext = preg_split("[/\\.]", $path) ;
+	$path = strtolower($path);
+	$ext = explode(".", $path);
 	$n = count($ext)-1;
 	$ext = $ext[$n];
 	

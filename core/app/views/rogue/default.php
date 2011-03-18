@@ -8,6 +8,7 @@
 		<title>The Bridge</title>
 		<link rel="stylesheet" type="text/css" href="<?php echo uri("app/public/js/dojo/release/dojo/dijit/themes/claro/claro.css"); ?>"/>
 		<?php $sb->publish("header"); ?>
+		<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/release/dojo/starbug/ide.js"); ?>"></script>
 		<style type="text/css">
 			html,body{height:100%}
 			body{margin:0px;font-size:14px;color:#555;background:#fff}

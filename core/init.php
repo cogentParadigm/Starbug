@@ -7,7 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
-date_default_timezone_set('UTC');
+if (defined("Etc::TIME_ZONE")) date_default_timezone_set(Etc::TIME_ZONE);
 error_reporting(E_ALL ^ E_NOTICE);
 
 // include global functions

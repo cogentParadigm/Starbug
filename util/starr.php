@@ -22,6 +22,7 @@ class starr {
 	 * @param string $str string of key/value pairs where the key is separate from the value by a colon (:) and the pairs are separated by 2 spaces
 	 */
 	function star($str="") {
+		if (is_array($str)) return $str;
 		$arr = array();
 		$keypairs = explode("  ", $str);
 		foreach($keypairs as $keypair) {

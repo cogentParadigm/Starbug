@@ -95,24 +95,28 @@ dojo.declare('starbug.IDE.IDE', [dijit._Widget, dijit._Templated], {
 						autoMatchParens: true,
 						saveFunction: dojo.hitch(this, 'saveFile'),
 						onChange: dojo.hitch(this, 'dirtySelected'),
-						textWrapping: false 
+						onLoad:dojo.hitch(this, '_onEditorTab'),
+						textWrapping: false
 					});
 					this.positions[loc] = this.tabs.length;
-					this.tabs.push({pane: tab, editor: cm, content: cm.getCode(), path: loc, file: caption, dirty: false});
+					this.tabs.push({pane: tab, editor: cm, content: '', path: loc, file: caption, dirty: false});
 					this.setType(this.tabs.length-1);
 					this.editor.selectChild(tab);
 				})
 			});
 		}
 	},
+	_onEditorTab: function(editor) {
+		this.tabs[this.tabs.length-1].content = editor.getCode();
+	},
 	saveFile: function() {
 		var current = this.tabs[this.selectedTab];
 		dojo.xhrPost({
 			url: this.saveURL,
 			content: {
-				open: this.tabs[this.selectedTab].path,
-				old: this.tabs[this.selectedTab].content,
-				new: this.tabs[this.selectedTab].editor.getCode()
+				'open': this.tabs[this.selectedTab].path,
+				'old': this.tabs[this.selectedTab].content,
+				'new': this.tabs[this.selectedTab].editor.getCode()
 			},
 			handleAs: 'json',
 			load: dojo.hitch(this, function(data) {
@@ -130,12 +134,11 @@ dojo.declare('starbug.IDE.IDE', [dijit._Widget, dijit._Templated], {
 		this.positions[this.tabs[parseInt(tab.id.substr(tab.id.length-1, 1))].path] = null;
 	},
 	setType: function(idx) {
-		var sel = dojo.byId('tab'+idx+'_type');
-		this.tabs[idx].editor.setParser(sel.options[sel.selectedIndex].value);
+		this.tabs[idx].editor.setParser(dojo.attr('tab'+idx+'_type', 'value'));
 	},
 	dirtySelected: function() {
 		if (this.timers[this.selectedTab] != null) clearTimeout(this.timers[this.selectedTab]);
-		setTimeout(dojo.hitch(this, 'checkErrors', this.selectedTab), 2000);
+		setTimeout(dojo.hitch(this, 'checkErrors', this.selectedTab), 1000);
 		if (!this.tabs[this.selectedTab].dirty) {
 			this.tabs[this.selectedTab].dirty = true;
 			this.tabs[this.selectedTab].pane.set('title', '<span style="color:#C00;font-weight:bold">*</span>'+this.tabs[this.selectedTab].file);
@@ -148,7 +151,7 @@ dojo.declare('starbug.IDE.IDE', [dijit._Widget, dijit._Templated], {
 	checkErrors: function(idx) {
 		dojo.xhrPost({
 			url: this.errorURL,
-			content: {content: this.tabs[idx].editor.getCode(), type: dojo.attr('tab'+idx, 'type')},
+			content: {'content': this.tabs[idx].editor.getCode(), 'type': dojo.attr('tab'+idx, 'type')},
 			load: dojo.hitch(this, function(data) {
 				dojo.query('.alerts', this.tabs[idx].pane.domNode)[0].innerHTML = data;
 			})

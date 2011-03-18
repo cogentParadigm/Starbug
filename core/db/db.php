@@ -26,6 +26,7 @@ class db {
 		try {
 			$this->pdo = new PDO($dsn, $username, $password);
 			$this->set_debug(false);
+			if (defined('Etc::TIME_ZONE')) $this->exec("SET time_zone='".Etc::TIME_ZONE."'");
 		} catch (PDOException $e) { 
 			die("PDO CONNECTION ERROR: " . $e->getMessage() . "\n");
 		}

@@ -305,4 +305,14 @@ function redirect($url, $delay=0){
 		exit();
 	}
 }
+/**
+	* check that an action was called and no errors occurred
+	* @param string $model the model name
+	* @param string $action the function name
+	* @return bool true if the function was called without returning errors
+	*/
+function success($model, $action) {
+	global $sb;
+	return $sb->success($model, $action);
+}
 ?>

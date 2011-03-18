@@ -1,20 +1,59 @@
 dojo.provide("starbug.data.ApiStore");
 dojo.require("dojo.data.ItemFileWriteStore");
+dojo.require("starbug.data.ApiManager");
 dojo.declare('starbug.data.ApiStore', dojo.data.ItemFileWriteStore, {
+
 	model : '',
 	models : '',
 	action : 'create',
 	query : '',
 	changes : [],
-	constructor: function(keywordParameters) {
-		this.model = keywordParameters.model;
-		if (keywordParameters.models) this.models = keywordParameters.models;
-		else this.models = this.model;
-		if (keywordParameters.query) this.action = keywordParameters.query;
-		if (keywordParameters.action) this.action = keywordParameters.action;
-		if (keywordParameters.url) this.url = keywordParameters.url;
-		this.url = WEBSITE_URL+'api/'+this.models+'/get.json?query='+this.query;
+	manager: null,
+	refreshInterval: 0,
+	timer: null,
+	onComplete: null,
+	onError: null,
+	onUpdate: null,
+	onItem: null,
+	onChange: null,
+	onDelete: null,
+	startTime: '',
+	lastPoll: null,
+	lastAttempt: null,
+	ofsett: null,
+	reloads: 0,
+
+	constructor: function(args) {
+		this.manager = starbug.data.manager();
+		dojo.mixin(this, args);
+		this.models = this.query.split('  ', 1)[0];
+		this.model = this.models.split('.', 1)[0];
+
+		//SET lastPoll AND offset FOR UPDATE REQUESTS
+		if (this.startTime != '') {
+			if (this.refreshInterval == 0) this.refreshInterval = 3;
+			var t = this.startTime.split(/[- :]/);
+			this.lastPoll = new Date(t[0], parseInt(t[1])-1, t[2], t[3], t[4], t[5]);
+			this.lastAttempt = new Date();
+			this.offset = this.lastPoll.getTime() - this.lastAttempt.getTime();
+		}
+
+		this.manager.register(this);
 	},
+
+	_onData: function(data) {
+		this.data = data;
+		this.fetch();
+	},
+
+	fetch: function(args) {
+		if (!args) args = {};
+		if (this.onItem) args.onItem = this.onItem;
+		if (this.onComplete) args.onComplete = this.onComplete;
+		if (this.onError) args.onError = this.onError;
+		this.inherited(arguments);
+	},
+
 	itemToJS : function(idx) {
 	// summary: Function to convert an item at the specified index into a simple JS object.
 		var item = null;
@@ -37,6 +76,7 @@ dojo.declare('starbug.data.ApiStore', dojo.data.ItemFileWriteStore, {
 		}
 		return js;
 	},
+
 	_saveCustom : function(saveComplete, saveFailed) {
 		//  summary: This is a custom save function for the store to populate an array of modified items that can be submitted to the server
 		var changeSet = this._pending;
@@ -52,26 +92,31 @@ dojo.declare('starbug.data.ApiStore', dojo.data.ItemFileWriteStore, {
 		if (success) this.save();
 		return success;
 	},
+
 	updateValue: function(/* item */ item, /* attribute-name-string */ attribute, /* almost anything */ value){
 		// summary: See dojo.data.api.Write.set()
 		var success = this._setValueOrValues(item, attribute, value, true); // boolean
 		if (success) delete this._pending._modifiedItems[this.getIdentity(item)];
 		return success;
 	},
+
 	updateValues: function(/* item */ item, /* attribute-name-string */ attribute, /* array */ values){
 		// summary: See dojo.data.api.Write.setValues()
 		var success = this._setValueOrValues(item, attribute, values, true); // boolean
 		if (success) delete this._pending._modifiedItems[this.getIdentity(item)];
 		return success;
 	},
+
 	removeItem: function(/* item */ item) {
 		var success = this.deleteItem(item);
 		if (success) delete this._pending._deletedItems[this.getIdentity(item)];
 		return success;
 	},
+
 	addItem: function(/* Object? */ keywordArgs, /* Object? */ parentInfo){
 		var newItem = this.newItem(keywordArgs, parentInfo);
 		if (newItem != null) delete this._pending._newItems[this.getIdentity(keywordArgs['id'])];
 		return newItem;
 	}
+
 });

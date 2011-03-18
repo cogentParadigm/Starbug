@@ -145,7 +145,7 @@ class Schemer {
 						}
 					}
 					if (isset($field['references']) && ($field['constraint'] != "false")) {
-						$fks = $this->db->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && INDEX_NAME='$name'");
+						$fks = $this->db->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".Etc::DB_NAME."'");
 						if (false === ($row = $fks->fetch())) {
 							// ADD CONSTRAINT																																								// CONSTRAINT
 							fwrite(STDOUT, "Adding foreign key ".P($table)."_".$name."_fk...\n");

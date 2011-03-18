@@ -1,26 +1,23 @@
 <?php
-include("core/db/ApiFunctions.php");
-$model = next($this->uri);
-if (false !== strpos($model, ".")) {
-	$models = explode(".", $model);
-	$model = $models[0];
-} else $models = array($model);
-$action = next($this->uri);
-$format = $this->format;
-$query = "";
-if (($action == "get") || ($action == "poll")) {
-	if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) $_GET['id'] = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : $sb->insert_id;
-	if ($model == "permits") $_GET['id'] = $sb->insert_id;
-	if (!empty($_GET['id'])) $query = "where:$model.id='$_GET[id]'";
-	if ($format == "xml") {
-		header("Content-Type: text/xml");
-		echo (empty($sb->errors[$model])) ? ApiFunctions::getXML($models, $query) : ApiFunctions::XMLerrors($model);
-	} else if ($format == "json") {
-		header("Content-Type: application/json");
-		echo (empty($sb->errors[$model])) ? ApiFunctions::getJSON($models, $query) : ApiFunctions::JSONerrors($model);
-	} else if ($format == "jsonp") {
-		header("Content-Type: application/x-javascript");
-		echo (empty($sb->errors[$model])) ? ApiFunctions::getJSONP($models, $query) : ApiFunctions::JSONPerrors($model);
+include("core/ApiRequest.php");
+if ($this->uri[1] == "call") { // Make multiple calls in one HTTP request
+	$result = array();
+	$output = false;
+	efault($_POST['calls'], array());
+	foreach ($_POST['calls'] as $idx => $call) {
+		list($models, $query) = explode("  ", $call, 2);
+		$request = new ApiRequest($models.".".$this->format, $query);
+		if (empty($request->result)) $result[] = "$idx:[]";
+		else {
+			$result[] = $idx.": ".$request->result;
+			$output = true;
+		}
 	}
+	if ($output) echo "{ ".implode(", ", $result)." }";
+} else { // Make a single call
+	$query = "";
+	foreach ($_GET as $k => $v) $query .= "$k:$v  ";
+	$request = new ApiRequest($this->uri[1].".".$this->format, rtrim($query, ' '));
+	if (!empty($request->result)) echo $request->result;
 }
 ?>

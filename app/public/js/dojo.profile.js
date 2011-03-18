@@ -10,6 +10,12 @@ dependencies = {
 				'dijit.Dialog',
 				'starbug.base'
 			]
+		},
+		{
+			name: "../starbug/ide.js",
+			dependencies: [
+				'starbug.IDE.IDE'
+			]
 		}
 	],
 
