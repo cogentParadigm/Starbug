@@ -8,7 +8,7 @@
 		<?php } ?>
 		<?php if (Etc::DOJO_ENABLED) { ?>
 			<link rel="stylesheet" type="text/css" href="<?php echo uri("app/public/js/dojo/release/dojo/dijit/themes/tundra/tundra.css"); ?>"/>
-			<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/release/dojo/dojo/dojo.js"); ?>" djConfig="parseOnLoad: true"></script>
+			<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/release/dojo/dojo/dojo.js"); ?>" data-dojo-config="parseOnLoad: true"></script>
 		<?php } ?>
 	<?php } else { ?>
 		<?php if (Etc::BLUEPRINT_ENABLED) { $bp = json_decode(file_get_contents(BASE_DIR."/etc/css.json"), true); ?>
@@ -36,7 +36,7 @@
 				$paths = "";
 				foreach ($profile['prefixes'] as $p) $paths .= "'$p[0]':'$p[1]', ";
 			?>
-			<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/dojo/dojo.js"); ?>" djConfig="parseOnLoad: true, modulePaths:{<?php echo rtrim($paths, ', '); ?>}"></script>
+			<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/dojo/dojo.js"); ?>" data-dojo-config="parseOnLoad: true, modulePaths:{<?php echo rtrim($paths, ', '); ?>}, serverTime:'<?php echo date("Y-m-d H:i:s"); ?>'"></script>
 			<script type="text/javascript">
 			<?php foreach ($profile['layers'] as $l) { foreach ($l['dependencies'] as $d) { ?>
 				dojo.require("<?php echo $d; ?>");
@@ -46,4 +46,6 @@
 	<?php } ?>
 	<script type="text/javascript">
 		var WEBSITE_URL = '<?php echo uri(); ?>';
+		<?php if (!empty($_GET)) { ?>var $_GET = dojo.fromJson('<?php echo json_encode($_GET); ?>');<?php } ?>
+		<?php if (!empty($_POST)) { ?>var $_POST = dojo.fromJson('<?php echo json_encode($_POST); ?>');<?php } ?>
 	</script>

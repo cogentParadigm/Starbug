@@ -1,5 +1,5 @@
 cd app/public/js
-wget http://download.dojotoolkit.org/release-1.5.0/dojo-release-1.5.0-src.tar.gz
-tar -xzf dojo-release-1.5.0-src.tar.gz
-mv dojo-release-1.5.0-src dojo
-rm dojo-release-1.5.0-src.tar.gz
+wget http://download.dojotoolkit.org/release-1.6.1/dojo-release-1.6.1-src.tar.gz
+tar -xzf dojo-release-1.6.1-src.tar.gz
+mv dojo-release-1.6.1-src dojo
+rm dojo-release-1.6.1-src.tar.gz

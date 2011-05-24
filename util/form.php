@@ -96,7 +96,8 @@ class form {
 		if ($this->method == "post") $var = (empty($this->model)) ? $_POST : $_POST[$this->model];
 		else $var = (empty($this->model)) ? $_GET : $_GET[$this->model];
 		foreach($parts as $p) $var = $var[rtrim($p, "]")];
-		return stripslashes($var);
+		if (is_array($var)) return $var;
+		else return stripslashes($var);
 	}
 	
 	/**

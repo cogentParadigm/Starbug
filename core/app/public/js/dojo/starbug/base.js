@@ -2,17 +2,16 @@ dojo.provide("starbug.base");
 dojo.require("dijit.form.Form");
 dojo.require("dijit.form.TextBox");
 dojo.declare("starbug.base", null, {
+	severTime: '',
 	constructor: function() {
+		this.serverTime = dojo.config.serverTime;
 		dojo.addOnLoad(dojo.hitch(this, 'onload'));
 	},
 	onload: function() {
 		this.parseForms();
 	},
 	require: function(module) {
-		dojo.require("starbug."+module);
-	},
-	provide: function(module) {
-		dojo.provide("starbug."+module);
+		dojo['require']("starbug."+module);
 	},
 	star: function(str) {
 		var starr = {};
@@ -24,13 +23,18 @@ dojo.declare("starbug.base", null, {
 		}
 		return starr;
 	},
+	query: function(query, args) {
+		this.require("data.ApiStore");
+		if (!args) args = {};
+		args.query = query;
+		return new starbug.data.ApiStore(args);
+	},
 	xhr : function(data) {
 		if (data.args.confirm && !confirm(data.args.confirm)) return;
 		var xhr_object = {
 			load: function(response, xhr) {
 				xhr.args.data = response;
 				data.args.action(xhr);
-				dojo.behavior.apply();
 			}
 		}
 		dojo.mixin(xhr_object, data.args);
@@ -74,11 +78,11 @@ dojo.declare("starbug.base", null, {
 	},
 	parseForms: function() {
 		dojo.query("form").forEach(function (item, idx) {
-			form = new dijit.form.Form({}, item);
+			//form = new dijit.form.Form({}, item);
 			dojo.query("input", item).forEach(function (item, idx) {
 
 			});
-			window[dojo.attr(item, 'id')] = form;
+			//window[dojo.attr(item, 'id')] = form;
 		});
 	}
 });

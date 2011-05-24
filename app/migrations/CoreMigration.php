@@ -25,10 +25,16 @@ class CoreMigration extends Migration {
 		$this->table("users",
 			"first_name  type:string  length:64",
 			"last_name  type:string  length:64",
-			"username  type:string  length:128",
+			"username  type:string  length:128  unique:",
 			"email  type:string  length:128  unique:",
 			"password  type:password  confirm:password_confirm  md5:  optional_update:",
-			"memberships  type:int"
+			"memberships  type:int",
+			"address  type:string  length:128",
+			"address2  type:string  length:128  default:",
+			"city  type:string  length:32",
+			"state  type:string  length:32",
+			"country  type:string  length:64",
+			"zip  type:string  length:16"
 		);
 		//This will be stored immediately after the creation of the users table
 		$this->store("users", "username:root", "memberships:1");
@@ -81,6 +87,11 @@ class CoreMigration extends Migration {
 			"value  type:text  default:",
 			"autoload  type:bool  default:0"
 		);
+		$this->table("emails",
+			"name  type:string  length:64",
+			"subject  type:string  length:128",
+			"body  type:text"
+		);
 		// URIS
 		$this->uri("sb-admin", "template:templates/Login  title:Bridge  prefix:core/app/views/");
 		$this->uri("sb", "template:templates/Starbug  prefix:core/app/views/  collective:1"); //parent:sb-admin
@@ -106,7 +117,7 @@ class CoreMigration extends Migration {
 		$this->permit("users::update_profile", "owner:global");
 
 		//ENABLE LOGGING
-		foreach (array("users", "permits", "uris", "tags", "uris_tags", "leafs", "text_leaf", "files", "options") as $tbl) {
+		foreach (array("users", "permits", "uris", "tags", "uris_tags", "leafs", "text_leaf", "files", "options", "emails") as $tbl) {
 			$this->after("$tbl::insert", $this->get_logging_trigger("$tbl", "insert"));
 			$this->after("$tbl::update", $this->get_logging_trigger("$tbl", "update"));
 			$this->after("$tbl::delete", $this->get_logging_trigger("$tbl", "delete"));

@@ -9,7 +9,7 @@ dojo.declare('starbug.data.ApiStore', dojo.data.ItemFileWriteStore, {
 	query : '',
 	changes : [],
 	manager: null,
-	refreshInterval: 0,
+	updateInterval: 0,
 	timer: null,
 	onComplete: null,
 	onError: null,
@@ -28,10 +28,9 @@ dojo.declare('starbug.data.ApiStore', dojo.data.ItemFileWriteStore, {
 		dojo.mixin(this, args);
 		this.models = this.query.split('  ', 1)[0];
 		this.model = this.models.split('.', 1)[0];
-
+		this.startTime = sb.serverTime;
 		//SET lastPoll AND offset FOR UPDATE REQUESTS
-		if (this.startTime != '') {
-			if (this.refreshInterval == 0) this.refreshInterval = 3;
+		if (this.updateInterval != 0) {
 			var t = this.startTime.split(/[- :]/);
 			this.lastPoll = new Date(t[0], parseInt(t[1])-1, t[2], t[3], t[4], t[5]);
 			this.lastAttempt = new Date();

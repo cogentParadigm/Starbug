@@ -15,7 +15,7 @@ dojo.declare("starbug.data.ApiManager", null, {
 	register: function(store) {
 		this.stores.push(store);
 		this.pending.push(store);
-		if (store.refreshInterval) this.isLive = true;
+		if (store.updateInterval) this.isLive = true;
 	},
 
 	fetch: function() {
@@ -30,7 +30,14 @@ dojo.declare("starbug.data.ApiManager", null, {
 	},
 
 	populate: function(data) {
-		for (var i in data) this.pending[i]._onData(data[i]);
+		for (var i in data) {
+			this.pending[i]._onData(data[i]);
+			if (data[i].items) {
+				for (var d in data[i].items) {
+					dojo.publish('/data/'+this.stores[i].models+'/add', this.stores[i]._getItemByIdentity(data[i].items[d].id));
+				}
+			}
+		}
 		this.pending = [];
 		if (this.isLive && (this.timer == null)) this.timer = setTimeout(dojo.hitch(this, 'update'), 1000);
 	},
@@ -41,7 +48,7 @@ dojo.declare("starbug.data.ApiManager", null, {
 		var args = {url: 'api/call.json', handleAs: 'json', content: {}, load: dojo.hitch(this, 'onUpdate')};
 		for (var i in this.stores) {
 			if (this.stores[i].isDirty()) this.stores[i].save();
-			if ((this.reloads % this.stores[i].refreshInterval) === 0) {
+			if ((this.reloads % this.stores[i].updateInterval) === 0) {
 				this.stores[i].lastAttempt = new Date();
 				args.content['calls['+i+']'] = this.stores[i].models+'  '+this.stores[i].query+"  log:log.created>'"+dojo.date.locale.format(this.stores[i].lastPoll, {datePattern: 'yyyy-MM-dd', timePattern: 'HH:mm:ss'})+"'  select:log.*";
 			}
@@ -70,6 +77,7 @@ dojo.declare("starbug.data.ApiManager", null, {
 								load: dojo.hitch(this, function(data) {
 									this.stores[i].addItem(data[0].items[0]);
 									if (this.stores[i].onItem != null) this.stores[i].onItem(this.stores[i]._getItemByIdentity(item.object_id), this.stores[i]);
+									dojo.publish('/data/'+this.stores[i].models+'/add', this.stores[i]._getItemByIdentity(item.object_id));
 								})
 							});
 						} else if (item.action == "UPDATE") {

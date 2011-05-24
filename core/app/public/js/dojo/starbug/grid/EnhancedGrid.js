@@ -1,5 +1,5 @@
 dojo.provide("starbug.grid.EnhancedGrid");
-dojo.require("starbug.data.LiveApiStore");
+dojo.require("starbug.data.ApiStore");
 dojo.require("dojox.grid.cells.dijit");
 dojo.require("dojox.grid.EnhancedGrid");
 dojo.require("dojox.grid.enhanced.plugins.NestedSorting");
@@ -9,24 +9,11 @@ dojo.require("dojox.grid.enhanced.plugins.IndirectSelection");
 dojo.require("dojox.dtl.filter.strings");
 //dojo.require("dojox.grid.enhanced.plugins.CellFormatter"); //not available til dojo 1.6
 dojo.declare('starbug.grid.EnhancedGrid', dojox.grid.EnhancedGrid, {
-	model: '',
-	action: 'create',
-	storeUrl: '',
 	store: null,
 	mouse_down: false,
 	orderColumn: '',
-	startTime: '',
 	constructor: function(args) {
-		if (args.model != null) this.model = args.model;
-		args.model = this.model;
-		if (args.storeUrl != null) {
-			args.url = args.storeUrl;
-			if (args.startTime != null) {
-				this.store = new starbug.data.LiveApiStore(args);
-			} else {
-				this.store = new starbug.data.ApiStore(args);
-			}
-		}
+		if (args.query) this.store = new starbug.data.ApiStore(args);
 	},
 	postCreate: function() {
 		this.inherited(arguments);
