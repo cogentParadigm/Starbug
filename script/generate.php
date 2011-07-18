@@ -13,6 +13,10 @@ $help .= "    \t\tcrud - CRUD nouns\n";
 $help .= "    \t\tmodel - Object model\n";
 $generator = array_shift($argv);
 $model = array_shift($argv);
+
+// IF GENERATING HOST, SKIP RIGHT TO IT AND EXIT
+if ($generator == "host") include(dirname(__FILE__)."/generate/host/host.php");
+
 include(BASE_DIR."/util/Args.php");
 $args = new Args();
 global $sb;

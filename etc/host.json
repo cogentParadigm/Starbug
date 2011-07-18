@@ -1,0 +1,18 @@
+{
+	"DB_TYPE" : "mysql",
+	"DB_HOST" : "localhost",
+	"DB_USERNAME" : "",
+	"DB_PASSWORD" : "",
+	"DB_NAME" : "",
+	"PREFIX" : "sb_",
+
+	"WEBSITE_URL" : ["localhost/", "URL of website"],
+
+	"JAVA_PATH" : ["/usr/bin/java", "Java paths"],
+	"SAXON_PATH" : "/usr/share/java/saxon/saxon9he.jar",
+
+	"BLUEPRINT_ENABLED" : ["true", "integration"],
+	"DOJO_ENABLED" : "true",
+	"PHPMAILER_ENABLED" : "true",
+	"SIMPLETEST_ENABLED" : "false"
+}
