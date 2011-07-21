@@ -239,7 +239,7 @@ function userinfo($field="") {
  * @param star $ops the css selector, action: the js function, url: optional url for xhr submission, event: js event (default onclick)
  * @param star $params additional paramteres to be passed to your function
  */
-function dojo_connect($ops, $params="") {
+function connect($ops, $params="") {
 	$ops = starr::star($ops);
 	$query = array_shift($ops);
 	efault($ops['event'], 'onclick');

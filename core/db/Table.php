@@ -94,9 +94,9 @@ class Table {
 	}
 
 
-	protected function store($arr) {
+	protected function store($arr, $from="auto") {
 		global $sb;
-		$errors = $sb->store($this->type, $arr);
+		$errors = $sb->store($this->type, $arr, $from);
 		if ((empty($errors)) && (empty($arr['id']))) $this->insert_id = $sb->insert_id;
 		return $errors;
 	}
