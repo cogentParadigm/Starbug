@@ -1,4 +1,5 @@
 dojo.provide("starbug.grid.EnhancedGrid");
+dojo.require("starbug.grid.cells");
 dojo.require("starbug.data.ApiStore");
 dojo.require("dojox.grid.cells.dijit");
 dojo.require("dojox.grid.EnhancedGrid");
