@@ -76,6 +76,7 @@ class sb {
 	 * @param string $what 'jsforms' works for either 'jsforms.php' or 'jsforms/jsforms.php'
 	 */
 	function load($what) {
+		global $request;
 		if (file_exists($what.".php")) include($what.".php");
 		else {
 			$token = split("/", $what); $token = $what."/".end($token).".php";

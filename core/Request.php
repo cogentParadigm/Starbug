@@ -34,6 +34,10 @@ class Request {
 	 */
 	var $format;
 	/**
+	 * @var string the stylesheet to use
+	 */
+	var $style;
+	/**
 	 * @var string the file path of the view
 	 */
 	var $file;
@@ -53,6 +57,7 @@ class Request {
 	 * @var string the path of the base directory
 	 */
 	var $base_dir;
+	
 
 	/**
 	 * constructor. initiates tags and postback
@@ -112,6 +117,7 @@ class Request {
 		$this->tags = array_merge($this->tags, $sb->query("uris,tags", "select:DISTINCT tag, raw_tag  where:uris.id='".$this->payload['id']."'", true));
 		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
 		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
+		$this->style = $this->payload['style'];
 	}
 
 	/**

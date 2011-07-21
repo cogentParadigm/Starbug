@@ -54,6 +54,7 @@ class CoreMigration extends Migration {
 			"sort_order  type:int  default:0",
 			"check_path  type:bool  default:1",
 			"prefix  type:string  length:128  default:app/views/",
+			"style  type:string  length:128  default:screen",
 			"options  type:text"
 		);
 		$this->table("tags",
@@ -106,6 +107,8 @@ class CoreMigration extends Migration {
 		$this->uri("forbidden", "template:".Etc::DEFAULT_TEMPLATE);
 		//Rogue IDE
 		$this->uri("rogue", "title:Rogue IDE  template:templates/Blank  prefix:core/app/views/  collective:0");
+		//Admin
+		$this->uri("admin", "title:Admin  template:templates/Admin  collective:4  style:admin");
 
 		// URI PERMITS
 		$this->permit("uris::read", "collective:global");

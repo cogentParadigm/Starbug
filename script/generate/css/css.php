@@ -31,4 +31,17 @@
 	$ie->parse();
 	if (!empty($conf['classes'])) $ie->add_semantic_classes($conf['classes']);
 	$ie->write();
+	$admin = new CSSParser(
+		BASE_DIR."/core/app/public/stylesheets/src/reset.css",
+		BASE_DIR."/core/app/public/stylesheets/src/typography.css",
+		BASE_DIR."/core/app/public/stylesheets/src/forms.css",
+		BASE_DIR."/core/app/public/stylesheets/src/grid.css",
+		BASE_DIR."/var/public/stylesheets/admin.css"
+	);
+	if (!empty($conf['plugins'])) foreach ($conf['plugins'] as $plugin) $admin->add_plugin($plugin);
+	if (!empty($conf['admin'])) foreach ($conf['admin'] as $custom) $admin->add_file(BASE_DIR."/$custom");
+	$admin->parse();
+	$admin->write();
+	//BUILD
+	if (file_exists(BASE_DIR."/app/public/js/dojo/util")) passthru("cd ".BASE_DIR."/script/generate/css; ./build.sh action=release cssOptimize=comments");
 ?>

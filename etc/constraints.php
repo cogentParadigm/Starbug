@@ -13,7 +13,8 @@
 global $groups;
 $groups = array(
 	"root"			=> 1,
-	"user"			=> 2
+	"user"			=> 2,
+	"admin"			=> 4
 );
 /**
  * list of statuses and their numeric value (must be a power of 2)

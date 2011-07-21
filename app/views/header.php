@@ -7,7 +7,7 @@
 		<title><?php echo Etc::WEBSITE_NAME; ?></title>
 		<?php $sb->publish("header"); ?>
 	</head>
-	<body class="tundra">
+	<body class="claro">
 		<div id="shell">
 			<h1><a href="./"><span><?php echo Etc::WEBSITE_NAME; ?></span></a></h1>
 			<span id="subhead"><?php echo Etc::TAGLINE; ?></span>

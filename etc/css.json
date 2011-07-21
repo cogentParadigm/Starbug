@@ -1,13 +1,9 @@
 {
-	"screen" : ["app/public/stylesheets/custom-screen.css"],
+	"screen" : ["app/public/stylesheets/custom-screen.css", "app/public/stylesheets/dojo-screen.css"],
 	"print" : ["app/public/stylesheets/custom-print.css"],
 	"ie" : ["app/public/stylesheets/custom-ie.css"],
+	"admin" : ["app/public/stylesheets/custom-admin.css", "app/public/stylesheets/dojo-admin.css"],
 	"plugins" : ["buttons", "rounding"],
 	"classes" : {
-		"#shell" : ".container",
-		"#main" : ".span-24",
-		"#content" : ".span-17 .colborder",
-		"#sidebar" : ".span-6 .last",
-		"#footer" : ".small .right .clear"
 	}
 }

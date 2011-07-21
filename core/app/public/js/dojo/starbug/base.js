@@ -3,9 +3,20 @@ dojo.require("dijit.form.Form");
 dojo.require("dijit.form.TextBox");
 dojo.declare("starbug.base", null, {
 	severTime: '',
+	$_GET:[],
 	constructor: function() {
 		this.serverTime = dojo.config.serverTime;
 		dojo.addOnLoad(dojo.hitch(this, 'onload'));
+		var urlHalves = String(document.location).split('?');
+		if(urlHalves[1]){
+			var urlVars = urlHalves[1].split('&');
+			for(var i=0; i<=(urlVars.length); i++){
+				 if(urlVars[i]){
+						var urlVarPair = urlVars[i].split('=');
+						this.$_GET[urlVarPair[0]] = urlVarPair[1];
+				 }
+			}
+		}
 	},
 	onload: function() {
 		this.parseForms();

@@ -76,7 +76,9 @@ class CSSParser {
 		$this->css["semantic class names"] = $styles;
 	}
 	function add_plugin($plugin) {
-		$filename = BASE_DIR."/core/app/public/stylesheets/plugins/$plugin/".end(explode("/", $this->path));
+		$file = end(explode("/", $this->path));
+		if (($file != "print.css") && ($file != "screen.css") && ($file != "ie.css")) $file = "screen.css";
+		$filename = BASE_DIR."/core/app/public/stylesheets/plugins/$plugin/$file";
 		if (file_exists($filename)) $this->add_file($filename, "$plugin plugin");
 	}
 	function write() {
