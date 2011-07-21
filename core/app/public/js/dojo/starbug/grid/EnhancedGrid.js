@@ -7,13 +7,24 @@ dojo.require("dojox.grid.enhanced.plugins.DnD");
 dojo.require("dojox.grid.enhanced.plugins.Menu");
 dojo.require("dojox.grid.enhanced.plugins.IndirectSelection");
 dojo.require("dojox.dtl.filter.strings");
-//dojo.require("dojox.grid.enhanced.plugins.CellFormatter"); //not available til dojo 1.6
 dojo.declare('starbug.grid.EnhancedGrid', dojox.grid.EnhancedGrid, {
+	model: '',
+	models: '',
+	action: 'create',
+	apiQuery:'',
+	storeUrl: '',
 	store: null,
 	mouse_down: false,
 	orderColumn: '',
+	startTime: '',
+	notifier:'',
+	hasFetched: false,
 	constructor: function(args) {
-		if (args.query) this.store = new starbug.data.ApiStore(args);
+		args.query = args.models+'  query:'+args.apiQuery;
+		args.onComplete = dojo.hitch(this, '_onFetchComplete');
+		this.store = new starbug.data.ApiStore(args);
+		this.model = this.store.model;
+		this.models = this.store.models;
 	},
 	postCreate: function() {
 		this.inherited(arguments);
@@ -31,7 +42,7 @@ dojo.declare('starbug.grid.EnhancedGrid', dojox.grid.EnhancedGrid, {
 	dropSelectedRows: function() {
 		var rows = this.selection.getSelected();
 		var new_index = this.selection.selectedIndex; //current physical index in the grid
-		this.moveRows(rows, new_index);
+		this.moveRows(rows, new_index+1);
 	},
 	moveRowToTop: function(rowIndex) {
 		this.moveRows([this.getItem(rowIndex)], 0);
@@ -40,13 +51,20 @@ dojo.declare('starbug.grid.EnhancedGrid', dojox.grid.EnhancedGrid, {
 		this.moveRows([this.getItem(rowIndex)], this._by_idx.length-1);
 	},
 	moveRows: function(rows, toIndex) {
-		var new_order = this.store._arrayOfAllItems[toIndex][this.orderColumn][0];
+		var new_order = this.store.getValue(grid.getItem(toIndex), this.orderColumn);
 		for (var i in rows) {
 			i = rows[i];
 			this.store.setValue(this.store._arrayOfAllItems[i._0], this.orderColumn, new_order);
 			new_order++;
 		}
-		this.store.update();
+		this.store.save();
+	},
+	_onFetchComplete: function(items, req){
+		this.inherited(arguments);
+		if (!this.hasFetched) {
+			this.hasFetched = true;
+			this.setQuery();
+		}
 	},
 	_resize: function(changeSize, resultSize) {
 		var scrollPosition = dojo._docScroll().y;

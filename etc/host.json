@@ -14,5 +14,7 @@
 	"BLUEPRINT_ENABLED" : ["true", "integration"],
 	"DOJO_ENABLED" : "true",
 	"PHPMAILER_ENABLED" : "true",
-	"SIMPLETEST_ENABLED" : "false"
+	"SIMPLETEST_ENABLED" : "false",
+	
+	"TIME_ZONE" : ["America/Vancouver", "Time Zone"]
 }

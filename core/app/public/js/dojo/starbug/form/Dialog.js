@@ -6,14 +6,16 @@ dojo.declare("starbug.form.Dialog", [dijit.Dialog], {
 	callback:null,
 	form:null,
 	model:'',
-	action:'',
+	action:'create',
+	updateUrl: '',
+	item_id: 0,
 	postCreate: function() {
 		this.inherited(arguments);
 		this.form = dojo.query('form', this.domNode)[0];
 		dojo.query('form', this.domNode).connect('onsubmit', dojo.hitch(this, '_onSubmit'));
 		dojo.query('.cancel', this.form).connect('onclick', this, 'hide');
 		dojo.query('.error', this.form).forEach(dojo.destroy);
-		if (this.url == '') this.url = WEBSITE_URL+'api/'+this.model+'/get.json';
+		if (this.url == '') this.url = WEBSITE_URL+'api/'+this.model+'.json';
 		var list = null;
 		if (list = dojo.query('[name="action['+this.model+']"]', this.form)) list.attr('value', this.action);
 		else dojo.create('input', {'type':'hidden', 'name':'action['+this.model+']', 'value':this.action}, this.form);
@@ -35,10 +37,7 @@ dojo.declare("starbug.form.Dialog", [dijit.Dialog], {
 	},
 	load: function(data) {
 		dojo.removeClass(this.form, 'loading');
-		if (data.items) {
-			if (this.callback != null) this.callback(data.items, this);
-			this.hide();
-		} else if (data.errors) {
+		if (data.errors) {
 			var node = null;
 			var span = null;
 			for (var field in data.errors) {
@@ -52,6 +51,9 @@ dojo.declare("starbug.form.Dialog", [dijit.Dialog], {
 					}
 				}
 			}
+		} else {
+			this.hide();
+			if (this.callback != null) this.callback(data.items, this);
 		}
 	},
 	setValues: function(args) {
@@ -62,19 +64,33 @@ dojo.declare("starbug.form.Dialog", [dijit.Dialog], {
 	show: function(id) {
 		this.inherited(arguments);
 		if (id) {
-			if (!dojo.query('name="'+this.model+'[id]"', this.form)) dojo.create('input', {'type':'hidden', 'name':this.model+'[id]'}, this.form);
+			this.item_id = id;
 			dojo.addClass(this.form, 'loading');
-			dojo.xhrGet({
-				url: this.url+'?where='+this.model+'.id='+id,
-				handleAs: 'json',
-				load: dojo.hitch(this, function(data) {
-					this.setValues(data.items[0]);
-					dojo.removeClass(this.form, 'loading');
-				})
-			});
+			if (this.updateUrl) {
+				dojo.xhrGet({
+					url: this.updateUrl+id+'.xhr',
+					load: dojo.hitch(this, 'loadForm')
+				});
+			} else {
+				if (dojo.query('[name="'+this.model+'[id]"]', this.form) == false) dojo.create('input', {'type':'hidden', 'name':this.model+'[id]'}, this.form);
+				dojo.xhrGet({
+					url: this.url+'?where='+this.model+'.id='+id+'&select='+this.model+'.*',
+					handleAs: 'json',
+					load: dojo.hitch(this, function(data) {
+						this.setValues(data.items[0]);
+						dojo.removeClass(this.form, 'loading');
+					})
+				});
+			}
 		} else {
 			dojo.query('[name^="'+this.model+'"]', this.form).attr('value', '');
 			dojo.query('[name="'+this.model+'[id]"]').forEach(dojo.destroy);
 		}
+	},
+	loadForm: function(data) {
+		this.set('content', data);
+		this.form = dojo.query('form', this.domNode)[0];
+		dojo.query('form', this.domNode).connect('onsubmit', dojo.hitch(this, '_onSubmit'));
+		dojo.query('.cancel', this.form).connect('onclick', this, 'hide');
 	}
 });

@@ -9,28 +9,28 @@ dojo.declare('starbug.data.ApiStore', dojo.data.ItemFileWriteStore, {
 	query : '',
 	changes : [],
 	manager: null,
-	updateInterval: 0,
+	refreshInterval: 0,
 	timer: null,
 	onComplete: null,
 	onError: null,
 	onUpdate: null,
 	onItem: null,
 	onChange: null,
-	onDelete: null,
 	startTime: '',
 	lastPoll: null,
 	lastAttempt: null,
 	ofsett: null,
 	reloads: 0,
-
+	notifier: '',
 	constructor: function(args) {
+		args.data = {identifier:'id', items:[]};
 		this.manager = starbug.data.manager();
 		dojo.mixin(this, args);
 		this.models = this.query.split('  ', 1)[0];
 		this.model = this.models.split('.', 1)[0];
-		this.startTime = sb.serverTime;
-		//SET lastPoll AND offset FOR UPDATE REQUESTS
-		if (this.updateInterval != 0) {
+
+		//SET lastPoll AND offset FOR UPDATE REQUESTS VIA POLLING
+		if (this.refreshInterval != 0) {
 			var t = this.startTime.split(/[- :]/);
 			this.lastPoll = new Date(t[0], parseInt(t[1])-1, t[2], t[3], t[4], t[5]);
 			this.lastAttempt = new Date();
@@ -42,15 +42,17 @@ dojo.declare('starbug.data.ApiStore', dojo.data.ItemFileWriteStore, {
 
 	_onData: function(data) {
 		this.data = data;
-		this.fetch();
-	},
-
-	fetch: function(args) {
-		if (!args) args = {};
+		this.clearOnClose = true;
+		this.close();
+		var args = {};
 		if (this.onItem) args.onItem = this.onItem;
 		if (this.onComplete) args.onComplete = this.onComplete;
 		if (this.onError) args.onError = this.onError;
-		this.inherited(arguments);
+		this.fetch(args);
+	},
+
+	update: function() {
+		this.manager.update();
 	},
 
 	itemToJS : function(idx) {
@@ -82,38 +84,59 @@ dojo.declare('starbug.data.ApiStore', dojo.data.ItemFileWriteStore, {
 		for (var i in changeSet._modifiedItems) {
 			i = this.itemToJS(i);
 			i['action['+this.model+']'] = this.action;
-			dojo.xhrPost({url: this.url, content: i, handleAs: 'json'});
+			dojo.xhrPost({url: WEBSITE_URL+'api/'+this.model+'.json', content: i, handleAs: 'json'});
+		}
+		for (var i in changeSet._deletedItems) {
+			var d = {};
+			d[this.model+'[id]'] = i;
+			d['action['+this.model+']'] = 'delete';
+			dojo.xhrPost({url:	WEBSITE_URL+'api/'+this.model+'.json', content: d});
+		}
+		for (var i in changeSet._newItems) {
+			console.log(i);
 		}
 		saveComplete();
 	},
-	_setValueOrValues: function(/* item */ item, /* attribute-name-string */ attribute, /* anything */ newValueOrValues, /*boolean?*/ callOnSet) {
+	_setValueOrValues: function(/* item */ item, /* attribute-name-string */ attribute, /* anything */ newValueOrValues, /*boolean?*/ callOnSet, noSave) {
 		var success = this.inherited(arguments);
-		if (success) this.save();
+		if (success && !noSave) this.save();
 		return success;
+	},
+	
+	deleteItem: function(item, noSave) {
+		var success = this.inherited(arguments);
+		if (success && !noSave) this.save();
+		return success;
+	},
+	
+	newItem: function (/* Object? */ keywordArgs, /* Object? */ parentInfo, noSave) {
+		var item = this.inherited(arguments);
+		if (item && !noSave) this.save();
+		return item;
 	},
 
 	updateValue: function(/* item */ item, /* attribute-name-string */ attribute, /* almost anything */ value){
 		// summary: See dojo.data.api.Write.set()
-		var success = this._setValueOrValues(item, attribute, value, true); // boolean
+		var success = this._setValueOrValues(item, attribute, value, true, true); // boolean
 		if (success) delete this._pending._modifiedItems[this.getIdentity(item)];
 		return success;
 	},
 
 	updateValues: function(/* item */ item, /* attribute-name-string */ attribute, /* array */ values){
 		// summary: See dojo.data.api.Write.setValues()
-		var success = this._setValueOrValues(item, attribute, values, true); // boolean
+		var success = this._setValueOrValues(item, attribute, values, true, true); // boolean
 		if (success) delete this._pending._modifiedItems[this.getIdentity(item)];
 		return success;
 	},
 
 	removeItem: function(/* item */ item) {
-		var success = this.deleteItem(item);
+		var success = this.deleteItem(item, true);
 		if (success) delete this._pending._deletedItems[this.getIdentity(item)];
 		return success;
 	},
 
 	addItem: function(/* Object? */ keywordArgs, /* Object? */ parentInfo){
-		var newItem = this.newItem(keywordArgs, parentInfo);
+		var newItem = this.newItem(keywordArgs, parentInfo, true);
 		if (newItem != null) delete this._pending._newItems[this.getIdentity(keywordArgs['id'])];
 		return newItem;
 	}

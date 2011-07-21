@@ -10,6 +10,7 @@
  * ApiRequest
  * @ingroup core
  */
+ $sb->provide("core/ApiRequest");
 class ApiRequest {
 
 	var $types = array(
@@ -18,6 +19,7 @@ class ApiRequest {
 		"jsonp" => "application/x-javascript"
 	);
 	var $result = "";
+	var $whitelisting = false;
 
 	/**
 	 * API Request constructor
@@ -26,12 +28,19 @@ class ApiRequest {
 	 * @param star $ops additional options, query paramaters if [object] is a model or group of models
 	 */
 	function __construct($what, $ops="") {
+		if (defined("ETC::API_WHITELIST")) {
+			if (in_array($_SERVER['REMOTE_ADDR'], explode(",", Etc::API_WHITELIST)) && empty($_SESSION[P("memberships")])) {
+				$this->whitelisting = true;
+				$_SESSION[P("memberships")] = 1;
+			}
+		}
 		$format = end(explode(".", $what));
 		$call = reset(explode("/", str_replace(".$format", "", $what)));
 		$ops = starr::star($ops);
 		efault($ops['action'], 'read');
 		header("Content-Type: ".$this->types[$format]);
 		$this->result = call_user_func(array($this, $call), $call, $format, $ops);
+		if ($this->whitelisting) $_SESSION[P("memberships")] = 0;
 	}
 
 	/**
@@ -56,7 +65,7 @@ class ApiRequest {
 		if (!empty($ops['query'])) {
 			$query = base64_decode($ops['query']);
 			unset($ops['query']);
-			$ops = array_merge($ops, starr::star($query));
+			$ops = array_merge(starr::star($query), $ops);
 		}
 		
 		$data = $sb->query(implode(",", $models), $ops, true);

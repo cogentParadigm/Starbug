@@ -292,6 +292,7 @@ class sb {
 			foreach($errors as $col => $err) if (empty($err)) unset($errors[$col]);
 			if (!empty($errors)) $this->errors = array_merge_recursive($this->errors, array($name => $errors));
 			if (empty($this->errors)) { //no errors
+				$pre_store_time = date("Y-m-d H:i:s");
 				$fields['modified'] = date("Y-m-d H:i:s");
 				if ($updating) { //updating existing record
 					$setstr = $wherestr = "";
@@ -330,6 +331,24 @@ class sb {
 					$stmt = $this->db->prepare("INSERT INTO ".P($name)." (".$keys.") VALUES (".$values.")");
 					$this->record_count = $stmt->execute($prize);
 					$this->insert_id = $this->db->lastInsertId();
+				}
+				//NOTIFY CLIENTS
+				if (defined("Etc::API_NOTIFIER")) {
+					$this->import("core/ApiRequest");
+					$curl = get_curl();
+					$curl->follow_redirects = false;
+					$subs = $curl->get(Etc::API_NOTIFIER);
+					$subs = json_decode($subs->body, true);
+					if (!is_array($subs)) $subs = array();
+					$result = array();
+					foreach ($subs as $idx => $call) {
+						list($models, $query) = explode("  ", $call, 2);
+						$request = new ApiRequest($models.".json", $query."  log:log.created>='$pre_store_time'  select:log.*");
+						if (empty($request->result)) $result[] = '"'.$idx.'":[]';
+						else $result[] = '"'.$idx.'": '.$request->result;
+					}
+					$postdata = array("response" => "{ ".implode(", ", $result)." }");
+					$curl->post(Etc::API_NOTIFIER, $postdata);
 				}
 			}
 		}
