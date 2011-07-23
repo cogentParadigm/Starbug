@@ -51,8 +51,9 @@ function P($var) {return Etc::PREFIX.$var;}
  */
 function uri($path="", $flags="") {
 	if ($flags == "s") $prefix = "https://";
+	else if ($flags == "u") $prefix = "http://";
 	else if ($flags == "f") $prefix = "";
-	else $prefix = "http://";
+ 	else $prefix = $_SERVER['HTTPS'] ? "https://" : "http://";
 	return $prefix.Etc::WEBSITE_URL.$path;
 }
 /**
