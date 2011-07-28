@@ -331,6 +331,7 @@ class sb {
 					$stmt = $this->db->prepare("INSERT INTO ".P($name)." (".$keys.") VALUES (".$values.")");
 					$this->record_count = $stmt->execute($prize);
 					$this->insert_id = $this->db->lastInsertId();
+					$this->get($name)->insert_id = $this->insert_id;
 				}
 				//NOTIFY CLIENTS
 				if (defined("Etc::API_NOTIFIER")) {

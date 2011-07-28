@@ -14,14 +14,6 @@ class CoreMigration extends Migration {
 	function up() {
 		global $schemer;
 		// This adds a table to the schema, The Schemer builds up a schema with all of the migrations that are to be run, and then updates the db
-		$this->table("log",
-			"table_name  type:string  length:100",
-			"object_id  type:int  default:0",
-			"action  type:string  length:16",
-			"column_name  type:string  length:128",
-			"old_value  type:text",
-			"new_value  type:text"
-		);
 		$this->table("users",
 			"first_name  type:string  length:64",
 			"last_name  type:string  length:64",
@@ -109,6 +101,8 @@ class CoreMigration extends Migration {
 		$this->uri("rogue", "title:Rogue IDE  template:templates/Blank  prefix:core/app/views/  collective:0");
 		//Admin
 		$this->uri("admin", "title:Admin  template:templates/Admin  collective:4  style:admin");
+		//Uploader - default permission only allows root to upload
+		$this->uri("upload", "prefix:core/app/views/  template:templates/Blank  collective:1");
 
 		// URI PERMITS
 		$this->permit("uris::read", "collective:global");
@@ -120,10 +114,20 @@ class CoreMigration extends Migration {
 		$this->permit("users::update_profile", "owner:global");
 
 		//ENABLE LOGGING
-		foreach (array("users", "permits", "uris", "tags", "uris_tags", "leafs", "text_leaf", "files", "options", "emails") as $tbl) {
-			$this->after("$tbl::insert", $this->get_logging_trigger("$tbl", "insert"));
-			$this->after("$tbl::update", $this->get_logging_trigger("$tbl", "update"));
-			$this->after("$tbl::delete", $this->get_logging_trigger("$tbl", "delete"));
+		if (Etc::ENABLE_SQL_LOG) {
+			$this->table("log",
+				"table_name  type:string  length:100",
+				"object_id  type:int  default:0",
+				"action  type:string  length:16",
+				"column_name  type:string  length:128",
+				"old_value  type:text",
+				"new_value  type:text"
+			);
+			foreach (array("users", "permits", "uris", "tags", "uris_tags", "leafs", "text_leaf", "files", "options", "emails") as $tbl) {
+				$this->after("$tbl::insert", $this->get_logging_trigger("$tbl", "insert"));
+				$this->after("$tbl::update", $this->get_logging_trigger("$tbl", "update"));
+				$this->after("$tbl::delete", $this->get_logging_trigger("$tbl", "delete"));
+			}
 		}
 	}
 

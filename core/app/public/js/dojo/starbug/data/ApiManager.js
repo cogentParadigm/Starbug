@@ -6,10 +6,12 @@ dojo.declare("starbug.data.ApiManager", null, {
 
 	stores: [],
 	pending: [],
+	fetching: [],
 	reloads: 0,
 	timer: null,
 	isLive: false,
 	socket:null,
+	hasFetched:false,
 
 	constructor: function() {
 		dojo.addOnLoad(dojo.hitch(this, 'fetch'));
@@ -18,12 +20,16 @@ dojo.declare("starbug.data.ApiManager", null, {
 	register: function(store) {
 		this.stores.push(store);
 		this.pending.push(store);
+		if (this.hasFetched && (this.fetching.length == 0)) this.fetch();
 		if (store.refreshInterval != 0) this.isLive = true;
 	},
 
 	fetch: function() {
+		this.fetching = this.pending;
+		this.pending = [];
+		this.hasFetched = true;
 		var args = {};
-		for (var i in this.pending) args['calls['+i+']'] = this.pending[i].query;
+		for (var i in this.fetching) args['calls['+i+']'] = this.fetching[i].query;
 		dojo.xhrPost({
 			url: WEBSITE_URL+'api/call.json',
 			handleAs: 'json',
@@ -34,9 +40,10 @@ dojo.declare("starbug.data.ApiManager", null, {
 	},
 
 	populate: function(data) {
-		for (var i in data) if (!dojo.isArray(data[i])) this.pending[i]._onData(data[i]);
-		this.pending = [];
+		for (var i in data) if (!dojo.isArray(data[i])) this.fetching[i]._onData(data[i]);
+		this.fetching = [];
 		if (this.isLive && (this.timer == null)) this.timer = setTimeout(dojo.hitch(this, 'update'), 1000);
+		if (this.pending.length > 0) this.fetch();
 	},
 	
 	subscribe: function(notifier) {

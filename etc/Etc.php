@@ -39,6 +39,15 @@ class Etc extends Host {
 	 * default page to load when request uri is /
 	 */
 	const DEFAULT_PATH = "home";
+
+	/* integration */
+	const BLUEPRINT_ENABLED = true;
+	const DOJO_ENABLED = true;
+	const PHPMAILER_ENABLED = true;
+	const SIMPLETEST_ENABLED = false;
+	
+	const ENABLE_SQL_LOG = false;
+
 }
 include(BASE_DIR."/etc/constraints.php");
 ?>

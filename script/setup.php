@@ -15,7 +15,7 @@
 	$dirs = array("var", "var/xml", "var/models", "var/tmp", "var/public", "var/public/stylesheets", "app/hooks", "app/public/js", "app/public/uploads", "app/public/thumbnails");
 	foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) exec("mkdir ".BASE_DIR."/".$dir);
 	exec("chmod -R a+w ".BASE_DIR."/var ".BASE_DIR."/app/public/uploads ".BASE_DIR."/app/public/thumbnails");
-	exec("cp -Ran ".BASE_DIR."/etc/setup/* ".BASE_DIR."/");
+	exec("cp ".BASE_DIR."/etc/setup/var/migration ".BASE_DIR."/var/");
 
 	if ($host) {
 		//INIT TABLES
@@ -33,6 +33,6 @@
 			$errors = store("users", "password:$admin_pass", "username:root");
 		}
 	} else {
-		fwrite(STDOUT, "\netc/Host.php has been generated. Enter your host details and run setup again.\n\n");
+		fwrite(STDOUT, "\nHost file not found. Run 'sb generate host' to generate one.\n\n");
 	}
 ?>

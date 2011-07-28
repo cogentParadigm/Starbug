@@ -477,8 +477,10 @@ class Schemer {
 		global $groups;
 		$on = explode("::", $on);
 		$args = starr::star($args);
-		$merge = array($on[0] => array($on[1] => $args));
-		$this->permits = array_merge_recursive($this->permits, $merge);
+		efault($this->permits[$on[0]], array());
+		efault($this->permits[$on[0]][$on[1]], array());
+ 		$this->permits[$on[0]][$on[1]] = array_merge($this->permits[$on[0]][$on[1]], $args);
+
 	}
 
 	/**
