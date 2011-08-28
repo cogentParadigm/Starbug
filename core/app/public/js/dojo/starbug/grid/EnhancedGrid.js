@@ -1,6 +1,5 @@
 dojo.provide("starbug.grid.EnhancedGrid");
-dojo.require("starbug.grid.cells");
-dojo.require("starbug.data.ApiStore");
+dojo.require("starbug.data.ObjectStore");
 dojo.require("dojox.grid.cells.dijit");
 dojo.require("dojox.grid.EnhancedGrid");
 dojo.require("dojox.grid.enhanced.plugins.NestedSorting");
@@ -21,9 +20,8 @@ dojo.declare('starbug.grid.EnhancedGrid', dojox.grid.EnhancedGrid, {
 	notifier:'',
 	hasFetched: false,
 	constructor: function(args) {
-		args.query = args.models+'  query:'+args.apiQuery;
-		args.onComplete = dojo.hitch(this, '_onFetchComplete');
-		this.store = new starbug.data.ApiStore(args);
+		args.apiQuery = args.models+'  query:'+args.apiQuery;
+		this.store = new starbug.data.ObjectStore(args);
 		this.model = this.store.model;
 		this.models = this.store.models;
 	},
@@ -55,17 +53,14 @@ dojo.declare('starbug.grid.EnhancedGrid', dojox.grid.EnhancedGrid, {
 		var new_order = this.store.getValue(grid.getItem(toIndex), this.orderColumn);
 		for (var i in rows) {
 			i = rows[i];
-			this.store.setValue(this.store._arrayOfAllItems[i._0], this.orderColumn, new_order);
+			this.store.setValue(i, this.orderColumn, new_order);
 			new_order++;
 		}
 		this.store.save();
 	},
-	_onFetchComplete: function(items, req){
-		this.inherited(arguments);
-		if (!this.hasFetched) {
-			this.hasFetched = true;
-			this.setQuery();
-		}
+	doApplyCellEdit: function(inValue, inRowIndex, inAttrName){
+		this.store.setValue(this.getItem(inRowIndex), inAttrName, inValue);
+		this.onApplyCellEdit(inValue, inRowIndex, inAttrName);
 	},
 	_resize: function(changeSize, resultSize) {
 		var scrollPosition = dojo._docScroll().y;

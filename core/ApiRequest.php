@@ -20,6 +20,7 @@ class ApiRequest {
 	);
 	var $result = "";
 	var $whitelisting = false;
+	var $query = true;
 
 	/**
 	 * API Request constructor
@@ -28,6 +29,7 @@ class ApiRequest {
 	 * @param star $ops additional options, query paramaters if [object] is a model or group of models
 	 */
 	function __construct($what, $ops="") {
+		global $sb;
 		if (defined("ETC::API_WHITELIST")) {
 			if (in_array($_SERVER['REMOTE_ADDR'], explode(",", Etc::API_WHITELIST)) && empty($_SESSION[P("memberships")])) {
 				$this->whitelisting = true;
@@ -35,7 +37,9 @@ class ApiRequest {
 			}
 		}
 		$format = end(explode(".", $what));
-		$call = reset(explode("/", str_replace(".$format", "", $what)));
+		$parts = explode("/", str_replace(".$format", "", $what));
+		$call = reset($parts);
+		if (next($parts) == "get") $this->query = false;
 		$ops = starr::star($ops);
 		efault($ops['action'], 'read');
 		header("Content-Type: ".$this->types[$format]);
@@ -59,8 +63,7 @@ class ApiRequest {
 		} else $models = array($model);
 		if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) {
 			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : $sb->insert_id;
-			if (!empty($ops['where'])) $ops['where'] .= " && $model.id='$id'";
-			else $ops['where'] = $model.".id='$id'";
+			$ops['where'] = $model.".id='$id'";
 		}
 		if (!empty($ops['query'])) {
 			$query = base64_decode($ops['query']);
@@ -73,6 +76,8 @@ class ApiRequest {
 		$error = $f."errors";
 		if (empty($sb->errors[$model])) {
 			if (!empty($data)) {
+				$count = count($data);
+				header("Content-Range: items 0-$count/$count");
 				switch ($format) {
 					case "xml": return $this->getXML($model, $data); break;
 					case "json": return $this->getJSON("id", $data); break;
@@ -126,9 +131,11 @@ class ApiRequest {
 	 * @return string json output of records
 	 */
 	protected function getJSON($identifier, $data) {
-		$json = '{ "identifier" : "'.$identifier.'", "items" : [';
+		//$json = '{ "identifier" : "'.$identifier.'", "items" : [';
+		$json = ($this->query) ? '[' : '';
 		foreach($data as $row) $json .= json_encode($row).", ";
-		return rtrim($json, ", ")." ] }";
+		return rtrim($json, ", ").(($this->query) ? ']' : '');
+		//return rtrim($json, ", ")." ] }";
 	}
 
 	/**

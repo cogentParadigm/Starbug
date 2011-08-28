@@ -19,24 +19,26 @@ dojo.declare("starbug.data.ApiManager", null, {
 
 	register: function(store) {
 		this.stores.push(store);
-		this.pending.push(store);
+		if (!store.objectStore) this.pending.push(store);
 		if (this.hasFetched && (this.fetching.length == 0)) this.fetch();
+		if (dojo.config.notifier) this.subscribe(this.stores.length-1);
 		if (store.refreshInterval != 0) this.isLive = true;
 	},
 
 	fetch: function() {
-		this.fetching = this.pending;
-		this.pending = [];
-		this.hasFetched = true;
-		var args = {};
-		for (var i in this.fetching) args['calls['+i+']'] = this.fetching[i].query;
-		dojo.xhrPost({
-			url: WEBSITE_URL+'api/call.json',
-			handleAs: 'json',
-			content: args,
-			load: dojo.hitch(this, 'populate')
-		});
-		if ((this.socket == null) && (dojo.config.notifier)) this.subscribe(dojo.config.notifier);
+		if (this.pending.length > 0) {
+			this.fetching = this.pending;
+			this.pending = [];
+			this.hasFetched = true;
+			var args = {};
+			for (var i in this.fetching) args['calls['+i+']'] = this.fetching[i].query;
+			dojo.xhrPost({
+				url: WEBSITE_URL+'api/call.json',
+				handleAs: 'json',
+				content: args,
+				load: dojo.hitch(this, 'populate')
+			});
+		}
 	},
 
 	populate: function(data) {
@@ -46,45 +48,49 @@ dojo.declare("starbug.data.ApiManager", null, {
 		if (this.pending.length > 0) this.fetch();
 	},
 	
-	subscribe: function(notifier) {
-		this.notifier = notifier;
-		var calls = [];
-		for (var i in this.stores) {
-			if (this.stores[i].isDirty()) this.stores[i].save();
-			calls.push(this.stores[i].query);
-		}
-		var socketMessageHeader = '~m~49~m~'; 
-		var args, ws = typeof WebSocket != 'undefined';
-		var socketSessionId;
-		this.socket = dojox.socket(args = {
-			url: ws ? this.notifier+'/socket.io/websocket' : this.notifier+'/socket.io/xhr-polling',
-			headers: {'Content-Type':'application/x-www-urlencoded'},
-			transport: function (args, message) {
-				args.content = message;
-				dojo.xhrPost(args);
-			}
-		});
-		this.socket = dojox.socket.Reconnect(this.socket);
-		this.socket.manager = starbug.data.manager();
+	subscribe: function(idx) {
+		this.notifier = dojo.config.notifier;
+		var calls = {};
+		if (this.stores[idx].isDirty()) this.stores[idx].save();
+		calls[idx] = this.stores[idx].query;
 		var sub = dojo.toJson({"subscribe":calls});
-		this.socket.on("open", function(event) {
-			console.log('client connected');
-			this.send('~m~'+(sub.length)+'~m~'+sub);
-		}, false, false);
-		this.socket.on("message", function(event) {
-			var message = event.data.split('~m~');
-			message = message[message.length-1];
-			if (!socketSessionId){
-				socketSessionId = event.data;
-				args.url += '/' + socketSessionId;
-			}else if(message.substr(0, 3) == '~h~'){
-				console.log('heartbeat received');
-				this.send(event.data);
-			} else {
-				console.log(message);
-				this.manager.onUpdate(dojo.fromJson(message));
-			}
-		}, false, false);
+		if (this.socket == null) {
+			var socketMessageHeader = '~m~49~m~'; 
+			var args, ws = typeof WebSocket != 'undefined';
+			var socketSessionId;
+			this.socket = dojox.socket(args = {
+				url: ws ? this.notifier+'/socket.io/websocket' : this.notifier+'/socket.io/xhr-polling',
+				headers: {'Content-Type':'application/x-www-urlencoded'},
+				transport: function (args, message) {
+					args.content = message;
+					dojo.xhrPost(args);
+				}
+			});
+			this.socket = dojox.socket.Reconnect(this.socket);
+			this.socket.manager = starbug.data.manager();
+			this.socket.on("open", function(event) {
+				console.log('client connected');
+				this.send('~m~'+(sub.length)+'~m~'+sub);
+			}, false, false);
+			this.socket.on("message", function(event) {
+				var message = event.data.split('~m~');
+				message = message[message.length-1];
+				if (!socketSessionId){
+					socketSessionId = event.data;
+					args.url += '/' + socketSessionId;
+				}else if(message.substr(0, 3) == '~h~'){
+					console.log('heartbeat received');
+					this.send(event.data);
+				} else {
+					console.log(message);
+					this.manager.onUpdate(dojo.fromJson(message));
+				}
+			}, false, false);
+		} else {
+			this.socket.on("open", function(event) {
+				this.send('~m~'+(sub.length)+'~m~'+sub);
+			});
+		}
 	},
 
 	update: function(xhrData) {
@@ -110,8 +116,8 @@ dojo.declare("starbug.data.ApiManager", null, {
 			for (var i in data) {
 				if (this.stores[i].refreshInterval) this.stores[i].lastPoll.setTime(this.stores[i].lastAttempt.getTime()+this.stores[i].offset);
 				if (data[i] != false) { //UPDATES EXIST
-					for (var item in data[i].items) {
-						item = data[i].items[item];
+					for (var item in data[i]) {
+						item = data[i][item];
 						console.log(item);
 						if (item.action == "INSERT") {
 							var args = {};
@@ -121,19 +127,23 @@ dojo.declare("starbug.data.ApiManager", null, {
 								content: args,
 								handleAs: 'json',
 								load: dojo.hitch(this, function(data) {
-									this.stores[i].addItem(data[i].items[0]);
-									if (this.stores[i].onItem != null) this.stores[i].onItem(this.stores[i]._getItemByIdentity(item.object_id), this.stores[i]);
+									this.stores[i].addItem(data[i][0]);
 								})
 							});
 						} else if (item.action == "UPDATE") {
-							if (this.stores[i].isItem(this.stores[i]._getItemByIdentity(item.object_id))) {
-								this.stores[i].updateValue(this.stores[i]._getItemByIdentity(item.object_id), item.column_name, item.new_value);
-								if (this.stores[i].onChange != null) this.stores[i].onChange(this.stores[i]._getItemByIdentity(item.object_id), this.stores[i]);
-							}
+							this.stores[i].fetchItemByIdentity({
+								identity: item.object_id,
+								onItem: dojo.hitch(this, function(item) {
+									if (this.stores[i].isItem(item)) this.stores[i].updateValue(item, item.column_name, item.new_value);
+								})
+							});
 						} else if (item.action == "DELETE") {
-							var target = this.stores[i]._getItemByIdentity(item.object_id);
-							this.stores[i].removeItem(target);
-							if (this.stores[i].onDelete != null) this.stores[i].onDelete(i, this.stores[i]);
+							this.stores[i].fetchItemByIdentity({
+								identity: item.object_id,
+								onItem: dojo.hitch(this, function(item) {
+									this.stores[i].removeItem(item);
+								})
+							});
 						}
 					}
 					if (this.stores[i].refreshInterval) this.stores[i].reloads++;

@@ -9,6 +9,7 @@ dojo.declare("starbug.form.Dialog", [dijit.Dialog], {
 	action:'create',
 	updateUrl: '',
 	item_id: 0,
+	persist:false,
 	postCreate: function() {
 		this.inherited(arguments);
 		this.form = dojo.query('form', this.domNode)[0];
@@ -53,7 +54,7 @@ dojo.declare("starbug.form.Dialog", [dijit.Dialog], {
 			}
 		} else {
 			this.hide();
-			if (this.callback != null) this.callback(data.items, this);
+			if (this.callback != null) this.callback(data, this);
 		}
 	},
 	setValues: function(args) {
@@ -82,7 +83,7 @@ dojo.declare("starbug.form.Dialog", [dijit.Dialog], {
 					})
 				});
 			}
-		} else {
+		} else if (!this.persist) {
 			dojo.query('[name^="'+this.model+'"]', this.form).attr('value', '');
 			dojo.query('[name="'+this.model+'[id]"]').forEach(dojo.destroy);
 		}
