@@ -320,4 +320,28 @@ function success($model, $action) {
 	global $sb;
 	return $sb->success($model, $action);
 }
+/**
+	* getter/setter/caller for model properties/functions
+	*/
+function sb() {
+	global $sb;
+	$args = func_get_args();
+	$count = count($args);
+	if ($count == 0) return $sb;
+	else if ($count == 1) {
+		if ($sb->has($args[0])) return $sb->get($args[0]);
+		else if (property_exists($sb, $args[0])) return $sb->$args[0];
+	} else if ($count == 2) {
+		return $sb->get($args[0])->$args[1];
+	} else if ($count == 3) {
+		$model = $sb->get(array_shift($args));
+		$function = array_shift($args);
+		$_POST = $args[0];
+		return call_user_func_array(array($model, $function));
+	} else {
+		$model = $sb->get(array_shift($args));
+		$function = array_shift($args);
+		return call_user_func_array(array($model, $function), $args);
+	}
+}
 ?>

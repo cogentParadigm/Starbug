@@ -2,13 +2,21 @@
 	$browse = $_REQUEST['browse'];
 	if(!$browse) $browse = ".";
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>The Bridge</title>
 		<link rel="stylesheet" type="text/css" href="<?php echo uri("app/public/js/dojo/release/dojo/dijit/themes/claro/claro.css"); ?>"/>
 		<?php $sb->publish("header"); ?>
+		<script src="<?php echo uri("app/public/js/CodeMirror/lib/codemirror.js"); ?>" type="text/javascript"></script>
+		<script src="<?php echo uri("app/public/js/CodeMirror/mode/php/php.js"); ?>" type="text/javascript"></script>
+		<script src="<?php echo uri("app/public/js/CodeMirror/mode/javascript/javascript.js"); ?>" type="text/javascript"></script>
+		<script src="<?php echo uri("app/public/js/CodeMirror/mode/htmlmixed/htmlmixed.js"); ?>" type="text/javascript"></script>
+		<script src="<?php echo uri("app/public/js/CodeMirror/mode/css/css.js"); ?>" type="text/javascript"></script>
+		<script src="<?php echo uri("app/public/js/CodeMirror/mode/xml/xml.js"); ?>" type="text/javascript"></script>
 		<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/release/dojo/starbug/ide.js"); ?>"></script>
+		<link rel="stylesheet" type="text/css" href="<?php echo uri("app/public/js/CodeMirror/lib/codemirror.css"); ?>"/>
+		<link rel="stylesheet" type="text/css" href="<?php echo uri("app/public/js/CodeMirror/theme/default.css"); ?>"/>
 		<style type="text/css">
 			html,body{height:100%}
 			body{margin:0px;font-size:14px;color:#555;background:#fff}
@@ -19,13 +27,12 @@
 			tbody tr:hover td, tbody tr.highlight td{background: #efe}
 			.fileinfo{margin:0;text-align:right}
 			.alerts .error{width:auto}
-			.CodeMirror-line-numbers{padding:5px;background:#eee}
-			.CodeMirror-line-numbers div{font-size:10pt;line-height:1.2em;text-align:right}
+			.CodeMirror{font-size:12px}
 			.tundra .dijitTabCloseButton{cursor:pointer}
 			body.claro .dijitTabContainerTop-tabs .dijitTab{padding-top:0px}
 			body.claro .dijitAccordionContainer .dijitAccordionContainer-child{padding:0;margin:0}
+			.CodeMirror-scroll{height:auto;overflow:visible}
 		</style>
-		<script src="<?php echo uri("app/public/js/CodeMirror/js/codemirror.js"); ?>" type="text/javascript"></script>
 		<script type="text/javascript">
 			dojo.require("starbug.IDE.IDE");
 		</script>

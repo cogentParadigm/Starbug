@@ -25,11 +25,11 @@ if ($open) {
 
 		$type = ($qtype) ? $qtype : FindFileType($open);
 		echo "<select id=\"$id"."_type\" onchange=\"ide.setType('".str_replace("tab", "", $id)."');\" style=\"margin-right:5px;float:left\">";
-		echo "<option value=\"PHPHTMLMixedParser\"".(($type == "php") ? " selected=\"selected\"" : "").">PHP</option>";
-		echo "<option value=\"JSParser\"".(($type == "javascript") ? " selected=\"selected\"" : "").">JS</option>";
-		echo "<option value=\"CSSParser\"".(($type == "css") ? " selected=\"selected\"" : "").">CSS</option>";
-		echo "<option value=\"HTMLMixedParser\"".(($type == "html") ? " selected=\"selected\"" : "").">HTML</option>";
-		echo "<option value=\"SQLParser\"".(($type == "sql") ? " selected=\"selected\"" : "").">SQL</option>";
+		echo "<option value=\"htmlmixed\"".(($type == "php") ? " selected=\"selected\"" : "").">PHP</option>";
+		echo "<option value=\"javascript\"".(($type == "javascript") ? " selected=\"selected\"" : "").">JS</option>";
+		echo "<option value=\"css\"".(($type == "css") ? " selected=\"selected\"" : "").">CSS</option>";
+		echo "<option value=\"htmlmixed\"".(($type == "html") ? " selected=\"selected\"" : "").">HTML</option>";
+		echo "<option value=\"sql\"".(($type == "sql") ? " selected=\"selected\"" : "").">SQL</option>";
 		echo "</select><div class=\"left\" style=\"line-height:30px\">$open</div><div class=\"left alerts\" style=\"margin-left:5px\"></div><br/><br/><br/>";
 		echo "<textarea id=\"$id\" type=\"$type\">";
 		echo htmlentities(file_get_contents($open));

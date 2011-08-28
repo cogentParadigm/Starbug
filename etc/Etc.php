@@ -39,6 +39,10 @@ class Etc extends Host {
 	 * default page to load when request uri is /
 	 */
 	const DEFAULT_PATH = "home";
+	/**
+	 * default page style
+	 */
+	const DEFAULT_STYLE = "screen";
 
 	/* integration */
 	const BLUEPRINT_ENABLED = true;

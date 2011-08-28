@@ -138,7 +138,7 @@ class Request {
 	 */
 	public function missing() {
 		header("HTTP/1.1 404 Not Found");
-		$this->payload = array("path" => "missing", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/");
+		$this->payload = array("path" => "missing", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/", "style" => Etc::DEFAULT_STYLE);
 		$this->path="missing";
 		$this->uri = array("missing");
 	}
@@ -148,7 +148,7 @@ class Request {
 	 */
 	public function forbidden() {
 		header("HTTP/1.1 403 Forbidden");
-		$this->payload = array("path" => "forbidden", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/");
+		$this->payload = array("path" => "forbidden", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/", "style" => Etc::DEFAULT_STYLE);
 		$this->path = "forbidden";
 		$this->uri = array("forbidden");
 	}
