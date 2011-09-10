@@ -21,6 +21,8 @@ class ApiRequest {
 	var $result = "";
 	var $whitelisting = false;
 	var $query = true;
+	var $headers = true;
+	var $model;
 
 	/**
 	 * API Request constructor
@@ -28,7 +30,7 @@ class ApiRequest {
 	 * 										 where object is an API function or set of models to query, and format is the desired output format (json, jsonp, xml)
 	 * @param star $ops additional options, query paramaters if [object] is a model or group of models
 	 */
-	function __construct($what, $ops="") {
+	function __construct($what, $ops="", $headers=true) {
 		global $sb;
 		if (defined("ETC::API_WHITELIST")) {
 			if (in_array($_SERVER['REMOTE_ADDR'], explode(",", Etc::API_WHITELIST)) && empty($_SESSION[P("memberships")])) {
@@ -36,13 +38,14 @@ class ApiRequest {
 				$_SESSION[P("memberships")] = 1;
 			}
 		}
+		$this->headers = $headers;
 		$format = end(explode(".", $what));
 		$parts = explode("/", str_replace(".$format", "", $what));
 		$call = reset($parts);
 		if (next($parts) == "get") $this->query = false;
 		$ops = starr::star($ops);
 		efault($ops['action'], 'read');
-		header("Content-Type: ".$this->types[$format]);
+		if ($this->headers) header("Content-Type: ".$this->types[$format]);
 		$this->result = call_user_func(array($this, $call), $call, $format, $ops);
 		if ($this->whitelisting) $_SESSION[P("memberships")] = 0;
 	}
@@ -61,6 +64,7 @@ class ApiRequest {
 			$models = explode(".", $model);
 			$model = $models[0];
 		} else $models = array($model);
+		$this->model = $model;
 		if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) {
 			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : $sb->insert_id;
 			$ops['where'] = $model.".id='$id'";
@@ -131,11 +135,9 @@ class ApiRequest {
 	 * @return string json output of records
 	 */
 	protected function getJSON($identifier, $data) {
-		//$json = '{ "identifier" : "'.$identifier.'", "items" : [';
 		$json = ($this->query) ? '[' : '';
-		foreach($data as $row) $json .= json_encode($row).", ";
+		foreach($data as $row) $json .= json_encode(sb($this->model, "filter", $row)).", ";
 		return rtrim($json, ", ").(($this->query) ? ']' : '');
-		//return rtrim($json, ", ")." ] }";
 	}
 
 	/**

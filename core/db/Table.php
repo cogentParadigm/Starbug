@@ -125,6 +125,10 @@ class Table {
 		$sb->grant($this->type, $_POST[$this->type]);
 	}
 
+	function filter($data) {
+		return $data;
+	}
+
 	function json($args="", $froms="", $deep="auto") {
 		header("Content-Type: application/json");
 		$data = $this->query($args, $froms, $deep);

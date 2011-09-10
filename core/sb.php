@@ -344,7 +344,7 @@ class sb {
 					$result = array();
 					foreach ($subs as $idx => $call) {
 						list($models, $query) = explode("  ", $call, 2);
-						$request = new ApiRequest($models.".json", $query."  log:log.created>='$pre_store_time'  select:log.*");
+						$request = new ApiRequest($models.".json", $query."  log:log.created>='$pre_store_time'  select:log.*", false);
 						if (empty($request->result)) $result[] = '"'.$idx.'":[]';
 						else $result[] = '"'.$idx.'": '.$request->result;
 					}
@@ -382,7 +382,7 @@ class sb {
 	function post_act($key, $value) {
 		if ($object = $this->get($key)) {
 			$permits = isset($_POST[$key]['id']) ? $this->query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : $this->query($key, "action:$value  priv_type:table");
-			if (($this->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value();
+			if (($this->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value($_POST[$key]);
 			else $errors = array("global" => array("forbidden" => "You do not have sufficient permission to complete your request."));
 			if (!empty($errors)) $this->errors = array_merge_recursive($this->errors, array($key => $errors));
 			if (!empty($this->errors[$key])) {

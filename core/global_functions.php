@@ -63,6 +63,7 @@ function uri($path="", $flags="") {
  * @param string $module the module
  */
 function import($util, $module="util") {
+	global $sb;
 	$sb->import($module."/".$util);
 }
 /**
@@ -80,8 +81,23 @@ function query($froms, $args="", $mine=true) {
  */
 function raw_query($query) {
 	global $sb;
-	if (strtolower(substr(trim($query), 0, 6)) == "select") return $sb->db->query($query);
+	$start = strtolower(substr(trim($query), 0, 6));
+	if ($start == "select" || $start == "descri") return $sb->db->query($query);
 	else return $sb->db->exec($query);
+}
+/**
+ * get single records or columns
+ * @param string $model the name of the model
+ * @param string $id the id of the record
+ * @param string $column optional column name
+ * @ingroup core
+ */
+function get() {
+	$args = func_get_args();
+	$count = count($args);
+	if ($count == 1) return query($args[0]);
+	else if ($count == 2) return query($args[0], "where:id='$args[1]'  limit:1");
+	else if ($count == 3) return reset(query($args[0], "select:$args[2]  where:id='$args[1]'  limit:1"));
 }
 /**
  * @copydoc sb::store
@@ -321,7 +337,7 @@ function success($model, $action) {
 	return $sb->success($model, $action);
 }
 /**
-	* getter/setter/caller for model properties/functions
+	* getter/caller for model properties/functions
 	*/
 function sb() {
 	global $sb;
@@ -333,11 +349,6 @@ function sb() {
 		else if (property_exists($sb, $args[0])) return $sb->$args[0];
 	} else if ($count == 2) {
 		return $sb->get($args[0])->$args[1];
-	} else if ($count == 3) {
-		$model = $sb->get(array_shift($args));
-		$function = array_shift($args);
-		$_POST = $args[0];
-		return call_user_func_array(array($model, $function));
 	} else {
 		$model = $sb->get(array_shift($args));
 		$function = array_shift($args);
