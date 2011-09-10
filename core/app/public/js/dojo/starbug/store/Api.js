@@ -61,7 +61,7 @@ dojo.declare("starbug.store.Api", null, {
 		//		Additional metadata for storing the data.
 		//	returns: Number
 		var data = {};
-		for (var k in object) data['requests['+k+']'] = object[k];
+		for (var k in object) data[this.model+'['+k+']'] = object[k];
 		options = options || {};
 		data['action['+this.model+']'] = this.action;
 		return dojo.xhrPost({
