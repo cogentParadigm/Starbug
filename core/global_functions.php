@@ -355,4 +355,25 @@ function sb() {
 		return call_user_func_array(array($model, $function), $args);
 	}
 }
+/**
+	* assign vars to the global renderer
+	* @param string $key the variable name
+	* @param string $value the value to assign
+	*/
+function assign($key, $value) {
+	global $sb;
+	$sb->import("core/lib/Renderer");
+	global $renderer;
+	$renderer->assign($key, $value);
+}
+/**
+	* render a template
+	* @param string $path the path, relative to the request prefix and without the file extension
+	*/
+function render($path) {
+	global $sb;
+	$sb->import("core/lib/Renderer");
+	global $renderer;
+	$renderer->render($path);
+}
 ?>

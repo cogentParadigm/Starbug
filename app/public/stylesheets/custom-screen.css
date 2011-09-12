@@ -2,14 +2,18 @@
 /********************* structural elements *********************/
 body{background:url('../../../core/app/public/images/sbfade.png') repeat-x #efede8;color:#666}
 #shell{position:relative}
-#subhead{display:block;margin:5px 0 15px 5px;font-weight:bold;color:#DDD}
+#subhead{display:block;margin:0 0 13px 5px;font-weight:bold;color:#DDD}
 #main{margin-bottom:10px}
 #footer, #footer li{list-style-type:none;margin:0 0 30px 0;float:left;padding:0 0 0 8px}
 label{display:block}
 
+/********************* text *********************/
+h1, body.claro h1{margin:10px 0 10px 0;font-size:3em;line-height:1}
+
 /********************* nav *********************/
 .hnav{list-style-type:none;width:100%;height:40px;margin:0;padding:0}
 .hnav li{float:left;padding:0;margin-right:5px}
+.hnav li a{display:block;float:left}
 .vnav{list-style-type:none}
 .vnav li{padding:0}
 .vnav li a{display:block;padding:5px;border-top:2px solid #494;font-weight:bold}
@@ -20,12 +24,13 @@ label{display:block}
 .green{color:#494}
 .red{color:#C00}
 span.error{display:block;width:300px;padding:5px}
+.field .note{float:left;padding:8px}
 
 /********************* links *********************/
 #nav a{padding:5px 10px;font-weight:bold}
 #nav a.active, #nav a:hover{background:#494;color:#FFF}
 a{color:#494;text-decoration:none}
-h1, h1 a, h1 a:hover{color:#efede8;text-decoration:none;margin:10px 0 0 0}
+h1, h1 a, h1 a:hover{color:#efede8;text-decoration:none}
 a:hover{color:#494;text-decoration:underline}
 input.link{background:none;border:none;color:#494;position:relative;top:-1px;cursor:pointer}
 input.link:hover{text-decoration:underline}

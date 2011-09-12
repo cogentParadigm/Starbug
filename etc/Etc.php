@@ -34,7 +34,7 @@ class Etc extends Host {
 	/**
 	 * default template used for missing and forbidden pages
 	 */
-	const DEFAULT_TEMPLATE = "templates/View";
+	const DEFAULT_TEMPLATE = "View";
 	/**
 	 * default page to load when request uri is /
 	 */

@@ -11,13 +11,12 @@
  * @ingroup core
  */
 class version {
-	const starbug = "0.9.2";
+	const starbug = "0.9.3a";
 
 	const phpmailer = "5.1";
-	const dojo = "1.5.0";
+	const dojo = "1.6.1";
 	const tinymce = "3.3.9.2";
 	const phpthumb = "1.7.9";
-	const simpletest = "1.1 alpha";
 	const getid3 = "1.7.9";
 }
 ?>

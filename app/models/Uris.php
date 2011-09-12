@@ -3,7 +3,7 @@ class Uris extends UrisModel {
 
 	function create() {
 		$uris = $_POST['uris'];
-		$uris['template'] = "templates/$uris[template]";
+		$uris['template'] = "$uris[template]";
 		$this->set_check_path($uris, file_get_contents("$uris[prefix]$uris[template]"));
 		return $this->store($uris);
 	}
@@ -12,7 +12,7 @@ class Uris extends UrisModel {
 		global $sb;
 		$uris = $_POST['uris'];
 		unset($uris['path']);
-		if (!empty($uris['template'])) $uris['template'] = "templates/$uris[template]";
+		if (!empty($uris['template'])) $uris['template'] = "$uris[template]";
 		$row = $this->query("where:id='$uris[id]'  limit:1");
 		//UNSET OLD TEMPLATE OPTIONS
 		$this->remove_template_options($uris, file_get_contents("$row[prefix]$row[template].php"));

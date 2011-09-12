@@ -125,11 +125,11 @@ class Request {
 	 */
 	public function execute() {
 		global $sb;
+		global $request;
 		$the_postback = $this->path;
 		$sb->check_post();
 		$this->locate();
-		if ((!empty($_GET['x'])) || ($this->format == "xhr")) include($this->file);
-		else include($this->payload['prefix'].$this->payload['template'].".php");
+		include($this->payload['prefix']."templates/".$this->payload['template'].".php");
 		$_SESSION[P('postback')] = $the_postback;
 	}
 

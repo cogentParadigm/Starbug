@@ -1,5 +1,5 @@
 <?php
 	include("app/views/header.php");
-	include($this->file);
+	include($request->file);
 	include("app/views/footer.php");
 ?>

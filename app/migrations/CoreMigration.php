@@ -86,23 +86,27 @@ class CoreMigration extends Migration {
 			"body  type:text"
 		);
 		// URIS
-		$this->uri("sb-admin", "template:templates/Login  title:Bridge  prefix:core/app/views/");
-		$this->uri("sb", "template:templates/Starbug  prefix:core/app/views/  collective:1"); //parent:sb-admin
-		$this->uri("sb/generate", "template:sb/generate  prefix:core/app/views/  collective:1"); //parent:sb-admin
-		$this->uri("api", "template:Api  prefix:core/app/views/  check_path:0");
-		$this->uri("documentation", "template:templates/Documentation  prefix:core/app/views/  collective:1  check_path:0");
+		$this->uri("sb-admin", "template:Login  title:Bridge  prefix:core/app/views/");
+		$this->uri("sb", "template:Starbug  prefix:core/app/views/  collective:1"); //parent:sb-admin
+		$this->uri("sb/generate", "template:../sb/generate  prefix:core/app/views/  collective:1"); //parent:sb-admin
+		$this->uri("api", "template:../Api  prefix:core/app/views/  check_path:0");
+		$this->uri("documentation", "template:Documentation  prefix:core/app/views/  collective:1  check_path:0");
 		//HOME PAGE
-		$this->uri(Etc::DEFAULT_PATH, "template:".Etc::DEFAULT_TEMPLATE);
+		$this->uri(Etc::DEFAULT_PATH);
 		//404 PAGE
-		$this->uri("missing", "template:".Etc::DEFAULT_TEMPLATE);
+		$this->uri("missing");
 		//403 PAGE
-		$this->uri("forbidden", "template:".Etc::DEFAULT_TEMPLATE);
+		$this->uri("forbidden");
+		//LOGIN/LOGOUT PAGES
+		$this->uri("login");
+		$this->uri("logout");
+		$this->uri("forgot-password");
 		//Rogue IDE
-		$this->uri("rogue", "title:Rogue IDE  template:templates/Blank  prefix:core/app/views/  collective:0");
+		$this->uri("rogue", "title:Rogue IDE  template:Blank  prefix:core/app/views/  collective:0");
 		//Admin
-		$this->uri("admin", "title:Admin  template:templates/Admin  collective:4  style:admin");
+		$this->uri("admin", "title:Admin  template:Admin  collective:4  style:admin");
 		//Uploader - default permission only allows root to upload
-		$this->uri("upload", "prefix:core/app/views/  template:templates/Blank  collective:1");
+		$this->uri("upload", "prefix:core/app/views/  template:Blank  collective:1");
 
 		// URI PERMITS
 		$this->permit("uris::read", "collective:global");

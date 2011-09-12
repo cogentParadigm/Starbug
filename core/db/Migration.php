@@ -38,7 +38,7 @@ class Migration {
 	/**
 	 * @copydoc Schemer::uri
 	 */
-	function uri($path, $args) {
+	function uri($path, $args="") {
 		global $schemer;
 		$schemer->uri($path, $args);
 	}

@@ -13,6 +13,10 @@
 			<span id="subhead"><?php echo Etc::TAGLINE; ?></span>
 			<ul id="nav" class="hnav">
 				<li><a class="active" href="">Home</a></li>
-				<li><a href="">About</a></li>
+				<?php if (logged_in()) { ?>
+					<li><a href="<?php echo uri("logout"); ?>">Log Out</a></li>
+				<?php } else { ?>
+					<li><a href="<?php echo uri("login"); ?>">Log In</a></li>
+				<?php } ?>
 			</ul>
 			<div id="main" class="span-24">

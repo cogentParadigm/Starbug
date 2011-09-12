@@ -444,7 +444,7 @@ class Schemer {
 		$args = starr::star($args);
 		$args['path'] = $path;
 		efault($args['title'], ucwords(str_replace("-", " ", $path)));
-		efault($args['template'], "templates/View");
+		efault($args['template'], "View");
 		efault($args['collective'], 0);
 		efault($args['status'], array_sum($statuses));
 		$this->uris[$path] = $args;
