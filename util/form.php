@@ -248,7 +248,6 @@ class form {
 		return $select.$this->form_control("select", $ops);
 	}
 
-	//DEPRECATED: use text field with dojoType:dijit.form.DateTextBox
 	function date_select($ops) {
 		global $sb;
 		$sb->import("util/datepicker");
@@ -267,8 +266,11 @@ class form {
 		$month_options = array("Month" => "-1", "January" => "1", "February" => "2", "March" => "3", "April" => "4", "May" => "5", "June" => "6", "July" => "7", "August" => "8", "September" => "9", "October" => "10", "November" => "11", "December" => "12");
 		$day_options = array("Day" => "-1");
 		for($i=1;$i<32;$i++) $day_options["$i"] = $i;		
-		$year = date("Y");
-		$year_options = array("Year" => "-1", $year => $year, (((int) $year)+1) => (((int) $year)+1));
+		$start_year = ($ops['start_year']) ? $ops['start_year'] : date("Y");
+		$end_year = ($ops['end_year']) ? $ops['end_year'] : $start_year+2;
+		$year_options = array("Year" => "-1");
+		if ($start_year < $end_year) for ($i=$start_year;$i<=$end_year;$i++) $year_options[$i] = $i;
+		else for ($i=$start_year;$i>=$end_year;$i--) $year_options[$i] = $i;
 		//BUILD SELECT BOXES
 		$select .= $this->select($name."[month]  id:".$ops['id']."-mm  nolabel:", $month_options);
 		$select .= $this->select($name."[day]  id:".$ops['id']."-dd  nolabel:", $day_options);
