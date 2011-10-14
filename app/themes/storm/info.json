@@ -1,0 +1,16 @@
+{
+	//basic info
+	"name":"Storm",
+	"description":"Administrative theme for Starbug PHP",
+	//content regions
+	"regions": [
+		"header", {"main":["content","sidebar"]}
+	],
+	//menus
+	"menus": ["primary", "seconday", "top", "footer"],
+	//stylesheets
+	"styles": {
+		"screen" : ["dojo.css"],
+		"plugins" : ["buttons", "rounding"]
+	}
+}

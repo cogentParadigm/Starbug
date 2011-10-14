@@ -1,5 +1,5 @@
 	<? open_form("model:users  action:login  url:".$url, "id:login_form"); ?>
 		<div class="field"><? text("username"); ?></div>
 		<div class="field"><? password("password  class:text"); ?></div>
-		<div class="field"><? button("type:submit  content:Log In"); ?><div class="note"><a href="<?= uri("forgot-password"); ?>">Forgot Your Password?</a></div></div>
+		<div class="field"><? button("Log In", "type:submit"); ?><div class="note"><a href="<?= uri("forgot-password"); ?>">Forgot Your Password?</a></div></div>
 	<? close_form(); ?>

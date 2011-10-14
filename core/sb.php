@@ -72,6 +72,26 @@ class sb {
 	}
 
 	/**
+	 * get or set config variables from json files in etc/
+	 * @param string $key the file name and optional sub indices. for example, 'themes' or 'fixtures.base'
+	 */
+	 function config($key, $value=null) {
+		 $parts = explode(".", $key);
+		 $key = array_shift($parts);
+		 $file = json_decode(file_get_contents(BASE_DIR."/etc/$key.json"), true);
+		 $config = &$file;
+		 while (!empty($parts)) {
+			 $k = array_shift($parts);
+			 $config = &$config[$k];
+		 }
+		 if ($value != null) {
+			 $config = $value;
+			 file_put_contents(BASE_DIR."/etc/$key.json", json_encode($file));
+		 }
+		 return $config;
+	 }
+
+	/**
 	 * since you can't subscribe the handle 'include', use sb::load
 	 * @param string $what 'jsforms' works for either 'jsforms.php' or 'jsforms/jsforms.php'
 	 */
@@ -85,7 +105,7 @@ class sb {
 	}
 
 	/**
-	 * publish a topic to any subscribers
+	 * publish a topic to any subscribers or hooks
 	 * @param string $topic the topic name you would like to publish
 	 * @param mixed $args any additional parameters will be passed in an array to the subscriber
 	 */
@@ -98,7 +118,8 @@ class sb {
 			$tags = array(array("tag" => $tags));
 		} else $tags = (isset($request->tags)) ? $request->tags : array(array("tag" => "global"));
 		foreach ($tags as $tag) {
-			$subscriptions = (file_exists(BASE_DIR."/etc/hooks/$tag[tag].$topic")) ? unserialize(file_get_contents(BASE_DIR."/etc/hooks/$tag[tag].$topic")) : array();
+			foreach (array(BASE_DIR."/core/app/hooks/$tag[tag].$topic.php", BASE_DIR."/app/hooks/$tag[tag].$topic.php") as $hook) if (file_exists($hook)) include($hook);
+			$subscriptions = (file_exists(BASE_DIR."/etc/hooks/$tag[tag].$topic.json")) ? json_decode(file_get_contents(BASE_DIR."/etc/hooks/$tag[tag].$topic"), true) : array();
 			foreach ($subscriptions as $priority) {
 				foreach($priority as $handle) {
 					if (false !== strpos($handle['handle'], "::")) $handle['handle'] = explode("::", $handle['handle']);

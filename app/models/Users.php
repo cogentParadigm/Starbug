@@ -7,21 +7,19 @@ class Users extends UsersModel {
 	/**
 	 * A function for an administrator to create and update users
 	 */
-	function create() {
+	function create($user) {
 		global $groups;
-		$user = $_POST['users'];
+		efault($user['groups'], array());
+		efault($user['collective'], 2);
 		if (!in_array($user['collective'], $user['groups'])) $user['groups'][] = $user['collective'];
-		$list = array_sum($user['groups']);
-		$user['memberships'] = $groups['user'] + $list;
+		if (!in_array($groups['user'], $user['groups'])) $user['groups'][] = $groups['user'];
+		$user['memberships'] = array_sum($user['groups']);
 		unset($user['groups']);
 		if (empty($user['id'])) $user['password'] = mt_rand(1000000,9999999);
-		$errors = $this->store($user);
-		if (empty($errors)) {
-			if (empty($user['id'])) {
-				$uid = $this->insert_id;
-				$this->store("id:$uid  owner:$uid");
-				$result = exec("sb email account_created $uid $user[password]");
-			}
+		$this->store($user);
+		if ((!errors()) && (empty($user['id']))) {
+			$uid = $this->insert_id;
+			$result = exec("sb email account_created $uid $user[password]");
 		}
 	}
 	/**

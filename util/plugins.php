@@ -28,23 +28,23 @@ class plugins {
 		}
 		return $plugs;
 	}
-	function load($plugin, $topic, $tag="global", $priority=10) {
+	function load($plugin, $topic, $tag="global") {
 		global $sb;
-		$sb->subscribe("plugins", "global", $priority, "plugins::info", end(explode("/", $plugin)));
-		$sb->subscribe($topic, $tag, $priority, "sb::load", $plugin);
+		$sb->subscribe("plugins", "plugins::info", end(explode("/", $plugin)), $tag);
+		$sb->subscribe($topic, "sb::load", $plugin, $tag);
 	}
-	function unload($plugin, $topic, $tag="global", $priority=10) {
+	function unload($plugin, $topic, $tag="global") {
 		global $sb;
-		$sb->unsubscribe($topic, $tag, $priority, "sb::load", $plugin);
-		$sb->unsubscribe("plugins", "global", $priority, "plugins::info", end(explode("/", $plugin)));
+		$sb->unsubscribe($topic, "sb::load", $plugin, $tag);
+		$sb->unsubscribe("plugins", "plugins::info", end(explode("/", $plugin)), $tag);
 	}
-	function activate($plugin, $tag, $priority=10) {
+	function activate($plugin, $tag="global") {
 		global $sb;
-		$sb->subscribe("plugins", $tag, $priority, "return_it", $plugin);
+		$sb->subscribe("plugins", "return_it", $plugin, $tag);
 	}
-	function deactivate($plugin, $tag, $priority=10) {
+	function deactivate($plugin, $tag="global") {
 		global $sb;
-		$sb->unsubscribe("plugins", $tag, $priority, "return_it", $plugin);
+		$sb->unsubscribe("plugins", "return_it", $plugin, $tag);
 	}
 }
 ?>

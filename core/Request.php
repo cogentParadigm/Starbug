@@ -36,7 +36,7 @@ class Request {
 	/**
 	 * @var string the stylesheet to use
 	 */
-	var $style;
+	var $theme;
 	/**
 	 * @var string the file path of the view
 	 */
@@ -117,7 +117,8 @@ class Request {
 		$this->tags = array_merge($this->tags, $sb->query("uris,tags", "select:DISTINCT tag, raw_tag  where:uris.id='".$this->payload['id']."'", true));
 		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
 		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
-		$this->style = $this->payload['style'];
+		$this->theme = $this->payload['theme'];
+		efault($this->theme, Etc::THEME);
 	}
 
 	/**
@@ -129,7 +130,8 @@ class Request {
 		$the_postback = $this->path;
 		$sb->check_post();
 		$this->locate();
-		include($this->payload['prefix']."templates/".$this->payload['template'].".php");
+		render("html");
+		//include($this->payload['prefix']."templates/".$this->payload['template'].".php");
 		$_SESSION[P('postback')] = $the_postback;
 	}
 

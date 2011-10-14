@@ -4,7 +4,7 @@ body{background:url('../../../core/app/public/images/sbfade.png') repeat-x #efed
 #shell{position:relative}
 #subhead{display:block;margin:0 0 13px 5px;font-weight:bold;color:#DDD}
 #main{margin-bottom:10px}
-#footer, #footer li{list-style-type:none;margin:0 0 30px 0;float:left;padding:0 0 0 8px}
+#footer li{list-style-type:none;margin:0 0 30px 0;float:left;padding:0 0 0 8px}
 label{display:block}
 
 /********************* text *********************/

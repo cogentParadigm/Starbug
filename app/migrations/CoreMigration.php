@@ -46,7 +46,7 @@ class CoreMigration extends Migration {
 			"sort_order  type:int  default:0",
 			"check_path  type:bool  default:1",
 			"prefix  type:string  length:128  default:app/views/",
-			"style  type:string  length:128  default:screen",
+			"theme  type:string  length:128  default:",
 			"options  type:text"
 		);
 		$this->table("tags",
@@ -104,7 +104,7 @@ class CoreMigration extends Migration {
 		//Rogue IDE
 		$this->uri("rogue", "title:Rogue IDE  template:Blank  prefix:core/app/views/  collective:0");
 		//Admin
-		$this->uri("admin", "title:Admin  template:Admin  collective:4  style:admin");
+		$this->uri("admin", "title:Admin  template:Admin  collective:4  theme:storm");
 		//Uploader - default permission only allows root to upload
 		$this->uri("upload", "prefix:core/app/views/  template:Blank  collective:1");
 

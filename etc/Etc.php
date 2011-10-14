@@ -21,16 +21,7 @@ class Etc extends Host {
 	 * a tagline or short description for your application
 	 */
 	const TAGLINE = "Fresh XHTML and CSS, just like mom used to serve!";
-
-	/**
-	 * CSS directory
-	 */
-	const STYLESHEET_DIR = "app/public/stylesheets/";
-	/**
-	 * image directory
-	 */
-	const IMG_DIR = "app/public/images/";
-
+	
 	/**
 	 * default template used for missing and forbidden pages
 	 */
@@ -43,6 +34,8 @@ class Etc extends Host {
 	 * default page style
 	 */
 	const DEFAULT_STYLE = "screen";
+	
+	const THEME = "starbug-1";
 
 	/* integration */
 	const BLUEPRINT_ENABLED = true;

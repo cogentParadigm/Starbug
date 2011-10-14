@@ -16,7 +16,7 @@ class Renderer {
 	/**
 	 * @var array assigned variables
 	 */
-	var $vars = array();
+	var $vars = array("global" => array());
 	/**
 	 * @var string view directory
 	 */
@@ -25,7 +25,7 @@ class Renderer {
 	 * @var string relative path from the view directory without file extension
 	 */	
 	var $path = "";
-
+	var $active_scope = "global";
 	/**
 	 * constructor. initializes variables
 	 * @param string $prefix the view directory
@@ -36,27 +36,54 @@ class Renderer {
 		$this->path = $path;
 	}
 	/**
+	 * get full path
+	 * @param string $path variable name
+	 */
+	function get_path($path, $scope) {
+		if ($scope == "view") return (empty($path)) ? request("file") : $this->prefix.$path.".php";
+		$path = "templates/".$path.".php";
+		if (file_exists("app/themes/".request("theme")."/".$path)) return "app/themes/".request("theme")."/".$path;
+		else if (file_exists($this->prefix.$path)) return $this->prefix.$path;
+		else return "core/".$this->prefix.$path;
+	}
+	/**
 	 * assign a variable
 	 * @param string $key variable name
 	 * @param string $value variable value
 	 */
-	function assign($key, $value) {
-		$this->vars[$key] = $value;
+	function assign($key, $value, $scope="global") {
+		efault($this->vars[$scope], array());
+		$this->vars[$scope][$key] = $value;
 	}
 	/**
 	 * render a template
 	 * @param string $path relative path to the template from the view directory without file extension
 	 */
-	function render($path="") {
+	function render($path="", $scope) {
 		global $sb;
 		global $request;
-		//$this->assign("this", $request);
 		if (!empty($path)) $this->path = $path;
-		extract($this->vars);
-		$output = file_get_contents($this->prefix."templates/".$this->path.".php");
-		$output = str_replace(array("<? ", "<?="), array("<?php ", "<?php echo"), $output);
+		extract($this->vars["global"]);
+		if (empty($scope)) $scope = $this->active_scope;
+		else $this->active_scope = $scope;
+		if (($scope != "global") && !empty($this->vars[$scope])) extract($this->vars[$scope]);
+		$output = file_get_contents($this->get_path($path, $scope));
+		$output = str_replace(array("<? ", "<?\n", "<?="), array("<?php ", "<?php\n", "<?php echo"), $output);
 		eval("?>".$output);
+		$this->active_scope = "global";
 	}
+	
+	/**
+	 * capture a rendered template
+	 * @param string $path relative path to the template from the view directory without file extension
+	 */
+	function capture($path="", $scope) {
+		ob_start();
+		$this->render($path, $scope);
+		$output = ob_get_contents();
+		ob_end_clean();
+		return $output;
+	}	
 
 }
 global $renderer;

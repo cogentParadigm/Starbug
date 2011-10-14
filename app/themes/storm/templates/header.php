@@ -1,0 +1,12 @@
+<div id="top-right">
+	<a href="<?php echo uri("logout"); ?>" class="small right blue button" style="margin:2px 0 0 5px"><span>Logout</span></a>
+	<a href="#"><?php echo userinfo("username"); ?></a>
+</div>
+<h1><a href="./"><span><?php echo Etc::WEBSITE_NAME; ?></span></a></h1>
+<span id="subhead"><?php echo Etc::TAGLINE; ?></span>
+<ul id="tabs" class="hnav">
+		<li><a class="button" href="<?php echo uri("profile"); ?>"><span>Profile</span></a></li>
+</ul>
+<ul id="nav" class="hnav">
+	<li class="first"><a href="<?php echo uri("admin"); ?>">Dashboard</a></li>
+</ul>

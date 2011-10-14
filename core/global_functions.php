@@ -50,11 +50,23 @@ function P($var) {return Etc::PREFIX.$var;}
  * @return string the absolute path
  */
 function uri($path="", $flags="") {
-	if ($flags == "s") $prefix = "https://";
-	else if ($flags == "u") $prefix = "http://";
-	else if ($flags == "f") $prefix = "";
- 	else $prefix = $_SERVER['HTTPS'] ? "https://" : "http://";
-	return $prefix.Etc::WEBSITE_URL.$path;
+	if ($flags == "i") $suffix = "app/public/images/"; //images
+	else if ($flags == "j") $suffix = "app/public/js/"; //javascript
+	else if ($flags == "c") $suffix = "app/public/stylesheets/"; //css
+	else $suffix = "";
+	if (!empty($suffix) || empty($flags)) $prefix = "//"; //auto
+	else if ($flags == "s") $prefix = "https://"; //secure
+	else if ($flags == "u") $prefix = "http://"; //unsecure
+	else if ($flags == "f") $prefix = ""; //friendly
+	return $prefix.Etc::WEBSITE_URL.$suffix.$path;
+}
+/**
+ * @copydoc sb::config
+ * @ingroup core
+ */
+function config($key, $value=null) {
+	global $sb;
+	return $sb->config($key, $value);
 }
 /**
  * utility import function
@@ -203,30 +215,7 @@ function open_form($options, $atts="") {
 	$open = "";
 	$atts = starr::star($atts);
 	foreach($atts as $k => $v) $open .= $k.'="'.$v.'" ';
-	echo $global_form->open(rtrim($open, " "));
-}
-/**
- * creates an HTML tag from a star (see star function)
- * @param string $tag the tag string eg. 'a href:/shop  style:font-weight:bold  content:Shop'
- * @param bool $self if true, will be treated as self closing tag '/>'
- */
-function tag($tag, $self=false) {
-	if (is_array($tag)) $name = array_shift($tag);
-	else {
-		$tag = explode("  ", $tag, 2);
-		$name = $tag[0];
-		if (count($tag) > 1) $tag = starr::star($parts[1]);
-		else $tag = array();
-	}
-	$echo = $tag['echo']; unset($tag['echo']);
-	efault($tag['content'], '');
-	$content = $tag['content']; 
-	unset($tag['content']);
-	$str = "";
-	foreach($tag as $key => $value) $str .= " $key=\"$value\"";
-	$return = ($self) ? "<$name$str />" : "<$name$str>$content</$name>";
-	if ('false' !== $echo) echo $return;
-	return $return;
+	$global_form->open(rtrim($open, " "));
 }
 /**
  * @copydoc starr::star
@@ -356,6 +345,17 @@ function sb() {
 	}
 }
 /**
+ * request object access
+ */
+function request() {
+	global $request;
+	$args = func_get_args();
+	$count = count($args);
+	if ($count == 0) return $request;
+	else if (($count == 1) && property_exists($request, $args[0])) return $request->$args[0];
+	else return false;
+}
+/**
 	* assign vars to the global renderer
 	* @param string $key the variable name
 	* @param string $value the value to assign
@@ -370,10 +370,50 @@ function assign($key, $value) {
 	* render a template
 	* @param string $path the path, relative to the request prefix and without the file extension
 	*/
-function render($path) {
+function render($path, $scope="") {
 	global $sb;
 	$sb->import("core/lib/Renderer");
 	global $renderer;
-	$renderer->render($path);
+	$renderer->render($path, $scope);
+}
+/**
+	* capture a rendered template
+	* @param string $path the path, relative to the request prefix and without the file extension
+	*/
+function capture($path, $scope="") {
+	global $sb;
+	$sb->import("core/lib/Renderer");
+	global $renderer;
+	return $renderer->capture($path, $scope);
+}
+/**
+	* render a region
+	* @param string $region the region to render
+	*/
+function render_region($region) {
+	if (is_array($region)) foreach($region as $key => $value) render_region($key);
+	else {
+		assign("region", $region);
+		render("region");
+	}
+}
+/**
+	* render a view
+	* @param string $view the view to render
+	*/
+function render_view($view="") {
+	render($view, "view");
+}
+/**
+	* get theme variables
+	* @param string $var the theme variable to get, if empty return the whole theme info object
+	*/
+function theme($var="", $name="") {
+	efault($name, request("theme"));
+	global $theme;
+	$theme = preg_replace("/\n(\s+)\/\/(.*)\n/", "\n", file_get_contents("app/themes/$name/info.json"));
+	$theme = json_decode($theme, true);
+	if (empty($var)) return $theme;
+	else return $theme[$var];
 }
 ?>

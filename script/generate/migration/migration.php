@@ -9,7 +9,7 @@
 		fwrite($file, $migration);
 		fclose($file);
 	}
-	global $sb;
-	$sb->import("util/subscribe");
-	$sb->subscribe("migrations", "global", 10, "return_it", $name);
+	$migrations = config("migrations");
+	$migrations[] = $name;
+	config("migrations", $migrations);
 ?>

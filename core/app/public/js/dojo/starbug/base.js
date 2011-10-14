@@ -3,17 +3,22 @@ dojo.require("dijit.form.Form");
 dojo.require("dijit.form.TextBox");
 dojo.declare("starbug.base", null, {
 	severTime: '',
+	notifier:'',
 	$_GET:[],
+	stores:{},
+	errors:{},
 	constructor: function() {
 		this.serverTime = dojo.config.serverTime;
+		this.notifier = dojo.config.notifier;
 		dojo.addOnLoad(dojo.hitch(this, 'onload'));
+		window['$_GET'] = [];
 		var urlHalves = String(document.location).split('?');
 		if(urlHalves[1]){
 			var urlVars = urlHalves[1].split('&');
 			for(var i=0; i<=(urlVars.length); i++){
 				 if(urlVars[i]){
 						var urlVarPair = urlVars[i].split('=');
-						this.$_GET[urlVarPair[0]] = urlVarPair[1];
+						window['$_GET'][urlVarPair[0]] = urlVarPair[1];
 				 }
 			}
 		}
@@ -34,11 +39,26 @@ dojo.declare("starbug.base", null, {
 		}
 		return starr;
 	},
-	query: function(query, args) {
-		this.require("data.ApiStore");
-		if (!args) args = {};
-		args.query = query;
-		return new starbug.data.ApiStore(args);
+	get: function(models) {
+		if (typeof this.stores[models] != 'undefined') return this.stores[models];
+		this.stores[models] = new starbug.store.Api({apiQuery:models});
+		return this.stores[models];
+	},
+	query: function(models, query) {
+		if (!query) query = {};
+		if (typeof query == 'string') query = this.star(query);
+		return this.get(models).query(query);
+	},
+	store: function(model, fields) {
+		return this.get(model).put(fields).then(dojo.hitch(this, function(data) {
+			if (data.errors) {
+				if (typeof this.errors[model] == 'undefined') this.errors[model] = {};
+				for (var field in data.errors) {
+					field = data.errors[field];
+					this.errors[model][field.field] = field.errors;
+				}
+			}
+		}));
 	},
 	xhr : function(data) {
 		if (data.args.confirm && !confirm(data.args.confirm)) return;
@@ -52,41 +72,6 @@ dojo.declare("starbug.base", null, {
 		if (data.args.method == "post") dojo.xhrPost(xhr_object);
 		else dojo.xhrGet(xhr_object);
 	},
-	replace : function(data) {
-		if (data.args.node.constructor.toString().indexOf('Array') == -1) data.args.node = [data.args.node];
-		for(var i in data.args.node) {
-			var node = (typeof(data.args.node[i]) == "string") ? dojo.query(data.args.node[i])[0] : data.args.node[i];
-			node.innerHTML = data.args.data;
-		}
-	},
-	append : function(data) {
-		var node = dojo.query(data.args.node)[0];
-		node.innerHTML += data.args.data;
-	},
-	prepend : function(data) {
-		var node = dojo.query(data.args.node)[0];
-		node.innerHTML = data.args.data + node.innerHTML;
-	},
-	destroy : function(data) {
-		if (data.args.node.constructor.toString().indexOf('Array') == -1) data.args.node = [data.args.node];
-		for(var i in data.args.node) {
-			var node = (typeof(data.args.node[i]) == "string") ? dojo.query(data.args.node[i])[0] : data.args.node[i];
-			node.parentNode.removeChild(node);
-		}
-	},
-	toggle : function(data) {
-		var node = (typeof(data.args.node) == "string") ? dojo.query(data.args.node)[0] : data.args.node;
-		var toggler = data.args.toggler;
-		var display = dojo.attr(node, 'displayed');
-		if (display == 'on') {
-			toggler.hide();
-			display = 'off';
-		} else {
-			toggler.show();
-			display = 'on';
-		}
-		dojo.attr(node, 'displayed', display);
-	},
 	parseForms: function() {
 		dojo.query("form").forEach(function (item, idx) {
 			//form = new dijit.form.Form({}, item);
@@ -97,4 +82,4 @@ dojo.declare("starbug.base", null, {
 		});
 	}
 });
-var sb = new starbug.base();
+window['sb'] = new starbug.base();

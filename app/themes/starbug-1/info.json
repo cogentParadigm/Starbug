@@ -1,0 +1,18 @@
+{
+	//basic info
+	"name":"Starbug 1",
+	"description":"The Original",
+	//content regions
+	"regions": [
+		"header",
+		{"main":["content","sidebar"]},
+		"footer"
+	],
+	//menus
+	"menus": ["top", "main", "footer"],
+	//stylesheets
+	"styles": {
+		"screen" : ["dojo.css"],
+		"plugins" : ["buttons", "rounding"]
+	}
+}

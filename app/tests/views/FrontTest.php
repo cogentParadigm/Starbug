@@ -1,4 +1,5 @@
 <?php
+/*
 class FrontTest extends ViewTestCase {
 
 	function __construct() {
@@ -34,4 +35,5 @@ class FrontTest extends ViewTestCase {
 	}
 
 }
+*/
 ?>

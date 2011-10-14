@@ -8,7 +8,8 @@ dependencies = {
 			dependencies: [
 				'dojo.behavior',
 				'dijit.Dialog',
-				'starbug.base'
+				'starbug.base',
+				'starbug.store.Api'
 			]
 		},
 		{

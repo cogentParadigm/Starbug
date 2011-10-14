@@ -38,6 +38,10 @@ class form {
 	 * @var string The URL to post back to if there is an error
 	 */
 	var $postback;
+	/**
+	 * @var string the rendering scope (see core/lib/Renderer)
+	 */
+	var $scope;
 
 	/**
 	 * constructor. initializes properties
@@ -46,7 +50,7 @@ class form {
 	function __construct($args="") {
 		global $request;
 		$request_tag = array("tag" => "form", "raw_tag" => "form");
-		if (!in_array($request_tag, $request->tags)) $request->tags = array_merge($request->tags, array($request_tag));
+		if ((is_array($request->tags)) && (!in_array($request_tag, $request->tags))) $request->tags = array_merge($request->tags, array($request_tag));
 		$args = starr::star($args);
 		efault($args['url'], $args['uri']);
 		efault($args['url'], $_SERVER['REQUEST_URI']);
@@ -57,6 +61,7 @@ class form {
 		$this->url = $args['url'];
 		$this->method = $args['method'];
 		$this->postback = $args['postback'];
+		$this->scope = $this->model."_".$this->action;
 	}
 
 	/**
@@ -64,11 +69,19 @@ class form {
 	 * @param string $atts attributes for the form tag
 	 */
 	function open($atts="") {
-		$open = '<form'.(($atts) ? " ".$atts : "").' action="'.$this->url.'" method="'.$this->method.'">'."\n";
-		if ($this->method == "post") $open .= '<input class="postback" name="postback" type="hidden" value="'.$this->postback.'" />'."\n";
-		if (!empty($this->action)) $open .= '<input class="action" name="action['.$this->model.']" type="hidden" value="'.$this->action.'" />'."\n";
-		if (!empty($_POST[$this->model]['id'])) $open .= '<input id="id" name="'.$this->model.'[id]" type="hidden" value="'.$_POST[$this->model]['id'].'" />'."\n";
-		return $open;
+		if (!empty($atts)) $atts = $atts." ";
+		if ($this->method == "post") $fields = (empty($this->model)) ? $_POST : $_POST[$this->model];
+		else $fields = (empty( $this->model)) ? $_GET : $_GET[$this->model];
+		$errors = errors($this->model);
+		assign("attributes", $atts, $this->scope);
+		assign("model", $this->model, $this->scope);
+		assign("url", $this->url, $this->scope);
+		assign("method", $this->method, $this->scope);
+		assign("postback", $this->postback, $this->scope);
+		assign("action", $this->action, $this->scope);
+		assign("fields", $fields, $this->scope);
+		assign("errors", efault($errors, array()), $this->scope);
+		render("form/open", $this->scope);
 	}
 	
 	/**
@@ -133,17 +146,6 @@ class form {
 		$ops['class'] = (empty($ops['class'])) ? $ops['type'] : $ops['class']." ".$ops['type'];
 	}
 
-	function label(&$ops) {
-		global $sb;
-		$name = reset(explode("[", $ops['name']));
-		if (!isset($ops['nolabel'])) $lab = '<label for="'.$ops['id'].'"'.((empty($ops['identifier_class'])) ? '' : ' class="'.$ops['identifier_class'].'"').'>'.$ops['label']."</label>";
-		else unset($ops['nolabel']);
-		if (isset($sb->errors[$this->model][$name])) foreach($sb->errors[$this->model][$name] as $err => $message) $lab .= "\n"."<span class=\"error\">".((!empty($ops['error'][$err])) ? $ops['error'][$err] : $message)."</span>";
-		unset($ops['label']);
-		unset($ops['error']);
-		return $lab;
-	}
-
 	/**
 	 * generate a form control (a tag with a name attribute such as input, select, textarea, file)
 	 * @param string $tag the name of the tag (input, select, textarea, file)
@@ -152,10 +154,18 @@ class form {
 	 *									content: the inner HTML of the tag if it is not self closing
 	 * @param bool $self if true, will use a self closing tag. If false, will use an opening tag and a closing tag (default is false)
 	 */
-	function form_control($tag, $ops, $self=false) {
+	function form_control($tag, $ops) {
+		$capture = "field";
+		$ops['field'] = reset(explode("[", $ops['name']));
 		$ops['name'] = $this->get_name($ops['name']);
-		$ops = array_merge(array($tag), $ops);
-		return $this->tag($ops, $self);
+		foreach ($ops as $k => $v) assign($k, $v, $this->scope);
+		if (isset($ops['nofield'])) {
+			unset($ops['nofield']);
+			$capture = $tag;
+		}
+		assign("attributes", $ops, $this->scope);
+		assign("control", $tag, $this->scope);
+		return capture("form/$capture", $this->scope);
 	}
 
 	function text($ops) {
@@ -172,20 +182,25 @@ class form {
 	}
 
 	function submit($ops="") {
-		return $this->tag("input  type:submit".((empty($ops))? "" : "  ".$ops), true);
+		return $this->input("submit", "nolabel:".((empty($ops))? "" : "  ".$ops));
 	}
 
-	function button($ops="") {
-		return $this->tag("button".((empty($ops))? "" : "  ".$ops));
+	function button($label, $ops="") {
+		$ops = star($ops);
+		assign("label", $label, $this->scope);
+		assign("attributes", $ops);
+		return capture("form/button", $this->scope);
 	}
 
 	function file($ops) {
-			$ops = $ops."  type:file";
-			$this->fill_ops($ops);
-			$input = $this->label($ops)."\n";
-			if (!empty($_POST[$ops['name']])) $ops['value'] = $_POST[$ops['name']];
-			$ops = array_merge(array("input"), $ops);
-			return $input.$this->tag($ops, true);
+		$ops = $ops."  type:file";
+		$this->fill_ops($ops);
+		if (!empty($_POST[$ops['name']])) $ops['value'] = $_POST[$ops['name']];
+		$ops['field'] = reset(explode("[", $ops['name']));
+		foreach ($ops as $k => $v) assign($k, $v, $this->scope);
+		assign("attributes", $ops, $this->scope);
+		assign("control", "input", $this->scope);
+		return capture("form/field", $this->scope);
 	}
 
 	function image($ops) {
@@ -195,9 +210,8 @@ class form {
 	function checkbox($ops) {
 		$ops = $ops."  type:checkbox";
 		$this->fill_ops($ops);
-		$input = $this->label($ops)."\n";
 		if ($this->get($ops['name']) == $ops['value']) $ops['checked'] = 'checked';
-		return $input.$this->form_control("input", $ops, true);
+		return $this->form_control("input", $ops);
 	}
 
 	function radio($ops) {
@@ -207,7 +221,6 @@ class form {
 	function input($type, $ops) {
 		$ops = $ops."  type:$type";
 		$this->fill_ops($ops);
-		$input = $this->label($ops)."\n";
 		//POSTed or default value
 		$var = $this->get($ops['name']);
 		if (!empty($var)) $ops['value'] = htmlentities($var);
@@ -215,19 +228,18 @@ class form {
 			$ops['value'] = $ops['default'];
 			unset($ops['default']);
 		}
-		return $input.$this->form_control("input", $ops, true);
+		return $this->form_control("input", $ops);
 	}
 
 	function select($ops, $options=array()) {
 		$this->fill_ops($ops);
-		$select = $this->label($ops)."\n";
-		$var = $this->get($ops['name']);
-		if ((empty($var)) && (!empty($ops['default']))) {
+		$value = $this->get($ops['name']);
+		if ((empty($value)) && (!empty($ops['default']))) {
 			$this->set($ops['name'], $ops['default']);
 			unset($ops['default']);
 		}
 		if (!empty($ops['range'])) {
-			$range = split(":", $ops['range']);
+			$range = explode("-", $ops['range']);
 			for ($i=$range[0];$i<=$range[1];$i++) $options[$i] = $i;
 			unset($ops['range']);
 		}
@@ -243,16 +255,14 @@ class form {
 			}
 			$options = $list; unset($ops['caption']); unset($ops['value']);
 		}
-		$ops['content'] = "";
-		foreach ($options as $caption => $val) $ops['content'] .= "<option value=\"".htmlentities($val)."\"".(($this->get($ops['name']) == $val) ? " selected=\"true\"" : "").">$caption</option>\n";
-		return $select.$this->form_control("select", $ops);
+		assign("options", $options, $this->scope);
+		return $this->form_control("select", $ops);
 	}
 
 	function date_select($ops) {
 		global $sb;
 		$sb->import("util/datepicker");
 		$this->fill_ops($ops);
-		$select = $this->label($ops)."\n";
 		//FILL VALUES FROM POST OR DEFAULT
 		$name = $ops['name'];
 		$value = $this->get($name);
@@ -272,7 +282,7 @@ class form {
 		if ($start_year < $end_year) for ($i=$start_year;$i<=$end_year;$i++) $year_options[$i] = $i;
 		else for ($i=$start_year;$i>=$end_year;$i--) $year_options[$i] = $i;
 		//BUILD SELECT BOXES
-		$select .= $this->select($name."[month]  id:".$ops['id']."-mm  nolabel:", $month_options);
+		$select = $this->select($name."[month]  id:".$ops['id']."-mm  nolabel:", $month_options);
 		$select .= $this->select($name."[day]  id:".$ops['id']."-dd  nolabel:", $day_options);
 		$select .= $this->select($name."[year]  id:".$ops['id']."  class:split-date range-low-".date("Y-m-d")." no-transparency  nolabel:", $year_options);
 		//TIME
@@ -282,7 +292,6 @@ class form {
 
 	function time_select($ops) {
 		$this->fill_ops($ops);
-		$select = $this->label($ops)."\n";
 		//GET POSTED OR DEFAULT VALUE
 		$value = $this->get($ops['name']);
 		efault($value, $ops['default']);
@@ -296,7 +305,7 @@ class form {
 		$minutes_options = array("Minutes" => "-1", "00" => "00", "15" => "15", "30" => "30", "45" => "45");
 		$ampm_options = array("AM" => "am", "PM" => "pm");
 		//BUILD SELECT BOXES
-		$select .= $this->select($ops['name']."[hour]  id:".$ops['id']."-hour  nolabel:", $hour_options);
+		$select  = $this->select($ops['name']."[hour]  id:".$ops['id']."-hour  nolabel:", $hour_options);
 		$select .= $this->select($ops['name']."[minutes]  id:".$ops['id']."-minutes  nolabel:", $minutes_options);
 		$select .= $this->select($ops['name']."[ampm]  id:".$ops['id']."  nolabel:", $ampm_options);
 		return $select;
@@ -304,7 +313,6 @@ class form {
 	
 	function textarea($ops) {
 		$this->fill_ops($ops);
-		$input = $this->label($ops)."\n";
 		efault($ops['cols'], "90");
 		efault($ops['rows'], "90");
 		//POSTed or default value
@@ -313,21 +321,9 @@ class form {
 			efault($value, $ops['default']);
 			unset($ops['default']);
 		}
-		efault($ops['content'], htmlentities($value));
+		efault($ops['value'], htmlentities($value));
 		//name close
-		return $input.$this->form_control("textarea", $ops);
-	}
-
-	function tag($tag, $self=false) {
-		if (is_array($tag)) $name = array_shift($tag);
-		else {
-			$parts = explode("  ", $tag, 2);
-			$name = $parts[0];
-			if (count($parts) > 1) $tag = starr::star($parts[1]);
-		}
-		$content = $tag['content']; unset($tag['content']); $str = "";
-		foreach($tag as $key => $value) $str .= " $key=\"$value\"";
-		return ($self) ? "<$name$str />" : "<$name$str>$content</$name>";
+		return $this->form_control("textarea", $ops);
 	}
 	
 }
@@ -463,6 +459,7 @@ function textarea($ops) {
  * @ingroup form
  */
 function close_form() {
-	echo "</form>";
+	global $global_form;
+	render("form/close", $global_form->scope);
 }
 ?>
