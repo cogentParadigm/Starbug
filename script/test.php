@@ -8,9 +8,26 @@
  * @ingroup script
  */
 	$what = array_shift($argv);
+	$sb->import("core/lib/Harness");
+	global $harness;
 	$no_errors = true;
+	$up = true;
+	$unit = true;
+	$output = array();
+	if ($what == "-u") {
+		$up = false;
+		$what = array_shift($argv);
+	}
 	if ($what == "-s") exec("find ".BASE_DIR." -type f -name \*.php -exec php -l {} \;", $output);
-	else {
+	else if ($what == "-l") { //load layer
+		$unit = false;
+		$next = array_shift($argv);
+		$harness->layer($next);
+	} else if ($what == "-f") { //load fixture
+		$unit = false;
+		$next = array_shift($argv);
+		$harness->fixture($next);
+	} else {
 		exec("git diff-index --name-only HEAD", $diff);
 		foreach ($diff as $file) {
 			$handle = fopen(BASE_DIR."/$file", "r");
@@ -32,5 +49,5 @@
 	}
 	if ($no_errors) fwrite(STDOUT, "\nNo syntax errors detected!\n\n");
 	else exit(1);
-	passthru("phpunit --bootstrap ./core/cli.php --no-globals-backup --colors ./app/tests/");
+	if ($unit) passthru("phpunit --bootstrap ./core/cli.php --no-globals-backup --colors ./app/tests/");
 ?>

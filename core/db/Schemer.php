@@ -4,12 +4,18 @@
 /**
  * @file core/db/Schemer.php
  * @author Ali Gangji <ali@neonrain.com>
+ * @ingroup Schemer
+ */
+/**
+ * @defgroup Schemer
+ * the db class
  * @ingroup db
  */
-include("core/db/Migration.php");
+$sb->import("core/db/Migration");
+$sb->provide("core/db/Schemer");
 /**
  * The Schemer class. Manages a schema of the database using migrations and handles synching a database with the schema
- * @ingroup db
+ * @ingroup Schemer
  */
 class Schemer {
 	/**
@@ -20,6 +26,10 @@ class Schemer {
 	 * @var array Holds tables, columns and column options
 	 */
 	var $tables = array();
+	/**
+	 * @var array Holds table options
+	 */
+	var $options = array();
 	/**
 	 * @var array Tables that have been dropped
 	 */
@@ -391,12 +401,18 @@ class Schemer {
 	function column($table, $col) {
 		$args = func_get_args();
 		$table = array_shift($args);
+		if (false !== strpos($table, "  ")) {
+			list($table, $ops) = explode("  ", $table, 2);
+			$ops = star($ops);
+		} else $ops = array();
 		efault($this->tables[$table], array());
 		foreach ($args as $col) {
 			$col = starr::star($col);
 			$colname = array_shift($col);
 			$this->tables[$table][$colname] = $col;
 		}
+		efault($this->options[$table], array("select" => "$table.*", "search" => implode(",", array_keys($this->tables[$table]))));
+		foreach ($ops as $k => $v) $this->options[$table][$k] = $v;
 	}
 
 	/**
@@ -421,7 +437,7 @@ class Schemer {
 	 */
 	function add_uri($path) {
 		$uri = $this->uris[$path];
-		$errors = store("uris", $uri);
+		store("uris", $uri);
 	}
 
 	/**
@@ -438,12 +454,18 @@ class Schemer {
 	 * @param string $path the path
 	 * @param star $args other fields
 	 */
-	function uri($path, $args) {
+	function uri($path, $args, $groups=array()) {
 		global $statuses;
+		$options = array();
 		$args = starr::star($args);
 		$args['path'] = $path;
 		efault($args['title'], ucwords(str_replace("-", " ", $path)));
-		efault($args['template'], "View");
+		if (!empty($args['groups'])) {
+			$args['groups'] = explode(",", $args['groups']);
+			$args['collective'] = 0;
+			foreach ($args['groups'] as $group) $args['collective'] += intval($group);
+			unset($args['groups']);
+		}
 		efault($args['collective'], 0);
 		efault($args['status'], array_sum($statuses));
 		$this->uris[$path] = $args;
@@ -738,6 +760,120 @@ class Schemer {
 			END";
 		}
 		return $trigger;
+	}
+
+	function get($model) {
+		global $groups; global $statuses;
+		$fields = $this->get_table($model);
+		$options = $this->options[$model];
+		//SET UP MODEL ARRAY
+		$data = array_merge(array("name" => $model, "label" => ucwords($model), "package" => Etc::WEBSITE_NAME, "fields" => array(), "relations" => array()), $options);
+		//ADD FIELDS
+		foreach($fields as $name => $field) {
+			$data["fields"][$name] = array("filters" => array());
+			$data["fields"][$name]['display'] = ((isset($this->tables[$model][$name])) && ($field['display'] !== "false")) ? true : false;
+			if (!isset($field['input_type'])) {
+				if ($field['type'] == "text") $field['input_type'] = "textarea";
+				else if ($field['type'] == "password") $field['input_type'] = "password";
+				else if ($field['type'] == "bool") $field['input_type'] = "checkbox";
+				else if (isset($field['upload'])) $field['input_type'] = "file_select";
+				else $field['input_type'] = "text";
+			}
+			$field[$field['type']] = "";
+			foreach ($field as $k => $v) {
+				//if (("references" == $k) && (false === strpos($v, $model))) $data["fields"][$name]["references"] = $v;
+				if (file_exists(BASE_DIR."/core/app/filters/store/$k.php")) $data["fields"][$name]["filters"][$k] = $v;
+				else $data["fields"][$name][$k] = $v;
+			}
+		}
+		//ADD RELATIONS
+		foreach ($this->tables as $table => $fields) {
+			$relations = $this->get_relations($table, $model);
+			foreach ($relations as $m => $r) $data["relations"][] = array("model" => $m, "field" => $r['hook'], "lookup" => $r['lookup'], "ref_field" => $r['ref_field']);
+		}
+		//ADD ACTIONS
+		$permits = query("permits", "where:related_table='".P($model)."'");
+		$actions = array();
+		foreach ($permits as $p) {
+			if (!isset($actions[$p['action']])) $actions[$p['action']] = array();
+				if ("object" == $p['priv_type']) $val = $p['related_id'];
+				else $val = $p['priv_type'];
+				if ($p['status'] != array_sum($statuses)) $val .= " ".$p['status'];
+			if ("group" == $p['role']) { //GROUP PERMIT
+				$actions[$p['action']][array_search($p['who'], $groups)] = (empty($actions[$p['action']][$groups[$p['who']]])) ? $val : ",".$val;
+			} else $actions[$p['action']][$p['role']] = (empty($actions[$p['action']][$p['role']])) ? $val : ",".$val;
+		}
+		$data['actions'] = $actions;
+		//ADD URIS
+		if ($model == "uris") $data['uris'] = query("uris");
+		return $data;
+	}
+	/**
+	 * convert table schema to XML
+	 */
+	function toXML($model) {
+		$xmlDoc = new DOMDocument();
+		$root = $xmlDoc->appendChild($xmlDoc->createElement("model"));
+		$xmlDoc->formatOutput = true;
+		foreach ($model as $key => $value) {
+			if (is_array($value)) {
+				switch ($key) {
+					case "fields":
+						foreach ($value as $name => $field) {
+							$node = $root->appendChild($xmlDoc->createElement("field"));
+							$node->appendChild($xmlDoc->createAttribute("name"))->appendChild($xmlDoc->createTextNode($name));
+							foreach ($field as $k => $v) {
+								switch ($k) {
+									case "filters":
+										foreach ($v as $filter => $val) {
+											$f = $node->appendChild($xmlDoc->createElement("filter"));
+											$f->appendChild($xmlDoc->createAttribute("name"))->appendChild($xmlDoc->createTextNode($filter));
+											$f->appendChild($xmlDoc->createAttribute("value"))->appendChild($xmlDoc->createTextNode($val));
+										}
+										break;
+									case "references":
+										$ref = explode(" ", $v);
+										$f = $node->appendChild($xmlDoc->createElement("references"));
+										$f->appendChild($xmlDoc->createAttribute("model"))->appendChild($xmlDoc->createTextNode($ref[0]));
+										$f->appendChild($xmlDoc->createAttribute("field"))->appendChild($xmlDoc->createTextNode($ref[1]));
+										break;
+									default:
+										$node->appendChild($xmlDoc->createAttribute($k))->appendChild($xmlDoc->createTextNode($v));
+										break;
+								}
+							}
+						}
+						break;
+					default:
+						foreach ($value as $tag) {
+							$node = $root->appendChild($xmlDoc->createElement(rtrim($key, 's')));
+							foreach ($tag as $k => $v) $node->appendChild($xmlDoc->createAttribute($k))->appendChild($xmlDoc->createTextNode($v));
+						}
+						break;
+				}
+			} else {
+				$root->appendChild($xmlDoc->createAttribute($key))->appendChild($xmlDoc->createTextNode($value));
+			}
+		}
+		$xml = $xmlDoc->saveXML();
+		//WRITE XML
+		$file = fopen(BASE_DIR."/var/xml/$model[name].xml", "wb");
+		fwrite($file, $xml);
+		fclose($file);
+		passthru("chmod 0777 ".BASE_DIR."/var/xml/$model[name].xml");
+		//RETURN
+		return $xml;
+	}
+	/**
+	 * convert table schema to JSON
+	 */
+	function toJSON($model) {
+		$json = json_encode($model);
+		$file = fopen(BASE_DIR."/var/json/$model[name].json", "wb");
+		fwrite($file, $json);
+		fclose($file);
+		passthru("chmod 0777 ".BASE_DIR."/var/json/$model[name].json");
+		return $json;
 	}
 
 }

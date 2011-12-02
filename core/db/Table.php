@@ -5,11 +5,16 @@
  * This file is part of Starbug PHP
  * @file core/db/Table.php
  * @author Ali Gangji <ali@neonrain.com>
+ * @ingroup Table
+ */
+/**
+ * @defgroup Table
+ * the db class
  * @ingroup db
  */
 /**
  * This class wraps a databse table, it is the base class for database models
- * @ingroup db
+ * @ingroup Table
  */
 class Table {
 	/**

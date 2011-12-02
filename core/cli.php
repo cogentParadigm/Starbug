@@ -22,7 +22,7 @@
 
 	/**
 	 * global instance of the Schemer
-	 * @ingroup core
+	 * @ingroup global
 	 */
 	global $schemer;
 	$schemer = new Schemer($sb->db);

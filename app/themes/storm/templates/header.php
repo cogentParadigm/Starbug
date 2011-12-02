@@ -3,7 +3,6 @@
 	<a href="#"><?php echo userinfo("username"); ?></a>
 </div>
 <h1><a href="./"><span><?php echo Etc::WEBSITE_NAME; ?></span></a></h1>
-<span id="subhead"><?php echo Etc::TAGLINE; ?></span>
 <ul id="tabs" class="hnav">
 		<li><a class="button" href="<?php echo uri("profile"); ?>"><span>Profile</span></a></li>
 </ul>

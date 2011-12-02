@@ -1,0 +1,15 @@
+/********************* comments *********************/
+.comments{list-style-type:none}
+.comments li{border-bottom:1px solid #999;display:block;margin-top:20px}
+.comments .avatar{margin-right:20px;margin-bottom:20px}
+.comments .header{margin-bottom:10px}
+.comments .body{padding-left:84px}
+.comment_box .dijitEditor iframe{height:125px !important}
+.comment{position:relative}
+.comment .helpful{position:absolute;bottom:5px;right:0px;color:#494}
+.comment .commentFiles{padding:30px 10px 10px 0px}
+.comment .commentFiles div{float:left;margin-left:10px}
+.comment .commentFiles .caption{float:right;margin-top:50px}
+body.claro .dijitToolbar, body.claro .dijitToolbar .dijitButtonNode{background-image:none}
+body.claro .dijitEditor .dijitEditorIFrameContainer{background-image:none}
+body.claro .dijitButton .dijitButtonNode, body.claro .dijitDropDownButton .dijitButtonNode, body.claro .dijitComboButton .dijitButtonNode, body.claro .dijitToggleButton .dijitButtonNode{background-image:none}

@@ -1,35 +1,35 @@
-@import url("../js/dojo/dijit/themes/dijit.css");
-@import url("../js/dojo/dijit/themes/claro/document.css");	/* rules on the document itself (rather than widgets), overriding dojo.css */
-@import url("../js/dojo/dijit/icons/commonIcons.css");/*sprite containing common icons to be used by all themes*/
-@import url("../js/dojo/dijit/themes/claro/Common.css");
-@import url("../js/dojo/dijit/themes/claro/form/Common.css");
-@import url("../js/dojo/dijit/themes/claro/form/Button.css");
-@import url("../js/dojo/dijit/themes/claro/form/Checkbox.css");
-@import url("../js/dojo/dijit/themes/claro/form/RadioButton.css");
-@import url("../js/dojo/dijit/themes/claro/form/Select.css");
-@import url("../js/dojo/dijit/themes/claro/layout/TabContainer.css");
-@import url("../js/dojo/dijit/themes/claro/Dialog.css");
-@import url("../js/dojo/dijit/themes/claro/layout/AccordionContainer.css");
-@import url("../js/dojo/dijit/themes/claro/layout/ContentPane.css");
-@import url("../js/dojo/dijit/themes/claro/Calendar.css");
-@import url("../js/dojo/dijit/themes/claro/Menu.css");
-@import url("../js/dojo/dijit/themes/claro/form/Slider.css");
-@import url("../js/dojo/dijit/themes/claro/ColorPalette.css");
-@import url("../js/dojo/dijit/themes/claro/InlineEditBox.css");
-@import url("../js/dojo/dijit/themes/claro/ProgressBar.css");
-@import url("../js/dojo/dijit/themes/claro/TimePicker.css");
-@import url("../js/dojo/dijit/themes/claro/layout/BorderContainer.css");
-@import url("../js/dojo/dijit/themes/claro/Tree.css"); 
-@import url("../js/dojo/dijit/themes/claro/Toolbar.css");
-@import url("../js/dojo/dijit/themes/claro/Editor.css");/*in order to test button or menu item with icon */
-@import url("../js/dojo/dijit/icons/editorIcons.css"); /*sprite for editor icons to be used by all themes*/
-@import url("../js/dojo/dijit/themes/claro/TitlePane.css");
-@import url("../js/dojo/dijit/themes/claro/form/NumberSpinner.css");
+@import url("../../../../public/js/dojo/dijit/themes/dijit.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/document.css");	/* rules on the document itself (rather than widgets), overriding dojo.css */
+@import url("../../../../public/js/dojo/dijit/icons/commonIcons.css");/*sprite containing common icons to be used by all themes*/
+@import url("../../../../public/js/dojo/dijit/themes/claro/Common.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/form/Common.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/form/Button.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/form/Checkbox.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/form/RadioButton.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/form/Select.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/layout/TabContainer.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/Dialog.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/layout/AccordionContainer.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/layout/ContentPane.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/Calendar.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/Menu.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/form/Slider.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/ColorPalette.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/InlineEditBox.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/ProgressBar.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/TimePicker.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/layout/BorderContainer.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/Tree.css"); 
+@import url("../../../../public/js/dojo/dijit/themes/claro/Toolbar.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/Editor.css");/*in order to test button or menu item with icon */
+@import url("../../../../public/js/dojo/dijit/icons/editorIcons.css"); /*sprite for editor icons to be used by all themes*/
+@import url("../../../../public/js/dojo/dijit/themes/claro/TitlePane.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/form/NumberSpinner.css");
 
-@import url("../js/dojo/dijit/themes/claro/claro_rtl.css");
+@import url("../../../../public/js/dojo/dijit/themes/claro/claro_rtl.css");
 
-@import url("../js/dojo/dojox/grid/resources/Grid.css");
-@import url("../js/dojo/dojox/grid/resources/claroGrid.css");
-@import url("../js/dojo/dojox/grid/enhanced/resources/EnhancedGrid.css");
-@import url("../js/dojo/dojox/grid/enhanced/resources/claro/EnhancedGrid.css");
-@import url"../js/dojo/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css");
+@import url("../../../../public/js/dojo/dojox/grid/resources/Grid.css");
+@import url("../../../../public/js/dojo/dojox/grid/resources/claroGrid.css");
+@import url("../../../../public/js/dojo/dojox/grid/enhanced/resources/EnhancedGrid.css");
+@import url("../../../../public/js/dojo/dojox/grid/enhanced/resources/claro/EnhancedGrid.css");
+@import url("../../../../public/js/dojo/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css");

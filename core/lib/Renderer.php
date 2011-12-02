@@ -5,12 +5,17 @@
  * This file is part of StarbugPHP
  * @file core/lib/Renderer.php
  * @author Ali Gangji <ali@neonrain.com>
- * @ingroup core
+ * @ingroup Renderer
+ */
+/**
+ * @defgroup Renderer
+ * The starbug templating engine, see @link core/global/templates.php for global functions
+ * @ingroup lib
  */
 $sb->provide("core/lib/Renderer");
 /**
  * Renderer class. assign/render style templating engine
- * @ingroup core
+ * @ingroup Renderer
  */
 class Renderer {
 	/**
@@ -26,12 +31,13 @@ class Renderer {
 	 */	
 	var $path = "";
 	var $active_scope = "global";
+	var $directory_scope = false;
 	/**
 	 * constructor. initializes variables
 	 * @param string $prefix the view directory
 	 * @param string $path relative path from the view directory without file extension
 	 */
-	function __construct($prefix="app/views/", $path="") {
+	function __construct($prefix="app/", $path="") {
 		$this->prefix = $prefix;
 		$this->path = $path;
 	}
@@ -40,10 +46,10 @@ class Renderer {
 	 * @param string $path variable name
 	 */
 	function get_path($path, $scope) {
-		if ($scope == "view") return (empty($path)) ? request("file") : $this->prefix.$path.".php";
-		$path = "templates/".$path.".php";
-		if (file_exists("app/themes/".request("theme")."/".$path)) return "app/themes/".request("theme")."/".$path;
-		else if (file_exists($this->prefix.$path)) return $this->prefix.$path;
+		if ($scope == "views" && empty($path)) return request("file");
+		$path = ($this->directory_scope) ? $scope."/".$path.".php" : "templates/".$path.".php";
+		if (file_exists($this->prefix.$path)) return $this->prefix.$path;
+		else if (file_exists("app/themes/".request("theme")."/".$path)) return "app/themes/".request("theme")."/".$path;
 		else return "core/".$this->prefix.$path;
 	}
 	/**
@@ -59,18 +65,27 @@ class Renderer {
 	 * render a template
 	 * @param string $path relative path to the template from the view directory without file extension
 	 */
-	function render($path="", $scope) {
+	function render($path=array(""), $scope="global") {
 		global $sb;
 		global $request;
-		if (!empty($path)) $this->path = $path;
-		extract($this->vars["global"]);
+		$this->directory_scope = (file_exists($this->prefix.$scope));
+		//resolve path
+		if (!is_array($path)) $path = array($path);
+		$this->path = reset($path);
+		while (!file_exists($filename = $this->get_path($this->path, $scope)) && $this->path) $this->path = next($path);
+		//set scope
 		if (empty($scope)) $scope = $this->active_scope;
-		else $this->active_scope = $scope;
+		else if (!$this->directory_scope) $this->active_scope = $scope;
+		//extract vars
+		extract($this->vars["global"]);
 		if (($scope != "global") && !empty($this->vars[$scope])) extract($this->vars[$scope]);
-		$output = file_get_contents($this->get_path($path, $scope));
+		//render target
+		$output = file_get_contents($filename);
 		$output = str_replace(array("<? ", "<?\n", "<?="), array("<?php ", "<?php\n", "<?php echo"), $output);
 		eval("?>".$output);
+		//reset scope
 		$this->active_scope = "global";
+		$this->directory_scope = false;
 	}
 	
 	/**
@@ -86,6 +101,10 @@ class Renderer {
 	}	
 
 }
+/**
+ * global Renderer instance
+ * @ingroup global
+ */
 global $renderer;
 $renderer = new Renderer();
 ?>

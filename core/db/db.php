@@ -8,6 +8,11 @@
  * @ingroup db
  */
 /**
+ * @defgroup db
+ * the db class
+ * @ingroup db
+ */
+/**
  * The db class. A simple PDO wrapper
  * @ingroup db
  */

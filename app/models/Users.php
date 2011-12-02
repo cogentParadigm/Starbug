@@ -31,22 +31,19 @@ class Users extends UsersModel {
 	/**
 	 * A function for current users to update their profile
 	 */
-	function update_profile() {
-		$user = $_POST['users'];
+	function update_profile($user) {
 		return $this->store($user);
 	}
 	/**
 	 * A function to delete users
 	 */
-	function delete() {
-		return $this->remove("id=".$_POST['users']['id']);
+	function delete($user) {
+		return $this->remove("id=".$user['id']);
 	}
 	/**
 	 * A function for logging in
 	 */
-	function login() {
-		$errors = array();
-		$login = $_POST['users'];
+	function login($login) {
 		$user = $this->query("select:*  where:username='".$login['username']."' && password='".md5($login['password'])."'  limit:1");
 		if (!empty($user)) {
 			unset($user['password']);
@@ -54,10 +51,9 @@ class Users extends UsersModel {
 			$_SESSION[P("memberships")] = $user['memberships'];
 			$_SESSION[P("user")] = $user;
 		} else {
-			$errors['username']['loginMatch'] = "That username and password combination was not found.";
+			error("That username and password combination was not found.", "username");
 		}
 		unset($_POST['users']['password']);
-		return $errors;
 	}
 
 	/**
@@ -73,28 +69,25 @@ class Users extends UsersModel {
 	/**
 	 * resets a users password and emails it to them
 	 */
-	function reset_password() {
+	function reset_password($fields) {
 		global $sb;
-		$fields = $_POST['users'];
 		$email_address = trim($fields['email']);
-		$errors = array();
-		if (empty($email_address)) $errors['email'] = array("required" => "Please enter your email address.");
+		if (empty($email_address)) error("Please enter your email address.", "email");
 		else {
 			$user = $this->query("where:email='".$email_address."'  limit:1");
 			if(!empty($user)) {
 				$id = $user['id'];
 				$first_name = $user['first_name'];
 				$last_name = $user['last_name'];
-				if(empty($id)) $errors['email'][] = "Sorry, the email address you entered was not found. Please retry.";
+				if(empty($id)) error("Sorry, the email address you entered was not found. Please retry.", "email");
 				else {
 					$new_password = mt_rand(1000000,9999999);
 					$this->store("id:$id  password:$new_password");
 					$result = exec("sb email password_reset $id $new_password");
-					if((int)$result != 1) $errors['email'][] = "Sorry, there was a problem emailing to your address. Please retry.";
+					if((int)$result != 1) error("Sorry, there was a problem emailing to your address. Please retry.", "email");
 				}
-			} else $errors['email'][] = "Sorry, the email address you entered was not found. Please retry.";
+			} else error("Sorry, the email address you entered was not found. Please retry.", "email");
 		}
-		return $errors;
 	}
 
 }

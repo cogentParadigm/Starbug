@@ -1,16 +1,14 @@
 <?php
 class Uris extends UrisModel {
 
-	function create() {
-		$uris = $_POST['uris'];
+	function create($uris) {
 		$uris['template'] = "$uris[template]";
 		$this->set_check_path($uris, file_get_contents("$uris[prefix]$uris[template]"));
 		return $this->store($uris);
 	}
 	
-	function update() {
+	function update($uris) {
 		global $sb;
-		$uris = $_POST['uris'];
 		unset($uris['path']);
 		if (!empty($uris['template'])) $uris['template'] = "$uris[template]";
 		$row = $this->query("where:id='$uris[id]'  limit:1");
@@ -34,12 +32,12 @@ class Uris extends UrisModel {
 		return $errors;
 	}
 
-	function delete() {
-		$id = $_POST['uris']['id'];
+	function delete($uris) {
+		$id = $uris['id'];
 		return $this->remove("id='".$id."'");
 	}
 
-	function change_name() {
+	function change_name($uris) {
 		global $sb;
 		$errors = array();
 		$this->query("where:path='$_POST[new_name]'");

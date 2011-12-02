@@ -1,5 +1,5 @@
 <div class="container">
-	<h1><a href="./"><span><?php echo Etc::WEBSITE_NAME; ?></span></a></h1>
+	<a id="logo" href="./"><span><?php echo Etc::WEBSITE_NAME; ?></span></a>
 	<span id="subhead"><?php echo Etc::TAGLINE; ?></span>
 	<ul id="nav" class="right hnav">
 		<li><a class="active" href="">Home</a></li>

@@ -27,10 +27,11 @@ include(BASE_DIR."/util/starr.php");
 
 /**
  * global instance of the sb class
- * @ingroup core
+ * @ingroup global
  */
 global $sb;
 $sb = new sb();
+
 if (!is_array($autoload)) include(BASE_DIR."/etc/autoload.php");
 if (!empty($autoload)) call_user_func_array(array($sb, "import"), $autoload);
 ?>

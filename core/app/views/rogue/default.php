@@ -7,7 +7,7 @@
 	<head>
 		<title>The Bridge</title>
 		<link rel="stylesheet" type="text/css" href="<?php echo uri("app/public/js/dojo/release/dojo/dijit/themes/claro/claro.css"); ?>"/>
-		<?php $sb->publish("header"); ?>
+		<?php $sb->publish("head"); ?>
 		<script src="<?php echo uri("app/public/js/CodeMirror/lib/codemirror.js"); ?>" type="text/javascript"></script>
 		<script src="<?php echo uri("app/public/js/CodeMirror/mode/php/php.js"); ?>" type="text/javascript"></script>
 		<script src="<?php echo uri("app/public/js/CodeMirror/mode/javascript/javascript.js"); ?>" type="text/javascript"></script>
@@ -32,6 +32,7 @@
 			body.claro .dijitTabContainerTop-tabs .dijitTab{padding-top:0px}
 			body.claro .dijitAccordionContainer .dijitAccordionContainer-child{padding:0;margin:0}
 			.CodeMirror-scroll{height:auto;overflow:visible}
+			.console .error, .console .alert, .console .notice, .console .success, .console .info{background:transparent;border:none;padding:0;margin-bottom:8px}
 		</style>
 		<script type="text/javascript">
 			dojo.require("starbug.IDE.IDE");
@@ -43,6 +44,7 @@
 			openURL="<?php echo uri("rogue/open"); ?>"
 			saveURL="<?php echo uri("rogue/save"); ?>"
 			errorURL="<?php echo uri("rogue/errors"); ?>"
+			rogueURL="<?php echo uri("rogue"); ?>"
 		<?php if (!empty($_REQUEST['files'])) { ?>
 			files="['<?php echo str_replace(",", "', '", $_REQUEST['files']); ?>']"
 		<?php } ?>

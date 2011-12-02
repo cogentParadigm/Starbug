@@ -24,7 +24,7 @@ include(BASE_DIR."/core/Request.php");
 
 /**
  * global instance of the Request class
- * @ingroup core
+ * @ingroup global
  */
 global $request;
 $request = new Request($groups, $statuses);

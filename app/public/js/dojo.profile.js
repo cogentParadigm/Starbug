@@ -9,7 +9,8 @@ dependencies = {
 				'dojo.behavior',
 				'dijit.Dialog',
 				'starbug.base',
-				'starbug.store.Api'
+				'starbug.store.Api',
+				'starbug.grid.EnhancedGrid'
 			]
 		},
 		{

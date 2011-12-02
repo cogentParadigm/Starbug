@@ -38,6 +38,10 @@ class Request {
 	 */
 	var $theme;
 	/**
+	 * @var string layout
+	 */
+	var $layout;
+	/**
 	 * @var string the file path of the view
 	 */
 	var $file;
@@ -71,54 +75,62 @@ class Request {
 
 	/**
 	 * set the path
+	 * used to normalize relative paths, for example if starbug is installed at http://www.mydomain.com/starbug/
+	 * the following:
+	 * login
+	 * /login
+	 * /starbug/login (this is what we'd get from $_SERVER['REQUEST_URI'])
+	 * would all translate to:
+	 * login
 	 * @param string $request_path the path
-	 * @param string $base_dir the base directory
+	 * @param string $base_dir (optional) the base directory (only needed to change or initialize the base directory)
 	 */
  	public function set_path($request_path, $base_dir="") {
 		if (empty($base_dir)) $base_dir = $this->base_dir;
 		else $this->base_dir = $base_dir;
-		$this->path = (false === ($base_pos = strpos($request_path, $base_dir))) ? substr($request_path, 1) : substr($request_path, $base_pos+strlen($base_dir)+1);
-		if (false !== strpos($this->path, "?")) {
-			$this->path = explode("?", $this->path, 2);
-			$this->query = $this->path[1];
-			$this->path = reset($this->path);
+
+		//if the path includes the base_dir, we remove it. otherwise we just remove the the leading slash
+		$this->path = (false === ($base_pos = strpos($request_path, $base_dir))) ? ltrim($request_path, "/") : substr($request_path, $base_pos+strlen($base_dir)+1);
+
+		//if the path contains a query string, split it off and save it to $this->query
+		if (false !== strpos($this->path, "?")) list($this->path, $this->query) = explode("?", $this->path, 2);
+		
+		//if the path includes a format (such as .html, .json, .xml etc..) split it off and save it to $this->format
+		$file = end(explode("/", $this->path));
+		if (false !== strpos($file, ".")) {
+			$this->format = end(explode(".", $file));
+			$this->path = substr($this->path, 0, -(strlen($this->format)+1));
 		}
-		if (false !== strpos($this->path, ".")) {
-			$this->path = explode("/", $this->path);
-			$index = count($this->path)-1;
-			if (false !== strpos($this->path[$index], ".")) {
-				$end = explode(".", $this->path[$index]);
-				$this->format = end($end);
-				array_pop($end);
-				$this->path[$index] = join(".", $end);
-			}
-			$this->path = join("/", $this->path);
-		}
+
+		//if we are left with an empty path, set it to the default path
 		efault($this->path, Etc::DEFAULT_PATH);
 	}
 
 	/**
 	 * return the path to the postback. called when a form submission contains errors
 	 */
-	public function return_path() {$this->path = (empty($_POST['postback'])) ? $_SESSION[P('postback')] : $_POST['postback'];}
+	public function return_path() {if (!empty($_POST['postback'])) $this->path = $_POST['postback'];}
 
 	/**
 	 * lookup the path in the uris table and set the payload, tags, uri, and file. also will delivers 404, or 403 headers if needed
 	 */
 	public function locate() {
-		global $sb;
+		//set up a query for uris where the path is a prefix of the current path
 		$query = "where:'".$this->path."' LIKE CONCAT(path, '%') ORDER BY CHAR_LENGTH(path) DESC  limit:1";
-		$this->payload = $sb->query("uris", $query."  action:read");
-		if (empty($this->payload)) {
-			$row = $sb->query("uris", $query);
-			if (!empty($row)) $this->forbidden();
-			else $this->missing();
+		//run the query, looking for read permits
+		$this->payload = query("uris", $query."  action:read");
+		if (empty($this->payload)) { //if we find nothing, query without looking for permits
+			$row = query("uris", $query);
+			if (!empty($row)) $this->forbidden(); //if we find something that means we don't have permission to see it, so show the forbidden page
+			else $this->missing(); //if we don't find anything, there is nothing there, so show the missing page
 		}
-		$this->tags = array_merge($this->tags, $sb->query("uris,tags", "select:DISTINCT tag, raw_tag  where:uris.id='".$this->payload['id']."'", true));
+		$this->tags = array_merge($this->tags, query("uris,tags", "select:DISTINCT tag, raw_tag  where:uris.id='".$this->payload['id']."'", true));
 		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
 		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
 		$this->theme = $this->payload['theme'];
+		$this->layout = $this->payload['layout'];
 		efault($this->theme, Etc::THEME);
+		efault($this->format, $this->payload['format']);
 	}
 
 	/**
@@ -127,12 +139,9 @@ class Request {
 	public function execute() {
 		global $sb;
 		global $request;
-		$the_postback = $this->path;
 		$sb->check_post();
 		$this->locate();
-		render("html");
-		//include($this->payload['prefix']."templates/".$this->payload['template'].".php");
-		$_SESSION[P('postback')] = $the_postback;
+		render(((!empty($this->payload['template'])) ? $this->payload['template'] : $this->format));
 	}
 
 	/**
@@ -140,7 +149,7 @@ class Request {
 	 */
 	public function missing() {
 		header("HTTP/1.1 404 Not Found");
-		$this->payload = array("path" => "missing", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/", "style" => Etc::DEFAULT_STYLE);
+		$this->payload = array("path" => "missing", "theme" => Etc::THEME, "format" => "html");
 		$this->path="missing";
 		$this->uri = array("missing");
 	}
@@ -150,7 +159,7 @@ class Request {
 	 */
 	public function forbidden() {
 		header("HTTP/1.1 403 Forbidden");
-		$this->payload = array("path" => "forbidden", "template" => Etc::DEFAULT_TEMPLATE, "prefix" => "app/views/", "style" => Etc::DEFAULT_STYLE);
+		$this->payload = array("path" => "forbidden", "theme" => Etc::THEME, "format" => "html");
 		$this->path = "forbidden";
 		$this->uri = array("forbidden");
 	}

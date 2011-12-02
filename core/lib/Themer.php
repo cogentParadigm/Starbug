@@ -5,30 +5,30 @@
  * This file is part of StarbugPHP
  * @file core/lib/Themer.php
  * @author Ali Gangji <ali@neonrain.com>
- * @ingroup core
+ * @ingroup Themer
+ */
+/**
+ * @defgroup Themer
+ * Themer (experimental)
+ * @ingroup lib
  */
 $sb->provide("core/lib/Themer");
 /**
  * Themer class
- * @ingroup core
+ * @ingroup Themer
  */
 class Themer {
 	var $enabled = array();
 	
 	function __construct() {
-		global $sb;
-		$this->enabled = $sb->publish("themes");
+		$this->enabled = config("themes");
 	}
 	
 	function enable($theme) {
-		global $sb;
-		$sb->import("util/subscribe");
-		$sb->subscribe("themes", "global", 10, "return_it", $theme);
+		$this->enabled[] = $theme;
 	}
 	
 	function disable($theme) {
-		global $sb;
-		$sb->import("util/subscribe");
-		$sb->unsubscribe("themes", "global", 10, "return_it", $theme);
+		unset($this->enabled[array_search($theme, $this->enabled)]);
 	}
 }

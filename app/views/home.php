@@ -1,2 +1,2 @@
-	<h2>Congratulations, she rides!</h2>
-	<p><strong>You&#39;ve successfully installed Starbug PHP!</strong></p>
+	<h1>Congratulations, she rides!</h1>
+	<p>You&#39;ve successfully installed Starbug PHP!</p>

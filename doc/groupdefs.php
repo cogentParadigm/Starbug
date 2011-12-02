@@ -40,6 +40,11 @@
 		 * @ingroup core
 		 * Database related files
 		 */
+		/**
+		 * @defgroup lib
+		 * @ingroup core
+		 * core libraries
+		 */
 	/**
 	 * @defgroup etc
 	 * @ingroup StarbugPHP

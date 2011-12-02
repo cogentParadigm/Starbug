@@ -15,10 +15,10 @@ class CoreMigration extends Migration {
 		global $schemer;
 		// This adds a table to the schema, The Schemer builds up a schema with all of the migrations that are to be run, and then updates the db
 		$this->table("users",
-			"first_name  type:string  length:64",
-			"last_name  type:string  length:64",
-			"username  type:string  length:128  unique:",
-			"email  type:string  length:128  unique:",
+			"first_name  type:string  length:64  list:true",
+			"last_name  type:string  length:64  list:true",
+			"username  type:string  length:128  unique:  list:true",
+			"email  type:string  length:128  unique:  list:true",
 			"password  type:password  confirm:password_confirm  md5:  optional_update:",
 			"memberships  type:int",
 			"address  type:string  length:128",
@@ -30,7 +30,7 @@ class CoreMigration extends Migration {
 		);
 		//This will be stored immediately after the creation of the users table
 		$this->store("users", "username:root", "memberships:1");
-		$this->table("permits",
+		$this->table("permits  list:all",
 			"role  type:string  length:30",
 			"who  type:int  default:0",
 			"action  type:string  length:100",
@@ -39,58 +39,59 @@ class CoreMigration extends Migration {
 			"related_id  type:int  default:0"
 		);
 		$this->table("uris",
-			"path  type:string  length:64",
-			"template  type:string  length:64",
-			"title  type:string  length:128",
-			"parent  type:int  default:0",
-			"sort_order  type:int  default:0",
-			"check_path  type:bool  default:1",
+			"path  type:string  length:64  list:true",
+			"title  type:string  length:128  list:true",
+			"template  type:string  length:64  default:  list:true",
+			"format  type:string  length:16  default:html  list:true",
+			"parent  type:int  default:0  list:false",
+			"sort_order  type:int  default:0  list:false",
+			"check_path  type:bool  default:1  list:false",
 			"prefix  type:string  length:128  default:app/views/",
-			"theme  type:string  length:128  default:",
-			"options  type:text"
+			"theme  type:string  length:128  default:  list:true",
+			"layout  type:string  length:64  default:"
 		);
-		$this->table("tags",
+		$this->table("tags  list:all",
 			"tag  type:string  length:30  default:",
 			"raw_tag  type:string  length:50  default:"
 		);
-		$this->table("uris_tags",
+		$this->table("uris_tags  list:all",
 			"tag_id  type:int  default:0  key:primary  references:tags id  update:cascade  delete:cascade",
 			"owner  type:int  default:1  key:primary  references:users id  update:cascade  delete:cascade",
 			"object_id  type:int  default:0  key:primary  references:uris id  update:cascade  delete:cascade"
 		);
-		$this->table("leafs",
+		$this->table("leafs  list:all",
 			"leaf  type:string  length:128",
 			"page  type:string  length:64",
 			"container  type:string  length:32",
 			"position  type:int"
 		);
-		$this->table("text_leaf",
+		$this->table("text_leaf  list:all",
 			"page  type:string  length:64",
 			"container  type:string  length:32",
 			"position  type:int",
 			"content  type:text  length:5000"
 		);
-		$this->table("files",
+		$this->table("files  list:all",
 			"mime_type  type:string  length:128",
 			"filename  type:string  length:128",
 			"caption  type:string  length:255"
 		);
-		$this->table("options",
+		$this->table("options  list:all",
 			"name  type:string  length:64",
 			"value  type:text  default:",
 			"autoload  type:bool  default:0"
 		);
 		$this->table("emails",
-			"name  type:string  length:64",
-			"subject  type:string  length:128",
+			"name  type:string  length:64  list:true",
+			"subject  type:string  length:128  list:true",
 			"body  type:text"
 		);
 		// URIS
-		$this->uri("sb-admin", "template:Login  title:Bridge  prefix:core/app/views/");
-		$this->uri("sb", "template:Starbug  prefix:core/app/views/  collective:1"); //parent:sb-admin
-		$this->uri("sb/generate", "template:../sb/generate  prefix:core/app/views/  collective:1"); //parent:sb-admin
-		$this->uri("api", "template:../Api  prefix:core/app/views/  check_path:0");
-		$this->uri("documentation", "template:Documentation  prefix:core/app/views/  collective:1  check_path:0");
+		$this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
+		$this->uri("sb", "prefix:core/app/views/ groups:root"); //parent:sb-admin
+		
+		$this->uri("api", "template:api  prefix:core/app/views/  check_path:0");
+		$this->uri("documentation", "template:documentation  prefix:core/app/views/  check_path:0  groups:root");
 		//HOME PAGE
 		$this->uri(Etc::DEFAULT_PATH);
 		//404 PAGE
@@ -102,11 +103,15 @@ class CoreMigration extends Migration {
 		$this->uri("logout");
 		$this->uri("forgot-password");
 		//Rogue IDE
-		$this->uri("rogue", "title:Rogue IDE  template:Blank  prefix:core/app/views/  collective:0");
+		$this->uri("rogue", "title:Rogue IDE  format:xhr  prefix:core/app/views/  groups:root");
 		//Admin
-		$this->uri("admin", "title:Admin  template:Admin  collective:4  theme:storm");
+		$this->uri("admin", "collective:4  theme:storm");
 		//Uploader - default permission only allows root to upload
-		$this->uri("upload", "prefix:core/app/views/  template:Blank  collective:1");
+		$this->uri("upload", "prefix:core/app/views/  format:xhr  groups:root");
+		
+		$this->uri("list", "prefix:core/app/views/  layout:one-column  groups:user");
+		$this->uri("create", "prefix:core/app/views/  layout:one-column  groups:user");
+		$this->uri("update", "prefix:core/app/views/  layout:one-column  groups:user");
 
 		// URI PERMITS
 		$this->permit("uris::read", "collective:global");
@@ -117,7 +122,15 @@ class CoreMigration extends Migration {
 		$this->permit("users::register", "everyone:table");
 		$this->permit("users::update_profile", "owner:global");
 
-		//ENABLE LOGGING
+		//LOGGING TABLES
+		//ERROR LOG
+		$this->table("errors",
+			"type  type:string  length:64",
+			"action  type:string  length:64  default:",
+			"field  type:string  length:64",
+			"message  type:text  length:512"
+		);
+		//SQL TRANSACTION LOG (MUST BE ENABLED IN etc/Etc.php)
 		if (Etc::ENABLE_SQL_LOG) {
 			$this->table("log",
 				"table_name  type:string  length:100",
@@ -127,7 +140,7 @@ class CoreMigration extends Migration {
 				"old_value  type:text",
 				"new_value  type:text"
 			);
-			foreach (array("users", "permits", "uris", "tags", "uris_tags", "leafs", "text_leaf", "files", "options", "emails") as $tbl) {
+			foreach (array("users", "permits", "uris", "tags", "uris_tags", "leafs", "text_leaf", "files", "options", "emails", "errors") as $tbl) {
 				$this->after("$tbl::insert", $this->get_logging_trigger("$tbl", "insert"));
 				$this->after("$tbl::update", $this->get_logging_trigger("$tbl", "update"));
 				$this->after("$tbl::delete", $this->get_logging_trigger("$tbl", "delete"));

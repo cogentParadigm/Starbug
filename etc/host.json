@@ -7,9 +7,8 @@
 	"PREFIX" : "sb_",
 
 	"WEBSITE_URL" : ["localhost/", "URL of website"],
-
-	"JAVA_PATH" : ["/usr/bin/java", "Java paths"],
-	"SAXON_PATH" : "/usr/share/java/saxon/saxon9he.jar",
 	
-	"TIME_ZONE" : ["America/Vancouver", "Time Zone"]
+	"TIME_ZONE" : ["America/Vancouver", "Time Zone"],
+	
+	"ENABLE_ERROR_LOG" : ["true", "Log errors"]
 }

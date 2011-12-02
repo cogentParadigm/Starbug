@@ -141,9 +141,11 @@ class form {
 		$ops['name'] = $name;
 		//id, label, and class
 		if (empty($ops['id'])) $ops['id'] = $ops['name'];
-		if (empty($ops['label'])) $ops['label'] = str_replace("_", " ", ucwords($ops['name']));
+		if (empty($ops['label'])) $ops['label'] = ucwords(str_replace("_", " ", $ops['name']));
 		if (empty($ops['error'][$ops['name']])) $ops['error'][$ops['name']] = "This field is required.";
 		$ops['class'] = (empty($ops['class'])) ? $ops['type'] : $ops['class']." ".$ops['type'];
+		if ($ops['type'] == 'password') $ops['class'] .= " text";
+		$ops['class'] .= " ".$ops['name']."-field";
 	}
 
 	/**
@@ -165,7 +167,7 @@ class form {
 		}
 		assign("attributes", $ops, $this->scope);
 		assign("control", $tag, $this->scope);
-		return capture("form/$capture", $this->scope);
+		return capture(array($this->model."/form/$ops[field]-$capture", "form/$ops[field]-$capture", $this->model."/form/$capture", "form/$capture"), $this->scope);
 	}
 
 	function text($ops) {
@@ -223,7 +225,7 @@ class form {
 		$this->fill_ops($ops);
 		//POSTed or default value
 		$var = $this->get($ops['name']);
-		if (!empty($var)) $ops['value'] = htmlentities($var);
+		if (!empty($var) && $type != "password") $ops['value'] = htmlentities($var);
 		else if (!empty($ops['default'])) {
 			$ops['value'] = $ops['default'];
 			unset($ops['default']);
@@ -326,140 +328,5 @@ class form {
 		return $this->form_control("textarea", $ops);
 	}
 	
-}
-/**
- * outputs a text field
- * @param string $ops the options
- * @ingroup form
- */
-function text($ops) {
-	global $global_form;
-	echo $global_form->text($ops);
-}
-/**
- * outputs a password
- * @param string $ops the options
- * @ingroup form
- */
-function password($ops) {
-	global $global_form;
-	echo $global_form->password($ops);
-}
-/**
- * outputs a hidden field
- * @param string $ops the options
- * @ingroup form
- */
-function hidden($ops) {
-	global $global_form;
-	echo $global_form->hidden($ops);
-}
-/**
- * outputs a submit button
- * @param string $ops the options
- * @ingroup form
- */
-function submit($ops="") {
-	global $global_form;
-	echo $global_form->submit($ops);
-}
-/**
- * outputs a button
- * @param string $ops the options
- * @ingroup form
- */
-function button($ops="") {
-	global $global_form;
-	echo $global_form->button($ops);
-}
-/**
- * outputs a file input
- * @param string $ops the options
- * @ingroup form
- */
-function file_select($ops) {
-	global $global_form;
-	echo $global_form->file($ops);
-}
-/**
- * outputs an image input
- * @param string $ops the options
- * @ingroup form
- */
-function image($ops) {
-	global $global_form;
-	echo $global_form->image($ops);
-}
-/**
- * outputs a checkbox input
- * @param string $ops the options
- * @ingroup form
- */
-function checkbox($ops) {
-	global $global_form;
-	echo $global_form->checkbox($ops);
-}
-/**
- * outputs a radio button
- * @param string $ops the options
- * @ingroup form
- */
-function radio($ops) {
-	global $global_form;
-	echo $global_form->radio($ops);
-}
-/**
- * outputs an input
- * @param string $ops the options
- * @ingroup form
- */
-function input($type, $ops) {
-	global $global_form;
-	echo $global_form->input($type, $ops);
-}
-/**
- * outputs a select field
- * @param string $ops the field info
- * @param array $options the option elements
- * @ingroup form
- */
-function select($ops, $options=array()) {
-	global $global_form;
-	echo $global_form->select($ops, $options);
-}
-/**
- * outputs a date select
- * @param string $ops the options
- * @ingroup form
- */
-function date_select($ops) {
-	global $global_form;
-	echo $global_form->date_select($ops);
-}
-/**
- * outputs a time select
- * @param string $ops the options
- * @ingroup form
- */
-function time_select($ops) {
-	global $global_form;
-	echo $global_form->time_select($ops);
-}
-/**
- * outputs a textarea
- * @param string $ops the options
- * @ingroup form
- */
-function textarea($ops) {
-	global $global_form;
-	echo $global_form->textarea($ops);
-}
-/**
- * outputs a closing form tag
- * @ingroup form
- */
-function close_form() {
-	global $global_form;
-	render("form/close", $global_form->scope);
 }
 ?>

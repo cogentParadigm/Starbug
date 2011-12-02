@@ -1,9 +1,9 @@
 /* Custom CSS for Storm */
 /********************* structural elements *********************/
 body{background:url(../images/bg.png) repeat-x #FFF;color:#666}
-.page{position:relative;padding:12px}
+.page{position:relative;padding:7px 12px}
 #top-right{float:right;color:#FFF}
-body h1, body.claro h1{margin:0 0 2px 0;font-weight:bold;font-size:140%}
+body h1, body.claro h1{margin:0 0 6px 0;font-weight:bold;font-size:140%}
 #subhead{display:block;margin:0 0 10px 2px;color:#999;font-size:90%;height:16px}
 #tabs{width:auto;position:absolute;right:12px}
 #nav{height:50px}

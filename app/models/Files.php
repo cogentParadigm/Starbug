@@ -1,32 +1,29 @@
 <?php
 class Files extends FilesModel {
 
-	function create() {
-		$record = $_POST['files'];
-		$errors = $this->upload($record, $_FILES['file']);
-		return $errors;
+	function create($record) {
+		$this->upload($record, $_FILES['file']);
 	}
 	
 	function upload($record, $file) {
 		if (!empty($file['name'])) {
-			if (!($file["size"] < 1000000)) return array("filename" => array("size" => "You must upload a file that is less than ".(round(1000000/1024))."kB"));
-			if ($file["error"] > 0) return array("filename" => array("file" => $file["error"]));
+			if (!($file["size"] < 1000000)) error("You must upload a file that is less than ".(round(1000000/1024))."kB", "filename");
+			if ($file["error"] > 0) error($file["error"], "filename");
 			$record['filename'] = str_replace(" ", "_", $file['name']);
 			$record['mime_type'] = $this->get_mime($file['tmp_name']);
-			$errors = $this->store($record);
-			if ((empty($errors)) && (!empty($record['filename']))) {
+			$this->store($record);
+			if ((empty(errors())) && (!empty($record['filename']))) {
 				$id = (empty($record['id'])) ? $this->insert_id : $record['id'];
 				move_uploaded_file($file["tmp_name"], "app/public/uploads/".$id."_".$record['filename']);
 			}
 		} else {
 			$record['filename'] = "";
-			$errors = $this->store($record);
+			$this->store($record);
 		}
-		return $errors;
 	}
 
-	function delete() {
-		$this->remove("id='" .$_POST['files']['id'] ."'");
+	function delete($file) {
+		$this->remove("id='" .$file['id'] ."'");
 		return array();
 	}
 	

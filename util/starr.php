@@ -29,6 +29,8 @@ class starr {
 			if (false !== ($pos = strpos($keypair, ":"))) {
 				$key = substr($keypair, 0, $pos);
 				$value = substr($keypair, $pos+1);
+				if ($value == "false") $value = false;
+				if ($value == "true") $value = true;
 				$arr[$key] = $value;
 			} else if ($keypair!="") $arr[] = $keypair;
 		}

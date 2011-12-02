@@ -10,7 +10,7 @@
 /**
  * @defgroup grid
  * grid utility
- * @ingroup grid
+ * @ingroup util
  */
 $sb->provide("util/grid");
 /**
@@ -27,30 +27,23 @@ class grid {
 		efault($ops['jsId'], $ops['id']);
 		efault($ops['style'], "width:100%");
 		efault($ops['autoHeight'], "100");
+		efault($ops['rowsPerPage'], "100");
 		efault($ops['dojoType'], "starbug.grid.EnhancedGrid");
-		if (!empty($ops['orderColumn'])) efault($ops['plugins'], "{nestedSorting: true, cellFormatter: true, dnd: true}");
-		else efault($ops['plugins'], "{nestedSorting: true, cellFormatter: true}");
+		if (!empty($ops['orderColumn'])) efault($ops['plugins'], "{nestedSorting: true, dnd: true}");
+		else efault($ops['plugins'], "{nestedSorting: true}");
+		$ops['apiQuery'] = base64_encode($query);
 		$this->ops = $ops;
-		$this->query($query);
 	}
 	function add_column($col, $caption="") {
 		$col = starr::star($col);
-		efault($caption, ucwords($col[0]));
-		$col['content'] = $caption;
-		$tag = "field:".array_shift($col);
-		foreach ($col as $k=> $v) $tag .= "  $k:$v";
-		$this->headers[] = $tag;
-	}
-	function query($query) {
-		$this->ops['storeUrl'] = uri("api/".$this->ops['models']."/get.json?query=".base64_encode($query));
+		efault($caption, ucwords(str_replace("_", " ", $col[0])));
+		$col['caption'] = $caption;
+		$col['field'] = array_shift($col);
+		$this->headers[] = $col;
 	}
 	function render() {
-		$tag = "";
-		foreach ($this->ops as $k => $v) $tag .= "  $k:$v";
-		$output = str_replace("</table>", "", tag("table  echo:false$tag"));
-		$output .= "<thead><tr>";
-		foreach ($this->headers as $col) $output .= tag("th  $col  echo:false");
-		$output .= "</tr></thead></table>";
-		echo $output;
+		assign("options", $this->ops);
+		assign("columns", $this->headers);
+		render("grid");
 	}
 }

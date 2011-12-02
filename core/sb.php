@@ -29,9 +29,17 @@ class sb {
 	 */
 	var $insert_id;
 	/**
+	 * @var string holds the active scope (usually 'global' or a model name)
+	 */
+	var $active_scope = "global";
+	/**
 	 * @var array holds the utils that have been provided
 	 */
 	var $provided = array();
+	/**
+	 * @var array holds configuration objects
+	 */
+	var $confs = array();
 	/**
 	 * @var array holds instantiated models
 	 */
@@ -72,21 +80,28 @@ class sb {
 	}
 
 	/**
-	 * get or set config variables from json files in etc/
+	 * get or set config variables from json files
 	 * @param string $key the file name and optional sub indices. for example, 'themes' or 'fixtures.base'
 	 */
-	 function config($key, $value=null) {
-		 $parts = explode(".", $key);
-		 $key = array_shift($parts);
-		 $file = json_decode(file_get_contents(BASE_DIR."/etc/$key.json"), true);
-		 $config = &$file;
+	function &config($key, $value=null, $dir="etc/") {
+		$parts = explode(".", $key);
+		$key = array_shift($parts);
+		if (empty($this->confs[$key])) {
+			$raw = explode("\n", file_get_contents(BASE_DIR."/$dir$key.json"));
+			$raw = array_filter($raw, function($item) {
+				$first = substr(trim($item), 0, 1);
+				return (in_array($first, array('"', '{', '}', '[', ']')) || is_numeric($first));
+			});
+			$this->confs[$dir.$key] = json_decode(join("\n", $raw), true);
+		}
+		$config = &$this->confs[$dir.$key];
 		 while (!empty($parts)) {
 			 $k = array_shift($parts);
 			 $config = &$config[$k];
 		 }
 		 if ($value != null) {
 			 $config = $value;
-			 file_put_contents(BASE_DIR."/etc/$key.json", json_encode($file));
+			 file_put_contents(BASE_DIR."/$dir$key.json", json_encode($this->confs[$dir.$key]));
 		 }
 		 return $config;
 	 }
@@ -269,6 +284,8 @@ class sb {
 	 * @return array validation errors
 	 */
 	function queue($name, $fields, $from="auto") {
+		$oldscope = $this->active_scope;
+		$this->active_scope = $name;
 		$thefilters = ($this->has($name)) ? $this->get($name)->filters : array();
 		$errors = $byfilter = array();
 		$storing = false;
@@ -285,19 +302,20 @@ class sb {
 			include(BASE_DIR."/core/app/filters/store/$filter.php");
 			if (!$on_store) unset($byfilter[$filter]);
 		}
-		foreach($errors as $col => $err) if (empty($err)) unset($errors[$col]);
-		if (!empty($errors)) $this->errors = array_merge_recursive($this->errors, array($name => $errors));
+		foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
 		$this->to_store[] = array("model" => $name, "fields" => $fields, "from" => $from, "filters" => $byfilter);
+		$this->active_scope = $oldscope;
 	}
 
 	/**
 	 * proccess the queue of data for storage
 	 */
 	function store_queue() {
+		$oldscope = $this->active_scope;
 		foreach ($this->to_store as $store) {
 			$storing = true;
 			$inserting = $updating = false;
-			$name = $store['model'];
+			$name = $this->active_scope = $store['model'];
 			$fields = $store['fields'];
 			$from = $store["from"];
 			$filters = $store["filters"];
@@ -310,8 +328,7 @@ class sb {
 			} else if ((false !== $from) && (!is_array($from))) $from = starr::star($from);
 			if (is_array($from)) $updating = true; else $inserting = true;
 			foreach ($filters as $filter => $args) include(BASE_DIR."/core/app/filters/store/$filter.php");
-			foreach($errors as $col => $err) if (empty($err)) unset($errors[$col]);
-			if (!empty($errors)) $this->errors = array_merge_recursive($this->errors, array($name => $errors));
+			foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
 			if (empty($this->errors)) { //no errors
 				$pre_store_time = date("Y-m-d H:i:s");
 				$fields['modified'] = date("Y-m-d H:i:s");
@@ -375,6 +392,7 @@ class sb {
 			}
 		}
 		$this->to_store = array();
+		$this->active_scope = $oldscope;
 	}
 
 	/**
@@ -390,6 +408,7 @@ class sb {
 				$this->record_count = $del->rowCount();
 				return array();
 			} catch(PDOException $e) {
+				error($e->getMessage(), "global", "DB");
 				die("DB Exception: ".$e->getMessage());
 			}
 		}
@@ -402,13 +421,14 @@ class sb {
 	 */
 	function post_act($key, $value) {
 		if ($object = $this->get($key)) {
+			$this->active_scope = $key;
 			$permits = isset($_POST[$key]['id']) ? $this->query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : $this->query($key, "action:$value  priv_type:table");
-			if (($this->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $errors = $object->$value($_POST[$key]);
-			else $errors = array("global" => array("forbidden" => "You do not have sufficient permission to complete your request."));
-			if (!empty($errors)) $this->errors = array_merge_recursive($this->errors, array($key => $errors));
+			if (($this->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $object->$value($_POST[$key]);
+			else error("You do not have sufficient permission to complete your request.");
+			$this->active_scope = "global";
 			if (!empty($this->errors[$key])) {
 				global $request;
-				if ($request->format != "json") $request->return_path();
+				$request->return_path();
 			}
 		}
 	}
@@ -434,14 +454,6 @@ class sb {
 		$permit['related_table'] = P($table);
 		return $this->store("permits", $permit, $filters);
 	}
-
-	/**
-	 * check that an action was called and no errors occurred
-	 * @param string $model the model name
-	 * @param string $action the function name
-	 * @return bool true if the function was called without returning errors
-	 */
-	public function success($model, $action) { return (($_POST['action'][$model] == $action) && (empty($this->errors[$model]))); }
 	
 	/**
 	 * mixin an object to import its functions into this object

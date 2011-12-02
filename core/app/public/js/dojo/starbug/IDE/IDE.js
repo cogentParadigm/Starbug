@@ -12,21 +12,25 @@ dojo.declare('starbug.IDE.IDE', [dijit._Widget, dijit._Templated], {
 	tabs: [],
 	positions: {},
 	selectedTab: 0,
+	rogueURL: '',
 	openURL: '',
 	saveURL: '',
 	browseURL: '',
 	errorURL: '',
 	gitURL: '',
 	startDir: '.',
+	lastUpdate:'',
 	files: '[]',
 	timers: [],
 	dialog: null,
 	branches:null,
 	info:null,
+	consoleTimer:null,
 	templateString: dojo.cache("starbug", "templates/IDE.html"),
 	widgetsInTemplate: true,
 	postCreate: function() {
 		this.inherited(arguments);
+		this.lastUpdate = dojo.config.serverTime;
 		this.dialog = new dijit.Dialog();
 		this.browseTo(this.startDir);
 		this.git('status');
@@ -42,6 +46,7 @@ dojo.declare('starbug.IDE.IDE', [dijit._Widget, dijit._Templated], {
 				this.saveFile();		
 			}
 		}));
+		this.consoleTimer = setInterval(dojo.hitch(this, 'updateConsole'), 4000);
 	},
 	onTabSelected: function(tab) {
 		this.selectedTab = parseInt(tab.id.substr(tab.id.length-1, 1));
@@ -52,6 +57,18 @@ dojo.declare('starbug.IDE.IDE', [dijit._Widget, dijit._Templated], {
 			content: {browse: loc},
 			load: dojo.hitch(this, function(data) {
 				this.browser.set('content', data);
+			})
+		});
+	},
+	updateConsole: function() {
+		dojo.xhrGet({
+			url: this.rogueURL+'/console',
+			content: {time: this.lastUpdate},
+			handleAs:'json',
+			load: dojo.hitch(this, function(data) {
+				this.lastUpdate = data.time;
+				data.html = this.console.get('content') + data.html;
+				this.console.set('content', data.html);
 			})
 		});
 	},

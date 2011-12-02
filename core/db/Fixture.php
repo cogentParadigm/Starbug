@@ -5,11 +5,17 @@
  * This file is part of StarbugPHP
  * @file core/db/Fixture.php
  * @author Ali Gangji <ali@neonrain.com>
- * @ingroup db
+ * @ingroup Fixture
  */
 /**
- * The Fixture class. Fixtures hold data sets used by the testing harness
+ * @defgroup Fixture
+ * the Fixture class
  * @ingroup db
+ */
+$sb->provide("core/db/Fixture");
+/**
+ * The Fixture class. Fixtures hold data sets used by the testing harness
+ * @ingroup Fixture
  */
 class Fixture {
 	var $type = '';
@@ -42,6 +48,8 @@ class Fixture {
 	
 	function store($idx) {
 		store($this->type, $this->records[$idx]);
+		global $sb;
+		print_r($sb->errors);
 		$this->ids[$idx] = sb("insert_id");
 	}
 	
@@ -53,11 +61,15 @@ class Fixture {
 		if (isset($this->ids[$idx])) {
 			remove($this->type, "id='".$this->ids[$idx]."'");
 			unset($this->ids[$idx]);
+		} else {
+			$where = array();
+			foreach ($this->records[$idx] as $k => $v) $where[] = "$k='$v'";
+			remove($this->type, implode(" && ", $where));
 		}
 	}
 	
 	function removeAll() {
-		foreach ($this->ids as $idx => $id) $this->remove($idx);
+		foreach ($this->records as $idx => $record) $this->remove($idx);
 	}
 
 	public function __call($method, $args) {

@@ -5,11 +5,17 @@
  * This file is part of StarbugPHP
  * @file core/db/Migration.php
  * @author Ali Gangji <ali@neonrain.com>
- * @ingroup db
+ * @ingroup Migration
  */
 /**
- * The Migration class. Interacts with the Schemer to manipulate the schema
+ * @defgroup Migration
+ * the Migration
  * @ingroup db
+ */
+$sb->provide("core/db/Migration");
+/**
+ * The Migration class. Interacts with the Schemer to manipulate the schema
+ * @ingroup Migration
  */
 class Migration {
 	/**

@@ -2,15 +2,20 @@
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
- * @file util/Harness.php
+ * @file core/lib/Harness.php
  * @author Ali Gangji <ali@neonrain.com>
- * @ingroup db
+ * @ingroup Harness
+ */
+/**
+ * @defgroup Harness
+ * Testing Harness
+ * @ingroup lib
  */
 $sb->provide("util/Harness");
-include("core/db/Fixture.php");
+$sb->import("core/db/Fixture");
 /**
  * The Harness class. Handles fixtures and test execution
- * @ingroup util
+ * @ingroup Harness
  */
 class Harness {
 	/**
@@ -26,8 +31,7 @@ class Harness {
 	 * constructor. loads layers
 	 */
 	function __construct() {
-		$this->layers = json_decode(file_get_contents(BASE_DIR."/etc/fixtures.json"), true);
-		$this->layer("base");
+		$this->layers = config("fixtures");
 	}
 
 	function  clean() {
@@ -35,20 +39,27 @@ class Harness {
 		$this->fixtures = array();
 	}
 
-	function layer($layer) {
+	function layer($layer, $up=true) {
 		$dependencies = $this->layers[$layer];
 		foreach ($dependencies as $dep) {
-			if (isset($this->layers[$dep])) $this->layer($dep);
-			else if (file_exists(BASE_DIR."/app/fixtures/".ucwords($dep)."Fixture.php")) $this->fixture($dep);
+			if (isset($this->layers[$dep])) $this->layer($dep, $up);
+			else if (file_exists(BASE_DIR."/app/fixtures/".ucwords($dep)."Fixture.php")) $this->fixture($dep, $up);
 		}
 	}
 	
-	function fixture($fixture) {
+	function fixture($fixture, $up=true) {
 		$fixture = ucwords($fixture)."Fixture";
 		include(BASE_DIR."/app/fixtures/".$fixture.".php");
 		$fixture = new $fixture();
-		$fixture->setUp();
+		if ($up) $fixture->setUp();
+		else $fixture->tearDown();
 	}
 
 }
+/**
+ * testing harness
+ * @ingroup global
+ */
+global $harness;
+$harness = new Harness();
 ?>
