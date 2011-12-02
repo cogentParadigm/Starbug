@@ -14,6 +14,9 @@ $help .= "TYPE\tWhat to generate\n";
 $help .= "    \t\tcrud - CRUD views\n";
 $help .= "    \t\tmodel - Object model\n";
 
+// IF GENERATING HOST, SKIP RIGHT TO IT AND EXIT
+if ($generator == "host") include(dirname(__FILE__)."/generate/host/host.php");
+
 // CLI VARS
 $generator = array_shift($argv);
 $model = array_shift($argv);
@@ -28,9 +31,6 @@ foreach ($argv as $i => $arg) {
 		assign($parts[0], $parts[1]);
 	}
 }
-
-// IF GENERATING HOST, SKIP RIGHT TO IT AND EXIT
-if ($generator == "host") include(dirname(__FILE__)."/generate/host/host.php");
 
 //SET VARS FOR GENERATOR 
 $model_name = $model;
