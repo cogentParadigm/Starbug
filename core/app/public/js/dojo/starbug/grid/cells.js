@@ -22,7 +22,7 @@ dojo.declare("starbug.grid.cells.Select", dojox.grid.cells.Select, {
 			if (-1 !== this.caption.indexOf('%'+i+'%')) label = label.replace('%'+i+'%', item[i][0]);
 		}
 		this.options.push(label);
-		this.values.push(item.[this.value_field][0]);
+		this.values.push(item[this.value_field][0]);
 	},
 	formatter: function(data, rowIndex) {
 		var label = this.caption;
