@@ -25,7 +25,7 @@ dojo.declare('starbug.list.List', [dijit._Widget, dijit._Templated], {
 		this.models = this.store.models;
 		this.store.fetch({onItem:dojo.hitch(this, 'addItem')});
 		for (var i in this.headers) {
-			dojo.create('li', {id:this.id+'_'+i, class:i, innerHTML:this.headers[i].label}, this.header, 'last');
+			dojo.create('li', {'id':this.id+'_'+i, 'class':i, 'innerHTML':this.headers[i].label}, this.header, 'last');
 		}
 	},
 	addItem: function(item) {
