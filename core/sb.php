@@ -88,10 +88,10 @@ class sb {
 		$key = array_shift($parts);
 		if (empty($this->confs[$key])) {
 			$raw = explode("\n", file_get_contents(BASE_DIR."/$dir$key.json"));
-			$raw = array_filter($raw, function($item) {
+			foreach ($raw as $idx => $item) {
 				$first = substr(trim($item), 0, 1);
-				return (in_array($first, array('"', '{', '}', '[', ']')) || is_numeric($first));
-			});
+				if (!(in_array($first, array('"', '{', '}', '[', ']')) || is_numeric($first))) unset($raw[$idx]);
+			}
 			$this->confs[$dir.$key] = json_decode(join("\n", $raw), true);
 		}
 		$config = &$this->confs[$dir.$key];
