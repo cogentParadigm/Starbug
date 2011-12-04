@@ -33,3 +33,4 @@
 @import url("../../../../public/js/dojo/dojox/grid/enhanced/resources/EnhancedGrid.css");
 @import url("../../../../public/js/dojo/dojox/grid/enhanced/resources/claro/EnhancedGrid.css");
 @import url("../../../../public/js/dojo/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css");
+.dojoxGridRowTable{margin-bottom:0}
