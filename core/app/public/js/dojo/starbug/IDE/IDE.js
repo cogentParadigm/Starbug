@@ -1,14 +1,18 @@
-dojo.provide("starbug.IDE.IDE");
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit.layout.BorderContainer");
-dojo.require("dijit.layout.AccordionContainer");
-dojo.require("dijit.layout.TabContainer");
-dojo.require("dijit.layout.ContentPane");
-dojo.require("dijit.Dialog");
-dojo.require("dijit.form.ComboBox");
-dojo.require("dijit.form.Button");
-dojo.declare('starbug.IDE.IDE', [dijit._Widget, dijit._Templated], {
+define([
+	"dojo",
+	"dijit",
+	"dijit/_Widget",
+	"dijit/_Templated",
+	"dojo/text!../templates/IDE.html",
+	"dijit/layout/BorderContainer",
+	"dijit/layout/AccordionContainer",
+	"dijit/layout/TabContainer",
+	"dijit/layout/ContentPane",
+	"dijit/Dialog",
+	"dijit/form/ComboBox",
+	"dijit/form/Button"
+], function(dojo, dijit, _Widget, _Templated, template) {
+var IDE = dojo.declare('starbug.IDE.IDE', [_Widget, _Templated], {
 	tabs: [],
 	positions: {},
 	selectedTab: 0,
@@ -26,7 +30,7 @@ dojo.declare('starbug.IDE.IDE', [dijit._Widget, dijit._Templated], {
 	branches:null,
 	info:null,
 	consoleTimer:null,
-	templateString: dojo.cache("starbug", "templates/IDE.html"),
+	templateString: template,
 	widgetsInTemplate: true,
 	postCreate: function() {
 		this.inherited(arguments);
@@ -278,4 +282,6 @@ dojo.declare('starbug.IDE.IDE', [dijit._Widget, dijit._Templated], {
 	push: function() {
 		this.git('push');
 	}
+});
+return IDE;
 });

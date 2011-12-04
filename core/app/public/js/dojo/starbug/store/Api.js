@@ -1,6 +1,8 @@
-dojo.provide("starbug.store.Api");
-dojo.require("dojo.store.util.QueryResults");
-dojo.declare("starbug.store.Api", null, {
+define([
+	"dojo",
+	"dojo/store/util/QueryResults"
+], function(dojo, QueryResults) {
+return dojo.declare("starbug.store.Api", null, {
 	// query: String
 	//		The API query string
 	apiQuery: "",
@@ -135,6 +137,7 @@ dojo.declare("starbug.store.Api", null, {
 			var range = results.ioArgs.xhr.getResponseHeader("Content-Range");
 			return range && (range=range.match(/\/(.*)/)) && +range[1];
 		});
-		return dojo.store.util.QueryResults(results);
+		return QueryResults(results);
 	}
+});
 });

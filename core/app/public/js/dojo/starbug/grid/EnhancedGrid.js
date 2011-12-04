@@ -1,13 +1,16 @@
-dojo.provide("starbug.grid.EnhancedGrid");
-dojo.require("starbug.data.ObjectStore");
-dojo.require("dojox.grid.cells.dijit");
-dojo.require("dojox.grid.EnhancedGrid");
-dojo.require("dojox.grid.enhanced.plugins.NestedSorting");
-dojo.require("dojox.grid.enhanced.plugins.DnD");
-dojo.require("dojox.grid.enhanced.plugins.Menu");
-dojo.require("dojox.grid.enhanced.plugins.IndirectSelection");
-dojo.require("dojox.dtl.filter.strings");
-dojo.declare('starbug.grid.EnhancedGrid', dojox.grid.EnhancedGrid, {
+define([
+	"dojo",
+	"dojo/behavior",
+	"dojox/grid/EnhancedGrid",
+	"starbug/data/ObjectStore",
+	"dojox/grid/cells/dijit",
+	"dojox/grid/enhanced/plugins/NestedSorting",
+	"dojox/grid/enhanced/plugins/DnD",
+	"dojox/grid/enhanced/plugins/Menu",
+	"dojox/grid/enhanced/plugins/IndirectSelection"
+], function(dojo, behavior, dojoxGrid, ObjectStore){
+
+var EnhancedGrid = dojo.declare('starbug.grid.EnhancedGrid', dojoxGrid, {
 	model: '',
 	models: '',
 	action: 'create',
@@ -21,7 +24,7 @@ dojo.declare('starbug.grid.EnhancedGrid', dojox.grid.EnhancedGrid, {
 	hasFetched: false,
 	constructor: function(args) {
 		args.apiQuery = args.models+'  query:'+args.apiQuery;
-		this.store = new starbug.data.ObjectStore(args);
+		this.store = new ObjectStore(args);
 		this.model = this.store.model;
 		this.models = this.store.models;
 	},
@@ -30,7 +33,7 @@ dojo.declare('starbug.grid.EnhancedGrid', dojox.grid.EnhancedGrid, {
 		dojo.connect(this, "onMouseDown", this, 'setMouseDown');
 		dojo.connect(this, "onMouseUp", this, 'setMouseUp');
 		if (this.orderColumn != '') dojo.subscribe(this.rowMovedTopic, this, 'dropSelectedRows');
-		setTimeout(dojo.hitch(dojo.behavior, 'apply'), 1000);
+		setTimeout(dojo.hitch(behavior, 'apply'), 1000);
 	},
 	setMouseDown: function() {
 		this.mouse_down = true;
@@ -69,5 +72,8 @@ dojo.declare('starbug.grid.EnhancedGrid', dojox.grid.EnhancedGrid, {
 		dojo.behavior.apply();
 	}
 });
-starbug.grid.EnhancedGrid.markupFactory = dojox.grid.EnhancedGrid.markupFactory;
-starbug.grid.EnhancedGrid.registerPlugin = dojox.grid.EnhancedGrid.registerPlugin;
+EnhancedGrid.markupFactory = dojoxGrid.markupFactory;
+EnhancedGrid.registerPlugin = dojoxGrid.registerPlugin;
+return EnhancedGrid;
+});
+

@@ -1,7 +1,10 @@
-dojo.provide("starbug.grid.cells");
-dojo.require("dojox.grid.cells");
-dojo.require("starbug.data.ApiStore");
-dojo.declare("starbug.grid.cells.Select", dojox.grid.cells.Select, {
+define([
+	"dojo",
+	"dojox",
+	"dojox/grid/cells",
+	"starbug/store/ObjectStore"
+], function (dojo, dojox, cells, ObjectStore) {
+var select = dojo.declare("starbug.grid.cells.Select", dojox.grid.cells.Select, {
 	options: [],
 	values: [],
 	query: '',
@@ -14,7 +17,7 @@ dojo.declare("starbug.grid.cells.Select", dojox.grid.cells.Select, {
 	postCreate: function() {
 		this.models = this.query.split('  ', 1)[0];
 		this.model = this.models.split('.', 1)[0];
-		this.store = new starbug.data.ApiStore({query: this.query, onItem:dojo.hitch(this,'onItem')});
+		this.store = new ObjectStore({apiQuery: this.query, onItem:dojo.hitch(this,'onItem')});
 	},
 	onItem: function(item, store) {
 		var label = this.caption;
@@ -39,7 +42,7 @@ dojo.declare("starbug.grid.cells.Select", dojox.grid.cells.Select, {
 starbug.grid.cells.Select.markupFactory = function(node, cell){
 	dojox.grid.cells.Cell.markupFactory(node, cell);
 };
-dojo.declare("starbug.grid.cells.Status", starbug.grid.cells.Select, {
+dojo.declare("starbug.grid.cells.Status", select, {
 	query: 'statuses',
 	caption: '%name%',
 	labelClass: true
@@ -68,6 +71,5 @@ dojo.declare("starbug.grid.cells.TextArea", dojox.grid.cells.Cell, {
 		return n.innerHTML;
 	}
 });
-starbug.grid.cells.TextArea.markupFactory = function(node, cell){
-	dojox.grid.cells.Cell.markupFactory(node, cell);
-};
+return select;
+});
