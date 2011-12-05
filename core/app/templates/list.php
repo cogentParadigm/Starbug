@@ -4,8 +4,11 @@
 		$uri = $request->path."/[action]";
 	}
 	$uri = str_replace('[model]', $model, $uri);
+	efault($links, true);
 ?>
-	<a class="big right round create button" style="margin-top:0" href="<?php echo uri(str_replace("[action]", "create", $uri)); ?>">New <?php echo $options['singular_label']; ?></a>
+	<?php if ($links) { ?>
+		<a class="big right round create button" style="margin-top:0" href="<?php echo uri(str_replace("[action]", "create", $uri)); ?>">New <?php echo $options['singular_label']; ?></a>
+	<?php } ?>
 	<h1><?php echo $options['label']; ?></h1>
 	<?php render_form("search"); ?>
 	<?php
@@ -22,7 +25,9 @@
 		$grid->add_column("id  width:60  formatter:row_options", "Options");
 		$grid->render();
 	?>
-	<a class="big left round create button" href="<?php echo uri(str_replace("[action]", "create", $uri)); ?>">New <?php echo $options['singular_label']; ?></a>
+	<?php if ($links) { ?>
+		<a class="big left round create button" href="<?php echo uri(str_replace("[action]", "create", $uri)); ?>">New <?php echo $options['singular_label']; ?></a>
+	<?php } ?>
 	<script type="text/javascript">
 			function row_options(data, rowIndex) {
 				var text = '<a class="edit button" href="<?php echo uri(str_replace("[action]", "update", $uri)."/"); ?>'+data+'<?= $to; ?>"><img src="<?php echo uri("core/app/public/icons/file-edit.png"); ?>"/></a>';
