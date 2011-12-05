@@ -141,6 +141,7 @@ class form {
 		$ops['name'] = $name;
 		//id, label, and class
 		if (empty($ops['id'])) $ops['id'] = $ops['name'];
+		dfault($ops['nolabel'], false);
 		if (empty($ops['label'])) $ops['label'] = ucwords(str_replace("_", " ", $ops['name']));
 		if (empty($ops['error'][$ops['name']])) $ops['error'][$ops['name']] = "This field is required.";
 		$ops['class'] = (empty($ops['class'])) ? $ops['type'] : $ops['class']." ".$ops['type'];
