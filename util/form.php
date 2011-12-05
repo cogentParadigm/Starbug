@@ -72,7 +72,7 @@ class form {
 		if (!empty($atts)) $atts = $atts." ";
 		if ($this->method == "post") $fields = (empty($this->model)) ? $_POST : $_POST[$this->model];
 		else $fields = (empty( $this->model)) ? $_GET : $_GET[$this->model];
-		$errors = errors($this->model);
+		$errors = errors($this->model, true);
 		assign("attributes", $atts, $this->scope);
 		assign("model", $this->model, $this->scope);
 		assign("url", $this->url, $this->scope);

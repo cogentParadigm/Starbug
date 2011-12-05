@@ -18,12 +18,17 @@
  * @param string $key the model or field to get errors for. If this is empty all errors will be returned. To get errors on a model pass the name of the model. To get errors on a field use array notation such as 'users[first_name]'
  * @return array errors indexed by model and field, empty if no errors
  */
-function errors($key="") {
+function errors($key="", $values=false) {
+	if (is_bool($key)) {
+		$values = $key;
+		$key = "";
+	}
 	global $sb;
 	$parts = explode("[", $key);
 	$errors = $sb->errors;
 	foreach ($parts as $p) $errors = $errors[rtrim($p, ']')];
-	return $errors;
+	if ($Values) return $errors;
+	else return (empty($errors));
 }
 /**
  * set validation error

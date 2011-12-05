@@ -12,7 +12,7 @@ class Files extends FilesModel {
 			$record['filename'] = str_replace(" ", "_", $file['name']);
 			$record['mime_type'] = $this->get_mime($file['tmp_name']);
 			$this->store($record);
-			if ((empty(errors())) && (!empty($record['filename']))) {
+			if ((!errors()) && (!empty($record['filename']))) {
 				$id = (empty($record['id'])) ? $this->insert_id : $record['id'];
 				move_uploaded_file($file["tmp_name"], "app/public/uploads/".$id."_".$record['filename']);
 			}
