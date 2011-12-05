@@ -25,7 +25,7 @@
 	<a class="big left round create button" href="<?php echo uri(str_replace("[action]", "create", $uri)); ?>">New <?php echo $options['singular_label']; ?></a>
 	<script type="text/javascript">
 			function row_options(data, rowIndex) {
-				var text = '<a class="edit button" href="<?php echo uri(str_replace("[action]", "create", $uri)."/"); ?>'+data+'<?= $to; ?>"><img src="<?php echo uri("core/app/public/icons/file-edit.png"); ?>"/></a>';
+				var text = '<a class="edit button" href="<?php echo uri(str_replace("[action]", "update", $uri)."/"); ?>'+data+'<?= $to; ?>"><img src="<?php echo uri("core/app/public/icons/file-edit.png"); ?>"/></a>';
 				text += '<form method="post" onsubmit="return confirm(\'are you sure you want to delete this item?\');"><input type="hidden" name="action[<?php echo $model; ?>]" value="delete"/><input type="hidden" name="<?php echo $model; ?>[id]" value="'+data+'"/><button class="negative" title="delete"><img src="<?php echo uri("core/app/public/icons/cross.png"); ?>"/></button></form>';
 				return text;
 			}
