@@ -28,7 +28,7 @@ function errors($key="", $values=false) {
 	$errors = $sb->errors;
 	if (!empty($key)) foreach ($parts as $p) $errors = $errors[rtrim($p, ']')];
 	if ($values) return $errors;
-	else return (empty($errors));
+	else return (!empty($errors));
 }
 /**
  * set validation error
