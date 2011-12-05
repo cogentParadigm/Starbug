@@ -26,7 +26,7 @@ function errors($key="", $values=false) {
 	global $sb;
 	$parts = explode("[", $key);
 	$errors = $sb->errors;
-	foreach ($parts as $p) $errors = $errors[rtrim($p, ']')];
+	if (!empty($key)) foreach ($parts as $p) $errors = $errors[rtrim($p, ']')];
 	if ($values) return $errors;
 	else return (empty($errors));
 }
