@@ -31,7 +31,7 @@
 	<script type="text/javascript">
 			function row_options(data, rowIndex) {
 				var text = '<a class="edit button" href="<?php echo uri(str_replace("[action]", "update", $uri)."/"); ?>'+data+'<?= $to; ?>"><img src="<?php echo uri("core/app/public/icons/file-edit.png"); ?>"/></a>';
-				text += '<form method="post" onsubmit="return confirm(\'are you sure you want to delete this item?\');"><input type="hidden" name="action[<?php echo $model; ?>]" value="delete"/><input type="hidden" name="<?php echo $model; ?>[id]" value="'+data+'"/><button class="negative" title="delete"><img src="<?php echo uri("core/app/public/icons/cross.png"); ?>"/></button></form>';
+				text += '<form method="post" onsubmit="return confirm(\'Are you sure you want to delete this item?\');"><input type="hidden" name="action[<?php echo $model; ?>]" value="delete"/><input type="hidden" name="<?php echo $model; ?>[id]" value="'+data+'"/><button class="negative" title="delete"><img src="<?php echo uri("core/app/public/icons/cross.png"); ?>"/></button></form>';
 				return text;
 			}
 	</script>

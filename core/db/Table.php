@@ -109,9 +109,13 @@ class Table {
 		return $sb->remove($this->type, $where);
 	}
 
-	function query($args="", $froms="", $deep="auto") {
+	function query($args="", $froms="", $replacements=array()) {
 		global $sb;
-		$records = $sb->query($this->type.((empty($froms)) ? "" : ",".$froms), $args, (($deep=="auto") ? (!empty($froms)) : $deep));
+		if (is_array($froms)) {
+			$replacements = $froms;
+			$froms = "";
+		}
+		$records = $sb->query($this->type.((empty($froms)) ? "" : ",".$froms), $args, $replacements);
 		$this->record_count = $sb->record_count;
 		return $records;
 	}

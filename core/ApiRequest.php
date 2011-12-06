@@ -75,7 +75,7 @@ class ApiRequest {
 			$ops = array_merge(starr::star($query), $ops);
 		}
 		
-		$data = $sb->query(implode(",", $models), $ops, true);
+		$data = $sb->query(implode(",", $models), $ops);
 		$f = strtoupper($format);
 		$error = $f."errors";
 		if (empty($sb->errors[$model])) {

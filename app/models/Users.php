@@ -44,7 +44,7 @@ class Users extends UsersModel {
 	 * A function for logging in
 	 */
 	function login($login) {
-		$user = $this->query("select:*  where:username='".$login['username']."' && password='".md5($login['password'])."'  limit:1");
+		$user = $this->query("select:*  where:username=? && password=?  limit:1", array($login['username'], md5($login['password'])));
 		if (!empty($user)) {
 			unset($user['password']);
 			$_SESSION[P("id")] = $user['id'];

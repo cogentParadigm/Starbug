@@ -1,9 +1,15 @@
 <?php open_form("model:$model  action:$action  url:$url"); ?>
+	<?php
+		efault($cancel_url, $url);
+	?>
 	<?php foreach ($fields as $name => $field) { ?>
-		<?php if ($field['display'] != false) { ?>
-			<?php
-			?>
-			<div class="field">
+		<?php
+			if (is_string($field['display'])) {
+				$values = explode(",", $field['display']);
+				if (in_array($action, $values)) $field['display'] = true; 
+			}	
+		?>
+		<?php if ($field['display'] === true) { ?>
 				<?php
 					if ($field['input_type'] == "password") $field['class'] .= ((empty($field['class'])) ? "" : " ")."text";
 					else if ($field['input_type'] == "select") {
@@ -23,8 +29,7 @@
 						$field['input_type']($field['filters']['confirm'].$star);
 					}
 				?>
-			</div>
 		<?php } ?>
 	<?php } ?>
-	<div class="field"><button class="left positive" type="submit">Save</button><button class="negative cancel button">Cancel</button></div>
+	<div class="field"><button class="left positive" type="submit">Save</button><button class="negative cancel button"<?php if (!empty($cancel_url)) { ?> onclick="window.location='<?= $cancel_url; ?>'"<?php } ?>>Cancel</button></div>
 <?php close_form(); ?>

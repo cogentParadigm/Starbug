@@ -187,14 +187,15 @@ class sb {
 	 * @param bool $mine optional. if true, joining models will be checked for relationships and ON statements will be added
 	 * @return array record or records
 	 */
-	function query($froms, $args="", $mine=true) {
+	function query($froms, $args="", $replacements=array()) {
 		$froms = explode(",", $froms);
 		$first = array_shift($froms);
 		$args = starr::star($args);
 		efault($args['select'], "*");
 		efault($args['join'], "INNER");
+		efault($args['mine'], true);
 		$from = "`".P($first)."` AS `".$first."`";
-		if (!$mine) foreach ($froms as $f) $from .= " $args[join] JOIN `".P($f)."` AS `".$f."`";
+		if (!$args['mine']) foreach ($froms as $f) $from .= " $args[join] JOIN `".P($f)."` AS `".$f."`";
 		else if (!empty($froms)) {
 			$relations = $this->get($first)->relations;
 			$last = "";
@@ -250,10 +251,11 @@ class sb {
 		$sql = " FROM $from$args[where]$order$limit";
 		if (isset($args['echo'])) echo "SELECT $args[select] ".$sql;
 		try {
-			$res = $this->db->query("SELECT COUNT(*)".$sql);
+			$res = $this->db->prepare("SELECT COUNT(*)".$sql);
+			$res->execute($replacements);
 			$this->record_count = $res->fetchColumn();
 			$records = $this->db->prepare("SELECT $args[select] FROM $from$args[where]$groupby$having$order$limit");
-			$records->execute();
+			$records->execute($replacements);
 		} catch(PDOException $e) {
 			die("DB Exception: ".$e->getMessage());
 		}

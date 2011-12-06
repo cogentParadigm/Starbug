@@ -50,9 +50,9 @@ function sb() {
  * @copydoc sb::query
  * @ingroup data
  */
-function query($froms, $args="", $mine=true) {
+function query($froms, $args="", $replacements=array()) {
 	global $sb;
-	return $sb->query($froms, $args, $mine);
+	return $sb->query($froms, $args, $replacements);
 }
 /**
  * perform a raw query
