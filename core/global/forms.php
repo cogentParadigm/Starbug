@@ -114,9 +114,9 @@ function submit($ops="") {
  * content: the text inside the button
  * any remaining options will be converted to an HTML attribute string and attached
  */
-function button($ops="") {
+function button($label, $ops="") {
 	global $global_form;
-	echo $global_form->button($ops);
+	echo $global_form->button($label, $ops);
 }
 /**
  * outputs a file input
