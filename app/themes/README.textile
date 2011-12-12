@@ -1,0 +1,72 @@
+h1. Themes reference
+
+* Intro
+* Configuration
+* Working with Templates
+* Deploying to a Production Environment
+
+h2. Intro
+
+Themes in Starbug are kept in app/themes/. At any given time there is one *active* theme and one or more *enabled* themes.
+
+let's look at how themes are structured:
+
+* public/
+*        images/
+*        stylesheets/
+* templates/
+* info.json
+
+Only folders named public are directly accesible. All other URLs will be rewritten. Images and stylesheets should be kept in the images and stylesheets folders within public respectively.
+
+The templates folder contains theme templates. Templates are loaded using the render function. see the section on working with templates for more details.
+
+see the next section for details on the info.json file.
+
+h2. Configuration
+
+All configuration for themes are done in these files:
+
+* etc/Etc.php - set the active theme here
+* etc/themes.json - set enabled themes here
+* app/themes/[theme]/info.json - theme specific options
+
+In the info.json file you can specify some basic information about your theme such as a name and description. Additionally you can specify:
+
+h3. regions
+
+a list of templates to be rendered in order that comprise a page. for example:
+<pre><code>regions: ["header", "main", "footer"]</code></pre>
+this means that there are 3 regions in the page, and 3 templates that are going to be rendered.
+
+h3. styles
+
+a list of stylesheets to be loaded. In development mode, they will be loaded indivdually. In production mode they will be built into a single stylsheet.
+The Blueprint CSS framework stylesheets are automatically loaded to provide some common styles.
+
+h2. Working with Templates
+
+When templates are loaded, the templating engine will search these 3 locations in this order:
+
+* app/templates/
+* app/themes/[theme]/templates/
+* core/app/templates/
+
+The first matching template that is found will be loaded.
+
+You can load templates using the assign and render functions. To load a template named "article.php" and pass it the variables "title" and "body" you would do this:
+
+<pre><code><?
+	assign("title" "My Title");
+	assign("body" "My Article");
+	render("article");
+?></code></pre>
+
+for more information on working with templates see core/global/templates.php
+
+h2. Creating a Theme
+
+Starbug includes 2 themes: starbug-1 and storm. starbug-1 is a fixed-width layout and storm is a flexible-width layout. You can use one of these as a starting point,
+and add your theme to etc/themes.json.
+
+Eeach of your themes regions will be rendered in order. Edit the templates to change the markup and put your styles into the stylesheets in the public/stylesheets folder of your theme.

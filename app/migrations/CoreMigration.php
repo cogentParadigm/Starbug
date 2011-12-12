@@ -88,7 +88,7 @@ class CoreMigration extends Migration {
 		);
 		// URIS
 		$this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
-		$this->uri("sb", "prefix:core/app/views/ groups:root"); //parent:sb-admin
+		$this->uri("sb", "prefix:core/app/views/  groups:root"); //parent:sb-admin
 		
 		$this->uri("api", "template:api  prefix:core/app/views/  check_path:0");
 		$this->uri("documentation", "template:documentation  prefix:core/app/views/  check_path:0  groups:root");
