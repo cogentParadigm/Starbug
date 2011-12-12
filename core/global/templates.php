@@ -18,11 +18,11 @@
 	* @param string $key the variable name
 	* @param string $value the value to assign
 	*/
-function assign($key, $value) {
+function assign($key, $value, $scope="global") {
 	global $sb;
 	$sb->import("core/lib/Renderer");
 	global $renderer;
-	$renderer->assign($key, $value);
+	$renderer->assign($key, $value, $scope);
 }
 /**
 	* render a template
@@ -30,7 +30,7 @@ function assign($key, $value) {
 	* @param string $path the path, relative to the request prefix and without the file extension
 	* @param string $scope a rendering scope. if this is empty we will use the active scope. If there is no active scope we will use 'global'
 	*/
-function render($path, $scope="global") {
+function render($path, $scope="") {
 	global $sb;
 	$sb->import("core/lib/Renderer");
 	global $renderer;
@@ -64,15 +64,26 @@ function render_region($region) {
 	* @ingroup templates
 	* @param string $view the view to render
 	*/
-function render_view($view="") {
-	render($view, "views");
+function render_view($view="", $render=true) {
+	if ($render) render($view, "views");
+	else return capture($view, "views");
 }
 /**
 	* render a form
 	* @ingroup templates
 	* @param string $form the form to render
 	*/
-function render_form($form="") {
-	render($form, "forms");
+function render_form($form="", $render=true) {
+	if ($render) render($form, "forms");
+	else return capture($form, "forms");
+}
+/**
+	* render a link
+	* @ingroup templates
+	* @param string $link the link to render
+	*/
+function render_link($link="", $render=true) {
+	if ($render) render($link, "links");
+	else return capture($link, "links");
 }
 ?>

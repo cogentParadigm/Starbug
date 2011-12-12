@@ -25,7 +25,7 @@ if ($open) {
 
 		$type = ($qtype) ? $qtype : FindFileType($open);
 		echo "<select id=\"$id"."_type\" onchange=\"ide.setType('".str_replace("tab", "", $id)."');\" style=\"margin-right:5px;float:left\">";
-		echo "<option value=\"htmlmixed\"".(($type == "php") ? " selected=\"selected\"" : "").">PHP</option>";
+		echo "<option value=\"php\"".(($type == "php") ? " selected=\"selected\"" : "").">PHP</option>";
 		echo "<option value=\"javascript\"".(($type == "javascript") ? " selected=\"selected\"" : "").">JS</option>";
 		echo "<option value=\"css\"".(($type == "css") ? " selected=\"selected\"" : "").">CSS</option>";
 		echo "<option value=\"htmlmixed\"".(($type == "html") ? " selected=\"selected\"" : "").">HTML</option>";

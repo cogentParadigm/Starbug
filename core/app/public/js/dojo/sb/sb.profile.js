@@ -1,9 +1,9 @@
 var copyOnly = function(mid){
 		var list = {
-			"starbug/starbug.profile":1,
-			"starbug/package.json":1
+			"sb/sb.profile":1,
+			"sb/package.json":1
 		};
-		return (mid in list) || /^starbug(.*)templates\//.test(mid) || /^starbug(.*)css\//.test(mid);
+		return (mid in list) || /^sb(.*)templates\//.test(mid) || /^sb(.*)css\//.test(mid);
 	};
 
 var profile = {

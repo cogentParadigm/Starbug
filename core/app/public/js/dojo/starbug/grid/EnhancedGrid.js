@@ -1,5 +1,6 @@
 define([
 	"dojo",
+	"starbug",
 	"dojo/behavior",
 	"dojox/grid/EnhancedGrid",
 	"starbug/data/ObjectStore",
@@ -8,7 +9,7 @@ define([
 	"dojox/grid/enhanced/plugins/DnD",
 	"dojox/grid/enhanced/plugins/Menu",
 	"dojox/grid/enhanced/plugins/IndirectSelection"
-], function(dojo, behavior, dojoxGrid, ObjectStore){
+], function(dojo, starbug, behavior, dojoxGrid, ObjectStore){
 
 var EnhancedGrid = dojo.declare('starbug.grid.EnhancedGrid', dojoxGrid, {
 	model: '',

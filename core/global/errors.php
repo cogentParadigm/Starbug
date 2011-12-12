@@ -44,9 +44,7 @@ function error($error, $field="global", $model="") {
 	efault($sb->errors[$model][$field], array());
 	$sb->errors[$model][$field][] = $error;
 	if (Etc::ENABLE_ERROR_LOG) {
-		$record = array("type" => $model, "field" => $field, "message" => $error);
-		if (!empty($_POST['action'][$model])) $record['action'] = $_POST['action'][$model];
-		store("errors", $record);
+		raw_query("INSERT INTO ".P("errors")." (type, field, message, action) VALUES ('".$model."', '".$field."', ".$sb->db->quote($error).", '".$_POST['action'][$model]."')");
 	}
 }
 /**

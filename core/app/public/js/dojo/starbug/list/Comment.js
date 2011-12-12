@@ -70,3 +70,4 @@ define(["dojo", "dijit", "dojox", "starbug", "dojo/text!./templates/Comment.html
 			}
 		}
 	});
+});

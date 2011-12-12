@@ -65,27 +65,33 @@ class Renderer {
 	 * render a template
 	 * @param string $path relative path to the template from the view directory without file extension
 	 */
-	function render($path=array(""), $scope="global") {
+	function render($path=array(""), $scope="") {
 		global $sb;
 		global $request;
-		$this->directory_scope = (file_exists($this->prefix.$scope));
+		//set scope
+		efault($scope, $this->active_scope);
+		efault($scope, "global");
+		$this->directory_scope = (file_exists($this->prefix.$scope) || file_exists("core/".$this->prefix.$scope));
+		if (!$this->directory_scope) {
+			$old_scope = $this->active_scope;
+			$this->active_scope = $scope;
+		}
 		//resolve path
 		if (!is_array($path)) $path = array($path);
 		$this->path = reset($path);
 		while (!file_exists($filename = $this->get_path($this->path, $scope)) && $this->path) $this->path = next($path);
-		//set scope
-		if (empty($scope)) $scope = $this->active_scope;
-		else if (!$this->directory_scope) $this->active_scope = $scope;
 		//extract vars
 		extract($this->vars["global"]);
 		if (($scope != "global") && !empty($this->vars[$scope])) extract($this->vars[$scope]);
 		//render target
-		$output = file_get_contents($filename);
-		$output = str_replace(array("<? ", "<?\n", "<?="), array("<?php ", "<?php\n", "<?php echo"), $output);
-		eval("?>".$output);
+		if (file_exists($filename)) {
+			$output = file_get_contents($filename);
+			$output = str_replace(array("<? ", "<?\n", "<?="), array("<?php ", "<?php\n", "<?php echo"), $output);
+			eval("?>".$output);
+		} else error("template not found: ".implode("\n", $path), $scope, "renderer");
 		//reset scope
-		$this->active_scope = "global";
-		$this->directory_scope = false;
+		if ($this->directory_scope) $this->directory_scope = false;
+		else $this->active_scope = $old_scope;
 	}
 	
 	/**

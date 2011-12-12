@@ -8,8 +8,7 @@ dependencies = {
 			dependencies: [
 				'dojo.behavior',
 				'dijit.Dialog',
-				'starbug.base',
-				'starbug.store.Api',
+				'sb.main',
 				'starbug.grid.EnhancedGrid'
 			]
 		},
@@ -24,6 +23,7 @@ dependencies = {
 	prefixes: [
 		["dijit", "../dijit" ],
 		["dojox", "../dojox" ],
+		["sb", "../../../../../core/app/public/js/dojo/sb"],
 		["starbug", "../../../../../core/app/public/js/dojo/starbug"]
 	]
 }

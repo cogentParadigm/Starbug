@@ -1,6 +1,6 @@
 define([
 	"dojo",
-	"dijit.Dialog"
+	"dijit/Dialog"
 ], function(dojo, Dialog) {
 	return dojo.declare("starbug.form.Dialog", [Dialog], {
 		dialog:null,

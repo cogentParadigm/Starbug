@@ -1,5 +1,5 @@
 <?php
-$sb->provide("core/Controller");
+$sb->provide("core/lib/Controller");
 class Controller {
 
 	function __construct() {

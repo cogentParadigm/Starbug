@@ -1,9 +1,6 @@
 {
-	"screen" : ["app/public/stylesheets/custom-screen.css", "app/public/stylesheets/dojo-screen.css"],
-	"print" : ["app/public/stylesheets/custom-print.css"],
-	"ie" : ["app/public/stylesheets/custom-ie.css"],
-	"admin" : ["app/public/stylesheets/custom-admin.css", "app/public/stylesheets/dojo-admin.css"],
-	"plugins" : ["buttons", "rounding"],
-	"classes" : {
-	}
+	"screen" : ["custom-screen.css"],
+	"print" : ["custom-print.css"],
+	"ie" : ["custom-ie.css"],
+	"plugins" : []
 }

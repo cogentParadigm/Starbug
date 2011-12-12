@@ -9,6 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo uri("app/public/js/dojo/release/dojo/dijit/themes/claro/claro.css"); ?>"/>
 		<?php $sb->publish("head"); ?>
 		<script src="<?php echo uri("app/public/js/CodeMirror/lib/codemirror.js"); ?>" type="text/javascript"></script>
+		<script src="<?php echo uri("app/public/js/CodeMirror/mode/clike/clike.js"); ?>" type="text/javascript"></script>
 		<script src="<?php echo uri("app/public/js/CodeMirror/mode/php/php.js"); ?>" type="text/javascript"></script>
 		<script src="<?php echo uri("app/public/js/CodeMirror/mode/javascript/javascript.js"); ?>" type="text/javascript"></script>
 		<script src="<?php echo uri("app/public/js/CodeMirror/mode/htmlmixed/htmlmixed.js"); ?>" type="text/javascript"></script>
@@ -35,11 +36,11 @@
 			.console .error, .console .alert, .console .notice, .console .success, .console .info{background:transparent;border:none;padding:0;margin-bottom:8px}
 		</style>
 		<script type="text/javascript">
-			dojo.require("starbug.IDE.IDE");
+			require(["starbug/IDE/IDE"]);
 		</script>
 	</head>
 	<body id="body" class="claro">
-		<div jsId="ide" dojoType="starbug.IDE.IDE" style="height:100%"
+		<div jsId="ide" data-dojo-type="starbug.IDE.IDE" style="height:100%"
 			browseURL="<?php echo uri("rogue/browse"); ?>"
 			openURL="<?php echo uri("rogue/open"); ?>"
 			saveURL="<?php echo uri("rogue/save"); ?>"

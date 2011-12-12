@@ -2,7 +2,7 @@ define([
 	"dojo",
 	"dojox",
 	"dojox/grid/cells",
-	"starbug/store/ObjectStore"
+	"starbug/data/ObjectStore"
 ], function (dojo, dojox, cells, ObjectStore) {
 var select = dojo.declare("starbug.grid.cells.Select", dojox.grid.cells.Select, {
 	options: [],

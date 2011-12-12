@@ -15,6 +15,7 @@
 	<?php } else { ?>
 		<?php if (Etc::BLUEPRINT_ENABLED) { ?>
 			<?php
+				$css = config("css");
 				$bp = theme("styles", $request->theme);
 				efault($bp['plugins'], array());
 				efault($bp['screen'], array());
@@ -37,15 +38,29 @@
 			<?php foreach ($bp['screen'] as $screen) { ?>
 				<link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/$screen"); ?>" type="text/css" media="screen, projection">
 			<?php } ?>
+			<?php foreach ($css['screen'] as $screen) { ?>
+				<link rel="stylesheet" href="<?php echo uri("app/public/stylesheets/$screen"); ?>" type="text/css" media="screen, projection">
+			<?php } ?>
 			<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/print.css"); ?>" type="text/css" media="print">
 			<?php foreach ($bp['print'] as $print) { ?>
-				<link rel="stylesheet" href="<?php echo uri($print); ?>" type="text/css" media="print">
+				<link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/styesheets/$print"); ?>" type="text/css" media="print">
+			<?php } ?>
+			<?php foreach ($css['print'] as $print) { ?>
+				<link rel="stylesheet" href="<?php echo uri("app/public/styesheets/$print"); ?>" type="text/css" media="print">
 			<?php } ?>
 			<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
 			<?php foreach ($bp['ie'] as $ie) { ?>
-				<!--[if IE]><link rel="stylesheet" href="<?php echo uri($ie); ?>" type="text/css" media="screen, projection"><![endif]-->
+				<!--[if IE]><link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/$ie"); ?>" type="text/css" media="screen, projection"><![endif]-->
+			<?php } ?>
+			<?php foreach ($css['ie'] as $ie) { ?>
+				<!--[if IE]><link rel="stylesheet" href="<?php echo uri("app/public/stylesheets/$ie"); ?>" type="text/css" media="screen, projection"><![endif]-->
 			<?php } ?>
 			<?php foreach ($bp['plugins'] as $plugin) { ?>
+					<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/screen.css"); ?>" type="text/css" media="screen, projection">
+					<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/print.css"); ?>" type="text/css" media="print">
+					<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
+			<?php } ?>
+			<?php foreach ($css['plugins'] as $plugin) { ?>
 					<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/screen.css"); ?>" type="text/css" media="screen, projection">
 					<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/print.css"); ?>" type="text/css" media="print">
 					<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
@@ -61,11 +76,16 @@
 				$paths = "";
 				foreach ($profile['prefixes'] as $p) $paths .= "'$p[0]':'$p[1]', ";
 			?>
-			<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/dojo/dojo.js"); ?>" data-dojo-config="parseOnLoad: true, modulePaths:{<?php echo rtrim($paths, ', '); ?>}, serverTime:'<?php echo date("Y-m-d H:i:s"); ?>'"></script>
+			<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/dojo/dojo.js"); ?>" data-dojo-config="async: true, parseOnLoad: true, serverTime:'<?php echo date("Y-m-d H:i:s"); ?>'"></script>
 			<script type="text/javascript">
-			<?php foreach ($profile['layers'] as $l) { foreach ($l['dependencies'] as $d) { ?>
-				dojo.require("<?php echo $d; ?>");
-			<?php } } ?>
+				require({
+						packages: [<?php foreach ($profile['prefixes'] as $idx => $p) { if ($idx > 0) echo ','; echo "\n"; ?>
+								{ name: '<?php echo $p[0]; ?>', location: '<?php echo $p[1]; ?>' }<?php } echo "\n"; ?>
+						]
+				}, [
+					<?php foreach ($profile['layers'] as $lidx => $l) { foreach ($l['dependencies'] as $didx => $d) { if ($lidx > 0 || $didx > 0) echo ",\n"; ?>
+					'<?php echo str_replace(".", "/", $d); ?>'<?php } } echo "\n"; ?>
+				]);
 			</script>
 		<?php } ?>
 	<?php } ?>

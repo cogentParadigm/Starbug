@@ -8,6 +8,7 @@ define([
 	"dijit/layout/AccordionContainer",
 	"dijit/layout/TabContainer",
 	"dijit/layout/ContentPane",
+	"dijit/layout/AccordionPane",
 	"dijit/Dialog",
 	"dijit/form/ComboBox",
 	"dijit/form/Button"
@@ -97,7 +98,7 @@ var IDE = dojo.declare('starbug.IDE.IDE', [_Widget, _Templated], {
 					this.editor.addChild(tab);
 					var cm = CodeMirror.fromTextArea(document.getElementById('tab'+this.tabs.length), {
 						height: "dynamic",
-						mode: "htmlmixed",
+						mode: "php",
 						tabMode: "shift",
 						lineNumbers: "true",
 						autoMatchParens: true,

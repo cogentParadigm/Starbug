@@ -24,6 +24,8 @@ label{display:block}
 .red{color:#C00}
 span.error{display:block;width:300px;padding:5px}
 .field .note{float:left;padding:8px}
+.heading .button{margin:0;font-size:11px}
+.inline .button{padding-top:5px;margin-top:0.6em}
 
 /********************* links *********************/
 #nav a{padding:4px 5px;font-weight:bold;color:white;background:#494;font-size:11px;font-family:Helvetica, Arial, sans-serif}

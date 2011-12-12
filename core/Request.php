@@ -141,7 +141,11 @@ class Request {
 		global $request;
 		$sb->check_post();
 		$this->locate();
-		render(((!empty($this->payload['template'])) ? $this->payload['template'] : $this->format));
+		if (!empty($_GET['template'])) {
+			foreach ($_POST as $k => $v) assign($k, $v);
+			render($_GET['template'], $_GET['scope']);
+		} else if (!empty($this->payload['template'])) render($this->payload['template']);
+		else render($this->format);
 	}
 
 	/**

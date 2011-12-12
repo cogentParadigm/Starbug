@@ -190,8 +190,10 @@ class form {
 
 	function button($label, $ops="") {
 		$ops = star($ops);
+		efault($ops['type'], "submit");
+		$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ")."button";
 		assign("label", $label, $this->scope);
-		assign("attributes", $ops);
+		assign("attributes", $ops, $this->scope);
 		return capture("form/button", $this->scope);
 	}
 

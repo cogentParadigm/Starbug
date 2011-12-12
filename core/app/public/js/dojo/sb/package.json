@@ -1,0 +1,11 @@
+{
+  "name": "sb",
+  "main": "main",
+  "description": "Starbug PHP core module for dojo",
+  "homepage": "http://starbugphp.com/",
+  "dependencies": {
+    "dojo": "1.7.0",
+    "dijit": "1.7.0"
+  },
+  "dojoBuild": "sb.profile.js"
+}
