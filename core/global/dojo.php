@@ -28,4 +28,10 @@ function connect($ops, $params="") {
 	if (isset($ops['url'])) $dojo->xhr($query, $ops['action'], $ops['url'], $params, $ops['event']);
 	$dojo->attach($query, $ops['action'], $params, $ops['event']);
 }
+function js($mid) {
+	global $sb;
+	$sb->import("util/dojo");
+	global $dojo;
+	$dojo->require_js($mid);
+}
 ?>

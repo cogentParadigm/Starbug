@@ -78,12 +78,15 @@ function render_form($form="", $render=true) {
 	else return capture($form, "forms");
 }
 /**
-	* render a link
+	* render an image
 	* @ingroup templates
-	* @param string $link the link to render
+	* @param star $src the image path plus attributes. eg. 'image("giraffe.png  class:left")'
 	*/
-function render_link($link="", $render=true) {
-	if ($render) render($link, "links");
-	else return capture($link, "links");
+function image($src="", $flags="i") {
+	$ops = star($src);
+	$src = array_shift($ops);
+	$ops['src'] = uri($ops, $flags);
+	assign("attributes", $ops);
+	render("image");
 }
 ?>

@@ -6,5 +6,6 @@
 	</head>
 	<body class="claro">
 		<?php render("page"); ?>
+		<?php $sb->publish("footer"); ?>
 	</body>
 </html>

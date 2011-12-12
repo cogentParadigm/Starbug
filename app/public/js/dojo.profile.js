@@ -8,8 +8,7 @@ dependencies = {
 			dependencies: [
 				'dojo.behavior',
 				'dijit.Dialog',
-				'sb.main',
-				'starbug.grid.EnhancedGrid'
+				'sb'
 			]
 		},
 		{

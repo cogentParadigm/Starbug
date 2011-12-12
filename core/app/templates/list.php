@@ -1,4 +1,5 @@
 <?php
+	js("starbug/grid/EnhancedGrid");
 	$options = schema($model);
 	if ((empty($uri)) && (end($request->uri) == $model)) {
 		$uri = $request->path."/[action]";
