@@ -57,7 +57,9 @@ class Renderer {
 	 * @param string $key variable name
 	 * @param string $value variable value
 	 */
-	function assign($key, $value, $scope="global") {
+	function assign($key, $value, $scope="") {
+		efault($scope, $this->active_scope);
+		efault($scope, "global");
 		efault($this->vars[$scope], array());
 		$this->vars[$scope][$key] = $value;
 	}
@@ -81,8 +83,8 @@ class Renderer {
 		$this->path = reset($path);
 		while (!file_exists($filename = $this->get_path($this->path, $scope)) && $this->path) $this->path = next($path);
 		//extract vars
-		extract($this->vars["global"]);
 		if (($scope != "global") && !empty($this->vars[$scope])) extract($this->vars[$scope]);
+		extract($this->vars["global"]);
 		//render target
 		if (file_exists($filename)) {
 			$output = file_get_contents($filename);
