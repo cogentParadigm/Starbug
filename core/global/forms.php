@@ -129,16 +129,6 @@ function file_select($ops) {
 	echo $global_form->file($ops);
 }
 /**
- * outputs an image input
- * @ingroup forms
- * @param string $ops the options
- * @ingroup form
- */
-function image($ops) {
-	global $global_form;
-	echo $global_form->image($ops);
-}
-/**
  * outputs a checkbox input
  * @ingroup forms
  * @param string $ops the options
