@@ -32,6 +32,7 @@
 		}
 		$grid->add_column("id  width:100  formatter:row_options", "Options");
 		$grid->render();
+		assign("model", $model);
 		render("create-link");
 	?>
 	<script type="text/javascript">
