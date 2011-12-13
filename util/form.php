@@ -74,12 +74,12 @@ class form {
 		else $fields = (empty( $this->model)) ? $_GET : $_GET[$this->model];
 		$errors = errors($this->model, true);
 		assign("attributes", $atts, $this->scope);
-		assign("model", $this->model, $this->scope);
-		assign("url", $this->url, $this->scope);
-		assign("method", $this->method, $this->scope);
-		assign("postback", $this->postback, $this->scope);
-		assign("action", $this->action, $this->scope);
-		assign("fields", $fields, $this->scope);
+		assign("model", $this->model);
+		assign("url", $this->url);
+		assign("method", $this->method);
+		assign("postback", $this->postback);
+		assign("action", $this->action);
+		assign("fields", $fields);
 		assign("errors", efault($errors, array()), $this->scope);
 		render("form/open", $this->scope);
 	}

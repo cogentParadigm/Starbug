@@ -2,7 +2,13 @@
 class Uris extends UrisModel {
 
 	function create($uris) {
-		$uris['check_path'] = "0";
+		if ($uris['template'] == "View") {
+			$uris['template'] = "";
+			$uris['check_path'] = "1";
+		} else {
+			if ($uris['template'] == "Page") $uris['template'] = "";
+			$uris['check_path'] = "0";
+		}
 		queue("blocks", "type:text  region:content  position:1  uris_id:");
 		$this->store($uris);
 		if (!errors()) {

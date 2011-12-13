@@ -10,5 +10,5 @@
 	assign("url", uri($uri));
 	assign("fields", $options['fields']);
 ?>
-	<h1>New <?= $options['singular_label']; ?></h1>
+	<h1>Update <?= $options['singular_label']; ?></h1>
 	<? render("form"); ?>

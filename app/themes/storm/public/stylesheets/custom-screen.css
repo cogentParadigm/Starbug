@@ -96,7 +96,7 @@ body.tundra .dijitDialogPaneContent{background:none;border:none}
 .attribute ul li.active label, .attribute ul li:hover label{background:#666;color:#FFF}
 .attribute ul li input{display:none}
 
-/********************* CMS *********************/
+/********************* CMS Pages *********************/
 .pages_form label{clear:both}
 .pages_form input.title-field{width:99%;font-size:18px}
 #link-label{float:left;padding:6px 0;margin-right:5px}
@@ -107,3 +107,7 @@ body.tundra .dijitDialogPaneContent{background:none;border:none}
 .pages_form .big.button{font-size:36px;margin-top:10px;width:200px;line-height:normal;margin:0}
 .pages_form .infield .big.button{width:100%}
 .editable a{background:white;padding:0px 5px}
+
+/********************* CMS Menus *********************/
+.uris_list{clear:both;height:300px;width:300px;overflow-y:scroll}
+.uris_list li{list-style-type:none;clear:both;margin-bottom:5px;border-bottom:1px solid}

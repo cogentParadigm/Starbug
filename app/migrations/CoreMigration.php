@@ -60,6 +60,11 @@ class CoreMigration extends Migration {
 		$this->table("menus  list:all",
 			"name  type:string  length:32"
 		);
+		$this->table("uris_menus  list:all",
+			"uris_id  type:int  references:uris id  update:cascade  delete:cascade",
+			"menus_id  type:int  references:menus id  update:cascade  delete:cascade",
+			"position  type:int  ordered:menus_id"
+		);
 		$this->table("tags  list:all",
 			"tag  type:string  length:30  default:",
 			"raw_tag  type:string  length:50  default:"

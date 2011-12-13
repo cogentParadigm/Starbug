@@ -96,7 +96,7 @@ require(['dojo/query'], function($) {
 	$parent_ops = array(" -- " => 0);
 	foreach($kids[0] as $child) $parent_ops = array_merge_recursive($parent_ops, parent_options($child, $kids));
 
-	$templates = array(); $containers = array("content"); $leaf_types = array("--Add a Leaf--" => "");
+	$templates = array("View" => "View", "Page" => "Page"); $containers = array("content"); $leaf_types = array("--Add a Leaf--" => "");
 	if (false !== ($handle = opendir("app/templates/"))) {
 		while (false !== ($file = readdir($handle))) if (((strpos($file, ".") !== 0)) && ($file != "options")) $templates[substr($file, 0, strpos($file, "."))] = substr($file, 0, strpos($file, "."));
 		closedir($handle);
@@ -105,8 +105,7 @@ require(['dojo/query'], function($) {
 		while (false !== ($file = readdir($handle))) if ((strpos($file, ".") !== 0)) $leaf_types[str_replace("_", " ", $file)] = $file;
 		closedir($handle);
 	}
-
-	efault($_POST['uris']['template'], "View");
+	efault($_POST['uris']['template'], (($_POST['uris']['check_path'] == '1') ? "View" : "Page"));
 	efault($_POST['uris']['status'], 4);
 	efault($_POST['uris']['prefix'], "app/views/");
 ?>
