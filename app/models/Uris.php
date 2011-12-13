@@ -11,12 +11,16 @@ class Uris extends UrisModel {
 		}
 		queue("blocks", "type:text  region:content  position:1  uris_id:");
 		$this->store($uris);
-		if (!errors()) {
-			redirect(uri("admin/uris/update"));
-		}
 	}
 	
 	function update($uris) {
+		if ($uris['template'] == "View") {
+			$uris['template'] = "";
+			$uris['check_path'] = "1";
+		} else {
+			if ($uris['template'] == "Page") $uris['template'] = "";
+			$uris['check_path'] = "0";
+		}
 		$row = $this->query("where:id='$uris[id]'  limit:1");
 		$this->store($uris);
 		if (!errors()) {
