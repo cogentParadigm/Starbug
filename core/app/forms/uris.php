@@ -98,7 +98,7 @@ require(['dojo/query'], function($) {
 
 	$templates = array("View" => "View", "Page" => "Page"); $containers = array("content"); $leaf_types = array("--Add a Leaf--" => "");
 	if (false !== ($handle = opendir("app/templates/"))) {
-		while (false !== ($file = readdir($handle))) if (((strpos($file, ".") !== 0)) && ($file != "options")) $templates[substr($file, 0, strpos($file, "."))] = substr($file, 0, strpos($file, "."));
+		//while (false !== ($file = readdir($handle))) if (((strpos($file, ".") !== 0)) && ($file != "options")) $templates[substr($file, 0, strpos($file, "."))] = substr($file, 0, strpos($file, "."));
 		closedir($handle);
 	}
 	if (false !== ($handle = opendir("app/views/leafs/"))) {
@@ -129,7 +129,7 @@ require(['dojo/query'], function($) {
 		<?php */} ?>
 		<div class="round infield">
 			<?php
-				select("template", $templates);
+				select("template  value:".$_POST['uris']['template'], $templates);
 				select("status  value:4", $request->statuses);
 				select("collective  label:Access  value:0", $collectives);
 				select("parent", $parent_ops);

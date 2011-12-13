@@ -1,4 +1,4 @@
 <?php
-	assign("query", "uris  where:check_path=0");
+	assign("query", "uris");
 	render("list");
 ?>
