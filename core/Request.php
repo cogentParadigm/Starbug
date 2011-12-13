@@ -16,35 +16,39 @@ class Request {
 	/**
 	 * @var array the row in the uris table of the requested path
 	 */
-	var $payload;
+	var $payload = array();
 	/**
 	 * @var string the request path
 	 */
-	var $path;
+	var $path = "";
 	/**
 	 * @var array the request path split by segment
 	 */
-	var $uri;
+	var $uri = array();
 	/**
 	 * @var string the query string
 	 */
-	var $query;
+	var $query = "";
+	/**
+	 * @var string the template
+	 */
+	var $template = "";
 	/**
 	 * @var string the requested format (xml, json, xhr)
 	 */
-	var $format;
+	var $format = "html";
 	/**
 	 * @var string the stylesheet to use
 	 */
-	var $theme;
+	var $theme = "";
 	/**
 	 * @var string layout
 	 */
-	var $layout;
+	var $layout = "";
 	/**
 	 * @var string the file path of the view
 	 */
-	var $file;
+	var $file = "";
 	/**
 	 * @var array the tags applied to the requested URI
 	 */
@@ -60,7 +64,7 @@ class Request {
 	/**
 	 * @var string the path of the base directory
 	 */
-	var $base_dir;
+	var $base_dir = "";
 	
 
 	/**
@@ -129,6 +133,7 @@ class Request {
 		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
 		$this->theme = $this->payload['theme'];
 		$this->layout = $this->payload['layout'];
+		$this->template = $this->payload['template'];
 		efault($this->theme, Etc::THEME);
 		efault($this->format, $this->payload['format']);
 	}

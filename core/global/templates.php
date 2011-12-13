@@ -78,6 +78,37 @@ function render_form($form="", $render=true) {
 	else return capture($form, "forms");
 }
 /**
+	* render a layout
+	* @ingroup templates
+	* @param string $layout the layout to render
+	*/
+function render_layout($layout="", $render=true) {
+	efault($layout, request("layout"));
+	efault($layout, "two-column-right");
+	if ($render) render($layout, "layouts");
+	else return capture($layout, "layouts");
+}
+/**
+	* render content
+	* @ingroup templates
+	* @param string $layout the layout to render
+	*/
+function render_content($content="", $render=true) {
+	$view = request("file");
+	if (empty($content) && !empty($view)) render_view($content, $render);
+	else render_blocks($content);
+}
+/**
+	* render blocks
+	* @ingroup templates
+	* @param string $region render all blocks in a region
+	*/
+function render_blocks($region="") {
+	efault($region, "content");
+	assign("region", $region);
+	render("blocks");
+}
+/**
 	* render an image
 	* @ingroup templates
 	* @param star $src the image path plus attributes. eg. 'image("giraffe.png  class:left")'

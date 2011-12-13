@@ -13,31 +13,10 @@
  * @ingroup global
  */
 /**
- * shortcut function for outputing small forms
- * @ingroup forms
- * @params string $arg the first parameter is the form options, the rest are form controls
- * @return string the form
+ * alias of render_form in core/global/templates
  */
-function form($arg) {
-	global $sb;
-	$sb->import("util/form");
-	$args = func_get_args();
-	$init = array_shift($args);
-	$form = new form($init);
-	$data = $form->open();
-	foreach($args as $field) {
-		$parts = explode("  ", $field, 2);
-		$name = $parts[0];
-		$ops = starr::star($parts[1]);
-        $before = $after = "";
-        if (isset($ops['before'])) { $before = $ops['before']; unset($ops['before']); }
-        if (isset($ops['after'])) { $after = $ops['after']; unset($ops['after']); }
-        $str = "";
-        foreach($ops as $k => $v) $str .= "$k:$v  ";
-        $data .= $before.$form->$name(trim($str)).$after;
-	}
-	$data .= "</form>";
-	return $data;
+function form($arg, $render=true) {
+	render_form($arg, $render);
 }
 /**
  * creates a new form and outputs the opening form tag and some hidden inputs

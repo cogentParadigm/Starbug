@@ -2,34 +2,24 @@
 class Uris extends UrisModel {
 
 	function create($uris) {
-		$uris['template'] = "$uris[template]";
-		$this->set_check_path($uris, file_get_contents("$uris[prefix]$uris[template]"));
-		return $this->store($uris);
+		$uris['check_path'] = "0";
+		queue("blocks", "type:text  region:content  position:1  uris_id:");
+		$this->store($uris);
+		if (!errors()) {
+			redirect(uri("admin/uris/update"));
+		}
 	}
 	
 	function update($uris) {
-		global $sb;
-		unset($uris['path']);
-		if (!empty($uris['template'])) $uris['template'] = "$uris[template]";
 		$row = $this->query("where:id='$uris[id]'  limit:1");
-		//UNSET OLD TEMPLATE OPTIONS
-		$this->remove_template_options($uris, file_get_contents("$row[prefix]$row[template].php"));
-		// SET NEW TEMPLATE OPTIONS
-		$template = file_get_contents("$row[prefix]$uris[template].php");
-		$this->set_template_options($uris, $template);
-		// SET CHECK_PATH VALUE
-		$this->set_check_path($uris, $template);
-		$errors = $this->store($uris);
-		if (empty($errors)) {
-			$pagename = $row['path'];
-			$leafs = $sb->query("leafs", "where:page='$row[path]' ORDER BY container ASC, position ASC");
-			foreach($leafs as $leaf) include("$row[prefix]leafs/$leaf[leaf]/save.php");
-			foreach($_POST['new-leaf'] as $container => $leaf) if (!empty($leaf)) include("$row[prefix]leafs/$leaf/create.php");
-			unset($_POST['new-leaf']);
-			foreach($_POST['remove-leaf'] as $container => $leaf) if (!empty($leaf)) include("$row[prefix]leafs/".end(explode(" ", $leaf))."/delete.php");
-			unset($_POST['remove-leaf']);
+		$this->store($uris);
+		if (!errors()) {
+			$blocks = query("blocks", "where:uris_id=?", array($uris['id']));
+			foreach ($blocks as $block) {
+				$key = 'block-'.$block['region'].'-'.$block['position'];
+				if (!empty($_POST[$key])) store("blocks", array("id" => $block['id'], "content" => $_POST[$key]["content"]));
+			}
 		}
-		return $errors;
 	}
 
 	function delete($uris) {

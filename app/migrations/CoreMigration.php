@@ -39,7 +39,7 @@ class CoreMigration extends Migration {
 			"related_id  type:int  default:0"
 		);
 		$this->table("uris",
-			"path  type:string  length:64  list:true",
+			"path  type:string  length:64  unique:  list:true",
 			"title  type:string  length:128  list:true",
 			"template  type:string  length:64  default:  list:true",
 			"format  type:string  length:16  default:html  list:true",
@@ -50,6 +50,16 @@ class CoreMigration extends Migration {
 			"theme  type:string  length:128  default:  list:true",
 			"layout  type:string  length:64  default:"
 		);
+		$this->table("blocks  list:all",
+			"uris_id  type:int  references:uris id",
+			"region  type:string  length:64  default:content",
+			"type  type:string  length:32  default:text",
+			"content  type:text  default:",
+			"position  type:int  ordered:uris_id"
+		);
+		$this->table("menus  list:all",
+			"name  type:string  length:32"
+		);
 		$this->table("tags  list:all",
 			"tag  type:string  length:30  default:",
 			"raw_tag  type:string  length:50  default:"
@@ -58,18 +68,6 @@ class CoreMigration extends Migration {
 			"tag_id  type:int  default:0  key:primary  references:tags id  update:cascade  delete:cascade",
 			"owner  type:int  default:1  key:primary  references:users id  update:cascade  delete:cascade",
 			"object_id  type:int  default:0  key:primary  references:uris id  update:cascade  delete:cascade"
-		);
-		$this->table("leafs  list:all",
-			"leaf  type:string  length:128",
-			"page  type:string  length:64",
-			"container  type:string  length:32",
-			"position  type:int"
-		);
-		$this->table("text_leaf  list:all",
-			"page  type:string  length:64",
-			"container  type:string  length:32",
-			"position  type:int",
-			"content  type:text  length:5000"
 		);
 		$this->table("files  list:all",
 			"mime_type  type:string  length:128",

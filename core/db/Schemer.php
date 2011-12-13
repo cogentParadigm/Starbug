@@ -681,7 +681,7 @@ class Schemer {
 		$last_at = trim(file_get_contents(BASE_DIR."/var/migration"));
 		if (empty($to) && ("0" !== $to)) $to = "top";
 		if ($to == "top") $to = count($this->migrations);
-		if ($from == "current") $from = $last_at;
+		if ($from === "current") $from = $last_at;
 		//MOVE TO FROM
 		$current = $from;
 		//UPDATE CURRENT

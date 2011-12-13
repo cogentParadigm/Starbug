@@ -95,3 +95,15 @@ body.tundra .dijitDialogPaneContent{background:none;border:none}
 .attribute ul li label{font-size:11px;padding-left:5px;font-weight:normal}
 .attribute ul li.active label, .attribute ul li:hover label{background:#666;color:#FFF}
 .attribute ul li input{display:none}
+
+/********************* CMS *********************/
+.pages_form label{clear:both}
+.pages_form input.title-field{width:99%;font-size:18px}
+#link-label{float:left;padding:6px 0;margin-right:5px}
+.link-span{display:block;float:left;padding:5px 0;font-size:12px}
+.link-span .editable{background:#FE9}
+.infield{float:right;border:1px solid #999;margin:10px 0;padding:10px;width:15%}
+.infield select{width:100%}
+.pages_form .big.button{font-size:36px;margin-top:10px;width:200px;line-height:normal;margin:0}
+.pages_form .infield .big.button{width:100%}
+.editable a{background:white;padding:0px 5px}

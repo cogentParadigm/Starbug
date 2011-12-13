@@ -1,6 +1,16 @@
 <?php
 	js("starbug/grid/EnhancedGrid");
+	if (!empty($query)) $query = star($query);
+	else $query = array($model);
+	$models = array_shift($query);
+	$model = reset(explode(".", $models));
+	assign("model", $model);
 	$options = schema($model);
+	foreach ($options as $k => $v) {
+		if (!isset($query[$k]) && is_string($v)) $query[$k] = $v;
+	}
+	dfault($query['keywords'], $_GET['keywords']);
+	foreach ($query as $k => $v) $query[$k] = $k.":".$v;
 	if ((empty($uri)) && (end($request->uri) == $model)) {
 		$uri = $request->path."/[action]";
 	}
@@ -13,7 +23,7 @@
 		$sb->import("util/grid");
 		$grid = new grid(
 			"model:$model",
-			"keywords:$_GET[keywords]  search:$options[search]  select:$options[select]"
+			implode("  ", $query)
 		);
 		foreach ($options['fields'] as $name => $field) {
 			if ($options['list'] == "all") efault($field['list'], true);
