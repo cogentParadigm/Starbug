@@ -130,8 +130,8 @@ require(['dojo/query'], function($) {
 		<?php */} ?>
 		<div class="round infield">
 			<?php
-				$status_list = $request-statuses;
-				unset($request['deleted']);
+				$status_list = $request->statuses;
+				unset($status_list['deleted']);
 				select("template  value:".$_POST['uris']['template'], $templates);
 				select("status  value:".$_POST['uris']['template'], $request->statuses);
 				select("collective  label:Access  value:".$_POST['uris']['collective'], $collectives);
