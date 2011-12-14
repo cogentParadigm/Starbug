@@ -63,7 +63,8 @@ class CoreMigration extends Migration {
 		$this->table("uris_menus  list:all",
 			"uris_id  type:int  references:uris id  update:cascade  delete:cascade",
 			"menus_id  type:int  references:menus id  update:cascade  delete:cascade",
-			"position  type:int  ordered:menus_id"
+			"position  type:int  ordered:menus_id",
+			"parent  type:int  default:0"
 		);
 		$this->table("tags  list:all",
 			"tag  type:string  length:30  default:",

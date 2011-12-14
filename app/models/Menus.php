@@ -10,7 +10,7 @@ class Menus extends MenusModel {
 	}
 	
 	function add_uri($menu) {
-		store("uris_menus", "menus_id:$menu[id]  uris_id:$menu[uris_id]  position:");
+		store("uris_menus", "menus_id:$menu[id]  uris_id:$menu[uris_id]  position:  parent:$menu[parent]");
 	}
 
 	function delete($menu) {

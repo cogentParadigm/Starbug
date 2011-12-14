@@ -111,7 +111,11 @@ body.tundra .dijitDialogPaneContent{background:none;border:none}
 /********************* CMS Menus *********************/
 .uris_list{clear:both;height:300px;width:300px;overflow-y:scroll}
 .uris_list li{list-style-type:none;clear:both;margin-bottom:5px;border-bottom:1px solid}
-.menu_items li{padding:5px}
+.menu_items li{padding:5px 0}
+
+.menu_item{width:500px}
+body ol.menu_items button, body ol.menu_items button{margin:0 0 0 10px;padding:0px;background:transparent;border:none;position:relative;top:-3px}
+body ol.menu_items button img{width:14px;height:14px}
 .dojoDndHandle{float:right;width:15px;height:15px;background:url(../images/drag-handle.png) no-repeat;overflow:hidden;display:block;cursor:move}
 .dojoDndHandle:hover, .dojoDndItem:hover .dojoDndHandle{background-position:0 -20px}
 .claro .dojoDndItemAfter{border-top:none;border-bottom:1px solid #769DC0}
