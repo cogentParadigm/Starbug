@@ -1,4 +1,4 @@
 <?php
-	assign("query", "uris");
+	assign("query", "uris  where:prefix='app/views/'");
 	render("list");
 ?>
