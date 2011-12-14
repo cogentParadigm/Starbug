@@ -120,7 +120,7 @@ class Request {
 	 */
 	public function locate() {
 		//set up a query for uris where the path is a prefix of the current path
-		$query = "where:'".$this->path."' LIKE CONCAT(path, '%') ORDER BY CHAR_LENGTH(path) DESC  limit:1";
+		$query = "select:uris.*  where:'".$this->path."' LIKE CONCAT(path, '%') ORDER BY CHAR_LENGTH(path) DESC  limit:1";
 		//run the query, looking for read permits
 		$this->payload = query("uris", $query."  action:read");
 		if (empty($this->payload)) { //if we find nothing, query without looking for permits

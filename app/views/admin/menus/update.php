@@ -72,7 +72,6 @@
 </div>
 <script type="text/javascript">
 	function changeOrder(source, nodes, copy) {
-		console.log(nodes);
 		var menus_id = '<?php echo $id; ?>';
 		var uris_menus_id = dojo.attr(nodes[0], 'data-menu-id');
 		var new_position = dojo.indexOf(dojo.query('li',nodes[0].parentNode),nodes[0]);
