@@ -11,6 +11,9 @@ class Uris extends UrisModel {
 		}
 		queue("blocks", "type:text  region:content  position:1  uris_id:");
 		$this->store($uris);
+		if (!errors()) {
+			redirect(uri("admin/uris/update"));
+		}
 	}
 	
 	function update($uris) {

@@ -108,6 +108,7 @@ require(['dojo/query'], function($) {
 	efault($_POST['uris']['template'], (($_POST['uris']['check_path'] == '1') ? "View" : "Page"));
 	efault($_POST['uris']['status'], 4);
 	efault($_POST['uris']['prefix'], "app/views/");
+	efault($_POST['uris']['collective'], "0");
 ?>
 
 <? open_form("model:uris  action:$action  url:$submit_to", "class:pages_form"); ?>
@@ -129,9 +130,11 @@ require(['dojo/query'], function($) {
 		<?php */} ?>
 		<div class="round infield">
 			<?php
+				$status_list = $request-statuses;
+				unset($request['deleted']);
 				select("template  value:".$_POST['uris']['template'], $templates);
-				select("status  value:4", $request->statuses);
-				select("collective  label:Access  value:0", $collectives);
+				select("status  value:".$_POST['uris']['template'], $request->statuses);
+				select("collective  label:Access  value:".$_POST['uris']['collective'], $collectives);
 				select("parent", $parent_ops);
 				button(ucwords($action), "class:big round left button");
 			?>

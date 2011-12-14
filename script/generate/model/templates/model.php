@@ -3,7 +3,7 @@
  * <?= $name; ?> model
  * @ingroup models
  */
-class <?= $label; ?> extends <?= $label; ?>Model {
+class <?= ucwords($name); ?> extends <?= ucwords($name); ?>Model {
 
 	function create($<?= $singular; ?>) {
 		$this->store($<?= $singular; ?>);

@@ -38,7 +38,7 @@ class CoreMigration extends Migration {
 			"related_table  type:string  length:100",
 			"related_id  type:int  default:0"
 		);
-		$this->table("uris",
+		$this->table("uris  label:Pages  singular_label:Page",
 			"path  type:string  length:64  unique:  list:true",
 			"title  type:string  length:128  list:true",
 			"template  type:string  length:64  default:  list:true",

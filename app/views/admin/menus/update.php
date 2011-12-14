@@ -16,6 +16,7 @@
 			<li>
 				<div class="right">
 					<?php
+						unset($_POST['menus']['uris_id']);
 						open_form("model:menus  action:add_uri");
 						hidden("uris_id  default:$uri[id]");
 						button("add", "class:link  style:margin:0");
@@ -35,10 +36,25 @@
 	<?php if (empty($links)) { ?>
 		<p>There are no links in this menu yet.</p>
 	<?php } else { ?>
-		<ul class="menu_items" data-dojo-type="dojo.dnd.Source">
+		<ol id="menu_items" class="menu_items" data-dojo-type="dojo.dnd.Source" data-dojo-props="withHandles: true" jsId="menulist">
 		<?php foreach ($links as $link) { ?>
-			<li class="dojoDndItem"><a href="<?php echo uri($link['path']); ?>"><?php echo $link['title']; ?></a></li>
+			<li class="dojoDndItem" id="menu_item_<?php echo $link['id']; ?>"><a href="#" class="dojoDndHandle"></a><a href="<?php echo uri($link['path']); ?>"><?php echo $link['title']; ?></a></li>
 		<?php } ?>
-		</ul>
+		</ol>
 	<?php } ?>
 </div>
+<script type="text/javascript">
+	function changeOrder(source, nodes, copy) {
+		var menus_id = '<?php echo $id; ?>';
+		var uris_menus_id = dojo.attr(nodes[0], 'id').substr(10);
+		var new_position = dojo.indexOf(dojo.query('li',nodes[0].parentNode),nodes[0]);
+		dojo.xhrPost({
+			url: WEBSITE_URL+'api/uris_menus.json',
+			content: {'action[uris_menus]':'create', 'uris_menus[id]':uris_menus_id, 'uris_menus[menus_id]':menus_id, 'uris_menus[position]':new_position}
+		});
+	}
+	require(['dojo', 'dojo/on', 'dojo/domReady!'], function(dojo, on) {
+		dojo.parser.parse();
+		on(menulist, 'Drop', changeOrder);
+	});
+</script>
