@@ -37,8 +37,8 @@
 	?>
 	<script type="text/javascript">
 			function row_options(data, rowIndex) {
-				var text = sb.render('update-link', {'model':'users', 'id':data, 'to':'<?= $to ?>', 'path':'<?= $uri; ?>'});
-				text += sb.form('delete', {'model':'users', 'users[id]':data});
+				var text = '<a class="edit button" href="<?php echo uri(str_replace("[action]", "update", $uri)."/"); ?>'+data+'<?= $to; ?>"><img src="<?php echo uri("core/app/public/icons/file-edit.png"); ?>"/></a>';
+				text += '<form method="post" onsubmit="return confirm(\'Are you sure you want to delete this item?\');"><input type="hidden" name="action[<?= $model; ?>]" value="delete"/><input type="hidden" name="<?= $model; ?>[id]"	value="'+data+'"/><button class="negative" title="delete" type="submit"><img src="<?php echo uri("core/app/public/icons/cross.png"); ?>"/></button></form>';
 				return text;
 			}
 	</script>
