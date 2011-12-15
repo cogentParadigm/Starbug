@@ -60,6 +60,7 @@ class Renderer {
 	function assign($key, $value, $scope="") {
 		efault($scope, $this->active_scope);
 		efault($scope, "global");
+		$scope = "global";
 		efault($this->vars[$scope], array());
 		$this->vars[$scope][$key] = $value;
 	}
@@ -75,6 +76,7 @@ class Renderer {
 		efault($scope, "global");
 		$this->directory_scope = (file_exists($this->prefix.$scope) || file_exists("core/".$this->prefix.$scope));
 		if (!$this->directory_scope) {
+			$scope = "global";
 			$old_scope = $this->active_scope;
 			$this->active_scope = $scope;
 		}

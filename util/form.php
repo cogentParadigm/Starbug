@@ -61,7 +61,6 @@ class form {
 		$this->url = $args['url'];
 		$this->method = $args['method'];
 		$this->postback = $args['postback'];
-		$this->scope = $this->model."_".$this->action;
 	}
 
 	/**
@@ -73,15 +72,15 @@ class form {
 		if ($this->method == "post") $fields = (empty($this->model)) ? $_POST : $_POST[$this->model];
 		else $fields = (empty( $this->model)) ? $_GET : $_GET[$this->model];
 		$errors = errors($this->model, true);
-		assign("attributes", $atts, $this->scope);
+		assign("attributes", $atts);
 		assign("model", $this->model);
 		assign("url", $this->url);
 		assign("method", $this->method);
 		assign("postback", $this->postback);
 		assign("action", $this->action);
 		assign("fields", $fields);
-		assign("errors", efault($errors, array()), $this->scope);
-		render("form/open", $this->scope);
+		assign("errors", efault($errors, array()));
+		render("form/open");
 	}
 	
 	/**
@@ -161,14 +160,14 @@ class form {
 		$capture = "field";
 		$ops['field'] = reset(explode("[", $ops['name']));
 		$ops['name'] = $this->get_name($ops['name']);
-		foreach ($ops as $k => $v) assign($k, $v, $this->scope);
+		foreach ($ops as $k => $v) assign($k, $v);
 		if (isset($ops['nofield'])) {
 			unset($ops['nofield']);
 			$capture = $tag;
 		}
-		assign("attributes", $ops, $this->scope);
-		assign("control", $tag, $this->scope);
-		return capture(array($this->model."/form/$ops[field]-$capture", "form/$ops[field]-$capture", $this->model."/form/$capture", "form/$capture"), $this->scope);
+		assign("attributes", $ops);
+		assign("control", $tag);
+		return capture(array($this->model."/form/$ops[field]-$capture", "form/$ops[field]-$capture", $this->model."/form/$capture", "form/$capture"));
 	}
 
 	function text($ops) {
@@ -192,9 +191,9 @@ class form {
 		$ops = star($ops);
 		efault($ops['type'], "submit");
 		$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ")."button";
-		assign("label", $label, $this->scope);
-		assign("attributes", $ops, $this->scope);
-		return capture("form/button", $this->scope);
+		assign("label", $label);
+		assign("attributes", $ops);
+		return capture("form/button");
 	}
 
 	function file($ops) {
@@ -202,10 +201,10 @@ class form {
 		$this->fill_ops($ops);
 		if (!empty($_POST[$ops['name']])) $ops['value'] = $_POST[$ops['name']];
 		$ops['field'] = reset(explode("[", $ops['name']));
-		foreach ($ops as $k => $v) assign($k, $v, $this->scope);
-		assign("attributes", $ops, $this->scope);
-		assign("control", "input", $this->scope);
-		return capture("form/field", $this->scope);
+		foreach ($ops as $k => $v) assign($k, $v);
+		assign("attributes", $ops);
+		assign("control", "input");
+		return capture("form/field");
 	}
 
 	function image($ops) {
@@ -260,7 +259,8 @@ class form {
 			}
 			$options = $list; unset($ops['caption']); unset($ops['value']);
 		}
-		assign("options", $options, $this->scope);
+		assign("value", $this->get($ops['name']));
+		assign("options", $options);
 		return $this->form_control("select", $ops);
 	}
 

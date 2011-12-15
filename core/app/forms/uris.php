@@ -133,9 +133,9 @@ require(['dojo/query'], function($) {
 				$status_list = $request->statuses;
 				unset($status_list['deleted']);
 				unset($collectives['root']);
-				select("template  value:".$_POST['uris']['template'], $templates);
-				select("status  value:".$_POST['uris']['template'], $status_list);
-				select("collective  label:Access  value:".$_POST['uris']['collective'], $collectives);
+				select("template", $templates);
+				select("status", $status_list);
+				select("collective  label:Access", $collectives);
 				select("parent", $parent_ops);
 				button(ucwords($action), "class:big round left button");
 			?>
