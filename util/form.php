@@ -131,6 +131,7 @@ class form {
 			$var = &$var[rtrim($p, "]")];
 		}
 		$var[$key] = $value;
+		return $value;
 	}
 
 
@@ -326,7 +327,7 @@ class form {
 			efault($value, $ops['default']);
 			unset($ops['default']);
 		}
-		efault($ops['value'], htmlentities($value));
+		assign("value", $this->set($ops['name'], htmlentities($value)));
 		//name close
 		return $this->form_control("textarea", $ops);
 	}

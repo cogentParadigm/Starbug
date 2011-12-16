@@ -84,7 +84,6 @@ function render_form($form="", $render=true) {
 	*/
 function render_layout($layout="", $render=true) {
 	efault($layout, request("layout"));
-	efault($layout, "two-column-right");
 	if ($render) render($layout, "layouts");
 	else return capture($layout, "layouts");
 }
@@ -93,9 +92,9 @@ function render_layout($layout="", $render=true) {
 	* @ingroup templates
 	* @param string $layout the layout to render
 	*/
-function render_content($content="", $render=true) {
+function render_content($content="") {
 	$view = request("file");
-	if (empty($content) && !empty($view)) render_view($content, $render);
+	if (empty($content) && !empty($view)) render_view($content);
 	else render_blocks($content);
 }
 /**

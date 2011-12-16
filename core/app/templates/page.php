@@ -1,3 +1,3 @@
-<div class="page">
+<div class="page <?= request("layout"); ?>">
 	<? render("regions"); ?>
 </div>

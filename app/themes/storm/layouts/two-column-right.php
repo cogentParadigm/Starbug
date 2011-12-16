@@ -1,0 +1,2 @@
+<? render("content") ?>
+<? render("sidebar"); ?>

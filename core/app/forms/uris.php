@@ -82,7 +82,7 @@ require(['dojo/query'], function($) {
 </script>
 <?php
 	$collectives = array_merge(array("everybody" => 0), $request->groups);
-	$parents = query("uris", "action:read");
+	$parents = query("uris", "where:prefix='app/views/' && check_path=0");
 	$kids = array();
 	foreach($parents as $u) $kids[$u['parent']][] = $u;
 	function parent_options($u, $k, $l=0) {
@@ -96,15 +96,12 @@ require(['dojo/query'], function($) {
 	$parent_ops = array(" -- " => 0);
 	foreach($kids[0] as $child) $parent_ops = array_merge_recursive($parent_ops, parent_options($child, $kids));
 
-	$templates = array("View" => "View", "Page" => "Page"); $containers = array("content"); $leaf_types = array("--Add a Leaf--" => "");
+	$templates = array("Page" => "Page"); $containers = array("content");
 	if (false !== ($handle = opendir("app/templates/"))) {
 		//while (false !== ($file = readdir($handle))) if (((strpos($file, ".") !== 0)) && ($file != "options")) $templates[substr($file, 0, strpos($file, "."))] = substr($file, 0, strpos($file, "."));
 		closedir($handle);
 	}
-	if (false !== ($handle = opendir("app/views/leafs/"))) {
-		while (false !== ($file = readdir($handle))) if ((strpos($file, ".") !== 0)) $leaf_types[str_replace("_", " ", $file)] = $file;
-		closedir($handle);
-	}
+
 	efault($_POST['uris']['template'], (($_POST['uris']['check_path'] == '1') ? "View" : "Page"));
 	efault($_POST['uris']['status'], 4);
 	efault($_POST['uris']['prefix'], "app/views/");
@@ -152,18 +149,10 @@ require(['dojo/query'], function($) {
 			<fieldset style="clear:left;width:82%">
 				<legend><?php echo $container; ?></legend>
 				<?php
+					assign("id", $_POST['uris']['id']);
 					assign("region", $container);
 					assign("position", "1");
 					render("form/block/text");
-					/*
-					echo $sb->get("uris")->fields($container, $_POST['uris']['path']);
-					echo $l->select($container."  nolabel:true  class:left", $leaf_types);
-					$leaves = $sb->query("leafs", "where:page='".$_POST['uris']['path']."' && container='$container' ORDER BY position ASC");
-					$rm = array("--Remove a Leaf--" => "");
-					foreach($leaves as $one) $rm[$one['position']." ".$one['leaf']] = $one['position']." ".$one['leaf'];
-					echo $r->select($container."  nolabel:true  class:left", $rm);
-					echo $form->submit("class:round right button  value:Update");
-					*/
 				?>
 			</fieldset>
 		<?php } ?>

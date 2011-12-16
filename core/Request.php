@@ -135,6 +135,7 @@ class Request {
 		$this->layout = $this->payload['layout'];
 		$this->template = $this->payload['template'];
 		efault($this->theme, Etc::THEME);
+		efault($this->layout, theme("layout", $this->theme));
 		efault($this->format, $this->payload['format']);
 	}
 
@@ -158,7 +159,7 @@ class Request {
 	 */
 	public function missing() {
 		header("HTTP/1.1 404 Not Found");
-		$this->payload = array("path" => "missing", "theme" => Etc::THEME, "format" => "html");
+		$this->payload = query("uris", "where:path='missing'  limit:1");
 		$this->path="missing";
 		$this->uri = array("missing");
 	}
@@ -168,7 +169,7 @@ class Request {
 	 */
 	public function forbidden() {
 		header("HTTP/1.1 403 Forbidden");
-		$this->payload = array("path" => "forbidden", "theme" => Etc::THEME, "format" => "html");
+		$this->payload = query("uris", "where:path='forbidden'  limit:1");
 		$this->path = "forbidden";
 		$this->uri = array("forbidden");
 	}

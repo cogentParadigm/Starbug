@@ -6,6 +6,8 @@
 	"regions": [
 		"header", {"main":["content","sidebar"]}
 	],
+	//default layout
+	"layout": "one-column",
 	//menus
 	"menus": ["primary", "seconday", "top", "footer"],
 	//stylesheets

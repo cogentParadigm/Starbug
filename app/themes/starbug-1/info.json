@@ -8,6 +8,8 @@
 		{"main":["content","sidebar"]},
 		"footer"
 	],
+	//default layout
+	"layout": "one-column",
 	//menus
 	"menus": ["top", "main", "footer"],
 	//stylesheets

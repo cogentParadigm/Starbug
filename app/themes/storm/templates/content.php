@@ -1,7 +1,7 @@
 <div id="content">
 	<div class="box">
 			<div class="inside">
-				<? render_view(); ?>
+				<? render_content(); ?>
 			</div>
 	</div>
 </div>
