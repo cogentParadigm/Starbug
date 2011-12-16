@@ -118,7 +118,7 @@ class CoreMigration extends Migration {
 		$this->uri("update", "prefix:core/app/views/  layout:one-column  groups:user");
 
 		// URI PERMITS
-		$this->permit("uris::read", "collective:global");
+		$this->permit("uris::read", "collective:global  status:4");
 		// USER PERMITS
 		$this->permit("users::login", "everyone:table");
 		$this->permit("users::logout", "everyone:table");

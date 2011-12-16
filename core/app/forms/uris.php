@@ -129,6 +129,7 @@ require(['dojo/query'], function($) {
 			<?php
 				$status_list = $request->statuses;
 				unset($status_list['deleted']);
+				unset($status_list['pending']);
 				unset($collectives['root']);
 				select("template", $templates);
 				select("status", $status_list);
