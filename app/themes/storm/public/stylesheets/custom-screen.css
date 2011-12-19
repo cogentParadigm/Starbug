@@ -109,7 +109,7 @@ body.tundra .dijitDialogPaneContent{background:none;border:none}
 .editable a{background:white;padding:0px 5px}
 
 /********************* CMS Menus *********************/
-.uris_list{clear:both;height:300px;width:300px;overflow-y:scroll}
+.uris_list{clear:both;height:300px;width:300px;overflow-y:scroll;margin-bottom:15px}
 .uris_list li{list-style-type:none;clear:both;margin-bottom:5px;border-bottom:1px solid}
 .menu_items li{padding:5px 0}
 
