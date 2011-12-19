@@ -73,7 +73,7 @@ function display_tags(args) {
 	args.args.node.innerHTML = list;
 }
 <?php } ?>
-require(['dojo/query'], function($) {
+require(['dojo/query', 'dojo/domReady!'], function($) {
 	var editable = $(".editable");
 	editable.on("click", edit_eip_text);
 	editable.on('change', editable_onchange);
