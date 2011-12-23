@@ -23,9 +23,7 @@ class Files extends FilesModel {
 	}
 	
 	function prepare() {
-		global $sb;
-		$_POST['files'] = array("caption" => "Pre Uploaded File");
-		$this->create();
+		$this->create(array("caption" => "Pre Uploaded File"));
 		if (!errors()) $_POST['files']['id'] = $this->insert_id;
 	}
 
