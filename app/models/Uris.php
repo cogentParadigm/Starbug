@@ -39,39 +39,6 @@ class Uris extends UrisModel {
 		$id = $uris['id'];
 		return $this->remove("id='".$id."'");
 	}
-
-	function change_name($uris) {
-		global $sb;
-		$errors = array();
-		$this->query("where:path='$_POST[new_name]'");
-		if ($this->record_count > 0) return array("path" => array("exists" => "That path already exists"));
-		$sb->db->exec("UPDATE `".P("uris")."` SET path='$_POST[new_name]' WHERE path='$_POST[old_name]'");
-		$leafs = $sb->query("leafs", "select:DISTINCT leaf  where:page='$_POST[old_name]'");
-		$sb->db->exec("UPDATE `".P("leafs")."` SET page='$_POST[new_name]' WHERE page='$_POST[old_name]'");
-		foreach($leafs as $leaf) $sb->db->exec("UPDATE `".P($leaf['leaf'])."` SET page='$_POST[new_name]' WHERE page='$_POST[old_name]'");
-		$uris = $sb->query("uris", "where:path='$_POST[new_name]'  limit:1");
-		$_POST['uris']['id'] = $uris['id'];
-		return $errors;
-	}
-	
-	function render($container, $name=null) {
-		global $sb;
-		global $request;
-		if (!$name) $name = current($request->uri);
-		$leafs = $sb->query("leafs", "where:page='$name' && container='$container' ORDER BY position ASC");
-		foreach ($leafs as $leaf) include("app/views/leafs/$leaf[leaf]/show.php");
-	}
-	
-	function fields($container, $name) {
-		global $sb;
-		$fieldset = "";
-		$leafs = $sb->query("leafs", "where:page='$name' && container='$container' ORDER BY position ASC");
-		foreach ($leafs as $leaf) {
-			include("app/views/leafs/$leaf[leaf]/fields.php");
-			$fieldset .= $fields;
-		}
-		return $fieldset;
-	}
 	
 	function apply_tags() {
 		global $sb;

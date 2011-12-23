@@ -21,6 +21,13 @@ class Files extends FilesModel {
 			$this->store($record);
 		}
 	}
+	
+	function prepare() {
+		global $sb;
+		$_POST['files'] = array("caption" => "Pre Uploaded File");
+		$this->create();
+		if (!errors()) $_POST['files']['id'] = $this->insert_id;
+	}
 
 	function delete($file) {
 		$this->remove("id='" .$file['id'] ."'");
