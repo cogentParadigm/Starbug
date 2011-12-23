@@ -31,6 +31,10 @@ function open_form($options, $atts="") {
 	$global_form = new form($options);
 	$open = "";
 	$atts = starr::star($atts);
+	if (success($global_form->model, $global_form->action)) $class = "success";
+	else if (failure($global_form->model, $global_form->action)) $class = "errors";
+	else $class = "clean";
+	$atts['class'] = (empty($atts['class'])) ? $class : $atts['class']." ".$class;
 	foreach($atts as $k => $v) $open .= $k.'="'.$v.'" ';
 	$global_form->open(rtrim($open, " "));
 }
