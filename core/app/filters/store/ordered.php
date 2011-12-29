@@ -3,7 +3,7 @@ foreach ($args as $field => $ordered) {
 	$where = "";
 	if (!empty($ordered)) {
 		$ordered = explode(" ", $ordered);
-		foreach $ordered as $o) $where = $o."='".$fields[$o]."' && ";
+		foreach ($ordered as $o) $where = $o."='".$fields[$o]."' && ";
 	}
 	if (empty($fields['id'])) {
 		$h = $this->query($name, "select:MAX(`$field`) as highest  where:$where"."1  limit:1");
