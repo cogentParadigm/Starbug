@@ -1,7 +1,10 @@
 <?php
 foreach ($args as $field => $ordered) {
-	if (!empty($ordered)) $where = $ordered."='".$fields[$ordered]."' && ";
-	else $where = "";
+	$where = "";
+	if (!empty($ordered)) {
+		$ordered = explode(" ", $ordered);
+		foreach $ordered as $o) $where = $o."='".$fields[$o]."' && ";
+	}
 	if (empty($fields['id'])) {
 		$h = $this->query($name, "select:MAX(`$field`) as highest  where:$where"."1  limit:1");
 		$fields[$field] = $h['highest']+1;
