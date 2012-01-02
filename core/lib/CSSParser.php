@@ -33,7 +33,8 @@ class CSSParser {
 	}
 	function add_file($filename, $desc="") {
 		efault($desc, end(explode("/", $filename)));
-		$this->css[$desc] = str_replace("url(../", "url(../../../app/public/", $this->optimize(file_get_contents($filename)));
+		$replacement = reset(explode("stylesheets", str_replace(BASE_DIR, "", dirname($filename)))); //translates ../ into ../../../app/public/
+		$this->css[$desc] = str_replace("url(../", "url(../../..$replacement", $this->optimize(file_get_contents($filename)));
 	}
 	function optimize($sheet) {
 		$sheet = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $sheet);

@@ -12,7 +12,7 @@
 			BASE_DIR."/var/public/stylesheets/$name-screen.css"
 		);
 		//add custom-screen.css
-		if (file_exists(BASE_DIR."app/themes/".$name."/public/stylesheets/custom-screen.css")) $screen->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-screen.css");
+		if (file_exists(BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-screen.css")) $screen->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-screen.css", "$name custom-screen.css");
 		//add additional screen styles
 		if (!empty($conf['screen'])) foreach ($conf['screen'] as $custom) $screen->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/$custom");
 		if (!empty($css['screen'])) foreach ($css['screen'] as $custom) $screen->add_file(BASE_DIR."/app/public/stylesheets/$custom");
