@@ -25,7 +25,7 @@ class Etc extends Host {
 	/**
 	 * default template used for missing and forbidden pages
 	 */
-	const DEFAULT_TEMPLATE = "View";
+	const DEFAULT_TEMPLATE = "html";
 	/**
 	 * default page to load when request uri is /
 	 */
@@ -46,5 +46,4 @@ class Etc extends Host {
 	const ENABLE_SQL_LOG = false;
 
 }
-include(BASE_DIR."/etc/constraints.php");
 ?>

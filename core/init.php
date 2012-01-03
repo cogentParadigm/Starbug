@@ -16,11 +16,11 @@ include(BASE_DIR."/core/global_functions.php");
 // include the db class
 include(BASE_DIR."/core/db/db.php");
 
-// include the sb class
-include(BASE_DIR."/core/sb.php");
-
 // include the Table class
 include(BASE_DIR."/core/db/Table.php");
+
+// include the sb class
+include(BASE_DIR."/core/sb.php");
 
 // include the starr class
 include(BASE_DIR."/util/starr.php");
@@ -31,6 +31,20 @@ include(BASE_DIR."/util/starr.php");
  */
 global $sb;
 $sb = new sb();
+
+/**
+ * list of groups from etc/groups.json
+ * @ingroup global
+ */
+global $groups;
+$groups = config("groups");
+
+/**
+ * list of statuses from etc/statuses.json
+ * @ingroup global
+ */
+global $statuses;
+$statuses = config("statuses");
 
 if (!is_array($autoload)) include(BASE_DIR."/etc/autoload.php");
 if (!empty($autoload)) call_user_func_array(array($sb, "import"), $autoload);

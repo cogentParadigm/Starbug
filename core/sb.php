@@ -76,7 +76,6 @@ class sb {
 			$_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
 			$_SESSION[P('user')] = array();
 		}
-		$this->publish("init");
 	}
 
 	/**
@@ -167,6 +166,7 @@ class sb {
 		if (!isset($this->objects[$name])) {
 			include(BASE_DIR."/var/models/".$obj."Model.php");
 			if (file_exists(BASE_DIR."/app/models/$obj.php")) include(BASE_DIR."/app/models/$obj.php");
+			else if (file_exists(BASE_DIR."/core/app/models/$obj.php")) include(BASE_DIR."/core/app/models/$obj.php");
 			else $obj .= "Model";
 			$this->objects[$name] = new $obj($name);
 		}
