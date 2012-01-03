@@ -3,6 +3,9 @@
 	SetOutputFilter DEFLATE
 </files>
 
+# cache for 2 weeks by default
+ExpiresDefault A1209600
+
 RewriteEngine On
 RewriteCond %{REQUEST_URI} !public/(.*)$
 RewriteRule (.*) index.php
