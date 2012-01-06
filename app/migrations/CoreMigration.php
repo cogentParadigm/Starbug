@@ -154,12 +154,14 @@ class CoreMigration extends Migration {
 	}
 
 	function down() {
+		$this->drop("emails");
 		$this->drop("options");
 		$this->drop("files");
-		$this->drop("text_leaf");
-		$this->drop("leafs");
 		$this->drop("uris_tags");
 		$this->drop("tags");
+		$this->drop("uris_menus");
+		$this->drop("menus");
+		$this->drop("blocks");
 		$this->drop("uris");
 		$this->drop("permits");
 		$this->drop("users");
