@@ -41,7 +41,7 @@
 	</select>
 	<div class="uris_list">
 		<ul>
-			<?php foreach (query("uris", "where:prefix='app/views/' && check_path=0") as $uri) { ?>
+			<?php foreach (query("uris", "where:prefix='app/views/' && type='Page'") as $uri) { ?>
 			<li>
 				<div class="right">
 					<?php

@@ -2,11 +2,11 @@ h1. Starbug PHP Web Development Framework
 
 Starbug PHP is an open source framework for PHP. Starbug is a fast and exstensible toolkit that employs a Model-View design pattern. Here are some of the core features SB provides:
 
-* Templating
+* Robust templating engine
 * Role-based access control (RBAC)
 * Database management and abstraction
 * Data validation
-* XSLT 2.0 code generation
+* code generation
 * Utilities for data grids, form building, pagination, tagging, thumbnailing and more..
 * Plugins and hooks built on a flexible publish/subscribe layer
 
@@ -21,11 +21,11 @@ h2. Dependencies
 You will need the following to use this toolkit:
 
 * "PDO extension for PHP":http://php.net/manual/en/book.pdo.php
-* "Saxon XSLT Processor":http://saxon.sourceforge.net (requires Java Runtime Environment)
 
 h2. Getting Started
 
-Install the "Starbug PHP Installer":http://github.com/cogentParadigm/Starbug/tree/installer and then follow these steps to get Starbug set up:
+The best way to get started is to install the "Starbug PHP Installer":http://github.com/cogentParadigm/Starbug/tree/installer. If you are an Arch Linux user, you can find it on "AUR":https://aur.archlinux.org/packages.php?ID=43627&detail=1
+once you have it installed, you can follow these steps to get Starbug set up:
 
 # Initialize a new application and change to that directory:<pre><code>starbug myapp
 cd myapp</code></pre>
@@ -42,7 +42,6 @@ Starbug integrates several 3rd party tools you may want to check out:
 * "Blueprint CSS":http://blueprintcss.org
 * "Nicedit":http://www.nicedit.com
 * "PHPThumb":http://phpthumb.sourceforge.net
-* "Saxon XSLT processor":http://saxon.sourceforge.net
 * "Doxygen":http://www.doxygen.org
 * "SimpleTest":www.simpletest.org
 

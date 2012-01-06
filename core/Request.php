@@ -130,7 +130,7 @@ class Request {
 		}
 		$this->tags = array_merge($this->tags, query("uris,tags", "select:DISTINCT tag, raw_tag  where:uris.id='".$this->payload['id']."'"));
 		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
-		if ($this->payload['check_path'] !== '0') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
+		if ($this->payload['type'] == 'View') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
 		$this->theme = $this->payload['theme'];
 		$this->layout = $this->payload['layout'];
 		$this->template = $this->payload['template'];

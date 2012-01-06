@@ -82,7 +82,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 </script>
 <?php
 	$collectives = array_merge(array("everybody" => 0), $request->groups);
-	$parents = query("uris", "where:prefix='app/views/' && check_path=0");
+	$parents = query("uris", "where:prefix='app/views/' && type='Page'");
 	$kids = array();
 	foreach($parents as $u) $kids[$u['parent']][] = $u;
 	function parent_options($u, $k, $l=0) {
@@ -97,12 +97,13 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 	foreach($kids[0] as $child) $parent_ops = array_merge_recursive($parent_ops, parent_options($child, $kids));
 
 	$templates = array("Page" => "Page"); $containers = array("content");
+	if (logged_in("root")) $templates["View"] => "View";
 	if (false !== ($handle = opendir("app/templates/"))) {
 		//while (false !== ($file = readdir($handle))) if (((strpos($file, ".") !== 0)) && ($file != "options")) $templates[substr($file, 0, strpos($file, "."))] = substr($file, 0, strpos($file, "."));
 		closedir($handle);
 	}
 
-	efault($_POST['uris']['template'], (($_POST['uris']['check_path'] == '1') ? "View" : "Page"));
+	efault($_POST['uris']['type'], "Page");
 	efault($_POST['uris']['status'], 4);
 	efault($_POST['uris']['prefix'], "app/views/");
 	efault($_POST['uris']['collective'], "0");
@@ -131,7 +132,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 				unset($status_list['deleted']);
 				unset($status_list['pending']);
 				unset($collectives['root']);
-				select("template", $templates);
+				select("type", $templates);
 				select("status", $status_list);
 				select("collective  label:Access", $collectives);
 				select("parent", $parent_ops);

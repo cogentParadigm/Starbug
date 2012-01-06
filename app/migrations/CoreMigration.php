@@ -45,7 +45,7 @@ class CoreMigration extends Migration {
 			"format  type:string  length:16  default:html  list:true",
 			"parent  type:int  default:0  list:false",
 			"sort_order  type:int  default:0  list:false",
-			"check_path  type:bool  default:1  list:false",
+			"type  type:string  default:View  list:false",
 			"prefix  type:string  length:128  default:app/views/",
 			"theme  type:string  length:128  default:  list:true",
 			"layout  type:string  length:64  default:"
@@ -94,8 +94,8 @@ class CoreMigration extends Migration {
 		$this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
 		$this->uri("sb", "prefix:core/app/views/  groups:root"); //parent:sb-admin
 		
-		$this->uri("api", "template:api  prefix:core/app/views/  check_path:0");
-		$this->uri("documentation", "template:documentation  prefix:core/app/views/  check_path:0  groups:root");
+		$this->uri("api", "template:api  prefix:core/app/views/  type:Page");
+		$this->uri("documentation", "template:documentation  prefix:core/app/views/  type:Page  groups:root");
 		//HOME PAGE
 		$this->uri(Etc::DEFAULT_PATH);
 		//404 PAGE

@@ -47,9 +47,8 @@ class Fixture {
 	}
 	
 	function store($idx) {
-		store($this->type, $this->records[$idx]);
+		store($this->type, $this->filter($idx, $this->records[$idx]));
 		global $sb;
-		print_r($sb->errors);
 		$this->ids[$idx] = sb("insert_id");
 	}
 	
@@ -70,6 +69,10 @@ class Fixture {
 	
 	function removeAll() {
 		foreach ($this->records as $idx => $record) $this->remove($idx);
+	}
+	
+	function filter($key, $record) {
+		return $record;
 	}
 
 	public function __call($method, $args) {
