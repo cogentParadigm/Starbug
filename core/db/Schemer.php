@@ -763,7 +763,7 @@ class Schemer {
 	}
 
 	function get($model) {
-		global $groups; global $statuses;
+		global $groups; global $statuses; global $sb;
 		$fields = $this->get_table($model);
 		$options = $this->options[$model];
 		//SET UP MODEL ARRAY
@@ -792,7 +792,7 @@ class Schemer {
 			foreach ($relations as $m => $r) $data["relations"][] = array("model" => $m, "field" => $r['hook'], "lookup" => $r['lookup'], "ref_field" => $r['ref_field']);
 		}
 		//ADD ACTIONS
-		$permits = query("permits", "where:related_table='".P($model)."'");
+		$permits = ($sb->has("permits")) ? query("permits", "where:related_table='".P($model)."'") : array();
 		$actions = array();
 		foreach ($permits as $p) {
 			if (!isset($actions[$p['action']])) $actions[$p['action']] = array();
