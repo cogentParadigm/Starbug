@@ -716,7 +716,9 @@ class Schemer {
 		} else {
 			fwrite(STDOUT, "The Database already matches the schema.\n");
 		}
+		fwrite(STDOUT, "Generating Models...\n");
 		fwrite(STDOUT, "Run 'sb generate models' to generate models manually.\n");
+		passthru("sb generate models");
 		fwrite(STDOUT, "Generating CSS...\n");
 		fwrite(STDOUT, "Run 'sb generate css' to generate CSS manually.\n");
 		passthru("sb generate css");
