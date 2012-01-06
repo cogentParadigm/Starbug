@@ -79,7 +79,7 @@ class Schemer {
 	}
 
 	function fill() {
-		$to = trim(file_get_contents(BASE_DIR."/var/migration"));
+		$to = (file_exists(BASE_DIR."/var/migration")) ? trim(file_get_contents(BASE_DIR."/var/migration")) : 0;
 		//MOVE TO CURRENT MIGRATION
 		$current = 0;
 		while ($current < $to) {

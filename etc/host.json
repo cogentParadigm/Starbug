@@ -1,5 +1,7 @@
 {
-	"DB_TYPE" : "mysql",
+	"ENVIRONMENT" : "development",
+
+	"DB_TYPE" : ["mysql", "DB settings"],
 	"DB_HOST" : "localhost",
 	"DB_USERNAME" : "",
 	"DB_PASSWORD" : "",
