@@ -58,10 +58,10 @@ class Table {
 		$this->imported_functions = array();
 		global $sb;
 		foreach ($sb->publish($this->type.".plugins") as $plugin) $this->mixin($plugin);
-		$this->onload();
+		$this->init();
 	}
 
-	protected function onload() {
+	protected function init() {
 	}
 
 	/**
@@ -157,7 +157,7 @@ class Table {
 
 	public function __call($method, $args=array()) {
 		if(array_key_exists($method, $this->imported_functions)) {
-			$args = array_merge(array($this), func_get_args());
+			$args[] = $this;
 			return call_user_func_array(array($this->imported_functions[$method], $method), $args);
 		}
 		throw new Exception ('Call to undefined method/class function: ' . $method);

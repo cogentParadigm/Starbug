@@ -23,7 +23,8 @@ label{display:block}
 .green{color:#494}
 .red{color:#C00}
 span.error{display:block;width:300px;padding:5px}
-.field .note{float:left;padding:8px}
+.field button{margin:0}
+.field .note{float:left;padding:10px 8px}
 .heading .button{margin:0;font-size:11px}
 .inline .button{padding-top:5px;margin-top:0.6em}
 

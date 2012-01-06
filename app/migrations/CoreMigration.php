@@ -125,6 +125,7 @@ class CoreMigration extends Migration {
 		$this->permit("users::create", "admin:");
 		$this->permit("users::register", "everyone:table");
 		$this->permit("users::update_profile", "owner:global");
+		$this->permit("users::reset_password", "everyone:table");
 
 		//LOGGING TABLES
 		//ERROR LOG

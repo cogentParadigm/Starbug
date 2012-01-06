@@ -164,6 +164,7 @@ class Schemer {
 					}
 				}
 			}
+			passthru("sb generate model $table -u");
 			$is += $this->populate($table);
 		}
 		foreach ($this->triggers as $name => $triggers) {
@@ -678,7 +679,7 @@ class Schemer {
 	 */
 	function migrate($to="top", $from=0) {
 		global $sb;
-		$last_at = trim(file_get_contents(BASE_DIR."/var/migration"));
+		$last_at = (file_exists(BASE_DIR."/var/migration")) ? trim(file_get_contents(BASE_DIR."/var/migration")) : 0;
 		if (empty($to) && ("0" !== $to)) $to = "top";
 		if ($to == "top") $to = count($this->migrations);
 		if ($from === "current") $from = $last_at;
@@ -711,8 +712,7 @@ class Schemer {
 		}
 		$this->fill();
 		if ($result) {
-			fwrite(STDOUT, "Generating models (this may take a minute)...\n");
-			passthru("sb generate models");
+			fwrite(STDOUT, "Database update completed.\n");
 		} else {
 			fwrite(STDOUT, "The Database already matches the schema.\n");
 		}

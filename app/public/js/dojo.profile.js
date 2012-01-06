@@ -6,8 +6,7 @@ dependencies = {
 			// in addition to the standard dojo.js base APIs. 
 			name: "dojo.js",
 			dependencies: [
-				'dojo.behavior',
-				'dijit.Dialog',
+				'dojo.query',
 				'sb'
 			]
 		},
@@ -23,6 +22,7 @@ dependencies = {
 		["dijit", "../dijit" ],
 		["dojox", "../dojox" ],
 		["sb", "../../../../../core/app/public/js/dojo/sb"],
-		["starbug", "../../../../../core/app/public/js/dojo/starbug"]
+		["starbug", "../../../../../core/app/public/js/dojo/starbug"],
+		["app", "../../"]
 	]
 }
