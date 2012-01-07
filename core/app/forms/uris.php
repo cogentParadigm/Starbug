@@ -97,7 +97,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 	foreach($kids[0] as $child) $parent_ops = array_merge_recursive($parent_ops, parent_options($child, $kids));
 
 	$templates = array("Page" => "Page"); $containers = array("content");
-	if (logged_in("root")) $templates["View"] => "View";
+	if (logged_in("root")) $templates["View"] = "View";
 	if (false !== ($handle = opendir("app/templates/"))) {
 		//while (false !== ($file = readdir($handle))) if (((strpos($file, ".") !== 0)) && ($file != "options")) $templates[substr($file, 0, strpos($file, "."))] = substr($file, 0, strpos($file, "."));
 		closedir($handle);
