@@ -24,9 +24,7 @@
  *      'file_size': image's physical size (in bytes)
  */
 function image_info($file) {
-  if (!is_file($file)) {
-    return FALSE;
-  }
+  if (!is_file($file)) return FALSE;
 
   $details = FALSE;
   $data = @getimagesize($file);
@@ -45,6 +43,64 @@ function image_info($file) {
   return $details;
 }
 /**
+ * Create a new image resource
+ * @ingroup images
+ * @param int $width the width of the image to create
+ * @param int $height the height of the image to create
+ * @return mixed a new image resource
+ */
+function image_create($width, $height) {
+	if (class_exists("Imagick")) {
+		$im = new Imagick();
+		$im->newImage($width, $height, "none");
+		return $im;
+	} else {
+		$im = imagecreatetruecolor($width, $height);
+		// apply PNG 24-bit transparency to background
+		$transparency = imagecolorallocatealpha($im, 0, 0, 0, 127);
+		imagealphablending($im, FALSE);
+		imagefilledrectangle($im, 0, 0, $width, $height, $transparency);
+		imagealphablending($im, TRUE);
+		imagesavealpha($im, TRUE);
+		return $im;
+	}
+}
+/**
+ * Open an image
+ * @ingroup images
+ * @param string $path the file path
+ */
+function image_open($path) {
+	if (class_exists("Imagick")) {
+		$image = new Imagick();
+		$image->readImage($path);
+		return $image;
+	} else {
+		if ($format == "auto") $format = end(explode(".", $path));
+		$format = str_replace('jpg', 'jpeg', $format);
+		$open_func = 'imageCreateFrom'. $format;
+		if (!function_exists($open_func)) return FALSE;
+		return $open_func($file);
+	}
+}
+/**
+ * Save an image
+ * @ingroup images
+ * @param mixed $image the image object or resource
+ * @param string $path the file path
+ */
+function image_save($image, $path, $format="auto") {
+	if ($format == "auto") $format = end(explode(".", $path));
+	switch (gettype($image)) {
+		case "object":
+			$image->setImageFormat($format);
+			$image->writeImage($path);
+		case "resource":
+			image_gd_close($image, $path, $format);
+			break;
+	}
+}
+/**
  * Get a thumbnail image URL
  * @ingroup images
  * @param string $current_file the path to the original
@@ -55,5 +111,25 @@ function image_thumb($current_file, $max_width) {
 	$loc = uri("app/public/php/phpthumb/phpThumb.php");
 	$loc .= "?w=$max_width&src=".$current_file;
 	return $loc;
+}
+/**
+ * Composite one image onto another
+ * @ingroup images
+ * @param mixed $dest the image to copose onto
+ * @param mixed $composite the image to be composed onto $dest
+ * @param int $x place $composite at this x co-ordinate on $dest
+ * @param int $y place $composite at this y co-ordinate on $dest
+ * @return bool TRUE on success, FALSE on failure
+ */
+function image_composite($dest, $composite, $x, $y) {
+	switch (gettype($dest)) {
+		case "object":
+			return $dest->compositeImage($composite, imagick::COMPOSITE_DEFAULT, $x, $y);
+		case "resource":
+			$width = imagesx($composite);
+			$height = imagesy($composite);
+			return imagecopyresampled($dest, $composite, $x, $y, 0, 0, $width, $height, $width, $height);
+	}
+	return false;
 }
 ?>
