@@ -91,13 +91,16 @@ function image_open($path) {
  */
 function image_save($image, $path, $format="auto") {
 	if ($format == "auto") $format = end(explode(".", $path));
+	$format = str_replace('jpg', 'jpeg', $format);
 	switch (gettype($image)) {
 		case "object":
 			$image->setImageFormat($format);
 			$image->writeImage($path);
 		case "resource":
-			image_gd_close($image, $path, $format);
-			break;
+			$close_func = 'image'. $format;
+			if (!function_exists($close_func)) return FALSE;
+			if ($format == 'jpeg') return $close_func($image, $path, 100);
+			else return $close_func($image, $path);
 	}
 }
 /**
