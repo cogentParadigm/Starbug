@@ -95,7 +95,7 @@ function image_save($image, $path, $format="auto") {
 	switch (gettype($image)) {
 		case "object":
 			$image->setImageFormat($format);
-			$image->writeImage($path);
+			return $image->writeImage($path);
 		case "resource":
 			$close_func = 'image'. $format;
 			if (!function_exists($close_func)) return FALSE;
