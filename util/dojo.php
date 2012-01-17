@@ -22,7 +22,7 @@ class dojo {
 	var $requires = array();
 	function __construct() {
 		global $request;
-		$request->tags[] = array("tag" => "dojo", "raw_tag" => "dojo");
+		$request->tags[] = array("term" => "dojo", "slug" => "dojo");
 	}
 	function require_js($mid) {
 		$this->requires[] = $mid;

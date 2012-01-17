@@ -138,19 +138,22 @@ class Schemer {
 			} else {
 				// OLD TABLE																																													// OLD TABLE
 				foreach ($fields as $name => $field) {
-					$records = $this->db->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
-					if (false === ($row = $records->fetch())) {
-						// NEW COLUMN																																											// NEW COLUMN
-						fwrite(STDOUT, "Adding column $name...\n");
-						$this->add($table, $name);
-						$cs++;
-					} else {
-						// OLD COLUMN																																											// OLD COLUMN
-						$type = explode(" ", $this->get_sql_type($field));
-						if (($row['Type'] != $type[0]) || ((!empty($field['default'])) && ($row['Default'] != $field['default']))) {
-							fwrite(STDOUT, "Altering column $name...\n");
-							$this->modify($table, $name);
-							$ms++;
+					if (!isset($this->tables[$field['type']])) {
+						// REAL COLUMN
+						$records = $this->db->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
+						if (false === ($row = $records->fetch())) {
+							// NEW COLUMN																																											// NEW COLUMN
+							fwrite(STDOUT, "Adding column $name...\n");
+							$this->add($table, $name);
+							$cs++;
+						} else {
+							// OLD COLUMN																																											// OLD COLUMN
+							$type = explode(" ", $this->get_sql_type($field));
+							if (($row['Type'] != $type[0]) || ((!empty($field['default'])) && ($row['Default'] != $field['default']))) {
+								fwrite(STDOUT, "Altering column $name...\n");
+								$this->modify($table, $name);
+								$ms++;
+							}
 						}
 					}
 					if (isset($field['references']) && ($field['constraint'] != "false")) {
@@ -278,18 +281,20 @@ class Schemer {
 		$sql_fields = "";
 		$primary_fields = "";
 		foreach ($fields as $fieldname => $options) {
-			$field_sql = "`".$fieldname."` ".$this->get_sql_type($options).", ";
-			if (isset($options['key']) && ("primary" == $options['key'])) {
-				$primary[] = "`$fieldname`";
-				$primary_fields .= $field_sql;
-			} else $sql_fields .= $field_sql;
-			if (isset($options['index'])) $index[] = $fieldname;
-			if (!empty($options['references'])) {
-				$ref = explode(" ", $options['references']);
-				$rec = array("table" => $ref[0], "column" => $ref[1]);
-				if (!empty($options['update'])) $rec['update'] = $options['update'];
-				if (!empty($options['delete'])) $rec['delete'] = $options['delete'];
-				$foreign[$fieldname] = $rec;
+			if (!isset($this->tables[$options['type']])) {
+				$field_sql = "`".$fieldname."` ".$this->get_sql_type($options).", ";
+				if (isset($options['key']) && ("primary" == $options['key'])) {
+					$primary[] = "`$fieldname`";
+					$primary_fields .= $field_sql;
+				} else $sql_fields .= $field_sql;
+				if (isset($options['index'])) $index[] = $fieldname;
+				if (!empty($options['references'])) {
+					$ref = explode(" ", $options['references']);
+					$rec = array("table" => $ref[0], "column" => $ref[1]);
+					if (!empty($options['update'])) $rec['update'] = $options['update'];
+					if (!empty($options['delete'])) $rec['delete'] = $options['delete'];
+					$foreign[$fieldname] = $rec;
+				}
 			}
 		}
 		$primary = join(", ", $primary);
@@ -367,8 +372,7 @@ class Schemer {
 	 * @param array $field the column options from the schema
 	 */
 	function get_sql_type($field) {
-		$type = "varchar(64)";
-		if ($field['type'] == 'string') $type = "varchar(".(isset($field['length'])?$field['length']:"64").")";
+		$type = "varchar(".(isset($field['length'])?$field['length']:"64").")";
 		if ($field['type'] == 'password') $type = "varchar(32)";
 		else if (($field['type'] == 'text') || ($field['type'] == 'longtext')) $type = $field["type"];
 		else if ($field['type'] == 'int') $type = "int(".(isset($field['length'])?$field['length']:"11").")";
@@ -407,13 +411,22 @@ class Schemer {
 			$ops = star($ops);
 		} else $ops = array();
 		efault($this->tables[$table], array());
+		$additional = array();
 		foreach ($args as $col) {
 			$col = starr::star($col);
 			$colname = array_shift($col);
+			if (isset($this->tables[$col['type']])) {
+				$additional[] = array($table."_".$colname,
+					$col['type']."_id  type:int  default:0  key:primary  references:$col[type] id  update:cascade  delete:cascade",
+					"owner  type:int  default:1  key:primary  references:users id  update:cascade  delete:cascade",
+					$table."_id  type:int  default:0  key:primary  references:$table id  update:cascade  delete:cascade"
+				);
+			}
 			$this->tables[$table][$colname] = $col;
 		}
 		efault($this->options[$table], array("select" => "$table.*", "search" => implode(",", array_keys($this->tables[$table]))));
 		foreach ($ops as $k => $v) $this->options[$table][$k] = $v;
+		foreach ($additional as $tbl) call_user_func_array(array($this, "column"), $tbl);
 	}
 
 	/**
@@ -468,7 +481,7 @@ class Schemer {
 			unset($args['groups']);
 		}
 		efault($args['collective'], 0);
-		efault($args['status'], array_sum($statuses));
+		efault($args['status'], "4");
 		$this->uris[$path] = $args;
 	}
 
@@ -778,13 +791,15 @@ class Schemer {
 				if ($field['type'] == "text") $field['input_type'] = "textarea";
 				else if ($field['type'] == "password") $field['input_type'] = "password";
 				else if ($field['type'] == "bool") $field['input_type'] = "checkbox";
+				else if ($field['type'] == "category") $field['input_type'] = "category_select";
+				else if ($field['type'] == "tags") $field['input_type'] = "tag_input";
 				else if (isset($field['upload'])) $field['input_type'] = "file_select";
 				else $field['input_type'] = "text";
 			}
 			$field[$field['type']] = "";
 			foreach ($field as $k => $v) {
 				//if (("references" == $k) && (false === strpos($v, $model))) $data["fields"][$name]["references"] = $v;
-				if (file_exists(BASE_DIR."/core/app/filters/store/$k.php")) $data["fields"][$name]["filters"][$k] = $v;
+				if (file_exists(BASE_DIR."/app/filters/store/$k.php") || file_exists(BASE_DIR."/core/app/filters/store/$k.php")) $data["fields"][$name]["filters"][$k] = $v;
 				else $data["fields"][$name][$k] = $v;
 			}
 		}

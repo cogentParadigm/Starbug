@@ -153,6 +153,15 @@ function select($ops, $options=array()) {
 	echo $global_form->select($ops, $options);
 }
 /**
+ * outputs a category select
+ * @ingroup forms
+ * @param string $ops the options
+ */
+function category_select($ops) {
+	global $global_form;
+	echo $global_form->category_select($ops);
+}
+/**
  * outputs a date select
  * @ingroup forms
  * @param string $ops the options

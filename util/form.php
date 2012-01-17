@@ -49,7 +49,7 @@ class form {
 	 */
 	function __construct($args="") {
 		global $request;
-		$request_tag = array("tag" => "form", "raw_tag" => "form");
+		$request_tag = array("term" => "form", "slug" => "form");
 		if ((is_array($request->tags)) && (!in_array($request_tag, $request->tags))) $request->tags = array_merge($request->tags, array($request_tag));
 		$args = starr::star($args);
 		efault($args['url'], $args['uri']);
@@ -72,6 +72,7 @@ class form {
 		if ($this->method == "post") $fields = (empty($this->model)) ? $_POST : $_POST[$this->model];
 		else $fields = (empty( $this->model)) ? $_GET : $_GET[$this->model];
 		$errors = errors($this->model, true);
+		assign("form", $this);
 		assign("attributes", $atts);
 		assign("model", $this->model);
 		assign("url", $this->url);
@@ -134,7 +135,10 @@ class form {
 		return $value;
 	}
 
-
+	/**
+	 * converts the option string given to form elements into an array and sets up default values
+	 * @param star $ops the option string
+	 */
 	function fill_ops(&$ops) {
 		$ops = starr::star($ops);
 		$name = array_shift($ops);
@@ -171,23 +175,59 @@ class form {
 		return capture(array($this->model."/form/$ops[field]-$capture", "form/$ops[field]-$capture", $this->model."/form/$capture", "form/$capture"));
 	}
 
+	/**
+	 * generates a text field
+	 * @param star $ops an option string starting with the input name, and including HTML attributes
+	 *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
+	 *									label: The label displayed above the input. The default label is the name option replacing underscores with spaces and passed to ucwords.
+	 * 									nolabel: if this is set, no label will be displayed
+	 * 									default: a default value to use
+	 *
+	 * 									you should not specify the key for name. For example, here the 'name' is 'title':
+	 * 									text("title  label:The Title  default:Untitled");
+	 */
 	function text($ops) {
 		return $this->input("text", $ops);
 	}
-
+	/**
+	 * generates a password field
+	 * @param star $ops an option string starting with the input name, and including HTML attributes
+	 *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
+	 *									label: The label displayed above the input. The default label is the name option replacing underscores with spaces and passed to ucwords.
+	 * 									nolabel: if this is set, no label will be displayed
+	 * 									default: a default value to use
+	 *
+	 * 									you should not specify the key for name. For example, here the 'name' is 'password':
+	 * 									password("password  label:Your Password");
+	 */
 	function password($ops) {
 		return $this->input("password", $ops);
 	}
-
+	/**
+	 * generates a hidden input field
+	 * @param star $ops an option string starting with the input name, and including HTML attributes
+	 *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
+	 * 									default: a default value to use
+	 *
+	 * 									you should not specify the key for name. For example, here the 'name' is 'article_id':
+	 * 									hidden("article_id  default:1");
+	 */
 	function hidden($ops) {
 		$ops = $ops."  nolabel:true";
 		return $this->input("hidden", $ops);
 	}
-
+	/**
+	 * generates a submit input
+	 * @param star $ops an option string of HTML attributes
+	 */
 	function submit($ops="") {
 		return $this->input("submit", "nolabel:".((empty($ops))? "" : "  ".$ops));
 	}
-
+	/**
+	 * generates a submit button
+	 * @param string $label the inner HTML of the button
+	 * @param star $ops an option string of HTML attributes
+	 */
 	function button($label, $ops="") {
 		$ops = star($ops);
 		efault($ops['type'], "submit");
@@ -196,7 +236,14 @@ class form {
 		assign("attributes", $ops);
 		return capture("form/button");
 	}
-
+	/**
+	 * generates a file input
+	 * @param star $ops an option string starting with the input name, and including HTML attributes
+	 *									[name]: the input name
+	 *									label: The label displayed above the input. The default label is the name option replacing underscores with spaces and passed to ucwords.
+	 * 									nolabel: if this is set, no label will be displayed
+	 * 									default: a default value to use
+	 */
 	function file($ops) {
 		$ops = $ops."  type:file";
 		$this->fill_ops($ops);
@@ -263,6 +310,25 @@ class form {
 		assign("value", $this->get($ops['name']));
 		assign("options", $options);
 		return $this->form_control("select", $ops);
+	}
+	
+	function category_select($ops) {
+		$this->fill_ops($ops);
+		$value = $this->get($ops['name']);
+		if ((empty($value)) && (!empty($ops['default']))) {
+			$this->set($ops['name'], $ops['default']);
+			unset($ops['default']);
+		}
+		efault($ops['taxonomy'], ((empty($this->model)) ? "" : $this->model."_").$ops['name']);
+		efault($ops['parent'], 0);
+		$terms = terms($ops['taxonomy'], $ops['parent']);
+		$options = array();
+		foreach ($terms as $term) $options[str_pad($term['term'], strlen($term['term'])+$depth, "-", STR_PAD_LEFT)] = $term['id'];
+		$options["Add a new ".str_replace("_", " ", $ops['name']).".."] = -1;
+		$ops['onchange'] = "if (dojo.attr(this, 'value') == -1) dojo.style(this.id+'_new_category', 'display', 'block'); else dojo.style(this.id+'_new_category', 'display', 'none');";
+		assign("value", $this->get($ops['name']));
+		assign("options", $options);
+		return $this->form_control("category_select", $ops);
 	}
 
 	function date_select($ops) {

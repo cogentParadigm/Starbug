@@ -129,11 +129,11 @@ class sb {
 		$args = func_get_args();
 		if (false !== strpos($topic, ".")) {
 			list($tags, $topic) = explode(".", $topic);
-			$tags = array(array("tag" => $tags));
-		} else $tags = (isset($request->tags)) ? $request->tags : array(array("tag" => "global"));
+			$tags = array(array("slug" => $tags));
+		} else $tags = (isset($request->tags)) ? $request->tags : array(array("slug" => "global"));
 		foreach ($tags as $tag) {
-			foreach (array(BASE_DIR."/core/app/hooks/$tag[tag].$topic.php", BASE_DIR."/app/hooks/$tag[tag].$topic.php") as $hook) if (file_exists($hook)) include($hook);
-			$subscriptions = (file_exists(BASE_DIR."/etc/hooks/$tag[tag].$topic.json")) ? json_decode(file_get_contents(BASE_DIR."/etc/hooks/$tag[tag].$topic"), true) : array();
+			foreach (array(BASE_DIR."/core/app/hooks/$tag[slug].$topic.php", BASE_DIR."/app/hooks/$tag[slug].$topic.php") as $hook) if (file_exists($hook)) include($hook);
+			$subscriptions = (file_exists(BASE_DIR."/etc/hooks/$tag[slug].$topic.json")) ? json_decode(file_get_contents(BASE_DIR."/etc/hooks/$tag[slug].$topic"), true) : array();
 			foreach ($subscriptions as $priority) {
 				foreach($priority as $handle) {
 					if (false !== strpos($handle['handle'], "::")) $handle['handle'] = explode("::", $handle['handle']);
@@ -242,7 +242,10 @@ class sb {
 				}
 			}
 		}
-		foreach ($args as $k => $v) if (file_exists(BASE_DIR."/core/app/filters/query/$k.php")) include(BASE_DIR."/core/app/filters/query/$k.php");
+		foreach ($args as $k => $v) {
+			if (file_exists(BASE_DIR."/app/filters/query/$k.php")) include(BASE_DIR."/app/filters/query/$k.php");
+			else if (file_exists(BASE_DIR."/core/app/filters/query/$k.php")) include(BASE_DIR."/core/app/filters/query/$k.php");
+		}
 		if (!empty($args['where'])) $args['where'] = " WHERE ".$args['where'];
 		$groupby = (!(empty($args['groupby']))) ? " LIMIT $args[groupby]" : "";
 		$having = (!(empty($args['having']))) ? " LIMIT $args[having]" : "";
@@ -292,6 +295,9 @@ class sb {
 		$errors = $byfilter = array();
 		$storing = false;
 		if (!is_array($fields)) $fields = starr::star($fields);
+		if ($from == "auto") {
+			if (!empty($fields['id'])) $from = array("id" => $fields['id']);
+		} else if ((false !== $from) && (!is_array($from))) $from = starr::star($from);
 		foreach ($fields as $col => $value) {
 			$errors[$col] = array();
 			$fields[$col] = trim($fields[$col]);
@@ -301,7 +307,8 @@ class sb {
 		}
 		foreach($byfilter as $filter => $args) {
 			$on_store = false;
-			include(BASE_DIR."/core/app/filters/store/$filter.php");
+			if (file_exists(BASE_DIR."/app/filters/store/$filter.php")) include(BASE_DIR."/app/filters/store/$filter.php");
+			else if (file_exists(BASE_DIR."/core/app/filters/store/$filter.php")) include(BASE_DIR."/core/app/filters/store/$filter.php");
 			if (!$on_store) unset($byfilter[$filter]);
 		}
 		foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
@@ -322,14 +329,14 @@ class sb {
 			$from = $store["from"];
 			$filters = $store["filters"];
 			$errors = $prize = array();
-			if ($from == "auto") {
-				if (!empty($fields['id'])) {
-					$from = array("id" => $fields['id']);
-					unset($fields['id']);
-				}
-			} else if ((false !== $from) && (!is_array($from))) $from = starr::star($from);
-			if (is_array($from)) $updating = true; else $inserting = true;
-			foreach ($filters as $filter => $args) include(BASE_DIR."/core/app/filters/store/$filter.php");
+			if (is_array($from)) {
+				if (!empty($fields['id']) && !empty($from['id'])) unset($fields['id']);
+				$updating = true;
+			} else $inserting = true;
+			foreach ($filters as $filter => $args) {
+				if (file_exists(BASE_DIR."/app/filters/store/$filter.php")) include(BASE_DIR."/app/filters/store/$filter.php");
+				else if (file_exists(BASE_DIR."/core/app/filters/store/$filter.php")) include(BASE_DIR."/core/app/filters/store/$filter.php");
+			}
 			foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
 			if (empty($this->errors)) { //no errors
 				$pre_store_time = date("Y-m-d H:i:s");
@@ -368,6 +375,7 @@ class sb {
 						if(empty($values)) $values = "$s";
 						else $values .= ", $s";
 					}
+					echo "INSERT INTO ".P($name)." (".$keys.") VALUES (".$values.")";
 					$stmt = $this->db->prepare("INSERT INTO ".P($name)." (".$keys.") VALUES (".$values.")");
 					$this->record_count = $stmt->execute($prize);
 					$this->insert_id = $this->db->lastInsertId();

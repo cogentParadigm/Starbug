@@ -83,7 +83,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 <?php
 	$collectives = array_merge(array("everybody" => 0), $request->groups);
 	$parents = query("uris", "where:prefix='app/views/' && type='Page'");
-	$kids = array();
+	$kids = array(array());
 	foreach($parents as $u) $kids[$u['parent']][] = $u;
 	function parent_options($u, $k, $l=0) {
 		$arr = array();
@@ -138,6 +138,9 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 				select("parent", $parent_ops);
 				button(ucwords($action), "class:big round left button");
 			?>
+		</div>
+		<div class="round infield" style="clear:right">
+			<?php category_select("category  writable:true"); ?>
 		</div>
 		<div class="left">
 			<?php text("path  nolabel:true  style:width:630px;display:none"); ?>

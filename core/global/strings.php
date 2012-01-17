@@ -27,6 +27,16 @@ function star($str) {
  */
 function P($var) {return Etc::PREFIX.$var;}
 /**
+ * normalize a string
+ * @ingroup strings
+ * @param string $raw the raw string
+ * @param string $valid_chars valid characters. default is 'a-zA-Z0-9'
+ * @return string the normalized version of $raw
+ */
+function normalize($raw, $valid_chars='a-zA-Z0-9 ') {
+	return preg_replace("/[^".$valid_chars."]/", "", $raw);
+}
+/**
  * get the plural form of a singular form word
  * @ingroup strings
  * @param string $singular the singular form of the word

@@ -38,10 +38,33 @@ class CoreMigration extends Migration {
 			"related_table  type:string  length:100",
 			"related_id  type:int  default:0"
 		);
+		$this->table("options  list:all",
+			"name  type:string  length:64",
+			"value  type:text  default:",
+			"autoload  type:bool  default:0"
+		);
+		$this->table("files  list:all",
+			"mime_type  type:string  length:128",
+			"name  type:string  length:128",
+			"category  type:category",
+			"caption  type:string  length:255",
+			"directory  type:int  default:1  display:false"
+		);
+		$this->table("terms",
+			"term  type:string  length:128",
+			"slug  type:string  length:128  unique:",
+			"description  type:string  length:255  input_type:textarea  default:",
+			"attachment  type:int  upload:term_attachment  null:  references:files id",
+			"taxonomy  type:string",
+			"parent  type:int  default:0",
+			"position  type:int  ordered:taxonomy parent"
+		);
 		$this->table("uris  label:Pages  singular_label:Page",
 			"path  type:string  length:64  unique:  list:true",
 			"title  type:string  length:128  list:true",
 			"template  type:string  length:64  default:  list:true",
+			"category  type:category  length:64",
+			"tags  type:terms",
 			"format  type:string  length:16  default:html  list:true",
 			"parent  type:int  default:0  list:false",
 			"sort_order  type:int  default:0  list:false",
@@ -65,25 +88,6 @@ class CoreMigration extends Migration {
 			"menus_id  type:int  references:menus id  update:cascade  delete:cascade",
 			"position  type:int  ordered:menus_id parent",
 			"parent  type:int  default:0"
-		);
-		$this->table("tags  list:all",
-			"tag  type:string  length:30  default:",
-			"raw_tag  type:string  length:50  default:"
-		);
-		$this->table("uris_tags  list:all",
-			"tag_id  type:int  default:0  key:primary  references:tags id  update:cascade  delete:cascade",
-			"owner  type:int  default:1  key:primary  references:users id  update:cascade  delete:cascade",
-			"object_id  type:int  default:0  key:primary  references:uris id  update:cascade  delete:cascade"
-		);
-		$this->table("files  list:all",
-			"mime_type  type:string  length:128",
-			"filename  type:string  length:128",
-			"caption  type:string  length:255"
-		);
-		$this->table("options  list:all",
-			"name  type:string  length:64",
-			"value  type:text  default:",
-			"autoload  type:bool  default:0"
 		);
 		$this->table("emails",
 			"name  type:string  length:64  list:true",
@@ -118,7 +122,7 @@ class CoreMigration extends Migration {
 		$this->uri("update", "prefix:core/app/views/  layout:one-column  groups:user");
 
 		// URI PERMITS
-		$this->permit("uris::read", "collective:global  status:4");
+		$this->permit("uris::read", "collective:global 4");
 		// USER PERMITS
 		$this->permit("users::login", "everyone:table");
 		$this->permit("users::logout", "everyone:table");

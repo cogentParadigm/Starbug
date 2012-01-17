@@ -71,7 +71,7 @@ class Request {
 	 * constructor. initiates tags and postback
 	 */
 	function __construct($groups, $statuses) {
-		$this->tags = array(array("tag" => "global", "raw_tag" => "global"));
+		$this->tags = array(array("term" => "global", "slug" => "global"));
 		$this->groups = $groups;
 		$this->statuses = $statuses;
 		if (!isset($_SESSION[P('postback')])) $_SESSION[P('postback')] = $_SERVER['REQUEST_URI'];
@@ -128,7 +128,7 @@ class Request {
 			if (!empty($row)) $this->forbidden(); //if we find something that means we don't have permission to see it, so show the forbidden page
 			else $this->missing(); //if we don't find anything, there is nothing there, so show the missing page
 		}
-		$this->tags = array_merge($this->tags, query("uris,tags", "select:DISTINCT tag, raw_tag  where:uris.id='".$this->payload['id']."'"));
+		$this->tags = array_merge($this->tags, query("uris,terms via uris_tags", "select:DISTINCT term, slug  where:uris.id='".$this->payload['id']."'"));
 		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
 		if ($this->payload['type'] == 'View') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
 		$this->theme = $this->payload['theme'];

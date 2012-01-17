@@ -6,6 +6,9 @@ class Uris extends UrisModel {
 		$this->store($uris);
 		if (!errors()) {
 			redirect(uri("admin/uris/update"));
+		} else {
+			global $sb;
+			if (errors("uris[title]") && empty($uris['path'])) unset($sb->errors['uris']['path']);
 		}
 	}
 	

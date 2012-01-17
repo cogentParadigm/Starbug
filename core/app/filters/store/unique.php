@@ -1,6 +1,14 @@
 <?php
 foreach($args as $field => $unique) {
-$urow = $this->query($name, "select:id, $field  where:$field=?".((empty($fields['id'])) ? "" : " && id!='$fields[id]'")."  limit:1", array($fields[$field]));
-if ($this->record_count != 0) $errors[$field]["exists"] = "That $field already exists.";
+	$unique_where = "";
+	$unique_replacements = array($fields[$field]);
+	if (is_array($from)) {
+		foreach ($from as $k => $v) {
+			$unique_where .= " && $k!=?";
+			$unique_replacements[] = $v;
+		}
+	}
+	$urow = $this->query($name, "select:id, $field  where:$field=?$unique_where  limit:1", $unique_replacements);
+	if ($this->record_count != 0 && !empty($fields[$field])) $errors[$field]["exists"] = "That $field already exists.";
 }
 ?>
