@@ -4,6 +4,5 @@
 ?>
 <div id="<?php echo $id; ?>_new_category"<?php if ($value != -1) echo ' style="display:none"'; ?>>
 	<? echo $form->text($field."_new_category  label:New Category"); ?>
-	<? echo $form->button("Save"); ?>
 	<br class="clear"/>
 </div>

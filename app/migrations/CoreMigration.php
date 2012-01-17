@@ -43,21 +43,21 @@ class CoreMigration extends Migration {
 			"value  type:text  default:",
 			"autoload  type:bool  default:0"
 		);
-		$this->table("files  list:all",
-			"mime_type  type:string  length:128",
-			"name  type:string  length:128",
-			"category  type:category",
-			"caption  type:string  length:255",
-			"directory  type:int  default:1  display:false"
-		);
 		$this->table("terms",
 			"term  type:string  length:128",
 			"slug  type:string  length:128  unique:",
 			"description  type:string  length:255  input_type:textarea  default:",
-			"attachment  type:int  upload:term_attachment  null:  references:files id",
+			//"attachment  type:int  upload:term_attachment  null:  references:files id",
 			"taxonomy  type:string",
 			"parent  type:int  default:0",
 			"position  type:int  ordered:taxonomy parent"
+		);
+		$this->table("files  list:all",
+			"mime_type  type:string  length:128",
+			"filename  type:string  length:128",
+			"category  type:category  null:",
+			"caption  type:string  length:255",
+			"directory  type:int  default:1  display:false"
 		);
 		$this->table("uris  label:Pages  singular_label:Page",
 			"path  type:string  length:64  unique:  list:true",
