@@ -14,7 +14,7 @@
  */
 function terms($taxonomy, $parent=0, $depth=0) {
 	$terms = array();
-	$parents = query("terms", "where:taxonomy=? AND parent=?", array($taxonomy, $parent));
+	$parents = query("terms", "where:taxonomy=? AND parent=?  oderby:position ASC", array($taxonomy, $parent));
 	foreach ($parents as $idx => $term) {
 		$term['depth'] = $depth;
 		$terms[] = $term;
