@@ -375,7 +375,6 @@ class sb {
 						if(empty($values)) $values = "$s";
 						else $values .= ", $s";
 					}
-					echo "INSERT INTO ".P($name)." (".$keys.") VALUES (".$values.")";
 					$stmt = $this->db->prepare("INSERT INTO ".P($name)." (".$keys.") VALUES (".$values.")");
 					$this->record_count = $stmt->execute($prize);
 					$this->insert_id = $this->db->lastInsertId();

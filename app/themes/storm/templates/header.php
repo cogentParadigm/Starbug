@@ -9,4 +9,5 @@
 <ul id="nav" class="hnav">
 	<li class="first"><a href="<?php echo uri("admin/uris"); ?>">Pages</a></li>
 	<li><a href="<?php echo uri("admin/menus"); ?>">Menus</a></li>
+	<li><a href="<?php echo uri("admin/taxonomies"); ?>">Taxonomy</a></li>
 </ul>

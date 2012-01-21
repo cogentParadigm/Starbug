@@ -19,6 +19,17 @@ function form($arg, $render=true) {
 	render_form($arg, $render);
 }
 /**
+ * retrieve a global form instance
+ * @ingroup forms
+ */
+function global_form($set="") {
+	global $global_form;
+	if (empty($set)) {
+		if (empty($global_form)) $global_form = new form();
+	} else $global_form = $set;
+	return $global_form;
+}
+/**
  * creates a new form and outputs the opening form tag and some hidden inputs
  * @ingroup forms
  * @param string $options the options for the form
@@ -48,8 +59,8 @@ function open_form($options, $atts="") {
  * any remaining options will be converted to an HTML attribute string and attached
  */
 function text($ops) {
-	global $global_form;
-	echo $global_form->text($ops);
+	$form = global_form();
+	echo $form->text($ops);
 }
 /**
  * outputs a password
@@ -61,8 +72,8 @@ function text($ops) {
  * any remaining options will be converted to an HTML attribute string and attached
  */
 function password($ops) {
-	global $global_form;
-	echo $global_form->password($ops);
+	$form = global_form();
+	echo $form->password($ops);
 }
 /**
  * outputs a hidden field
@@ -74,8 +85,8 @@ function password($ops) {
  * any remaining options will be converted to an HTML attribute string and attached
  */
 function hidden($ops) {
-	global $global_form;
-	echo $global_form->hidden($ops);
+	$form = global_form();
+	echo $form->hidden($ops);
 }
 /**
  * outputs a submit button
@@ -86,8 +97,8 @@ function hidden($ops) {
  * any remaining options will be converted to an HTML attribute string and attached
  */
 function submit($ops="") {
-	global $global_form;
-	echo $global_form->submit($ops);
+	$form = global_form();
+	echo $form->submit($ops);
 }
 /**
  * outputs a button
@@ -98,8 +109,8 @@ function submit($ops="") {
  * any remaining options will be converted to an HTML attribute string and attached
  */
 function button($label, $ops="") {
-	global $global_form;
-	echo $global_form->button($label, $ops);
+	$form = global_form();
+	echo $form->button($label, $ops);
 }
 /**
  * outputs a file input
@@ -108,8 +119,8 @@ function button($label, $ops="") {
  * @ingroup form
  */
 function file_select($ops) {
-	global $global_form;
-	echo $global_form->file($ops);
+	$form = global_form();
+	echo $form->file($ops);
 }
 /**
  * outputs a checkbox input
@@ -118,8 +129,8 @@ function file_select($ops) {
  * @ingroup form
  */
 function checkbox($ops) {
-	global $global_form;
-	echo $global_form->checkbox($ops);
+	$form = global_form();
+	echo $form->checkbox($ops);
 }
 /**
  * outputs a radio button
@@ -128,8 +139,8 @@ function checkbox($ops) {
  * @ingroup form
  */
 function radio($ops) {
-	global $global_form;
-	echo $global_form->radio($ops);
+	$form = global_form();
+	echo $form->radio($ops);
 }
 /**
  * outputs an input
@@ -138,8 +149,8 @@ function radio($ops) {
  * @ingroup form
  */
 function input($type, $ops) {
-	global $global_form;
-	echo $global_form->input($type, $ops);
+	$form = global_form();
+	echo $form->input($type, $ops);
 }
 /**
  * outputs a select field
@@ -149,8 +160,8 @@ function input($type, $ops) {
  * @ingroup form
  */
 function select($ops, $options=array()) {
-	global $global_form;
-	echo $global_form->select($ops, $options);
+	$form = global_form();
+	echo $form->select($ops, $options);
 }
 /**
  * outputs a category select
@@ -158,8 +169,8 @@ function select($ops, $options=array()) {
  * @param string $ops the options
  */
 function category_select($ops) {
-	global $global_form;
-	echo $global_form->category_select($ops);
+	$form = global_form();
+	echo $form->category_select($ops);
 }
 /**
  * outputs a date select
@@ -168,8 +179,8 @@ function category_select($ops) {
  * @ingroup form
  */
 function date_select($ops) {
-	global $global_form;
-	echo $global_form->date_select($ops);
+	$form = global_form();
+	echo $form->date_select($ops);
 }
 /**
  * outputs a time select
@@ -178,8 +189,8 @@ function date_select($ops) {
  * @ingroup form
  */
 function time_select($ops) {
-	global $global_form;
-	echo $global_form->time_select($ops);
+	$form = global_form();
+	echo $form->time_select($ops);
 }
 /**
  * outputs a textarea
@@ -188,8 +199,8 @@ function time_select($ops) {
  * @ingroup form
  */
 function textarea($ops) {
-	global $global_form;
-	echo $global_form->textarea($ops);
+	$form = global_form();
+	echo $form->textarea($ops);
 }
 /**
  * outputs a closing form tag
@@ -197,7 +208,7 @@ function textarea($ops) {
  * @ingroup form
  */
 function close_form() {
-	global $global_form;
-	render("form/close", $global_form->scope);
+	$form = global_form();
+	render("form/close", $form->scope);
 }
 ?>

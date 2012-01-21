@@ -45,11 +45,11 @@ class CoreMigration extends Migration {
 		);
 		$this->table("terms",
 			"term  type:string  length:128",
-			"slug  type:string  length:128  unique:",
+			"slug  type:string  length:128  unique:  display:false",
 			"description  type:string  length:255  input_type:textarea  default:",
 			//"attachment  type:int  upload:term_attachment  null:  references:files id",
-			"taxonomy  type:string",
-			"parent  type:int  default:0",
+			"taxonomy  type:string  views:taxonomies  input_type:hidden",
+			"parent  type:int  default:0  input_type:category_select  readonly:",
 			"position  type:int  ordered:taxonomy parent"
 		);
 		$this->table("files  list:all",
@@ -121,8 +121,19 @@ class CoreMigration extends Migration {
 		$this->uri("create", "prefix:core/app/views/  layout:one-column  groups:user");
 		$this->uri("update", "prefix:core/app/views/  layout:one-column  groups:user");
 
+		// PERMITS
+		//STANDARD WRITE PERMITS
+		foreach(array("users", "terms", "menus", "uris_menus", "uris") as $standard_write) {
+						$this->permit("$standard_write::create", "admin:");
+						$this->permit("$standard_write::delete", "admin:global");
+		}
+		//STANDARD READ PERMITS
+		foreach (array("terms", "menus", "uris_menus") as $standard_read) {
+						$this->permit("$standard_read::read","user:global");
+		}
 		// URI PERMITS
 		$this->permit("uris::read", "collective:global 4");
+		$this->permit("uris::update", "admin:global");
 		// USER PERMITS
 		$this->permit("users::login", "everyone:table");
 		$this->permit("users::logout", "everyone:table");
@@ -130,6 +141,12 @@ class CoreMigration extends Migration {
 		$this->permit("users::register", "everyone:table");
 		$this->permit("users::update_profile", "owner:global");
 		$this->permit("users::reset_password", "everyone:table");
+		// MENU PERMITS
+		$this->permit("menus::add_uri", "admin:global");
+		// TERM PERMITS
+		$this->permit("terms::delete_taxonomy", "admin:table");
+		//FILE PERMITS
+		$this->permit("files::prepare", "admin:table");
 
 		//LOGGING TABLES
 		//ERROR LOG

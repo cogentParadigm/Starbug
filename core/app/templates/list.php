@@ -26,8 +26,13 @@
 			implode("  ", $query)
 		);
 		foreach ($options['fields'] as $name => $field) {
+			if (!empty($view)) efault($field['list'], false);
 			if ($options['list'] == "all") efault($field['list'], true);
 			else efault($field['list'], false);
+			if (!empty($field['views'])) {
+				$field_views = explode(",", $field['views']);
+				if (in_array($view, $field_views)) $field['list'] = true;
+			}
 			if (($field['display']) && ($field['list'])) $grid->add_column("$name  width:auto");
 		}
 		$grid->add_column("id  width:100  formatter:row_options", "Options");

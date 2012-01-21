@@ -8,6 +8,7 @@ foreach ($args as $field => $ordered) {
 	if (empty($fields['id'])) {
 		$h = $this->query($name, "select:MAX(`$field`) as highest  where:$where"."1  limit:1");
 		$fields[$field] = $h['highest']+1;
+		unset($errors[$field]['required']);
 	} else if (!empty($fields[$field])) {
 		$x = $fields[$field];
 		unset($fields[$field]);

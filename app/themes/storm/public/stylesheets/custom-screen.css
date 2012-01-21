@@ -76,6 +76,7 @@ input.link:hover{text-decoration:underline}
 
 /********************* forms *********************/
 input.text{border-color:#CCC;background:url(../images/text-input-bg.png) bottom left repeat-x}
+textarea{width:309px;height:100px}
 #login_form{width:234px;height:128px;margin:34px auto 0;padding:136px 85px 0;background:url(../images/login-bg.png) no-repeat}
 #login_form input.text{width:221px;color:#419bc0}
 #login_form span.error{width:221px;position:absolute;top:330px}
@@ -112,8 +113,8 @@ body.tundra .dijitDialogPaneContent{background:none;border:none}
 /********************* CMS Menus *********************/
 .uris_list{clear:both;height:300px;width:300px;overflow-y:scroll;margin-bottom:15px}
 .uris_list li{list-style-type:none;clear:both;margin-bottom:5px;border-bottom:1px solid}
-.menu_items li{padding:5px 0}
-
+.menu_items li{padding:5px 0;list-style-type:none;clear:both}
+.menu_items li input{width:25px;text-align:center}
 .menu_item{width:500px}
 body ol.menu_items button, body ol.menu_items button{margin:0 0 0 10px;padding:0px;background:transparent;border:none;position:relative;top:-3px}
 body ol.menu_items button img{width:14px;height:14px}

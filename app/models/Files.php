@@ -7,7 +7,6 @@ class Files extends FilesModel {
 	
 	function upload($record, $file) {
 		if (!empty($file['name'])) {
-			if (!($file["size"] < 1000000)) error("You must upload a file that is less than ".(round(1000000/1024))."kB", "filename");
 			if ($file["error"] > 0) error($file["error"], "filename");
 			$record['filename'] = str_replace(" ", "_", $file['name']);
 			$record['mime_type'] = $this->get_mime($file['tmp_name']);

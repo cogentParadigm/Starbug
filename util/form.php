@@ -285,6 +285,10 @@ class form {
 
 	function select($ops, $options=array()) {
 		$this->fill_ops($ops);
+		if (isset($ops['mulitple'])) {
+			$ops['name'] = $ops['name']."[]";
+			efault($ops['size'], 5);
+		}
 		$value = $this->get($ops['name']);
 		if ((empty($value)) && (!empty($ops['default']))) {
 			$this->set($ops['name'], $ops['default']);
@@ -312,6 +316,10 @@ class form {
 		return $this->form_control("select", $ops);
 	}
 	
+	function mulitple_select($ops, $options=array()) {
+		return $this->select($ops."  multiple:", $options);
+	}
+	
 	function category_select($ops) {
 		$this->fill_ops($ops);
 		$value = $this->get($ops['name']);
@@ -323,9 +331,12 @@ class form {
 		efault($ops['parent'], 0);
 		$terms = terms($ops['taxonomy'], $ops['parent']);
 		$options = array();
+		if (isset($ops['optional'])) $options[""] = 0;
 		foreach ($terms as $term) $options[str_pad($term['term'], strlen($term['term'])+$depth, "-", STR_PAD_LEFT)] = $term['id'];
-		$options["Add a new ".str_replace("_", " ", $ops['name']).".."] = -1;
-		$ops['onchange'] = "if (dojo.attr(this, 'value') == -1) dojo.style(this.id+'_new_category', 'display', 'block'); else dojo.style(this.id+'_new_category', 'display', 'none');";
+		if (!isset($ops['readonly'])) {
+			$options["Add a new ".str_replace("_", " ", $ops['name']).".."] = -1;
+			$ops['onchange'] = "if (dojo.attr(this, 'value') == -1) dojo.style(this.id+'_new_category', 'display', 'block'); else dojo.style(this.id+'_new_category', 'display', 'none');";
+		}
 		assign("value", $this->get($ops['name']));
 		assign("options", $options);
 		return $this->form_control("category_select", $ops);
