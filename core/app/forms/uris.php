@@ -36,7 +36,7 @@ function editable_onchange(evt) {
 <?php if ($action == "update") { ?>
 function apply_tags() {
 	sb.xhr({
-		url: '<?php echo uri("api/uris.tags.json"); ?>',
+		url: '<?php echo uri("api/uris.terms.json"); ?>',
 		content: {
 			'action[uris]': 'apply_tags',
 			'uris[id]': '<?php echo $_POST['uris']['id']; ?>',
@@ -50,7 +50,7 @@ function apply_tags() {
 }
 function remove_tag(tag) {
 	sb.xhr({
-		url: '<?php echo uri("api/uris.tags.json"); ?>',
+		url: '<?php echo uri("api/uris.terms.json"); ?>',
 		content: {
 			'action[uris]': 'remove_tag',
 			'uris[id]': '<?php echo $_POST['uris']['id']; ?>',
@@ -62,15 +62,15 @@ function remove_tag(tag) {
 		node: dojo.byId('applied_tags')
 	});
 }
-function display_tags(args) {
+function display_tags(data, args) {
 	console.log(arguments);
 	var list = "";
-	for(var i=0;i<args.args.data.uris.length;i++) {
-		console.log(args.args.data.uris[i]);
-		var item = args.args.data.uris[i];
-		list += '<li><a href="javascript:remove_tag(\''+item.tag+'\');">x</a> '+item.tag+'</li>\n';
+	for(var i=0;i<data.length;i++) {
+		console.log(data[i]);
+		var item = data[i];
+		list += '<li><a href="javascript:remove_tag(\''+item.term+'\');">x</a> '+item.term+'</li>\n';
 	}
-	args.args.node.innerHTML = list;
+	args.node.innerHTML = list;
 }
 <?php } ?>
 require(['dojo/query', 'dojo/domReady!'], function($) {
@@ -136,9 +136,18 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 				select("status", $status_list);
 				select("collective  label:Access", $collectives);
 				select("parent", $parent_ops);
-				category_select("category");
 				button(ucwords($action), "class:big round left button");
 			?>
+				<br class="clear"/><br/>
+				<?php category_select("category"); ?>
+				<br/>
+				<label>Tags</label>
+				<input type="text" id="tagbox" class="text left" style="width:195px" /><a class="round right button" href="javascript:apply_tags();">apply</a>
+				<ul id="applied_tags">
+					<?php foreach(query("uris,terms", "select:DISTINCT term, slug  where:uris.id='".$_POST['uris']['id']."'") as $tag) { ?>
+						<li><a href="javascript:remove_tag('<?php echo $tag['term']; ?>');">x</a> <?php echo $tag['term']; ?></li>
+					<?php } ?>
+				</ul>
 		</div>
 		<div class="left">
 			<?php text("path  nolabel:true  style:width:630px;display:none"); ?>

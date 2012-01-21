@@ -110,6 +110,12 @@ body.tundra .dijitDialogPaneContent{background:none;border:none}
 .pages_form .infield .big.button{width:100%}
 .editable a{background:white;padding:0px 5px}
 
+#applied_tags{clear:both;list-style-type:none;font-size:10px;margin:0}
+#applied_tags li{float:left;margin-right:10px;margin-bottom:10px}
+#applied_tags a{border:1px solid #666;padding:0px 4px 1px}
+#applied_tags a:hover{background:#666;color:#FFF;text-decoration:none}
+.infield, #applied_tags a{border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px}
+
 /********************* CMS Menus *********************/
 .uris_list{clear:both;height:300px;width:300px;overflow-y:scroll;margin-bottom:15px}
 .uris_list li{list-style-type:none;clear:both;margin-bottom:5px;border-bottom:1px solid}

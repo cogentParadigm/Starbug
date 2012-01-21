@@ -31,18 +31,16 @@ class Uris extends UrisModel {
 	
 	function apply_tags() {
 		global $sb;
-		$sb->import("util/tags");
 		$tags = explode(",", $_POST['tags']);
 		$uid = $_POST['uris']['id'];
-		foreach($tags as $tag) tags::safe_tag("tags", "uris_tags", $_SESSION[P('id')], $uid, trim($tag));
+		foreach($tags as $tag) tag("uris_tags", $uid, trim($tag));
 	}
 	
 	function remove_tag() {
 		global $sb;
-		$sb->import("util/tags");
 		$tag = $_POST['tag'];
 		$uri = $_POST['uris']['id'];
-		tags::delete_object_tag("tags", "uris_tags", $uri, $tag);
+		untag("uris_tags", $uri, $tag);
 	}
 
 }

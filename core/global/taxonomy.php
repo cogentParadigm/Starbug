@@ -30,7 +30,7 @@ function terms($taxonomy, $parent=0, $depth=0) {
  * @param string $tag the tag
  * @return bool returns true on success, false otherwise.
  */
-function tag($table, $taxonomy, $object_id, $tag) {
+function tag($table, $taxonomy, $object_id, $tag="") {
 	$args = func_get_args();
 	$count = count($args);
 	if ($count == 3) {
@@ -43,7 +43,7 @@ function tag($table, $taxonomy, $object_id, $tag) {
 	//IF THE TAG IS ALREADY APPLIED, RETURN TRUE
 	$existing = query("$taxonomy,terms", "where:$taxonomy.$table"."_id=? AND terms.term=?", array($object_id, $tag));
 	if (!empty($existing)) return true;
-	
+
 	//IF THE TERM DOESN'T EXIST, ADD IT
 	$term = query("terms", "where:term=? AND taxonomy=?  limit:1", array($tag, $taxonomy));
 	if (empty($term)) store("terms", "term:$tag  slug:$slug  taxonomy:$taxonomy  parent:0  position:");
@@ -51,7 +51,7 @@ function tag($table, $taxonomy, $object_id, $tag) {
 		
 	//APPLY TAG
 	$term_id = (empty($term)) ? sb("insert_id") : $term['id'];
-	store($taxonomy, "term_id:$term_id  $table"."_id:$object_id");
+	store($taxonomy, "terms_id:$term_id  $table"."_id:$object_id");
 	return (!errors());
 }
 /**
@@ -62,13 +62,13 @@ function tag($table, $taxonomy, $object_id, $tag) {
  * @param int $object_id the id of the object to apply the tag to
  * @param string $tag the tag
  */
-function untag($table, $taxonomy, $object_id, $tag) {
+function untag($table, $taxonomy, $object_id, $tag="") {
 	$args = func_get_args();
 	$count = count($args);
 	if ($count == 3) {
 		list($taxonomy, $object_id, $tag) = $args;
 		$table = reset(explode("_", $taxonomy));
 	}
-	remove($taxonomy, $table."_id='$object_id' AND terms_id=(SELECT id FROM ".P("terms")." WHERE (term='$tag' || slug='$tag'))");
+	remove($taxonomy, $table."_id='$object_id' AND terms_id IN (SELECT id FROM ".P("terms")." WHERE (term='$tag' || slug='$tag'))");
 }
 ?>
