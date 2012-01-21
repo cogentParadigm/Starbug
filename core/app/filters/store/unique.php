@@ -2,6 +2,13 @@
 foreach($args as $field => $unique) {
 	$unique_where = "";
 	$unique_replacements = array($fields[$field]);
+	if (!empty($unique)) {
+		$unique = explode(" ", $unique);
+		foreach ($unique as $u) {
+			$unique_where .= " && $u=?";
+			$unique_replacements[] = $fields[$u];
+		}
+	}
 	if (is_array($from)) {
 		foreach ($from as $k => $v) {
 			$unique_where .= " && $k!=?";

@@ -45,7 +45,7 @@ class CoreMigration extends Migration {
 		);
 		$this->table("terms",
 			"term  type:string  length:128",
-			"slug  type:string  length:128  unique:  display:false",
+			"slug  type:string  length:128  unique:taxonomy parent  display:false",
 			"description  type:string  length:255  input_type:textarea  default:",
 			//"attachment  type:int  upload:term_attachment  null:  references:files id",
 			"taxonomy  type:string  views:taxonomies  input_type:hidden",

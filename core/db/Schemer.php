@@ -383,7 +383,7 @@ class Schemer {
 						.((isset($field['unsigned'])) ? " UNSIGNED" : "")
 						.((isset($field['zerofill'])) ? " ZEROFILL" : "")
 						.((isset($field['auto_increment'])) ? " AUTO_INCREMENT" : "")
-						.((isset($field['unique'])) ? " UNIQUE" : "")
+						.((isset($field['unique']) && empty($field['unique'])) ? " UNIQUE" : "")
 						.((!isset($field['default'])) ? "" : " default '".$field['default']."'");
 		return $type;
 	}
