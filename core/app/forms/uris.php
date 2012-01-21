@@ -136,11 +136,9 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 				select("status", $status_list);
 				select("collective  label:Access", $collectives);
 				select("parent", $parent_ops);
+				category_select("category");
 				button(ucwords($action), "class:big round left button");
 			?>
-		</div>
-		<div class="round infield" style="clear:right">
-			<?php category_select("category  writable:true"); ?>
 		</div>
 		<div class="left">
 			<?php text("path  nolabel:true  style:width:630px;display:none"); ?>
