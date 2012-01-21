@@ -794,7 +794,7 @@ class Schemer {
 				else if ($field['type'] == "category") $field['input_type'] = "category_select";
 				else if ($field['type'] == "tags") $field['input_type'] = "tag_input";
 				else if (isset($field['upload'])) $field['input_type'] = "file_select";
-				else if (isset($this->tables[$field['type']]) $field['input_type'] = "multiple_select";
+				else if (isset($this->tables[$field['type']])) $field['input_type'] = "multiple_select";
 				else $field['input_type'] = "text";
 			}
 			$field[$field['type']] = "";
