@@ -138,7 +138,7 @@ class Schemer {
 			} else {
 				// OLD TABLE																																													// OLD TABLE
 				foreach ($fields as $name => $field) {
-					if (!isset($this->tables[$field['type']])) {
+					if (!sb()->has($field['type'])) {
 						// REAL COLUMN
 						$records = $this->db->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
 						if (false === ($row = $records->fetch())) {
@@ -281,7 +281,7 @@ class Schemer {
 		$sql_fields = "";
 		$primary_fields = "";
 		foreach ($fields as $fieldname => $options) {
-			if (!isset($this->tables[$options['type']])) {
+			if (!sb()->has($options['type'])) {
 				$field_sql = "`".$fieldname."` ".$this->get_sql_type($options).", ";
 				if (isset($options['key']) && ("primary" == $options['key'])) {
 					$primary[] = "`$fieldname`";
@@ -415,7 +415,7 @@ class Schemer {
 		foreach ($args as $col) {
 			$col = starr::star($col);
 			$colname = array_shift($col);
-			if (isset($this->tables[$col['type']])) {
+			if (sb()->has($col['type'])) {
 				$additional[] = array($table."_".$colname,
 					$col['type']."_id  type:int  default:0  key:primary  references:$col[type] id  update:cascade  delete:cascade",
 					"owner  type:int  default:1  key:primary  references:users id  update:cascade  delete:cascade",
@@ -794,7 +794,7 @@ class Schemer {
 				else if ($field['type'] == "category") $field['input_type'] = "category_select";
 				else if ($field['type'] == "tags") $field['input_type'] = "tag_input";
 				else if (isset($field['upload'])) $field['input_type'] = "file_select";
-				else if (isset($this->tables[$field['type']])) $field['input_type'] = "multiple_select";
+				else if (sb()->has($field['type'])) $field['input_type'] = "multiple_select";
 				else $field['input_type'] = "text";
 			}
 			$field[$field['type']] = "";
