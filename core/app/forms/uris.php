@@ -125,11 +125,10 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 				select("status", $status_list);
 				select("collective  label:Access", $collectives);
 				select("parent", $parent_ops);
+				category_select("category");
 				button(ucwords($action), "class:big round left button");
 			?>
-				<br class="clear"/><br/>
-				<?php category_select("category"); ?>
-				<br/>
+				<br class="clear"/><br/><br/>
 				<label>Tags</label>
 				<input type="text" id="tagbox" class="text left" style="width:195px" /><a class="round right button" href="javascript:apply_tags();">apply</a>
 				<ul id="applied_tags">
