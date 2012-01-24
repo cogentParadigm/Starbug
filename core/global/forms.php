@@ -164,6 +164,17 @@ function select($ops, $options=array()) {
 	echo $form->select($ops, $options);
 }
 /**
+ * outputs a select field
+ * @ingroup forms
+ * @param string $ops the field info
+ * @param array $options the option elements
+ * @ingroup form
+ */
+function multiple_select($ops, $options=array()) {
+	$form = global_form();
+	echo $form->multiple_select($ops, $options);
+}
+/**
  * outputs a category select
  * @ingroup forms
  * @param string $ops the options

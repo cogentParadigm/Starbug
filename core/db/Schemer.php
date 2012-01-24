@@ -99,6 +99,7 @@ class Schemer {
 		$primary = array();
 		foreach ($fields as $column => $options) {
 			if ((isset($options['key'])) && ("primary" == $options['key'])) $primary[] = $column;
+			if ($options['type'] == "category") $fields[$column]['references'] = "terms id";
 		}
 		if (empty($primary)) $fields['id'] = star("type:int  auto_increment:  key:primary");
 		if (empty($fields["owner"])) $fields["owner"] = star("type:int  default:1  references:users id");
@@ -375,7 +376,7 @@ class Schemer {
 		$type = "varchar(".(isset($field['length'])?$field['length']:"64").")";
 		if ($field['type'] == 'password') $type = "varchar(32)";
 		else if (($field['type'] == 'text') || ($field['type'] == 'longtext')) $type = $field["type"];
-		else if ($field['type'] == 'int') $type = "int(".(isset($field['length'])?$field['length']:"11").")";
+		else if ($field['type'] == 'int' || $field['type'] == 'category') $type = "int(".(isset($field['length'])?$field['length']:"11").")";
 		else if ($field['type'] == 'decimal') $type = "decimal(".$field['length'].")";
 		else if ($field['type'] == 'bool') $type = "tinyint(1)";
 		else if (($field['type'] == 'datetime') || ($field['type'] == 'timestamp')) $type = "datetime";
@@ -737,6 +738,11 @@ class Schemer {
 		passthru("sb generate css");
 	}
 
+	/**
+	 * get all of the ways one table is related to another
+	 * @param string $from the migration to go to
+	 * @param int $from the migration to start from
+	 */
 	function get_relations($from, $to) {
 		$fields = $this->get_table($from);
 		$return = (isset($fields['id'])) ? array($from => array()) : array();
@@ -798,6 +804,7 @@ class Schemer {
 				else $field['input_type'] = "text";
 			}
 			$field[$field['type']] = "";
+			efault($field[$field['input_type']], "");
 			foreach ($field as $k => $v) {
 				//if (("references" == $k) && (false === strpos($v, $model))) $data["fields"][$name]["references"] = $v;
 				if (file_exists(BASE_DIR."/app/filters/store/$k.php") || file_exists(BASE_DIR."/core/app/filters/store/$k.php")) $data["fields"][$name]["filters"][$k] = $v;

@@ -63,7 +63,7 @@ class CoreMigration extends Migration {
 			"path  type:string  length:64  unique:  list:true",
 			"title  type:string  length:128  list:true",
 			"template  type:string  length:64  default:  list:true",
-			"category  type:category  length:64",
+			"category  type:category",
 			"tags  type:terms",
 			"format  type:string  length:16  default:html  list:true",
 			"parent  type:int  default:0  list:false",
@@ -134,6 +134,8 @@ class CoreMigration extends Migration {
 		// URI PERMITS
 		$this->permit("uris::read", "collective:global 4");
 		$this->permit("uris::update", "admin:global");
+		$this->permit("uris::apply_tags", "admin:global");
+		$this->permit("uris::remove_tag", "admin:global");
 		// USER PERMITS
 		$this->permit("users::login", "everyone:table");
 		$this->permit("users::logout", "everyone:table");
