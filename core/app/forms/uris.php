@@ -36,7 +36,7 @@ function editable_onchange(evt) {
 <?php if ($action == "update") { ?>
 function apply_tags() {
 	sb.xhr({
-		url: '<?php echo uri("api/uris.terms via uris_tags.json"); ?>',
+		url: '<?php echo uri("api/uris.terms via uris_tags.json?select=DISTINCT term,slug&where=uris.id='".$_POST['uris']['id']."'"); ?>',
 		content: {
 			'action[uris]': 'apply_tags',
 			'uris[id]': '<?php echo $_POST['uris']['id']; ?>',
@@ -50,7 +50,7 @@ function apply_tags() {
 }
 function remove_tag(tag) {
 	sb.xhr({
-		url: '<?php echo uri("api/uris.terms via uris_tags.json"); ?>',
+		url: '<?php echo uri("api/uris.terms via uris_tags.json?select=DISTINCT term,slug&where=uris.id='".$_POST['uris']['id']."'"); ?>',
 		content: {
 			'action[uris]': 'remove_tag',
 			'uris[id]': '<?php echo $_POST['uris']['id']; ?>',
