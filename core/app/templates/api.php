@@ -23,7 +23,7 @@ while ($continue && ((time() - $time) < 30)) {
 		$query = "";
 		foreach ($_GET as $k => $v) $query .= "$k:".stripslashes($v)."  ";
 		//echo $request->uri[1].".".$request->format." ".rtrim($query, ' ');
-		$request = new ApiRequest(str_replace("api/", "", implode("/", $request->uri)).".".$request->format, rtrim($query, ' '));
+		$request = new ApiRequest(str_replace(array("api/", "%20"), array("", " "), implode("/", $request->uri)).".".$request->format, rtrim($query, ' '));
 		if (!empty($request->result)) echo $request->result;
 		else echo '[]';
 	}

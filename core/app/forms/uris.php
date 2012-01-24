@@ -36,7 +36,7 @@ function editable_onchange(evt) {
 <?php if ($action == "update") { ?>
 function apply_tags() {
 	sb.xhr({
-		url: '<?php echo uri("api/uris.terms.json"); ?>',
+		url: '<?php echo uri("api/uris.terms via uris_tags.json"); ?>',
 		content: {
 			'action[uris]': 'apply_tags',
 			'uris[id]': '<?php echo $_POST['uris']['id']; ?>',
@@ -50,7 +50,7 @@ function apply_tags() {
 }
 function remove_tag(tag) {
 	sb.xhr({
-		url: '<?php echo uri("api/uris.terms.json"); ?>',
+		url: '<?php echo uri("api/uris.terms via uris_tags.json"); ?>',
 		content: {
 			'action[uris]': 'remove_tag',
 			'uris[id]': '<?php echo $_POST['uris']['id']; ?>',
@@ -115,17 +115,6 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 		<label id="link-label">Permalink:</label>
 		<span id="permalink" class="link-span"><?= uri("", "f"); ?><span class="editable"><?= (($_POST['uris']['path']) ? $_POST['uris']['path'] : ".." ); ?></span></span>
 		<? if (errors('uris[path]')) echo "<span class=\"clear error\">".reset(errors('uris[path]'))."</span><br />"; ?>
-		<?php if ($action == "update") {/* ?>
-			<div class="round infield" style="float:left;clear:left;width:250px">
-				<h3>Tags</h3>
-				<input type="text" id="tagbox" class="text left" style="width:195px" /><a class="round right button" href="javascript:apply_tags();">apply</a>
-				<ul id="applied_tags">
-					<?php foreach(query("uris,tags", "select:DISTINCT tag, raw_tag  where:uris.id='".$_POST['uris']['id']."'") as $tag) { ?>
-						<li><a href="javascript:remove_tag('<?php echo $tag['tag']; ?>');">x</a> <?php echo $tag['tag']; ?></li>
-					<?php } ?>
-				</ul>
-			</div>
-		<?php */} ?>
 		<div class="round infield">
 			<?php
 				$status_list = $request->statuses;
@@ -144,7 +133,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 				<label>Tags</label>
 				<input type="text" id="tagbox" class="text left" style="width:195px" /><a class="round right button" href="javascript:apply_tags();">apply</a>
 				<ul id="applied_tags">
-					<?php foreach(query("uris,terms", "select:DISTINCT term, slug  where:uris.id='".$_POST['uris']['id']."'") as $tag) { ?>
+					<?php foreach(query("uris_tags,terms", "select:DISTINCT term, slug  where:uris_tags.uris_id='".$_POST['uris']['id']."'") as $tag) { ?>
 						<li><a href="javascript:remove_tag('<?php echo $tag['term']; ?>');">x</a> <?php echo $tag['term']; ?></li>
 					<?php } ?>
 				</ul>
