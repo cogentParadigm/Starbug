@@ -81,6 +81,7 @@ textarea{width:309px;height:100px}
 #login_form input.text{width:221px;color:#419bc0}
 #login_form span.error{width:221px;position:absolute;top:330px}
 .left.field{margin-right:5px}
+.infield span.error{width:auto}
 
 /********************* dojo *********************/
 body .dijitDialogUnderlay{background:#111;opacity:0.6}
