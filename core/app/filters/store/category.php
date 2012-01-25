@@ -20,8 +20,9 @@ foreach($args as $field => $category) {
 					$fields[$field] = $_POST[$name][$field] = sb('terms', 'insert_id');
 				}
 			}
+		} else {
+			unset($errors[$field.'_new_category']);
 		}
 		unset($fields[$field.'_new_category']);
-		unset($errors[$field.'_new_category']);
 }
 ?>

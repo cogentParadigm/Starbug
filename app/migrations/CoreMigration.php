@@ -50,7 +50,7 @@ class CoreMigration extends Migration {
 			//"attachment  type:int  upload:term_attachment  null:  references:files id",
 			"taxonomy  type:string  views:taxonomies  input_type:hidden",
 			"parent  type:int  default:0  input_type:category_select  readonly:",
-			"position  type:int  ordered:taxonomy parent"
+			"position  type:int  ordered:taxonomy parent  display:false"
 		);
 		$this->table("files  list:all",
 			"mime_type  type:string  length:128",
