@@ -7,6 +7,10 @@
 <?php } ?>
 <div class="left" style="margin-right:50px">
 	<?php
+		if (!errors("terms")) {
+			unset($_POST['terms']);
+			$_POST['terms'] = array('taxonomy' => $taxonomy);
+		}
 		assign("model", "terms");
 		assign("uri", "admin/taxonomies/update/$taxonomy");
 		assign("parent_options", "taxonomy:$taxonomy  optional:");
