@@ -22,5 +22,6 @@ foreach($args as $field => $category) {
 			}
 		}
 		unset($fields[$field.'_new_category']);
+		unset($errors[$field.'_new_category']);
 }
 ?>
