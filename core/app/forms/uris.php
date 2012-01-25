@@ -130,7 +130,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 			?>
 				<br class="clear"/><br/><br/>
 				<label>Tags</label>
-				<input type="text" id="tagbox" class="text left" style="width:195px" /><a class="round right button" href="javascript:apply_tags();">apply</a>
+				<input type="text" id="tagbox" class="text left" style="width:65%" /><a class="round right button" href="javascript:apply_tags();">apply</a>
 				<ul id="applied_tags">
 					<?php foreach(query("uris_tags,terms", "select:DISTINCT term, slug  where:uris_tags.uris_id='".$_POST['uris']['id']."'") as $tag) { ?>
 						<li><a href="javascript:remove_tag('<?php echo $tag['term']; ?>');">x</a> <?php echo $tag['term']; ?></li>

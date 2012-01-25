@@ -19,6 +19,7 @@
 </div>
 <div style="width:500px;" class="left">
 	<h1>Terms in '<?= $label; ?>'</h1>
+	<div class="sucess" id="order_success" style="display:none">Term order updated successfully</div>
 	<?php $terms = query("terms", "where:taxonomy=? && parent=0  orderby:position ASC", array($taxonomy)); ?>
 	<?php if (empty($terms)) { ?>
 		<p>There are no terms in this taxonomy yet.</p>
@@ -44,6 +45,8 @@
 						load: function(data) {
 							$("#content .box .inside").attr('innerHTML', data);
 							registerEvents();
+							dojo.style('order_success', 'display', 'block');
+							setTimeout(function(){dojo.fadeOut({node:'order_success'}).play()}, 2000);
 						}
 					});
 				}
