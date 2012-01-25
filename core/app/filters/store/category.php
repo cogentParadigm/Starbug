@@ -11,7 +11,8 @@ foreach($args as $field => $category) {
 				sb('terms','create',array(
 					'term' => $fields[$field.'_new_category'],
 					'taxonomy' => $category_column_info['taxonomy'],
-					'parent' => 0
+					'parent' => 0,
+					'position' => ''
 				));
 				if(errors('terms[slug]')) $errors[$field.'_new_category'][] = "That $field already exists";
 				else {
