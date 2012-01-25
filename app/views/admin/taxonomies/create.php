@@ -1,7 +1,7 @@
 <h1>New Taxonomy</h1>	
 <?php
 	$_POST['terms']['term'] = "Uncategorized";
-	open_form("model:terms  action:create  uri:admin/taxonomies");
+	open_form("model:terms  action:create  uri:".uri("admin/taxonomies"));
 	text("taxonomy");
 	hidden("term");
 	$cancel_url = uri("admin/taxonomies");
