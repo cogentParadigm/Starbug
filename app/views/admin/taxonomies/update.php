@@ -19,7 +19,7 @@
 </div>
 <div style="width:500px;" class="left">
 	<h1>Terms in '<?= $label; ?>'</h1>
-	<div class="sucess" id="order_success" style="display:none">Term order updated successfully</div>
+	<div class="success" id="order_success" style="display:none">Term order updated successfully</div>
 	<?php $terms = query("terms", "where:taxonomy=? && parent=0  orderby:position ASC", array($taxonomy)); ?>
 	<?php if (empty($terms)) { ?>
 		<p>There are no terms in this taxonomy yet.</p>
