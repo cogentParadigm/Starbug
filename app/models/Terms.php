@@ -8,6 +8,7 @@ class Terms extends TermsModel {
 	function create($term) {
 		$term['term'] = normalize($term['term']);
 		$term['slug'] = strtolower(str_replace(" ", "-", $term['term']));
+		efault($term['parent'], '');
 		$this->store($term);
 		if (errors('terms[slug]') && !empty($term['term'])) foreach (errors("terms[slug]", true) as $e) error(str_replace("slug", "term", $e), "term");
 	}
