@@ -1,5 +1,5 @@
 <?php
-	$taxonomy = $_POST['terms']['taxonomy'] = end($request->uri);
+	$taxonomy = $_POST['terms']['taxonomy'] = urldecode(end($request->uri));
 	$label = ucwords(str_replace("_", " ", $taxonomy));
 ?>
 <?php if (success("menus", "create")) { ?>
