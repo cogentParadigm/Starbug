@@ -316,7 +316,7 @@ class form {
 		return $this->form_control("select", $ops);
 	}
 	
-	function mulitple_select($ops, $options=array()) {
+	function multiple_select($ops, $options=array()) {
 		return $this->select($ops."  multiple:", $options);
 	}
 	
