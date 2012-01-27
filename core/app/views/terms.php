@@ -1,5 +1,5 @@
 <?php
-	$taxonomy = urldecode(end($this->uri));
+	$taxonomy = urldecode(end($request->uri));
 	$terms = terms($taxonomy);
 	echo json_encode($terms);
 ?>
