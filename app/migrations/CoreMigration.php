@@ -120,6 +120,7 @@ class CoreMigration extends Migration {
 		$this->uri("list", "prefix:core/app/views/  layout:one-column  groups:user");
 		$this->uri("create", "prefix:core/app/views/  layout:one-column  groups:user");
 		$this->uri("update", "prefix:core/app/views/  layout:one-column  groups:user");
+		$this->uri("terms", "prefix:core/app/views/  format:xhr  groups:user");
 
 		// PERMITS
 		//STANDARD WRITE PERMITS
