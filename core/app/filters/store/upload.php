@@ -5,7 +5,7 @@ foreach($args as $field => $upload) {
 	$file = $_FILES[$field];
 	if (!empty($file['name'])) {
 		$this->get("files")->upload($record, $file);
-    if (if (!errors("files")) {
+    if (!errors("files")) {
         $fields[$field] = (empty($record['id'])) ? $this->insert_id : $record['id'];
         unset($errors[$field]['required']);
     } else {
