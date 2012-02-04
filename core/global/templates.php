@@ -18,11 +18,11 @@
 	* @param string $key the variable name
 	* @param string $value the value to assign
 	*/
-function assign($key, $value, $scope="global") {
+function assign($key, $value) {
 	global $sb;
 	$sb->import("core/lib/Renderer");
 	global $renderer;
-	$renderer->assign($key, $value, $scope);
+	$renderer->assign($key, $value);
 }
 /**
 	* render a template
@@ -41,7 +41,7 @@ function render($path, $scope="") {
 	* @ingroup templates
 	* @param string $path the path, relative to the request prefix and without the file extension
 	*/
-function capture($path, $scope="global") {
+function capture($path, $scope="") {
 	global $sb;
 	$sb->import("core/lib/Renderer");
 	global $renderer;
@@ -118,5 +118,20 @@ function image($src="", $flags="i") {
 	$ops['src'] = uri($src, $flags);
 	assign("attributes", $ops);
 	render("image");
+}
+/**
+	* render a link
+	* @ingroup templates
+	* @param string $text the innerHTML of the link
+	* @param string $url (optional) the relative url to link to
+	* @param star $attributes HTML attributes for the link
+	*/
+function link_to($text, $url="", $attributes=array()) {
+	if (is_array($url)) $attributes = $url;
+	else if (!empty($url)) $attributes['href'] = uri($url);
+	assign("attributes", $attributes);
+	assign("tag", "a");
+	assign("innerHTML", $text);
+	render("tag");
 }
 ?>

@@ -73,6 +73,7 @@ function format_plural($singular) {
  * @return string the HTML attribute string
  */
 function html_attributes($ops, $echo=true) {
+	$ops = star($ops);
 	$attributes = "";
 	foreach ($ops as $k => $v) $attributes .= " $k=\"$v\"";
 	if ($echo) echo $attributes;

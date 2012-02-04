@@ -18,7 +18,13 @@ define(['dojo', 'dojo/_base/config', 'dojo/_base/xhr'], function(dojo, config) {
 				}
 				return starr;
 			},
-			xhr : function(args) {
+			xhr : function(url, args) {
+				if (typeof url == "object") {
+					args = url;
+					url = window.location.href
+				}
+				if (url.substr(0, 4) != 'http') url = WEBSITE_URL+url;
+				args.url = url;
 				if (args.confirm && !confirm(args.confirm)) return;
 				var xhr_object = {
 					load: function(response, xhr) {
@@ -28,6 +34,18 @@ define(['dojo', 'dojo/_base/config', 'dojo/_base/xhr'], function(dojo, config) {
 				dojo.mixin(xhr_object, args);
 				if (args.method == "post") dojo.xhrPost(xhr_object);
 				else dojo.xhrGet(xhr_object);
+			},
+			post: function(url, args, onsubmit) {
+				if (typeof url == "object") {
+					onsubmit = args;
+					args = url;
+					url = window.location.href;
+				}
+				if (url.substr(0, 4) != 'http') url = WEBSITE_URL+url;
+				var form = dojo.create('form', {'method':'post', 'action':url}, dojo.body());
+				if (onsubmit) dojo.attr(form, 'onsubmit', onsubmit);
+				for (var key in args) if (args.hasOwnProperty(key)) dojo.create('input', {'type':'hidden', 'name':key, 'value':args[key]}, form);
+				form.submit();
 			}
 		};
 		/*

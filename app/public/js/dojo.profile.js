@@ -21,8 +21,8 @@ dependencies = {
 	prefixes: [
 		["dijit", "../dijit" ],
 		["dojox", "../dojox" ],
-		["sb", "../../../../../core/app/public/js/dojo/sb"],
-		["starbug", "../../../../../core/app/public/js/dojo/starbug"],
+		["sb", "../../../../../core/app/public/js/sb"],
+		["starbug", "../../../../../core/app/public/js/starbug"],
 		["app", "../../"]
 	]
 }

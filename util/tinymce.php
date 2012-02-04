@@ -1,6 +1,6 @@
 <?php $sb->provide("util/tinymce"); ?>
 <!-- TinyMCE -->
-<script type="text/javascript" src="<?php echo uri("app/public/js/tiny_mce/tiny_mce.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo uri("core/app/public/js/tiny_mce/tiny_mce.js"); ?>"></script>
 <script type="text/javascript">
 	tinyMCE.init({
 		// General options

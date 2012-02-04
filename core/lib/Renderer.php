@@ -21,7 +21,7 @@ class Renderer {
 	/**
 	 * @var array assigned variables
 	 */
-	var $vars = array("global" => array());
+	var $vars = array();
 	/**
 	 * @var string view directory
 	 */
@@ -30,8 +30,7 @@ class Renderer {
 	 * @var string relative path from the view directory without file extension
 	 */	
 	var $path = "";
-	var $active_scope = "global";
-	var $directory_scope = false;
+
 	/**
 	 * constructor. initializes variables
 	 * @param string $prefix the view directory
@@ -45,9 +44,10 @@ class Renderer {
 	 * get full path
 	 * @param string $path variable name
 	 */
-	function get_path($path, $scope) {
+	function get_path($path, $scope="") {
+		efault($scope, "templates");
 		if ($scope == "views" && empty($path)) return request("file");
-		$path = ($this->directory_scope) ? $scope."/".$path.".php" : "templates/".$path.".php";
+		$path = $scope."/".$path.".php";
 		if (file_exists($this->prefix.$path)) return $this->prefix.$path;
 		else if (file_exists("app/themes/".request("theme")."/".$path)) return "app/themes/".request("theme")."/".$path;
 		else return "core/".$this->prefix.$path;
@@ -57,45 +57,28 @@ class Renderer {
 	 * @param string $key variable name
 	 * @param string $value variable value
 	 */
-	function assign($key, $value, $scope="") {
-		efault($scope, $this->active_scope);
-		efault($scope, "global");
-		$scope = "global";
-		efault($this->vars[$scope], array());
-		$this->vars[$scope][$key] = $value;
+	function assign($key, $value) {
+		$this->vars[$key] = $value;
 	}
 	/**
 	 * render a template
 	 * @param string $path relative path to the template from the view directory without file extension
 	 */
-	function render($path=array(""), $scope="") {
+	function render($paths=array(""), $scope="") {
 		global $sb;
 		global $request;
-		//set scope
-		efault($scope, $this->active_scope);
-		efault($scope, "global");
-		$this->directory_scope = (file_exists($this->prefix.$scope) || file_exists("core/".$this->prefix.$scope));
-		if (!$this->directory_scope) {
-			$scope = "global";
-			$old_scope = $this->active_scope;
-			$this->active_scope = $scope;
-		}
 		//resolve path
-		if (!is_array($path)) $path = array($path);
-		$this->path = reset($path);
-		while (!file_exists($filename = $this->get_path($this->path, $scope)) && $this->path) $this->path = next($path);
+		if (!is_array($paths)) $paths = array($paths);
+		$this->path = reset($paths);
+		while (!file_exists($filename = $this->get_path($this->path, $scope)) && $this->path) $this->path = next($paths);
 		//extract vars
-		if (($scope != "global") && !empty($this->vars[$scope])) extract($this->vars[$scope]);
-		extract($this->vars["global"]);
+		extract($this->vars);
 		//render target
 		if (file_exists($filename)) {
 			$output = file_get_contents($filename);
 			$output = str_replace(array("<? ", "<?\n", "<?="), array("<?php ", "<?php\n", "<?php echo"), $output);
 			eval("?>".$output);
-		} else error("template not found: ".implode("\n", $path), $scope, "renderer");
-		//reset scope
-		if ($this->directory_scope) $this->directory_scope = false;
-		else $this->active_scope = $old_scope;
+		} else die("template not found: ".implode("\n", $paths));
 	}
 	
 	/**

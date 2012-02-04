@@ -191,6 +191,8 @@ class sb {
 		$froms = explode(",", $froms);
 		$first = array_shift($froms);
 		$args = starr::star($args);
+		$schema = schema($first);
+		foreach ($schema as $k => $v) if (!isset($args[$k]) && is_string($v)) $args[$k] = $v;
 		efault($args['select'], "*");
 		efault($args['join'], "INNER");
 		efault($args['mine'], true);
