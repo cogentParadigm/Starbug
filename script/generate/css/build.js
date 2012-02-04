@@ -1,6 +1,6 @@
 //Starbug CSS Build Script
 var buildTimerStart = (new Date()).getTime();
-buildScriptsPath = "../../../app/public/js/dojo/util/buildscripts/";
+buildScriptsPath = "../../../core/app/public/js/dojo/util/buildscripts/";
 load(buildScriptsPath + "jslib/logger.js");
 load(buildScriptsPath + "jslib/fileUtil.js");
 load(buildScriptsPath + "jslib/buildUtil.js");

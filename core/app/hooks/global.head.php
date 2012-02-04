@@ -7,7 +7,7 @@
 			<!--[if IE]><link rel="stylesheet" href="<?php echo uri("var/public/stylesheets/".$request->theme."-ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
 		<?php } ?>
 		<?php if (Etc::DOJO_ENABLED) { ?>
-			<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/release/dojo/dojo/dojo.js"); ?>" data-dojo-config="parseOnLoad: true"></script>
+			<script type="text/javascript" src="<?php echo uri("core/app/public/js/dojo/release/dojo/dojo/dojo.js"); ?>" data-dojo-config="parseOnLoad: true"></script>
 		<?php } ?>
 			<!--[if lt IE 9]>
 				<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -68,7 +68,7 @@
 		<?php } ?>
 		<?php if (Etc::DOJO_ENABLED) { ?>
 			<?php
-				$profile = file_get_contents(BASE_DIR."/app/public/js/dojo.profile.js");
+				$profile = file_get_contents(BASE_DIR."/etc/dojo.profile.js");
 				$profile = explode("\n", substr($profile, 15));
 				foreach ($profile as $i => $p) if (0 === strpos(trim($p), "//")) unset($profile[$i]);
 				$profile = str_replace(array("dependencies:", "layers:", "name:", "prefixes:", "'"), array('"dependencies":', '"layers":', '"name":', '"prefixes":', '"'), implode(" ", $profile));
@@ -76,7 +76,7 @@
 				$paths = "";
 				foreach ($profile['prefixes'] as $p) $paths .= "'$p[0]':'$p[1]', ";
 			?>
-			<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/dojo/dojo.js"); ?>" data-dojo-config="async: true, parseOnLoad: true, serverTime:'<?php echo date("Y-m-d H:i:s"); ?>'"></script>
+			<script type="text/javascript" src="<?php echo uri("core/app/public/js/dojo/dojo/dojo.js"); ?>" data-dojo-config="async: true, parseOnLoad: true, serverTime:'<?php echo date("Y-m-d H:i:s"); ?>'"></script>
 			<script type="text/javascript">
 				require({
 						packages: [<?php foreach ($profile['prefixes'] as $idx => $p) { if ($idx > 0) echo ','; echo "\n"; ?>

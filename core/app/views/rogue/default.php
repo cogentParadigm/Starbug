@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>The Bridge</title>
-		<link rel="stylesheet" type="text/css" href="<?php echo uri("app/public/js/dojo/release/dojo/dijit/themes/claro/claro.css"); ?>"/>
+		<link rel="stylesheet" type="text/css" href="<?php echo uri("core/app/public/js/dojo/release/dojo/dijit/themes/claro/claro.css"); ?>"/>
 		<?php $sb->publish("head"); ?>
 		<script src="<?php echo uri("core/app/public/js/CodeMirror/lib/codemirror.js"); ?>" type="text/javascript"></script>
 		<script src="<?php echo uri("core/app/public/js/CodeMirror/mode/clike/clike.js"); ?>" type="text/javascript"></script>
@@ -15,7 +15,7 @@
 		<script src="<?php echo uri("core/app/public/js/CodeMirror/mode/htmlmixed/htmlmixed.js"); ?>" type="text/javascript"></script>
 		<script src="<?php echo uri("core/app/public/js/CodeMirror/mode/css/css.js"); ?>" type="text/javascript"></script>
 		<script src="<?php echo uri("core/app/public/js/CodeMirror/mode/xml/xml.js"); ?>" type="text/javascript"></script>
-		<script type="text/javascript" src="<?php echo uri("app/public/js/dojo/release/dojo/starbug/ide.js"); ?>"></script>
+		<script type="text/javascript" src="<?php echo uri("core/app/public/js/dojo/release/dojo/starbug/ide.js"); ?>"></script>
 		<link rel="stylesheet" type="text/css" href="<?php echo uri("core/app/public/js/CodeMirror/lib/codemirror.css"); ?>"/>
 		<link rel="stylesheet" type="text/css" href="<?php echo uri("core/app/public/js/CodeMirror/theme/default.css"); ?>"/>
 		<style type="text/css">

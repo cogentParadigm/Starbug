@@ -53,5 +53,5 @@
 		$ie->write();
 	}
 	//BUILD
-	if (file_exists(BASE_DIR."/app/public/js/dojo/util")) passthru("cd ".BASE_DIR."/script/generate/css; ./build.sh action=release cssOptimize=comments");
+	if (file_exists(BASE_DIR."/core/app/public/js/dojo/util")) passthru("cd ".BASE_DIR."/script/generate/css; ./build.sh action=release cssOptimize=comments");
 ?>
