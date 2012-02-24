@@ -2,6 +2,8 @@
 		<title><?php echo strip_tags($request->payload['title']).' - '.Etc::WEBSITE_NAME; ?></title>
 		<meta name="description" content="<?php echo $request->payload['description']; ?>"/>
 		<?php echo $request->payload['meta']; ?>
+		<base href="<?php echo uri(); ?>"/>
+		<?php if (!empty($request->payload['canonical'])) { ?><link rel="canonical" href="<?php echo $request->payload['canonical']; ?>"/><?php } ?>
 		<?php echo option("meta"); ?>
 	<?php if (Etc::ENVIRONMENT == "production") { ?>
 		<?php if (Etc::BLUEPRINT_ENABLED) { ?>
