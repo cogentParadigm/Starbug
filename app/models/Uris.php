@@ -2,6 +2,10 @@
 class Uris extends UrisModel {
 
 	function create($uris) {
+		if ($uris['type'] != "View" && $uris['type'] != "Page") {
+			$uris['layout'] = $uris['type'];
+			$uris['type'] = "Page";
+		}
 		queue("blocks", "type:text  region:content  position:1  uris_id:");
 		$this->store($uris);
 		if (!errors()) {
@@ -13,6 +17,10 @@ class Uris extends UrisModel {
 	}
 	
 	function update($uris) {
+		if ($uris['type'] != "View" && $uris['type'] != "Page") {
+			$uris['layout'] = $uris['type'];
+			$uris['type'] = "Page";
+		}
 		$row = $this->query("where:id='$uris[id]'  limit:1");
 		$this->store($uris);
 		if (!errors()) {

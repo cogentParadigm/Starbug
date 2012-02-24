@@ -2,6 +2,7 @@
 	if ((!empty($args['action'])) && (($_SESSION[P("memberships")] & 1) != 1)) {
 		$roles = "(permits.role='everyone' || (permits.role='user' && permits.who='".$_SESSION[P('id')]."') || (permits.role='group' && (('".$_SESSION[P('memberships')]."' & permits.who)=permits.who))";
 		if ((!empty($args['priv_type'])) && ($args['priv_type'] == "table")) {
+			$args['select'] = "*";
 			$from = P("permits")." AS permits";
 			$permit_type = "permits.priv_type='table'";
 		} else {

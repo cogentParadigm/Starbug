@@ -1,5 +1,8 @@
 		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
-		<meta name="generator" content="StarbugPHP" />
+		<title><?php echo strip_tags($request->payload['title']).' - '.Etc::WEBSITE_NAME; ?></title>
+		<meta name="description" content="<?php echo $request->payload['description']; ?>"/>
+		<?php echo $request->payload['meta']; ?>
+		<?php echo option("meta"); ?>
 	<?php if (Etc::ENVIRONMENT == "production") { ?>
 		<?php if (Etc::BLUEPRINT_ENABLED) { ?>
 			<link rel="stylesheet" href="<?php echo uri("var/public/stylesheets/".$request->theme."-screen.css"); ?>" type="text/css" media="screen, projection">

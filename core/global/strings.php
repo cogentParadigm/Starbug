@@ -75,7 +75,7 @@ function format_plural($singular) {
 function html_attributes($ops, $echo=true) {
 	$ops = star($ops);
 	$attributes = "";
-	foreach ($ops as $k => $v) $attributes .= " $k=\"$v\"";
+	foreach ($ops as $k => $v) if (!is_array($v)) $attributes .= " $k=\"$v\"";
 	if ($echo) echo $attributes;
 	return $attributes;
 }

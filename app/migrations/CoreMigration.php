@@ -43,6 +43,8 @@ class CoreMigration extends Migration {
 			"value  type:text  default:",
 			"autoload  type:bool  default:0"
 		);
+		$this->store("options", "name:meta", "value:");
+		$this->store("options", "name:seo_hide", "value:1");
 		$this->table("terms",
 			"term  type:string  length:128",
 			"slug  type:string  length:128  unique:taxonomy parent  display:false",
@@ -62,16 +64,20 @@ class CoreMigration extends Migration {
 		$this->table("uris  label:Pages  singular_label:Page",
 			"path  type:string  length:64  unique:  list:true",
 			"title  type:string  length:128  list:true",
-			"template  type:string  length:64  default:  list:true",
-			"category  type:category",
+			"template  type:string  length:64  default:  list:false",
+			"category  type:category  null:",
 			"tags  type:terms",
-			"format  type:string  length:16  default:html  list:true",
+			"format  type:string  length:16  default:html  list:false",
 			"parent  type:int  default:0  list:false",
 			"sort_order  type:int  default:0  list:false",
 			"type  type:string  default:View  list:false",
 			"prefix  type:string  length:128  default:app/views/",
-			"theme  type:string  length:128  default:  list:true",
-			"layout  type:string  length:64  default:"
+			"theme  type:string  length:128  default:  list:false",
+			"layout  type:string  length:64  default:",
+			"description  type:string  length:255  input_type:textarea  default:  list:false",
+			"meta  type:text  default:  list:false",
+			"canonical  type:string  length:255  default:  list:false",
+			"breadcrumb  type:string  length:255  default:  list:false"
 		);
 		$this->table("blocks  list:all",
 			"uris_id  type:int  references:uris id",
@@ -121,10 +127,11 @@ class CoreMigration extends Migration {
 		$this->uri("create", "prefix:core/app/views/  layout:one-column  groups:user");
 		$this->uri("update", "prefix:core/app/views/  layout:one-column  groups:user");
 		$this->uri("terms", "prefix:core/app/views/  format:xhr  groups:user");
+		$this->uri("robots", "prefix:core/app/views/  format:txt");
 
 		// PERMITS
 		//STANDARD WRITE PERMITS
-		foreach(array("users", "terms", "menus", "uris_menus", "uris") as $standard_write) {
+		foreach(array("users", "terms", "menus", "uris_menus", "uris", "options") as $standard_write) {
 						$this->permit("$standard_write::create", "admin:");
 						$this->permit("$standard_write::delete", "admin:global");
 		}

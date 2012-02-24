@@ -81,6 +81,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 });
 </script>
 <?php
+	js("dijit/form/Textarea");
 	$collectives = array_merge(array("everybody" => 0), $request->groups);
 	$parents = query("uris", "where:prefix='app/views/' && type='Page'");
 	$kids = array(array());
@@ -96,11 +97,13 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 	$parent_ops = array(" -- " => 0);
 	foreach($kids[0] as $child) $parent_ops = array_merge_recursive($parent_ops, parent_options($child, $kids));
 
-	$templates = array("Page" => "Page"); $containers = array("content");
+	$templates = array("default" => "Page"); $containers = array("content");	
 	if (logged_in("root")) $templates["View"] = "View";
-	if (false !== ($handle = opendir("app/templates/"))) {
-		//while (false !== ($file = readdir($handle))) if (((strpos($file, ".") !== 0)) && ($file != "options")) $templates[substr($file, 0, strpos($file, "."))] = substr($file, 0, strpos($file, "."));
-		closedir($handle);
+	foreach (array("core/app/layouts/", "app/themes/".Etc::THEME."/layouts/", "app/layouts") as $dir) {
+		if (file_exists($dir) && false !== ($handle = opendir($dir))) {
+			while (false !== ($file = readdir($handle))) if ((strpos($file, ".") !== 0)) $templates[substr($file, 0, strpos($file, "."))] = substr($file, 0, strpos($file, "."));
+			closedir($handle);
+		}
 	}
 
 	efault($_POST['uris']['type'], "Page");
@@ -121,7 +124,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 				unset($status_list['deleted']);
 				unset($status_list['pending']);
 				unset($collectives['root']);
-				select("type", $templates);
+				select("type  label:Template", $templates);
 				select("status", $status_list);
 				select("collective  label:Access", $collectives);
 				select("parent", $parent_ops);
@@ -143,6 +146,8 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 	</div>
 	<?php
 	if (($action == "update") && (!empty($containers))) {
+		$count = query("blocks", "select:COUNT(*) as count  where:uris_id=?", array($_POST['uris']['id']));
+		if ($count['count'] == 0) store("blocks", "uris_id:".$_POST['uris']['id']."  type:text  region:content  position:1");
 		$l = new form("model:new-block");
 		$r = new form("model:remove-block");
 		foreach($containers as $container) { ?>
@@ -157,5 +162,16 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 			</fieldset>
 		<?php } ?>
 	<?php } ?>
+	<fieldset style="margin-top:20px;width:82%">
+		<legend>SEO</legend>
+		<br/>
+		<?php textarea("description  label:Meta Description  class:plain  style:width:100%  data-dojo-type:dijit.form.Textarea"); ?>
+		<br/>
+		<?php textarea("meta  label:Custom Meta Tags  class:plain  style:width:100%  data-dojo-type:dijit.form.Textarea"); ?>
+		<br/>
+		<?php text("canonical  label:Canonical URL  style:width:100%"); ?>
+		<br/>
+		<?php text("breadcrumb  label:Breadcrumbs Title  style:width:100%"); ?>
+	</fieldset>
 <? close_form(); ?>
 <?php $sb->import("util/tinymce"); ?>

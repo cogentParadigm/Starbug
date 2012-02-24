@@ -8,7 +8,8 @@ define([
 	"dojox/grid/enhanced/plugins/NestedSorting",
 	"dojox/grid/enhanced/plugins/DnD",
 	"dojox/grid/enhanced/plugins/Menu",
-	"dojox/grid/enhanced/plugins/IndirectSelection"
+	"dojox/grid/enhanced/plugins/IndirectSelection",
+	"starbug/grid/cells"
 ], function(dojo, starbug, behavior, dojoxGrid, ObjectStore){
 
 var EnhancedGrid = dojo.declare('starbug.grid.EnhancedGrid', dojoxGrid, {

@@ -1,5 +1,6 @@
 define(['dojo', 'sb'], function(dojo, sb) {
 	sb.star = function(str) {
+		if (typeof str != "string") return str;
 		var starr = {};
 		var pos = null;
 		var keypairs = str.split('  ');

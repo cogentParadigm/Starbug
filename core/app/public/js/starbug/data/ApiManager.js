@@ -1,8 +1,7 @@
 define([
 	"dojo",
 	"dojo/date/locale",
-	"dojox/socket",
-	"dojox/socket/Reconnect"
+	"dojox/socket"
 ], function (dojo, locale, socket, reconnect) {
 	var apimanager = dojo.declare("starbug.data.ApiManager", null, {
 
@@ -68,7 +67,7 @@ define([
 						dojo.xhrPost(args);
 					}
 				});
-				this.socket = reconnect(this.socket);
+				//this.socket = reconnect(this.socket);
 				this.socket.manager = this;
 				this.socket.on("open", function(event) {
 					console.log('client connected');

@@ -127,6 +127,7 @@ function image($src="", $flags="i") {
 	* @param star $attributes HTML attributes for the link
 	*/
 function link_to($text, $url="", $attributes=array()) {
+	$attributes = star($attributes);
 	if (is_array($url)) $attributes = $url;
 	else if (!empty($url)) $attributes['href'] = uri($url);
 	assign("attributes", $attributes);

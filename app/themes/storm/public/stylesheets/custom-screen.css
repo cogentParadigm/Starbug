@@ -75,7 +75,8 @@ input.link{background:none;border:none;color:#419bc0;position:relative;top:-1px;
 input.link:hover{text-decoration:underline}
 
 /********************* forms *********************/
-input.text{border-color:#CCC;background:url(../images/text-input-bg.png) bottom left repeat-x}
+input.text, textarea, body.claro textarea.dijitTextBoxFocused, body.claro textarea.dijitTextBoxHover{border-color:#CCC;background:url(../images/text-input-bg.png) bottom left repeat-x;padding:2px;margin:0.5em 0 !important}
+body.claro textarea.dijitTextBoxFocused{border-color:#666}
 textarea{width:309px;height:100px}
 #login_form{width:234px;height:128px;margin:34px auto 0;padding:136px 85px 0;background:url(../images/login-bg.png) no-repeat}
 #login_form input.text{width:221px;color:#419bc0}
@@ -128,4 +129,8 @@ body ol.menu_items button img{width:14px;height:14px}
 .dojoDndHandle{float:right;width:15px;height:15px;background:url(../images/drag-handle.png) no-repeat;overflow:hidden;display:block;cursor:move}
 .dojoDndHandle:hover, .dojoDndItem:hover .dojoDndHandle{background-position:0 -20px}
 .claro .dojoDndItemAfter{border-top:none;border-bottom:1px solid #769DC0}
+
+.icon.sprite{width:16px;height:16px}
+.Edit .icon{background:url(../icons/file-edit.png) no-repeat}
+.Delete .icon{background:url(../icons/cross.png) no-repeat}
 

@@ -2,8 +2,32 @@ define([
 	"dojo",
 	"dojox",
 	"dojox/grid/cells",
-	"starbug/data/ObjectStore"
-], function (dojo, dojox, cells, ObjectStore) {
+	"starbug/data/ObjectStore",
+	"dijit/_TemplatedMixin",
+	"sb/strings",
+	"dojo/dom-attr"
+], function (dojo, dojox, cell, ObjectStore, TemplatedMixin, strings, domAttr) {
+dojo.declare("starbug.grid.cells.Options", dojox.grid.cells.Cell, {
+	options: {},
+	template: '<a class="%class% button" title="%title%" href="%href%"><div class="sprite icon"></div></a>',
+	formatter: function(data, rowIndex) {
+		console.log(this.options);
+		var url, text = '', item = this.grid.getItem(rowIndex);
+		for (var i in this.options) {
+			url = this.options[i];
+			for (var k in item) {
+				if (-1 !== url.indexOf('%'+k+'%')) url = url.replace('%'+k+'%', item[k]);
+			}
+			text += this.template.replace('%title%', i).replace('%class%', strings.normalize(i)).replace('%href%', url);
+		}
+		return text;
+	}
+});
+starbug.grid.cells.Options.markupFactory = function(node, cell){
+	dojox.grid.cells.Cell.markupFactory(node, cell);
+	console.log('{'+dojo.attr(node, 'options').replace(/'/g, '"').replace(/\\\"/g, "'")+'}');
+	cell.options = dojo.fromJson('{'+dojo.attr(node, 'options').replace(/'/g, '"').replace(/\\\"/g, "'")+'}');
+};
 var select = dojo.declare("starbug.grid.cells.Select", dojox.grid.cells.Select, {
 	options: [],
 	values: [],

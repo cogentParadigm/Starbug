@@ -49,4 +49,18 @@ function theme($var="", $name="") {
 	if (!empty($var)) $var = ".".$var;
 	return config("info$var", null, "app/themes/$name/");
 }
+/**
+	* get/set site options
+	* @ingroup config
+	* @param string $name the option name
+	* @param mixed $value (optional) value to set
+	*/
+function option($name, $value=null) {
+	if ($value == null) {
+		$value = query("options", "where:name='$name'  limit:1");
+		return $value['value'];
+	}
+	store("options", "value:$value", "name:$name");
+	return $value;
+}
 ?>
