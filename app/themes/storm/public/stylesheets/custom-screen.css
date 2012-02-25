@@ -23,14 +23,15 @@ h2{color:#419bc0;font-size:150%}
 .vnav{list-style-type:none;margin:0;padding:0}
 .vnav li{padding:0}
 .vnav li a{display:block;padding:0px 2px}
-.vnav li a:hover{background:#419bc0;color:#FFF;text-decoration:none}
+.vnav > li > a:hover{background:#419bc0;color:#FFF;text-decoration:none}
 
-#nav li{background:url(../images/nav-col-border.png) top right no-repeat}
-#nav li.last{background:transparent}
-#nav li a{display:block;float:left;padding:21px 20px 0px 15px;height:29px;line-height:14px;color:#FFF;font-weight:bold;font-size:95%}
-#nav li a span{font-weight:normal;font-size:80%;color:#b5b5b5;display:block;margin-left:47px}
-#nav li a img{margin-top:-12px}
-#nav li.first a{padding-left:0}
+#nav > li{background:url(../images/nav-col-border.png) top right no-repeat}
+#nav > li.last{background:transparent}
+#nav > li > a{display:block;float:left;padding:21px 20px 0px 15px;height:29px;line-height:14px;color:#FFF;font-weight:bold;font-size:95%}
+#nav > li > a > span{font-weight:normal;font-size:80%;color:#b5b5b5;display:block;margin-left:47px}
+#nav > li > a img{margin-top:-12px}
+#nav > li.first > a{padding-left:0}
+#nav li ul{background:#1a1a1a}
 
 /********************* classes *********************/
 .colborder{border-color:#111;border-width:2px;margin-right:24px}
@@ -130,6 +131,7 @@ body ol.menu_items button img{width:14px;height:14px}
 .dojoDndHandle:hover, .dojoDndItem:hover .dojoDndHandle{background-position:0 -20px}
 .claro .dojoDndItemAfter{border-top:none;border-bottom:1px solid #769DC0}
 
+/********************* icons *********************/
 .icon.sprite{width:16px;height:16px}
 .Edit .icon{background:url(../icons/file-edit.png) no-repeat}
 .Delete .icon{background:url(../icons/cross.png) no-repeat}

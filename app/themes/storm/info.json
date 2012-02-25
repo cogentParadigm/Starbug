@@ -13,6 +13,6 @@
 	//stylesheets
 	"styles": {
 		"screen" : ["dojo.css"],
-		"plugins" : ["buttons", "rounding"]
+		"plugins" : ["buttons", "rounding", "dropdowns"]
 	}
 }
