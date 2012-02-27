@@ -820,7 +820,8 @@ class Schemer {
 		//ADD RELATIONS
 		foreach ($this->tables as $table => $fields) {
 			$relations = $this->get_relations($table, $model);
-			foreach ($relations as $m => $r) $data["relations"][] = array("model" => $m, "field" => $r['hook'], "lookup" => $r['lookup'], "ref_field" => $r['ref_field']);
+			$data['relations'] = array_merge($data['relations'], $relations);
+			//foreach ($relations as $m => $r) $data["relations"][] = array("model" => $m, "field" => $r['hook'], "lookup" => $r['lookup'], "ref_field" => $r['ref_field']);
 		}
 		//ADD ACTIONS
 		$permits = ($sb->has("permits")) ? query("permits", "where:related_table='".P($model)."'") : array();
