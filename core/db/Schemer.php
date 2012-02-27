@@ -745,17 +745,23 @@ class Schemer {
 	 */
 	function get_relations($from, $to) {
 		$fields = $this->get_table($from);
-		$return = (isset($fields['id'])) ? array($from => array()) : array();
-		$hook = "";
+		$return = $indirect = $hooks = array();
 		foreach($fields as $column => $options) {
 			if (isset($options['references'])) {
 				$ref = explode(" ", $options['references']);
-				if (0 === strpos($options['references'], $to)) $hook = $column;
-				else $return[$ref[0]] = array("lookup" => $from, "ref_field" => $column);
+				//if $to has a hook in $from, then it has an indirect relation to everything $from has a relation to
+				//otherwise, there are no relationships
+				if (0 === strpos($options['references'], $to)) $hooks[] = $column;
+				else $indirect[] = array("model" => $ref[0], "lookup" => $from, "ref_field" => $column);
 			}
 		}
-		if (empty($hook)) return array();
-		foreach ($return as $idx => $arr) $return[$idx]["hook"] = $hook;
+		if (empty($hooks)) return array();
+		foreach ($hooks as $hook) {
+			//add the direct relation to the hook
+			if (isset($fields['id'])) $return[] = array("model" => $from, "field" => $hook);
+			//add each indirect relation through the hook
+			foreach ($indirect as $i) $return[] = array_merge($i, array("field" => $hook));
+		}
 		return $return;
 	}
 
