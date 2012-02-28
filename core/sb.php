@@ -218,8 +218,10 @@ class sb {
 					$f[1] = $parts[0];
 					$rel = $relations[$f[0]][$f[1]];
 					if (1 == count($parts)) $rel = reset(reset($rel));
-					else if (2 == count($parts)) $rel = reset($rel[$parts[1]]);
-					else $rel = $rel[$parts[1]][$parts[2]];
+					else if (2 == count($parts)) {
+						$rel = reset($rel);
+						$rel = $rel[$parts[1]];
+					} else $rel = $rel[$parts[1]][$parts[2]];
 				}
 				$last = $f[0];
 				$lookup = $f[1];
