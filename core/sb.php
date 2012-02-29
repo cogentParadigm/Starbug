@@ -192,6 +192,8 @@ class sb {
 		$first = array_shift($froms);
 		$args = starr::star($args);
 		$schema = schema($first);
+		if (!isset($args['search'])) unset($schema['search']);
+		else if (empty($args['search'])) unset($args['search']);
 		foreach ($schema as $k => $v) if (!isset($args[$k]) && is_string($v)) $args[$k] = $v;
 		efault($args['select'], "*");
 		efault($args['join'], "INNER");
