@@ -97,7 +97,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 	$parent_ops = array(" -- " => 0);
 	foreach($kids[0] as $child) $parent_ops = array_merge_recursive($parent_ops, parent_options($child, $kids));
 
-	$templates = array("default" => "Page"); $containers = array("content");	
+	$templates = array("default" => "Page");
 	if (logged_in("root")) $templates["View"] = "View";
 	foreach (array("core/app/layouts/", "app/themes/".Etc::THEME."/layouts/", "app/layouts") as $dir) {
 		if (file_exists($dir) && false !== ($handle = opendir($dir))) {
@@ -145,19 +145,20 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 		</div>
 	</div>
 	<?php
-	if (($action == "update") && (!empty($containers))) {
+	if ($action == "update") {
 		$count = query("blocks", "select:COUNT(*) as count  where:uris_id=?", array($_POST['uris']['id']));
 		if ($count['count'] == 0) store("blocks", "uris_id:".$_POST['uris']['id']."  type:text  region:content  position:1");
+		$containers = query("blocks", "where:uris_id=? orderby:position ASC", array($_POST['uris']['id']));
 		$l = new form("model:new-block");
 		$r = new form("model:remove-block");
 		foreach($containers as $container) { ?>
 			<fieldset style="clear:left;width:82%">
-				<legend><?php echo $container; ?></legend>
+				<legend><?php echo $container['region']; ?></legend>
 				<?php
 					assign("id", $_POST['uris']['id']);
-					assign("region", $container);
-					assign("position", "1");
-					render("form/block/text");
+					assign("region", $container['region']);
+					assign("position", $container['position']);
+					render("form/block/$container[type]");
 				?>
 			</fieldset>
 		<?php } ?>
