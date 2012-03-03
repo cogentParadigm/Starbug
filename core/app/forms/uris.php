@@ -153,7 +153,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 		$r = new form("model:remove-block");
 		foreach($containers as $container) { ?>
 			<fieldset style="clear:left;width:82%">
-				<legend><?php echo $container['region']; ?></legend>
+				<legend><?php echo ucwords(str_replace("_", " ", $container['region'])); ?></legend>
 				<?php
 					assign("id", $_POST['uris']['id']);
 					assign("region", $container['region']);
