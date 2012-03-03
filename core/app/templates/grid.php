@@ -4,39 +4,62 @@
 /**
  * @file core/app/templates/grid.php
  * @author Ali Gangji <ali@neonrain.com>
- * @ingroup core
- * Default template implementation to display the value of a field.
+ * @ingroup templates
+ * Default template implementation to display a list of data in a grid with options to edit and delete.
  *
  * Available variables:
- * - $options: An array of field values. Use render() to output them.
- * - $columns: The item label
+ * - $query: a starbug style query string. eg: "users  select:first_name,last_name,id  where:memberships & 2  orderby:last_name ASC"
+ * - $columns: (optional) an array of column overrides. set a column to false to hide it
+ * - $attributes: (optional) attributes for the table
+ * - $view: (optional) view name. only show fields within this view
  */
 	js("starbug/grid/EnhancedGrid");
-	$options = starr::star($attributes);
+	$attributes = starr::star($attributes);
 	list($models, $query) = explode("  ", $query, 2);
 	$models = str_replace(",", ".", $models);
-	$options['models'] = $models;
-	$options['model'] = $model = reset(explode(".", $models, 2));
-	$options['data-dojo-props'] = array();
-	efault($options['id'], $ops['model']."_grid");
-	efault($options['models'], $options['model']);
-	efault($options['jsId'], $options['id']);
-	efault($options['style'], "width:100%");
-	efault($options['autoHeight'], "100");
-	efault($options['rowsPerPage'], "100");
-	efault($options['data-dojo-type'], "starbug.grid.EnhancedGrid");
-	if (!empty($options['orderColumn'])) efault($options['plugins'], array("nestedSorting" => true, "dnd" => true));
-	else efault($options['plugins'], array("nestedSorting" => true));
-	$options['apiQuery'] = base64_encode($query);
-	foreach ($options as $k => $v) {
+
+	//SET UP ATTRIBUTES
+	$attributes['models'] = $models;
+	$attributes['model'] = $model = reset(explode(".", $models, 2));
+	$attributes['data-dojo-props'] = array();
+	efault($attributes['id'], $attributes['model']."_grid");
+	efault($attributes['models'], $attributes['model']);
+	efault($attributes['jsId'], $attributes['id']);
+	efault($attributes['style'], "width:100%");
+	efault($attributes['autoHeight'], "100");
+	efault($attributes['rowsPerPage'], "100");
+	efault($attributes['data-dojo-type'], "starbug.grid.EnhancedGrid");
+	if (!empty($attributes['orderColumn'])) efault($attributes['plugins'], array("nestedSorting" => true, "dnd" => true));
+	else efault($attributes['plugins'], array("nestedSorting" => true));
+	$attributes['apiQuery'] = base64_encode($query);
+	foreach ($attributes as $k => $v) {
 		if (!in_array($k, array("id", "jsId", "class", "style", "data-dojo-type", "data-dojo-props"))) {
-			$options['data-dojo-props'][$k] = $v;
-			unset($options[$k]);
+			$attributes['data-dojo-props'][$k] = $v;
+			unset($attributes[$k]);
 		}
 	}
-	$options['data-dojo-props'] = trim(str_replace('"', "'", json_encode($options['data-dojo-props'])), '{}');
+	$attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($attributes['data-dojo-props'])), '{}');
+	
+	//SET UP COLUMNS
+	efault($columns, array());
+	$options = schema($model);
+	foreach ($options['fields'] as $name => $field) {
 		
-	assign("attributes", $options);
+		if ($options['list'] == "all") efault($field['list'], true);
+		else efault($field['list'], false);
+
+		if (!empty($field['views'])) {
+			$field_views = explode(",", $field['views']);
+			$field['list'] = (in_array($view, $field_views));
+		}
+		efault($field['width'], "auto");
+		if (($field['display']) && ($field['list'])) efault($columns[$name], $field);
+	}
+	$columns["Options"] = "id  width:100  cellType:starbug.grid.cells.Options  options:'Edit':'".uri($request->path)."/update/%id%', 'Delete':'javascript:sb.post({\'action[$model]\':\'delete\', \'".$model."[id]\':%id%}, \'return confirm(\\\'Are you sure you want to delete this item?\\\')\');'";
+	
+	//RENDER TABLE
+	assign("attributes", $attributes);
+	assign("columns", $columns);
 	render("table");
 	
 ?>
