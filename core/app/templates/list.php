@@ -13,7 +13,7 @@
  * - $attributes: (optional) attributes for the table
  * - $view: (optional) view name. only show fields within this view
  */
-	$model = reset(explode(".", str_replace(",", ".", $query), 2));
+	$model = reset(explode(".", str_replace(",", ".", reset(explode("  ", $query))), 2));
 	$options = schema($model);
 
 ?>
