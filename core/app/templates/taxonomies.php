@@ -1,17 +1,14 @@
-<?php
-	js("starbug/grid/EnhancedGrid");
-	$model = "terms";
-	assign("model", $model);
-?>
 	<h1 class="heading"><a class="big round right create button" href="<?php echo uri($request->path."/create"); ?>">New Taxonomy</a>Taxonomies</h1>
 	<br/>
-	<?php
-		$sb->import("util/grid");
-		$grid = new grid("model:terms", "select:DISTINCT taxonomy");
-		$grid->add_column("taxonomy  width:auto  formatter:taxonomy_formatter");
-		$grid->add_column("taxonomy  width:100  formatter:row_options", "Options");
-		$grid->render();
-	?>
+<?php
+	assign("query", "terms  select:DISTINCT taxonomy");
+	$columns = array(
+		"Taxonomy" => "field:taxonomy  width:auto  formatter:taxonomy_formatter",
+		"Options" => "field:taxonomy  width:100  formatter:row_options",
+	);
+	assign("columns", $columns);
+	render("grid");
+?>
 	<a class="big round create button" href="<?php echo uri($request->path."/create"); ?>">New Taxonomy</a>
 	<script type="text/javascript">
 			function row_options(data, rowIndex) {

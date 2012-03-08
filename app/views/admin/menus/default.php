@@ -1,4 +1,4 @@
 <?php
-	assign("model", "menus");
+	assign("query", "menus");
 	render("list");
 ?>
