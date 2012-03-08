@@ -1,4 +1,4 @@
 <?= '<?php'."\n"; ?>
-	assign("model", "<?= $model; ?>");
+	assign("query", "<?= $model; ?>");
 	render("list");
 <?= '?>'; ?>
