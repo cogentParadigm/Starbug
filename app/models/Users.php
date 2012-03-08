@@ -50,6 +50,7 @@ class Users extends UsersModel {
 			$_SESSION[P("id")] = $user['id'];
 			$_SESSION[P("memberships")] = $user['memberships'];
 			$_SESSION[P("user")] = $user;
+			if (logged_in('admin') || logged_in('root')) redirect(uri('admin'));
 		} else {
 			error("That username and password combination was not found.", "username");
 		}
