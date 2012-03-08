@@ -44,6 +44,8 @@
 	efault($columns, array());
 	$options = schema($model);
 	foreach ($options['fields'] as $name => $field) {
+		$field['field'] = $name;
+		$name = ucwords(str_replace('_',' ',$name));
 		
 		if ($options['list'] == "all") efault($field['list'], true);
 		else efault($field['list'], false);
@@ -55,7 +57,7 @@
 		efault($field['width'], "auto");
 		if (($field['display']) && ($field['list'])) efault($columns[$name], $field);
 	}
-	$columns["Options"] = "id  width:100  cellType:starbug.grid.cells.Options  options:'Edit':'".uri($request->path)."/update/%id%', 'Delete':'javascript:sb.post({\'action[$model]\':\'delete\', \'".$model."[id]\':%id%}, \'return confirm(\\\'Are you sure you want to delete this item?\\\')\');'";
+	$columns["Options"] = "id  width:100  cellType:starbug.grid.cells.Options  options:'Edit':'".uri($request->path)."/update/%id%', 'Delete':'javascript:sb.post({\'action[$model]\':\'delete\', \'".$model."[id]\':%id%}, \'return confirm(\\\\\'Are you sure you want to delete this item?\\\\\')\');'";
 	
 	//RENDER TABLE
 	assign("attributes", $attributes);
