@@ -45,7 +45,8 @@ define(['dojo', 'dojo/_base/config', 'dojo/_base/xhr'], function(dojo, config) {
 				var form = dojo.create('form', {'method':'post', 'action':url}, dojo.body());
 				if (onsubmit) dojo.attr(form, 'onsubmit', onsubmit);
 				for (var key in args) if (args.hasOwnProperty(key)) dojo.create('input', {'type':'hidden', 'name':key, 'value':args[key]}, form);
-				form.submit();
+				var button = dojo.create('button', {'type':'submit', 'innerHTML':'submit'}, form);
+				button.click();
 			}
 		};
 		/*
