@@ -73,9 +73,10 @@ function format_plural($singular) {
  * @return string the HTML attribute string
  */
 function html_attributes($ops, $echo=true) {
+	$valid = array("class", "id", "style", "title", "dir", "lang", "tabindex", "accesskey", "for", "src", "href");
 	$ops = star($ops);
 	$attributes = "";
-	foreach ($ops as $k => $v) if (!is_array($v)) $attributes .= " $k=\"$v\"";
+	foreach ($ops as $k => $v) if (!is_array($v) && (in_array($k, $valid) || (0===strpos($k, "on")) || (0===strpos($k, "data")))) $attributes .= " $k=\"$v\"";
 	if ($echo) echo $attributes;
 	return $attributes;
 }
