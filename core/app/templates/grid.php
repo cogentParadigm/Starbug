@@ -57,7 +57,7 @@
 		efault($field['width'], "auto");
 		if (($field['display']) && ($field['list'])) efault($columns[$name], $field);
 	}
-	$columns["Options"] = "id  width:100  cellType:starbug.grid.cells.Options  options:'Edit':'".uri($request->path)."/update/%id%', 'Delete':'javascript:sb.post({\'action[$model]\':\'delete\', \'".$model."[id]\':%id%}, \'return confirm(\\\\\'Are you sure you want to delete this item?\\\\\')\');'";
+	efault($columns["Options"], "field:id  width:100  cellType:starbug.grid.cells.Options  options:'Edit':'".uri($request->path)."/update/%id%', 'Delete':'javascript:sb.post({\'action[$model]\':\'delete\', \'".$model."[id]\':%id%}, \'return confirm(\\\\\'Are you sure you want to delete this item?\\\\\')\');'");
 	
 	//RENDER TABLE
 	assign("attributes", $attributes);
