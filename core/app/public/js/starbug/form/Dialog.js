@@ -1,100 +1,75 @@
 define([
 	"dojo",
+	"dojo/io/iframe",
 	"dijit/Dialog"
-], function(dojo, Dialog) {
+], function(dojo, iframe, Dialog) {
 	return dojo.declare("starbug.form.Dialog", [Dialog], {
 		dialog:null,
 		url:'',
 		callback:null,
 		form:null,
-		model:'',
-		action:'create',
-		updateUrl: '',
 		item_id: 0,
-		persist:false,
+		post_data:{},
 		postCreate: function() {
 			this.inherited(arguments);
-			this.form = dojo.query('form', this.domNode)[0];
-			dojo.query('form', this.domNode).connect('onsubmit', dojo.hitch(this, '_onSubmit'));
-			dojo.query('.cancel', this.form).connect('onclick', this, 'hide');
-			dojo.query('.error', this.form).forEach(dojo.destroy);
-			if (this.url == '') this.url = WEBSITE_URL+'api/'+this.model+'.json';
-			var list = null;
-			if (list = dojo.query('[name="action['+this.model+']"]', this.form)) list.attr('value', this.action);
-			else dojo.create('input', {'type':'hidden', 'name':'action['+this.model+']', 'value':this.action}, this.form);
+			this.set('content', '');
 		},
 		_onSubmit: function(evt){
 			evt.preventDefault();
-			this.execute(this.get('value'));
+			this.execute();
 			return false;
 		},
-		execute: function(args) {
-			dojo.query('.error', this.form).forEach(dojo.destroy);
+		execute: function() {
 			dojo.addClass(this.form, 'loading');
-			dojo.xhrPost({
-				url: this.url,
+			dojo.query('.loading', this.form).style('display','block');
+			iframe.send({
 				form: this.form,
-				handleAs: 'json',
+				url: this.url+((this.item_id) ? 'update/'+this.item_id : 'create')+'.xhr',
+				content: this.post_data,
+				handleAs: 'html',
 				load: dojo.hitch(this, 'load')
 			});
 		},
+		upload: function(evt) {
+			dojo.query('.submit', this.form).attr('disabled','true');
+			dojo.addClass(this.form, 'loading');
+			this.post_data['action[files]'] = 'prepare';
+			this.execute();
+			delete this.post_data['action[files]'];
+		},
 		load: function(data) {
-			dojo.removeClass(this.form, 'loading');
-			if (data.errors) {
-				var node = null;
-				var span = null;
-				for (var field in data.errors) {
-					field = data.errors[field];
-					node = dojo.query('[name *= "'+field.field+'"]', this.form);
-					if (node != null) {
-						node = node[0];
-						for (var e in field.errors) {
-							span = '<span class="error">'+field.errors[e]+'</span>';
-							dojo.place(span, node, "before");
-						}
-					}
-				}
-			} else {
+			res = dojo.byId("dojoIoIframe").contentWindow.document.body.innerHTML;
+			this.loadForm(res);
+			if (dojo.hasClass(this.form, 'submitted')) {
 				this.hide();
 				if (this.callback != null) this.callback(data, this);
 			}
 		},
 		setValues: function(args) {
 			for (var i in args) {
-				dojo.query('[name="'+this.model+'['+i+']"]').attr('value', args[i]);
+				dojo.query('[name="'+i+'"]').attr('value', args[i]);
 			}
 		},
 		show: function(id) {
 			this.inherited(arguments);
-			if (id) {
-				this.item_id = id;
-				dojo.addClass(this.form, 'loading');
-				if (this.updateUrl) {
-					dojo.xhrGet({
-						url: this.updateUrl+id+'.xhr',
-						load: dojo.hitch(this, 'loadForm')
-					});
-				} else {
-					if (dojo.query('[name="'+this.model+'[id]"]', this.form) == false) dojo.create('input', {'type':'hidden', 'name':this.model+'[id]'}, this.form);
-					dojo.xhrGet({
-						url: this.url+'?where='+this.model+'.id='+id+'&select='+this.model+'.*',
-						handleAs: 'json',
-						load: dojo.hitch(this, function(data) {
-							this.setValues(data.items[0]);
-							dojo.removeClass(this.form, 'loading');
-						})
-					});
-				}
-			} else if (!this.persist) {
-				dojo.query('[name^="'+this.model+'"]', this.form).attr('value', '');
-				dojo.query('[name="'+this.model+'[id]"]').forEach(dojo.destroy);
-			}
+			if (id) this.item_id = id;
+			else this.item_id = 0;
+			dojo.xhrGet({
+				url: this.url+((id) ? 'update/'+id : 'create')+'.xhr',
+				load: dojo.hitch(this, 'loadForm')
+			});
+		},
+		hide: function(evt) {
+			if (evt) evt.preventDefault();
+			this.inherited(arguments);
 		},
 		loadForm: function(data) {
 			this.set('content', data);
 			this.form = dojo.query('form', this.domNode)[0];
-			dojo.query('form', this.domNode).connect('onsubmit', dojo.hitch(this, '_onSubmit'));
-			dojo.query('.cancel', this.form).connect('onclick', this, 'hide');
+			dojo.query('form', this.domNode).on('submit', function(evt) {evt.preventDefault();});
+			dojo.query('.submit', this.form).on('click', dojo.hitch(this, '_onSubmit'));
+			dojo.query('.cancel', this.form).on('click', dojo.hitch(this, 'hide'));
+			dojo.query('input[type="file"]', this.form).on('change', dojo.hitch(this, 'upload'));
 		}
 	});
 });
