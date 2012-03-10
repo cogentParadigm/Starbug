@@ -64,7 +64,10 @@ define([
 			this.inherited(arguments);
 		},
 		remove: function(model, id) {
-			sb.post({'action['+model+']':'delete', model+'[id]':id}, 'return confirm(\'Are you sure you want to delete this item?\')');
+			var args = {};
+			args['action['+model+']'] = 'delete';
+			args[model+'[id]'] = id;
+			sb.post(args, 'return confirm(\'Are you sure you want to delete this item?\')');
 		},
 		loadForm: function(data) {
 			this.set('content', data);
