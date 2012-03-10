@@ -303,7 +303,7 @@ class form {
 			$keys = explode(",", $ops['options']);
 			$values = (!empty($ops['values'])) ? explode(",", $ops['values']) : $keys;
 			$options = array();
-			foreach ($keys as $i => $k) $options[$k] = $value[$i];
+			foreach ($keys as $i => $k) $options[$k] = $values[$i];
 		}
 		if (!empty($ops['caption'])) {
 			if (!empty($ops['from'])) $options = query($ops['from']);
