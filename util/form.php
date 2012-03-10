@@ -285,6 +285,7 @@ class form {
 
 	function select($ops, $options=array()) {
 		$this->fill_ops($ops);
+		$name = $ops['name'];
 		if (isset($ops['multiple'])) {
 			$ops['multiple'] = "multiple";
 			$ops['name'] = $ops['name']."[]";
@@ -320,7 +321,7 @@ class form {
 			}
 			$options = $list; unset($ops['caption']); unset($ops['value']);
 		}
-		assign("value", $this->get($ops['name']));
+		assign("value", $this->get($name));
 		assign("options", $options);
 		return $this->form_control("select", $ops);
 	}
