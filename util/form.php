@@ -285,7 +285,8 @@ class form {
 
 	function select($ops, $options=array()) {
 		$this->fill_ops($ops);
-		if (isset($ops['mulitple'])) {
+		if (isset($ops['multiple'])) {
+			$ops['multiple'] = "multiple";
 			$ops['name'] = $ops['name']."[]";
 			efault($ops['size'], 5);
 		}
