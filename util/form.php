@@ -299,6 +299,12 @@ class form {
 			for ($i=$range[0];$i<=$range[1];$i++) $options[$i] = $i;
 			unset($ops['range']);
 		}
+		if (!empty($ops['options'])) {
+			$keys = explode(",", $ops['options']);
+			$values = (!empty($ops['values'])) ? explode(",", $ops['values']) : $keys;
+			$options = array();
+			foreach ($keys as $i => $k) $options[$k] = $value[$i];
+		}
 		if (!empty($ops['caption'])) {
 			if (!empty($ops['from'])) $options = query($ops['from']);
 			$list = array();
