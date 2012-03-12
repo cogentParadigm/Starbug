@@ -1,8 +1,4 @@
-define([
-	"dojo",
-	"dojo/io/iframe",
-	"dijit/Dialog"
-], function(dojo, iframe, Dialog) {
+define(["dojo", "dojo/io/iframe", "dijit/Dialog"], function(dojo, iframe, Dialog) {
 	return dojo.declare("starbug.form.Dialog", [Dialog], {
 		dialog:null,
 		url:'',
@@ -73,7 +69,7 @@ define([
 			this.set('content', data);
 			this.form = dojo.query('form', this.domNode)[0];
 			dojo.query('form', this.domNode).on('submit', function(evt) {evt.preventDefault();});
-			dojo.query('.submit', this.form).attr('onclick', '').on('click', dojo.hitch(this, '_onSubmit'));
+			dojo.query('.submit, [type=\"submit\"]', this.form).attr('onclick', '').on('click', dojo.hitch(this, '_onSubmit'));
 			dojo.query('.cancel', this.form).attr('onclick', '').on('click', dojo.hitch(this, 'hide'));
 			dojo.query('input[type="file"]', this.form).on('change', dojo.hitch(this, 'upload'));
 		}
