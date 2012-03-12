@@ -38,7 +38,7 @@ h2{color:#419bc0;font-size:150%}
 .colborder{border-color:#111;border-width:2px;margin-right:24px}
 .green{color:#494}
 .red{color:#C00}
-span.error{display:block;width:300px;padding:5px}
+span.error{display:block;width:300px;padding:5px;margin-bottom:0}
 .heading .button{margin:0;font-size:11px}
 body button{padding: 5px 10px 5px 7px}
 .blue.button, a.blue.button, .blue.button:hover, a.blue.button:hover, button.blue, button.blue:hover
