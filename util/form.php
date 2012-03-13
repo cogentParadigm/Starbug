@@ -183,7 +183,7 @@ class form {
 	 * 									nolabel: if this is set, no label will be displayed
 	 * 									default: a default value to use
 	 *
-	 * 									you should not specify the key for name. For example, here the 'name' is 'title':
+	 * 									for the first paramater, you can leave out the key. For example, here  'name:' is left out:
 	 * 									text("title  label:The Title  default:Untitled");
 	 */
 	function text($ops) {
@@ -197,7 +197,7 @@ class form {
 	 * 									nolabel: if this is set, no label will be displayed
 	 * 									default: a default value to use
 	 *
-	 * 									you should not specify the key for name. For example, here the 'name' is 'password':
+	 * 									for the first paramater, you can leave out the key. For example, here  'name:' is left out:
 	 * 									password("password  label:Your Password");
 	 */
 	function password($ops) {
@@ -209,7 +209,7 @@ class form {
 	 *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
 	 * 									default: a default value to use
 	 *
-	 * 									you should not specify the key for name. For example, here the 'name' is 'article_id':
+	 * 									for the first paramater, you can leave out the key. For example, here  'name:' is left out:
 	 * 									hidden("article_id  default:1");
 	 */
 	function hidden($ops) {
@@ -254,11 +254,17 @@ class form {
 		assign("control", "input");
 		return capture("form/field");
 	}
-
-	function image($ops) {
-		return $this->input("image", $ops);
-	}
-
+	/**
+	 * generates a checkbox
+	 * @param star $ops an option string starting with the input name, and including HTML attributes
+	 *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
+	 * 									value: you must specify a value. The checkbox will be checked if the POST contains this value.
+	 *									label: The label displayed above the input. The default label is the name option replacing underscores with spaces and passed to ucwords.
+	 * 									nolabel: if this is set, no label will be displayed
+	 *
+	 * 									for the first paramater, you can leave out the key. For example, here  'name:' is left out:
+	 * 									checkbox("is_active  value:1");
+	 */
 	function checkbox($ops) {
 		$ops = $ops."  type:checkbox";
 		$this->fill_ops($ops);
@@ -310,7 +316,7 @@ class form {
 			unset($ops['values']);
 		}
 		if (!empty($ops['caption'])) {
-			if (!empty($ops['from'])) $options = query($ops['from']);
+			if (!empty($ops['from'])) $options = query($ops['from'], $ops);
 			$list = array();
 			$keys = array();
 			if (!empty($options)) foreach ($options[0] as $k => $v) if (false !== strpos($ops['caption'], "%$k%")) $keys[] = $k;
