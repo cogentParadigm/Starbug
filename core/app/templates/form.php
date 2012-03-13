@@ -32,6 +32,6 @@
 				?>
 		<?php } ?>
 	<?php } ?>
-	<div class="field"><button class="left positive" type="submit">Save</button><button class="negative cancel button"<?php if (!empty($cancel_url)) { ?> onclick="window.location='<?= $cancel_url; ?>'"<?php } ?>>Cancel</button></div>
+	<div class="field"><button class="left positive" type="submit">Save</button><button type="button" class="negative cancel button"<?php if (!empty($cancel_url)) { ?> onclick="window.location='<?= $cancel_url; ?>'"<?php } ?>>Cancel</button></div>
 	<br class="clear"/>
 <?php close_form(); ?>
