@@ -1,5 +1,5 @@
-<?php if (success("uris", "update")) { ?>
-<div class="success">Page updated successfully</div>
+<?php efault($type, "Page"); if (success("uris", "update")) { ?>
+<div class="success"><?php echo $type; ?> updated successfully</div>
 <?php } ?>
 <script type="text/javascript">
 var old_link = '<?php if ($action == "update") echo $_POST['uris']['path']; ?>';
@@ -96,8 +96,8 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 	}
 	$parent_ops = array(" -- " => 0);
 	foreach($kids[0] as $child) $parent_ops = array_merge_recursive($parent_ops, parent_options($child, $kids));
-
-	$templates = array("default" => "Page");
+	
+	$templates = array("default" => $type);
 	if (logged_in("root")) $templates["View"] = "View";
 	foreach (array("core/app/layouts/", "app/themes/".Etc::THEME."/layouts/", "app/layouts") as $dir) {
 		if (file_exists($dir) && false !== ($handle = opendir($dir))) {
@@ -105,14 +105,15 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 			closedir($handle);
 		}
 	}
-
-	efault($_POST['uris']['type'], "Page");
+	
+	efault($_POST['uris']['type'], $type);
 	efault($_POST['uris']['status'], 4);
 	efault($_POST['uris']['prefix'], "app/views/");
 	efault($_POST['uris']['collective'], "0");
 ?>
 
 <? open_form("model:uris  action:$action  url:$submit_to", "class:pages_form"); ?>
+	<input type="hidden" name="type" value="<?php echo $type; ?>"/>
 	<div class="field">
 		<? text("title  class:round title"); ?>
 		<label id="link-label">Permalink:</label>

@@ -26,7 +26,10 @@
 		theme_advanced_statusbar_location : "bottom",
 		theme_advanced_resizing : true,
 		file_browser_callback: "kfm_for_tiny_mce",
-		editor_deselector: "plain"
+		editor_deselector: "plain",
+		relative_urls : false,
+		remove_script_host : false,
+		document_base_url : "<?php echo uri(""); ?>"
 
 		// Example content CSS (should be your site CSS)
 		//content_css : "<?php echo uri("var/public/stylesheets/screen.css"); ?>"

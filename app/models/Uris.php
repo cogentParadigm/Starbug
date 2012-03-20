@@ -2,14 +2,15 @@
 class Uris extends UrisModel {
 
 	function create($uris) {
-		if ($uris['type'] != "View" && $uris['type'] != "Page") {
+		if ($uris['type'] != "View" && $uris['type'] != $_POST['type']) {
 			$uris['layout'] = $uris['type'];
-			$uris['type'] = "Page";
+			$uris['type'] = $_POST['type'];
 		}
 		queue("blocks", "type:text  region:content  position:1  uris_id:");
 		$this->store($uris);
 		if (!errors()) {
-			redirect(uri("admin/uris/update"));
+			if ($_POST['type'] == "Page") redirect(uri("admin/uris/update"));
+			else redirect(uri("admin/".strtolower($_POST['type'])."s/update"));
 		} else {
 			global $sb;
 			if (errors("uris[title]") && empty($uris['path'])) unset($sb->errors['uris']['path']);
@@ -17,9 +18,9 @@ class Uris extends UrisModel {
 	}
 	
 	function update($uris) {
-		if ($uris['type'] != "View" && $uris['type'] != "Page") {
+		if ($uris['type'] != "View" && $uris['type'] != $_POST['type']) {
 			$uris['layout'] = $uris['type'];
-			$uris['type'] = "Page";
+			$uris['type'] = $_POST['type'];
 		}
 		$row = $this->query("where:id='$uris[id]'  limit:1");
 		$this->store($uris);

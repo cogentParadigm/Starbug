@@ -14,6 +14,7 @@
  */
 	include("core/global/common.php");
 	include("core/global/config.php");
+	include("core/global/cache.php");
 	include("core/global/modules.php");
 	include("core/global/strings.php");
 	include("core/global/users.php");
