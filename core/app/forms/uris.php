@@ -129,7 +129,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 				select("status", $status_list);
 				select("collective  label:Access", $collectives);
 				select("parent", $parent_ops);
-				category_select("category");
+				multiple_category_select("categories");
 				button(ucwords($action), "class:big round left button");
 			?>
 				<br class="clear"/><br/><br/>

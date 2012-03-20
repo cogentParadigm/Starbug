@@ -12,7 +12,6 @@
  */
 class CoreMigration extends Migration {
 	function up() {
-		global $schemer;
 		// This adds a table to the schema, The Schemer builds up a schema with all of the migrations that are to be run, and then updates the db
 		$this->table("users",
 			"first_name  type:string  length:64  list:true",
@@ -65,7 +64,7 @@ class CoreMigration extends Migration {
 			"path  type:string  length:64  unique:  list:true",
 			"title  type:string  length:128  list:true",
 			"template  type:string  length:64  default:  list:false",
-			"category  type:category  null:",
+			"categories  type:terms",
 			"tags  type:terms",
 			"format  type:string  length:16  default:html  list:false",
 			"parent  type:int  default:0  list:false",

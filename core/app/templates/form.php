@@ -22,7 +22,7 @@
 					} else if ($field['type'] == "bool") $field['value'] = 1;
 					$star = "";
 					foreach ($field as $k => $v) $star .= "  $k:$v";
-					if (isset($this->vars["global"][$name."_options"])) $star .= "  ".$this->vars["global"][$name."_options"];
+					if (isset($this->vars[$name."_options"])) $star .= "  ".$this->vars[$name."_options"];
 				?>
 				<?php $field['input_type']($name.$star); ?>
 				<?php

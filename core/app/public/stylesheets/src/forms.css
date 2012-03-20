@@ -79,3 +79,9 @@ form.inline p { margin-bottom:0; }
 .notice a   { color: #514721; }
 .success a  { color: #264409; }
 .info a			{ color: #205791; }
+
+/* starbug controls - multiple_category_select, etc.
+-------------------------------------------------------------- */
+.multiple_category_select{margin:5px 0;height:150px;overflow-x:hidden;overflow-y:scroll;border:1px solid;padding:8px}
+.multiple_category_select label{font-weight:normal}
+.multiple_category_select .category{padding-bottom:8px}

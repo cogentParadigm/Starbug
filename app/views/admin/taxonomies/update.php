@@ -14,7 +14,10 @@
 		assign("model", "terms");
 		assign("uri", "admin/taxonomies/update/$taxonomy");
 		assign("parent_options", "taxonomy:$taxonomy  optional:");
-		render("create");
+		if (!empty($_GET['term']) && is_numeric($_GET['term'])) {
+			assign("id", $_GET['term']);
+			render("update");
+		} else render("create");
 	?>
 </div>
 <div style="width:500px;" class="left">

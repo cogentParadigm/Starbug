@@ -135,7 +135,7 @@ class Request {
 		$this->layout = $this->payload['layout'];
 		$this->template = $this->payload['template'];
 		efault($this->theme, Etc::THEME);
-		efault($this->layout, theme("layout", $this->theme));
+		efault($this->layout, $this->payload['type']);
 		efault($this->format, $this->payload['format']);
 	}
 

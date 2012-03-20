@@ -184,6 +184,15 @@ function category_select($ops) {
 	echo $form->category_select($ops);
 }
 /**
+ * outputs a multiple category select - functionally equivalent to multiple select but using checkboxes and labels
+ * @ingroup forms
+ * @param string $ops the options
+ */
+function multiple_category_select($ops) {
+	$form = global_form();
+	echo $form->multiple_category_select($ops);
+}
+/**
  * outputs a date select
  * @ingroup forms
  * @param string $ops the options

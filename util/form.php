@@ -348,7 +348,7 @@ class form {
 		$terms = terms($ops['taxonomy'], $ops['parent']);
 		$options = array();
 		if (isset($ops['optional'])) $options[""] = 0;
-		foreach ($terms as $term) $options[str_pad($term['term'], strlen($term['term'])+$depth, "-", STR_PAD_LEFT)] = $term['id'];
+		foreach ($terms as $term) $options[str_pad($term['term'], strlen($term['term'])+$term['depth'], "-", STR_PAD_LEFT)] = $term['id'];
 		if (!isset($ops['readonly'])) {
 			$options["Add a new ".str_replace("_", " ", $ops['name']).".."] = -1;
 			$ops['onchange'] = "if (dojo.attr(this, 'value') == -1) dojo.style(this.id+'_new_category', 'display', 'block'); else dojo.style(this.id+'_new_category', 'display', 'none');";
@@ -356,6 +356,28 @@ class form {
 		assign("value", $this->get($ops['name']));
 		assign("options", $options);
 		return $this->form_control("category_select", $ops);
+	}
+	
+	function multiple_category_select($ops) {
+		$this->fill_ops($ops);
+		$value = $this->get($ops['name']);
+		if ((empty($value)) && (!empty($ops['default']))) {
+			$this->set($ops['name'], $ops['default']);
+			unset($ops['default']);
+		}
+		efault($ops['taxonomy'], ((empty($this->model)) ? "" : $this->model."_").$ops['name']);
+		efault($ops['parent'], 0);
+		$terms = terms($ops['taxonomy'], $ops['parent']);
+		$options = array();
+		if (isset($ops['optional'])) $options[""] = 0;
+		foreach ($terms as $term) $options[str_pad($term['term'], strlen($term['term'])+$term['depth'], "-", STR_PAD_LEFT)] = $term['id'];
+		if (!isset($ops['readonly'])) {
+			$options["Add a new ".str_replace("_", " ", $ops['name']).".."] = -1;
+			$ops['onchange'] = "if (dojo.attr(this, 'value') == -1) dojo.style(this.id+'_new_category', 'display', 'block'); else dojo.style(this.id+'_new_category', 'display', 'none');";
+		}
+		assign("value", $this->get($ops['name']));
+		assign("terms", $terms);
+		return $this->form_control("multiple_category_select", $ops);
 	}
 
 	function date_select($ops) {

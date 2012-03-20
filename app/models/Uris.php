@@ -7,8 +7,12 @@ class Uris extends UrisModel {
 			$uris['type'] = $_POST['type'];
 		}
 		queue("blocks", "type:text  region:content  position:1  uris_id:");
+		$categories = $uris['categories'];
+		unset($uris['categories']);
 		$this->store($uris);
 		if (!errors()) {
+			$uid = $this->insert_id;
+			foreach ($categories as $tid) store("uris_categories", "uris_id:$uid  terms_id:$tid");
 			if ($_POST['type'] == "Page") redirect(uri("admin/uris/update"));
 			else redirect(uri("admin/".strtolower($_POST['type'])."s/update"));
 		} else {
@@ -23,8 +27,16 @@ class Uris extends UrisModel {
 			$uris['type'] = $_POST['type'];
 		}
 		$row = $this->query("where:id='$uris[id]'  limit:1");
+		$categories = $uris['categories'];
+		unset($uris['categories']);
 		$this->store($uris);
 		if (!errors()) {
+			$uid = $uris['id'];
+			remove("uris_categories", "uris_id=$uid && terms_id NOT IN (".implode(", ", $categories).")");
+			foreach ($categories as $tid) {
+				$exists = query("uris_categories", "where:uris_id=? && terms_id=?  limit:1", array($uid, $tid));
+				if (!$exists) store("uris_categories", "uris_id:$uid  terms_id:$tid");
+			}
 			$blocks = query("blocks", "where:uris_id=?", array($uris['id']));
 			foreach ($blocks as $block) {
 				$key = 'block-'.$block['region'].'-'.$block['position'];

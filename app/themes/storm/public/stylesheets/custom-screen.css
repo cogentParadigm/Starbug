@@ -9,7 +9,7 @@ body h1, body.claro h1{margin:0 0 8px 0;font-weight:bold;font-size:140%}
 #nav{height:50px}
 #main{margin:0 0 10px;padding:9px 0;float:left;width:100%}
 #content{float:left;width:79%;position:relative}
-.page.one-column #content{width:100%}
+.page.one-column #content, .page.View #content{width:100%}
 #sidebar{float:right;width:20%}
 #footer, #footer li{list-style-type:none;margin:0 0 30px 0;float:left;padding:0 0 0 15px}
 label{display:block}
@@ -102,7 +102,6 @@ body.tundra .dijitDialogPaneContent{background:none;border:none}
 .attribute ul li input{display:none}
 
 /********************* CMS Pages *********************/
-.pages_form label{clear:both}
 .pages_form input.title-field{width:99%;font-size:18px}
 #link-label{float:left;padding:6px 0;margin-right:5px}
 .link-span{display:block;float:left;padding:5px 0;font-size:12px}
