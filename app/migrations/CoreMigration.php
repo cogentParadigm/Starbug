@@ -60,6 +60,11 @@ class CoreMigration extends Migration {
 			"caption  type:string  length:255",
 			"directory  type:int  default:1  display:false"
 		);
+		$this->table("comments",
+			"name  type:string  length:255",
+			"email  type:string  length:255",
+			"comment  type:text"
+		);
 		$this->table("uris  label:Pages  singular_label:Page",
 			"path  type:string  length:64  unique:  list:true",
 			"title  type:string  length:128  list:true",
@@ -76,7 +81,8 @@ class CoreMigration extends Migration {
 			"description  type:string  length:255  input_type:textarea  default:  list:false",
 			"meta  type:text  default:  list:false",
 			"canonical  type:string  length:255  default:  list:false",
-			"breadcrumb  type:string  length:255  default:  list:false"
+			"breadcrumb  type:string  length:255  default:  list:false",
+			"comments  type:comments  display:false"
 		);
 		$this->table("blocks  list:all",
 			"uris_id  type:int  references:uris id",
