@@ -6,7 +6,9 @@ class Uris extends UrisModel {
 			$uris['layout'] = $uris['type'];
 			$uris['type'] = $_POST['type'];
 		}
+		if ($_POST['type'] == "Post") $uris['path'] = "blog/".$uris['path'];
 		queue("blocks", "type:text  region:content  position:1  uris_id:");
+		efault($uris['categories'], array());
 		$categories = $uris['categories'];
 		unset($uris['categories']);
 		$this->store($uris);
@@ -26,13 +28,15 @@ class Uris extends UrisModel {
 			$uris['layout'] = $uris['type'];
 			$uris['type'] = $_POST['type'];
 		}
+		if ($_POST['type'] == "Post") $uris['path'] = "blog/".$uris['path'];
 		$row = $this->query("where:id='$uris[id]'  limit:1");
+		efault($uris['categories'], array());
 		$categories = $uris['categories'];
 		unset($uris['categories']);
 		$this->store($uris);
 		if (!errors()) {
 			$uid = $uris['id'];
-			remove("uris_categories", "uris_id=$uid && terms_id NOT IN (".implode(", ", $categories).")");
+			remove("uris_categories", "uris_id=$uid".(empty($categories) ? "" : " && terms_id NOT IN (".implode(", ", $categories).")"));
 			foreach ($categories as $tid) {
 				$exists = query("uris_categories", "where:uris_id=? && terms_id=?  limit:1", array($uid, $tid));
 				if (!$exists) store("uris_categories", "uris_id:$uid  terms_id:$tid");

@@ -35,8 +35,7 @@ function editable_onchange(evt) {
 }
 <?php if ($action == "update") { ?>
 function apply_tags() {
-	sb.xhr({
-		url: '<?php echo uri("api/uris.terms via uris_tags.json?select=DISTINCT term,slug&where=uris.id=".$_POST['uris']['id']); ?>',
+	sb.xhr('<?php echo uri("api/uris.terms via uris_tags.json?select=DISTINCT term,slug&where=uris.id=".$_POST['uris']['id'], "u"); ?>', {
 		content: {
 			'action[uris]': 'apply_tags',
 			'uris[id]': '<?php echo $_POST['uris']['id']; ?>',
@@ -49,8 +48,7 @@ function apply_tags() {
 	});
 }
 function remove_tag(tag) {
-	sb.xhr({
-		url: '<?php echo uri("api/uris.terms via uris_tags.json?select=DISTINCT term,slug&where=uris.id=".$_POST['uris']['id']); ?>',
+	sb.xhr('<?php echo uri("api/uris.terms via uris_tags.json?select=DISTINCT term,slug&where=uris.id=".$_POST['uris']['id'], "u"); ?>', {
 		content: {
 			'action[uris]': 'remove_tag',
 			'uris[id]': '<?php echo $_POST['uris']['id']; ?>',
@@ -110,6 +108,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 	efault($_POST['uris']['status'], 4);
 	efault($_POST['uris']['prefix'], "app/views/");
 	efault($_POST['uris']['collective'], "0");
+	$base_uri = ($type == "Post") ? uri("blog/", "f") : uri("", "f");
 ?>
 
 <? open_form("model:uris  action:$action  url:$submit_to", "class:pages_form"); ?>
@@ -117,7 +116,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 	<div class="field">
 		<? text("title  class:round title"); ?>
 		<label id="link-label">Permalink:</label>
-		<span id="permalink" class="link-span"><?= uri("", "f"); ?><span class="editable"><?= (($_POST['uris']['path']) ? $_POST['uris']['path'] : ".." ); ?></span></span>
+		<span id="permalink" class="link-span"><?= $base_uri; ?><span class="editable"><?= (($_POST['uris']['path']) ? $_POST['uris']['path'] : ".." ); ?></span></span>
 		<? if (errors('uris[path]')) echo "<span class=\"clear error\">".reset(errors('uris[path]'))."</span><br />"; ?>
 		<div class="round infield">
 			<?php
