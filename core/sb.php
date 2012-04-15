@@ -253,8 +253,8 @@ class sb {
 			else if (file_exists(BASE_DIR."/core/app/filters/query/$k.php")) include(BASE_DIR."/core/app/filters/query/$k.php");
 		}
 		if (!empty($args['where'])) $args['where'] = " WHERE ".$args['where'];
-		$groupby = (!(empty($args['groupby']))) ? " LIMIT $args[groupby]" : "";
-		$having = (!(empty($args['having']))) ? " LIMIT $args[having]" : "";
+		$groupby = (!(empty($args['groupby']))) ? " GROUP BY $args[groupby]" : "";
+		$having = (!(empty($args['having']))) ? " HAVING $args[having]" : "";
 		$limit = (!(empty($args['limit']))) ? " LIMIT $args[limit]" : "";
 		$order = (!(empty($args['orderby']))) ? " ORDER BY $args[orderby]" : "";
 		$sql = " FROM $from$args[where]$order$limit";
