@@ -121,12 +121,11 @@ return dojo.declare("starbug.store.Api", null, {
 		query = dojo.objectToQuery(base);
 		query = query ? "?" + query: "";
 		if(options && options.sort){
-			query += (query ? "&" : "?") + "sort(";
+			query += (query ? "&" : "?") + "orderby=";
 			for(var i = 0; i<options.sort.length; i++){
 				var sort = options.sort[i];
-				query += (i > 0 ? "," : "") + (sort.descending ? '-' : '+') + encodeURIComponent(sort.attribute);
+				query += (i > 0 ? "," : "") + encodeURIComponent(sort.attribute+' '+(sort.descending ? 'DESC' : 'ASC'));
 			}
-			query += ")";
 		}
 		var results = dojo.xhrGet({
 			url: WEBSITE_URL+'api/'+this.models+'.json' + (query || ""),
