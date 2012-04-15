@@ -52,6 +52,4 @@
 		if (!empty($conf['classes'])) $ie->add_semantic_classes($conf['classes']);
 		$ie->write();
 	}
-	//BUILD
-	if (file_exists(BASE_DIR."/core/app/public/js/dojo/util")) passthru("cd ".BASE_DIR."/script/generate/css; ./build.sh action=release cssOptimize=comments");
 ?>
