@@ -96,7 +96,7 @@ function store_queue() {
  */
 function store_once($name, $fields, $from="auto") {
 	global $sb;
-	if (!is_array($fields)) $fields = starr::star($fields);
+	if (!is_array($fields)) $fields = star($fields);
 	$where = "";
 	foreach ($fields as $k => $v) {
 		if (!empty($where)) $where .= " && ";

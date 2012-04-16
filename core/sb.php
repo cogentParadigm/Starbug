@@ -37,10 +37,6 @@ class sb {
 	 */
 	var $provided = array();
 	/**
-	 * @var array holds configuration objects
-	 */
-	var $confs = array();
-	/**
 	 * @var array holds instantiated models
 	 */
 	var $objects = array();
@@ -77,33 +73,6 @@ class sb {
 			$_SESSION[P('user')] = array();
 		}
 	}
-
-	/**
-	 * get or set config variables from json files
-	 * @param string $key the file name and optional sub indices. for example, 'themes' or 'fixtures.base'
-	 */
-	function &config($key, $value=null, $dir="etc/") {
-		$parts = explode(".", $key);
-		$key = array_shift($parts);
-		if (empty($this->confs[$key])) {
-			$raw = explode("\n", file_get_contents(BASE_DIR."/$dir$key.json"));
-			foreach ($raw as $idx => $item) {
-				$first = substr(trim($item), 0, 1);
-				if (!(in_array($first, array('"', '{', '}', '[', ']')) || is_numeric($first))) unset($raw[$idx]);
-			}
-			$this->confs[$dir.$key] = json_decode(join("\n", $raw), true);
-		}
-		$config = &$this->confs[$dir.$key];
-		 while (!empty($parts)) {
-			 $k = array_shift($parts);
-			 $config = &$config[$k];
-		 }
-		 if ($value != null) {
-			 $config = $value;
-			 file_put_contents(BASE_DIR."/$dir$key.json", json_encode($this->confs[$dir.$key]));
-		 }
-		 return $config;
-	 }
 
 	/**
 	 * since you can't subscribe the handle 'include', use sb::load
@@ -190,7 +159,7 @@ class sb {
 	function query($froms, $args="", $replacements=array()) {
 		$froms = explode(",", $froms);
 		$first = array_shift($froms);
-		$args = starr::star($args);
+		$args = star($args);
 		$schema = schema($first);
 		if (!isset($args['search'])) unset($schema['search']);
 		else if (empty($args['search'])) unset($args['search']);
@@ -300,14 +269,14 @@ class sb {
 		$thefilters = ($this->has($name)) ? $this->get($name)->filters : array();
 		$errors = $byfilter = array();
 		$storing = false;
-		if (!is_array($fields)) $fields = starr::star($fields);
+		if (!is_array($fields)) $fields = star($fields);
 		if ($from == "auto") {
 			if (!empty($fields['id'])) $from = array("id" => $fields['id']);
-		} else if ((false !== $from) && (!is_array($from))) $from = starr::star($from);
+		} else if ((false !== $from) && (!is_array($from))) $from = star($from);
 		foreach ($fields as $col => $value) {
 			$errors[$col] = array();
 			$fields[$col] = trim($fields[$col]);
-			$filters = starr::star($thefilters[$col]);
+			$filters = star($thefilters[$col]);
 			foreach($filters as $filter => $args) $byfilter[$filter][$col] = $args;
 			if ($value === "") $errors[$col]["required"] = "This field is required.";
 		}

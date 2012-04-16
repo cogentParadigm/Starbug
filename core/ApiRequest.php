@@ -43,7 +43,7 @@ class ApiRequest {
 		$parts = explode("/", str_replace(".$format", "", $what));
 		$call = reset($parts);
 		if (next($parts) == "get") $this->query = false;
-		$ops = starr::star($ops);
+		$ops = star($ops);
 		efault($ops['action'], 'read');
 		if ($this->headers) header("Content-Type: ".$this->types[$format]);
 		$this->result = call_user_func(array($this, $call), $call, $format, $ops);
@@ -72,7 +72,7 @@ class ApiRequest {
 		if (!empty($ops['query'])) {
 			$query = base64_decode($ops['query']);
 			unset($ops['query']);
-			$ops = array_merge(starr::star($query), $ops);
+			$ops = array_merge(star($query), $ops);
 		}
 		
 		$data = $sb->query(implode(",", $models), $ops);

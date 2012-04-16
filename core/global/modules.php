@@ -34,8 +34,9 @@ function locate($file, $dir="templates/") {
 	else {
 		$paths = array();
 		$modules = config("modules");
-		$theme = request("theme");
-		if (!$theme) $theme = Etc::THEME;
+		global $request;
+		if ($request) $theme = request("theme");
+		efault($theme, Etc::THEME);
 		if (file_exists(BASE_DIR."/app/$dir$file")) $paths[] = "app/$dir$file";
 		foreach ($modules as $module) if (file_exists(BASE_DIR."/modules/$module/$dir$file")) $paths[] = "modules/$module/$dir$file";
 		if (file_exists(BASE_DIR."/app/themes/$theme/$dir$file")) $paths[] = "app/themes/$theme/$dir$file";

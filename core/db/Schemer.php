@@ -422,7 +422,7 @@ class Schemer {
 		efault($this->tables[$table], array());
 		$additional = array();
 		foreach ($args as $col) {
-			$col = starr::star($col);
+			$col = star($col);
 			$colname = array_shift($col);
 			if (sb()->has($col['type'])) {
 				$additional[] = array($table."_".$colname,
@@ -480,7 +480,7 @@ class Schemer {
 	function uri($path, $args=array(), $groups=array()) {
 		global $statuses;
 		$options = array();
-		$args = starr::star($args);
+		$args = star($args);
 		$args['path'] = $path;
 		efault($args['title'], ucwords(str_replace("-", " ", $path)));
 		if (!empty($args['groups'])) {
@@ -520,7 +520,7 @@ class Schemer {
 	function permit($on, $args) {
 		global $groups;
 		$on = explode("::", $on);
-		$args = starr::star($args);
+		$args = star($args);
 		efault($this->permits[$on[0]], array());
 		efault($this->permits[$on[0]][$on[1]], array());
  		$this->permits[$on[0]][$on[1]] = array_merge($this->permits[$on[0]][$on[1]], $args);
@@ -573,7 +573,7 @@ class Schemer {
 	 * @param star $others the other, non-unique fields
 	 */
 	function store($table, $match, $others) {
-		$merge = array($table => array(array("match" => starr::star($match), "others" => starr::star($others))));
+		$merge = array($table => array(array("match" => star($match), "others" => star($others))));
 		$this->population = array_merge_recursive($this->population, $merge);
 	}
 

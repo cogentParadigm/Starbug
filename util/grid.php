@@ -21,7 +21,7 @@ class grid {
 	var $headers;
 	var $ops;
 	function __construct($ops, $query) {
-		$ops = starr::star($ops);
+		$ops = star($ops);
 		$ops['data-dojo-props'] = array();
 		efault($ops['id'], $ops['model']."_grid");
 		efault($ops['models'], $ops['model']);
@@ -43,7 +43,7 @@ class grid {
 		$this->ops = $ops;
 	}
 	function add_column($col, $caption="") {
-		$col = starr::star($col);
+		$col = star($col);
 		efault($caption, ucwords(str_replace("_", " ", $col[0])));
 		$col['caption'] = $caption;
 		$col['field'] = array_shift($col);
