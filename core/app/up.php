@@ -46,22 +46,9 @@ $this->table("terms",
 	"term  type:string  length:128",
 	"slug  type:string  length:128  unique:taxonomy parent  display:false",
 	"description  type:string  length:255  input_type:textarea  default:",
-	//"attachment  type:int  upload:term_attachment  null:  references:files id",
 	"taxonomy  type:string  views:taxonomies  input_type:hidden",
 	"parent  type:int  default:0  input_type:category_select  readonly:",
 	"position  type:int  ordered:taxonomy parent  display:false"
-);
-$this->table("files  list:all",
-	"mime_type  type:string  length:128",
-	"filename  type:string  length:128",
-	"category  type:category  null:",
-	"caption  type:string  length:255",
-	"directory  type:int  default:1  display:false"
-);
-$this->table("comments",
-	"name  type:string  length:255",
-	"email  type:string  length:255",
-	"comment  type:text"
 );
 $this->table("uris  label:Pages  singular_label:Page",
 	"path  type:string  length:64  unique:  list:true",
@@ -79,8 +66,7 @@ $this->table("uris  label:Pages  singular_label:Page",
 	"description  type:string  length:255  input_type:textarea  default:  list:false",
 	"meta  type:text  default:  list:false",
 	"canonical  type:string  length:255  default:  list:false",
-	"breadcrumb  type:string  length:255  default:  list:false",
-	"comments  type:comments  display:false"
+	"breadcrumb  type:string  length:255  default:  list:false"
 );
 $this->table("blocks  list:all",
 	"uris_id  type:int  references:uris id",
@@ -97,11 +83,6 @@ $this->table("uris_menus  list:all",
 	"menus_id  type:int  references:menus id  update:cascade  delete:cascade",
 	"position  type:int  ordered:menus_id parent",
 	"parent  type:int  default:0"
-);
-$this->table("emails",
-	"name  type:string  length:64  list:true",
-	"subject  type:string  length:128  list:true",
-	"body  type:text"
 );
 // URIS
 $this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");

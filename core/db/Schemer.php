@@ -62,6 +62,8 @@ class Schemer {
 	 * @var array triggers to drop
 	 */
 	var $trigger_drops = array();
+	
+	var $current;
 
 	/**
 	 * constructor. loads migrations
@@ -77,12 +79,14 @@ class Schemer {
 	
 	function up($migration) {
 		if (is_numeric($migration)) $migration = $this->migrations[$migration];
+		$this->current = $migration;
 		$migration = BASE_DIR."/".$migration."/up.php";
 		if (file_exists($migration)) include($migration);
 	}
 	
 	function down($migration) {
 		if (is_numeric($migration)) $migration = $this->migrations[$migration];
+		$this->current = $migration;
 		$migration = BASE_DIR."/".$migration."/down.php";
 		if (file_exists($migration)) include($migration);
 	}
@@ -491,6 +495,7 @@ class Schemer {
 		}
 		efault($args['collective'], 0);
 		efault($args['status'], "4");
+		if ($this->current != "core/app") efault($args['prefix'], $this->current."/views/");
 		$this->uris[$path] = $args;
 	}
 
