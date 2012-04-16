@@ -68,14 +68,23 @@ class Schemer {
 	 */
 	function __construct($data) {
 		$this->db = $data;
-		$this->migrations = config("migrations");
-		foreach($this->migrations as $i => $a) {
-			include(BASE_DIR."/app/migrations/$a.php");
-		}
+		$this->migrations = array_merge(array("core/app"), config("modules"), array("app"));
 	}
 
 	function  clean() {
 		$this->tables = $this->table_drops = $this->column_drops = $this->uris = $this->permits = $this->population = $this->triggers = $this->trigger_drops = array();
+	}
+	
+	function up($migration) {
+		if (is_numeric($migration)) $migration = $this->migrations[$migration];
+		$migration = BASE_DIR."/".$migration."/up.php";
+		if (file_exists($migration)) include($migration);
+	}
+	
+	function down($migration) {
+		if (is_numeric($migration)) $migration = $this->migrations[$migration];
+		$migration = BASE_DIR."/".$migration."/down.php";
+		if (file_exists($migration)) include($migration);
 	}
 
 	function fill() {
@@ -83,8 +92,7 @@ class Schemer {
 		//MOVE TO CURRENT MIGRATION
 		$current = 0;
 		while ($current < $to) {
-			$migration = new $this->migrations[$current]();
-			$migration->up();
+			$this->up($current);
 			$current++;
 		}
 	}
@@ -469,7 +477,7 @@ class Schemer {
 	 * @param string $path the path
 	 * @param star $args other fields
 	 */
-	function uri($path, $args, $groups=array()) {
+	function uri($path, $args=array(), $groups=array()) {
 		global $statuses;
 		$options = array();
 		$args = starr::star($args);
@@ -679,7 +687,6 @@ class Schemer {
 		$args = func_get_args();
 		foreach($args as $i => $a) {
 			if (!in_array($a, $this->migrations)) {
-				if (file_exists(BASE_DIR."/app/migrations/$a.php")) include(BASE_DIR."/app/migrations/$a.php");
 				$this->migrations[] = $a;
 				config("migrations", $this->migrations);
 			}
@@ -708,19 +715,17 @@ class Schemer {
 		if ($to < $from) { //DOWN
 			while($current > $to) {
 				$this->clean();
-				$migration = new $this->migrations[$current-1]();
-				$migration->down();
+				$this->down($current-1);
 				if ($this->update()) $result = true;
-				$migration->removed();
+				//$this->removed($current-1);
 				$current--;
 			}
 		} else {  //UP
 			while($current < $to) {
 				$this->clean();
-				$migration = new $this->migrations[$current]();
-				$migration->up();
+				$this->up($current);
 				if ($this->update()) $result = true;
-				$migration->created();
+				//$this->created($current);
 				$current++;
 			}
 		}
