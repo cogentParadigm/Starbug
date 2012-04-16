@@ -51,7 +51,7 @@ class form {
 		global $request;
 		$request_tag = array("term" => "form", "slug" => "form");
 		if ((is_array($request->tags)) && (!in_array($request_tag, $request->tags))) $request->tags = array_merge($request->tags, array($request_tag));
-		$args = starr::star($args);
+		$args = star($args);
 		efault($args['url'], $args['uri']);
 		efault($args['url'], $_SERVER['REQUEST_URI']);
 		efault($args['method'], "post");
@@ -140,7 +140,7 @@ class form {
 	 * @param star $ops the option string
 	 */
 	function fill_ops(&$ops) {
-		$ops = starr::star($ops);
+		$ops = star($ops);
 		$name = array_shift($ops);
 		$ops['name'] = $name;
 		//id, label, and class

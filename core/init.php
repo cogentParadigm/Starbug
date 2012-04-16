@@ -22,9 +22,6 @@ include(BASE_DIR."/core/db/Table.php");
 // include the sb class
 include(BASE_DIR."/core/sb.php");
 
-// include the starr class
-include(BASE_DIR."/util/starr.php");
-
 /**
  * global instance of the sb class
  * @ingroup global

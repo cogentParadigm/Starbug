@@ -159,7 +159,7 @@ class sb {
 	function query($froms, $args="", $replacements=array()) {
 		$froms = explode(",", $froms);
 		$first = array_shift($froms);
-		$args = starr::star($args);
+		$args = star($args);
 		$schema = schema($first);
 		if (!isset($args['search'])) unset($schema['search']);
 		else if (empty($args['search'])) unset($args['search']);
@@ -269,14 +269,14 @@ class sb {
 		$thefilters = ($this->has($name)) ? $this->get($name)->filters : array();
 		$errors = $byfilter = array();
 		$storing = false;
-		if (!is_array($fields)) $fields = starr::star($fields);
+		if (!is_array($fields)) $fields = star($fields);
 		if ($from == "auto") {
 			if (!empty($fields['id'])) $from = array("id" => $fields['id']);
-		} else if ((false !== $from) && (!is_array($from))) $from = starr::star($from);
+		} else if ((false !== $from) && (!is_array($from))) $from = star($from);
 		foreach ($fields as $col => $value) {
 			$errors[$col] = array();
 			$fields[$col] = trim($fields[$col]);
-			$filters = starr::star($thefilters[$col]);
+			$filters = star($thefilters[$col]);
 			foreach($filters as $filter => $args) $byfilter[$filter][$col] = $args;
 			if ($value === "") $errors[$col]["required"] = "This field is required.";
 		}

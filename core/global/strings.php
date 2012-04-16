@@ -13,11 +13,23 @@
  * @ingroup global
  */
 /**
- * @copydoc starr::star
+ * @copydoc star
  * @ingroup strings
  */
-function star($str) {
-	return starr::star($str);
+function star($str=array()) {
+	if (is_array($str)) return $str;
+	$arr = array();
+	$keypairs = explode("  ", $str);
+	foreach($keypairs as $keypair) {
+		if (false !== ($pos = strpos($keypair, ":"))) {
+			$key = substr($keypair, 0, $pos);
+			$value = substr($keypair, $pos+1);
+			if ($value == "false") $value = false;
+			if ($value == "true") $value = true;
+			$arr[$key] = $value;
+		} else if ($keypair!="") $arr[] = $keypair;
+	}
+	return $arr;
 }
 /**
  * prefix a variable with the site prefix

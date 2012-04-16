@@ -9,7 +9,7 @@
  */
 $name = array_shift($argv);
 $params = join("  ", $argv);
-$params = starr::star($params);
+$params = star($params);
 $errors = $sb->store($name, $params);
 if (empty($errors)) {
 	$id = (empty($params['id'])) ? $sb->insert_id : $params['id'];

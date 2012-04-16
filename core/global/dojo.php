@@ -19,7 +19,7 @@
  * @param star $params additional paramteres to be passed to your function
  */
 function connect($ops, $params="") {
-	$ops = starr::star($ops);
+	$ops = star($ops);
 	$query = array_shift($ops);
 	efault($ops['event'], 'onclick');
 	global $sb;

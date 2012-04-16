@@ -41,7 +41,7 @@ function open_form($options, $atts="") {
 	global $global_form;
 	$global_form = new form($options);
 	$open = "";
-	$atts = starr::star($atts);
+	$atts = star($atts);
 	if (success($global_form->model, $global_form->action)) $class = "submitted";
 	else if (failure($global_form->model, $global_form->action)) $class = "errors";
 	else $class = "clean";

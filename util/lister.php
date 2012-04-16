@@ -24,17 +24,17 @@ class lister {
 	var $pager;
 	var $url;
 	function lister($ops, $url, $cols="", $itemlist=array()) {
-		$this->ops = starr::star($ops);
+		$this->ops = star($ops);
 		$this->url = $url;
 		$this->items = $itemlist;
-		$this->headers = starr::star($cols);
+		$this->headers = star($cols);
 		$this->ops['orderby'] = (isset($this->ops['orderby'])) ? explode(" ", $this->ops['orderby']) : array("", "");
 	}
 	function add_columns($str) {
-		$this->headers = array_merge($this->headers, starr::star($str));
+		$this->headers = array_merge($this->headers, star($str));
 	}
 	function add_column($str) {
-		$str = starr::star($str);
+		$str = star($str);
 		$this->headers[array_shift($str)] = $str;
 	}
 	function items($arr) {
@@ -63,7 +63,7 @@ class lister {
 			$th .= "<$t><tr>";
 			foreach($this->headers as $key => $value) {
 				if (!isset($value['caption'])) $value['caption'] = ucwords(str_replace("_", " ", $key));
-				$arg = starr::star("th  echo:false  content:".$value['caption']);
+				$arg = star("th  echo:false  content:".$value['caption']);
 				efault($arg['class'], str_replace(array(" ", "_"), array("-", "-"), strtolower($key))."-col");
 				if (isset($value['sortable'])) {
 					$surl = str_replace("[orderby]", $key, $sort_url);

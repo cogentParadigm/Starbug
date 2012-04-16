@@ -37,7 +37,7 @@ class dojo {
 		$this->attach($query, "sb.xhr", "action:$action  url:$url".(empty($params) ? "" : "  ".$params), $event);
 	}
 	function attach($query, $action, $params="", $event="onclick") {
-		$params = starr::star($params);
+		$params = star($params);
 		if (!empty($params['pre'])) {
 			$object = $params['pre']."var args = {";
 			unset($params['pre']);

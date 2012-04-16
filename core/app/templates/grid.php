@@ -14,7 +14,7 @@
  * - $view: (optional) view name. only show fields within this view
  */
 	js("starbug/grid/EnhancedGrid");
-	$attributes = starr::star($attributes);
+	$attributes = star($attributes);
 	list($models, $query) = explode("  ", $query, 2);
 	$models = str_replace(",", ".", $models);
 
