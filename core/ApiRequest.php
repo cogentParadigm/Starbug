@@ -66,7 +66,7 @@ class ApiRequest {
 		} else $models = array($model);
 		$this->model = $model;
 		if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) {
-			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : $sb->insert_id;
+			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : sb("insert_id");
 			$ops['where'] = $model.".id='$id'";
 		}
 		if (!empty($ops['query'])) {
@@ -75,7 +75,7 @@ class ApiRequest {
 			$ops = array_merge(star($query), $ops);
 		}
 		
-		$data = $sb->query(implode(",", $models), $ops);
+		$data = query(implode(",", $models), $ops);
 		$f = strtoupper($format);
 		$error = $f."errors";
 		if (empty($sb->errors[$model])) {

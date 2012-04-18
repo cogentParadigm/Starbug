@@ -13,5 +13,5 @@ foreach($argv as $index => $arg) {
 	$argv[$index] = $arg[0]."='".$arg[1]."'";
 }
 $params = join(" && ", $argv);
-$sb->remove($name, $params);
+remove($name, $params);
 ?>

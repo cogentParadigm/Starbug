@@ -142,7 +142,7 @@ class Schemer {
 		$gd = 0; //dropped triggers
 		foreach ($this->tables as $table => $fields) {
 			$fields = $this->get_table($table);
-			$records = $this->db->query("SHOW TABLES LIKE '".P($table)."'");
+			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
 			if (false === ($row = $records->fetch())) {
 				// NEW TABLE																																													// NEW TABLE
 				fwrite(STDOUT, "Creating table ".P($table)."...\n");
@@ -151,9 +151,9 @@ class Schemer {
 			} else {
 				// OLD TABLE																																													// OLD TABLE
 				foreach ($fields as $name => $field) {
-					if (!sb()->has($field['type'])) {
+					if (!$this->db->has($field['type'])) {
 						// REAL COLUMN
-						$records = $this->db->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
+						$records = $this->db->pdo->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
 						if (false === ($row = $records->fetch())) {
 							// NEW COLUMN																																											// NEW COLUMN
 							fwrite(STDOUT, "Adding column $name...\n");
@@ -170,7 +170,7 @@ class Schemer {
 						}
 					}
 					if (isset($field['references']) && ($field['constraint'] != "false")) {
-						$fks = $this->db->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".Etc::DB_NAME."'");
+						$fks = $this->db->pdo->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".Etc::DB_NAME."'");
 						if (false === ($row = $fks->fetch())) {
 							// ADD CONSTRAINT																																								// CONSTRAINT
 							fwrite(STDOUT, "Adding foreign key ".P($table)."_".$name."_fk...\n");
@@ -185,7 +185,7 @@ class Schemer {
 		}
 		foreach ($this->triggers as $name => $triggers) {
 			foreach ($triggers as $event => $trigger) {
-				$record = $this->db->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($trigger['table']."_".$event."_".$trigger['action'])."'")->fetch();
+				$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($trigger['table']."_".$event."_".$trigger['action'])."'")->fetch();
 				if (empty($record)) {
 					// ADD TRIGGER																																											// ADD TRIGGER
 					fwrite(STDOUT, "Creating trigger ".P($trigger['table'])."_".$event."_$trigger[action]...\n");
@@ -241,7 +241,7 @@ class Schemer {
 			}
 		}
 		foreach ($this->table_drops as $table) {
-			$records = $this->db->query("SHOW TABLES LIKE '".P($table)."'");
+			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
 			if ($row = $records->fetch()) {
 				// DROP TABLE																																													// DROP TABLE
 				fwrite(STDOUT, "Dropping table ".P($table)."...\n");
@@ -250,10 +250,10 @@ class Schemer {
 			}
 		}
 		foreach ($this->column_drops as $table => $cols) {
-			$records = $this->db->query("SHOW TABLES LIKE '".P($table)."'");
+			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
 			if ($row = $records->fetch()) {
 				foreach($cols as $col) {
-					$records = $this->db->query("SHOW COLUMNS FROM ".P($table)." WHERE field='".$col."'");
+					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".P($table)." WHERE field='".$col."'");
 					if ($row = $records->fetch()) {
 						// DROP COLUMN																																										// DROP COLUMN
 						fwrite(STDOUT, "Dropping column ".P($table).".$col...\n");
@@ -266,7 +266,7 @@ class Schemer {
 		foreach ($this->trigger_drops as $name => $event) {
 			// DROP TRIGGER																																													// DROP TRIGGER
 			$parts = explode("::", $name);
-			$record = $this->db->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($parts[0]."_".$event."_".$parts[1])."'")->fetch();
+			$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($parts[0]."_".$event."_".$parts[1])."'")->fetch();
 			if (false !== $record) {
 				fwrite(STDOUT, "Dropping trigger ".P($parts[0])."_".$event."_$parts[1]...\n");
 				$this->remove_trigger($name, $event);
@@ -294,7 +294,7 @@ class Schemer {
 		$sql_fields = "";
 		$primary_fields = "";
 		foreach ($fields as $fieldname => $options) {
-			if (!sb()->has($options['type'])) {
+			if (!$this->db->has($options['type'])) {
 				$field_sql = "`".$fieldname."` ".$this->get_sql_type($options).", ";
 				if (isset($options['key']) && ("primary" == $options['key'])) {
 					$primary[] = "`$fieldname`";
@@ -428,7 +428,7 @@ class Schemer {
 		foreach ($args as $col) {
 			$col = star($col);
 			$colname = array_shift($col);
-			if (sb()->has($col['type'])) {
+			if ($this->db->has($col['type'])) {
 				$additional[] = array($table."_".$colname,
 					$col['type']."_id  type:int  default:0  key:primary  references:$col[type] id  update:cascade  delete:cascade",
 					"owner  type:int  default:1  key:primary  references:users id  update:cascade  delete:cascade",
@@ -816,7 +816,7 @@ class Schemer {
 				else if ($field['type'] == "category") $field['input_type'] = "category_select";
 				else if ($field['type'] == "tags") $field['input_type'] = "tag_input";
 				else if (isset($field['upload'])) $field['input_type'] = "file_select";
-				else if (sb()->has($field['type'])) $field['input_type'] = "multiple_select";
+				else if ($this->db->has($field['type'])) $field['input_type'] = "multiple_select";
 				else $field['input_type'] = "text";
 			}
 			$field[$field['type']] = "";

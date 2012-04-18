@@ -48,6 +48,18 @@ function error($error, $field="global", $model="") {
 	}
 }
 /**
+ * get or set the error scope
+ * @ingroup errors
+ * @param $value if not null, the value to set the scope to
+ * @return the active scope. if a value is passed, this will return the scope that is active before setting the value
+ */
+function error_scope($value=null) {
+	global $sb;
+	$scope = $sb->active_scope;
+	if ($value != null) $sb->active_scope = $value;
+	return $scope;
+}
+/**
  * check that an action was called and no errors occurred
  * @ingroup errors
  * @param string $model the model name

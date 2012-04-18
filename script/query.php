@@ -9,7 +9,7 @@
  */
 $name = array_shift($argv);
 $params = join("  ", $argv);
-$records = $sb->query($name, $params);
+$records = query($name, $params);
 echo "query $name $params\n";
 cli::table($records);
 ?>

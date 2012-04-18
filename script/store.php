@@ -10,9 +10,9 @@
 $name = array_shift($argv);
 $params = join("  ", $argv);
 $params = star($params);
-$errors = $sb->store($name, $params);
+$errors = store($name, $params);
 if (empty($errors)) {
-	$id = (empty($params['id'])) ? $sb->insert_id : $params['id'];
+	$id = (empty($params['id'])) ? sb("insert_id") : $params['id'];
 	$argv = array($name, "where:id='$id'");
 	include(BASE_DIR."/script/query.php");
 } else {

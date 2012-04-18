@@ -19,9 +19,8 @@ $sb->provide("util/cli");
  * @see cli::table
  * @ingroup cli
  */
-function cli_query($model, $args="", $mine=false) {
-	global $sb;
-	cli::table($sb->query($model, $args, $mine));
+function cli_query($model, $args="", $replacements=array()) {
+	cli::table(query($model, $args, $replacements));
 }
 /**
  * class for cli output functions

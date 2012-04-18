@@ -5,9 +5,9 @@
 	$record = array("filename" => "", "mime_type" => "", "caption" => "uploaded file");
 	$file = array();
 	foreach ($_FILES['uploadedfiles'] as $key => $arr) $file[$key] = $arr[0];
-	$moved = $sb->get("files")->upload($record, $file);
+	$moved = sb("files")->upload($record, $file);
 	if ($moved) {
-		$id = $sb->insert_id;
+		$id = sb('insert_id');
 		$_post['id'] = $id;
 		$_post['original_name'] = str_replace(" ", "_", $file['name']); 
 		$_post['name'] = $id."_".$_post['original_name'];

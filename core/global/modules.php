@@ -29,19 +29,20 @@ function import($util, $module="util") {
  * @param string $dir the directory within app/ core/app/ or module dir to look in. default is templates/
  * @TODO allow boolean return
  */
-function locate($file, $dir="templates/") {
-	if (is_cached($dir.$file)) return json_decode(cache($dir.$file));
+function locate($file, $dir="templates") {
+	$path = $dir."/".$file;
+	if (is_cached($path)) return json_decode(cache($path));
 	else {
 		$paths = array();
 		$modules = config("modules");
 		global $request;
 		if ($request) $theme = request("theme");
 		efault($theme, Etc::THEME);
-		if (file_exists(BASE_DIR."/app/$dir$file")) $paths[] = "app/$dir$file";
-		foreach ($modules as $module) if (file_exists(BASE_DIR."/modules/$module/$dir$file")) $paths[] = "modules/$module/$dir$file";
-		if (file_exists(BASE_DIR."/app/themes/$theme/$dir$file")) $paths[] = "app/themes/$theme/$dir$file";
-		if (file_exists(BASE_DIR."/core/app/$dir$file")) $paths[] = "core/app/$dir$file";
-		cache($dir.$file, json_encode($paths));
+		if (file_exists(BASE_DIR."/app/$path")) $paths[] = BASE_DIR."/app/$path";
+		foreach ($modules as $module) if (file_exists(BASE_DIR."/modules/$module/$path")) $paths[] = BASE_DIR."/modules/$module/$path";
+		if (file_exists(BASE_DIR."/app/themes/$theme/$path")) $paths[] = BASE_DIR."/app/themes/$theme/$path";
+		if (file_exists(BASE_DIR."/core/app/$path")) $paths[] = BASE_DIR."/core/app/$path";
+		cache($path, json_encode($paths));
 		return $paths;
 	}
 }

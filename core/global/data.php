@@ -36,23 +36,23 @@ function sb() {
 	$count = count($args);
 	if ($count == 0) return $sb;
 	else if ($count == 1) {
-		if ($sb->has($args[0])) return $sb->get($args[0]);
-		else if (property_exists($sb, $args[0])) return $sb->$args[0];
+		if ($sb->db->has($args[0])) return $sb->db->model($args[0]);
+		else if (property_exists($sb->db, $args[0])) return $sb->db->$args[0];
 	} else if ($count == 2) {
-		return $sb->get($args[0])->$args[1];
+		return $sb->db->model($args[0])->$args[1];
 	} else {
-		$model = $sb->get(array_shift($args));
+		$model = $sb->db->model(array_shift($args));
 		$function = array_shift($args);
 		return call_user_func_array(array($model, $function), $args);
 	}
 }
 /**
- * @copydoc sb::query
+ * @copydoc db::query
  * @ingroup data
  */
 function query($froms, $args="", $replacements=array()) {
 	global $sb;
-	return $sb->query($froms, $args, $replacements);
+	return $sb->db->query($froms, $args, $replacements);
 }
 /**
  * perform a raw query
@@ -62,58 +62,58 @@ function query($froms, $args="", $replacements=array()) {
 function raw_query($query) {
 	global $sb;
 	$start = strtolower(substr(trim($query), 0, 6));
-	if ($start == "select" || $start == "descri") return $sb->db->query($query);
+	if ($start == "select" || $start == "descri") return $sb->db->pdo->query($query);
 	else return $sb->db->exec($query);
 }
 /**
- * @copydoc sb::store
+ * @copydoc db::store
  * @ingroup data
  */
 function store($name, $fields, $from="auto") {
 	global $sb;
-	return $sb->store($name, $fields, $from);
+	return $sb->db->store($name, $fields, $from);
 }
 /**
- * @copydoc sb::queue
+ * @copydoc db::queue
  * @ingroup data
  */
 function queue($name, $fields, $from="auto") {
 	global $sb;
-	return $sb->queue($name, $fields, $from);
+	return $sb->db->queue($name, $fields, $from);
 }
 /**
- * @copydoc sb::store_queue
+ * @copydoc db::store_queue
  * @ingroup data
  */
 function store_queue() {
 	global $sb;
-	$sb->store_queue();
+	$sb->db->store_queue();
 }
 /**
  * store only if a record with matching fields does not exist
  * @ingroup data
- * @copydoc sb::store
+ * @copydoc db::store
  */
 function store_once($name, $fields, $from="auto") {
-	global $sb;
 	if (!is_array($fields)) $fields = star($fields);
 	$where = "";
+	$values = array();
 	foreach ($fields as $k => $v) {
 		if (!empty($where)) $where .= " && ";
-		$where .= "$k=".$sb->db->quote($v);
+		$where .= "$k=?";
+		$values[] = $v;
 	}
-	$records = $sb->query($name, "where:$where");
-	if ($sb->record_count == 0) {
-		$err = $sb->store($name, $fields, $from);
-		return $err;
+	$records = query($name, "where:$where", $values);
+	if (sb("record_count") == 0) {
+		store($name, $fields, $from);
 	} else return false;
 }
 /**
- * @copydoc sb::remove
+ * @copydoc db::remove
  * @ingroup data
  */
 function remove($from, $where) {
 	global $sb;
-	return $sb->remove($from, $where);
+	return $sb->db->remove($from, $where);
 }
 ?>

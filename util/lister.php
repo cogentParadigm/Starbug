@@ -48,7 +48,7 @@ class lister {
 	}
 	function query($froms, $args, $mine=false) {
 		global $sb;
-		$this->items($sb->query($froms, $args."  orderby:".$this->ops['orderby'][0], $mine));
+		$this->items(query($froms, $args."  orderby:".$this->ops['orderby'][0], $mine));
 	}
 	function render($tag) {
 		$lsearch = array('[orderby]', '[direction]');

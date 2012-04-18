@@ -7,7 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
-$tables = $sb->db->query("SHOW TABLES LIKE '".Etc::PREFIX."%'")->fetchAll(PDO::FETCH_ASSOC);
+$tables = $sb->db->pdo->query("SHOW TABLES LIKE '".Etc::PREFIX."%'")->fetchAll(PDO::FETCH_ASSOC);
 if (!file_exists(BASE_DIR."/var/dump")) {
 	mkdir(BASE_DIR."/var/dump");
 	chmod(BASE_DIR."/var/dump", 0777);

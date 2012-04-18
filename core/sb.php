@@ -21,14 +21,6 @@ class sb {
 	 */
 	var $db;
 	/**
-	 * @var int holds the number of records returned by last query
-	 */
-	var $record_count;
-	/**
-	 * @var int holds the id of the last inserted record
-	 */
-	var $insert_id;
-	/**
 	 * @var string holds the active scope (usually 'global' or a model name)
 	 */
 	var $active_scope = "global";
@@ -37,10 +29,6 @@ class sb {
 	 */
 	var $provided = array();
 	/**
-	 * @var array holds instantiated models
-	 */
-	var $objects = array();
-	/**
 	 * @var array holds validation errors
 	 */
 	var $errors = array();
@@ -48,6 +36,7 @@ class sb {
 	 * @var array holds alerts
 	 */
 	var $alerts = array();
+	/**#@-*/
 	/**
 	 * @var array holds mixed in objects
 	 */
@@ -56,17 +45,13 @@ class sb {
 	 * @var array holds function names of mixed in objects
 	 */
 	var $imported_functions = array();
-	/**#@-*/
-	/**
-	 * @var array holds records waiting to be stored
-	 */
-	var $to_store = array();
+
 
 	/**
 	 * constructor. connects to db and sets default $_SESSION values
 	 */
 	function __construct() {
-		$this->db = new db('mysql:host='.Etc::DB_HOST.';dbname='.Etc::DB_NAME, Etc::DB_USERNAME, Etc::DB_PASSWORD);
+		$this->db = new db('mysql:host='.Etc::DB_HOST.';dbname='.Etc::DB_NAME, Etc::DB_USERNAME, Etc::DB_PASSWORD, Etc::PREFIX);
 		$this->db->set_debug(true);
 		if (!isset($_SESSION[P('id')])) {
 			$_SESSION[P('id')] = $_SESSION[P('memberships')] = 0;
@@ -101,7 +86,7 @@ class sb {
 			$tags = array(array("slug" => $tags));
 		} else $tags = (isset($request->tags)) ? $request->tags : array(array("slug" => "global"));
 		foreach ($tags as $tag) {
-			foreach (array(BASE_DIR."/core/app/hooks/$tag[slug].$topic.php", BASE_DIR."/app/hooks/$tag[slug].$topic.php") as $hook) if (file_exists($hook)) include($hook);
+			foreach (locate("$tag[slug].$topic.php", "hooks") as $hook) if (file_exists($hook)) include($hook);
 			$subscriptions = (file_exists(BASE_DIR."/etc/hooks/$tag[slug].$topic.json")) ? json_decode(file_get_contents(BASE_DIR."/etc/hooks/$tag[slug].$topic"), true) : array();
 			foreach ($subscriptions as $priority) {
 				foreach($priority as $handle) {
@@ -131,271 +116,7 @@ class sb {
 	 * @return the instantiated model
 	 */
 	function get($name) {
-		$obj = ucwords($name);
-		if (!isset($this->objects[$name])) {
-			include(BASE_DIR."/var/models/".$obj."Model.php");
-			if (file_exists(BASE_DIR."/app/models/$obj.php")) include(BASE_DIR."/app/models/$obj.php");
-			else if (file_exists(BASE_DIR."/core/app/models/$obj.php")) include(BASE_DIR."/core/app/models/$obj.php");
-			else $obj .= "Model";
-			$this->objects[$name] = new $obj($name);
-		}
-		return $this->objects[$name];
-	}
-
-	/**
-	 * check if a model exists
-	 * @param string $name the name of the model
-	 * @return bool true if model exists, false otherwise
-	 */
-	function has($name) {return (($this->objects[$name]) || (file_exists(BASE_DIR."/var/models/".ucwords($name)."Model.php")));}
-
-	/**
-	 * query the database
-	 * @param string $froms comma delimeted list of tables to join. 'users' or 'uris,system_tags'
-	 * @param string $args starbug query string for params: select, where, limit, and action/priv_type
-	 * @param bool $mine optional. if true, joining models will be checked for relationships and ON statements will be added
-	 * @return array record or records
-	 */
-	function query($froms, $args="", $replacements=array()) {
-		$froms = explode(",", $froms);
-		$first = array_shift($froms);
-		$args = star($args);
-		$schema = schema($first);
-		if (!isset($args['search'])) unset($schema['search']);
-		else if (empty($args['search'])) unset($args['search']);
-		foreach ($schema as $k => $v) if (!isset($args[$k]) && is_string($v)) $args[$k] = $v;
-		efault($args['select'], "*");
-		efault($args['join'], "INNER");
-		efault($args['mine'], true);
-		$from = "`".P($first)."` AS `".$first."`";
-		if (!$args['mine']) foreach ($froms as $f) $from .= " $args[join] JOIN `".P($f)."` AS `".$f."`";
-		else if (!empty($froms)) {
-			$relations = $this->get($first)->relations;
-			$last = "";
-			$joined = array();
-			foreach ($froms as $f) {
-				$f = explode(" via ", $f);
-				if (1 == count($f)) {
-					if (isset($relations[$f[0]][$last])) $rel = reset(reset($relations[$f[0]][$last]));
-					else if (isset($relations[$f[0]][$first])) $rel = reset(reset($relations[$f[0]][$first]));
-					else if (isset($relations[$f[0]][$f[0]])) $rel = reset(reset($relations[$f[0]][$f[0]]));
-					else if (isset($relations[$f[0]])) $rel = reset(reset(reset($relations[$f[0]])));
-					else if (!empty($last)) {
-						$set = $this->get($last)->relations;
-						if (isset($set[$f[0]])) $rel = reset(reset(reset($set[$f[0]])));
-					}
-				} else {
-					$parts = explode(" ", $f[1]);
-					$f[1] = $parts[0];
-					$rel = $relations[$f[0]][$f[1]];
-					if (1 == count($parts)) $rel = reset(reset($rel));
-					else if (2 == count($parts)) {
-						$rel = reset($rel);
-						$rel = $rel[$parts[1]];
-					} else $rel = $rel[$parts[1]][$parts[2]];
-				}
-				$last = $f[0];
-				$lookup = $f[1];
-				$f = $f[0];
-				$namejoin = " $args[join] JOIN `".P($f)."` AS `$f`";
-				$joined[] = $f;
-				if (empty($rel)) $from .= $namejoin;
-				else {
-					$namejoin .= " ON ";
-					if ($rel['type'] == "one") $from .= $namejoin."$rel[lookup].$rel[ref]=".(($rel['lookup'] == $f) ? $first : $f).".id";
-					else if ($rel['type'] == "many") {
-						if ($rel['lookup']) {
-							if (false === array_search($rel['lookup'], $joined)) {
-								$from .= " $args[join] JOIN ".P($rel['lookup'])." AS $rel[lookup] ON ".$first.".id=$rel[lookup].$rel[hook]";
-								$joined[] = $rel['lookup'];
-							}
-							$from .= $namejoin." $rel[lookup].$rel[ref]=$f.id";
-						} else {
-							$from .= $namejoin.$first.".id=$f.$rel[hook]";
-						}
-					}
-				}
-			}
-		}
-		foreach ($args as $k => $v) {
-			if (file_exists(BASE_DIR."/app/filters/query/$k.php")) include(BASE_DIR."/app/filters/query/$k.php");
-			else if (file_exists(BASE_DIR."/core/app/filters/query/$k.php")) include(BASE_DIR."/core/app/filters/query/$k.php");
-		}
-		if (!empty($args['where'])) $args['where'] = " WHERE ".$args['where'];
-		$groupby = (!(empty($args['groupby']))) ? " GROUP BY $args[groupby]" : "";
-		$having = (!(empty($args['having']))) ? " HAVING $args[having]" : "";
-		$limit = (!(empty($args['limit']))) ? " LIMIT $args[limit]" : "";
-		$order = (!(empty($args['orderby']))) ? " ORDER BY $args[orderby]" : "";
-		$sql = " FROM $from$args[where]$order$limit";
-		if (isset($args['echo'])) echo "SELECT $args[select] ".$sql;
-		try {
-			$res = $this->db->prepare("SELECT COUNT(*)".$sql);
-			$res->execute($replacements);
-			$this->record_count = $res->fetchColumn();
-			$records = $this->db->prepare("SELECT $args[select] FROM $from$args[where]$groupby$having$order$limit");
-			$records->execute($replacements);
-		} catch(PDOException $e) {
-			die("DB Exception: ".$e->getMessage());
-		}
-		$rows = $records->fetchAll(PDO::FETCH_ASSOC);
-		foreach ($rows as $idx => $row) foreach ($row as $col => $value) $rows[$idx][$col] = stripslashes($value);
-		return ((!empty($args['limit'])) && ($args['limit'] == 1)) ? $rows[0] : $rows;
-	}
-
-	/**
-	 * store data in the database
-	 * @param string $name the name of the table
-	 * @param string/array $fields keypairs of columns/values to be stored
-	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
-	 * @return array validation errors
-	 */
-	function store($name, $fields, $from="auto") {
-		$this->queue($name, $fields, $from);
-		$last = array_pop($this->to_store);
-		$this->to_store = array_merge(array($last), $this->to_store);
-		$this->store_queue();
-	}
-
-	/**
-	 * queue data to be stored in the database pending validation of other data
-	 * @param string $name the name of the table
-	 * @param string/array $fields keypairs of columns/values to be stored
-	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
-	 * @return array validation errors
-	 */
-	function queue($name, $fields, $from="auto") {
-		$oldscope = $this->active_scope;
-		$this->active_scope = $name;
-		$thefilters = ($this->has($name)) ? $this->get($name)->filters : array();
-		$errors = $byfilter = array();
-		$storing = false;
-		if (!is_array($fields)) $fields = star($fields);
-		if ($from == "auto") {
-			if (!empty($fields['id'])) $from = array("id" => $fields['id']);
-		} else if ((false !== $from) && (!is_array($from))) $from = star($from);
-		foreach ($fields as $col => $value) {
-			$errors[$col] = array();
-			$fields[$col] = trim($fields[$col]);
-			$filters = star($thefilters[$col]);
-			foreach($filters as $filter => $args) $byfilter[$filter][$col] = $args;
-			if ($value === "") $errors[$col]["required"] = "This field is required.";
-		}
-		foreach($byfilter as $filter => $args) {
-			$on_store = false;
-			if (file_exists(BASE_DIR."/app/filters/store/$filter.php")) include(BASE_DIR."/app/filters/store/$filter.php");
-			else if (file_exists(BASE_DIR."/core/app/filters/store/$filter.php")) include(BASE_DIR."/core/app/filters/store/$filter.php");
-			if (!$on_store) unset($byfilter[$filter]);
-		}
-		foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
-		$this->to_store[] = array("model" => $name, "fields" => $fields, "from" => $from, "filters" => $byfilter);
-		$this->active_scope = $oldscope;
-	}
-
-	/**
-	 * proccess the queue of data for storage
-	 */
-	function store_queue() {
-		$oldscope = $this->active_scope;
-		foreach ($this->to_store as $store) {
-			$storing = true;
-			$inserting = $updating = false;
-			$name = $this->active_scope = $store['model'];
-			$fields = $store['fields'];
-			$from = $store["from"];
-			$filters = $store["filters"];
-			$errors = $prize = array();
-			if (is_array($from)) {
-				if (!empty($fields['id']) && !empty($from['id'])) unset($fields['id']);
-				$updating = true;
-			} else $inserting = true;
-			foreach ($filters as $filter => $args) {
-				if (file_exists(BASE_DIR."/app/filters/store/$filter.php")) include(BASE_DIR."/app/filters/store/$filter.php");
-				else if (file_exists(BASE_DIR."/core/app/filters/store/$filter.php")) include(BASE_DIR."/core/app/filters/store/$filter.php");
-			}
-			foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
-			if (empty($this->errors)) { //no errors
-				$pre_store_time = date("Y-m-d H:i:s");
-				$fields['modified'] = date("Y-m-d H:i:s");
-				if ($updating) { //updating existing record
-					$setstr = $wherestr = "";
-					foreach($fields as $col => $value) {
-						if ($value == "NULL") $s = "NULL";
-						else {
-							$prize[] = $value;
-							$s = "?";
-						}
-						if(empty($setstr)) $setstr = $col."= $s";
-						else $setstr .= ", ".$col."= $s";
-					}
-					foreach($from as $c => $v) {
-						$prize[] = $v;
-						if (empty($wherestr)) $wherestr = $c." = ?";
-						else $wherestr .= " && ".$c." = ?";
-					}
-					$stmt = $this->db->prepare("UPDATE ".P($name)." SET ".$setstr." WHERE ".$wherestr);
-					$this->record_count = $stmt->execute($prize);
-				} else { //creating new record
-					$fields['created'] = date("Y-m-d H:i:s");
-					if (!isset($fields['owner'])) $fields['owner'] = ($_SESSION[P('id')] > 0) ? $_SESSION[P('id')] : 1;
-					$keys = ""; $values = "";
-					foreach($fields as $col => $value) {
-						if ($value == "NULL") $s = "NULL";
-						else if ($value == "now()") $s = "now()";
-						else {
-							$prize[] = $value;
-							$s = "?";
-						}
-						if(empty($keys)) $keys = $col;
-						else $keys .= ", ".$col;
-						if(empty($values)) $values = "$s";
-						else $values .= ", $s";
-					}
-					$stmt = $this->db->prepare("INSERT INTO ".P($name)." (".$keys.") VALUES (".$values.")");
-					$this->record_count = $stmt->execute($prize);
-					$this->insert_id = $this->db->lastInsertId();
-					$this->get($name)->insert_id = $this->insert_id;
-				}
-				//NOTIFY CLIENTS
-				if (defined("Etc::API_NOTIFIER")) {
-					$this->import("core/ApiRequest");
-					$curl = get_curl();
-					$curl->follow_redirects = false;
-					$subs = $curl->get(Etc::API_NOTIFIER);
-					$subs = json_decode($subs->body, true);
-					if (!is_array($subs)) $subs = array();
-					$result = array();
-					foreach ($subs as $idx => $call) {
-						list($models, $query) = explode("  ", $call, 2);
-						$request = new ApiRequest($models.".json", $query."  log:log.created>='$pre_store_time'  select:log.*", false);
-						if (empty($request->result)) $result[] = '"'.$idx.'":[]';
-						else $result[] = '"'.$idx.'": '.$request->result;
-					}
-					$postdata = array("response" => "{ ".implode(", ", $result)." }");
-					$curl->post(Etc::API_NOTIFIER, $postdata);
-				}
-			}
-		}
-		$this->to_store = array();
-		$this->active_scope = $oldscope;
-	}
-
-	/**
-	 * remove from the database
-	 * @param string $from the name of the table
-	 * @param string $where the WHERE conditions on the DELETE
-	 */
-	function remove($from, $where) {
-		if (!empty($where)) {
-			try {
-				$del = $this->db->prepare("DELETE FROM ".P($from)." WHERE ".$where);
-				$del->execute();
-				$this->record_count = $del->rowCount();
-				return array();
-			} catch(PDOException $e) {
-				error($e->getMessage(), "global", "DB");
-				die("DB Exception: ".$e->getMessage());
-			}
-		}
+		return $this->db->model($name);
 	}
 
 	/**
@@ -404,10 +125,10 @@ class sb {
 	 * @param string $value the function name
 	 */
 	function post_act($key, $value) {
-		if ($object = $this->get($key)) {
+		if ($object = $this->db->model($key)) {
 			$this->active_scope = $key;
-			$permits = isset($_POST[$key]['id']) ? $this->query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : $this->query($key, "action:$value  priv_type:table");
-			if (($this->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $object->$value($_POST[$key]);
+			$permits = isset($_POST[$key]['id']) ? $this->db->query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : $this->db->query($key, "action:$value  priv_type:table");
+			if (($this->db->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $object->$value($_POST[$key]);
 			else error("You do not have sufficient permission to complete your request.");
 			$this->active_scope = "global";
 			if (!empty($this->errors[$key])) {
@@ -436,7 +157,7 @@ class sb {
 			"related_id" 		=> "default:0"
 		);
 		$permit['related_table'] = P($table);
-		return $this->store("permits", $permit, $filters);
+		return store("permits", $permit, $filters);
 	}
 	
 	/**

@@ -18,6 +18,10 @@
  */
 class Table {
 	/**
+	 * @var db the db object
+	 */
+	var $db;
+	/**
 	 * @var string The unprefixed table name
 	 */
 	var $type;
@@ -51,7 +55,8 @@ class Table {
 	 * @param string $type the un-prefixed table name
 	 * @param array $filters the column filters
 	 */
-	function __construct($type, $filters=array()) {
+	function __construct($db, $type, $filters=array()) {
+		$this->db = $db;
 		$this->type = $type;
 		if (!isset($this->filters)) $this->filters = $filters;
 		$this->imported = array();
@@ -100,28 +105,24 @@ class Table {
 
 
 	protected function store($arr, $from="auto") {
-		global $sb;
-		$sb->store($this->type, $arr, $from);
+		$this->db->store($this->type, $arr, $from);
 	}
 
 	protected function remove($where) {
-		global $sb;
-		return $sb->remove($this->type, $where);
+		return $this->db->remove($this->type, $where);
 	}
 
 	function query($args="", $froms="", $replacements=array()) {
-		global $sb;
 		if (is_array($froms)) {
 			$replacements = $froms;
 			$froms = "";
 		}
-		$records = $sb->query($this->type.((empty($froms)) ? "" : ",".$froms), $args, $replacements);
-		$this->record_count = $sb->record_count;
+		$records = $this->db->query($this->type.((empty($froms)) ? "" : ",".$froms), $args, $replacements);
+		$this->record_count = $this->db->record_count;
 		return $records;
 	}
 
 	function id_list($top, $role) {
-		global $sb;
 		$prefix = array($top);
 		$children = $this->query("where:$role=$top");
 		if (!empty($children)) foreach($children as $kid) $prefix = array_merge($prefix, $this->id_list($kid['id'], $role));
