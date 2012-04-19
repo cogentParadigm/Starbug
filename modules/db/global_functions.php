@@ -12,6 +12,10 @@
  * global functions
  * @ingroup global
  */
+// include the db class
+include(dirname(__FILE__)."/classes/db.php");
+// include the Table class
+include(dirname(__FILE__)."/classes/Table.php");
 /**
  * get single records or columns
  * @ingroup data

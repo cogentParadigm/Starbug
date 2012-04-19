@@ -30,7 +30,8 @@ function import($util, $module="util") {
  * @TODO allow boolean return
  */
 function locate($file, $dir="templates") {
-	$path = $dir."/".$file;
+	if (!empty($dir)) $dir .= "/";
+	$path = $dir.$file;
 	if (is_cached($path)) return json_decode(cache($path));
 	else {
 		$paths = array();

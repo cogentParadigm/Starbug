@@ -11,8 +11,6 @@
  * the db class
  * @ingroup db
  */
-$sb->import("core/db/Migration");
-$sb->provide("core/db/Schemer");
 /**
  * The Schemer class. Manages a schema of the database using migrations and handles synching a database with the schema
  * @ingroup Schemer

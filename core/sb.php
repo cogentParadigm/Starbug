@@ -78,7 +78,7 @@ class sb {
 	 * @param mixed $args any additional parameters will be passed in an array to the subscriber
 	 */
 	function publish($topic, $args=null) {
-		global $request;
+		global $request; global $sb;
 		$return = array();
 		$args = func_get_args();
 		if (false !== strpos($topic, ".")) {

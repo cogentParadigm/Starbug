@@ -15,16 +15,8 @@
 	include(BASE_DIR."/etc/Etc.php");
 	// include init file
 	include(BASE_DIR."/core/init.php");
-	// include Schemer
-	include(BASE_DIR."/core/db/Schemer.php");
 
 	$sb->import("util/cli");
 
-	/**
-	 * global instance of the Schemer
-	 * @ingroup global
-	 */
-	global $schemer;
-	$schemer = new Schemer($sb->db);
-	$schemer->fill();
+	$sb->publish("cli.init");
 ?>

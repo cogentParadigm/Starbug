@@ -1,5 +1,6 @@
 //List modules here to enable them
 [
+	"db",
 	"files",
 	"comments"
 ]

@@ -19,7 +19,6 @@
 	include("core/global/strings.php");
 	include("core/global/users.php");
 	include("core/global/routing.php");
-	include("core/global/data.php");
 	include("core/global/errors.php");
 	include("core/global/taxonomy.php");
 	include("core/global/templates.php");

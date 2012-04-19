@@ -10,14 +10,11 @@
 if (defined("Etc::TIME_ZONE")) date_default_timezone_set(Etc::TIME_ZONE);
 error_reporting(E_ALL ^ E_NOTICE);
 
-// include global functions
+// include core global functions
 include(BASE_DIR."/core/global_functions.php");
 
-// include the db class
-include(BASE_DIR."/core/db/db.php");
-
-// include the Table class
-include(BASE_DIR."/core/db/Table.php");
+// include module global functions
+foreach (locate("global_functions.php", "") as $global_include) include($global_include);
 
 // include the sb class
 include(BASE_DIR."/core/sb.php");
@@ -45,4 +42,6 @@ $statuses = config("statuses");
 
 if (!is_array($autoload)) include(BASE_DIR."/etc/autoload.php");
 if (!empty($autoload)) call_user_func_array(array($sb, "import"), $autoload);
+
+$sb->publish("init");
 ?>
