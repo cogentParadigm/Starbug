@@ -823,7 +823,7 @@ class Schemer {
 			efault($field[$field['input_type']], "");
 			foreach ($field as $k => $v) {
 				//if (("references" == $k) && (false === strpos($v, $model))) $data["fields"][$name]["references"] = $v;
-				if (file_exists(BASE_DIR."/app/filters/store/$k.php") || file_exists(BASE_DIR."/core/app/filters/store/$k.php")) $data["fields"][$name]["filters"][$k] = $v;
+				if (!empty(locate("store/$k.php", "filters")) $data["fields"][$name]["filters"][$k] = $v;
 				else $data["fields"][$name][$k] = $v;
 			}
 		}
