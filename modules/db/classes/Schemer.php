@@ -68,7 +68,9 @@ class Schemer {
 	 */
 	function __construct($data) {
 		$this->db = $data;
-		$this->migrations = array_merge(array("core/app"), config("modules"), array("app"));
+		$this->migrations = config("modules");
+		foreach ($this->migrations as $i => $m) $this->migrations[$i] = "modules/".$m;
+		$this->migrations = array_merge(array("core/app"), $this->migrations, array("app"));
 	}
 
 	function  clean() {
