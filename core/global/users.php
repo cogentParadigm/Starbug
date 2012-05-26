@@ -19,7 +19,7 @@
  */
 function logged_in($group="") {
 	global $groups;
-	return ((empty($group) && (!empty($_SESSION[P('id')]))) || ($_SESSION[P('memberships')] & $groups[$group]));
+	return ((empty($group) && (!empty($_SESSION[P('id')]))) || (!empty($group) && $_SESSION[P('memberships')] & $groups[$group]));
 }
 /**
  * get user info
