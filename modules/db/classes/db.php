@@ -112,7 +112,7 @@ class db {
 					//get file contents
 					$contents = file_get_contents($models[$i]);
 					//make class name unique and extend the previous class
-					$class = str_replace(array(BASE_DIR.'/', '/'), array('', '_'), reset(explode('/models/', $models[$i])))."_$class";
+					$class = str_replace(array(BASE_DIR.'/', '/'), array('', '_'), reset(explode('/models/', $models[$i])))."__$class";
 					$replace = "class $class extends $last {";
 					//replace and eval
 					eval('?>'.str_replace($search, $replace, $contents));

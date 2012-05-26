@@ -25,14 +25,14 @@ body {
 }
 
 h1 {
-	font: normal 18pt "Verdana";
-	color: #f00;
+	font: normal 13pt "Verdana";
+	color: #C00;
 	margin-bottom: .5em;
 }
 
 h2 {
-	font: normal 14pt "Verdana";
-	color: #800000;
+	font: normal 12pt "Verdana";
+	color: #C00;
 	margin-bottom: .5em;
 }
 
@@ -155,88 +155,13 @@ pre span.error-ln {
 /*]]>*/
 </style>
 </head>
-<?php
-	function render_source($file, $line, $max) {
-		$line--;	// adjust line number to 0-based from 1-based
-		if($line<0 || ($lines=@file($file))===false || ($count=count($lines))<=$line) return '';
-
-		$half = (int)($max/2);
-		$start = ($line-$half>0) ? $line-$half : 0;
-		$end = ($line+$half<$count) ? $line+$half : $count-1;
-		$lineNumberWidth = strlen($end+1);
-
-		$output='';
-		for($i=$start;$i<=$end;++$i)
-		{
-			$isline = $i===$line;
-			$code=sprintf("<span class=\"ln".($isline?' error-ln':'')."\">%0{$lineNumberWidth}d</span> %s",$i+1,htmlentities(str_replace("\t",'    ',$lines[$i])));
-			if(!$isline)
-				$output.=$code;
-			else
-				$output.='<span class="error">'.$code.'</span>';
-		}
-		return '<div class="code"><pre>'.$output.'</pre></div>';
-	}
-	function argumentsToString($args) {
-		$count=0;
-
-		$isAssoc=$args!==array_values($args);
-
-		foreach($args as $key => $value)
-		{
-			$count++;
-			if($count>=5)
-			{
-				if($count>5)
-					unset($args[$key]);
-				else
-					$args[$key]='...';
-				continue;
-			}
-
-			if(is_object($value))
-				$args[$key] = get_class($value);
-			else if(is_bool($value))
-				$args[$key] = $value ? 'true' : 'false';
-			else if(is_string($value))
-			{
-				if(strlen($value)>64)
-					$args[$key] = '"'.substr($value,0,64).'..."';
-				else
-					$args[$key] = '"'.$value.'"';
-			}
-			else if(is_array($value))
-				$args[$key] = 'array('.argumentsToString($value).')';
-			else if($value===null)
-				$args[$key] = 'null';
-			else if(is_resource($value))
-				$args[$key] = 'resource';
-
-			if(is_string($key))
-			{
-				$args[$key] = '"'.$key.'" => '.$args[$key];
-			}
-			else if($isAssoc)
-			{
-				$args[$key] = $key.' => '.$args[$key];
-			}
-		}
-		$out = implode(", ", $args);
-
-		return $out;
-	}
-?>
 <body>
 <div class="container">
-	<h1>Exception</h1>
-
-	<p class="message">
-		<?php echo nl2br(htmlspecialchars($error['message'], ENT_QUOTES)); ?>
-	</p>
+	<h1><?php echo nl2br(htmlspecialchars($error['message'], ENT_QUOTES)); ?></h1>
 
 	<div class="source">
 		<p class="file"><?php echo htmlspecialchars($error['file'], ENT_QUOTES)."(".$error['line'].")"?></p>
-		<?php echo render_source($error['file'], $error['line'], 10); ?>
+		<?php echo ErrorHandler::render_source($error['file'], $error['line'], 10); ?>
 	</div>
 
 	<div class="traces">
@@ -245,9 +170,10 @@ pre span.error-ln {
 		<table style="width:100%;">
 		<?php foreach ($error['traces'] as $n => $trace) { ?>
 		<?php
-			if (false !== strpos($trace['file'], "/core/")) $cssClass='core collapsed';
-			else if(++$count>3) $cssClass='app collapsed';
-			else $cssClass='app expanded';
+			if (false !== strpos($trace['file'], "/core/")) {
+			 if (false == strpos($trace['file'], "/core/app/")) $cssClass = 'core collapsed';
+			 else $cssClass = 'core expanded';
+			} else $cssClass = 'app expanded';
 			$hasCode = $trace['file']!=='unknown' && is_file($trace['file']);
 		?>
 		<tr class="trace <?php echo $cssClass; ?>">
@@ -263,17 +189,17 @@ pre span.error-ln {
 					<?php
 						echo '&nbsp;';
 						echo htmlspecialchars($trace['file'])."(".$trace['line'].")";
-						echo ': ';
-						if(!empty($trace['class']))
-							echo "<strong>{$trace['class']}</strong>{$trace['type']}";
-						echo "<strong>{$trace['function']}</strong>(";
-						if(!empty($trace['args']))
-							echo htmlspecialchars(argumentsToString($trace['args']));
-						echo ')';
+						if (isset($trace['function'])) {
+							echo ': ';
+							if(!empty($trace['class'])) echo "<strong>{$trace['class']}</strong>{$trace['type']}";
+							echo "<strong>{$trace['function']}</strong>(";
+							if(!empty($trace['args'])) echo htmlspecialchars(ErrorHandler::argumentsToString($trace['args']));
+							echo ')';
+						}
 					?>
 				</div>
 
-				<?php if($hasCode) echo render_source($trace['file'], $trace['line'], 10); ?>
+				<?php if($hasCode) echo ErrorHandler::render_source($trace['file'], $trace['line'], 10); ?>
 			</td>
 		</tr>
 		<?php } ?>

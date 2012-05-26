@@ -30,6 +30,10 @@ class Renderer {
 	 * @var string relative path from the view directory without file extension
 	 */	
 	var $path = "";
+	/**
+	 * @var array eval stack for error handling
+	 */
+	 var $stack = array();
 
 	/**
 	 * constructor. initializes variables
@@ -88,6 +92,7 @@ class Renderer {
 		extract($this->vars);
 		//render target
 		if (file_exists($filename)) {
+			$this->stack[] = $filename;
 			$output = file_get_contents($filename);
 			$output = str_replace(array("<? ", "<?\n", "<?="), array("<?php ", "<?php\n", "<?php echo"), $output);
 			eval("?>".$output);
