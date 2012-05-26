@@ -143,6 +143,7 @@ class Request {
 	 * calls $sb to to check for any post actions, runs locate, and loads the requested file
 	 */
 	public function execute() {
+		ob_start();
 		global $sb;
 		global $request;
 		$sb->check_post();
@@ -152,6 +153,7 @@ class Request {
 			render($_GET['template'], $_GET['scope']);
 		} else if (!empty($this->payload['template'])) render($this->payload['template']);
 		else render($this->format);
+		ob_end_flush();
 	}
 
 	/**

@@ -51,6 +51,8 @@ class sb {
 	 * constructor. connects to db and sets default $_SESSION values
 	 */
 	function __construct() {
+		set_exception_handler(array($this,'handle_exception'));
+		set_error_handler(array($this,'handle_error'), error_reporting());
 		$this->db = new db('mysql:host='.Etc::DB_HOST.';dbname='.Etc::DB_NAME, Etc::DB_USERNAME, Etc::DB_PASSWORD, Etc::PREFIX);
 		$this->db->set_debug(true);
 		if (!isset($_SESSION[P('id')])) {
@@ -102,7 +104,7 @@ class sb {
 	 * import function. only imports once when used with provide
 	 * @param string $loc path of file to import without '.php' at the end
 	 */
-	function import($loc) {global $sb; $args = func_get_args(); foreach($args as $l) if (!$this->provided[$l]) include(BASE_DIR."/".$l.".php");}
+	function import($loc) {global $sb; $args = func_get_args(); foreach($args as $l) if (!isset($this->provided[$l])) include(BASE_DIR."/".$l.".php");}
 
 	/**
 	 * when imported use provide to prevent further imports from attempting to include it again
@@ -142,22 +144,18 @@ class sb {
 	 * check $_POST['action'] for posted actions and run them through post_act
 	 */
 	function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_act($key, $val);}
-
+	
 	/**
-	 * grant permissions
-	 * @param string $table the table on which to apply the permit
-	 * @param array $permit the permit record
-	 * @return errors array
+	 * exception handler
 	 */
-	function grant($table, $permit) {
-		$filters = array(
-			"priv_type" 		=> "default:table",
-			"who" 					=> "default:0",
-			"status" 				=> "default:0",
-			"related_id" 		=> "default:0"
-		);
-		$permit['related_table'] = P($table);
-		return store("permits", $permit, $filters);
+	public function handle_exception($exception) {
+		$this->import("core/lib/ErrorHandler");
+		ErrorHandler::handle_exception($exception);
+	}
+	
+	function handle_error($errno, $errstr, $errfile, $errline) {
+		$this->import("core/lib/ErrorHandler");
+		ErrorHandler::handle_error($errno, $errstr, $errfile, $errline);
 	}
 	
 	/**
