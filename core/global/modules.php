@@ -35,13 +35,13 @@ function locate($file, $dir="templates") {
 	if (is_cached($path)) return json_decode(cache($path));
 	else {
 		$paths = array();
-		$modules = config("modules");
+		$modules = array_reverse(config("modules"));
 		global $request;
 		if ($request) $theme = request("theme");
 		efault($theme, Etc::THEME);
 		if (file_exists(BASE_DIR."/app/$path")) $paths[] = BASE_DIR."/app/$path";
-		foreach ($modules as $module) if (file_exists(BASE_DIR."/modules/$module/$path")) $paths[] = BASE_DIR."/modules/$module/$path";
 		if (file_exists(BASE_DIR."/app/themes/$theme/$path")) $paths[] = BASE_DIR."/app/themes/$theme/$path";
+		foreach ($modules as $module) if (file_exists(BASE_DIR."/modules/$module/$path")) $paths[] = BASE_DIR."/modules/$module/$path";
 		if (file_exists(BASE_DIR."/core/app/$path")) $paths[] = BASE_DIR."/core/app/$path";
 		cache($path, json_encode($paths));
 		return $paths;

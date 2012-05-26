@@ -3,7 +3,7 @@
  * options model
  * @ingroup models
  */
-class Options extends OptionsModel {
+class Options {
 
 	function create($options) {
 		efault($options['seo_hide'], 0);

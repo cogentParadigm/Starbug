@@ -3,7 +3,7 @@
  * Users model
  * @ingroup models
  */
-class Users extends UsersModel {
+class Users {
 	/**
 	 * A function for an administrator to create and update users
 	 */

@@ -58,7 +58,11 @@ class Renderer {
 	 * @param string $value variable value
 	 */
 	function assign($key, $value) {
-		$this->vars[$key] = $value;
+		$args = func_get_args();
+		if (count($args) == 1) {
+			$args = star($args[0]);
+			foreach ($args as $k => $v) $this->vars[$k] = $v;
+		} else $this->vars[$key] = $value;
 	}
 	/**
 	 * render a template
@@ -67,10 +71,19 @@ class Renderer {
 	function render($paths=array(""), $scope="") {
 		global $sb;
 		global $request;
-		//resolve path
-		if (!is_array($paths)) $paths = array($paths);
-		$this->path = reset($paths);
-		while (!file_exists($filename = $this->get_path($this->path, $scope)) && $this->path) $this->path = next($paths);
+		efault($scope, "templates");
+		if ($scope == "views" && empty($paths)) $filename = request("file");
+		else {
+			//resolve path
+			if (!is_array($paths)) $paths = array($paths);
+			$this->path = reset($paths);
+			$found = array();
+			while(empty($found) && $this->path) {
+				$found = locate($this->path.".php", $scope);
+				$this->path = next($paths);
+			}
+			$filename = reset($found);
+		}
 		//extract vars
 		extract($this->vars);
 		//render target

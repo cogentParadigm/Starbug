@@ -1,5 +1,5 @@
 <?php
-class Files extends FilesModel {
+class Files {
 
 	function create($record) {
 		$this->upload($record, $_FILES['file']);

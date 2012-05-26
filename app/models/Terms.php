@@ -3,7 +3,7 @@
  * terms model
  * @ingroup models
  */
-class Terms extends TermsModel {
+class Terms {
 
 	function create($term) {
 		$term['term'] = normalize($term['term']);

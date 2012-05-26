@@ -3,7 +3,7 @@
  * menus model
  * @ingroup models
  */
-class Menus extends MenusModel {
+class Menus {
 
 	function create($menu) {
 		$this->store($menu);

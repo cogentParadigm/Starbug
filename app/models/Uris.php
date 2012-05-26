@@ -1,7 +1,8 @@
 <?php
-class Uris extends UrisModel {
+class Uris {
 
 	function create($uris) {
+		throw new Exception("create");
 		if ($uris['type'] != "View" && $uris['type'] != $_POST['type']) {
 			$uris['layout'] = $uris['type'];
 			$uris['type'] = $_POST['type'];
