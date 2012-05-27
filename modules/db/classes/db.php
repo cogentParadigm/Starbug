@@ -103,7 +103,7 @@ class db {
 				$last = $class."Model";
 				
 				//get additional models
-				$models = array_reverse(locate("$class.php", "models"));
+				$models = locate("$class.php", "models");
 				$count = count($models);
 				$search = "class $class {";
 				

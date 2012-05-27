@@ -86,7 +86,7 @@ class Renderer {
 				$found = locate($this->path.".php", $scope);
 				$this->path = next($paths);
 			}
-			$filename = reset($found);
+			$filename = end($found);
 		}
 		//extract vars
 		extract($this->vars);

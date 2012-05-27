@@ -22,24 +22,21 @@ class Users {
 			$result = exec("sb email account_created $uid $user[password]");
 		}
 	}
+
 	/**
 	 * A function for new users to register themselves
 	 */
 	function register() {
 
 	}
+
 	/**
 	 * A function for current users to update their profile
 	 */
 	function update_profile($user) {
 		return $this->store($user);
 	}
-	/**
-	 * A function to delete users
-	 */
-	function delete($user) {
-		return $this->remove("id=".$user['id']);
-	}
+
 	/**
 	 * A function for logging in
 	 */

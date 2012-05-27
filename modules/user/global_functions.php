@@ -3,7 +3,7 @@
 # Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP
- * @file core/global/users.php
+ * @file modules/users/global_functions.php
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup users
  */

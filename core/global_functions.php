@@ -17,7 +17,6 @@
 	include("core/global/cache.php");
 	include("core/global/modules.php");
 	include("core/global/strings.php");
-	include("core/global/users.php");
 	include("core/global/routing.php");
 	include("core/global/errors.php");
 	include("core/global/taxonomy.php");
@@ -25,6 +24,8 @@
 	include("core/global/images.php");
 	include("core/global/forms.php");
 	include("core/global/dojo.php");
-
+	
+	// include module global functions
+	foreach (locate("global_functions.php", "") as $global_include) include($global_include);
 
 ?>

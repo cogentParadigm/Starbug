@@ -14,18 +14,8 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
 // include the sb class
 include(BASE_DIR."/core/sb.php");
 
-// include core global functions
+// load global functions
 include(BASE_DIR."/core/global_functions.php");
-
-// include module global functions
-foreach (locate("global_functions.php", "") as $global_include) include($global_include);
-
-/**
- * global instance of the sb class
- * @ingroup global
- */
-global $sb;
-$sb = new sb();
 
 /**
  * list of groups from etc/groups.json
@@ -41,8 +31,11 @@ $groups = config("groups");
 global $statuses;
 $statuses = config("statuses");
 
-if (!isset($autoload) || is_array($autoload)) include(BASE_DIR."/etc/autoload.php");
-if (!empty($autoload)) call_user_func_array(array($sb, "import"), $autoload);
+/**
+ * global instance of the sb class
+ * @ingroup global
+ */
+global $sb;
+$sb = new sb();
 
-$sb->publish("init");
 ?>
