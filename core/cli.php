@@ -15,8 +15,11 @@
 	include(BASE_DIR."/etc/Etc.php");
 	// include init file
 	include(BASE_DIR."/core/init.php");
-
+	//restore error handlers
+	restore_error_handler();
+	restore_exception_handler();
+	//import cli utils
 	$sb->import("util/cli");
-
+	//publish cli init hook
 	$sb->publish("cli.init");
 ?>
