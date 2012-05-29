@@ -139,8 +139,6 @@ $this->permit("users::reset_password", "everyone:table");
 $this->permit("menus::add_uri", "admin:global");
 // TERM PERMITS
 $this->permit("terms::delete_taxonomy", "admin:table");
-//FILE PERMITS
-$this->permit("files::prepare", "admin:table");
 
 //LOGGING TABLES
 //ERROR LOG

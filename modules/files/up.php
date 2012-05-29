@@ -6,6 +6,10 @@ $this->table("files  list:all",
 	"caption  type:string  length:255",
 	"directory  type:int  default:1  display:false"
 );
+
 //add file attachments to terms
 $this->column("terms", "attachment  type:int  upload:term_attachment  null:  references:files id");
+
+//file permits - only prepare should be called directly
+$this->permit("files::prepare", "admin:table");
 ?>
