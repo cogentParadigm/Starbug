@@ -36,27 +36,6 @@ class Renderer {
 	 var $stack = array();
 
 	/**
-	 * constructor. initializes variables
-	 * @param string $prefix the view directory
-	 * @param string $path relative path from the view directory without file extension
-	 */
-	function __construct($prefix="app/", $path="") {
-		$this->prefix = $prefix;
-		$this->path = $path;
-	}
-	/**
-	 * get full path
-	 * @param string $path variable name
-	 */
-	function get_path($path, $scope="") {
-		efault($scope, "templates");
-		if ($scope == "views" && empty($path)) return request("file");
-		$path = $scope."/".$path.".php";
-		if (file_exists($this->prefix.$path)) return $this->prefix.$path;
-		else if (file_exists("app/themes/".request("theme")."/".$path)) return "app/themes/".request("theme")."/".$path;
-		else return "core/".$this->prefix.$path;
-	}
-	/**
 	 * assign a variable
 	 * @param string $key variable name
 	 * @param string $value variable value
@@ -77,12 +56,14 @@ class Renderer {
 		global $request;
 		efault($scope, "templates");
 		if ($scope == "views" && empty($paths)) $filename = request("file");
+		else if (!empty($this->prefix)) $filename = BASE_DIR."/".$this->prefix.$scope."/".$paths.".php";
 		else {
 			//resolve path
 			if (!is_array($paths)) $paths = array($paths);
 			$this->path = reset($paths);
 			$found = array();
 			while(empty($found) && $this->path) {
+				
 				$found = locate($this->path.".php", $scope);
 				$this->path = next($paths);
 			}
