@@ -35,6 +35,8 @@ foreach ($argv as $i => $arg) {
 
 //SET VARS FOR GENERATOR 
 $model_name = $model;
+$app_dir = "app/";
+if (!empty($args['module'])) $app_dir = "modules/".$args['module'];
 $dirs = array(); $generate = array(); $copy = array();
 
 global $renderer;
