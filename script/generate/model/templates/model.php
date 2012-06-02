@@ -3,14 +3,10 @@
  * <?= $name; ?> model
  * @ingroup models
  */
-class <?= ucwords($name); ?> extends <?= ucwords($name); ?>Model {
+class <?= ucwords($name); ?> {
 
 	function create($<?= $singular; ?>) {
 		$this->store($<?= $singular; ?>);
-	}
-
-	function delete($<?= $singular; ?>) {
-		return $this->remove('id='.$<?= $singular; ?>['id']);
 	}
 
 }
