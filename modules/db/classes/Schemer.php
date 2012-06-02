@@ -390,6 +390,7 @@ class Schemer {
 		else if (($field['type'] == 'text') || ($field['type'] == 'longtext')) $type = $field["type"];
 		else if ($field['type'] == 'int' || $field['type'] == 'category') $type = "int(".(isset($field['length'])?$field['length']:"11").")";
 		else if ($field['type'] == 'decimal') $type = "decimal(".$field['length'].")";
+		else if ($field['type'] == 'double') $type = "double(".$field['length'].")";
 		else if ($field['type'] == 'bool') $type = "tinyint(1)";
 		else if (($field['type'] == 'datetime') || ($field['type'] == 'timestamp')) $type = "datetime";
 		$type .= ((isset($field['null'])) ? " NULL" : " NOT NULL")
