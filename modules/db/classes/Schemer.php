@@ -301,7 +301,7 @@ class Schemer {
 					$primary_fields .= $field_sql;
 				} else $sql_fields .= $field_sql;
 				if (isset($options['index'])) $index[] = $fieldname;
-				if (!empty($options['references'])) {
+				if (!empty($options['references']) && $options['constraint'] != "false") {
 					$ref = explode(" ", $options['references']);
 					$rec = array("table" => $ref[0], "column" => $ref[1]);
 					if (!empty($options['update'])) $rec['update'] = $options['update'];
