@@ -393,6 +393,7 @@ class Schemer {
 		else if ($field['type'] == 'double') $type = "double(".$field['length'].")";
 		else if ($field['type'] == 'bool') $type = "tinyint(1)";
 		else if (($field['type'] == 'datetime') || ($field['type'] == 'timestamp')) $type = "datetime";
+		else if (!empty($field['type'])) $type = $field['type'];
 		$type .= ((isset($field['null'])) ? " NULL" : " NOT NULL")
 						.((isset($field['unsigned'])) ? " UNSIGNED" : "")
 						.((isset($field['zerofill'])) ? " ZEROFILL" : "")
