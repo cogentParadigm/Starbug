@@ -93,6 +93,13 @@
 				]);
 			</script>
 		<?php } ?>
+		<?php
+			$scripts = theme("scripts", $request->theme);
+			efault($scripts, array());
+		?>
+		<?php foreach ($scripts as $script) { ?>
+			<script type="text/javascript" src="<?php echo uri("app/themes/".$request->theme."/public/js/$script"); ?>"></script>	
+		<?php } ?>
 	<?php } ?>
 	<script type="text/javascript">
 		var WEBSITE_URL = '<?php echo uri(); ?>';
