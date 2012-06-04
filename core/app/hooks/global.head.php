@@ -6,70 +6,68 @@
 		<?php if (!empty($request->payload['canonical'])) { ?><link rel="canonical" href="<?php echo $request->payload['canonical']; ?>"/><?php } ?>
 		<?php echo option("meta"); ?>
 	<?php if (Etc::ENVIRONMENT == "production") { ?>
-		<?php if (Etc::BLUEPRINT_ENABLED) { ?>
 			<link rel="stylesheet" href="<?php echo uri("var/public/stylesheets/".$request->theme."-screen.css"); ?>" type="text/css" media="screen, projection">
 			<link rel="stylesheet" href="<?php echo uri("var/public/stylesheets/".$request->theme."-print.css"); ?>" type="text/css" media="print">
 			<!--[if IE]><link rel="stylesheet" href="<?php echo uri("var/public/stylesheets/".$request->theme."-ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
-		<?php } ?>
-		<?php if (Etc::DOJO_ENABLED) { ?>
-			<script type="text/javascript" src="<?php echo uri("core/app/public/js/dojo/release/dojo/dojo/dojo.js"); ?>" data-dojo-config="parseOnLoad: true"></script>
-		<?php } ?>
 			<!--[if lt IE 9]>
 				<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 			<![endif]-->
+		<?php if (Etc::DOJO_ENABLED) { ?>
+			<script type="text/javascript" src="<?php echo uri("core/app/public/js/dojo/release/dojo/dojo/dojo.js"); ?>" data-dojo-config="parseOnLoad: true"></script>
+		<?php } ?>
 	<?php } else { ?>
-		<?php if (Etc::BLUEPRINT_ENABLED) { ?>
 			<?php
 				$css = config("css");
-				$bp = theme("styles", $request->theme);
-				efault($bp['plugins'], array());
-				efault($bp['screen'], array());
-				efault($bp['print'], array());
-				efault($bp['ie'], array());
+				$styles = theme("styles", $request->theme);
+				efault($styles['plugins'], array());
+				efault($styles['screen'], array());
+				efault($styles['print'], array());
+				efault($styles['ie'], array());
 			?>
+		<?php if (Etc::BLUEPRINT_ENABLED) { ?>
 			<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/reset.css"); ?>" type="text/css" media="screen, projection">
 			<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/typography.css"); ?>" type="text/css" media="screen, projection">
 			<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/forms.css"); ?>" type="text/css" media="screen, projection">
 			<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/grid.css"); ?>" type="text/css" media="screen, projection">
-			<?php if (file_exists(BASE_DIR."/app/themes/".$request->theme."/public/stylesheets/custom-screen.css")) { ?>
-				<link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/custom-screen.css"); ?>" type="text/css" media="screen, projection">
-			<?php } ?>
-			<?php if (file_exists(BASE_DIR."/app/themes/".$request->theme."/public/stylesheets/custom-print.css")) { ?>
-				<link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/custom-print.css"); ?>" type="text/css" media="print">
-			<?php } ?>
-			<?php if (file_exists(BASE_DIR."/app/themes/".$request->theme."/public/stylesheets/custom-ie.css")) { ?>
-				<!--[if IE]><link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/custom-ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
-			<?php } ?>
-			<?php foreach ($bp['screen'] as $screen) { ?>
-				<link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/$screen"); ?>" type="text/css" media="screen, projection">
-			<?php } ?>
-			<?php foreach ($css['screen'] as $screen) { ?>
-				<link rel="stylesheet" href="<?php echo uri("app/public/stylesheets/$screen"); ?>" type="text/css" media="screen, projection">
-			<?php } ?>
-			<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/print.css"); ?>" type="text/css" media="print">
-			<?php foreach ($bp['print'] as $print) { ?>
-				<link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/styesheets/$print"); ?>" type="text/css" media="print">
-			<?php } ?>
-			<?php foreach ($css['print'] as $print) { ?>
-				<link rel="stylesheet" href="<?php echo uri("app/public/styesheets/$print"); ?>" type="text/css" media="print">
-			<?php } ?>
-			<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
-			<?php foreach ($bp['ie'] as $ie) { ?>
-				<!--[if IE]><link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/$ie"); ?>" type="text/css" media="screen, projection"><![endif]-->
-			<?php } ?>
-			<?php foreach ($css['ie'] as $ie) { ?>
-				<!--[if IE]><link rel="stylesheet" href="<?php echo uri("app/public/stylesheets/$ie"); ?>" type="text/css" media="screen, projection"><![endif]-->
-			<?php } ?>
-			<?php foreach ($bp['plugins'] as $plugin) { ?>
-					<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/screen.css"); ?>" type="text/css" media="screen, projection">
-					<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/print.css"); ?>" type="text/css" media="print">
-					<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
-			<?php } ?>
-			<?php foreach ($css['plugins'] as $plugin) { ?>
-					<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/screen.css"); ?>" type="text/css" media="screen, projection">
-					<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/print.css"); ?>" type="text/css" media="print">
-					<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
-			<?php } ?>
+		<?php } ?>
+		<?php if (file_exists(BASE_DIR."/app/themes/".$request->theme."/public/stylesheets/custom-screen.css")) { ?>
+			<link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/custom-screen.css"); ?>" type="text/css" media="screen, projection">
+		<?php } ?>
+		<?php if (file_exists(BASE_DIR."/app/themes/".$request->theme."/public/stylesheets/custom-print.css")) { ?>
+			<link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/custom-print.css"); ?>" type="text/css" media="print">
+		<?php } ?>
+		<?php if (file_exists(BASE_DIR."/app/themes/".$request->theme."/public/stylesheets/custom-ie.css")) { ?>
+			<!--[if IE]><link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/custom-ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
+		<?php } ?>
+		<?php foreach ($styles['screen'] as $screen) { ?>
+			<link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/$screen"); ?>" type="text/css" media="screen, projection">
+		<?php } ?>
+		<?php foreach ($css['screen'] as $screen) { ?>
+			<link rel="stylesheet" href="<?php echo uri("app/public/stylesheets/$screen"); ?>" type="text/css" media="screen, projection">
+		<?php } ?>
+		<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/print.css"); ?>" type="text/css" media="print">
+		<?php foreach ($styles['print'] as $print) { ?>
+			<link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/styesheets/$print"); ?>" type="text/css" media="print">
+		<?php } ?>
+		<?php foreach ($css['print'] as $print) { ?>
+			<link rel="stylesheet" href="<?php echo uri("app/public/styesheets/$print"); ?>" type="text/css" media="print">
+		<?php } ?>
+		<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
+		<?php foreach ($styles['ie'] as $ie) { ?>
+			<!--[if IE]><link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/$ie"); ?>" type="text/css" media="screen, projection"><![endif]-->
+		<?php } ?>
+		<?php foreach ($css['ie'] as $ie) { ?>
+			<!--[if IE]><link rel="stylesheet" href="<?php echo uri("app/public/stylesheets/$ie"); ?>" type="text/css" media="screen, projection"><![endif]-->
+		<?php } ?>
+		<?php foreach ($styles['plugins'] as $plugin) { ?>
+				<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/screen.css"); ?>" type="text/css" media="screen, projection">
+				<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/print.css"); ?>" type="text/css" media="print">
+				<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
+		<?php } ?>
+		<?php foreach ($css['plugins'] as $plugin) { ?>
+				<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/screen.css"); ?>" type="text/css" media="screen, projection">
+				<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/print.css"); ?>" type="text/css" media="print">
+				<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
 		<?php } ?>
 		<?php if (Etc::DOJO_ENABLED) { ?>
 			<?php
