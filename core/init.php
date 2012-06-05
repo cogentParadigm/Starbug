@@ -38,4 +38,7 @@ $statuses = config("statuses");
 global $sb;
 $sb = new sb();
 
+//publish init hooks
+$sb->publish("init");
+
 ?>
