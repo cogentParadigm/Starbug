@@ -32,7 +32,7 @@ function import($util, $module="util") {
 function locate($file, $dir="templates") {
 	if (!empty($dir)) $dir .= "/";
 	$path = $dir.$file;
-	if (is_cached($path)) return json_decode(cache($path));
+	if (is_cached($path)) return cache($path);
 	else {
 		$paths = array();
 		$modules = config("modules");
@@ -43,7 +43,7 @@ function locate($file, $dir="templates") {
 		foreach ($modules as $module) if (file_exists(BASE_DIR."/modules/$module/$path")) $paths[] = BASE_DIR."/modules/$module/$path";
 		if (file_exists(BASE_DIR."/app/themes/$theme/$path")) $paths[] = BASE_DIR."/app/themes/$theme/$path";
 		if (file_exists(BASE_DIR."/app/$path")) $paths[] = BASE_DIR."/app/$path";
-		cache($path, json_encode($paths));
+		cache($path, $paths);
 		return $paths;
 	}
 }

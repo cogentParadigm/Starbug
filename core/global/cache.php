@@ -26,7 +26,7 @@ function cache($key, $value=null, $expiry=null, $dir="var/cache/") {
 		if (file_exists(BASE_DIR."/".$dir.$key.".time") && file_exists(BASE_DIR."/".$dir.$key.".cache")) {
 			$expired = (int) file_get_contents(BASE_DIR."/".$dir.$key.".time");
 			$now = time();
-			if ($expired > $now) $value = file_get_contents(BASE_DIR."/".$dir.$key.".cache");
+			if ($expired > $now) $value = json_decode(file_get_contents(BASE_DIR."/".$dir.$key.".cache"), true);
 		}
 	} else { //SET THE VALUE
 		//SET EXPIRY
@@ -41,7 +41,7 @@ function cache($key, $value=null, $expiry=null, $dir="var/cache/") {
 		}
 		//STORE VALUE & EXPIRY
 		file_put_contents(BASE_DIR."/".$dir.$key.".time", $expiry);
-		file_put_contents(BASE_DIR."/".$dir.$key.".cache", $value);
+		file_put_contents(BASE_DIR."/".$dir.$key.".cache", json_encode($value));
 	}
 	return $value;
 }
