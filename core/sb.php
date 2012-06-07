@@ -51,7 +51,7 @@ class sb {
 	 * constructor. connects to db and sets default $_SESSION values
 	 */
 	function __construct() {
-		if (php_sapi_name() != "cli") {
+		if (php_sapi_name() != Etc::CLI_SAPI_NAME) {
 			set_exception_handler(array($this,'handle_exception'));
 			set_error_handler(array($this,'handle_error'), error_reporting());
 		}
