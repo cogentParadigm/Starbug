@@ -7,8 +7,24 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
+// define SB_START_TIME to record application start time
 defined('SB_START_TIME') or define('SB_START_TIME',microtime(true));
+
+// define directory paths and set the include path
+if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("/core", "", dirname(__FILE__)));
+set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);
+
+// define STDOUT and STDIN if they are not defined
+if (!defined('STDOUT')) define("STDOUT", fopen("php://stdout", "wb"));
+if (!defined('STDIN')) define("STDIN", fopen("php://stdin", "r"));
+
+// load configuration
+include(BASE_DIR."/etc/Etc.php");
+
+// set the default time zone
 if (defined('Etc::TIME_ZONE')) date_default_timezone_set(Etc::TIME_ZONE);
+
+//set the appropriate level of error reporting
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
 
 // include the sb class
@@ -40,5 +56,12 @@ $sb = new sb();
 
 //publish init hooks
 $sb->publish("init");
+
+if (php_sapi_name() == "cli") {
+	//import cli utils
+	$sb->import("util/cli");
+	//publish cli init hook
+	$sb->publish("cli.init");
+}
 
 ?>

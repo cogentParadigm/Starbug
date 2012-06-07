@@ -77,6 +77,7 @@ class Renderer {
 			$output = file_get_contents($filename);
 			$output = str_replace(array("<? ", "<?\n", "<?="), array("<?php ", "<?php\n", "<?php echo"), $output);
 			eval("?>".$output);
+			array_pop($this->stack);
 		} else die("template not found: ".implode("\n", $paths));
 	}
 	

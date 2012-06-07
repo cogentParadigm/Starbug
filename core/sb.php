@@ -51,8 +51,10 @@ class sb {
 	 * constructor. connects to db and sets default $_SESSION values
 	 */
 	function __construct() {
-		set_exception_handler(array($this,'handle_exception'));
-		set_error_handler(array($this,'handle_error'), error_reporting());
+		if (php_sapi_name() != "cli") {
+			set_exception_handler(array($this,'handle_exception'));
+			set_error_handler(array($this,'handle_error'), error_reporting());
+		}
 		$this->db = new db('mysql:host='.Etc::DB_HOST.';dbname='.Etc::DB_NAME, Etc::DB_USERNAME, Etc::DB_PASSWORD, Etc::PREFIX);
 		$this->db->set_debug(true);
 	}

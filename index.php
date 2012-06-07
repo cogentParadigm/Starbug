@@ -8,19 +8,12 @@
  * @ingroup core
  */
 session_start();
-/**
- * the base directory
- */
-define('BASE_DIR', dirname(__FILE__));
-
-// include the config file
-include(BASE_DIR."/etc/Etc.php");
 
 // include init file
-include(BASE_DIR."/core/init.php");
+include("core/init.php");
 
 // include Request
-include(BASE_DIR."/core/Request.php");
+include("core/Request.php");
 
 /**
  * global instance of the Request class
