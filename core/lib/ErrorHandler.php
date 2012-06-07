@@ -52,7 +52,7 @@ class ErrorHandler {
 		
 		$trace=debug_backtrace();
 		// skip the first 3 stacks as they do not tell the error position
-		if (count($trace)>1) $trace = array_slice($trace, 1);
+		if (count($trace)>2) $trace = array_slice($trace, 2);
 
 			switch($errno) {
 				case E_WARNING:
@@ -87,6 +87,7 @@ class ErrorHandler {
 
 			$traces = ErrorHandler::expand_evals($error, $trace);
 			if (false !== strpos($error['file'], "eval()'d code")) {
+				if (empty($traces[0]['message'])) $traces[0]['message'] = $error['message'];
 				$error = array_shift($traces);
 			}
 			$error['traces'] = $traces;
@@ -103,19 +104,19 @@ class ErrorHandler {
 	function expand_evals($error, $traces) {
 		$ret = array();
 		foreach ($traces as $i => $trace) {
-			if ($trace['function'] == 'eval') {
+			if (false !== strpos($trace['file'], "/modules/db/classes/db.php")) {
+				//interpret path from class
+				$ret = array_merge($ret, ErrorHandler::expand_eval($trace, $error, "model"));
+				$trace = array_pop($ret);
+			} else if (false !== strpos($trace['class'], "__")) {
+				$ret = array_merge($ret, ErrorHandler::expand_eval($trace, $error, "model"));
+			} else if ($trace['function'] == 'eval' || (false != strpos($trace['file'], 'eval()\'d code'))) {
 				$path = str_replace(BASE_DIR, "", $trace['file']);
 				$expand = $i ? array_pop($ret) : $error;
 				if ($path == "/core/lib/Renderer.php") {
 					//pull from renderer eval stack
 					$ret = array_merge($ret, ErrorHandler::expand_eval($expand, $trace, "renderer"));
 				}
-			} else if (false !== strpos($trace['file'], "/modules/db/classes/db.php")) {
-				//interpret path from class
-				$ret = array_merge($ret, ErrorHandler::expand_eval($trace, $error, "model"));
-				$trace = array_pop($ret);
-			} else if (false !== strpos($trace['class'], "__")) {
-				$ret = array_merge($ret, ErrorHandler::expand_eval($trace, $error, "model"));
 			}
 			$ret[] = $trace;
 		}
