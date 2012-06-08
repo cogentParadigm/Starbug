@@ -129,12 +129,9 @@ class sb {
 			$this->active_scope = $key;
 			$permits = isset($_POST[$key]['id']) ? $this->db->query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : $this->db->query($key, "action:$value  priv_type:table");
 			if (($this->db->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $object->$value($_POST[$key]);
-			else error("You do not have sufficient permission to complete your request.");
+			else request()->forbidden();
 			$this->active_scope = "global";
-			if (!empty($this->errors[$key])) {
-				global $request;
-				$request->return_path();
-			}
+			if (!empty($this->errors[$key])) request()->return_path();
 		}
 	}
 
