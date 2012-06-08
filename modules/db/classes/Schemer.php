@@ -884,7 +884,7 @@ class Schemer {
 										$f->appendChild($xmlDoc->createAttribute("field"))->appendChild($xmlDoc->createTextNode($ref[1]));
 										break;
 									default:
-										if (!empty($k)) $node->appendChild($xmlDoc->createAttribute($k))->appendChild($xmlDoc->createTextNode($v));
+										if (!empty($k)) $node->appendChild($xmlDoc->createAttribute(htmlentities($k, ENT_XML1)))->appendChild($xmlDoc->createTextNode(htmlentities($v, ENT_XML1)));
 										break;
 								}
 							}
