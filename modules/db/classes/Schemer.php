@@ -394,7 +394,7 @@ class Schemer {
 		else if ($field['type'] == 'double') $type = "double(".$field['length'].")";
 		else if ($field['type'] == 'bool') $type = "tinyint(1)";
 		else if (($field['type'] == 'datetime') || ($field['type'] == 'timestamp')) $type = "datetime";
-		else if (!empty($field['type'])) $type = $field['type'];
+		else if (!empty($field['type'])) $type = $field['type'].(isset($field['length'])?'('.$field['length'].')':"");
 		$type .= ((isset($field['null'])) ? " NULL" : " NOT NULL")
 						.((isset($field['unsigned'])) ? " UNSIGNED" : "")
 						.((isset($field['zerofill'])) ? " ZEROFILL" : "")
@@ -884,7 +884,7 @@ class Schemer {
 										$f->appendChild($xmlDoc->createAttribute("field"))->appendChild($xmlDoc->createTextNode($ref[1]));
 										break;
 									default:
-										if (!empty($k)) $node->appendChild($xmlDoc->createAttribute(htmlentities($k, ENT_XML1)))->appendChild($xmlDoc->createTextNode(htmlentities($v, ENT_XML1)));
+										if (!empty($k)) $node->appendChild($xmlDoc->createAttribute($k))->appendChild($xmlDoc->createTextNode($v));
 										break;
 								}
 							}
