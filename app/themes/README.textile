@@ -44,15 +44,20 @@ h3. styles
 a list of stylesheets to be loaded. In development mode, they will be loaded indivdually. In production mode they will be built into a single stylsheet.
 The Blueprint CSS framework stylesheets are automatically loaded to provide some common styles.
 
+h3. scripts
+
+a list of Javascript files to be loaded. In development mode, they will be loaded indivdually. In production mode they will be built into a single script.
+
 h2. Working with Templates
 
 When templates are loaded, the templating engine will search these 3 locations in this order:
 
 * app/templates/
 * app/themes/[theme]/templates/
+* modules/*/templates/
 * core/app/templates/
 
-The first matching template that is found will be loaded.
+The first matching template that is found will be loaded. While modules are migrated from top to bottom, template priority is from bottom to top.
 
 You can load templates using the assign and render functions. To load a template named "article.php" and pass it the variables "title" and "body" you would do this:
 

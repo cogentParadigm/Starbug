@@ -42,6 +42,7 @@
 	
 	//SET UP COLUMNS
 	efault($columns, array());
+	$ordered_columns = array();
 	$options = schema($model);
 	foreach ($options['fields'] as $name => $field) {
 		$field['field'] = $name;
@@ -55,13 +56,13 @@
 			$field['list'] = (in_array($view, $field_views));
 		}
 		efault($field['width'], "auto");
-		if (($field['display']) && ($field['list'])) efault($columns[$name], $field);
+		if (($field['display']) && ($field['list'])) $ordered_columns[$name] = empty($columns[$name]) ? $field : $columns[$name];
 	}
-	efault($columns["Options"], "field:id  width:100  cellType:starbug.grid.cells.Options  options:'Edit':'".uri($request->path)."/update/%id%', 'Delete':'javascript:sb.post({\'action[$model]\':\'delete\', \'".$model."[id]\':%id%}, \'return confirm(\\\\\'Are you sure you want to delete this item?\\\\\')\');'");
+	$ordered_columns["Options"] = empty($columns["Options"]) ? "field:id  width:100  cellType:starbug.grid.cells.Options  options:'Edit':'".uri($request->path)."/update/%id%', 'Delete':'javascript:sb.post({\'action[$model]\':\'delete\', \'".$model."[id]\':%id%}, \'return confirm(\\\\\'Are you sure you want to delete this item?\\\\\')\');'" : $columns["Options"];
 	
 	//RENDER TABLE
 	assign("attributes", $attributes);
-	assign("columns", $columns);
+	assign("columns", $ordered_columns);
 	render("table");
 	
 ?>

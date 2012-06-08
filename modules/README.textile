@@ -2,8 +2,8 @@ h1. Modules reference
 
 * Intro
 * Configuration
-* Working with Templates
-* Deploying to a Production Environment
+* Creating a Module
+* Commonly Used Structures
 
 h2. Intro
 
@@ -22,11 +22,12 @@ Modules are structured just like the app/ folder. All of the files and directori
 * tests/ - not yet supported
 * up.php
 * down.php
+* global_functions.php
 * info.json
 
-Only folders named public are directly accesible. All other URLs will be rewritten. Images and stylesheets should be kept in the images and stylesheets folders within public respectively.
+themes are not supported within modules.
 
-The templates folder contains theme templates. Templates are loaded using the render function. see the section on working with templates for more details.
+uris created in the up file of a module without a prefix specified will assume a prefix of 'modules/[module-name]/views/'
 
 see the next section for details on the info.json file.
 
@@ -37,42 +38,42 @@ All configuration for modules are done in these files:
 * etc/modules.json - set enabled modules here
 * modules/[module]/info.json - module specific options
 
-In the info.json file you can specify some basic information about your theme such as a name and description. Additionally you can specify:
+In the info.json file you can specify some basic information about your module such as a name and description. Additionally you can specify:
 
-h3. regions
+h3. styles - *not yet supported*
 
-a list of templates to be rendered in order that comprise a page. for example:
-<pre><code>regions: ["header", "main", "footer"]</code></pre>
-this means that there are 3 regions in the page, and 3 templates that are going to be rendered.
+A list of stylesheets to be loaded. In development mode, they will be loaded indivdually. In production mode they will be built into a single stylsheet.
 
-h3. styles
+h3. scripts - *not yet supported*
 
-a list of stylesheets to be loaded. In development mode, they will be loaded indivdually. In production mode they will be built into a single stylsheet.
-The Blueprint CSS framework stylesheets are automatically loaded to provide some common styles.
+A list of Javascript files to be loaded. In development mode, they will be loaded indivdually. In production mode they will be built into a single script.
 
-h2. Working with Templates
 
-When templates are loaded, the templating engine will search these 3 locations in this order:
+h2. Creating a Module
 
-* app/templates/
-* app/themes/[theme]/templates/
-* core/app/templates/
+Starbug includes various modules which you can use as a starting point. If you want to start from scratch, all you need to do is create a directory in the modules folder
+and add that directory to etc/modules.json to enable the module. 
 
-The first matching template that is found will be loaded.
+h2. Commonly Used Structures
 
-You can load templates using the assign and render functions. To load a template named "article.php" and pass it the variables "title" and "body" you would do this:
+All of this information applies equally to the app/ folder.
 
-<pre><code><?
-	assign("title" "My Title");
-	assign("body" "My Article");
-	render("article");
-?></code></pre>
+h3. Migrations
 
-for more information on working with templates see core/global/templates.php
+Migrating is handled by 2 files. up.php and down.php. Put any tables, uris or permits you wish to create in up.php and drop them in down.php to support migrating down.
 
-h2. Creating a Theme
+h3. Models
 
-Starbug includes 2 themes: starbug-1 and storm. starbug-1 is a fixed-width layout and storm is a flexible-width layout. You can use one of these as a starting point,
-and add your theme to etc/themes.json.
+To create or extend a model, say Users, you must create models/Users.php which defines a Users class. Any number of Users models can be defined across modules, they will
+be dynamically altered to form an extension chain.
 
-Eeach of your themes regions will be rendered in order. Edit the templates to change the markup and put your styles into the stylesheets in the public/stylesheets folder of your theme.
+h3. Global Functions
+
+Simply place a file called global_functions.php in your module folder and it will be loaded. You should place any and all global functions you declare in this file.
+You should not use this to perform initialization actions, but only to define functions.
+
+h3. Hooks
+
+Hooks can be used to load code at a specific point in the application cycle. For example, custom initialization procedures can be placed in hooks/global.init.php.
+In this case 'init' is the name of the hook. 'global' is a tag indicating that the hook should run in all situations. Other tag options are 'cli' for command line only
+and any tags applied to uris to only run on those pages.

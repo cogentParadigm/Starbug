@@ -42,7 +42,7 @@ define(['dojo', 'dojo/_base/config', 'dojo/_base/xhr'], function(dojo, config) {
 					url = window.location.href;
 				}
 				if (url.substr(0, 4) != 'http') url = WEBSITE_URL+url;
-				var form = dojo.create('form', {'method':'post', 'action':url}, dojo.body());
+				var form = dojo.create('form', {'method':'post', 'action':url, 'style': 'display:none'}, dojo.body());
 				if (onsubmit) dojo.attr(form, 'onsubmit', onsubmit);
 				for (var key in args) if (args.hasOwnProperty(key)) dojo.create('input', {'type':'hidden', 'name':key, 'value':args[key]}, form);
 				var button = dojo.create('button', {'type':'submit', 'innerHTML':'submit'}, form);
