@@ -108,7 +108,7 @@ class ErrorHandler {
 				//interpret path from class
 				$ret = array_merge($ret, ErrorHandler::expand_eval($trace, $error, "model"));
 				$trace = array_pop($ret);
-			} else if (false !== strpos($trace['class'], "__")) {
+			} else if (isset($trace['class']) && false !== strpos($trace['class'], "__")) {
 				$ret = array_merge($ret, ErrorHandler::expand_eval($trace, $error, "model"));
 			} else if ($trace['function'] == 'eval' || (false != strpos($trace['file'], 'eval()\'d code'))) {
 				$path = str_replace(BASE_DIR, "", $trace['file']);
