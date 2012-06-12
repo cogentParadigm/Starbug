@@ -1,13 +1,12 @@
 <?
-	$sb->import("core/Controller");
-	if ($request->uri[0] == "c") array_shift($request->uri);
+	$sb->import("core/lib/Controller");
 	list($controller, $action) = $request->uri;
 	$c = ucwords($controller);
 	
 	$failure = false;
-	if (file_exists(BASE_DIR."/app/controllers/$c.php")) include(BASE_DIR."/app/controllers/$c.php");
-	else if (file_exists(BASE_DIR."/app/themes/".request("theme")."/controllers/$c.php")) include(BASE_DIR."/app/themes/".request("theme")."/controllers/$c.php");
-	else if (file_exists(BASE_DIR."/core/app/controllers/$c.php")) include(BASE_DIR."/core/app/controllers/$c.php");
+	$name = ucwords($c)."Controller";
+	$found = locate("$name.php", "controllers");
+	if (!empty($found)) include(end($found));
 	else {
 		$failure = true;
 		$request->missing();
@@ -15,8 +14,8 @@
 	}
 	
 	if (!$failure) {
-		$object = new $c();
-		if (!method_exists($object, $action)) $action = "default";
-		call_user_func_array(array($object, $action), array_splice($request->uri, 3));
+		$object = new $name();
+		if (empty($action)) $action = "default_action";
+		call_user_func_array(array($object, $action), array_splice($request->uri, 2));
 	}
 ?>

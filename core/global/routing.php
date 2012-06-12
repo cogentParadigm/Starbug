@@ -53,6 +53,19 @@ function request() {
 	else return false;
 }
 /**
+ * checks the path to see if a matching file exists
+ * @return the file to be loaded
+ */
+function locate_view($uri, $prefix="") {
+	efault($prefix, request()->payload['prefix']);
+	if (!is_array($uri)) $uri = explode("/", $uri);
+	$current = (empty($uri)) ? "default" : array_shift($uri);
+	if (file_exists($prefix.$current.".php")) return $prefix.$current.".php"; // file found
+	else if (file_exists($prefix.$current)) return locate_view($uri, $prefix.$current."/"); // directory found
+	else if (file_exists($prefix."default.php")) return $prefix."default.php";
+	else return false;
+}
+/**
  * check to see if this the default path (the front page)
  * @ingroup routing
  * @return bool true if it is, false if it isn't

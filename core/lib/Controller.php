@@ -10,7 +10,12 @@ class Controller {
 	
 	}
 	
-	function default() {
+	function default_action() {
+		render("html");
+	}
+
+	function render($path="") {
+		if (!empty($path)) request()->file = locate_view($path);
 		render("html");
 	}
 
@@ -22,6 +27,10 @@ class Controller {
 	function missing() {
 		request()->missing();
 		render("html");
+	}
+	
+	function __call($name, $arguments) {
+		$this->missing();
 	}
 
 }

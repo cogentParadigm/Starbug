@@ -54,14 +54,6 @@ class Request {
 	 */
 	var $tags;
 	/**
-	 * @var array the groups
-	 */
-	var $groups;
-	/**
-	 * @var statuses the statuses
-	 */
-	var $statuses;
-	/**
 	 * @var string the path of the base directory
 	 */
 	var $base_dir = "";
@@ -70,11 +62,10 @@ class Request {
 	/**
 	 * constructor. initiates tags and postback
 	 */
-	function __construct($groups, $statuses) {
+	function __construct($request_path, $base_dir=false) {
 		$this->tags = array(array("term" => "global", "slug" => "global"));
-		$this->groups = $groups;
-		$this->statuses = $statuses;
-		if (!isset($_SESSION[P('postback')])) $_SESSION[P('postback')] = $_SERVER['REQUEST_URI'];
+		if ($base_dir === false) $base_dir = end(explode("/", str_replace("/core", "", dirname(__FILE__))));
+		$this->set_path($request_path, $base_dir);
  	}
 
 	/**
@@ -130,7 +121,7 @@ class Request {
 		}
 		$this->tags = array_merge($this->tags, query("uris,terms via uris_tags", "select:DISTINCT term, slug  where:uris.id='".$this->payload['id']."'"));
 		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
-		if ($this->payload['type'] == 'View') $this->file = $this->check_path($this->payload['prefix'], "", current($this->uri));
+		if ($this->payload['type'] == 'View') $this->file = locate_view($this->uri);
 		$this->theme = $this->payload['theme'];
 		$this->layout = $this->payload['layout'];
 		$this->template = $this->payload['template'];
@@ -176,19 +167,5 @@ class Request {
 		$this->uri = array("forbidden");
 	}
 
-	/**
-	 * checks the path to see if a matching file exists
-	 * @return the file to be loaded
-	 */
-	private function check_path($prefix, $base, $current) {
-		if (empty($current)) $current = "default";
-		if (file_exists("$prefix$base$current.php")) return $prefix.$base.$current.".php";
-		else if (file_exists("$prefix$base$current")) return $this->check_path($prefix, "$base$current/", next($this->uri));
-		else if (file_exists($prefix.$base."default.php")) return $prefix.$base."default.php";
-		else {
-			$this->missing();
-			return $prefix."missing.php";
-		}
-	}
 }
 ?>

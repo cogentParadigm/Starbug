@@ -20,7 +20,6 @@ include("core/Request.php");
  * @ingroup global
  */
 global $request;
-$request = new Request($groups, $statuses);
-$request->set_path($_SERVER['REQUEST_URI'], end(explode("/",dirname(__FILE__))));
+$request = new Request($_SERVER['REQUEST_URI']);
 $request->execute();
 ?>

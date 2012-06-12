@@ -80,7 +80,8 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 </script>
 <?php
 	js("dijit/form/Textarea");
-	$collectives = array_merge(array("everybody" => 0), $request->groups);
+	global $groups;
+	$collectives = array_merge(array("everybody" => 0), $groups);
 	$parents = query("uris", "where:prefix='app/views/' && type='Page'");
 	$kids = array(array());
 	foreach($parents as $u) $kids[$u['parent']][] = $u;
