@@ -19,7 +19,7 @@ class <?= ucwords($name); ?>Model extends Table {
 	}
 
 	function delete($<?= $singular; ?>) {
-		return $this->remove('id='.$<?= $singular; ?>['id']);
+		return $this->store(array('status' => 1,  'id' => $<?= $singular; ?>['id']));
 	}
 
 }

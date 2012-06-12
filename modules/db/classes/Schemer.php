@@ -559,7 +559,7 @@ class Schemer {
 			}
 		}
 		efault($ops[0], "table,global");
-		efault($ops[1], array_sum($statuses));
+		efault($ops[1], array_sum($statuses)-1);
 		$permit['status'] = $ops[1];
 		$return = array();
 		$types = explode(",", $ops[0]);
@@ -844,7 +844,7 @@ class Schemer {
 			if (!isset($actions[$p['action']])) $actions[$p['action']] = array();
 				if ("object" == $p['priv_type']) $val = $p['related_id'];
 				else $val = $p['priv_type'];
-				if ($p['status'] != array_sum($statuses)) $val .= " ".$p['status'];
+				if ($p['status'] != (array_sum($statuses)-1)) $val .= " ".$p['status'];
 			if ("group" == $p['role']) { //GROUP PERMIT
 				$actions[$p['action']][array_search($p['who'], $groups)] = (empty($actions[$p['action']][$groups[$p['who']]])) ? $val : ",".$val;
 			} else $actions[$p['action']][$p['role']] = (empty($actions[$p['action']][$p['role']])) ? $val : ",".$val;
