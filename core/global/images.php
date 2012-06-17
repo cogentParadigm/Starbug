@@ -107,14 +107,19 @@ function image_save($image, $path, $format="auto") {
  * Get a thumbnail image URL
  * @ingroup images
  * @param string $current_file the path to the original
- * @param int $max_width the desired width in pixels
+ * @param star $dimensions the desired width or height (or both to constrain) in pixels
  * @return string an absolute URL to the thumbnail
  */
-function image_thumb($current_file, $max_width) {
+function image_thumb($current_file, $dimensions) {
+	list($width, $height) = getimagesize(BASE_DIR.$current_file);
+	$target = array_merge(array("width" => $width, "height" => $height), star($dimensions));
+	$ratio = max($width/$target['width'], $height/$target['height']);
+	$max_width = (int) ($width/$ratio);
 	$loc = uri("app/public/php/phpthumb/phpThumb.php");
 	$loc .= "?w=$max_width&src=".$current_file;
 	return $loc;
 }
+
 /**
  * Composite one image onto another
  * @ingroup images
