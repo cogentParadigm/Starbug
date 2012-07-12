@@ -39,34 +39,4 @@ class pager {
 		$shown = ($remaining<$items_per_page) ? ($remaining % $items_per_page) : $items_per_page;
 		$this->finish = $this->start + $shown;
 	}
-	function links($prefix, $suffix="") {
-		$half = floor($this->range/2);
-		//set $from to $current_page minus half of $range OR 1
-		$from = ($this->current_page > $half) ? $this->current_page-$half : 1;
-		//set $to to the full range from from
-		$to = $from + $this->range;
-		//if that pushes us past the end, shift back to the end
-		if ($to > $this->last) {
-			$to = $this->last;
-			$from = $to - $this->range;
-		}
-		//if there are not enough pages, bring up $from to 1
-		if ($from < 1) $from = 1;
-		
-		if ($this->count > $this->per) { ?>
-			<ul class="pages hnav">
-				<?php if ($this->current_page > 1) { ?>
-				<li class="back"><a class="button" href="<?php echo $prefix.($this->current_page-1).$suffix; ?>">Back</a></li>
-				<?php } if ($from > 1) { ?>
-				<li class="first"><a class="button" href="<?php echo $prefix."1".$suffix; ?>">1</a><div style="padding-top:18px;float:left">...</div></li>
-				<?php } for($i=$from;$i<=$to;$i++) { ?>
-				<li><a class="button<?php if($this->current_page == $i) { ?> active<?php } ?>" href="<?php echo $prefix.$i.$suffix; ?>"><?php echo $i; ?></a></li>
-				<?php } if ($to < $this->last) { ?>
-				<li class="last"><div style="padding:18px 8px 0px 0px;float:left">...</div><a class="button" href="<?php echo $prefix.$this->last.$suffix; ?>"><?php echo $this->last; ?></a></li>
-				<?php } if ($this->current_page < $this->last) { ?>
-				<li class="next"><a class="button" href="<?php echo $prefix.($this->current_page+1).$suffix; ?>">Next</a></li>
-				<?php } ?>
-			</ul>
-		<?php }
-	}
 }

@@ -7,6 +7,8 @@ if (!empty($args['where'])) $sql .= " WHERE $args[where]";
 $res = $this->pdo->prepare($sql);
 $res->execute($replacements);
 $count = $res->fetchColumn();
-$pager = new pager($count, $args['limit'], $args['page']);
-$args['limit'] = $pager->start.', '.$args['limit'];
+efault($args['limit'], $_GET['show']);
+if ($args['limit'] == "all") $args['limit'] = $count;
+request()->pager = new pager($count, $args['limit'], $args['page']);
+$args['limit'] = request()->pager->start.', '.$args['limit'];
 ?>

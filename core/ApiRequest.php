@@ -75,13 +75,24 @@ class ApiRequest {
 			$ops = array_merge(star($query), $ops);
 		}
 		
+		//paging
+		if (isset($_SERVER['HTTP_RANGE'])) {
+			list($start, $finish) = explode("-", end(explode("=", $_SERVER['HTTP_RANGE'])));
+			$ops['paged'] = true;
+			$ops['limit'] = 1 + (int) $finish - (int) $start;
+			$_GET['page'] = 1 + (((int) $start) - 1)/$ops['limit'];
+		}
+		
 		$data = query(implode(",", $models), $ops);
 		$f = strtoupper($format);
 		$error = $f."errors";
 		if (empty($sb->errors[$model])) {
 			if (!empty($data)) {
-				$count = count($data);
-				header("Content-Range: items 0-$count/$count");
+				if (isset($ops['paged'])) header("Content-Range: items ".(request()->pager->start+1).'-'.request()->pager->finish.'/'.request()->pager->count);
+				else {
+					$count = count($data);
+					header("Content-Range: items 0-$count/$count");
+				}
 				switch ($format) {
 					case "xml": return $this->getXML($model, $data); break;
 					case "json": return $this->getJSON("id", $data); break;

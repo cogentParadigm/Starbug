@@ -121,13 +121,11 @@ class Request {
 		}
 		$this->tags = array_merge($this->tags, query("uris,terms via uris_tags", "select:DISTINCT term, slug  where:uris.id='".$this->payload['id']."'"));
 		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
-		if ($this->payload['type'] == 'View') $this->file = locate_view($this->uri);
-		$this->theme = $this->payload['theme'];
-		$this->layout = $this->payload['layout'];
-		$this->template = $this->payload['template'];
+		efault($this->payload['format'], $this->format);
+		foreach ($this->payload as $k => $v) $this->{$k} = $v;
 		efault($this->theme, Etc::THEME);
-		efault($this->layout, $this->payload['type']);
-		efault($this->format, $this->payload['format']);
+		efault($this->layout, $this->type);
+		if ($this->type == 'View') $this->file = locate_view($this->uri);
 	}
 
 	/**
@@ -142,7 +140,7 @@ class Request {
 		if (!empty($_GET['template'])) {
 			foreach ($_POST as $k => $v) assign($k, $v);
 			render($_GET['template'], $_GET['scope']);
-		} else if (!empty($this->payload['template'])) render($this->payload['template']);
+		} else if (!empty($this->template)) render($this->template);
 		else render($this->format);
 		ob_end_flush();
 	}
@@ -152,9 +150,8 @@ class Request {
 	 */
 	public function missing() {
 		header("HTTP/1.1 404 Not Found");
-		$this->payload = query("uris", "where:path='missing'  limit:1");
 		$this->path="missing";
-		$this->uri = array("missing");
+		$this->locate();
 	}
 	
 	/**
@@ -162,9 +159,8 @@ class Request {
 	 */
 	public function forbidden() {
 		header("HTTP/1.1 403 Forbidden");
-		$this->payload = query("uris", "where:path='forbidden'  limit:1");
 		$this->path = "forbidden";
-		$this->uri = array("forbidden");
+		$this->locate();
 	}
 
 }
