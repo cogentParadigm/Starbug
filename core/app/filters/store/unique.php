@@ -16,6 +16,6 @@ foreach($args as $field => $unique) {
 		}
 	}
 	$urow = $this->query($name, "select:id, $field  where:$field=?$unique_where  limit:1", $unique_replacements);
-	if ($this->record_count != 0 && !empty($fields[$field])) $errors[$field]["exists"] = "That $field already exists.";
+	if ($urow && !empty($fields[$field])) $errors[$field]["exists"] = "That $field already exists.";
 }
 ?>

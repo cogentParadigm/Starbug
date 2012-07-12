@@ -75,11 +75,7 @@ class db {
 	}
 
   public function exec($statement) {
-		try {
-			return $this->pdo->exec($statement);
-		} catch(PDOException $e) { 
-			die("DB Exception: ".$e->getMessage()."\n");
-		}
+		return $this->pdo->exec($statement);
 	}
 
 	/**
@@ -141,25 +137,45 @@ class db {
 	 * @return array record or records
 	 */
 	function query($froms, $args="", $replacements=array()) {
-		$froms = explode(",", $froms);
-		$first = array_shift($froms);
 		$args = star($args);
+		
+		//list of tables
+		$froms = explode(",", $froms);
+		
+		//first table
+		$first = array_shift($froms);
+		
+		//schema
 		$schema = (function_exists("schema")) ? schema($first) : array();
+		
+		//set defaults from schema, only use search if $args[search] is set and empty
 		if (!isset($args['search'])) unset($schema['search']);
 		else if (empty($args['search'])) unset($args['search']);
 		foreach ($schema as $k => $v) if (!isset($args[$k]) && is_string($v)) $args[$k] = $v;
+
+		//after schema defaults have been set, set global defaults
 		efault($args['select'], "*");
 		efault($args['join'], "INNER");
 		efault($args['mine'], true);
+		
+		//build FROM clause with joins
 		$from = "`".$this->prefix.$first."` AS `".$first."`";
 		if (!$args['mine']) foreach ($froms as $f) $from .= " $args[join] JOIN `".$this->prefix.$f."` AS `".$f."`";
 		else if (!empty($froms)) {
+			
+			//build JOINs
 			$relations = $this->model($first)->relations;
 			$last = "";
 			$joined = array();
+			
+			//loop through joining models to determine relations
 			foreach ($froms as $f) {
+
+				//if the relationship is ambiguous, use via to be clear
 				$f = explode(" via ", $f);
-				if (1 == count($f)) {
+				
+				if (1 == count($f)) { //determine best relation
+				
 					if (isset($relations[$f[0]][$last])) $rel = reset(reset($relations[$f[0]][$last]));
 					else if (isset($relations[$f[0]][$first])) $rel = reset(reset($relations[$f[0]][$first]));
 					else if (isset($relations[$f[0]][$f[0]])) $rel = reset(reset($relations[$f[0]][$f[0]]));
@@ -168,7 +184,9 @@ class db {
 						$set = $this->model($last)->relations;
 						if (isset($set[$f[0]])) $rel = reset(reset(reset($set[$f[0]])));
 					}
-				} else {
+					
+				} else { //use via
+
 					$parts = explode(" ", $f[1]);
 					$f[1] = $parts[0];
 					$rel = $relations[$f[0]][$f[1]];
@@ -177,7 +195,10 @@ class db {
 						$rel = reset($rel);
 						$rel = $rel[$parts[1]];
 					} else $rel = $rel[$parts[1]][$parts[2]];
+
 				}
+				
+				//convert relationship to JOIN clause
 				$last = $f[0];
 				$lookup = $f[1];
 				$f = $f[0];
@@ -199,27 +220,30 @@ class db {
 						}
 					}
 				}
-			}
-		}
+
+			} //end loop for JOINs
+		} //end FROM clause
+		$args['from'] = $from;
+		
+		//run filters
 		foreach ($args as $k => $v) {
 			foreach (locate("query/$k.php", "filters") as $filter) include($filter);
 		}
-		if (!empty($args['where'])) $args['where'] = " WHERE ".$args['where'];
+		
+		//prepare query parts
+		$select = "SELECT $args[select]";
+		$from = " FROM $from";
+		$where = (!(empty($args['where']))) ? " WHERE $args[where]" : "";
 		$groupby = (!(empty($args['groupby']))) ? " GROUP BY $args[groupby]" : "";
 		$having = (!(empty($args['having']))) ? " HAVING $args[having]" : "";
 		$limit = (!(empty($args['limit']))) ? " LIMIT $args[limit]" : "";
 		$order = (!(empty($args['orderby']))) ? " ORDER BY $args[orderby]" : "";
-		$sql = " FROM $from$args[where]$order$limit";
-		if (isset($args['echo'])) echo "SELECT $args[select] ".$sql;
-		try {
-			$res = $this->pdo->prepare("SELECT COUNT(*)".$sql);
-			$res->execute($replacements);
-			$this->record_count = $res->fetchColumn();
-			$records = $this->pdo->prepare("SELECT $args[select] FROM $from$args[where]$groupby$having$order$limit");
-			$records->execute($replacements);
-		} catch(PDOException $e) {
-			die("DB Exception: ".$e->getMessage());
-		}
+		$sql = "$select$from$where$groupby$having$order$limit";
+
+		if (isset($args['echo'])) echo $sql;
+
+		$records = $this->pdo->prepare($sql);
+		$records->execute($replacements);
 		$rows = $records->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($rows as $idx => $row) foreach ($row as $col => $value) $rows[$idx][$col] = stripslashes($value);
 		return ((!empty($args['limit'])) && ($args['limit'] == 1)) ? $rows[0] : $rows;
@@ -368,16 +392,62 @@ class db {
 	 */
 	function remove($from, $where) {
 		if (!empty($where)) {
-			try {
-				$del = $this->pdo->prepare("DELETE FROM ".$this->prefix.$from." WHERE ".$where);
-				$del->execute();
-				$this->record_count = $del->rowCount();
-				return array();
-			} catch(PDOException $e) {
-				error($e->getMessage(), "global", "DB");
-				die("DB Exception: ".$e->getMessage());
+			$del = $this->pdo->prepare("DELETE FROM ".$this->prefix.$from." WHERE ".$where);
+			$del->execute();
+			$this->record_count = $del->rowCount();
+			return array();
+		}
+	}
+	
+	/**
+	 * build a search clause to be put into a WHERE clause
+	 * @param string $text a natural language search string which can include operators 'and' and 'or' and quotes for exact matches
+	 * @param array $fields a list of columns to search on
+	 * @return string SQL WHERE component
+	 * examples,
+	 * 
+	 * search string: 'beef and broccoli'
+	 * fields: array('name', 'description')
+	 * return: ((name LIKE '%beef%' OR description LIKE '%beef%') and (name LIKE '%broccoli%' OR description LIKE '%broccoli%'))
+	 */
+	function search_clause($text, $fields) {
+		$text = strtolower(trim(str_replace("\\\"","&quot;",$text)));
+		//tokenize the text
+		$output = array();
+		$output2 = array();
+		$arr = explode("&quot;",$text);
+		for ($i=0;$i<count($arr);$i++){
+			if ($i%2==0) $output=array_merge($output,explode(" ",$arr[$i]));
+			else $output[] = $arr[$i];
+		}
+		foreach($output as $token) if (trim($token)!="") $words[]=$token;
+		//generate condition string
+		$conditions = "(";
+		for($word=0;$word<count($words);$word++) {
+			$w = $words[$word];
+			if ($w!="") {
+				if ($w!="and" && $w!="or") {
+					$conditions .= "(";
+					for($field=0;$field<count($fields);$field++) {
+						$conditions .= $fields[$field]." LIKE '%".$w."%'";
+						if ($field<(count($fields)-1)) {
+							$conditions .= " OR ";
+						} else {
+							$conditions .= ")";
+						}
+					}
+					if ($word<(count($words)-1)) {
+						if ($words[$word+1]=="and" || $words[$word+1]=="or") {
+							$conditions .= " ".$words[$word+1]." ";
+						} else {
+							$conditions .= " AND ";
+						}
+					}
+				}
 			}
 		}
+		$conditions .= ")";
+		return $conditions;
 	}
 
 	public function __call($method, $args) {

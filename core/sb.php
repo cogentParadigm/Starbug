@@ -54,6 +54,7 @@ class sb {
 		if (php_sapi_name() != Etc::CLI_SAPI_NAME) {
 			set_exception_handler(array($this,'handle_exception'));
 			set_error_handler(array($this,'handle_error'), error_reporting());
+			register_shutdown_function(array($this, 'handle_shutdown')); 
 		}
 		$this->db = new db('mysql:host='.Etc::DB_HOST.';dbname='.Etc::DB_NAME, Etc::DB_USERNAME, Etc::DB_PASSWORD, Etc::PREFIX);
 		$this->db->set_debug(true);
@@ -128,7 +129,7 @@ class sb {
 		if ($object = $this->db->model($key)) {
 			$this->active_scope = $key;
 			$permits = isset($_POST[$key]['id']) ? $this->db->query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : $this->db->query($key, "action:$value  priv_type:table");
-			if (($this->db->record_count > 0) || ($_SESSION[P('memberships')] & 1)) $object->$value($_POST[$key]);
+			if ($permits || ($_SESSION[P('memberships')] & 1)) $object->$value($_POST[$key]);
 			else request()->forbidden();
 			$this->active_scope = "global";
 			if (!empty($this->errors[$key])) request()->return_path();
@@ -151,6 +152,12 @@ class sb {
 	function handle_error($errno, $errstr, $errfile, $errline) {
 		$this->import("core/lib/ErrorHandler");
 		ErrorHandler::handle_error($errno, $errstr, $errfile, $errline);
+	}
+	
+	function handle_shutdown() {
+		if(is_null($e = error_get_last()) === false) {
+			ob_end_flush();
+		}
 	}
 	
 	/**

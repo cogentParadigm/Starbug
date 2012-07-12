@@ -108,7 +108,7 @@ function store_once($name, $fields, $from="auto") {
 		$values[] = $v;
 	}
 	$records = query($name, "where:$where", $values);
-	if (sb("record_count") == 0) {
+	if (!$records) {
 		store($name, $fields, $from);
 	} else return false;
 }
