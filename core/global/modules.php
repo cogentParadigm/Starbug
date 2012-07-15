@@ -30,20 +30,21 @@ function import($util, $module="util") {
  * @TODO allow boolean return
  */
 function locate($file, $dir="templates") {
+	global $request;
+	if ($request) $theme = request("theme");
+	efault($theme, Etc::THEME);
 	if (!empty($dir)) $dir .= "/";
 	$path = $dir.$file;
-	if (is_cached($path)) return cache($path);
+	$key = $theme.'_'.$path;
+	if (is_cached($key)) return cache($key);
 	else {
 		$paths = array();
 		$modules = config("modules");
-		global $request;
-		if ($request) $theme = request("theme");
-		efault($theme, Etc::THEME);
 		if (file_exists(BASE_DIR."/core/app/$path")) $paths[] = BASE_DIR."/core/app/$path";
 		foreach ($modules as $module) if (file_exists(BASE_DIR."/modules/$module/$path")) $paths[] = BASE_DIR."/modules/$module/$path";
 		if (file_exists(BASE_DIR."/app/themes/$theme/$path")) $paths[] = BASE_DIR."/app/themes/$theme/$path";
 		if (file_exists(BASE_DIR."/app/$path")) $paths[] = BASE_DIR."/app/$path";
-		cache($path, $paths);
+		cache($key, $paths);
 		return $paths;
 	}
 }

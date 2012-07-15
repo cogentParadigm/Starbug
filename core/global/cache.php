@@ -17,31 +17,18 @@
  * @ingroup cache
  * @param string $key the key you want to get or save. use periods to group key names.
  * @param string $value (optional) value to store
- * @param string $expiry (optional) expiry time from now (default is 30 days)
- * @param string $dir the cache directory
- * @return string the value
+ * @param string $ttl (optional) store for $ttl seconds, otherwise it will persist until removed
+ * 															 You can also specify a string like "30 days"
+ * @return mixed if $value is not specified, the value will be return
+ *               if $value is specified and stored successfully, true will be returned
+ *               a failure in either case will return false
  */
-function cache($key, $value=null, $expiry=null, $dir="var/cache/") {
-	if ($value == null) { //GET THE VALUE
-		if (file_exists(BASE_DIR."/".$dir.$key.".time") && file_exists(BASE_DIR."/".$dir.$key.".cache")) {
-			$expired = (int) file_get_contents(BASE_DIR."/".$dir.$key.".time");
-			$now = time();
-			if ($expired > $now) $value = json_decode(file_get_contents(BASE_DIR."/".$dir.$key.".cache"), true);
-		}
-	} else { //SET THE VALUE
-		//SET EXPIRY
-		if ($expiry == null) $expiry = 30*24*60*60; //DEFAULT 30 DAYS
-		$expiry = time() + $expiry;
-		//CREATE DIRS
-		$dirs = explode("/", $key);
-		$start = BASE_DIR."/".$dir;
-		foreach ($dirs as $d) {
-			if (!file_exists($start.$d)) mkdir($start.$d);
-			$start .= $d."/";
-		}
-		//STORE VALUE & EXPIRY
-		file_put_contents(BASE_DIR."/".$dir.$key.".time", $expiry);
-		file_put_contents(BASE_DIR."/".$dir.$key.".cache", json_encode($value));
+function cache($key, $value=null, $ttl=0) {
+	if ($value == null) {
+		return apc_fetch(P($key)); //GET THE VALUE
+	} else {
+		if (!is_numeric($ttl)) $ttl = strtotime($ttl) - time(); //SET EXPIRY
+		return apc_store(P($key), $value, $ttl); //STORE VALUE
 	}
 	return $value;
 }
@@ -49,16 +36,18 @@ function cache($key, $value=null, $expiry=null, $dir="var/cache/") {
  * check if a key has an active cache
  * @ingroup cache
  * @param string $key the key you want to get or save. use periods to group key names.
- * @param string $dir the cache directory
  * @return bool true if the value is cached, false otherwise
  */
-function is_cached($key, $dir="var/cache/") {
-	$key = str_replace(".", "/", $key);
-	if (file_exists(BASE_DIR."/".$dir.$key.".time") && file_exists(BASE_DIR."/".$dir.$key.".cache")) {
-		$expired = (int) file_get_contents(BASE_DIR."/".$dir.$key.".time");
-		$now = time();
-		if ($expired > $now) return true;
-	}
-	return false;
+function is_cached($key) {
+	return apc_exists(P($key));
+}
+/**
+ * delete a key from the cache
+ * @ingroup cache
+ * @param string $key the key you want to delete
+ * @return bool true if successful, false otherwise
+ */
+function cache_delete($key) {
+	return apc_delete(P($key));
 }
 ?>
