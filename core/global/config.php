@@ -46,7 +46,7 @@ function &config($key, $value=null, $dir="etc/") {
 	//we'll end up with the position of the key to change or add to
 	$conf = &$config[$dir.$key];
 	$position = 0;
-	$action = "";
+	$action = "change";
 	while (!empty($parts)) {
 		$action = "change";
 		$next = array_shift($parts);
@@ -68,6 +68,7 @@ function &config($key, $value=null, $dir="etc/") {
 					$text = substr($text, 0, $matches[0][1]+1).$value.substr($text, $matches[0][1]+strlen($conf)+1);
 					break;
 				case '[':
+					print_r($conf);
 					$closer = ']';
 				case '{':
 					$closer = '}';
@@ -129,6 +130,17 @@ function theme($var="", $name="") {
 	efault($name, Etc::THEME);
 	if (!empty($var)) $var = ".".$var;
 	return config("info$var", null, "app/themes/$name/");
+}
+/**
+	* get module variables
+	* @ingroup config
+	* @param string $var the module variable to get, if empty return the whole module info object
+	*/
+function module($key) {
+	$key = explode(".", $key, 2);
+	$module = $key[0];
+	$var = (isset($key[1])) ? ".".$key[1] : "";
+	return config("info$var", null, "modules/$module/");
 }
 /**
 	* get/set site options

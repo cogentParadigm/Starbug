@@ -48,4 +48,20 @@ function locate($file, $dir="templates") {
 		return $paths;
 	}
 }
+/**
+ * get module index
+ */
+function get_module_index() {
+	$modules = config("modules");
+	$index = array();
+	foreach ($modules as $module) {
+		$index[$module] = $module;
+		$info = module($module);
+		if (!empty($info['provides'])) {
+			if (!is_array($info['provides'])) $info['provides'] = array($info['provides']);
+			foreach ($info['provides'] as $provided) $index[$provided] = $module;
+		}
+	}
+	return $index;
+}
 ?>

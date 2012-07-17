@@ -1,0 +1,4 @@
+{
+	"name":"Users",
+	"requires":["db"]
+}
