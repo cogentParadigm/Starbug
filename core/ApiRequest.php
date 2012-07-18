@@ -78,6 +78,7 @@ class ApiRequest {
 		//paging
 		if (isset($_SERVER['HTTP_RANGE'])) {
 			list($start, $finish) = explode("-", end(explode("=", $_SERVER['HTTP_RANGE'])));
+			$start = max((int) $start, 1);
 			$ops['paged'] = true;
 			$ops['limit'] = 1 + (int) $finish - (int) $start;
 			$_GET['page'] = 1 + (((int) $start) - 1)/$ops['limit'];
