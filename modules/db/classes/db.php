@@ -282,7 +282,6 @@ class db {
 		} else if ((false !== $from) && (!is_array($from))) $from = star($from);
 		foreach ($fields as $col => $value) {
 			$errors[$col] = array();
-			$fields[$col] = trim($fields[$col]);
 			$filters = star($thefilters[$col]);
 			foreach($filters as $filter => $args) $byfilter[$filter][$col] = $args;
 			if ($value === "") $errors[$col]["required"] = "This field is required.";
