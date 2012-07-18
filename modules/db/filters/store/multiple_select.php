@@ -10,7 +10,7 @@ foreach($args as $field => $category) {
 			foreach ($fields[$field] as $ref_id) store($category_column_info['taxonomy'], array($name."_id" => $fields['id'], $category_column_info['type']."_id" => $ref_id));
 			$this->to_store = $old_queue;
 		} else {
-			foreach ($fields[$field] as $ref_id) queue($category_column_info['taxonomy'], array($category_column_info['type']."_id" => $ref_id));
+			foreach ($fields[$field] as $ref_id) queue($category_column_info['taxonomy'], array($name."_id" => "", $category_column_info['type']."_id" => $ref_id));
 		}
 	}
 	unset($fields[$field]);
