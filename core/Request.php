@@ -122,7 +122,7 @@ class Request {
 		$this->tags = array_merge($this->tags, query("uris,terms via uris_tags", "select:DISTINCT term, slug  where:uris.id='".$this->payload['id']."'"));
 		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path )));
 		efault($this->payload['format'], $this->format);
-		foreach ($this->payload as $k => $v) $this->{$k} = $v;
+		foreach ($this->payload as $k => $v) if ($k != "path") $this->{$k} = $v;
 		efault($this->theme, Etc::THEME);
 		efault($this->layout, $this->type);
 		if ($this->type == 'View') $this->file = locate_view($this->uri);
