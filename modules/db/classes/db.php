@@ -232,7 +232,7 @@ class db {
 		
 		//prepare query parts
 		$select = "SELECT $args[select]";
-		$from = " FROM $from";
+		$from = " FROM $args[from]";
 		$where = (!(empty($args['where']))) ? " WHERE $args[where]" : "";
 		$groupby = (!(empty($args['groupby']))) ? " GROUP BY $args[groupby]" : "";
 		$having = (!(empty($args['having']))) ? " HAVING $args[having]" : "";
