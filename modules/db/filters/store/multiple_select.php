@@ -4,7 +4,7 @@ foreach($args as $field => $category) {
 		$category_column_info = schema($name.".fields.".$field);
 		efault($category_column_info['taxonomy'], $name."_".$field);
 		if (!empty($fields['id'])) {
-			remove($category_column_info['taxonomy'], $name.".id=".$fields['id']);
+			remove($category_column_info['taxonomy'], $name."_id=".$fields['id']);
 			$old_queue = $this->to_store;
 			$this->to_store = array();
 			foreach ($fields[$field] as $ref_id) store($category_column_info['taxonomy'], array($name."_id" => $fields['id'], $category_column_info['type']."_id" => $ref_id));
