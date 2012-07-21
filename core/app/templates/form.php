@@ -1,4 +1,4 @@
-<?php open_form("model:$model  action:$action  url:$url", $form_attributes); ?>
+<?php open_form("model:$model  action:$action".(empty($url) ? "" : "  url:$url"), $form_attributes); ?>
 	<?php
 		efault($cancel_url, $url);
 	?>

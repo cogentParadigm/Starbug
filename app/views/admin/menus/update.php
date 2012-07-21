@@ -4,10 +4,6 @@
 <?php } ?>
 <div class="left" style="margin-right:50px">
 	<?php
-		$id = end($request->uri);
-		assign("model", "menus");
-		assign("id", $id);
-		assign("uri", "admin/menus/update/$id");
 		render("update");
 	?>
 	<br class="clear"/>
@@ -76,7 +72,7 @@
 			$('.parent_id').attr('value', dojo.attr('parent_select', 'value'));
 		});
 		connect.subscribe("/dnd/drop", function(source, nodes, copy) {
-			var menus_id = '<?php echo $id; ?>';
+			var menus_id = '<?php echo $_POST['menus']['id']; ?>';
 			var uris_menus_id = dojo.attr(nodes[0], 'data-menu-id');
 			var new_position = dojo.indexOf(dojo.query('li',nodes[0].parentNode),nodes[0]);
 			dojo.xhrPost({

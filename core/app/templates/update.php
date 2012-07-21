@@ -7,7 +7,7 @@
 	$options = schema($model);
 	assign("model", $model);
 	assign("action", "create");
-	assign("url", uri($uri));
+	assign("url", (empty($uri) ? "" : uri($uri)));
 	assign("fields", $options['fields']);
 ?>
 	<h1>Update <?= $options['singular_label']; ?></h1>

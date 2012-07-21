@@ -1,5 +1,4 @@
 <?php
-	$id = end($request->uri);
 	$record = (is_numeric($id)) ? query("uris", "select:uris.*  where:uris.id=?  limit:1", array($id)) : query("uris", "select:uris.*  limit:1  orderby:uris.modified DESC");
 	$id = $record['id'];
 	efault($_POST["uris"], array());
