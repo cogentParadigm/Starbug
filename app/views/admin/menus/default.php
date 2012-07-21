@@ -1,4 +1,5 @@
 <?php
-	assign("query", "menus");
+	assign("model", "menus");
+	assign("query", "admin");
 	render("list");
 ?>

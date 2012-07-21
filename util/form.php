@@ -43,6 +43,9 @@ class form {
 	 */
 	var $scope;
 
+	var $schema = array();
+	var $errors = array();
+
 	/**
 	 * constructor. initializes properties
 	 * @param string $args a named parameter string with any initial values
@@ -61,6 +64,11 @@ class form {
 		$this->url = $args['url'];
 		$this->method = $args['method'];
 		$this->postback = $args['postback'];
+		if (!empty($this->model)) {
+			$schema = schema($this->model);
+			$this->schema = $schema['fields'];
+		}
+		$this->errors = errors($this->model, true);
 	}
 
 	/**
@@ -71,7 +79,6 @@ class form {
 		if (!empty($atts)) $atts = $atts." ";
 		if ($this->method == "post") $fields = (empty($this->model)) ? $_POST : $_POST[$this->model];
 		else $fields = (empty( $this->model)) ? $_GET : $_GET[$this->model];
-		$errors = errors($this->model, true);
 		assign("form", $this);
 		assign("attributes", $atts);
 		assign("model", $this->model);
@@ -80,7 +87,7 @@ class form {
 		assign("postback", $this->postback);
 		assign("action", $this->action);
 		assign("fields", $fields);
-		assign("errors", efault($errors, array()));
+		assign("errors", efault($this->errors, array()));
 		render("form/open");
 	}
 	
@@ -213,7 +220,7 @@ class form {
 	 * 									hidden("article_id  default:1");
 	 */
 	function hidden($ops) {
-		$ops = $ops."  nolabel:true";
+		$ops = $ops."  nolabel:true  nodiv:true";
 		return $this->input("hidden", $ops);
 	}
 	/**

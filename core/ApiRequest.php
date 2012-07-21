@@ -42,11 +42,10 @@ class ApiRequest {
 		$format = end(explode(".", $what));
 		$parts = explode("/", str_replace(".$format", "", $what));
 		$call = reset($parts);
-		if (next($parts) == "get") $this->query = false;
-		$ops = star($ops);
-		efault($ops['action'], 'read');
+		$action = next($parts);
+		$ops = array("action" => "read", "where" => array());
 		if ($this->headers) header("Content-Type: ".$this->types[$format]);
-		$this->result = call_user_func(array($this, $call), $call, $format, $ops);
+		$this->result = call_user_func(array($this, $call), $action, $format, $ops);
 		if ($this->whitelisting) $_SESSION[P("memberships")] = 0;
 	}
 
@@ -58,21 +57,11 @@ class ApiRequest {
 	 */
 	function __call($model, $args) {
 		global $sb;
-		$format = $args[1];
-		$ops = $args[2];
-		if (false !== strpos($model, ".")) {
-			$models = explode(".", $model);
-			$model = $models[0];
-		} else $models = array($model);
+		list($action, $format, $ops) = $args;
 		$this->model = $model;
 		if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) {
 			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : sb("insert_id");
-			$ops['where'] = $model.".id='$id'";
-		}
-		if (!empty($ops['query'])) {
-			$query = base64_decode($ops['query']);
-			unset($ops['query']);
-			$ops = array_merge(star($query), $ops);
+			$ops['where'][] = $model.".id='$id'";
 		}
 		
 		//paging
@@ -83,8 +72,11 @@ class ApiRequest {
 			$ops['limit'] = 1 + (int) $finish - (int) $start;
 			$_GET['page'] = 1 + (((int) $start) - 1)/$ops['limit'];
 		}
-		
-		$data = query(implode(",", $models), $ops);
+		$action_name = "query_".$action;
+		$query = sb($model)->$action_name($ops);
+		$models = (isset($query['models'])) ? $query['models'] : $model;
+		$query['where'] = implode(' && ', $query['where']);
+		$data = query($models, $query);
 		$f = strtoupper($format);
 		$error = $f."errors";
 		if (empty($sb->errors[$model])) {

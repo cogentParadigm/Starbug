@@ -63,6 +63,8 @@ h2 .button{margin:4px 5px !important}
 
 html body div .button.round-right{padding:2px 5px 1px}
 
+.required .asterisk{font-size:125%;color:#C00;position:relative;left:4px}
+
 /********************* the box *********************/
 .box{background:#FFF;padding:0;overflow:hidden;width:100%}
 .box{-webkit-box-shadow:0px 1px 14px 0px #888;-moz-box-shadow:0px 1px 14px 0px #888;box-shadow:0px 1px 14px 0px #888}

@@ -67,6 +67,11 @@ class Uris {
 		$uri = $_POST['uris']['id'];
 		untag("uris_tags", $uri, $tag);
 	}
+	
+	function query_admin($query) {
+		$query['where'] += array("prefix='app/views/'", "type='Page'", "!(status & 1)");
+		return $query;
+	}
 
 }
 ?>

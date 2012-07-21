@@ -121,7 +121,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 		<? if (errors('uris[path]')) echo "<span class=\"clear error\">".reset(errors('uris[path]'))."</span><br />"; ?>
 		<div class="round infield">
 			<?php
-				$status_list = $request->statuses;
+				$status_list = config("statuses");
 				unset($status_list['deleted']);
 				unset($status_list['pending']);
 				unset($collectives['root']);

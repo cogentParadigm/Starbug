@@ -39,6 +39,7 @@ input.link:hover{text-decoration:underline}
 
 /********************* forms *********************/
 input.zip-field{width:50px}
+.required .asterisk{font-size:125%;color:#C00;position:relative;left:4px}
 
 /* rounding */
 #nav a{border-top-left-radius:5px;-moz-border-radius-topleft:5px;-webkit-border-top-left-radius:5px}

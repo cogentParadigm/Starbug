@@ -10,8 +10,8 @@ return dojo.declare("starbug.store.Api", null, {
 	//		Indicates the property to use as the identity property. The values of this
 	//		property should be unique.
 	model: '',
-	models: '',
-	action: 'create',
+	action:'list',
+	post_action: 'create',
 	idProperty: "id",
 	constructor: function(/*starbug.store.Api*/ options){
 		// summary:
@@ -20,8 +20,6 @@ return dojo.declare("starbug.store.Api", null, {
 		// options:
 		//		This provides any configuration information that will be mixed into the store
 		dojo.mixin(this, options);
-		this.models = this.apiQuery.split('  ', 1)[0];
-		this.model = this.models.split('.', 1)[0];
 	},
 	get: function(id, options){
 		//	summary:
@@ -65,7 +63,7 @@ return dojo.declare("starbug.store.Api", null, {
 		var data = {};
 		for (var k in object) data[this.model+'['+k+']'] = object[k];
 		options = options || {};
-		data['action['+this.model+']'] = this.action;
+		data['action['+this.model+']'] = this.post_action;
 		return dojo.xhrPost({
 				url: WEBSITE_URL+'api/'+this.model+'/get.json',
 				content: data,
@@ -116,9 +114,7 @@ return dojo.declare("starbug.store.Api", null, {
 				(("count" in options && options.count != Infinity) ?
 					(options.count + (options.start || 0) - 1) : '');
 		}
-		var base = sb.star(this.apiQuery);
-		for (var k in query) base[k] = (typeof base[k] == "undefined") ? query[k] : '('+base[k]+') && '+query[k];
-		query = dojo.objectToQuery(base);
+		query = dojo.objectToQuery(query);
 		query = query ? "?" + query: "";
 		if(options && options.sort){
 			query += (query ? "&" : "?") + "orderby=";
@@ -128,7 +124,7 @@ return dojo.declare("starbug.store.Api", null, {
 			}
 		}
 		var results = dojo.xhrGet({
-			url: WEBSITE_URL+'api/'+this.models+'.json' + (query || ""),
+			url: WEBSITE_URL+'api/'+this.model+'/'+this.action+'.json' + (query || ""),
 			handleAs: "json",
 			headers: headers
 		});

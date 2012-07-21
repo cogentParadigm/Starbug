@@ -14,9 +14,7 @@ define([
 
 var EnhancedGrid = dojo.declare('starbug.grid.EnhancedGrid', dojoxGrid, {
 	model: '',
-	models: '',
-	action: 'create',
-	apiQuery:'',
+	action: 'list',
 	storeUrl: '',
 	store: null,
 	mouse_down: false,
@@ -25,10 +23,8 @@ var EnhancedGrid = dojo.declare('starbug.grid.EnhancedGrid', dojoxGrid, {
 	notifier:'',
 	hasFetched: false,
 	constructor: function(args) {
-		args.apiQuery = args.models+'  query:'+args.apiQuery;
 		this.store = new ObjectStore(args);
 		this.model = this.store.model;
-		this.models = this.store.models;
 	},
 	postCreate: function() {
 		this.inherited(arguments);

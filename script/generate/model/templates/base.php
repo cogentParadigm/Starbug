@@ -21,6 +21,11 @@ class <?= ucwords($name); ?>Model extends Table {
 	function delete($<?= $singular; ?>) {
 		return $this->store(array('status' => 1,  'id' => $<?= $singular; ?>['id']));
 	}
+	
+	function query_admin($query) {
+		$query['where'][] = '!(<?= $name; ?>.status & 1)';
+		return $query;
+	}
 
 }
 <?= '?>'; ?>

@@ -15,15 +15,11 @@
  */
 	js("starbug/grid/EnhancedGrid");
 	$attributes = star($attributes);
-	list($models, $query) = explode("  ", $query, 2);
-	$models = str_replace(",", ".", $models);
 
 	//SET UP ATTRIBUTES
-	$attributes['models'] = $models;
-	$attributes['model'] = $model = reset(explode(".", $models, 2));
+	$attributes['model'] = $model;
 	$attributes['data-dojo-props'] = array();
 	efault($attributes['id'], $attributes['model']."_grid");
-	efault($attributes['models'], $attributes['model']);
 	efault($attributes['jsId'], $attributes['id']);
 	efault($attributes['style'], "width:100%");
 	efault($attributes['autoHeight'], "100");
@@ -31,7 +27,7 @@
 	efault($attributes['data-dojo-type'], "starbug.grid.EnhancedGrid");
 	if (!empty($attributes['orderColumn'])) efault($attributes['plugins'], array("nestedSorting" => true, "dnd" => true));
 	else efault($attributes['plugins'], array("nestedSorting" => true));
-	$attributes['apiQuery'] = base64_encode($query);
+	if ($query) $attributes['action'] = $query;
 	foreach ($attributes as $k => $v) {
 		if (!in_array($k, array("id", "jsId", "class", "style", "data-dojo-type", "data-dojo-props"))) {
 			$attributes['data-dojo-props'][$k] = $v;
@@ -56,7 +52,7 @@
 			$field['list'] = (in_array($view, $field_views));
 		}
 		efault($field['width'], "auto");
-		if (($field['display']) && ($field['list'])) $ordered_columns[$name] = empty($columns[$name]) ? $field : $columns[$name];
+		if ((($field['display']) && ($field['list'])) || isset($columns[$name])) $ordered_columns[$name] = empty($columns[$name]) ? $field : $columns[$name];
 	}
 	$ordered_columns["Options"] = empty($columns["Options"]) ? "field:id  width:100  cellType:starbug.grid.cells.Options  options:'Edit':'".uri($request->path)."/update/%id%', 'Delete':'javascript:sb.post({\'action[$model]\':\'delete\', \'".$model."[id]\':%id%}, \'return confirm(\\\\\'Are you sure you want to delete this item?\\\\\')\');'" : $columns["Options"];
 	

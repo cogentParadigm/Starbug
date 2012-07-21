@@ -13,9 +13,8 @@
  * - $attributes: (optional) attributes for the table
  * - $view: (optional) view name. only show fields within this view
  */
-	$model = reset(explode(".", str_replace(",", ".", reset(explode("  ", $query))), 2));
 	$options = schema($model);
-
+	$grid = capture("grid");
 ?>
 	<h1 class="heading">
 		<? link_to("New $options[singular_label]", $request->path."/create", "class:big right round create button"); ?>
@@ -23,6 +22,6 @@
 	</h1>
 	<?
 		render_form("search");
-		render("grid");
+		echo $grid;
 		link_to("New $options[singular_label]", $request->path."/create", "class:big right round create button");
 	?>

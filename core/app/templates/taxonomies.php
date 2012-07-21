@@ -1,7 +1,8 @@
 	<h1 class="heading"><a class="big round right create button" href="<?php echo uri($request->path."/create"); ?>">New Taxonomy</a>Taxonomies</h1>
 	<br/>
 <?php
-	assign("query", "terms  select:DISTINCT taxonomy");
+	assign("model", "terms");
+	assign("query", "admin");
 	$columns = array(
 		"Taxonomy" => "field:taxonomy  width:auto  formatter:taxonomy_formatter",
 		"Options" => "field:taxonomy  width:100  formatter:row_options",

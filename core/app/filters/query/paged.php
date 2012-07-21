@@ -2,7 +2,7 @@
 import("pager");
 efault($args['page'], $_GET['page']);
 //get count
-$sql = "SELECT COUNT(*) FROM $args[from]";
+$sql = "SELECT COUNT(".((false !== strpos(strtolower($args['select']), 'distinct')) ? $args['select'] : "*").") FROM $args[from]";
 if (!empty($args['where'])) $sql .= " WHERE $args[where]";
 $res = $this->pdo->prepare($sql);
 $res->execute($replacements);

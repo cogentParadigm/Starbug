@@ -21,6 +21,12 @@ class Terms {
 		$tax = $term['taxonomy'];
 		$this->remove("taxonomy='$tax'");
 	}
+	
+	function query_admin($query) {
+		$query['select'] = "DISTINCT taxonomy";
+		$query['where'][] = '!(status & 1)';
+		return $query;
+	}
 
 }
 ?>

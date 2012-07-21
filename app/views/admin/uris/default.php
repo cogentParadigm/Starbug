@@ -1,4 +1,5 @@
 <?php
-	assign("query", "uris  where:prefix='app/views/' && type='Page'");
+	assign("model", "uris");
+	assign("query", "admin");
 	render("list");
 ?>

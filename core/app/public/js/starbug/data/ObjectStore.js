@@ -7,7 +7,6 @@ define([
 ], function(dojo, declare, api, manager, dojoObjectStore) {
 	var oStore = declare("starbug.data.ObjectStore", [dojoObjectStore], {
 		model : '',
-		models : '',
 		query : '',
 		changes : [],
 		manager: null,
@@ -18,9 +17,7 @@ define([
 		onChange: null,
 		constructor:function(options) {
 			this.objectStore = new api(options);
-			this.query = this.objectStore.apiQuery;
 			this.model = this.objectStore.model;
-			this.models = this.objectStore.models;
 			this.manager = manager();
 			this.manager.register(this);
 		},
