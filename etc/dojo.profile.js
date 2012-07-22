@@ -7,7 +7,8 @@ dependencies = {
 			name: "dojo.js",
 			dependencies: [
 				'dojo.query',
-				'sb'
+				'sb',
+				'sb/data'
 			]
 		},
 		{
@@ -19,8 +20,11 @@ dependencies = {
 	],
 
 	prefixes: [
-		["dijit", "../dijit" ],
-		["dojox", "../dojox" ],
+		["dijit", "../dijit"],
+		["dojox", "../dojox"],
+		["dgrid", "../dgrid"],
+		["put-selector", "../put-selector"],
+		["xstyle", "../xstyle"],
 		["sb", "../../sb"],
 		["starbug", "../../starbug"],
 		["app", "../../../../../../app/public/js"]

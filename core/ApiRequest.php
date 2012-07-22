@@ -67,10 +67,10 @@ class ApiRequest {
 		//paging
 		if (isset($_SERVER['HTTP_RANGE'])) {
 			list($start, $finish) = explode("-", end(explode("=", $_SERVER['HTTP_RANGE'])));
-			$start = max((int) $start, 1);
+			//$start = max((int) $start, 1);
 			$ops['paged'] = true;
 			$ops['limit'] = 1 + (int) $finish - (int) $start;
-			$_GET['page'] = 1 + (((int) $start) - 1)/$ops['limit'];
+			$_GET['page'] = 1 + (int) $start/$ops['limit'];
 		}
 		$action_name = "query_".$action;
 		$query = sb($model)->$action_name($ops);
@@ -81,7 +81,8 @@ class ApiRequest {
 		$error = $f."errors";
 		if (empty($sb->errors[$model])) {
 			if (!empty($data)) {
-				if (isset($ops['paged'])) header("Content-Range: items ".(request()->pager->start+1).'-'.request()->pager->finish.'/'.request()->pager->count);
+				$add = (request()->pager->start > 0) ? 1 : 0;
+				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min(request()->pager->count, $finish).'/'.request()->pager->count);
 				else {
 					$count = count($data);
 					header("Content-Range: items 0-$count/$count");

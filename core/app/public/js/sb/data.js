@@ -1,13 +1,14 @@
 define(['dojo', 'sb/kernel', 'starbug', 'starbug/store/Api'], function(dojo, sb, starbug) {
-			sb.get = function(models) {
-				if (typeof this.stores[models] != 'undefined') return this.stores[models];
-				this.stores[models] = new starbug.store.Api({apiQuery:models});
-				return this.stores[models];
+			sb.get = function(model, action) {
+				if (typeof this.stores[model+'.'+action] != 'undefined') return this.stores[model+'.'+action];
+				var store = new starbug.store.Api({model:model, action:action});
+				this.stores[model+'.'+action] = store;
+				return store;
 			};
-			sb.query = function(models, query) {
+			sb.query = function(model, action, query) {
 				if (!query) query = {};
 				if (typeof query == 'string') query = this.star(query);
-				return this.get(models).query(query);
+				return this.get(model, action).query(query);
 			},
 			sb.store = function(model, fields) {
 				return this.get(model).put(fields).then(dojo.hitch(this, function(data) {

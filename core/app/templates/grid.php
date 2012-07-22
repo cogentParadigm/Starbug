@@ -13,35 +13,33 @@
  * - $attributes: (optional) attributes for the table
  * - $view: (optional) view name. only show fields within this view
  */
-	js("starbug/grid/EnhancedGrid");
+	js("starbug/grid/Grid");
 	$attributes = star($attributes);
 
-	//SET UP ATTRIBUTES
+	//set up default attributes
 	$attributes['model'] = $model;
 	$attributes['data-dojo-props'] = array();
 	efault($attributes['id'], $attributes['model']."_grid");
-	efault($attributes['jsId'], $attributes['id']);
-	efault($attributes['style'], "width:100%");
-	efault($attributes['autoHeight'], "100");
-	efault($attributes['rowsPerPage'], "100");
-	efault($attributes['data-dojo-type'], "starbug.grid.EnhancedGrid");
-	if (!empty($attributes['orderColumn'])) efault($attributes['plugins'], array("nestedSorting" => true, "dnd" => true));
-	else efault($attributes['plugins'], array("nestedSorting" => true));
+	efault($attributes['data-dojo-id'], $attributes['id']);
+	efault($attributes['style'], "width:100%;height:615px");
+	efault($attributes['data-dojo-type'], "starbug.grid.Grid");
 	if ($query) $attributes['action'] = $query;
+	
+	//build data-dojo-props attribute
 	foreach ($attributes as $k => $v) {
-		if (!in_array($k, array("id", "jsId", "class", "style", "data-dojo-type", "data-dojo-props"))) {
+		if (!in_array($k, array("id", "class", "style", "data-dojo-type", "data-dojo-props"))) {
 			$attributes['data-dojo-props'][$k] = $v;
 			unset($attributes[$k]);
 		}
 	}
 	$attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($attributes['data-dojo-props'])), '{}');
 	
-	//SET UP COLUMNS
+	//prepare columns
 	efault($columns, array());
 	$ordered_columns = array();
 	$options = schema($model);
 	foreach ($options['fields'] as $name => $field) {
-		$field['field'] = $name;
+		$field['field'] = "'".$name."'";
 		$name = ucwords(str_replace('_',' ',$name));
 		
 		if ($options['list'] == "all") efault($field['list'], true);
@@ -51,12 +49,36 @@
 			$field_views = explode(",", $field['views']);
 			$field['list'] = (in_array($view, $field_views));
 		}
-		efault($field['width'], "auto");
-		if ((($field['display']) && ($field['list'])) || isset($columns[$name])) $ordered_columns[$name] = empty($columns[$name]) ? $field : $columns[$name];
+		if ((($field['display']) && ($field['list'])) || isset($columns[$name])) {
+			foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list') as $remove) unset($field[$remove]);
+			$ordered_columns[$name] = empty($columns[$name]) ? $field : $columns[$name];
+		}
 	}
-	$ordered_columns["Options"] = empty($columns["Options"]) ? "field:id  width:100  cellType:starbug.grid.cells.Options  options:'Edit':'".uri($request->path)."/update/%id%', 'Delete':'javascript:sb.post({\'action[$model]\':\'delete\', \'".$model."[id]\':%id%}, \'return confirm(\\\\\'Are you sure you want to delete this item?\\\\\')\');'" : $columns["Options"];
+	$ordered_columns["Options"] = empty($columns["Options"]) ? "field:'id'  class:field-options  plugin:starbug.grid.columns.options" : $columns["Options"];
 	
-	//RENDER TABLE
+	//build data-dgrid-column attributes
+	foreach ($ordered_columns as $key => $value) {
+		$value = star($value);
+		$props = array();
+		foreach ($value as $k => $v) {
+			if (!in_array($k, array("id", "class", "style"))) {
+				$props[$k] = $v;
+				unset($value[$k]);
+			}
+		}
+		$value['data-dgrid-column'] = array();
+		foreach ($props as $k => $v) {
+			$value['data-dgrid-column'][] = "$k:$v";
+		}
+		$value['data-dgrid-column'] = '{'.implode(', ', $value['data-dgrid-column']).'}';
+		if (isset($props['plugin'])) {
+			js(str_replace(".", "/", $props['plugin']));
+			$value['data-dgrid-column'] = $props['plugin']."(".$value['data-dgrid-column'].")";
+		}
+		$ordered_columns[$key] = $value;
+	}
+	
+	//render table
 	assign("attributes", $attributes);
 	assign("columns", $ordered_columns);
 	render("table");

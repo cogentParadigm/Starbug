@@ -10,3 +10,12 @@
 [submodule "core/app/public/js/dojo/util"]
 	path = core/app/public/js/dojo/util
 	url = git://github.com/dojo/util.git
+[submodule "core/app/public/js/dojo/dgrid"]
+	path = core/app/public/js/dojo/dgrid
+	url = git://github.com/SitePen/dgrid.git
+[submodule "core/app/public/js/dojo/put-selector"]
+	path = core/app/public/js/dojo/put-selector
+	url = git://github.com/kriszyp/put-selector.git
+[submodule "core/app/public/js/dojo/xstyle"]
+	path = core/app/public/js/dojo/xstyle
+	url = git://github.com/kriszyp/xstyle.git

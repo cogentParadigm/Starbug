@@ -140,3 +140,15 @@ body ol.menu_items button img{width:14px;height:14px}
 .Edit .icon{background:url(../icons/file-edit.png) no-repeat}
 .Delete .icon{background:url(../icons/cross.png) no-repeat}
 
+/********************* dgrid *********************/
+.dgrid table{margin:0}
+.dgrid button, .dgrid a.button{margin:0}
+.dgrid .field-options{width:80px}
+/* auto-height code */
+/*
+.ui-widget.dgrid{height:auto}
+.dgrid .dgrid-scroller{position:relative;overflow-y:hidden}
+.has-ie-6 .dgrid .dgrid-scroller{overflow-y:visible}
+.dgrid .dgrid-header-scroll{display:none}
+.dgrid .dgrid-header{right:0}
+*/
