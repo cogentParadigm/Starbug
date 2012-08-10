@@ -1,5 +1,5 @@
 <?php
-class AdminMenusController extends Controller {
+class AdminMenusController {
 	function init() {
 		assign("model", "menus");
 	}

@@ -24,7 +24,7 @@ class Terms {
 	
 	function query_admin($query) {
 		$query['select'] = "DISTINCT taxonomy";
-		$query['where'][] = '!(status & 1)';
+		$query['where'][] = '!(terms.status & 1)';
 		return $query;
 	}
 

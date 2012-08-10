@@ -64,4 +64,41 @@ function get_module_index() {
 	}
 	return $index;
 }
-?>
+
+/**
+ * get a controller by name
+ * @param string $name the name of the controller, such as 'users'
+ * @param string $type a sub type such as 'admin'
+ * @return the instantiated controller
+ */
+function controller($name, $type="") {
+	import("Controller", "core/lib");
+
+	$class = ucwords($type).ucwords($name)."Controller";
+
+	$last = "Controller";
+	
+	//get extending controllers
+	$controllers = locate("$class.php", "controllers");
+	$count = count($controllers);
+	$search = "class $class {";
+	
+	//loop through found controllers
+	for ($i = 0; $i < $count; $i++) {
+		//get file contents
+		$contents = file_get_contents($controllers[$i]);
+		//make class name unique and extend the previous class
+		$class = str_replace(array(BASE_DIR.'/', '/'), array('', '_'), reset(explode('/controllers/', $controllers[$i])))."__$class";
+		$replace = "class $class extends $last {";
+		//replace and eval
+		eval('?>'.str_replace($search, $replace, $contents));
+		//set $last for the next round
+		$last = $class;
+	}
+	
+	//return the base model if no others
+	if ($count == 0) $class = $last;
+
+	//instantiate save the object
+	return new $class($name, $type);
+}

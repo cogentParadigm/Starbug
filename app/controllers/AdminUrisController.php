@@ -1,5 +1,5 @@
 <?php
-class AdminUrisController extends Controller {
+class AdminUrisController {
 	function init() {
 		assign("model", "uris");
 	}

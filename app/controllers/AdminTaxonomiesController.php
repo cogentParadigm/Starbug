@@ -1,5 +1,5 @@
 <?php
-class AdminTaxonomiesController extends Controller {
+class AdminTaxonomiesController {
 	function init() {
 		assign("model", "taxonomies");
 	}
