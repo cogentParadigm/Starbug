@@ -25,10 +25,10 @@
  */
 function cache($key, $value=null, $ttl=0) {
 	if ($value == null) {
-		return apc_fetch(P($key)); //GET THE VALUE
+		return apc_fetch(BASE_DIR.'_'.$key); //GET THE VALUE
 	} else {
 		if (!is_numeric($ttl)) $ttl = strtotime($ttl) - time(); //SET EXPIRY
-		return apc_store(P($key), $value, $ttl); //STORE VALUE
+		return apc_store(BASE_DIR.'_'.$key, $value, $ttl); //STORE VALUE
 	}
 	return $value;
 }
@@ -39,7 +39,7 @@ function cache($key, $value=null, $ttl=0) {
  * @return bool true if the value is cached, false otherwise
  */
 function is_cached($key) {
-	return apc_exists(P($key));
+	return apc_exists(BASE_DIR.'_'.$key);
 }
 /**
  * delete a key from the cache
@@ -48,6 +48,6 @@ function is_cached($key) {
  * @return bool true if successful, false otherwise
  */
 function cache_delete($key) {
-	return apc_delete(P($key));
+	return apc_delete(BASE_DIR.'_'.$key);
 }
 ?>
