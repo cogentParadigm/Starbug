@@ -559,7 +559,7 @@ class Schemer {
 			}
 		}
 		efault($ops[0], "table,global");
-		efault($ops[1], array_sum($statuses)-1);
+		efault($ops[1], array_sum($statuses));
 		$permit['status'] = $ops[1];
 		$return = array();
 		$types = explode(",", $ops[0]);
