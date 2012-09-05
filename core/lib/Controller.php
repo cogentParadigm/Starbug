@@ -2,7 +2,7 @@
 $sb->provide("core/lib/Controller");
 class Controller {
 	
-	var $template = "html";
+	var $template = "auto";
 	var $auto_render = true;
 
 	function __construct() {
