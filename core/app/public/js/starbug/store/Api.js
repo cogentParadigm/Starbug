@@ -13,6 +13,7 @@ return dojo.declare("starbug.store.Api", null, {
 	action:'list',
 	post_action: 'create',
 	idProperty: "id",
+	params:{},
 	constructor: function(/*starbug.store.Api*/ options){
 		// summary:
 		//		This is a basic store for RESTful communicating with a server through JSON
@@ -108,6 +109,7 @@ return dojo.declare("starbug.store.Api", null, {
 		//		The results of the query, extended with iterative methods.
 		var headers = {Accept: "application/javascript, application/json"};
 		query = query || {};
+		for (x in this.params) if (typeof query[x] == 'undefined') query[x] = this.params[x];
 		options = options || {};
 		if(options.start >= 0 || options.count >= 0){
 			headers.Range = "items=" + (options.start || '0') + '-' +

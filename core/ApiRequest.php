@@ -43,7 +43,8 @@ class ApiRequest {
 		$parts = explode("/", str_replace(".$format", "", $what));
 		$call = reset($parts);
 		$action = next($parts);
-		$ops = array("action" => "read", "where" => array());
+		$ops = array_merge(array("action" => "read", "where" => array()), star($ops));
+		if (!is_array($ops['where'])) $ops['where'] = array($ops['where']);
 		if ($this->headers) header("Content-Type: ".$this->types[$format]);
 		$this->result = call_user_func(array($this, $call), $action, $format, $ops);
 		if ($this->whitelisting) $_SESSION[P("memberships")] = 0;

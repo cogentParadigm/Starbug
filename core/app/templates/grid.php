@@ -14,7 +14,7 @@
  * - $view: (optional) view name. only show fields within this view
  */
 	js("starbug/grid/Grid");
-	$attributes = star($attributes);
+	$attributes = star($grid_attributes);
 
 	//set up default attributes
 	$attributes['model'] = $model;
@@ -23,16 +23,27 @@
 	efault($attributes['data-dojo-id'], $attributes['id']);
 	efault($attributes['style'], "width:100%;height:615px");
 	efault($attributes['data-dojo-type'], "starbug.grid.Grid");
-	if ($query) $attributes['action'] = $query;
+	if ($query) {
+		$params = star($query);
+		$query = array_shift($params);
+		$attributes['action'] = $query;
+	}
 	
 	//build data-dojo-props attribute
 	foreach ($attributes as $k => $v) {
-		if (!in_array($k, array("id", "class", "style", "data-dojo-type", "data-dojo-props"))) {
+		if (!in_array($k, array("id", "class", "style", "data-dojo-type", "data-dojo-props", "data-dojo-id"))) {
 			$attributes['data-dojo-props'][$k] = $v;
 			unset($attributes[$k]);
 		}
 	}
+
 	$attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($attributes['data-dojo-props'])), '{}');
+	
+	if (!empty($params)) {
+		$attributes['data-dojo-props'] .= ', query: {';
+		foreach ($params as $k => $v) $attributes['data-dojo-props'] .= $k.":'".$v."', ";
+		$attributes['data-dojo-props'] = rtrim($attributes['data-dojo-props'], ', ').'}';
+	}
 	
 	//prepare columns
 	efault($columns, array());
@@ -61,7 +72,7 @@
 		$value = star($value);
 		$props = array();
 		foreach ($value as $k => $v) {
-			if (!in_array($k, array("id", "class", "style"))) {
+			if (!in_array($k, array("id", "class", "style", "options"))) {
 				$props[$k] = $v;
 				unset($value[$k]);
 			}
