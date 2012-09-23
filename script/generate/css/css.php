@@ -15,10 +15,8 @@
 		if (file_exists(BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-screen.css")) $screen->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-screen.css", "$name custom-screen.css");
 		//add additional screen styles
 		if (!empty($conf['screen'])) foreach ($conf['screen'] as $custom) $screen->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/$custom");
-		if (!empty($css['screen'])) foreach ($css['screen'] as $custom) $screen->add_file(BASE_DIR."/app/public/stylesheets/$custom");
 		//add plugins
 		if (!empty($conf['plugins'])) foreach ($conf['plugins'] as $plugin) $screen->add_plugin($plugin);
-		if (!empty($css['plugins'])) foreach ($css['plugins'] as $plugin) $screen->add_plugin($plugin);
 		$screen->parse();
 		if (!empty($conf['classes'])) $screen->add_semantic_classes($conf['classes']);
 		$screen->write();
@@ -30,10 +28,8 @@
 		if (file_exists(BASE_DIR."app/themes/".$name."/public/stylesheets/custom-print.css")) $print->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-print.css");
 		//add additional print styles
 		if (!empty($conf['print'])) foreach ($conf['print'] as $custom) $print->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/$custom");
-		if (!empty($css['print'])) foreach ($css['print'] as $custom) $print->add_file(BASE_DIR."/app/public/stylesheets/$custom");
 		//add plugins
 		if (!empty($conf['plugins'])) foreach ($conf['plugins'] as $plugin) $print->add_plugin($plugin);
-		if (!empty($css['plugins'])) foreach ($css['plugins'] as $plugin) $print->add_plugin($plugin);
 		$print->parse();
 		if (!empty($conf['classes'])) $screen->add_semantic_classes($conf['classes']);
 		$print->write();
@@ -45,7 +41,6 @@
 		if (file_exists(BASE_DIR."app/themes/".$name."/public/stylesheets/custom-ie.css")) $ie->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-ie.css");
 		//add additional ie styles
 		if (!empty($conf['ie'])) foreach ($conf['ie'] as $custom) $ie->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/$custom");
-		if (!empty($css['ie'])) foreach ($css['ie'] as $custom) $ie->add_file(BASE_DIR."/app/public/stylesheets/$custom");
 		//add plugins
 		if (!empty($conf['plugins'])) foreach ($conf['plugins'] as $plugin) $ie->add_plugin($plugin);
 		$ie->parse();
