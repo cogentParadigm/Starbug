@@ -1,6 +1,0 @@
-{
-	"screen" : ["custom-screen.css"],
-	"print" : ["custom-print.css"],
-	"ie" : ["custom-ie.css"],
-	"plugins" : []
-}

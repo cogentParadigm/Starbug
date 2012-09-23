@@ -64,8 +64,10 @@
 			foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list') as $remove) unset($field[$remove]);
 			$ordered_columns[$name] = empty($columns[$name]) ? $field : $columns[$name];
 		}
+		unset($columns[$name]);
 	}
-	$ordered_columns["Options"] = empty($columns["Options"]) ? "field:'id'  class:field-options  plugin:starbug.grid.columns.options" : $columns["Options"];
+	$ordered_columns = array_merge($ordered_columns, $columns);
+	efault($ordered_columns['Options'], "field:'id'  class:field-options  plugin:starbug.grid.columns.options");
 	
 	//build data-dgrid-column attributes
 	foreach ($ordered_columns as $key => $value) {

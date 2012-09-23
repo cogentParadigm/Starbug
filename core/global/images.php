@@ -111,12 +111,8 @@ function image_save($image, $path, $format="auto") {
  * @return string an absolute URL to the thumbnail
  */
 function image_thumb($current_file, $dimensions) {
-	list($width, $height) = getimagesize(BASE_DIR.$current_file);
-	$target = array_merge(array("width" => $width, "height" => $height), star($dimensions));
-	$ratio = max($width/$target['width'], $height/$target['height']);
-	$max_width = (int) ($width/$ratio);
-	$loc = uri("app/public/php/phpthumb/phpThumb.php");
-	$loc .= "?w=$max_width&src=".$current_file;
+	$dimensions = star($dimensions);
+	$loc = uri("app/public/php/phpthumb/phpThumb.php?").http_build_query($dimensions).'&src=/'.request()->base_dir.'/'.$current_file;
 	return $loc;
 }
 

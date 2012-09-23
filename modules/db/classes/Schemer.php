@@ -115,7 +115,7 @@ class Schemer {
 		}
 		if (empty($primary)) $fields['id'] = star("type:int  auto_increment:  key:primary");
 		if (empty($fields["owner"])) $fields["owner"] = star("type:int  default:1  references:users id");
-		if (empty($fields["collective"])) $fields["collective"] = star("type:int  default:1");
+		if (empty($fields["collective"])) $fields["collective"] = star("type:int  default:0");
 		if (empty($fields["status"])) $fields["status"] = star("type:int  default:4");
 		if (empty($fields["created"])) $fields["created"] = star("type:datetime  default:0000-00-00 00:00:00");
 		if (empty($fields["modified"])) $fields["modified"] = star("type:datetime  default:0000-00-00 00:00:00");

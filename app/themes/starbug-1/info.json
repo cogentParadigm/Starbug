@@ -14,6 +14,7 @@
 	"menus": ["top", "main", "footer"],
 	//stylesheets
 	"styles": {
+		"blueprint": true,
 		"screen" : ["dojo.css"],
 		"plugins" : ["buttons", "rounding"]
 	}

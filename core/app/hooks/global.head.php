@@ -17,14 +17,14 @@
 		<?php } ?>
 	<?php } else { ?>
 			<?php
-				$css = config("css");
 				$styles = theme("styles", $request->theme);
 				efault($styles['plugins'], array());
 				efault($styles['screen'], array());
 				efault($styles['print'], array());
 				efault($styles['ie'], array());
+				efault($styles['blueprint'], false);
 			?>
-		<?php if (Etc::BLUEPRINT_ENABLED) { ?>
+		<?php if ($styles['blueprint']) { ?>
 			<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/reset.css"); ?>" type="text/css" media="screen, projection">
 			<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/typography.css"); ?>" type="text/css" media="screen, projection">
 			<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/forms.css"); ?>" type="text/css" media="screen, projection">
@@ -42,29 +42,19 @@
 		<?php foreach ($styles['screen'] as $screen) { ?>
 			<link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/$screen"); ?>" type="text/css" media="screen, projection">
 		<?php } ?>
-		<?php foreach ($css['screen'] as $screen) { ?>
-			<link rel="stylesheet" href="<?php echo uri("app/public/stylesheets/$screen"); ?>" type="text/css" media="screen, projection">
+		<?php if ($styles['blueprint']) { ?>
+			<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/print.css"); ?>" type="text/css" media="print">
 		<?php } ?>
-		<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/print.css"); ?>" type="text/css" media="print">
 		<?php foreach ($styles['print'] as $print) { ?>
 			<link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/styesheets/$print"); ?>" type="text/css" media="print">
 		<?php } ?>
-		<?php foreach ($css['print'] as $print) { ?>
-			<link rel="stylesheet" href="<?php echo uri("app/public/styesheets/$print"); ?>" type="text/css" media="print">
+		<?php if ($styles['blueprint']) { ?>
+			<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
 		<?php } ?>
-		<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/src/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
 		<?php foreach ($styles['ie'] as $ie) { ?>
 			<!--[if IE]><link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/$ie"); ?>" type="text/css" media="screen, projection"><![endif]-->
 		<?php } ?>
-		<?php foreach ($css['ie'] as $ie) { ?>
-			<!--[if IE]><link rel="stylesheet" href="<?php echo uri("app/public/stylesheets/$ie"); ?>" type="text/css" media="screen, projection"><![endif]-->
-		<?php } ?>
 		<?php foreach ($styles['plugins'] as $plugin) { ?>
-				<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/screen.css"); ?>" type="text/css" media="screen, projection">
-				<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/print.css"); ?>" type="text/css" media="print">
-				<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
-		<?php } ?>
-		<?php foreach ($css['plugins'] as $plugin) { ?>
 				<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/screen.css"); ?>" type="text/css" media="screen, projection">
 				<link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/print.css"); ?>" type="text/css" media="print">
 				<!--[if IE]><link rel="stylesheet" href="<?php echo uri("core/app/public/stylesheets/plugins/$plugin/ie.css"); ?>" type="text/css" media="screen, projection"><![endif]-->
