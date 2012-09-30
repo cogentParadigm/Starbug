@@ -25,7 +25,7 @@ function title_onchange(evt) {
 	var permalink = dojo.query("#permalink .editable")[0];
 	console.log(permalink);
 	var namebox = dojo.byId("path");
-	if ((old_title.replace(/ /g, '-').replace("'", '').toLowerCase()) == old_link) permalink.innerHTML = namebox.value = old_link = title.value.replace(/ /g, '-').replace("'", '').toLowerCase();
+	if ((old_title.replace(/ /g, '-').replace("'", '').replace(".", '').toLowerCase()) == old_link) permalink.innerHTML = namebox.value = old_link = title.value.replace(/ /g, '-').replace("'", '').replace(".", '').toLowerCase();
 	old_title = title.value;
 }
 function editable_onchange(evt) {
@@ -136,7 +136,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 				<label>Tags</label>
 				<input type="text" id="tagbox" class="text left" style="width:65%" /><a class="round right button" href="javascript:apply_tags();">apply</a>
 				<ul id="applied_tags">
-					<?php foreach(query("uris_tags,terms", "select:DISTINCT term, slug  where:uris_tags.uris_id='".$_POST['uris']['id']."'") as $tag) { ?>
+					<?php foreach(query("uris_tags,terms", "select:DISTINCT term, slug  where:!(terms.status & 1) and uris_tags.uris_id='".$_POST['uris']['id']."'") as $tag) { ?>
 						<li><a href="javascript:remove_tag('<?php echo $tag['term']; ?>');">x</a> <?php echo $tag['term']; ?></li>
 					<?php } ?>
 				</ul>
@@ -168,6 +168,8 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 		<legend>SEO</legend>
 		<br/>
 		<?php textarea("description  label:Meta Description  class:plain  style:width:100%  data-dojo-type:dijit.form.Textarea"); ?>
+		<br/>
+		<?php textarea("meta_keywords  label:Meta Keywords  class:plain  style:width:100%  data-dojo-type:dijit.form.Textarea"); ?>
 		<br/>
 		<?php textarea("meta  label:Custom Meta Tags  class:plain  style:width:100%  data-dojo-type:dijit.form.Textarea"); ?>
 		<br/>

@@ -1,7 +1,6 @@
 <?php
 	$sb->import("core/lib/CSSParser");
 	$themes = config("themes");
-	$css = config("css");
 	foreach ($themes as $name) {
 		$conf = theme("styles", $name);
 		$screen = new CSSParser(
