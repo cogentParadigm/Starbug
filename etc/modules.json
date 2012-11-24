@@ -3,5 +3,7 @@
 	"db",
 	"users",
 	"files",
-	"comments"
+	"comments",
+	"css",
+	"js"
 ]
