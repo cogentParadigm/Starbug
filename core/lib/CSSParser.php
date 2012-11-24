@@ -20,8 +20,9 @@ $sb->provide("core/lib/CSSParser");
 class CSSParser {
 	var $path;
 	var $css;
+	var $fonts;
 	function __construct($filename, $output_path="") {
-		$this->css = array();
+		$this->css = $this->fonts = array();
 		$args = func_get_args();
 		$count = count($args);
 		if ($count == 1) { //IF THERE IS ONLY ONE PARAM, USE IT AS THE OUTPUT PATH
@@ -62,6 +63,7 @@ class CSSParser {
 	function parse() {
 		foreach($this->css as $desc => $file) {
 			$styles = array();
+			$fontfaces = array();
 			//OPTIMIZED FILE CONTAINS 1 RULESET PER LINE SO FIRST BREAK UP THE LINES
 			$lines = explode("\n", rtrim($file, "\n"));
 			// NOW WE LOOP THROUGH EACH LINE AND FILL THE STYLES ARRAY
@@ -76,12 +78,11 @@ class CSSParser {
 				$p = array();
 				foreach($props as $prop) {
 					$prop = explode(":", $prop);
-					$p[$prop[0]] = $prop[1];
+					$p[] = array($prop[0], $prop[1]);
 				}
 				$s = trim($s);
 				if (!empty($s)) {
-					if(isset($styles[$s])) $styles[$s] = array_merge_recursive($styles[$s], $p);
-					else $styles[$s] = $p;
+					$styles[] = array($s, $p);
 				}
 			}
 			$this->css[$desc] = $styles;
@@ -118,11 +119,11 @@ class CSSParser {
 		foreach ($this->css as $desc => $lines) {
 			if (!empty($output)) $output .= "\n";
 			$output .= "/* $desc */\n";
-			foreach ($lines as $s => $rules) {
-				$output .= $s."{";
-				foreach ($rules as $property => $value) $output .= $property.":".$value.";";
-				$output = rtrim($output, ';');
-				$output .= "}";
+			foreach ($lines as $idx => $rule) {
+					$output .= $rule[0]."{";
+					foreach ($rule[1] as $idx => $property) $output .= $property[0].":".$property[1].";";
+					$output = rtrim($output, ';');
+					$output .= "}";
 			}
 		}
 		$file = fopen($this->path, "wb");
