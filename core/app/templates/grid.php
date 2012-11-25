@@ -27,6 +27,7 @@
 		$params = star($query);
 		$query = array_shift($params);
 		$attributes['action'] = $query;
+		$params = array_merge($_GET, $params);
 	}
 	
 	//build data-dojo-props attribute

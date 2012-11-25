@@ -440,7 +440,7 @@ class Schemer {
 			}
 			$this->tables[$table][$colname] = $col;
 		}
-		efault($this->options[$table], array("select" => "$table.*", "search" => implode(",", array_keys($this->tables[$table]))));
+		efault($this->options[$table], array("select" => "$table.*", "search" => $table.'.'.implode(",$table.", array_keys($this->tables[$table]))));
 		foreach ($ops as $k => $v) $this->options[$table][$k] = $v;
 		foreach ($additional as $tbl) call_user_func_array(array($this, "column"), $tbl);
 	}

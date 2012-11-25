@@ -77,6 +77,7 @@ class ApiRequest {
 		$query = sb($model)->$action_name($ops);
 		$models = (isset($query['models'])) ? $query['models'] : $model;
 		$query['where'] = implode(' && ', $query['where']);
+		if (!empty($_GET['keywords'])) efault($query['search'], '');
 		$data = query($models, $query);
 		$f = strtoupper($format);
 		$error = $f."errors";
