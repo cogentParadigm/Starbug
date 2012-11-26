@@ -154,81 +154,34 @@ class form {
 		if (empty($ops['id'])) $ops['id'] = $ops['name'];
 		$ops['nolabel'] = (isset($ops['nolabel'])) ? true : false;
 		if (empty($ops['label'])) $ops['label'] = ucwords(str_replace("_", " ", $ops['name']));
-		if (empty($ops['error'][$ops['name']])) $ops['error'][$ops['name']] = "This field is required.";
-		$ops['class'] = (empty($ops['class'])) ? $ops['type'] : $ops['class']." ".$ops['type'];
-		if ($ops['type'] == 'password') $ops['class'] .= " text";
-		$ops['class'] .= " ".$ops['name']."-field";
+		$ops['class'] = ((empty($ops['class'])) ? "" : " ").$ops['name']."-field";
 	}
 
 	/**
 	 * generate a form control (a tag with a name attribute such as input, select, textarea, file)
-	 * @param string $tag the name of the tag (input, select, textarea, file)
-	 * @param star $ops the attributes for the html tag - special ones below
+	 * @param string $control the name of the form control, usually the tag (input, select, textarea, file)
+	 * @param star $field the attributes for the html tag - special ones below
 	 *									name: the relative name, eg. 'group[]' might become 'users[group][]'
 	 *									content: the inner HTML of the tag if it is not self closing
+	 * @param array $options an optional array that can be used to specify a data set eg. select options
 	 * @param bool $self if true, will use a self closing tag. If false, will use an opening tag and a closing tag (default is false)
 	 */
-	function form_control($tag, $ops) {
+	function form_control($control, $field, $options=array()) {
+		$this->fill_ops($field);
+		//run filters
+		foreach (locate("form/".$control.".php", "filters") as $filter) include($filter);
+		
 		$capture = "field";
-		$ops['field'] = reset(explode("[", $ops['name']));
-		$ops['name'] = $this->get_name($ops['name']);
-		foreach ($ops as $k => $v) assign($k, $v);
-		if (isset($ops['nofield'])) {
-			unset($ops['nofield']);
-			$capture = $tag;
+		$field['field'] = reset(explode("[", $field['name']));
+		if ($control != "input" || $field['type'] != "file") $field['name'] = $this->get_name($field['name']);
+		foreach ($field as $k => $v) assign($k, $v);
+		if (isset($field['nofield'])) {
+			unset($field['nofield']);
+			$capture = $control;
 		}
-		assign("attributes", $ops);
-		assign("control", $tag);
-		return capture(array($this->model."/form/$ops[field]-$capture", "form/$ops[field]-$capture", $this->model."/form/$capture", "form/$capture"));
-	}
-
-	/**
-	 * generates a text field
-	 * @param star $ops an option string starting with the input name, and including HTML attributes
-	 *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
-	 *									label: The label displayed above the input. The default label is the name option replacing underscores with spaces and passed to ucwords.
-	 * 									nolabel: if this is set, no label will be displayed
-	 * 									default: a default value to use
-	 *
-	 * 									for the first paramater, you can leave out the key. For example, here  'name:' is left out:
-	 * 									text("title  label:The Title  default:Untitled");
-	 */
-	function text($ops) {
-		return $this->input("text", $ops);
-	}
-	/**
-	 * generates a password field
-	 * @param star $ops an option string starting with the input name, and including HTML attributes
-	 *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
-	 *									label: The label displayed above the input. The default label is the name option replacing underscores with spaces and passed to ucwords.
-	 * 									nolabel: if this is set, no label will be displayed
-	 * 									default: a default value to use
-	 *
-	 * 									for the first paramater, you can leave out the key. For example, here  'name:' is left out:
-	 * 									password("password  label:Your Password");
-	 */
-	function password($ops) {
-		return $this->input("password", $ops);
-	}
-	/**
-	 * generates a hidden input field
-	 * @param star $ops an option string starting with the input name, and including HTML attributes
-	 *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
-	 * 									default: a default value to use
-	 *
-	 * 									for the first paramater, you can leave out the key. For example, here  'name:' is left out:
-	 * 									hidden("article_id  default:1");
-	 */
-	function hidden($ops) {
-		$ops = $ops."  nolabel:true  nodiv:true";
-		return $this->input("hidden", $ops);
-	}
-	/**
-	 * generates a submit input
-	 * @param star $ops an option string of HTML attributes
-	 */
-	function submit($ops="") {
-		return $this->input("submit", "nolabel:".((empty($ops))? "" : "  ".$ops));
+		assign("attributes", $field);
+		assign("control", $control);
+		return capture(array($this->model."/form/$field[field]-$capture", "form/$field[field]-$capture", $this->model."/form/$capture", "form/$capture"));
 	}
 	/**
 	 * generates a submit button
@@ -242,149 +195,6 @@ class form {
 		assign("label", $label);
 		assign("attributes", $ops);
 		return capture("form/button");
-	}
-	/**
-	 * generates a file input
-	 * @param star $ops an option string starting with the input name, and including HTML attributes
-	 *									[name]: the input name
-	 *									label: The label displayed above the input. The default label is the name option replacing underscores with spaces and passed to ucwords.
-	 * 									nolabel: if this is set, no label will be displayed
-	 * 									default: a default value to use
-	 */
-	function file($ops) {
-		$ops = $ops."  type:file";
-		$this->fill_ops($ops);
-		if (!empty($_POST[$ops['name']])) $ops['value'] = $_POST[$ops['name']];
-		$ops['field'] = reset(explode("[", $ops['name']));
-		foreach ($ops as $k => $v) assign($k, $v);
-		assign("attributes", $ops);
-		assign("control", "input");
-		return capture("form/field");
-	}
-	/**
-	 * generates a checkbox
-	 * @param star $ops an option string starting with the input name, and including HTML attributes
-	 *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
-	 * 									value: you must specify a value. The checkbox will be checked if the POST contains this value.
-	 *									label: The label displayed above the input. The default label is the name option replacing underscores with spaces and passed to ucwords.
-	 * 									nolabel: if this is set, no label will be displayed
-	 *
-	 * 									for the first paramater, you can leave out the key. For example, here  'name:' is left out:
-	 * 									checkbox("is_active  value:1");
-	 */
-	function checkbox($ops) {
-		$ops = $ops."  type:checkbox";
-		$this->fill_ops($ops);
-		if ($this->get($ops['name']) == $ops['value']) $ops['checked'] = 'checked';
-		return $this->form_control("input", $ops);
-	}
-
-	function radio($ops) {
-		return $this->input("radio", $ops);
-	}
-
-	function input($type, $ops) {
-		$ops = $ops."  type:$type";
-		$this->fill_ops($ops);
-		//POSTed or default value
-		$var = $this->get($ops['name']);
-		if (!empty($var) && $type != "password") $ops['value'] = htmlentities($var);
-		else if (!empty($ops['default'])) {
-			$ops['value'] = $ops['default'];
-			unset($ops['default']);
-		}
-		return $this->form_control("input", $ops);
-	}
-
-	function select($ops, $options=array()) {
-		$this->fill_ops($ops);
-		$name = $ops['name'];
-		if (isset($ops['multiple'])) {
-			$ops['multiple'] = "multiple";
-			$ops['name'] = $ops['name']."[]";
-			efault($ops['size'], 5);
-		}
-		$value = $this->get($ops['name']);
-		if ((empty($value)) && (!empty($ops['default']))) {
-			$this->set($ops['name'], $ops['default']);
-			unset($ops['default']);
-		}
-		if (!empty($ops['range'])) {
-			$range = explode("-", $ops['range']);
-			for ($i=$range[0];$i<=$range[1];$i++) $options[$i] = $i;
-			unset($ops['range']);
-		}
-		if (!empty($ops['options'])) {
-			$keys = explode(",", $ops['options']);
-			$values = (!empty($ops['values'])) ? explode(",", $ops['values']) : $keys;
-			$options = array();
-			foreach ($keys as $i => $k) $options[$k] = $values[$i];
-			unset($ops['options']);
-			unset($ops['values']);
-		}
-		if (!empty($ops['caption'])) {
-			if (!empty($ops['from'])) $options = query($ops['from'], $ops);
-			$list = array();
-			$keys = array();
-			if (!empty($options)) foreach ($options[0] as $k => $v) if (false !== strpos($ops['caption'], "%$k%")) $keys[] = $k;
-			foreach ($options as $o) {
-				$cap = $ops['caption'];
-				foreach($keys as $k) $cap = str_replace("%$k%", $o[$k], $cap);
-				$list[$cap] = $o[$ops['value']];
-			}
-			$options = $list; unset($ops['caption']); unset($ops['value']);
-		}
-		assign("value", $this->get($name));
-		assign("options", $options);
-		return $this->form_control("select", $ops);
-	}
-	
-	function multiple_select($ops, $options=array()) {
-		return $this->select($ops."  multiple:", $options);
-	}
-	
-	function category_select($ops) {
-		$this->fill_ops($ops);
-		$value = $this->get($ops['name']);
-		if ((empty($value)) && (!empty($ops['default']))) {
-			$this->set($ops['name'], $ops['default']);
-			unset($ops['default']);
-		}
-		efault($ops['taxonomy'], ((empty($this->model)) ? "" : $this->model."_").$ops['name']);
-		efault($ops['parent'], 0);
-		$terms = terms($ops['taxonomy'], $ops['parent']);
-		$options = array();
-		if (isset($ops['optional'])) $options[""] = 0;
-		foreach ($terms as $term) $options[str_pad($term['term'], strlen($term['term'])+$term['depth'], "-", STR_PAD_LEFT)] = $term['id'];
-		if (!isset($ops['readonly'])) {
-			$options["Add a new ".str_replace("_", " ", $ops['name']).".."] = -1;
-			$ops['onchange'] = "if (dojo.attr(this, 'value') == -1) dojo.style(this.id+'_new_category', 'display', 'block'); else dojo.style(this.id+'_new_category', 'display', 'none');";
-		}
-		assign("value", $this->get($ops['name']));
-		assign("options", $options);
-		return $this->form_control("category_select", $ops);
-	}
-	
-	function multiple_category_select($ops) {
-		$this->fill_ops($ops);
-		$value = $this->get($ops['name']);
-		if ((empty($value)) && (!empty($ops['default']))) {
-			$this->set($ops['name'], $ops['default']);
-			unset($ops['default']);
-		}
-		efault($ops['taxonomy'], ((empty($this->model)) ? "" : $this->model."_").$ops['name']);
-		efault($ops['parent'], 0);
-		$terms = terms($ops['taxonomy'], $ops['parent']);
-		$options = array();
-		if (isset($ops['optional'])) $options[""] = 0;
-		foreach ($terms as $term) $options[str_pad($term['term'], strlen($term['term'])+$term['depth'], "-", STR_PAD_LEFT)] = $term['id'];
-		if (!isset($ops['readonly'])) {
-			$options["Add a new ".str_replace("_", " ", $ops['name']).".."] = -1;
-			$ops['onchange'] = "if (dojo.attr(this, 'value') == -1) dojo.style(this.id+'_new_category', 'display', 'block'); else dojo.style(this.id+'_new_category', 'display', 'none');";
-		}
-		assign("value", $this->get($ops['name']));
-		assign("terms", $terms);
-		return $this->form_control("multiple_category_select", $ops);
 	}
 
 	function date_select($ops) {
@@ -410,9 +220,9 @@ class form {
 		if ($start_year < $end_year) for ($i=$start_year;$i<=$end_year;$i++) $year_options[$i] = $i;
 		else for ($i=$start_year;$i>=$end_year;$i--) $year_options[$i] = $i;
 		//BUILD SELECT BOXES
-		$select = $this->select($name."[month]  id:".$ops['id']."-mm  nolabel:", $month_options);
-		$select .= $this->select($name."[day]  id:".$ops['id']."-dd  nolabel:", $day_options);
-		$select .= $this->select($name."[year]  id:".$ops['id']."  class:split-date range-low-".date("Y-m-d")." no-transparency  nolabel:", $year_options);
+		$select = $this->select($name."[month]  id:".$ops['id']."-mm  nolabel:  nodiv:", $month_options);
+		$select .= $this->select($name."[day]  id:".$ops['id']."-dd  nolabel:  nodiv:", $day_options);
+		$select .= $this->select($name."[year]  id:".$ops['id']."  class:split-date range-low-".date("Y-m-d")." no-transparency  nolabel:  nodiv:", $year_options);
 		//TIME
 		if (!empty($ops['time_select'])) $select .= $this->time_select(array_merge(array($name), $ops));
 		return $select;
@@ -439,20 +249,9 @@ class form {
 		return $select;
 	}
 	
-	function textarea($ops) {
-		$this->fill_ops($ops);
-		efault($ops['cols'], "90");
-		efault($ops['rows'], "90");
-		//POSTed or default value
-		$value = $this->get($ops['name']);
-		if (!empty($ops['default'])) {
-			efault($value, $ops['default']);
-			unset($ops['default']);
-		}
-		assign("value", $this->set($ops['name'], htmlentities($value)));
-		//name close
-		return $this->form_control("textarea", $ops);
+	function __call($name, $arguments) {
+		efault($arguments[1], array());
+		return $this->form_control($name, $arguments[0], $arguments[1]);
 	}
-	
 }
 ?>

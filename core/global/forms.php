@@ -50,51 +50,54 @@ function open_form($options, $atts="") {
 	$global_form->open(rtrim($open, " "));
 }
 /**
- * outputs a text field
+ * generates a text field
  * @ingroup forms
- * @param star $ops
- * an option string of the form 'field_name  option1:value  option2:value  optionN:value' where possible options include:
- * label: label text
- * default: a default value to use if $_POST[$model][$field_name] is not set
- * any remaining options will be converted to an HTML attribute string and attached
+ * @param star $ops an option string starting with the input name, and including HTML attributes
+ *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
+ *									label: The label displayed above the input. The default label is the name option replacing underscores with spaces and passed to ucwords.
+ * 									nolabel: if this is set, no label will be displayed
+ * 									default: a default value to use if $_POST[$model][$field_name] is not set
+ *
+ * 									for the first paramater, you can leave out the key. For example, here  'name:' is left out:
+ * 									text("title  label:The Title  default:Untitled");
  */
 function text($ops) {
 	$form = global_form();
 	echo $form->text($ops);
 }
 /**
- * outputs a password
+ * generates a password field
  * @ingroup forms
- * @param star $ops
- * an option string of the form 'field_name  option1:value  option2:value  optionN:value' where possible options include:
- * label: label text
- * default: a default value to use if $_POST[$model][$field_name] is not set
- * any remaining options will be converted to an HTML attribute string and attached
+ * @param star $ops an option string starting with the input name, and including HTML attributes
+ *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
+ *									label: The label displayed above the input. The default label is the name option replacing underscores with spaces and passed to ucwords.
+ * 									nolabel: if this is set, no label will be displayed
+ *
+ * 									for the first paramater, you can leave out the key. For example, here  'name:' is left out:
+ * 									password("password  label:Your Password");
  */
 function password($ops) {
 	$form = global_form();
 	echo $form->password($ops);
 }
 /**
- * outputs a hidden field
+ * generates a hidden input field
  * @ingroup forms
- * @param star $ops
- * an option string of the form 'field_name  option1:value  option2:value  optionN:value' where possible options include:
- * label: label text
- * default: a default value to use if $_POST[$model][$field_name] is not set
- * any remaining options will be converted to an HTML attribute string and attached
+ * @param star $ops an option string starting with the input name, and including HTML attributes
+ *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
+ * 									default: a default value to use if $_POST[$model][$field_name] is not set
+ *
+ * 									for the first paramater, you can leave out the key. For example, here  'name:' is left out:
+ * 									hidden("article_id  default:1");
  */
 function hidden($ops) {
 	$form = global_form();
 	echo $form->hidden($ops);
 }
 /**
- * outputs a submit button
+ * generates a submit input
  * @ingroup forms
- * @param star $ops
- * an option string of the form 'field_name  option1:value  option2:value  optionN:value' where possible options include:
- * content: the text inside the button
- * any remaining options will be converted to an HTML attribute string and attached
+ * @param star $ops an option string of HTML attributes
  */
 function submit($ops="") {
 	$form = global_form();
@@ -112,22 +115,31 @@ function button($label, $ops="") {
 	$form = global_form();
 	echo $form->button($label, $ops);
 }
-/**
- * outputs a file input
- * @ingroup forms
- * @param string $ops the options
- * @ingroup form
- */
+	/**
+	 * generates a file input
+	 * @ingroup forms
+	 * @param star $ops an option string starting with the input name, and including HTML attributes
+	 *									[name]: the input name
+	 *									label: The label displayed above the input. The default label is the name option replacing underscores with spaces and passed to ucwords.
+	 * 									nolabel: if this is set, no label will be displayed
+	 * 									default: a default value to use
+	 */
 function file_select($ops) {
 	$form = global_form();
 	echo $form->file($ops);
 }
-/**
- * outputs a checkbox input
- * @ingroup forms
- * @param string $ops the options
- * @ingroup form
- */
+	/**
+	 * generates a checkbox
+	 * @ingroup forms
+	 * @param star $ops an option string starting with the input name, and including HTML attributes
+	 *									[name]: the input name. If there is a model associated with this form, the name is relative, eg. 'group[]' might become 'users[group][]'
+	 * 									value: you must specify a value. The checkbox will be checked if the POST contains this value.
+	 *									label: The label displayed above the input. The default label is the name option replacing underscores with spaces and passed to ucwords.
+	 * 									nolabel: if this is set, no label will be displayed
+	 *
+	 * 									for the first paramater, you can leave out the key. For example, here  'name:' is left out:
+	 * 									checkbox("is_active  value:1");
+	 */
 function checkbox($ops) {
 	$form = global_form();
 	echo $form->checkbox($ops);
@@ -162,17 +174,6 @@ function input($type, $ops) {
 function select($ops, $options=array()) {
 	$form = global_form();
 	echo $form->select($ops, $options);
-}
-/**
- * outputs a select field
- * @ingroup forms
- * @param string $ops the field info
- * @param array $options the option elements
- * @ingroup form
- */
-function multiple_select($ops, $options=array()) {
-	$form = global_form();
-	echo $form->multiple_select($ops, $options);
 }
 /**
  * outputs a category select
