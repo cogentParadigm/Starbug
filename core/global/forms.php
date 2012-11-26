@@ -49,6 +49,10 @@ function open_form($options, $atts="") {
 	foreach($atts as $k => $v) $open .= $k.'="'.$v.'" ';
 	$global_form->open(rtrim($open, " "));
 }
+function f($control, $field, $options=array()) {
+	$form = global_form();
+	echo $form->form_control($control, $field, $options);
+}
 /**
  * generates a text field
  * @ingroup forms
@@ -104,16 +108,18 @@ function submit($ops="") {
 	echo $form->submit($ops);
 }
 /**
- * outputs a button
+ * generates a submit button
  * @ingroup forms
- * @param star $ops
- * an option string of the form 'field_name  option1:value  option2:value  optionN:value' where possible options include:
- * content: the text inside the button
- * any remaining options will be converted to an HTML attribute string and attached
+ * @param string $label the inner HTML of the button
+ * @param star $ops an option string of HTML attributes
  */
 function button($label, $ops="") {
-	$form = global_form();
-	echo $form->button($label, $ops);
+	$ops = star($ops);
+	efault($ops['type'], "submit");
+	$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ")."button";
+	assign("label", $label);
+	assign("attributes", $ops);
+	render("form/button");
 }
 	/**
 	 * generates a file input
