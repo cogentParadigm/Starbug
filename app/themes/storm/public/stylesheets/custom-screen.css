@@ -31,7 +31,16 @@ h2{color:#419bc0;font-size:150%}
 #nav > li > a > span{font-weight:normal;font-size:80%;color:#b5b5b5;display:block;margin-left:47px}
 #nav > li > a img{margin-top:-12px}
 #nav > li.first > a{padding-left:0}
-#nav li ul{background:#1a1a1a}
+#nav li ul{
+	background: rgb(26,26,26); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(26,26,26,1) 0%, rgba(0,0,0,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(26,26,26,1)), color-stop(100%,rgba(0,0,0,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(26,26,26,1) 0%,rgba(0,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(26,26,26,1) 0%,rgba(0,0,0,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(26,26,26,1) 0%,rgba(0,0,0,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(26,26,26,1) 0%,rgba(0,0,0,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a1a1a', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
+}
 #nav li ul a{padding:0 8px 10px 20px}
 .dropdown li:hover ul, .dropdown li li:hover ul, .dropdown li li li:hover ul, .dropdown li li li li:hover ul, .dropdown li.hover ul, .dropdown li li.hover ul, .dropdown li li li.hover ul, .dropdown li li li li.hover ul{left:-20px !important}
 

@@ -27,8 +27,19 @@ function get() {
 	$args = func_get_args();
 	$count = count($args);
 	if ($count == 1) return query($args[0]);
-	else if ($count == 2) return query($args[0], "where:id='$args[1]'  limit:1");
-	else if ($count == 3) return reset(query($args[0], "select:$args[2]  where:id='$args[1]'  limit:1"));
+	else if ($count > 1) {
+		$where = star($args[1]);
+		$params = array();
+		foreach ($where as $k => $v) {
+			$col = ($k == 0) ? "id" : $k;
+			$where[$k] = $col."=?";
+			$params[] = $v;
+		}
+		$query = "where:".implode(" && ", $where);
+	}
+	if ($count == 3) $query .= "  select:$args[2]";
+	$ret = query($args[0], $query, $params);
+	if (count($ret) == 1) return $ret[0];
 }
 /**
 	* getter/caller for model properties/functions
