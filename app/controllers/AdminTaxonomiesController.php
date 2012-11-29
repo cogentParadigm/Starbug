@@ -11,7 +11,10 @@ class AdminTaxonomiesController {
 		else $this->render("admin/taxonomies/create");
 	}
 	function update($id=null) {
-		assign("id", $id);
+		$taxonomy = $_POST['terms']['taxonomy'] = urldecode($id);
+		$label = ucwords(str_replace("_", " ", $taxonomy));
+		assign("taxonomy", $taxonomy);
+		assign("label", $label);
 		$this->render("admin/taxonomies/update");
 	}
 }

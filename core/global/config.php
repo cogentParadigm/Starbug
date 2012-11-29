@@ -148,12 +148,18 @@ function module($key) {
 	* @param string $name the option name
 	* @param mixed $value (optional) value to set
 	*/
-function option($name, $value=null) {
+function settings($name, $value=null) {
 	if ($value == null) {
-		$value = query("options", "where:name='$name'  limit:1");
-		return $value['value'];
+		if (is_cached("settings-".$name)) return cache($name);
+		else {
+			$value = query("settings", "where:name='$name'  limit:1");
+			cache("settings-".$name, $value['value']);
+			return $value['value'];
+		}
+	} else {
+		store("settings", "value:$value", "name:$name");
+		cache("settings-".$name, $value);
+		return $value;
 	}
-	store("options", "value:$value", "name:$name");
-	return $value;
 }
 ?>

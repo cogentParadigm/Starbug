@@ -1,4 +1,6 @@
 <?php
-	assign("query", "admin");
-	render("list");
+	efault($query, "admin");
+	efault($template, "list");
+	assign("query", $query);
+	render($template);
 ?>

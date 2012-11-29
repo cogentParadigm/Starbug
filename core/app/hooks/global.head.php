@@ -4,4 +4,4 @@
 		<?php echo $request->payload['meta']; ?>
 		<base href="<?php echo uri(); ?>"/>
 		<?php if (!empty($request->payload['canonical'])) { ?><link rel="canonical" href="<?php echo $request->payload['canonical']; ?>"/><?php } ?>
-		<?php echo option("meta"); ?>
+		<?php echo settings("meta"); ?>

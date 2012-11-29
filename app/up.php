@@ -31,7 +31,16 @@
  * //create a page called secret-sauce that can only be accessed by users in the user group
  * $this->uri("secret-sauce", "groups:user");
  ********************************************************/
- 
+//HOME PAGE
+$this->uri("home");
+//404 PAGE
+$this->uri("missing");
+//403 PAGE
+$this->uri("forbidden");
+//LOGIN/LOGOUT PAGES
+$this->uri("login");
+$this->uri("logout");
+$this->uri("forgot-password");
 
 
 

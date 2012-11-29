@@ -61,42 +61,21 @@ class sb {
 	}
 
 	/**
-	 * since you can't subscribe the handle 'include', use sb::load
-	 * @param string $what 'jsforms' works for either 'jsforms.php' or 'jsforms/jsforms.php'
-	 */
-	function load($what) {
-		global $request;
-		if (file_exists($what.".php")) include($what.".php");
-		else {
-			$token = split("/", $what); $token = $what."/".end($token).".php";
-			if (file_exists($token)) include($token);
-		}
-	}
-
-	/**
 	 * publish a topic to any subscribers or hooks
 	 * @param string $topic the topic name you would like to publish
 	 * @param mixed $args any additional parameters will be passed in an array to the subscriber
 	 */
 	function publish($topic, $args=null) {
 		global $request; global $sb;
-		$return = array();
-		$args = func_get_args();
+		$args = func_get_args(); $topic = array_shift($args);
 		if (false !== strpos($topic, ".")) {
 			list($tags, $topic) = explode(".", $topic);
 			$tags = array(array("slug" => $tags));
 		} else $tags = (isset($request->tags)) ? $request->tags : array(array("slug" => "global"));
 		foreach ($tags as $tag) {
 			foreach (locate("$tag[slug].$topic.php", "hooks") as $hook) if (file_exists($hook)) include($hook);
-			$subscriptions = (file_exists(BASE_DIR."/etc/hooks/$tag[slug].$topic.json")) ? json_decode(file_get_contents(BASE_DIR."/etc/hooks/$tag[slug].$topic"), true) : array();
-			foreach ($subscriptions as $priority) {
-				foreach($priority as $handle) {
-					if (false !== strpos($handle['handle'], "::")) $handle['handle'] = explode("::", $handle['handle']);
-					$return[] = call_user_func($handle['handle'], $handle['args'], $args);
-				}
-			}
 		}
-		return $return;
+		return $args;
 	}
 
 	/**

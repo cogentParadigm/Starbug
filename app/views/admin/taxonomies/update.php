@@ -1,7 +1,3 @@
-<?php
-	$taxonomy = $_POST['terms']['taxonomy'] = urldecode(end($request->uri));
-	$label = ucwords(str_replace("_", " ", $taxonomy));
-?>
 <?php if (success("menus", "create")) { ?>
 	<div class="success">Taxonomy <?= (empty($_POST['menus']['id'])) ? "created" : "updated"; ?> successfully</div>
 <?php } ?>

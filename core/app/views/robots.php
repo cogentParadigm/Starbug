@@ -1,5 +1,5 @@
 <?php
-	$hide = option("seo_hide");
+	$hide = settings("seo_hide");
 ?>
 User-agent: *
 Disallow: <?php if ($hide) echo "/"; ?>

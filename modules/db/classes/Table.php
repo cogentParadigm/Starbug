@@ -61,8 +61,6 @@ class Table {
 		if (!isset($this->filters)) $this->filters = $filters;
 		$this->imported = array();
 		$this->imported_functions = array();
-		global $sb;
-		foreach ($sb->publish($this->type.".plugins") as $plugin) $this->mixin($plugin);
 		$this->init();
 	}
 

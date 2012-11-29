@@ -35,13 +35,6 @@ $this->table("permits  list:all",
 	"related_table  type:string  length:100",
 	"related_id  type:int  default:0"
 );
-$this->table("options  list:all",
-	"name  type:string  length:64",
-	"value  type:text  default:",
-	"autoload  type:bool  default:0"
-);
-$this->store("options", "name:meta", "value:");
-$this->store("options", "name:seo_hide", "value:1");
 $this->table("terms",
 	"term  type:string  length:128",
 	"slug  type:string  length:128  unique:taxonomy parent  display:false",
@@ -50,6 +43,17 @@ $this->table("terms",
 	"parent  type:int  default:0  input_type:category_select  readonly:",
 	"position  type:int  ordered:taxonomy parent  display:false"
 );
+$this->table("settings",
+	"name  type:string  length:255",
+	"type  type:string  length:128",
+	"label  type:string  length:128",
+	"options  type:text  default:",
+	"value  type:text  default:",
+	"description  type:text  default:",
+	"category  type:category  null:"
+);
+$this->store("settings", "name:meta", "type:textarea  label:Custom Analytics, etc..");
+$this->store("settings", "name:seo_hide", "type:checkbox  value:1  label:Hide from search engines");
 $this->table("uris  label:Pages  singular_label:Page",
 	"path  type:string  length:64  unique:  list:true",
 	"title  type:string  length:128  list:true",
@@ -86,30 +90,14 @@ $this->table("uris_menus  list:all",
 );
 // URIS
 $this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
-$this->uri("sb", "prefix:core/app/views/  groups:root"); //parent:sb-admin
-
 $this->uri("api", "template:api  prefix:core/app/views/  type:Page");
 $this->uri("documentation", "template:documentation  prefix:core/app/views/  type:Page  groups:root");
-//HOME PAGE
-$this->uri("home");
-//404 PAGE
-$this->uri("missing");
-//403 PAGE
-$this->uri("forbidden");
-//LOGIN/LOGOUT PAGES
-$this->uri("login");
-$this->uri("logout");
-$this->uri("forgot-password");
 //Rogue IDE
 $this->uri("rogue", "title:Rogue IDE  format:xhr  prefix:core/app/views/  groups:root");
 //Admin
 $this->uri("admin", "template:controller-group  collective:4  theme:storm");
 //Uploader - default permission only allows root to upload
 $this->uri("upload", "prefix:core/app/views/  format:xhr  groups:root");
-
-$this->uri("list", "prefix:core/app/views/  layout:one-column  groups:user");
-$this->uri("create", "prefix:core/app/views/  layout:one-column  groups:user");
-$this->uri("update", "prefix:core/app/views/  layout:one-column  groups:user");
 $this->uri("terms", "prefix:core/app/views/  format:xhr  groups:user");
 $this->uri("robots", "prefix:core/app/views/  format:txt");
 
