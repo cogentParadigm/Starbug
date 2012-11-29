@@ -15,7 +15,9 @@
 		<script src="<?php echo uri("core/app/public/js/CodeMirror/mode/htmlmixed/htmlmixed.js"); ?>" type="text/javascript"></script>
 		<script src="<?php echo uri("core/app/public/js/CodeMirror/mode/css/css.js"); ?>" type="text/javascript"></script>
 		<script src="<?php echo uri("core/app/public/js/CodeMirror/mode/xml/xml.js"); ?>" type="text/javascript"></script>
-		<script type="text/javascript" src="<?php echo uri("core/app/public/js/dojo/release/dojo/starbug/ide.js"); ?>"></script>
+		<?php if (file_exists(BASE_DIR."/core/app/public/js/dojo/release/dojo/starbug/ide.js")) { ?>
+			<!--<script type="text/javascript" src="<?php echo uri("core/app/public/js/dojo/release/dojo/starbug/ide.js"); ?>"></script>-->
+		<?php } ?>
 		<link rel="stylesheet" type="text/css" href="<?php echo uri("core/app/public/js/CodeMirror/lib/codemirror.css"); ?>"/>
 		<link rel="stylesheet" type="text/css" href="<?php echo uri("core/app/public/js/CodeMirror/theme/default.css"); ?>"/>
 		<style type="text/css">
@@ -40,17 +42,14 @@
 		</script>
 	</head>
 	<body id="body" class="claro">
-		<div jsId="ide" data-dojo-type="starbug.IDE.IDE" style="height:100%"
-			browseURL="<?php echo uri("rogue/browse"); ?>"
-			openURL="<?php echo uri("rogue/open"); ?>"
-			saveURL="<?php echo uri("rogue/save"); ?>"
-			errorURL="<?php echo uri("rogue/errors"); ?>"
-			rogueURL="<?php echo uri("rogue"); ?>"
+		<div data-dojo-id="ide" data-dojo-type="starbug.IDE.IDE" style="height:100%"
+			data-dojo-props="browseURL:'<?php echo uri("rogue/browse"); ?>', openURL:'<?php echo uri("rogue/open"); ?>', saveURL:'<?php echo uri("rogue/save"); ?>', errorURL:'<?php echo uri("rogue/errors"); ?>',
+			rogueURL:'<?php echo uri("rogue"); ?>',
 		<?php if (!empty($_REQUEST['files'])) { ?>
-			files="['<?php echo str_replace(",", "', '", $_REQUEST['files']); ?>']"
+			files:'[\'<?php echo str_replace(",", "\', \'", $_REQUEST['files']); ?>\']',
 		<?php } ?>
-			startDir="<?php echo $browse; ?>"
-			gitURL="<?php echo uri("rogue/git"); ?>"
-		/>
+			startDir:'<?php echo $browse; ?>',
+			gitURL:'<?php echo uri("rogue/git"); ?>'">
+		</div>
 	</body>
 </html>

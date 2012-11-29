@@ -4,6 +4,7 @@ define([
 	"dijit/_Widget",
 	"dijit/_Templated",
 	"dojo/text!../templates/IDE.html",
+	"dojo/store/Memory",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/AccordionContainer",
 	"dijit/layout/TabContainer",
@@ -12,7 +13,7 @@ define([
 	"dijit/Dialog",
 	"dijit/form/ComboBox",
 	"dijit/form/Button"
-], function(dojo, dijit, _Widget, _Templated, template) {
+], function(dojo, dijit, _Widget, _Templated, template, Memory) {
 var IDE = dojo.declare('starbug.IDE.IDE', [_Widget, _Templated], {
 	tabs: [],
 	positions: {},
@@ -197,18 +198,14 @@ var IDE = dojo.declare('starbug.IDE.IDE', [_Widget, _Templated], {
 			handleAs: 'json',
 			load: dojo.hitch(this, function(data) {
 				this.info = data;
+				console.log('test');
 				if (this.branches == null) {
-					this.branches = new dojo.data.ItemFileReadStore({
-						data: {
-							identifier: 'name',
-							items: data.branches
-						}
-					});
-					this.branches.clearOnClose = true;
+					console.log(data.branches);
+					this.branches = new Memory({data: data.branches});
 				} else {
-					this.branches.data = {identifier:'name', items:data.branches};
-					this.branches.close();
+					this.branches.data = data.branches;
 				}
+				console.log('test');
 				var output = '<a class="right" style="margin-right:5px" href="javascript:dijit.byId(\''+this.id+'\').checkout()">switch</a><strong>Branch:</strong> <strong style="color:blue">'+data.branch+'</strong><br/><br/>';
 				if (data.staged.length > 0) {
 					output += '<strong>staged:</strong><br/>';
