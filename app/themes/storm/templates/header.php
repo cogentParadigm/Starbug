@@ -6,9 +6,19 @@
 <ul id="tabs" class="hnav">
 		<li><a class="button" href="<?php echo uri("profile"); ?>"><span>Profile</span></a></li>
 </ul>
-<ul id="nav" class="hnav">
-	<li class="first"><a href="<?php echo uri("admin/settings"); ?>">Settings</a></li>
+<ul id="nav" class="hnav dropdown">
+	<li class="first">
+		<a href="<?php echo uri("admin/settings"); ?>">Settings</a>
+		<ul>
+			<li><a href="<?php echo uri("admin/settings"); ?>">General</a></li>
+			<li><hr style="width:160px;margin-left:20px"/></li>
+			<li><a href="<?php echo uri("admin/menus"); ?>">Menus</a></li>
+			<li><a href="<?php echo uri("admin/taxonomies"); ?>">Taxonomy</a></li>
+			<?php if (logged_in("root")) { ?>
+				<li><hr style="width:160px;margin-left:20px"/></li>
+				<li><a href="<?php echo uri("sb-admin"); ?>" target="_blank">The Bridge</a></li>
+			<?php } ?>
+		</ul>
+	</li>
 	<li><a href="<?php echo uri("admin/uris"); ?>">Pages</a></li>
-	<li><a href="<?php echo uri("admin/menus"); ?>">Menus</a></li>
-	<li><a href="<?php echo uri("admin/taxonomies"); ?>">Taxonomy</a></li>
 </ul>

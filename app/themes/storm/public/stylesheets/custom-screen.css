@@ -33,6 +33,7 @@ h2{color:#419bc0;font-size:150%}
 #nav > li.first > a{padding-left:0}
 #nav li ul{background:#1a1a1a}
 #nav li ul a{padding:0 8px 10px 20px}
+.dropdown li:hover ul, .dropdown li li:hover ul, .dropdown li li li:hover ul, .dropdown li li li li:hover ul, .dropdown li.hover ul, .dropdown li li.hover ul, .dropdown li li li.hover ul, .dropdown li li li li.hover ul{left:-20px !important}
 
 /********************* classes *********************/
 .colborder{border-color:#111;border-width:2px;margin-right:24px}
