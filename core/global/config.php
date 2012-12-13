@@ -28,6 +28,7 @@ function &config($key, $value=null, $dir="etc/") {
 	
 	//file name
 	$key = array_shift($parts);
+	if (!file_exists(BASE_DIR."/$dir$key.json")) return array();
 	
 	//get text
 	$text = file_get_contents(BASE_DIR."/$dir$key.json");

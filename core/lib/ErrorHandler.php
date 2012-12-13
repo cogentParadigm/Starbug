@@ -37,7 +37,8 @@ class ErrorHandler {
 		$error['traces'] = $traces;
 		
 		assign("error", $error);
-		render("exception");
+		if (defined('SB_CLI')) render("exception-cli");
+		else render("exception");
 		exit(1);
 	}
 	
@@ -94,7 +95,8 @@ class ErrorHandler {
 
 			if(!headers_sent()) header("HTTP/1.0 500 PHP Error");
 			assign("error", $error);
-			render("exception");
+			if (defined('SB_CLI')) render("exception-cli");
+			else render("exception");
 			exit(1);
 	}
 	

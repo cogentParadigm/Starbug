@@ -51,11 +51,9 @@ class sb {
 	 * constructor. connects to db and sets default $_SESSION values
 	 */
 	function __construct() {
-		if (php_sapi_name() != Etc::CLI_SAPI_NAME) {
-			set_exception_handler(array($this,'handle_exception'));
-			set_error_handler(array($this,'handle_error'), error_reporting());
-			register_shutdown_function(array($this, 'handle_shutdown')); 
-		}
+		set_exception_handler(array($this,'handle_exception'));
+		set_error_handler(array($this,'handle_error'), error_reporting());
+		register_shutdown_function(array($this, 'handle_shutdown')); 
 		$this->db = new db('mysql:host='.Etc::DB_HOST.';dbname='.Etc::DB_NAME, Etc::DB_USERNAME, Etc::DB_PASSWORD, Etc::PREFIX);
 		$this->db->set_debug(true);
 	}
