@@ -62,8 +62,10 @@
 			$field['list'] = (in_array($view, $field_views));
 		}
 		if ((($field['display']) && ($field['list'])) || isset($columns[$name])) {
-			foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list') as $remove) unset($field[$remove]);
-			$ordered_columns[$name] = empty($columns[$name]) ? $field : $columns[$name];
+			if (false !== $columns[$name]) {
+				foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list') as $remove) unset($field[$remove]);
+				$ordered_columns[$name] = empty($columns[$name]) ? $field : $columns[$name];
+			}
 		}
 		unset($columns[$name]);
 	}
