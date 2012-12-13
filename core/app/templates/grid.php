@@ -32,7 +32,7 @@
 	
 	//build data-dojo-props attribute
 	foreach ($attributes as $k => $v) {
-		if (!in_array($k, array("id", "class", "style", "data-dojo-type", "data-dojo-props", "data-dojo-id"))) {
+		if (!in_array($k, array("id", "class", "style", "data-dojo-type", "data-dojo-props", "data-dojo-id", "label"))) {
 			$attributes['data-dojo-props'][$k] = $v;
 			unset($attributes[$k]);
 		}
