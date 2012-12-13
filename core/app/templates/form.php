@@ -24,10 +24,10 @@
 					foreach ($field as $k => $v) $star .= "  $k:$v";
 					if (isset($this->vars[$name."_options"])) $star .= "  ".$this->vars[$name."_options"];
 				?>
-				<?php $field['input_type']($name.$star); ?>
+				<?php f($field['input_type'], $name.$star); ?>
 				<?php
 					if (!empty($field['filters']['confirm'])) {
-						$field['input_type']($field['filters']['confirm'].$star);
+						f($field['input_type'], $field['filters']['confirm'].$star);
 					}
 				?>
 		<?php } ?>
