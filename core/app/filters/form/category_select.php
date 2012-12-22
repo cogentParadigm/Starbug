@@ -1,4 +1,9 @@
 <?php
+	if (isset($field['multiple'])) {
+		$field['multiple'] = "multiple";
+		$field['name'] = $field['name']."[]";
+		efault($field['size'], 5);
+	}
 	$value = $this->get($field['name']);
 	if ((empty($value)) && (!empty($field['default']))) {
 		$this->set($field['name'], $field['default']);
