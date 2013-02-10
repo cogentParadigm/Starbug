@@ -57,7 +57,7 @@ $sb = new sb();
 //publish init hooks
 $sb->publish("init");
 
-if (php_sapi_name() == Etc::CLI_SAPI_NAME) {
+if (defined('SB_CLI')) {
 	//import cli utils
 	$sb->import("util/cli");
 	//publish cli init hook
