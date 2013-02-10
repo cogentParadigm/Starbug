@@ -49,17 +49,19 @@ class sb {
 	 * @var array holds function names of mixed in objects
 	 */
 	var $imported_functions = array();
+	
+	static $instance;
 
 
 	/**
 	 * constructor. connects to db and starts the session
 	 */
 	function __construct() {
+		self::$instance = $this;
 		set_exception_handler(array($this,'handle_exception'));
 		set_error_handler(array($this,'handle_error'), error_reporting());
 		register_shutdown_function(array($this, 'handle_shutdown')); 
-		$this->db = new db('mysql:host='.Etc::DB_HOST.';dbname='.Etc::DB_NAME, Etc::DB_USERNAME, Etc::DB_PASSWORD, Etc::PREFIX);
-		$this->db->set_debug(true);
+		$this->db = new db(array("type" => Etc::DB_TYPE, "host" => Etc::DB_HOST, "db" => Etc::DB_NAME, "username" => Etc::DB_USERNAME, "password" => Etc::DB_PASSWORD, "prefix" => Etc::PREFIX));
 		$this->start_session();
 	}
 	
@@ -84,7 +86,8 @@ class sb {
 	 * @param mixed $args any additional parameters will be passed in an array to the subscriber
 	 */
 	function publish($topic, $args=null) {
-		global $request; global $sb;
+		$sb = self::$instance;
+		global $request;
 		$args = func_get_args(); $topic = array_shift($args);
 		if (false !== strpos($topic, ".")) {
 			list($tags, $topic) = explode(".", $topic);
@@ -100,7 +103,7 @@ class sb {
 	 * import function. only imports once when used with provide
 	 * @param string $loc path of file to import without '.php' at the end
 	 */
-	function import($loc) {global $sb; $args = func_get_args(); foreach($args as $l) if (!isset($this->provided[$l])) include(BASE_DIR."/".$l.".php");}
+	function import($loc) {$sb = self::$instance; $args = func_get_args(); foreach($args as $l) if (!isset($this->provided[$l])) include(BASE_DIR."/".$l.".php");}
 
 	/**
 	 * when imported use provide to prevent further imports from attempting to include it again

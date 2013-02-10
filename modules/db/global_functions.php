@@ -16,6 +16,8 @@
 include(dirname(__FILE__)."/classes/db.php");
 // include the Table class
 include(dirname(__FILE__)."/classes/Table.php");
+// included driver class
+if (Etc::DB_TYPE == "mysql") include(dirname(__FILE__)."/classes/mysql.php");
 /**
  * get single records or columns
  * @ingroup data
@@ -46,7 +48,7 @@ function get() {
 	* @ingroup data
 	*/
 function sb() {
-	global $sb;
+	$sb = sb::$instance;
 	$args = func_get_args();
 	$count = count($args);
 	if ($count == 0) return $sb;
