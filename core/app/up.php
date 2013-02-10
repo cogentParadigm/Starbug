@@ -55,8 +55,8 @@ $this->table("settings",
 $this->store("settings", "name:meta", "type:textarea  label:Custom Analytics, etc..");
 $this->store("settings", "name:seo_hide", "type:checkbox  value:1  label:Hide from search engines");
 $this->table("uris  label:Pages  singular_label:Page",
-	"path  type:string  length:64  unique:  list:true",
 	"title  type:string  length:128  list:true",
+	"path  type:string  length:64  unique:  list:true",
 	"template  type:string  length:64  default:  list:false",
 	"categories  type:terms",
 	"tags  type:terms",
@@ -69,6 +69,7 @@ $this->table("uris  label:Pages  singular_label:Page",
 	"layout  type:string  length:64  default:",
 	"description  type:string  length:255  input_type:textarea  default:  list:false",
 	"meta  type:text  default:  list:false",
+	"meta_keywords  type:string  length:255  input_type:textarea  default:  list:false",
 	"canonical  type:string  length:255  default:  list:false",
 	"breadcrumb  type:string  length:255  default:  list:false"
 );

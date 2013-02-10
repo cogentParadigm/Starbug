@@ -1,6 +1,6 @@
 		<ol class="menu_items" data-dojo-type="dojo.dnd.Source" data-dojo-props="withHandles: true">
 		<?php foreach ($links as $idx => $link) { ?>
-			<?php $children = query("uris_menus,uris", "select:uris_menus.*,uris.title,uris.path  where:uris_menus.parent=?  orderby:position ASC", array($link['id'])); ?>
+			<?php $children = query("uris_menus,uris", "select:uris_menus.*,uris.title,uris.path  where:uris_menus.parent=? && (uris_menus.status & 4)  orderby:position ASC", array($link['id'])); ?>
 			<li class="dojoDndItem<?php if (!empty($children)) echo " parent"; ?>" data-menu-id="<?php echo $link['id']; ?>">
 				<div class="right">
 				<?php

@@ -9,7 +9,7 @@
 	<br class="clear"/>
 	<h1>Add Items</h1>
 	<?php
-	$links = query("uris_menus,uris", "select:uris_menus.*,uris.title,uris.path  where:menus_id=?  orderby:position ASC", array($id));
+	$links = query("uris_menus,uris", "select:uris_menus.*,uris.title,uris.path  where:menus_id=? && !(uris_menus.status & 1)  orderby:position ASC", array($id));
 	$parents = array();
 	$kids = array();
 	foreach ($links as $link) {
@@ -37,7 +37,7 @@
 	</select>
 	<div class="uris_list">
 		<ul>
-			<?php foreach (query("uris", "where:prefix='app/views/' && type='Page'") as $uri) { ?>
+			<?php foreach (query("uris", "where:prefix='app/views/' && (type='Page' || type='View') && (status & 4)  orderby:title") as $uri) { ?>
 			<li>
 				<div class="right">
 					<?php
@@ -72,13 +72,15 @@
 			$('.parent_id').attr('value', dojo.attr('parent_select', 'value'));
 		});
 		connect.subscribe("/dnd/drop", function(source, nodes, copy) {
-			var menus_id = '<?php echo $_POST['menus']['id']; ?>';
-			var uris_menus_id = dojo.attr(nodes[0], 'data-menu-id');
-			var new_position = dojo.indexOf(dojo.query('li',nodes[0].parentNode),nodes[0]);
-			dojo.xhrPost({
-				url: WEBSITE_URL+'api/uris_menus.json',
-				content: {'action[uris_menus]':'create', 'uris_menus[id]':uris_menus_id, 'uris_menus[menus_id]':menus_id, 'uris_menus[position]':new_position}
-			});			
+			setTimeout(function() {
+				var menus_id = '<?php echo $_POST['menus']['id']; ?>';
+				var uris_menus_id = dojo.attr(nodes[0], 'data-menu-id');
+				var new_position = dojo.indexOf(dojo.query('li',nodes[0].parentNode),nodes[0]);
+				dojo.xhrPost({
+					url: WEBSITE_URL+'api/uris_menus.json',
+					content: {'action[uris_menus]':'create', 'uris_menus[id]':uris_menus_id, 'uris_menus[menus_id]':menus_id, 'uris_menus[position]':new_position}
+				});
+			}, 200);			
 		});
 	});
 </script>

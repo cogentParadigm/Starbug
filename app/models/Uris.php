@@ -70,6 +70,7 @@ class Uris {
 	
 	function query_admin($query) {
 		$query['where'] += array("prefix='app/views/'", "type='Page'", "!(uris.status & 1)");
+		$query['orderby'] = "title";
 		return $query;
 	}
 

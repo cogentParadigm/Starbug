@@ -1,5 +1,5 @@
 <div id="content">
-<?php if(success("users", "reset-password")) { ?>
+<?php if(success("users", "reset_password")) { ?>
 	<p>Your new password has been emailed to you.<br />Click <a href="<?php echo uri('login');?>">here</a> to return to the login page.</p>
 <?php } else {
 	open_form("model:users  action:reset_password");
