@@ -387,7 +387,7 @@ class Schemer {
 	function get_sql_type($field) {
 		$type = "varchar(".(isset($field['length'])?$field['length']:"64").")";
 		if ($field['type'] == 'string') $type = "varchar(".(isset($field['length'])?$field['length']:"64").")";
-		else if ($field['type'] == 'password') $type = "varchar(32)";
+		else if ($field['type'] == 'password') $type = "varchar(100)";
 		else if (($field['type'] == 'text') || ($field['type'] == 'longtext')) $type = $field["type"];
 		else if ($field['type'] == 'int' || $field['type'] == 'category') $type = "int(".(isset($field['length'])?$field['length']:"11").")";
 		else if ($field['type'] == 'decimal') $type = "decimal(".$field['length'].")";

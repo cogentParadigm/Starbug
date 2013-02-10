@@ -21,6 +21,10 @@ class sb {
 	 */
 	var $db;
 	/**
+	 * @var array active user
+	 */
+	var $user = false;
+	/**
 	 * @var string holds the active scope (usually 'global' or a model name)
 	 */
 	var $active_scope = "global";
@@ -48,7 +52,7 @@ class sb {
 
 
 	/**
-	 * constructor. connects to db and sets default $_SESSION values
+	 * constructor. connects to db and starts the session
 	 */
 	function __construct() {
 		set_exception_handler(array($this,'handle_exception'));
@@ -56,6 +60,22 @@ class sb {
 		register_shutdown_function(array($this, 'handle_shutdown')); 
 		$this->db = new db('mysql:host='.Etc::DB_HOST.';dbname='.Etc::DB_NAME, Etc::DB_USERNAME, Etc::DB_PASSWORD, Etc::PREFIX);
 		$this->db->set_debug(true);
+		$this->start_session();
+	}
+	
+	/**
+	 * load the Session class and validate the current session if the user has a cookie
+	 */
+	function start_session() {
+		$this->import("core/lib/Session");
+		if (false !== ($session = Session::active())) {
+			if (!empty($session['v']) && is_numeric($session['v'])) {
+				$user = $this->db->query("users", "where:id=?  limit:1", array($session['v']));
+				if (Session::validate($session, $user['password'], Etc::HMAC_KEY)) {
+					$this->user = $user;
+				}
+			}
+		}
 	}
 
 	/**

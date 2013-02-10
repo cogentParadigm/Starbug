@@ -19,7 +19,7 @@
  */
 function logged_in($group="") {
 	global $groups;
-	return ((empty($group) && (!empty($_SESSION[P('id')]))) || (!empty($group) && $_SESSION[P('memberships')] & $groups[$group]));
+	return ((empty($group) && (sb()->user)) || (!empty($group) && sb()->user['memberships'] & $groups[$group]));
 }
 /**
  * get user info
@@ -28,7 +28,8 @@ function logged_in($group="") {
  */
 function userinfo($field="") {
 	global $groups;
-	if ("group" == $field) return array_search($_SESSION[P('user')]['collective'], $groups);
-	else return $_SESSION[P("user")][$field];
+	if (!sb()->user) return false;
+	if ("group" == $field) return array_search(sb()->user['collective'], $groups);
+	else return sb()->user[$field];
 }
 ?>

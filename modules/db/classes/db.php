@@ -341,7 +341,7 @@ class db {
 					$this->record_count = $stmt->execute($prize);
 				} else { //creating new record
 					$fields['created'] = date("Y-m-d H:i:s");
-					if (!isset($fields['owner'])) $fields['owner'] = ($_SESSION[P('id')] > 0) ? $_SESSION[P('id')] : 1;
+					if (!isset($fields['owner'])) $fields['owner'] = (logged_in()) ? sb()->user['id'] : 1;
 					$keys = ""; $values = "";
 					foreach($fields as $col => $value) {
 						if ($value == "NULL") $s = "NULL";

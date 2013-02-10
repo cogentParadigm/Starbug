@@ -33,9 +33,10 @@ class ApiRequest {
 	function __construct($what, $ops="", $headers=true) {
 		global $sb;
 		if (defined("ETC::API_WHITELIST")) {
-			if (in_array($_SERVER['REMOTE_ADDR'], explode(",", Etc::API_WHITELIST)) && empty($_SESSION[P("memberships")])) {
+			if (in_array($_SERVER['REMOTE_ADDR'], explode(",", Etc::API_WHITELIST)) && !sb()->user) {
 				$this->whitelisting = true;
-				$_SESSION[P("memberships")] = 1;
+				//UN-COMMENT THIS LINE TO ALLOW WHITE LISTING, ENABLE IT AT YOUR OWN RISK
+				//sb()->user = array("id" => 1, "memberships" => 1);
 			}
 		}
 		$this->headers = $headers;
@@ -47,7 +48,6 @@ class ApiRequest {
 		if (!is_array($ops['where'])) $ops['where'] = array($ops['where']);
 		if ($this->headers) header("Content-Type: ".$this->types[$format]);
 		$this->result = call_user_func(array($this, $call), $action, $format, $ops);
-		if ($this->whitelisting) $_SESSION[P("memberships")] = 0;
 	}
 
 	/**

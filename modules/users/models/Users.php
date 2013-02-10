@@ -41,12 +41,10 @@ class Users {
 	 * A function for logging in
 	 */
 	function login($login) {
-		$user = $this->query("select:*  where:username=? && password=?  limit:1", array($login['username'], md5($login['password'])));
-		if (!empty($user)) {
+		$user = $this->query("select:*  where:username=?  limit:1", array($login['username']));
+		if (Session::authenticate($user['password'], $login['password'], $user['id'], Etc::HMAC_KEY)) {
+			sb()->user = $user;
 			unset($user['password']);
-			$_SESSION[P("id")] = $user['id'];
-			$_SESSION[P("memberships")] = $user['memberships'];
-			$_SESSION[P("user")] = $user;
 			if (logged_in('admin') || logged_in('root')) redirect(uri('admin'));
 		} else {
 			error("That username and password combination was not found.", "username");
@@ -58,9 +56,7 @@ class Users {
 	 * for logging out
 	 */
 	function logout() {
-		$_SESSION[P("id")] = 0;
-		$_SESSION[P("memberships")] = 0;
-		$_SESSION[P("user")] = array();
+		Session::destroy();
 		return array();
 	}
 
