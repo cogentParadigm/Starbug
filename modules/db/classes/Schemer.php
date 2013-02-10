@@ -162,7 +162,7 @@ class Schemer {
 						} else {
 							// OLD COLUMN																																											// OLD COLUMN
 							$type = explode(" ", $this->get_sql_type($field));
-							if (($row['Type'] != $type[0]) || ((!empty($field['default'])) && ($row['Default'] != $field['default']))) {
+							if (($row['Type'] != $type[0]) || ((!empty($field['default'])) && ($row['Default'] != $field['default'])) || (isset($field['null']) && ($row['Null'] == "NO")) || (!isset($field['null']) && ($row['Null'] == "YES"))) {
 								fwrite(STDOUT, "Altering column $name...\n");
 								$this->modify($table, $name);
 								$ms++;
