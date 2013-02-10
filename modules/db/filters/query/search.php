@@ -1,8 +1,10 @@
 <?php
 dfault($args['keywords'], $_GET['keywords']);
 if (!empty($args['keywords'])) {
+	//split tokens
+	$preliminary_search_fields = preg_split('~(?<!\\\)' . preg_quote(",", '~') . '~', $args['search']);
+ 	foreach ($preliminary_search_fields as $sfk => $sfv) $preliminary_search_fields[$sfk] = str_replace("\,", ",", $sfv);
 	//pull out virtual columns
-	$preliminary_search_fields = explode(",", $args['search']);
 	$search_fields = array();
 	foreach ($preliminary_search_fields as $s => $f) {
 		$col_name = (false === strpos($f, ".")) ? $f : end(explode(".", $f));
