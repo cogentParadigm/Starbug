@@ -96,27 +96,6 @@ class sb {
 	function get($name) {
 		return $this->db->model($name);
 	}
-
-	/**
-	 * run a model action if permitted
-	 * @param string $key the model name
-	 * @param string $value the function name
-	 */
-	function post_act($key, $value) {
-		if ($object = $this->db->model($key)) {
-			$this->active_scope = $key;
-			$permits = isset($_POST[$key]['id']) ? $this->db->query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : $this->db->query($key, "action:$value  priv_type:table");
-			if ($permits || ($_SESSION[P('memberships')] & 1)) $object->$value($_POST[$key]);
-			else request()->forbidden();
-			$this->active_scope = "global";
-			if (!empty($this->errors[$key])) request()->return_path();
-		}
-	}
-
-	/**
-	 * check $_POST['action'] for posted actions and run them through post_act
-	 */
-	function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_act($key, $val);}
 	
 	/**
 	 * exception handler

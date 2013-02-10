@@ -8,7 +8,7 @@
  * @ingroup core
  */
 /**
- * Request class. interprets the request URI and serves the appropriate content
+ * Request class. interprets the request (URI, $_GET, and $_POST) and serves the appropriate content
  * @ingroup core
  */
 class Request {
@@ -53,19 +53,14 @@ class Request {
 	 * @var array the tags applied to the requested URI
 	 */
 	var $tags;
-	/**
-	 * @var string the path of the base directory
-	 */
-	var $base_dir = "";
 	
 
 	/**
 	 * constructor. initiates tags and postback
 	 */
-	function __construct($request_path, $base_dir=false) {
+	function __construct($request_path) {
 		$this->tags = array(array("term" => "global", "slug" => "global"));
-		if ($base_dir === false) $base_dir = end(explode("/", str_replace("/core", "", dirname(__FILE__))));
-		$this->set_path($request_path, $base_dir);
+		$this->set_path($request_path);
  	}
 
 	/**
@@ -78,14 +73,10 @@ class Request {
 	 * would all translate to:
 	 * login
 	 * @param string $request_path the path
-	 * @param string $base_dir (optional) the base directory (only needed to change or initialize the base directory)
 	 */
- 	public function set_path($request_path, $base_dir="") {
-		if (empty($base_dir)) $base_dir = $this->base_dir;
-		else $this->base_dir = $base_dir;
-
+ 	public function set_path($request_path) {
 		//if the path includes the base_dir, we remove it. otherwise we just remove the the leading slash
-		$this->path = (false === ($base_pos = strpos($request_path, $base_dir))) ? ltrim($request_path, "/") : substr($request_path, $base_pos+strlen($base_dir)+1);
+		$this->path = substr($request_path, strlen(Etc::WEBSITE_URL));
 
 		//if the path contains a query string, split it off and save it to $this->query
 		if (false !== strpos($this->path, "?")) list($this->path, $this->query) = explode("?", $this->path, 2);
@@ -105,6 +96,27 @@ class Request {
 	 * return the path to the postback. called when a form submission contains errors
 	 */
 	public function return_path() {if (!empty($_POST['postback'])) $this->path = $_POST['postback'];}
+
+	/**
+	 * run a model action if permitted
+	 * @param string $key the model name
+	 * @param string $value the function name
+	 */
+	function post_action($key, $value) {
+		if ($object = sb($key)) {
+			error_scope($key);
+			$permits = isset($_POST[$key]['id']) ? query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : query($key, "action:$value  priv_type:table");
+			if ($permits || ($_SESSION[P('memberships')] & 1)) $object->$value($_POST[$key]);
+			else $this->forbidden();
+			error_scope("global");
+			if (errors($key)) $this->return_path();
+		}
+	}
+
+	/**
+	 * check $_POST['action'] for posted actions and run them through post_act
+	 */
+	function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_action($key, $val);}
 
 	/**
 	 * lookup the path in the uris table and set the payload, tags, uri, and file. also will delivers 404, or 403 headers if needed
@@ -135,7 +147,7 @@ class Request {
 		ob_start();
 		global $sb;
 		global $request;
-		$sb->check_post();
+		$this->check_post();
 		$this->locate();
 		if (!empty($_GET['template'])) {
 			foreach ($_POST as $k => $v) assign($k, $v);

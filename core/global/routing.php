@@ -30,10 +30,10 @@ function uri($path="", $flags="") {
 	else if ($flags == "j") $suffix = "app/public/js/"; //javascript
 	else if ($flags == "c") $suffix = "app/public/stylesheets/"; //css
 	else $suffix = "";
-	if (!empty($suffix) || empty($flags)) $prefix = "//"; //auto
-	else if ($flags == "s") $prefix = "https://"; //secure
-	else if ($flags == "u") $prefix = "http://"; //unsecure
-	else if ($flags == "f") $prefix = ""; //friendly
+	if (!empty($suffix) || empty($flags)) $prefix = ""; //auto
+	else if ($flags == "s") $prefix = "https://".$_SERVER['HTTP_HOST']; //secure
+	else if ($flags == "u") $prefix = "http://".$_SERVER['HTTP_HOST']; //unsecure
+	else if ($flags == "f") $prefix = $_SERVER['HTTP_HOST']; //friendly
 	return $prefix.Etc::WEBSITE_URL.$suffix.$path;
 }
 /**
