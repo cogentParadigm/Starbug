@@ -10,7 +10,7 @@
 /**
  * @defgroup cache
  * global functions
- * @ingroup global
+ * @ingroup core
  */
 /**
  * get or save a cached value

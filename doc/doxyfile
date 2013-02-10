@@ -31,7 +31,7 @@ PROJECT_NAME           = StarbugPHP
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER         = v0.9
+PROJECT_NUMBER         = v0.9.3b
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute)
 # base path where the generated documentation will be put.
@@ -581,7 +581,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  = core script etc install util doc script/generate script/db script/plugin script/migration script/css script/test index.php console README
+INPUT                  = app core script modules etc install util doc script/generate script/db script/plugin script/migration script/css script/test index.php console README
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is
@@ -610,7 +610,7 @@ RECURSIVE              = YES
 # excluded from the INPUT source files. This way you can easily exclude a
 # subdirectory from a directory tree whose root is specified with the INPUT tag.
 
-EXCLUDE                = core/app/public/php core/app/public/js/nicedit app/public/js util/getid3 util/simpletest core/app/views/documentation var
+EXCLUDE                = core/app/public/php core/app/public/js/tiny_mce core/app/public/js/dojo core/app/public/js/CodeMirror util/phpmailer util/getid3 util/simpletest core/app/views/documentation var
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or
 # directories that are symbolic links (a Unix filesystem feature) are excluded

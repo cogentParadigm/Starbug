@@ -15,31 +15,15 @@
 		 * @ingroup app
 		 * models
 		 */
-		/**
-		 * @defgroup views
-		 * @ingroup app
-		 * views
-		 */
-		/**
-		 * @defgroup migrations
-		 * @ingroup app
-		 * migrations
-		 */
-		/**
-		 * @defgroup tests
-		 * @ingroup app
-		 * tests
-		 */
+	/**
+	 * @defgroup global
+	 * @ingroup StarbugPHP
+	 */
 	/**
 	 * @defgroup core
 	 * @ingroup StarbugPHP
 	 * Starbug core
 	 */
-		/**
-		 * @defgroup db
-		 * @ingroup core
-		 * Database related files
-		 */
 		/**
 		 * @defgroup lib
 		 * @ingroup core
