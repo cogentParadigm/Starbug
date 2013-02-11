@@ -81,12 +81,14 @@ function is_default_path() {
  * @param int $delay number of seconds to wait before redirecting (default 0)
  */
 function redirect($url, $delay=0){
-	if(!headers_sent()) {
-		header('location: '.$url);
-		exit();
-	} else {
-		echo '<script type="text/JavaScript">setTimeout("location.href = \''.$url.'\';", '.($delay*1000).');</script>';
-		exit();
+	if (!defined("SB_CLI")) {
+		if(!headers_sent()) {
+			header('location: '.$url);
+			exit();
+		} else {
+			echo '<script type="text/JavaScript">setTimeout("location.href = \''.$url.'\';", '.($delay*1000).');</script>';
+			exit();
+		}
 	}
 }
 ?>

@@ -16,7 +16,7 @@
  * The mysql class. A simple PDO wrapper
  * @ingroup mysql
  */
-class mysql {
+class mysql extends db {
 
 	/**
 	 * @var PDO a PDO object

@@ -49,5 +49,5 @@
 	}
 	if ($no_errors) fwrite(STDOUT, "\nNo syntax errors detected!\n\n");
 	else exit(1);
-	if ($unit) passthru("phpunit --bootstrap ./core/cli.php --no-globals-backup --colors ./app/tests/");
+	if ($unit) passthru("phpunit --bootstrap ./core/cli.php --no-globals-backup --colors ./core/app/tests/");
 ?>

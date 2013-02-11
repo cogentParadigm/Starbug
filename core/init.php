@@ -38,7 +38,7 @@ include(BASE_DIR."/core/global_functions.php");
  * @ingroup global
  */
 $driver_class = Etc::DB_TYPE;
-$driver = new $driver_class(array(
+$db = new $driver_class(array(
 	"type" => Etc::DB_TYPE,
 	"host" => Etc::DB_HOST,
 	"db" => Etc::DB_NAME,
@@ -46,7 +46,6 @@ $driver = new $driver_class(array(
 	"password" => Etc::DB_PASSWORD,
 	"prefix" => Etc::PREFIX
 ));
-$db = new db($driver);
 
 /**
  * global instance of the sb class

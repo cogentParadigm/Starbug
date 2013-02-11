@@ -22,13 +22,6 @@ class db {
 	 * @var array holds instantiated models
 	 */
 	static $objects = array();
-	
-	static $driver;
-
-
-	public function __construct($driver) {
-		self::$driver = $driver;
-	}
 
 	/**
 	 * check if a model exists
@@ -79,14 +72,6 @@ class db {
 		
 		//return the saved object
 		return self::$objects[$name];
-	}
-
-	public function __call($method, $args) {
-		return call_user_func_array(array(self::$driver, $method), $args);
-	}
-
-	public function __get($name) {
-		return self::$driver->$name;
 	}
 
 }

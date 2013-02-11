@@ -33,7 +33,7 @@ function get() {
 		$where = star($args[1]);
 		$params = array();
 		foreach ($where as $k => $v) {
-			$col = ($k == 0) ? "id" : $k;
+			$col = ($k === 0) ? "id" : $k;
 			$where[$k] = $col."=?";
 			$params[] = $v;
 		}
