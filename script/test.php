@@ -18,8 +18,10 @@
 		$up = false;
 		$what = array_shift($argv);
 	}
-	if ($what == "-s") exec("find ".BASE_DIR." -type f -name \*.php -exec php -l {} \;", $output);
-	else if ($what == "-l") { //load layer
+	if ($what == "-s") {
+		exec("find ".BASE_DIR." -type f -name \*.php -exec php -l {} \;", $output);
+		$what = array_shift($argv);
+	} else if ($what == "-l") { //load layer
 		$unit = false;
 		$next = array_shift($argv);
 		$harness->layer($next);
@@ -49,5 +51,5 @@
 	}
 	if ($no_errors) fwrite(STDOUT, "\nNo syntax errors detected!\n\n");
 	else exit(1);
-	if ($unit) passthru("phpunit --bootstrap ./core/cli.php --no-globals-backup --colors ./core/app/tests/");
+	if ($unit) passthru("phpunit -c etc/phpunit.xml $what");
 ?>

@@ -18,29 +18,8 @@ $sb->provide("core/lib/test/ModelTest");
  * @ingroup Fixture
  */
 class ModelTest extends PHPUnit_Framework_TestCase {
+
 	var $model;
-	/**
-	 * overridable function
-	 * set $records here to prevent storing all records
-	 */
-	function setUp() {}
-	/**
-	 * overridable function
-	 * unset $records to prevent removing records
-	 */
-	function tearDown() {}
-	/**
-	 * setUp function
-	 */
-	function _setUp() {
-		$this->setUp();
-	}
-	/**
-	 * tearDown function
-	 */
-	function _tearDown() {
-		$this->tearDown();
-	}
 	
 	function action() {
 		$args = func_get_args();
