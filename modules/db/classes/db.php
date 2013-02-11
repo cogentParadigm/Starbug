@@ -82,8 +82,11 @@ class db {
 	}
 
 	public function __call($method, $args) {
-		if(method_exists(self::$driver, $method)) return call_user_func_array(array(self::$driver, $method), $args);
-		throw new Exception ('Call to undefined method/class function: ' . $method);
+		return call_user_func_array(array(self::$driver, $method), $args);
+	}
+
+	public function __get($name) {
+		return self::$driver->$name;
 	}
 
 }

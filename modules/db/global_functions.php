@@ -54,7 +54,7 @@ function sb() {
 	if ($count == 0) return $sb;
 	else if ($count == 1) {
 		if ($sb->db->has($args[0])) return $sb->db->model($args[0]);
-		else if (property_exists($sb->db, $args[0])) return $sb->db->$args[0];
+		else return $sb->db->$args[0];
 	} else if ($count == 2) {
 		return $sb->db->model($args[0])->$args[1];
 	} else {
