@@ -24,14 +24,21 @@ You will need the following to use this toolkit:
 
 h2. Getting Started
 
-The best way to get started is to install the "Starbug PHP Installer":http://github.com/cogentParadigm/Starbug/tree/installer. If you are an Arch Linux user, you can find it on "AUR":https://aur.archlinux.org/packages.php?ID=43627&detail=1
-once you have it installed, you can follow these steps to get Starbug set up:
+Installing starbug is easy, just follow these simple steps:
 
-# Initialize a new application and change to that directory:<pre><code>starbug myapp
+# Initialize a new application and change to that directory:<pre><code>git clone git://github.com/cogentParadigm/Starbug.git myapp
 cd myapp</code></pre>
-# Enter your database and other details into <code>etc/Host.php</code>.
-# Run setup:<pre><code>sb setup</code></pre>
+# Generate a host file and enter your database and other details:<pre><code>./sb generate host
+vi etc/Host.php</code></pre>
+# Run setup:<pre><code>./sb setup</code></pre>
 # Open up your browser and point it to your installation directory!
+
+h2. Extra Steps
+
+We recommend you take following additional steps:
+
+# Copy the sb command to your path:<pre><code>cp sb /usr/bin/sb</code></pre>
+# Copy the bash completion file to take advantage of auto-completion when running sb commands:<pre><code>cp core/lib/bash_completion/sb /etc/bash_completion.d/</code></pre>
 
 h2. Links
 
@@ -40,10 +47,10 @@ Starbug integrates several 3rd party tools you may want to check out:
 * "Git":http://www.git-scm.com
 * "Dojo":http://www.dojotoolkit.org
 * "Blueprint CSS":http://blueprintcss.org
-* "Nicedit":http://www.nicedit.com
+* "TinyMCE":http://www.tinymce.com
 * "PHPThumb":http://phpthumb.sourceforge.net
 * "Doxygen":http://www.doxygen.org
-* "SimpleTest":www.simpletest.org
+* "PHPUnit":http://www.phpunit.de/manual/current/en/index.html
 
 h2. License
 

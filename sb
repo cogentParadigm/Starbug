@@ -1,0 +1,9 @@
+#!/usr/bin/php
+<?php
+	if (file_exists("etc/Host.php")) include("core/cli.php");
+	$command = array_shift($argv);
+	$script = array_shift($argv);
+	if (file_exists("script/$script.php")) {
+		include("script/$script.php");
+	}
+?>
