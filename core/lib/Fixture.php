@@ -3,7 +3,7 @@
 # Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP
- * @file core/db/Fixture.php
+ * @file core/lib/Fixture.php
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup Fixture
  */
@@ -12,7 +12,7 @@
  * the Fixture class
  * @ingroup db
  */
-$sb->provide("core/db/Fixture");
+$sb->provide("core/lib/Fixture");
 /**
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup Fixture
