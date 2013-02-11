@@ -1,14 +1,15 @@
 h1. Starbug PHP Web Development Framework
 
-Starbug PHP is an open source framework for PHP. Starbug is a fast and exstensible toolkit that employs a Model-View design pattern. Here are some of the core features SB provides:
+Starbug PHP is an open source framework for PHP. Starbug is a fast and exstensible toolkit that employs a loose MVC design pattern. Here are some of the core features provided:
 
-* Robust templating engine
+* Flexible routing and content model with built-in CMS
+* Simple templating engine (using PHP for templates)
+* Code generation made easy, built on the templating system
 * Role-based access control (RBAC)
-* Database management and abstraction
-* Data validation
-* code generation
-* Utilities for data grids, form building, pagination, tagging, thumbnailing and more..
-* Plugins and hooks built on a flexible publish/subscribe layer
+* Database abstraction layer includes schema management and a flexible validation and filtering system
+* many command line utilities, and you can easily add your own
+* Utilities for data grids, form building, pagination, thumbnailing and more..
+* support for modules
 
 h2. Project Info
 
@@ -21,6 +22,8 @@ h2. Dependencies
 You will need the following to use this toolkit:
 
 * "PDO extension for PHP":http://php.net/manual/en/book.pdo.php
+
+Optional dependencies are listed in the links section.
 
 h2. Getting Started
 
@@ -51,6 +54,7 @@ Starbug integrates several 3rd party tools you may want to check out:
 * "PHPThumb":http://phpthumb.sourceforge.net
 * "Doxygen":http://www.doxygen.org
 * "PHPUnit":http://www.phpunit.de/manual/current/en/index.html
+* "CodeMirror":http://codemirror.net
 
 h2. License
 
