@@ -11,8 +11,8 @@
  * Testing Harness
  * @ingroup lib
  */
-$sb->provide("core/lib/Harness");
-$sb->import("core/lib/Fixture");
+$sb->provide("core/lib/test/Harness");
+$sb->import("core/lib/test/Fixture");
 /**
  * The Harness class. Handles fixtures and test execution
  * @ingroup Harness

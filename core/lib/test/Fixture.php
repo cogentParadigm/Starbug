@@ -12,7 +12,7 @@
  * the Fixture class
  * @ingroup db
  */
-$sb->provide("core/lib/Fixture");
+$sb->provide("core/lib/test/Fixture");
 /**
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup Fixture
