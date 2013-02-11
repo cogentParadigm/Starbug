@@ -1,10 +1,14 @@
 <?php
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
-class UsersTest extends PHPUnit_Framework_TestCase {
+import("lib/test/ModelTest", "core");
+class UsersTest extends ModelTest {
+	
+	var $model = "users";
 		
 	function test_create() {
-		sb("users", "create", star("username:PHPUnit  email:phpunit@neonrain.com  collective:2"));
+		remove("users", "username='PHPUnit'");
+		$this->action("create", star("username:PHPUnit  email:phpunit@neonrain.com  collective:2"));
 		$user = get("users", sb("insert_id"));
 		//lets verify the explicit values were set
 		$this->assertEquals($user['username'], "PHPUnit");
@@ -12,6 +16,7 @@ class UsersTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($user['collective'], "2");
 		//lets also verify that the implicit values were set
 		$this->assertEquals($user['memberships'], "2");
+		$this->assertEquals($user['status'], "4");
 	}
 
 	function test_delete() {
@@ -20,9 +25,10 @@ class UsersTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(empty($user), false);
 		
 		//remove it and assert that the record is gone
-		remove("users", "id='".$user['id']."'");
+		$this->action("delete", $user);
 		$user = get("users", array("username" => "PHPUnit"));
-		$this->assertEquals(empty($user), true);
+		$this->assertEquals($user['status'], "1");
+		remove("users", "username='PHPUnit'");
 	}
 
 }

@@ -7,5 +7,6 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
+	if (!defined("SB_CLI")) define("SB_CLI", true);
 	include("init.php");
 ?>

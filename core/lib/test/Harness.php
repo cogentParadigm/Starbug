@@ -7,9 +7,13 @@
  * @ingroup Harness
  */
 /**
+ * @defgroup test
+ * @ingroup lib
+ */
+/**
  * @defgroup Harness
  * Testing Harness
- * @ingroup lib
+ * @ingroup test
  */
 $sb->provide("core/lib/test/Harness");
 $sb->import("core/lib/test/Fixture");

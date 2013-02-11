@@ -51,6 +51,7 @@ class Uris {
 
 	function delete($uris) {
 		$id = $uris['id'];
+		remove("blocks", "uris_id='".$uris['id']."'");
 		return $this->remove("id='".$id."'");
 	}
 	
