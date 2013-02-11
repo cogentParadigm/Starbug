@@ -80,7 +80,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 </script>
 <?php
 	js("dijit/form/Textarea");
-	global $groups;
+	$groups = config("groups");
 	$collectives = array_merge(array("everybody" => 0), $groups);
 	$parents = query("uris", "where:prefix='app/views/' && type='Page'");
 	$kids = array(array());

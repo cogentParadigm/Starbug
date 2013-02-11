@@ -26,8 +26,8 @@ class db {
 	static $driver;
 
 
-	public function __construct($params) {
-		if (Etc::DB_TYPE == "mysql") self::$driver = new mysql($params);
+	public function __construct($driver) {
+		self::$driver = $driver;
 	}
 
 	/**

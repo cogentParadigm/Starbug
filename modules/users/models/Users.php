@@ -8,7 +8,7 @@ class Users {
 	 * A function for an administrator to create and update users
 	 */
 	function create($user) {
-		global $groups;
+		$groups = config("groups");
 		efault($user['groups'], array());
 		efault($user['collective'], 2);
 		if (!in_array($user['collective'], $user['groups'])) $user['groups'][] = $user['collective'];

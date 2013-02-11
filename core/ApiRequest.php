@@ -105,7 +105,7 @@ class ApiRequest {
 	 * @param star $ops additional options
 	 */
 	protected function groups($call, $format, $ops) {
-		global $groups;
+		$groups = config("groups");
 		$data = array();
 		foreach ($groups as $name => $number) $data[] = array("name" => $name, "id" => $number);
 		if (!empty($data)) {
@@ -124,7 +124,7 @@ class ApiRequest {
 	 * @param star $ops additional options
 	 */
 	protected function statuses($call, $format, $ops) {
-		global $statuses;
+		$statuses = config("statuses");
 		$data = array();
 		foreach ($statuses as $name => $number) $data[] = array("name" => $name, "id" => $number);
 		if (!empty($data)) {

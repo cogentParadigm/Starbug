@@ -40,7 +40,7 @@ class ViewTestCase extends WebTestCase {
 	 * hook to set up tempory users before testing
 	 */
 	function setUp() {
-		global $groups;
+		$groups = config("groups");
 		foreach($groups as $name => $value) store("users", "username:test_$name  email:$name@localhost  password:test  memberships:$value");
 	}
 
@@ -48,7 +48,7 @@ class ViewTestCase extends WebTestCase {
 	 * hook to remove tempory users after testing
 	 */
 	function tearDown() {
-		global $groups;
+		$groups = config("groups");
 		foreach($groups as $name => $value) remove("users", "username='test_$name'");
 	}
 

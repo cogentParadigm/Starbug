@@ -18,7 +18,7 @@
  * @param string $group return true only if the user is in the specified group (optional)
  */
 function logged_in($group="") {
-	global $groups;
+	$groups = config("groups");
 	return ((empty($group) && (sb()->user)) || (!empty($group) && sb()->user['memberships'] & $groups[$group]));
 }
 /**
@@ -27,7 +27,7 @@ function logged_in($group="") {
  * @param string $field the name of the field
  */
 function userinfo($field="") {
-	global $groups;
+	$groups = config("groups");
 	if (!sb()->user) return false;
 	if ("group" == $field) return array_search(sb()->user['collective'], $groups);
 	else return sb()->user[$field];

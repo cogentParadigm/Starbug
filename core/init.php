@@ -34,25 +34,26 @@ include(BASE_DIR."/core/sb.php");
 include(BASE_DIR."/core/global_functions.php");
 
 /**
- * list of groups from etc/groups.json
+ * instantiate the database to be passed to sb
  * @ingroup global
  */
-global $groups;
-$groups = config("groups");
-
-/**
- * list of statuses from etc/statuses.json
- * @ingroup global
- */
-global $statuses;
-$statuses = config("statuses");
+$driver_class = Etc::DB_TYPE;
+$driver = new $driver_class(array(
+	"type" => Etc::DB_TYPE,
+	"host" => Etc::DB_HOST,
+	"db" => Etc::DB_NAME,
+	"username" => Etc::DB_USERNAME,
+	"password" => Etc::DB_PASSWORD,
+	"prefix" => Etc::PREFIX
+));
+$db = new db($driver);
 
 /**
  * global instance of the sb class
  * @ingroup global
  */
 global $sb;
-$sb = new sb();
+$sb = new sb($db);
 
 //publish init hooks
 $sb->publish("init");

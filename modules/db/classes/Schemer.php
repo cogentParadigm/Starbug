@@ -485,7 +485,7 @@ class Schemer {
 	 * @param star $args other fields
 	 */
 	function uri($path, $args=array(), $groups=array()) {
-		global $statuses;
+		$statuses = config("statuses");
 		$options = array();
 		$args = star($args);
 		$args['path'] = $path;
@@ -526,7 +526,7 @@ class Schemer {
 	 * @param star $args a field string where keys are roles and values are priv_type and status
 	 */
 	function permit($on, $args) {
-		global $groups;
+		$groups = config("groups");
 		$on = explode("::", $on);
 		$args = star($args);
 		efault($this->permits[$on[0]], array());
@@ -542,8 +542,8 @@ class Schemer {
 	 * @param string $role the role that the permit is applied to
 	 */
 	function get_permits($model, $action, $role) {
-		global $groups;
-		global $statuses;
+		$groups = config("groups");
+		$statuses = config("statuses");
 		$permit = array("related_table" => P($model), "action" => $action);
 		$ops = $this->permits[$model][$action][$role];
 		if (isset($groups[$role])) {
@@ -691,7 +691,6 @@ class Schemer {
 	 * @param string $arg0-$argN the name of the migration
 	 */
 	function add_migrations($arg) {
-		global $sb;
 		$args = func_get_args();
 		foreach($args as $i => $a) {
 			if (!in_array($a, $this->migrations)) {
@@ -803,7 +802,9 @@ class Schemer {
 	}
 
 	function get($model) {
-		global $groups; global $statuses; global $sb;
+		$groups = config("groups");
+		$statuses = config("statuses");
+		$sb = sb();
 		$fields = $this->get_table($model);
 		$options = $this->options[$model];
 		//SET UP MODEL ARRAY

@@ -56,12 +56,12 @@ class sb {
 	/**
 	 * constructor. connects to db and starts the session
 	 */
-	function __construct() {
+	function __construct($db) {
 		self::$instance = $this;
 		set_exception_handler(array($this,'handle_exception'));
 		set_error_handler(array($this,'handle_error'), error_reporting());
 		register_shutdown_function(array($this, 'handle_shutdown')); 
-		$this->db = new db(array("type" => Etc::DB_TYPE, "host" => Etc::DB_HOST, "db" => Etc::DB_NAME, "username" => Etc::DB_USERNAME, "password" => Etc::DB_PASSWORD, "prefix" => Etc::PREFIX));
+		$this->db = $db;
 		$this->start_session();
 	}
 	
