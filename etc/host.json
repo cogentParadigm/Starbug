@@ -8,7 +8,9 @@
 	"DB_NAME" : "",
 	"PREFIX" : "sb_",
 
-	"WEBSITE_URL" : ["localhost/", "URL of website"],
+	"HMAC_KEY" : ["%HMAC_KEY%", "Used for managing sessions"]
+
+	"WEBSITE_URL" : ["/", "Relative path of the site"],
 	
 	"TIME_ZONE" : ["America/Vancouver", "Time Zone"],
 	

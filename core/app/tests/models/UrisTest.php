@@ -8,19 +8,33 @@ class UrisTest extends ModelTest {
 	
 	function test_create() {
 		$this->action("create", array("path" => "phpunit")); 
-		$object = get("uris", sb("uris")->insert_id);
+		$object = $this->get($this->insert_id);
 		//lets verify the explicit values were set
 		$this->assertEquals("phpunit", $object['path']);
+	}
+	
+	function test_update() {
+		$object = $this->get(array("path" => "phpunit"));
+		//test setting a normal field
+		$object['title'] = "Test Title";
+		//test setting block content
+		$_POST['block-content-1']['content'] = "Test Content";
+		$this->action("update", $object);
+		//re fetch and test for updates
+		$object = $this->get(array("path" => "phpunit"));
+		$block = get("blocks", array("uris_id" => $object["id"]));
+		$this->assertEquals("Test Title", $object['title']);
+		$this->assertEquals("Test Content", $block['content']);
 	}
 
 	function test_delete() {
 		//first assert that the record exists
-		$object = get("uris", array("path" => "phpunit"));
+		$object = $this->get(array("path" => "phpunit"));
 		$this->assertEquals(empty($object), false);
 		
 		//remove it and assert that the record is gone
 		$this->action("delete", $object);
-		$object = get("uris", array("path" => "phpunit"));
+		$object = $this->get(array("path" => "phpunit"));
 		$this->assertEquals(empty($object), true);
 	}
 
