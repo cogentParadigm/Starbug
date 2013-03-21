@@ -21,7 +21,7 @@
 		<?php echo $options['label']; ?>
 	</h1>
 	<?
-		render_form("search");
+		render_form(array($model."/search", "search"));
 		echo $grid;
 		link_to("New $options[singular_label]", $request->path."/create", "class:big right round create button");
 	?>

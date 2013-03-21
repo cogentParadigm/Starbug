@@ -99,6 +99,7 @@ textarea{width:309px;height:100px}
 #login_form span.error{width:221px;position:absolute;top:330px}
 .left.field{margin-right:5px}
 .infield span.error{width:auto}
+.input.left{margin-right:8px}
 
 /********************* dojo *********************/
 body .dijitDialogUnderlay{background:#111;opacity:0.6}

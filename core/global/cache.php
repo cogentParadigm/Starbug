@@ -24,6 +24,7 @@
  *               a failure in either case will return false
  */
 function cache($key, $value=null, $ttl=0) {
+	return $value;
 	if ($value == null) {
 		return apc_fetch(BASE_DIR.'_'.$key); //GET THE VALUE
 	} else {
@@ -39,6 +40,7 @@ function cache($key, $value=null, $ttl=0) {
  * @return bool true if the value is cached, false otherwise
  */
 function is_cached($key) {
+	return false;
 	return apc_exists(BASE_DIR.'_'.$key);
 }
 /**

@@ -45,6 +45,7 @@ class Users {
 		if (Session::authenticate($user['password'], $login['password'], $user['id'], Etc::HMAC_KEY)) {
 			sb()->user = $user;
 			unset($user['password']);
+			$this->store(array("id" => $user['id'], "last_visit" => date("Y-m-d H:i:s")));
 			if (logged_in('admin') || logged_in('root')) redirect(uri('admin'));
 		} else {
 			error("That username and password combination was not found.", "username");
@@ -82,6 +83,24 @@ class Users {
 				}
 			} else error("Sorry, the email address you entered was not found. Please retry.", "email");
 		}
+	}
+	
+	function query_admin($query) {
+		$query['params'] = array();
+		if (!empty($query['group']) && is_numeric($query['group'])) {
+			$query['where'][] = 'memberships & ?';
+			$query['params'][] = $query['group'];
+		}
+		
+		if (!empty($query['status'])) {
+			if ($query['status'] == "disabled") $query['where'][] = "(users.status & 1)";
+			else {
+				$query['where'][] = "!(users.status & 1)";
+				if ($query['status'] == "active") $query['where'][] = "users.last_visit > '0000-00-00 00:00:00'";
+				else if ($query['status'] == "inactive") $query['where'][] = "users.last_visit = '0000-00-00 00:00:00'";
+			}
+		}
+		return $query;
 	}
 
 }

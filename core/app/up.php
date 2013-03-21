@@ -16,13 +16,14 @@ $this->table("users",
 	"last_name  type:string  length:64  list:true",
 	"email  type:string  length:128  unique:  list:true",
 	"password  type:password  confirm:password_confirm  optional_update:",
-	"memberships  type:int",
+	"memberships  type:int  list:true",
 	"address  type:string  length:128",
 	"address2  type:string  length:128  default:",
 	"city  type:string  length:32",
 	"state  type:string  length:32",
 	"country  type:string  length:64",
-	"zip  type:string  length:16"
+	"zip  type:string  length:16",
+	"last_visit  type:datetime  default:0000-00-00 00:00:00  list:true"
 );
 //This will be stored immediately after the creation of the users table
 $this->store("users", "email:root", "memberships:1");

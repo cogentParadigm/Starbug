@@ -1,5 +1,6 @@
 define(['dojo', 'sb/kernel', 'starbug', 'starbug/store/Api'], function(dojo, sb, starbug) {
 			sb.get = function(model, action) {
+				if (!action) action = 'admin';
 				if (typeof this.stores[model+'.'+action] != 'undefined') return this.stores[model+'.'+action];
 				var store = new starbug.store.Api({model:model, action:action});
 				this.stores[model+'.'+action] = store;
@@ -7,6 +8,7 @@ define(['dojo', 'sb/kernel', 'starbug', 'starbug/store/Api'], function(dojo, sb,
 			};
 			sb.query = function(model, action, query) {
 				if (!query) query = {};
+				if (!action) action = 'admin';
 				if (typeof query == 'string') query = this.star(query);
 				return this.get(model, action).query(query);
 			},
