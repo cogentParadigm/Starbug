@@ -41,7 +41,7 @@ class Users {
 	 * A function for logging in
 	 */
 	function login($login) {
-		$user = $this->query("select:*  where:username=?  limit:1", array($login['username']));
+		$user = $this->query("select:*  where:email=?  limit:1", array($login['username']));
 		if (Session::authenticate($user['password'], $login['password'], $user['id'], Etc::HMAC_KEY)) {
 			sb()->user = $user;
 			unset($user['password']);

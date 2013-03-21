@@ -598,16 +598,8 @@ class Schemer {
 			if (empty($match)) {
 				$store = array_merge($record['match'], $record['others']);
 				fwrite(STDOUT, "Inserting $table record...\n");
-				store($table, $store, true);
+				store($table, $store);
 				$rs++;
-			} else if (!empty($record['others'])) {
-				foreach ($record['others'] as $k => $v) $query .= " && $k='$v'";
-				$match = query($table, "where:$query");
-				if (empty($match)) {
-					fwrite(STDOUT, "Updating $table record...\n");
-					store($table, $record['others'], $record['match']);
-					$rs++;
-				}
 			}
 		}
 		return $rs;

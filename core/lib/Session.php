@@ -82,7 +82,7 @@ class Session {
 		$session .= '&d='.urlencode(hash_hmac("sha256", $session, $key));
 		
 		//save cookie and return
-		setcookie("sid", $session);
+		if (!defined("SB_CLI")) setcookie("sid", $session);
 		return true;
 	}
 	
@@ -112,7 +112,7 @@ class Session {
 	}
 	
 	function destroy() {
-		setcookie("sid", "", time());
+		if (!defined("SB_CLI")) setcookie("sid", "", time());
 	}
 
 }

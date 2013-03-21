@@ -7,11 +7,10 @@ class UsersTest extends ModelTest {
 	var $model = "users";
 		
 	function test_create() {
-		remove("users", "username='PHPUnit'");
-		$this->action("create", star("username:PHPUnit  email:phpunit@neonrain.com  collective:2"));
+		remove("users", "email='phpunit@neonrain.com'");
+		$this->action("create", star("email:phpunit@neonrain.com  collective:2"));
 		$user = get("users", sb("insert_id"));
 		//lets verify the explicit values were set
-		$this->assertEquals($user['username'], "PHPUnit");
 		$this->assertEquals($user['email'], "phpunit@neonrain.com");
 		$this->assertEquals($user['collective'], "2");
 		//lets also verify that the implicit values were set
@@ -21,14 +20,14 @@ class UsersTest extends ModelTest {
 
 	function test_delete() {
 		//first assert that the record exists
-		$user = get("users", array("username" => "PHPUnit"));
+		$user = get("users", array("email" => "phpunit@neonrain.com"));
 		$this->assertEquals(empty($user), false);
 		
 		//remove it and assert that the record is gone
 		$this->action("delete", $user);
-		$user = get("users", array("username" => "PHPUnit"));
+		$user = get("users", array("email" => "phpunit@neonrain.com"));
 		$this->assertEquals($user['status'], "1");
-		remove("users", "username='PHPUnit'");
+		remove("users", "email='phpunit@neonrain.com'");
 	}
 
 }

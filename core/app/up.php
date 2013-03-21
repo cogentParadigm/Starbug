@@ -14,7 +14,6 @@
 $this->table("users",
 	"first_name  type:string  length:64  list:true",
 	"last_name  type:string  length:64  list:true",
-	"username  type:string  length:128  unique:  list:true",
 	"email  type:string  length:128  unique:  list:true",
 	"password  type:password  confirm:password_confirm  optional_update:",
 	"memberships  type:int",
@@ -26,7 +25,7 @@ $this->table("users",
 	"zip  type:string  length:16"
 );
 //This will be stored immediately after the creation of the users table
-$this->store("users", "username:root", "memberships:1");
+$this->store("users", "email:root", "memberships:1");
 $this->table("permits  list:all",
 	"role  type:string  length:30",
 	"who  type:int  default:0",

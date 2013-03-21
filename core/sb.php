@@ -60,8 +60,9 @@ class sb {
 		self::$instance = $this;
 		set_exception_handler(array($this,'handle_exception'));
 		set_error_handler(array($this,'handle_error'), error_reporting());
-		register_shutdown_function(array($this, 'handle_shutdown')); 
+		register_shutdown_function(array($this, 'handle_shutdown'));
 		$this->db = $db;
+		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
 		$this->start_session();
 	}
 	
