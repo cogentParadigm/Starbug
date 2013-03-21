@@ -79,6 +79,7 @@ var Grid = dojo.declare('starbug.grid.Grid', [GridFromHtml, Keyboard, Selection]
 				// getting the item from the store first if desired.
 				promise = promise.then(getFunc(id)).then(put);
 			}
+			promise = promise.then(function(){self.refresh()});
 			
 			// Kick off and return the promise representing all applicable get/put ops.
 			// If the success callback is fired, all operations succeeded; otherwise,

@@ -8,8 +8,11 @@ function(dojo, sb, put){
 			value = parseInt(value);
 			//get groups and populate field
 			sb.query('groups').then(function(items) {
-				for (var g in items) if (value & items[g].id) put(cell, 'span.'+items[g].name, items[g].name);
+				var list = [];
+				for (var g in items) if (value & items[g].id) list.push(items[g].name);
+				put(cell, 'span.groups', list.join(', '));
 			});
+			
 		};
 
 		return column;

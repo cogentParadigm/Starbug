@@ -8,14 +8,13 @@ class Users {
 	 * A function for an administrator to create and update users
 	 */
 	function create($user) {
-		$groups = config("groups");
 		if (logged_in("root") || logged_in("admin")) {
-			foreach ($user as $k => $v) {
-				if (empty($v) && $k != "email") unset($user[$k]);
-			}
+			foreach ($user as $k => $v) if (empty($v) && $k != "email") unset($user[$k]);
 		}
-		$user['memberships'] = (empty($user['groups'])) ? "" : array_sum($user['groups']);
-		unset($user['groups']);
+		if (!empty($user['groups'])) {
+			$user['memberships'] = array_sum($user['groups']);
+			unset($user['groups']);
+		}
 		$this->store($user);
 		if ((!errors()) && (empty($user['id']))) {
 			$uid = $this->insert_id;
