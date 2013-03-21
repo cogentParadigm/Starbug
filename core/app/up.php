@@ -23,7 +23,7 @@ $this->table("users",
 	"state  type:string  length:32",
 	"country  type:string  length:64",
 	"zip  type:string  length:16",
-	"last_visit  type:datetime  default:0000-00-00 00:00:00  list:true"
+	"last_visit  type:datetime  default:0000-00-00 00:00:00  list:true  display:false"
 );
 //This will be stored immediately after the creation of the users table
 $this->store("users", "email:root", "memberships:1");

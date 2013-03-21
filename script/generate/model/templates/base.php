@@ -26,6 +26,10 @@ class <?= ucwords($name); ?>Model extends Table {
 		$query['where'][] = '!(<?= $name; ?>.status & 1)';
 		return $query;
 	}
+	
+	function query_get($query) {
+		return $query;
+	}
 
 }
 <?= '?>'; ?>

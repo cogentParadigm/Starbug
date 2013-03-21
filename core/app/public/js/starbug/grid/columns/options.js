@@ -10,7 +10,6 @@ function(dojo, strings, put, on){
 		};
 
 		column.renderCell = function(object, value, cell, options, header){
-			console.log(options);
 			var url, text = '', row = object && grid.row(object), parent = cell.parentNode;
 			var base_url = grid.base_url || dojo.global.location.pathname;
 			put(parent && parent.contents ? parent : cell, ".dgrid-options");

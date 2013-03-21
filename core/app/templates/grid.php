@@ -61,7 +61,7 @@
 			$field_views = explode(",", $field['views']);
 			$field['list'] = (in_array($view, $field_views));
 		}
-		if ((($field['display']) && ($field['list'])) || isset($columns[$name])) {
+		if ($field['list'] || isset($columns[$name])) {
 			if (false !== $columns[$name]) {
 				foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list') as $remove) unset($field[$remove]);
 				$ordered_columns[$name] = empty($columns[$name]) ? $field : $columns[$name];
@@ -90,6 +90,10 @@
 		if (isset($props['plugin'])) {
 			js(str_replace(".", "/", $props['plugin']));
 			$value['data-dgrid-column'] = $props['plugin']."(".$value['data-dgrid-column'].")";
+		}
+		efault($props['editor'], 'text');
+		if (isset($props['editor'])) {
+			$value['data-dgrid-column'] = "dgrid.editor(".$value['data-dgrid-column'].", '".$props['editor']."', 'dblclick')";
 		}
 		$ordered_columns[$key] = $value;
 	}

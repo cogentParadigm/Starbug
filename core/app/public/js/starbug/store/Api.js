@@ -10,7 +10,7 @@ return dojo.declare("starbug.store.Api", null, {
 	//		Indicates the property to use as the identity property. The values of this
 	//		property should be unique.
 	model: '',
-	action:'list',
+	action:'admin',
 	post_action: 'create',
 	idProperty: "id",
 	params:{},
@@ -39,7 +39,7 @@ return dojo.declare("starbug.store.Api", null, {
 		var headers = options || {};
 		headers.Accept = "application/javascript, application/json";
 		return dojo.xhrGet({
-			url: WEBSITE_URL+'api/'+this.models+'/get.json'+(q || ''),
+			url: WEBSITE_URL+'api/'+this.model+'/get.json'+(q || ''),
 			handleAs: "json",
 			headers: headers
 		});

@@ -9,13 +9,13 @@ class Users {
 	 */
 	function create($user) {
 		$groups = config("groups");
-		efault($user['groups'], array());
-		efault($user['collective'], 2);
-		if (!in_array($user['collective'], $user['groups'])) $user['groups'][] = $user['collective'];
-		if (!in_array($groups['user'], $user['groups'])) $user['groups'][] = $groups['user'];
-		$user['memberships'] = array_sum($user['groups']);
+		if (logged_in("root") || logged_in("admin")) {
+			foreach ($user as $k => $v) {
+				if (empty($v) && $k != "email") unset($user[$k]);
+			}
+		}
+		$user['memberships'] = (empty($user['groups'])) ? "" : array_sum($user['groups']);
 		unset($user['groups']);
-		if (empty($user['id'])) $user['password'] = mt_rand(1000000,9999999);
 		$this->store($user);
 		if ((!errors()) && (empty($user['id']))) {
 			$uid = $this->insert_id;
