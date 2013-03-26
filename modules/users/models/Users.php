@@ -4,18 +4,23 @@
  * @ingroup models
  */
 class Users {
+	
+	var $statuses = array(
+		"disabled" => 1,
+		"enabled" => 4
+	);
+	
 	/**
 	 * A function for an administrator to create and update users
 	 */
 	function create($user) {
-		$groups = config("groups");
-		efault($user['groups'], array());
-		efault($user['collective'], 2);
-		if (!in_array($user['collective'], $user['groups'])) $user['groups'][] = $user['collective'];
-		if (!in_array($groups['user'], $user['groups'])) $user['groups'][] = $groups['user'];
-		$user['memberships'] = array_sum($user['groups']);
-		unset($user['groups']);
-		if (empty($user['id'])) $user['password'] = mt_rand(1000000,9999999);
+		if (logged_in("root") || logged_in("admin")) {
+			foreach ($user as $k => $v) if (empty($v) && $k != "email") unset($user[$k]);
+		}
+		if (!empty($user['groups'])) {
+			$user['memberships'] = array_sum($user['groups']);
+			unset($user['groups']);
+		}
 		$this->store($user);
 		if ((!errors()) && (empty($user['id']))) {
 			$uid = $this->insert_id;
@@ -41,10 +46,11 @@ class Users {
 	 * A function for logging in
 	 */
 	function login($login) {
-		$user = $this->query("select:*  where:username=?  limit:1", array($login['username']));
+		$user = $this->query("select:*  where:email=?  limit:1", array($login['username']));
 		if (Session::authenticate($user['password'], $login['password'], $user['id'], Etc::HMAC_KEY)) {
 			sb()->user = $user;
 			unset($user['password']);
+			$this->store(array("id" => $user['id'], "last_visit" => date("Y-m-d H:i:s")));
 			if (logged_in('admin') || logged_in('root')) redirect(uri('admin'));
 		} else {
 			error("That username and password combination was not found.", "username");
@@ -82,6 +88,25 @@ class Users {
 				}
 			} else error("Sorry, the email address you entered was not found. Please retry.", "email");
 		}
+	}
+	
+	function query_admin($query) {
+		$query['params'] = array();
+		if (!empty($query['group']) && is_numeric($query['group'])) {
+			$query['where'][] = 'memberships & ?';
+			$query['params'][] = $query['group'];
+		}
+		
+		if (!empty($query['status']) && is_numeric($query['status'])) $query['where'][] = "(users.status & ".$query['status'].")";
+		else $query['where'][] = "!(users.status & 1)";
+		return $query;
+	}
+	
+	function filter($row) {
+		//even though it shouldn't be useful to attackers,
+		//we don't want the password hash to be returned in api calls
+		unset($row['password']);
+		return $row;
 	}
 
 }

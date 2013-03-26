@@ -64,14 +64,14 @@ body button{padding: 5px 10px 5px 7px}
 #tabs .button, #tabs a.button, #tabs .button:hover, #tabs a.button:hover{background:url(../images/tab-left.png) no-repeat;padding:0 0 0 5px;color:#419bc0;border:none;margin:0;font-size:80%;font-weight:normal;text-transform:uppercase;display:block;height:21px}
 #tabs .button span, #tabs a.button span{display:block;float:left;background:url(../images/tab-right.png) top right no-repeat;padding:3px 7px 3px 3px}
 
-.inline .button{padding-top:5px;padding-bottom:6px;margin-top:0.6em}
+.inline .button{padding-top:3px;padding-bottom:3px;margin-top:0.5em}
 
 h2 .button{margin:4px 5px !important}
 
 .photos{list-style-type:none}
 .photos li{width:100px;height:150px;float:left;position:relative;margin-right:25px}
 
-html body div .button.round-right{padding:2px 5px 1px}
+html body div .button.round-right{padding:3px 5px 3px}
 
 .required .asterisk{font-size:125%;color:#C00;position:relative;left:4px}
 
@@ -99,6 +99,8 @@ textarea{width:309px;height:100px}
 #login_form span.error{width:221px;position:absolute;top:330px}
 .left.field{margin-right:5px}
 .infield span.error{width:auto}
+.input.left{margin-right:8px}
+.input.checkbox input{float:left;width:auto;margin-right:5px;position:relative;top:-4px}
 
 /********************* dojo *********************/
 body .dijitDialogUnderlay{background:#111;opacity:0.6}

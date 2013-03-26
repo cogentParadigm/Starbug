@@ -3,26 +3,26 @@
 # Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP
- * @file util/dojo.php
+ * @file core/lib/js.php
  * @author Ali Gangji <ali@neonrain.com>
- * @ingroup dojo
+ * @ingroup js
  */
 /**
- * @defgroup dojo
- * dojo utility
- * @ingroup util
+ * @defgroup js
+ * js utility
+ * @ingroup lib
  */
-$sb->provide("util/dojo");
+$sb->provide("core/lib/js");
 /**
- * The dojo class. A wrapper for dojo javascript toolkit
- * @ingroup dojo
+ * The js class. A javascript helper class
+ * @ingroup js
  */
-class dojo {
+class js {
 	var $behaviors = array();
 	var $requires = array();
 	function __construct() {
 		global $request;
-		$request->tags[] = array("term" => "dojo", "slug" => "dojo");
+		$request->tags[] = array("term" => "js", "slug" => "js");
 	}
 	function require_js($mid) {
 		$this->requires[] = $mid;
@@ -49,11 +49,42 @@ class dojo {
 		$action = $object.$action."({args : args});";
 		$this->behavior($query, $event, $action);
 	}
+	function column($field, $ops=array()) {
+		$ops = star($ops);
+
+		//set editor
+		if (!empty($ops['editor'])) {
+			if (!empty($ops['editorArgs'])) $ops['editorArgs'] = json_decode($ops['editorArgs'], true);
+			if ($ops['editor'] == "text") $ops['editor'] = "'text'";
+			else if ($ops['editor'] == "select") {
+				$this->require_js("dijit/form/Select");
+				$ops['editor'] = "dijit.form.Select";
+				if (!isset($ops['editorArgs'])) $ops['editorArgs'] = array();
+				$ops['editorArgs']['style'] = "'width:100%;'";
+			} else if ($ops['editor'] == "bool") {
+				$this->require_js("dijit/form/Select");
+				$ops['editor'] = "dijit.form.Select";
+				$ops['editorArgs'] = array("options" => "[{value:1, label:'Yes'},{value:0, label:'No'}]", "style" => "'width:50px'");
+			}
+		}
+		
+		//format editorArgs
+		if (is_array($ops['editorArgs'])) {
+			$args = array();
+			foreach ($ops['editorArgs'] as $k => $v) $args[] = $k.":".$v;
+			$ops['editorArgs'] = "{".implode(", ", $args)."}";
+		}
+		
+		//generate column string and return
+		$column = "field:'$field'";
+		foreach ($ops as $k => $v) $column .= "  $k:$v";
+		return $column;
+	}
 }
 /**
  * A global instance of the dojo class
  * @ingroup dojo
  */
-global $dojo;
-$dojo = new dojo();
+global $js;
+$js = new js();
 ?>

@@ -23,7 +23,17 @@ class <?= ucwords($name); ?>Model extends Table {
 	}
 	
 	function query_admin($query) {
-		$query['where'][] = '!(<?= $name; ?>.status & 1)';
+		$query['where'][] = "!(<?= $name; ?>.status & 1)";
+		return $query;
+	}
+	
+	function query_get($query) {
+		return $query;
+	}
+	
+	function query_select($query) {
+		$query['where'][] = "!(<?= $name; ?>.status & 1)";
+		$query['select'] = "<?= $name; ?>.id,<?= efault($label_select, $name.".id"); ?> as label";
 		return $query;
 	}
 

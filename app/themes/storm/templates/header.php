@@ -8,7 +8,7 @@
 </ul>
 <ul id="nav" class="hnav dropdown">
 	<li class="first">
-		<a href="<?php echo uri("admin/settings"); ?>">Settings</a>
+		<a <?php if (in_array($request->uri[1], array("settings", "menus", "taxonomies"))) { ?>class="active" <?php } ?>href="<?php echo uri("admin/settings"); ?>">Settings</a>
 		<ul>
 			<li><a href="<?php echo uri("admin/settings"); ?>">General</a></li>
 			<li><hr style="width:160px;margin-left:20px"/></li>
@@ -20,5 +20,6 @@
 			<?php } ?>
 		</ul>
 	</li>
-	<li><a href="<?php echo uri("admin/uris"); ?>">Pages</a></li>
+	<li><a <?php if ($request->uri[1] == "users") { ?>class="active" <?php } ?>href="<?php echo uri("admin/users"); ?>">Users</a></li>
+	<li><a <?php if ($request->uri[1] == "uris") { ?>class="active" <?php } ?>href="<?php echo uri("admin/uris"); ?>">Pages</a></li>
 </ul>

@@ -5,10 +5,10 @@
  * This file is part of StarbugPHP
  * @file modules/js/global_functions.php
  * @author Ali Gangji <ali@neonrain.com>
- * @ingroup dojo
+ * @ingroup js
  */
 /**
- * @defgroup dojo
+ * @defgroup js
  * global functions
  * @ingroup global
  */
@@ -23,15 +23,22 @@ function connect($ops, $params="") {
 	$query = array_shift($ops);
 	efault($ops['event'], 'onclick');
 	global $sb;
-	$sb->import("util/dojo");
-	global $dojo;
-	if (isset($ops['url'])) $dojo->xhr($query, $ops['action'], $ops['url'], $params, $ops['event']);
-	$dojo->attach($query, $ops['action'], $params, $ops['event']);
+	$sb->import("core/lib/js");
+	global $js;
+	if (isset($ops['url'])) $js->xhr($query, $ops['action'], $ops['url'], $params, $ops['event']);
+	$js->attach($query, $ops['action'], $params, $ops['event']);
+	return $js;
 }
 function js($mid) {
 	global $sb;
-	$sb->import("util/dojo");
-	global $dojo;
-	$dojo->require_js($mid);
+	$sb->import("core/lib/js");
+	global $js;
+	$js->require_js($mid);
+	return $js;
+}
+function column($field, $ops=array()) {
+	sb()->import("core/lib/js");
+	global $js;
+	return $js->column($field, $ops);
 }
 ?>

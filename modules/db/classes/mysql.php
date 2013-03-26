@@ -78,6 +78,7 @@ class mysql extends db {
 	 */
 	function query($froms, $args="", $replacements=array()) {
 		$args = star($args);
+		if (!empty($args['params'])) $replacements = $args['params'];
 		
 		//list of tables
 		$froms = explode(",", $froms);

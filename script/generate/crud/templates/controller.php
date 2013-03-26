@@ -1,5 +1,5 @@
 <?= '<?php'."\n"; ?>
-class Admin<?= ucwords($model); ?>Controller extends Controller {
+class Admin<?= ucwords($model); ?>Controller {
 	function init() {
 		assign("model", "<?= $model; ?>");
 	}

@@ -51,8 +51,9 @@
 	$ordered_columns = array();
 	$options = schema($model);
 	foreach ($options['fields'] as $name => $field) {
+		$merge = array();
 		$field['field'] = "'".$name."'";
-		$name = ucwords(str_replace('_',' ',$name));
+		$name = (empty($field['label'])) ? ucwords(str_replace('_',' ',$name)) : $field['label'];
 		
 		if ($options['list'] == "all") efault($field['list'], true);
 		else efault($field['list'], false);
@@ -61,10 +62,20 @@
 			$field_views = explode(",", $field['views']);
 			$field['list'] = (in_array($view, $field_views));
 		}
-		if ((($field['display']) && ($field['list'])) || isset($columns[$name])) {
+		
+		if ($field['input_type'] == "select") {
+			$merge['plugin'] = "starbug.grid.columns.select";
+			if (!empty($field['filters']['references'])) $merge['from'] = "'".reset(explode(" ", $field['filters']['references']))."'";
+		} else if ($field['type'] == "bool") {
+			$merge['plugin'] = "starbug.grid.columns.select";
+			$merge['options'] = "{0:'Yes', 1:'No'}";
+		}
+		
+		if ($field['list'] || isset($columns[$name])) {
 			if (false !== $columns[$name]) {
-				foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list') as $remove) unset($field[$remove]);
-				$ordered_columns[$name] = empty($columns[$name]) ? $field : $columns[$name];
+				foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list', "options") as $remove) unset($field[$remove]);
+				$ordered_columns[$name] = empty($columns[$name]) ? $field : star($columns[$name]);
+				foreach ($merge as $k => $v) if (empty($ordered_columns[$name][$k])) $ordered_columns[$name][$k] = $v;
 			}
 		}
 		unset($columns[$name]);
@@ -77,7 +88,7 @@
 		$value = star($value);
 		$props = array();
 		foreach ($value as $k => $v) {
-			if (!in_array($k, array("id", "class", "style", "options", "label"))) {
+			if (!in_array($k, array("id", "class", "style", "label"))) {
 				$props[$k] = $v;
 				unset($value[$k]);
 			}
@@ -90,6 +101,10 @@
 		if (isset($props['plugin'])) {
 			js(str_replace(".", "/", $props['plugin']));
 			$value['data-dgrid-column'] = $props['plugin']."(".$value['data-dgrid-column'].")";
+		}
+		if (empty($props['plugin'])) efault($props['editor'], "'text'");
+		if (isset($props['editor'])) {
+			$value['data-dgrid-column'] = "dgrid.editor(".$value['data-dgrid-column'].", ".$props['editor'].", 'dblclick')";
 		}
 		$ordered_columns[$key] = $value;
 	}

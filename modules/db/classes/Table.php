@@ -62,6 +62,7 @@ class Table {
 		$this->imported = array();
 		$this->imported_functions = array();
 		$this->init();
+		if (!isset($this->statuses)) $this->statuses = config("statuses");
 	}
 
 	protected function init() {
@@ -135,6 +136,13 @@ class Table {
 
 	function filter($data) {
 		return $data;
+	}
+
+	function query_statuses($query) {
+		$statuses = array();
+		foreach ($this->statuses as $label => $id) $statuses[] = array("id" => $id, "label" => $label);
+		$query['data'] = $statuses;
+		return $query;
 	}
 
 	function json($args="", $froms="", $deep="auto") {
