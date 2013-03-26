@@ -5,13 +5,14 @@ define([
 	"sb/data",
 	"starbug/store/Api",
 	"dgrid/GridFromHtml",
+	"dgrid/OnDemandGrid",
 	"dgrid/Keyboard",
 	"dgrid/Selection",
-	"dgrid/Editor",
+	"dgrid/editor",
 	"dojo/_base/Deferred"
-], function(dojo, starbug, sb, data, api, GridFromHtml, Keyboard, Selection, editor, Deferred){
+], function(dojo, starbug, sb, data, api, GridFromHtml, List, Keyboard, Selection, editor, Deferred){
 window.dgrid = window.dgrid || {GridFromHtml:GridFromHtml, editor:editor};
-var Grid = dojo.declare('starbug.grid.Grid', [GridFromHtml, Keyboard, Selection], {
+var Grid = dojo.declare('starbug.grid.Grid', [GridFromHtml, List, Keyboard, Selection], {
 	getBeforePut:false,
 	constructor: function(args) {
 		this.inherited(arguments);

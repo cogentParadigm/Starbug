@@ -78,7 +78,7 @@ class ApiRequest {
 		$models = (isset($query['models'])) ? $query['models'] : $model;
 		$query['where'] = implode(' && ', $query['where']);
 		if (!empty($_GET['keywords'])) efault($query['search'], '');
-		$data = query($models, $query);
+		$data = (isset($query['data'])) ? $query['data'] : query($models, $query);
 		$f = strtoupper($format);
 		$error = $f."errors";
 		if (empty($sb->errors[$model])) {
@@ -107,7 +107,7 @@ class ApiRequest {
 	protected function groups($call, $format, $ops) {
 		$groups = config("groups");
 		$data = array();
-		foreach ($groups as $name => $number) $data[] = array("name" => $name, "id" => $number);
+		foreach ($groups as $name => $number) $data[] = array("label" => $name, "id" => $number);
 		if (!empty($data)) {
 			switch ($format) {
 				case "xml": return $this->getXML("groups", $data); break;
@@ -126,7 +126,7 @@ class ApiRequest {
 	protected function statuses($call, $format, $ops) {
 		$statuses = config("statuses");
 		$data = array();
-		foreach ($statuses as $name => $number) $data[] = array("name" => $name, "id" => $number);
+		foreach ($statuses as $name => $number) $data[] = array("label" => $name, "id" => $number);
 		if (!empty($data)) {
 			switch ($format) {
 				case "xml": return $this->getXML("statuses", $data); break;

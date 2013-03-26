@@ -11,7 +11,7 @@
  * @ingroup migrations
  */
 // This adds a table to the schema, The Schemer builds up a schema with all of the migrations that are to be run, and then updates the db
-$this->table("users",
+$this->table("users  label_select:CONCAT(first_name, ' ', last_name, ' (', email, ')')",
 	"first_name  type:string  length:64  list:true",
 	"last_name  type:string  length:64  list:true",
 	"email  type:string  length:128  unique:  list:true",

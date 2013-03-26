@@ -4,6 +4,12 @@
  * @ingroup models
  */
 class Users {
+	
+	var $statuses = array(
+		"disabled" => 1,
+		"enabled" => 4
+	);
+	
 	/**
 	 * A function for an administrator to create and update users
 	 */
@@ -91,14 +97,8 @@ class Users {
 			$query['params'][] = $query['group'];
 		}
 		
-		if (!empty($query['status'])) {
-			if ($query['status'] == "disabled") $query['where'][] = "(users.status & 1)";
-			else {
-				$query['where'][] = "!(users.status & 1)";
-				if ($query['status'] == "active") $query['where'][] = "users.last_visit > '0000-00-00 00:00:00'";
-				else if ($query['status'] == "inactive") $query['where'][] = "users.last_visit = '0000-00-00 00:00:00'";
-			}
-		}
+		if (!empty($query['status']) && is_numeric($query['status'])) $query['where'][] = "(users.status & ".$query['status'].")";
+		else $query['where'][] = "!(users.status & 1)";
 		return $query;
 	}
 

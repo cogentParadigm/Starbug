@@ -5,7 +5,8 @@ class AdminUsersController {
 	}
 	function default_action() {
 		assign("columns", array(
-			"Memberships" => "field:'memberships'  plugin:starbug.grid.columns.groups"
+			"Memberships" => "field:'memberships'  plugin:starbug.grid.columns.groups",
+			"Status" => "field:'status'  plugin:starbug.grid.columns.statuses"
 		));
 		$this->render("admin/list");
 	}
