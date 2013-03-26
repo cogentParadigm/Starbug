@@ -13,6 +13,7 @@ return dojo.declare("starbug.store.Api", null, {
 	action:'admin',
 	post_action: 'create',
 	idProperty: "id",
+	last_query:'',
 	params:{},
 	constructor: function(/*starbug.store.Api*/ options){
 		// summary:
@@ -125,8 +126,10 @@ return dojo.declare("starbug.store.Api", null, {
 				query += (i > 0 ? "," : "") + encodeURIComponent(sort.attribute+' '+(sort.descending ? 'DESC' : 'ASC'));
 			}
 		}
+		var query_url = WEBSITE_URL+'api/'+this.model+'/'+this.action+'.json' + (query || "");
+		this.last_query = query_url;
 		var results = dojo.xhrGet({
-			url: WEBSITE_URL+'api/'+this.model+'/'+this.action+'.json' + (query || ""),
+			url: query_url,
 			handleAs: "json",
 			headers: headers
 		});

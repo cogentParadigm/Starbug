@@ -16,7 +16,8 @@ class ApiRequest {
 	var $types = array(
 		"xml" => "text/xml",
 		"json" => "application/json",
-		"jsonp" => "application/x-javascript"
+		"jsonp" => "application/x-javascript",
+		"csv" => "text/csv"
 	);
 	var $result = "";
 	var $whitelisting = false;
@@ -46,7 +47,10 @@ class ApiRequest {
 		$action = next($parts);
 		$ops = array_merge(array("action" => "read", "where" => array()), star($ops));
 		if (!is_array($ops['where'])) $ops['where'] = array($ops['where']);
-		if ($this->headers) header("Content-Type: ".$this->types[$format]);
+		if ($this->headers) {
+			header("Content-Type: ".$this->types[$format]);
+			header("Cache-Control: no-store, no-cache");
+		}
 		$this->result = call_user_func(array($this, $call), $action, $format, $ops);
 	}
 
@@ -89,10 +93,12 @@ class ApiRequest {
 					$count = count($data);
 					header("Content-Range: items 0-$count/$count");
 				}
+				if (!isset($query['headers'])) $query['headers'] = true;
 				switch ($format) {
 					case "xml": return $this->getXML($model, $data); break;
 					case "json": return $this->getJSON("id", $data); break;
 					case "jsonp": return $this->getJSONP($ops['pad'], $data); break;
+					case "csv": return $this->getCSV($data, $query['headers']); break;
 				}
 			}
 		} else return $this->$error($model);
@@ -113,6 +119,7 @@ class ApiRequest {
 				case "xml": return $this->getXML("groups", $data); break;
 				case "json": return $this->getJSON("id", $data); break;
 				case "jsonp": return $this->getJSONP($ops['pad'], $data); break;
+				case "csv": return $this->getCSV($data); break;
 			}
 		}
 	}
@@ -132,6 +139,7 @@ class ApiRequest {
 				case "xml": return $this->getXML("statuses", $data); break;
 				case "json": return $this->getJSON("id", $data); break;
 				case "jsonp": return $this->getJSONP($ops['pad'], $data); break;
+				case "csv": return $this->getCSV($data); break;
 			}
 		}
 	}
@@ -174,6 +182,24 @@ class ApiRequest {
 		}
 		$xml->endElement();
 		return $xml->outputMemory(true);
+	}
+
+ 	/**
+ 	 * get a CSV formatted recordset
+ 	 * @param array $data an array of data
+ 	 * @return string json output of records
+ 	 */
+ 	protected function getCSV($data, $headers=true) {
+ 		if ($this->headers) header('Content-Disposition: attachment; filename="'.$this->model.'.csv"');
+ 		$lines = array();
+ 		$buffer = fopen("php://temp", 'r+');
+ 		if (is_array($headers)) fputcsv($buffer, $headers);
+ 		else if (true === $headers) fputcsv($buffer, array_keys(sb($this->model, 'filter', $data[0])));
+ 		foreach ($data as $row) fputcsv($buffer, sb($this->model, "filter", $row));
+ 		rewind($buffer);
+ 		foreach ($data as $row) $lines[] = fgets($buffer);
+ 		fclose($buffer);
+ 		return implode("", $lines);
 	}
 
 	/**

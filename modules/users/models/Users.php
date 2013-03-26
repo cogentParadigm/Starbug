@@ -101,6 +101,13 @@ class Users {
 		else $query['where'][] = "!(users.status & 1)";
 		return $query;
 	}
+	
+	function filter($row) {
+		//even though it shouldn't be useful to attackers,
+		//we don't want the password hash to be returned in api calls
+		unset($row['password']);
+		return $row;
+	}
 
 }
 ?>
