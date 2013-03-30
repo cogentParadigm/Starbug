@@ -103,31 +103,16 @@ $this->uri("terms", "prefix:core/app/views/  format:xhr  groups:user");
 $this->uri("robots", "prefix:core/app/views/  format:txt");
 
 // PERMITS
-//STANDARD WRITE PERMITS
-foreach(array("users", "terms", "menus", "uris_menus", "uris", "options") as $standard_write) {
-	$this->permit("$standard_write::create", "admin:");
-	$this->permit("$standard_write::delete", "admin:global");
-}
-//STANDARD READ PERMITS
-foreach (array("terms", "menus", "uris_menus") as $standard_read) {
-	$this->permit("$standard_read::read","user:global");
-}
+//GLOBAL READ AND WRITE PERMITS FOR ADMIN
+$this->permit("%::%", "admin:%");
 // URI PERMITS
 $this->permit("uris::read", "collective:global 4");
-$this->permit("uris::update", "admin:global");
-$this->permit("uris::apply_tags", "admin:global");
-$this->permit("uris::remove_tag", "admin:global");
 // USER PERMITS
 $this->permit("users::login", "everyone:table");
 $this->permit("users::logout", "everyone:table");
-$this->permit("users::create", "admin:");
 $this->permit("users::register", "everyone:table");
 $this->permit("users::update_profile", "owner:global");
 $this->permit("users::reset_password", "everyone:table");
-// MENU PERMITS
-$this->permit("menus::add_uri", "admin:global");
-// TERM PERMITS
-$this->permit("terms::delete_taxonomy", "admin:table");
 
 //LOGGING TABLES
 //ERROR LOG
@@ -147,7 +132,7 @@ if (Etc::ENABLE_SQL_LOG) {
 		"old_value  type:text",
 		"new_value  type:text"
 	);
-	foreach (array("users", "permits", "uris", "tags", "uris_tags", "leafs", "text_leaf", "files", "options", "emails", "errors") as $tbl) {
+	foreach ($this->tables as $tbl => $columns) {
 		$this->after("$tbl::insert", $this->get_logging_trigger("$tbl", "insert"));
 		$this->after("$tbl::update", $this->get_logging_trigger("$tbl", "update"));
 		$this->after("$tbl::delete", $this->get_logging_trigger("$tbl", "delete"));

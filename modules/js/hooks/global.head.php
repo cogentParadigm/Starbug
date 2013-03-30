@@ -16,7 +16,7 @@
 				$paths = "";
 				foreach ($profile['prefixes'] as $p) $paths .= "'$p[0]':'$p[1]', ";
 			?>
-			<script type="text/javascript" src="<?php echo uri("core/app/public/js/dojo/dojo/dojo.js"); ?>" data-dojo-config="async: true, parseOnLoad: true, serverTime:'<?php echo date("Y-m-d H:i:s"); ?>'"></script>
+			<script type="text/javascript" src="<?php echo uri("core/app/public/js/dojo/dojo/dojo.js"); ?>" data-dojo-config="async: true, parseOnLoad: true, serverTime:'<?php echo date("Y-m-d H:i:s"); ?>', isDebug:true"></script>
 			<script type="text/javascript">
 				require({
 						packages: [<?php foreach ($profile['prefixes'] as $idx => $p) { if ($idx > 0) echo ','; echo "\n"; ?>
