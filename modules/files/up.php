@@ -9,7 +9,4 @@ $this->table("files  list:all",
 
 //add file attachments to terms
 $this->column("terms", "attachment  type:int  upload:term_attachment  null:  references:files id");
-
-//file permits - only prepare should be called directly
-$this->permit("files::prepare", "admin:table");
 ?>
