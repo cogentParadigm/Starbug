@@ -70,6 +70,34 @@ class mysql extends db {
 	}
 
 	/**
+	 * get records or columns
+	 * @ingroup data
+	 * @param string $model the name of the model
+	 * @param mixed $id/$conditions the id or an array of conditions
+	 * @param string $column optional column name
+	 */
+	function get() {
+		$args = func_get_args();
+		$count = count($args);
+		if ($count == 1) return $this->query($args[0]);
+		else if ($count > 1) {
+			$where = star($args[1]);
+			$params = array();
+			foreach ($where as $k => $v) {
+				$col = ($k === 0) ? "id" : $k;
+				if (!is_array($v)) $v = array($v, '=');
+				$where[$k] = $col." ".$v[1]." ?";
+				$params[] = $v[0];
+			}
+			$query = "where:".implode(" && ", $where);
+		}
+		if ($count == 3) $query .= "  select:$args[2]";
+		$ret = $this->query($args[0], $query, $params);
+		if (count($ret) == 1) return $ret[0];
+		else return $ret;
+	}
+
+	/**
 	 * query the database
 	 * @param string $froms comma delimeted list of tables to join. 'users' or 'uris,system_tags'
 	 * @param string $args starbug query string for params: select, where, limit, and action/priv_type

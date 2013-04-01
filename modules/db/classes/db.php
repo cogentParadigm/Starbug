@@ -13,7 +13,7 @@
  * @ingroup db
  */
 /**
- * The db class. A simple PDO wrapper
+ * The db class. loads DB driver and Model objects
  * @ingroup db
  */
 class db {
