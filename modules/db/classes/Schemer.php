@@ -666,7 +666,7 @@ class Schemer {
 	 * @param string $name the name of the model
 	 */
 	function write_model($name, $backup) {
-		exec("./script/generate model ".$name);
+		exec("./sb generate model ".$name);
 	}
 
 	/**

@@ -14,7 +14,7 @@ $errors = store($name, $params);
 if (empty($errors)) {
 	$id = (empty($params['id'])) ? sb("insert_id") : $params['id'];
 	$argv = array($name, "where:id='$id'");
-	include(BASE_DIR."/script/query.php");
+	include(BASE_DIR."/core/app/script/query.php");
 } else {
 	foreach($errors as $col => $arr) {
 		echo $col.":\n";
