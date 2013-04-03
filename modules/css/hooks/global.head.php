@@ -54,6 +54,6 @@
 				<?php } ?>
 		<?php } ?>
 		<?php if ($styles['less']) { ?>
-			<script src="<?php echo uri("core/app/public/js/less-1.3.1.min.js"); ?>" type="text/javascript"></script>
+			<script src="<?php echo uri("core/app/public/js/less-1.3.3.min.js"); ?>" type="text/javascript"></script>
 		<?php } ?>
 	<?php } ?>

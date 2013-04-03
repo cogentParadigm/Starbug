@@ -1,0 +1,14 @@
+{
+	//basic info
+	"name":"Starbug 2",
+	"description":"Uses LESS",
+	//content regions
+	"regions": ["header", "main", "footer"],
+	//menus
+	"menus": ["top", "main", "footer"],
+	//stylesheets
+	"styles": {
+		"less": true,
+		"screen" : ["dojo.css"]
+	}
+}

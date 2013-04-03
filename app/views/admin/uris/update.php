@@ -1,5 +1,5 @@
 <?php
-	$record = (is_numeric($id)) ? get("uris", $id) : query("uris", "select:uris.*  limit:1  orderby:uris.modified DESC");
+	$record = (is_numeric($id)) ? get("uris", $id) : get("uris", array(), array("sort" => array("modified" => -1), "limit" => 1));
 	$id = $record['id'];
 	efault($_POST["uris"], array());
 	if (empty($_POST["uris"]["categories"])) {

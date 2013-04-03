@@ -1,0 +1,91 @@
+.gradient(@start, @stop, @from: left bottom, @to: left top, @repeat: no-repeat) {
+  background: linear-gradient(bottom, @start, @stop) @repeat;
+  background: -webkit-linear-gradient(@from, color-stop(0, @start), color-stop(1, @stop)) @repeat;
+  background: -webkit-gradient(linear, @from, @to, color-stop(0, @start), color-stop(1, @stop)) @repeat;
+  background: -ms-linear-gradient(@from, @start, @stop) @repeat;
+  background: -moz-linear-gradient(@from, @start 0%, @stop 100%) @repeat;
+  background: -o-linear-gradient(@from, @start 0%, @stop 100%) @repeat;
+  -pie-background:linear-gradient(@start, @stop) @repeat;
+  behavior:url(/app/public/pie/PIE.htc);
+}
+.drop-shadow(@color:rgba(0, 0, 0, 0.1), @x-axis: 0, @y-axis: 1px, @blur: 2px) {
+  -webkit-box-shadow: @x-axis @y-axis @blur @color;
+  -moz-box-shadow: @x-axis @y-axis @blur @color;
+  box-shadow: @x-axis @y-axis @blur @color;
+  behavior:url(/app/public/stylesheets/pie/PIE.htc);
+}
+.rounded(@radius: 10px) {
+	-webkit-border-radius:@radius;
+	-moz-border-radius:@radius;
+	border-radius:@radius;
+	behavior:url(/app/public/stylesheets/pie/PIE.htc);
+}
+.rounded(@radius_top_left, @radius_top_right, @radius_bottom_right, @radius_bottom_left) {
+	-webkit-border-radius:@radius_top_left @radius_top_right @radius_bottom_right @radius_bottom_left;
+	-moz-border-radius:@radius_top_left @radius_top_right @radius_bottom_right @radius_bottom_left;
+	border-radius:@radius_top_left @radius_top_right @radius_bottom_right @radius_bottom_left;
+	behavior:url(/app/public/stylesheets/pie/PIE.htc);
+}
+.opacity(@opacity: 0.5) {
+  -moz-opacity: @opacity;
+  -khtml-opacity: @opacity;
+  -webkit-opacity: @opacity;
+  opacity: @opacity;
+}
+.transition-duration(@duration: 0.2s) {
+  -moz-transition-duration: @duration;
+  -webkit-transition-duration: @duration;
+  transition-duration: @duration;
+}
+.rotation(@deg:5deg){
+  -webkit-transform: rotate(@deg);
+  -moz-transform: rotate(@deg);
+  transform: rotate(@deg);
+}
+.scale(@ratio:1.5){
+  -webkit-transform:scale(@ratio);
+  -moz-transform:scale(@ratio);
+  transform:scale(@ratio);
+}
+.transition(@duration:0.2s, @ease:ease-out) {
+  -webkit-transition: all @duration @ease;
+  -moz-transition: all @duration @ease;
+  transition: all @duration @ease;
+}
+.inner-shadow(@horizontal:0, @vertical:1px, @blur:2px, @alpha: 0.4) {
+  -webkit-box-shadow: inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+  -moz-box-shadow: inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+  box-shadow: inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+}
+.box-shadow(@arguments) {
+  -webkit-box-shadow: @arguments;
+  -moz-box-shadow: @arguments;
+  box-shadow: @arguments;
+}
+.columns(@colwidth: 250px, @colcount: 0, @colgap: 50px, @columnRuleColor: #EEE, @columnRuleStyle: solid, @columnRuleWidth: 1px) {
+  -moz-column-width: @colwidth;
+  -moz-column-count: @colcount;
+  -moz-column-gap: @colgap;
+  -moz-column-rule-color: @columnRuleColor;
+  -moz-column-rule-style: @columnRuleStyle;
+  -moz-column-rule-width: @columnRuleWidth;
+  -webkit-column-width: @colwidth;
+  -webkit-column-count: @colcount;
+  -webkit-column-gap: @colgap;
+  -webkit-column-rule-color: @columnRuleColor;
+  -webkit-column-rule-style: @columnRuleStyle;
+  -webkit-column-rule-width: @columnRuleWidth;
+  column-width: @colwidth;
+  column-count: @colcount;
+  column-gap: @colgap;
+  column-rule-color: @columnRuleColor;
+  column-rule-style: @columnRuleStyle;
+  column-rule-width: @columnRuleWidth;
+}
+.translate(@x:0, @y:0) {
+  -moz-transform: translate(@x, @y);
+  -webkit-transform: translate(@x, @y);
+  -o-transform: translate(@x, @y);
+  -ms-transform: translate(@x, @y);
+  transform: translate(@x, @y);
+}
