@@ -29,7 +29,7 @@ class Uris {
 			$uris['type'] = $_POST['type'];
 		}
 		if ($_POST['type'] == "Post") $uris['path'] = "blog/".$uris['path'];
-		$row = $this->query("where:id='$uris[id]'  limit:1");
+		$row = $this->get($uris['id']);
 		efault($uris['categories'], array());
 		$categories = $uris['categories'];
 		unset($uris['categories']);
@@ -38,10 +38,10 @@ class Uris {
 			$uid = $uris['id'];
 			remove("uris_categories", "uris_id=$uid".(empty($categories) ? "" : " && terms_id NOT IN (".implode(", ", $categories).")"));
 			foreach ($categories as $tid) {
-				$exists = query("uris_categories", "where:uris_id=? && terms_id=?  limit:1", array($uid, $tid));
+				$exists = get("uris_categories", array("uris_id" => $uid, "terms_id" => $tid));
 				if (!$exists) store("uris_categories", "uris_id:$uid  terms_id:$tid");
 			}
-			$blocks = query("blocks", "where:uris_id=?", array($uris['id']));
+			$blocks = get("blocks", array("uris_id" => $uris['id']));
 			foreach ($blocks as $block) {
 				$key = 'block-'.$block['region'].'-'.$block['position'];
 				if (!empty($_POST[$key])) store("blocks", array("id" => $block['id'], "content" => $_POST[$key]["content"]));

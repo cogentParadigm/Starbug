@@ -20,12 +20,12 @@ class UsersTest extends ModelTest {
 
 	function test_delete() {
 		//first assert that the record exists
-		$user = get("users", array("email" => "phpunit@neonrain.com"));
+		$user = get("users", array("email" => "phpunit@neonrain.com"), array("limit" => 1));
 		$this->assertEquals(empty($user), false);
 		
 		//remove it and assert that the record is gone
 		$this->action("delete", $user);
-		$user = get("users", array("email" => "phpunit@neonrain.com"));
+		$user = get("users", array("email" => "phpunit@neonrain.com"), array("limit" => 1));
 		$this->assertEquals($user['status'], "1");
 		remove("users", "email='phpunit@neonrain.com'");
 	}

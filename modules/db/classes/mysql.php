@@ -78,23 +78,39 @@ class mysql extends db {
 	 */
 	function get() {
 		$args = func_get_args();
-		$count = count($args);
-		if ($count == 1) return $this->query($args[0]);
-		else if ($count > 1) {
-			$where = star($args[1]);
-			$params = array();
-			foreach ($where as $k => $v) {
-				$col = ($k === 0) ? "id" : $k;
-				if (!is_array($v)) $v = array($v, '=');
-				$where[$k] = $col." ".$v[1]." ?";
-				$params[] = $v[0];
-			}
-			$query = "where:".implode(" && ", $where);
+		$query = $conditions = $replacements = array();
+		
+		//loop through the input arguments
+		foreach ($args as $idx => $arg) {
+				if ($idx == 0) $collection = $arg; //first argument is the collection
+				else if ($idx == 1) $conditions = star($arg); //second argument are the conditions
+				else {
+					$arg = star($arg);
+					if (!empty($arg['orderby'])) $arg['sort'] = $arg['orderby']; //DEPRECATED: use sort
+					if (!empty($arg['sort'])) {
+						foreach ($arg['sort'] as $key => $direction) $query['orderby'][] = $key." ".(($direction > 0) ? "ASC" : "DESC");
+						$query['orderby'] = implode(", ", $query['orderby']);
+					}
+					if (!empty($arg['limit'])) $query['limit'] = $arg['limit'];
+					if (!empty($arg['skip'])) $query['limit'] = $arg['skip'].", ".$query['limit'];
+				}
 		}
-		if ($count == 3) $query .= "  select:$args[2]";
-		$ret = $this->query($args[0], $query, $params);
-		if (count($ret) == 1) return $ret[0];
-		else return $ret;
+		
+		//if there are any conditions, convert them to string expressions
+		$conditions = star($conditions);
+		foreach ($conditions as $k => $v) {
+			$col = ($k === 0) ? "id" : $k;
+			if (!is_array($v)) $v = array($v, '=');
+			$conditions[$k] = $col." ".$v[1]." ?";
+			$replacements[] = $v[0];
+			//if id is compared for equality, set the limit to 1
+			if ($col == "id" && $v[1] == "=") $query['limit'] = 1;
+		}
+		if (!empty($conditions)) $query['where'] = implode(" && ", $conditions);
+		
+		//obtain query result
+		$result = $this->query($collection, $query, $replacements);
+		return $result;
 	}
 
 	/**
