@@ -8,7 +8,7 @@
 		} else {
 			$args['from'] .= " INNER JOIN ".P("permits")." AS permits";
 			$permit_type = "('global' LIKE permits.priv_type || (permits.priv_type='object' && permits.related_id=".$first.".id))"." && ((permits.status & ".$first.".status)=".$first.".status)";
-			$roles .= " || (permits.role='owner' && ".$first.".owner='".sb()->user['id']."') || (permits.role='collective' && ((('".sb()->user['memberships']."' & ".$first.".collective)>'0') || (('".sb()->user['memberships']."' & ".$first.".collective)=$first.collective)))";
+			$roles .= " || (permits.role='self' && ".$first.".id='".sb()->user['id']."') || (permits.role='owner' && ".$first.".owner='".sb()->user['id']."') || (permits.role='collective' && ((('".sb()->user['memberships']."' & ".$first.".collective)>'0') || (('".sb()->user['memberships']."' & ".$first.".collective)=$first.collective)))";
 		}
 		$args['where'] = "'".P($first)."' LIKE permits.related_table"
 		." && '$args[action]' LIKE permits.action"

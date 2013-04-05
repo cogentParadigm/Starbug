@@ -14,6 +14,7 @@
 			<li><hr style="width:160px;margin-left:20px"/></li>
 			<li><a href="<?php echo uri("admin/menus"); ?>">Menus</a></li>
 			<li><a href="<?php echo uri("admin/taxonomies"); ?>">Taxonomy</a></li>
+			<?php foreach (locate("settings.menu.php", "hooks") as $path) include($path); ?>
 			<?php if (logged_in("root")) { ?>
 				<li><hr style="width:160px;margin-left:20px"/></li>
 				<li><a href="<?php echo uri("sb-admin"); ?>" target="_blank">The Bridge</a></li>

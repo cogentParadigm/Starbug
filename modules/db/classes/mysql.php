@@ -225,7 +225,10 @@ class mysql extends db {
 		$order = (!(empty($args['orderby']))) ? " ORDER BY $args[orderby]" : "";
 		$sql = "$select$from$where$groupby$having$order$limit";
 
-		if (isset($args['echo'])) echo $sql;
+		if (isset($args['echo'])) {
+			echo $sql;
+			exit();
+		}
 
 		$records = $this->pdo->prepare($sql);
 		$records->execute($replacements);

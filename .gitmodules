@@ -19,3 +19,6 @@
 [submodule "core/app/public/js/dojo/xstyle"]
 	path = core/app/public/js/dojo/xstyle
 	url = git://github.com/kriszyp/xstyle.git
+[submodule "core/app/public/js/dojo/bootstrap"]
+	path = core/app/public/js/dojo/bootstrap
+	url = https://github.com/xsokev/Dojo-Bootstrap.git

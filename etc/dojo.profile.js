@@ -6,7 +6,6 @@ dependencies = {
 			// in addition to the standard dojo.js base APIs. 
 			name: "dojo.js",
 			dependencies: [
-				'dojo.query',
 				'sb',
 				'sb/data'
 			]
@@ -25,6 +24,7 @@ dependencies = {
 		["dgrid", "../dgrid"],
 		["put-selector", "../put-selector"],
 		["xstyle", "../xstyle"],
+		["jquery", "//ajax.googleapis.com/ajax/libs/jquery/1.9.1"],
 		["sb", "../../sb"],
 		["starbug", "../../starbug"],
 		["app", "../../../../../../app/public/js"]

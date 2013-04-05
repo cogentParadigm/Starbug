@@ -26,6 +26,7 @@
 					<?php foreach ($profile['layers'] as $lidx => $l) { foreach ($l['dependencies'] as $didx => $d) { if ($lidx > 0 || $didx > 0) echo ",\n"; ?>
 					'<?php echo str_replace(".", "/", $d); ?>'<?php } } echo "\n"; ?>
 				]);
+				define.amd.jQuery = true;
 			</script>
 		<?php } ?>
 	<?php } ?>

@@ -86,6 +86,8 @@ $this->table("menus  list:all",
 $this->table("uris_menus  list:all",
 	"uris_id  type:int  references:uris id  update:cascade  delete:cascade",
 	"menus_id  type:int  references:menus id  update:cascade  delete:cascade",
+	"href  type:string  length:255  default:",
+	"content  type:string  length:255  default:",
 	"position  type:int  ordered:menus_id parent",
 	"parent  type:int  default:0"
 );
@@ -111,7 +113,7 @@ $this->permit("uris::read", "collective:global 4");
 $this->permit("users::login", "everyone:table");
 $this->permit("users::logout", "everyone:table");
 $this->permit("users::register", "everyone:table");
-$this->permit("users::update_profile", "owner:global");
+$this->permit("users::update_profile", "self:global");
 $this->permit("users::reset_password", "everyone:table");
 
 //LOGGING TABLES

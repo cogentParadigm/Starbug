@@ -1,7 +1,7 @@
 {
 	//basic info
 	"name":"Starbug 2",
-	"description":"Uses LESS",
+	"description":"Uses LESS and bootstrap",
 	//content regions
 	"regions": ["header", "main", "footer"],
 	//menus
