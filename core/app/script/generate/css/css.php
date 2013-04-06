@@ -4,21 +4,11 @@
 	foreach ($themes as $name) {
 		
 		$conf = theme("styles", $name);
-		efault($conf['blueprint'], false);
 		efault($conf['less'], false);
 		
 		/******************SCREEN********************/
-		if ($conf['blueprint']) {
-			$screen = new CSSParser(
-				BASE_DIR."/core/app/public/stylesheets/src/reset.css",
-				BASE_DIR."/core/app/public/stylesheets/src/typography.css",
-				BASE_DIR."/core/app/public/stylesheets/src/forms.css",
-				BASE_DIR."/core/app/public/stylesheets/src/grid.css",
-				BASE_DIR."/var/public/stylesheets/$name-screen.css"
-			);
-		} else {
-			$screen = new CSSParser(BASE_DIR."/var/public/stylesheets/$name-screen.css");			
-		}
+		$screen = new CSSParser(BASE_DIR."/var/public/stylesheets/$name-screen.css");			
+
 		//compile custom-screen.less
 		if ($conf['less'] && file_exists(BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-screen.less")) {
 			exec("lessc ".BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-screen.less ".BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-screen.css");
@@ -33,14 +23,8 @@
 		$screen->write();
 		
 		/******************PRINT********************/
-		if ($conf['blueprint']) {
-			$print = new CSSParser(
-				BASE_DIR."/core/app/public/stylesheets/src/print.css",
-				BASE_DIR."/var/public/stylesheets/$name-print.css"
-			);
-		} else {
-			$print = new CSSParser(BASE_DIR."/var/public/stylesheets/$name-print.css");
-		}
+		$print = new CSSParser(BASE_DIR."/var/public/stylesheets/$name-print.css");
+
 		//add custom-print.css
 		if (file_exists(BASE_DIR."app/themes/".$name."/public/stylesheets/custom-print.css")) $print->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-print.css");
 		//add additional print styles
@@ -51,14 +35,8 @@
 		$print->write();
 
 		/******************IE********************/
-		if ($conf['blueprint']) {
-			$ie = new CSSParser(
-				BASE_DIR."/core/app/public/stylesheets/src/ie.css",
-				BASE_DIR."/var/public/stylesheets/$name-ie.css"
-			);
-		} else {
-			$ie = new CSSParser(BASE_DIR."/var/public/stylesheets/$name-ie.css");
-		}
+		$ie = new CSSParser(BASE_DIR."/var/public/stylesheets/$name-ie.css");
+
 		//add custom-ie.css
 		if (file_exists(BASE_DIR."app/themes/".$name."/public/stylesheets/custom-ie.css")) $ie->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-ie.css");
 		//add additional ie styles
