@@ -35,7 +35,7 @@ class Etc extends Host {
 	 */
 	const DEFAULT_STYLE = "screen";
 	
-	const THEME = "starbug-2";
+	const THEME = "starbug-1";
 
 	/* integration */
 	const BLUEPRINT_ENABLED = true;
