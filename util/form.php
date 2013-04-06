@@ -154,7 +154,7 @@ class form {
 		if (empty($ops['id'])) $ops['id'] = $ops['name'];
 		$ops['nolabel'] = (isset($ops['nolabel'])) ? true : false;
 		if (empty($ops['label'])) $ops['label'] = ucwords(str_replace("_", " ", $ops['name']));
-		$ops['class'] = ((empty($ops['class'])) ? "" : " ").$ops['name']."-field";
+		$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ").$ops['name']."-field";
 	}
 
 	/**

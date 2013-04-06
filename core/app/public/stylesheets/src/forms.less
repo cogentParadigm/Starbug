@@ -596,12 +596,17 @@ input.search-query {
     display: none;
   }
 }
+.form-inline{display:inline-block;margin-right:5px}
 .form-search label,
 .form-inline label,
 .form-search .btn-group,
-.form-inline .btn-group {
+.form-inline .btn-group,
+.form-inline .input {
   display: inline-block;
 }
+.form-inline > .input + .input,
+.form-inline > .input + .btn
+{margin-left:5px}
 // Remove margin for input-prepend/-append
 .form-search .input-append,
 .form-inline .input-append,

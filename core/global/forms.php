@@ -116,7 +116,7 @@ function submit($ops="") {
 function button($label, $ops="") {
 	$ops = star($ops);
 	efault($ops['type'], "submit");
-	$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ")."button";
+	$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ")."btn";
 	assign("label", $label);
 	assign("attributes", $ops);
 	render("form/button");
