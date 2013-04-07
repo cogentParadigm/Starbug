@@ -3,7 +3,7 @@
 	<a href="#"><?php echo userinfo("username"); ?></a>
 </div>
 <h1><a href="./"><span><?php echo Etc::WEBSITE_NAME; ?></span></a></h1>
-<ul id="tabs" class="nav">
+<ul id="tabs" class="nav nav-tabs">
 		<li><a class="button" href="<?php echo uri("profile"); ?>"><span>Profile</span></a></li>
 </ul>
 <ul id="nav" class="nav">

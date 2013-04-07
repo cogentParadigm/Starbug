@@ -13,7 +13,7 @@ define([
 	// module:
 	//		starbug/form/MultiSelect
 
-	var MultiSelect = declare("starbug.form.MultiSelect", _FormSelectWidget, {
+	var MultiSelect = declare(_FormSelectWidget, {
 		// summary:
 		//		Multiple select widget,
 		//		for selecting multiple options.

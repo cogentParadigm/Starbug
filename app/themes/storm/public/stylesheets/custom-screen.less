@@ -11,7 +11,6 @@ body h1, body.claro h1{margin:0 0 8px 0;font-weight:bold;font-size:140%}
 #nav{height:50px;margin-bottom:0}
 #main{margin:0 0 10px;padding:9px 0;float:left;width:100%}
 #content{width:100%}
-#footer, #footer li{list-style-type:none;margin:0 0 30px 0;float:left;padding:0 0 0 15px}
 
 /********************* headers *********************/
 h2{color:#419bc0;font-size:150%}
@@ -27,11 +26,8 @@ h2{color:#419bc0;font-size:150%}
 #nav .dropdown-menu li a{color:#FFF}
 .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {background:transparent;text-decoration:underline}
 .dropdown-toggle{cursor:pointer}
-
-/********************* classes *********************/
-.input .alert-error{display:block;width:300px;padding:5px;margin-bottom:8px}
-.right{float:right}
-.left{float:left}
+#tabs{border-bottom:none}
+#tabs > li + li{margin-left:5px}
 .blue.button, a.blue.button, .blue.button:hover, a.blue.button:hover, button.blue, button.blue:hover
 {background:url(../images/button-left.png) no-repeat;padding:0 0 0 6px;color:#fff;border:none;margin:0;font-size:12px;font-weight:normal}
 .blue.button span, a .blue.button span, button.blue span
@@ -40,13 +36,20 @@ h2{color:#419bc0;font-size:150%}
 {background:url(../images/button-left-small.png) no-repeat;padding:0 0 0 4px;color:#fff;border:none;margin:0;font-size:80%;font-weight:normal}
 .small.blue.button span, a .small.blue.button span, button.small.blue span
 {background:url(../images/button-right-small.png) top right no-repeat;padding:1px 7px 2px 3px}
-#tabs .button, #tabs a.button, #tabs .button:hover, #tabs a.button:hover{background:url(../images/tab-left.png) no-repeat;padding:0 0 0 5px;color:#419bc0;border:none;margin:0;font-size:80%;font-weight:normal;text-transform:uppercase;display:block;height:21px}
-#tabs .button span, #tabs a.button span{display:block;float:left;background:url(../images/tab-right.png) top right no-repeat;padding:1px 7px 3px 3px}
+#tabs .button, #tabs a.button, #tabs .button:hover, #tabs a.button:hover{background:url(../images/tab-left.png) no-repeat;.border-radius(0);padding:0 0 0 5px;color:#419bc0;border:none;margin:0;font-size:80%;font-weight:normal;text-transform:uppercase;display:block;height:21px}
+#tabs .button span, #tabs a.button span{display:block;float:left;background:url(../images/tab-right.png) top right no-repeat;padding:0px 7px 3px 3px}
+#footer{margin-top:10px}
+#footer ul{padding:12px 0;margin:0}
+#footer ul li{list-style-type:none;float:left}
+
+/********************* classes *********************/
+.input .alert-error{display:block;width:300px;padding:5px;margin-bottom:8px}
+.right{float:right}
+.left{float:left}
 .required .asterisk{font-size:125%;color:#C00;position:relative;left:4px}
 
 /********************* the box *********************/
-.box{background:#FFF;padding:0;overflow:hidden;width:100%}
-.box{-webkit-box-shadow:0px 1px 14px 0px #888;-moz-box-shadow:0px 1px 14px 0px #888;box-shadow:0px 1px 14px 0px #888}
+.box{background:#FFF;padding:0;overflow:hidden;width:100%;.border-radius(@baseBorderRadius);.box-shadow(0 1px 4px #888);.clearfix()}
 .box-top{padding-left:7px;height:7px;width:100%}
 .box .inside{padding:10px 20px 10px 10px;position:relative}
 
