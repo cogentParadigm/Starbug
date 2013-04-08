@@ -1,22 +1,27 @@
-		<ol class="menu_items" data-dojo-type="dojo.dnd.Source" data-dojo-props="withHandles: true">
+<?php
+	$first = reset($links);
+?>
+		<ul class="nav nav-tabs nav-stacked<?php if (!empty($first['parent'])) echo " collapse"; ?>" id="menu-<?php echo $first['parent']; ?>">
 		<?php foreach ($links as $idx => $link) { ?>
-			<?php $children = query("uris_menus,uris", "select:uris_menus.*,uris.title,uris.path  where:uris_menus.parent=? && (uris_menus.status & 4)  orderby:position ASC", array($link['id'])); ?>
-			<li class="dojoDndItem<?php if (!empty($children)) echo " parent"; ?>" data-menu-id="<?php echo $link['id']; ?>">
+			<li class="<?php if (!empty($link['children'])) echo "parent"; ?>" data-menu-id="<?php echo $link['id']; ?>">
 				<div class="right">
 				<?php
-					assign("model", "uris_menus");
-					$_POST["uris_menus"] = array("id" => $link['id']);
-					render_form("delete");
+					$model = "menus";
+					$_POST["menus"] = array("id" => $link['id']);
+					open_form("model:$model  action:delete", "class:delete_form  onsubmit:return confirm('Are you sure you want to delete this item?');");
 				?>
+				<button class="Delete" type="submit"><div class="sprite icon"></div></button>
+				<? close_form(); ?>
 				</div>
 				<a href="#" class="dojoDndHandle"></a>
-				<a href="<?php echo uri($link['path']); ?>"><?php echo $link['title']; ?></a>
+				<a href="<?php echo empty($link['href']) ? uri($link['path']) : ((0 === strpos($link['href'], 'http')) ? $link['href'] : uri($link['href'])); ?>"><?php echo empty($link['content']) ? $link['title'] : $link['content']; ?></a>
 				<?php
-					if (!empty($children)) {
-						assign("links", $children);
+					if (!empty($link['children'])) {
+						echo '<a class="menu-toggle" onclick="var m = document.getElementById(\'menu-'.$link['id'].'\'); if (m.className.indexOf(\'in\') == -1) m.className = \'menu_items collapse in\'; else m.className = \'menu_items collapse\';" href="javascript:;"><i class="icon-chevron-right"></i></a>';
+						assign("links", $link['children']);
 						render("sortable-menu");
 					} else echo '<br class="clear"/>';
 				?>
 			</li>
 		<?php } ?>
-		</ol>
+		</ul>

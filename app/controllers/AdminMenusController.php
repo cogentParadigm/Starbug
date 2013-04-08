@@ -4,15 +4,25 @@ class AdminMenusController {
 		assign("model", "menus");
 	}
 	function default_action() {
-		$this->render("admin/list");
+		$this->render("admin/menus/list");
 	}
 	function create() {
-		if (success("menus", "create")) redirect(uri("admin/menus/update", 'u'));
-		else $this->render("admin/create");
+		assign("menu", $_GET['menu']);
+		if (success("menus", "create")) {
+			$menu = get("menus", sb("menus")->insert_id);
+			redirect(uri("admin/menus/menu/".$menu['menu']));
+		} else $this->render("admin/menus/create");
 	}
 	function update($id=null) {
 		assign("id", $id);
-		$this->render("admin/menus/update");
+		if (success("menus", "create")) {
+			$menu = get("menus", $id);
+			redirect(uri("admin/menus/menu/".$menu['menu']));
+		} else $this->render("admin/menus/update");
+	}
+	function menu($menu=null) {
+		assign("menu", $menu);
+		$this->render("admin/menus/menu");
 	}
 }
 ?>

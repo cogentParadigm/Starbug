@@ -66,7 +66,6 @@ textarea{width:309px;height:100px}
 .left.field{margin-right:5px}
 .infield span.alert-error{width:auto}
 .input.left{margin-right:8px}
-.input.checkbox input{float:left;width:auto;margin-right:5px;position:relative;top:-4px}
 
 /********************* dojo *********************/
 body .dijitDialogUnderlay{background:#111;opacity:0.6}
@@ -105,11 +104,24 @@ body.tundra .dijitDialogPaneContent{background:none;border:none}
 .menu_items li{padding:5px 0;list-style-type:none;clear:both}
 .menu_items li input{width:25px;text-align:center}
 .menu_item{width:500px}
+.menu_items .menu-toggle{position:relative;top:5px}
+.menu_items .menu-toggle .caret{border-top-color:#555}
 body ol.menu_items button, body ol.menu_items button{margin:0 0 0 10px;padding:0px;background:transparent;border:none;position:relative;top:-3px}
 body ol.menu_items button img{width:14px;height:14px}
 .dojoDndHandle{float:right;width:15px;height:15px;background:url(../images/drag-handle.png) no-repeat;overflow:hidden;display:block;cursor:move}
-.dojoDndHandle:hover, .dojoDndItem:hover .dojoDndHandle{background-position:0 -20px}
+.dojoDndHandle:hover, .dojoDndItem:hover > .dojoDndHandle{background-position:0 -20px}
 .claro .dojoDndItemAfter{border-top:none;border-bottom:1px solid #769DC0}
+
+.sortable.nav .dropdown-menu{position:static;float:none;margin:0;.border-radius(0)}
+.sortable.nav .dropdown-menu > .active > a, .sortable.nav .dropdown-menu > .active > a:hover, .sortable.nav .dropdown-menu > .active > a:focus{color:inherit}
+.sortable.nav li a{cursor:move}
+.sortable.nav li.over > a{background:#EEE}
+.sortable.nav .dropdown-menu .divider{margin:0;padding:12px 1px}
+.sortable.nav li{position:relative}
+.sortable.nav li .btn-group.right{position:absolute;top:10px;right:5px}
+.sortable.nav li ul li .btn-group.right{top:3px}
+.sortable.nav li a.btn{cursor:pointer}
+.menu-form .inline-fields .input{width:280px}
 
 /********************* icons *********************/
 .icon.sprite{width:16px;height:16px}

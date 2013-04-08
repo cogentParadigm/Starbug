@@ -6,6 +6,12 @@
 <ul id="tabs" class="nav nav-tabs">
 		<li><a class="button" href="<?php echo uri("profile"); ?>"><span>Profile</span></a></li>
 </ul>
+<?php
+	assign("attributes", array("id" => "nav"));
+	assign("menu", "admin");
+	render("menu");
+?>
+<!--
 <ul id="nav" class="nav">
 	<li class="first dropdown" data-dojo-type="bootstrap/Dropdown">
 		<a class="dropdown-toggle<?php if (in_array($request->uri[1], array("settings", "menus", "taxonomies"))) { ?> active<?php } ?>" role="button" data-toggle="dropdown">Settings<b class="caret"></b></a>
@@ -24,3 +30,4 @@
 	<li><a <?php if ($request->uri[1] == "users") { ?>class="active" <?php } ?>href="<?php echo uri("admin/users"); ?>">Users</a></li>
 	<li><a <?php if ($request->uri[1] == "uris") { ?>class="active" <?php } ?>href="<?php echo uri("admin/uris"); ?>">Pages</a></li>
 </ul>
+-->

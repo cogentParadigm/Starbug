@@ -40,8 +40,9 @@ $this->table("terms",
 	"slug  type:string  length:128  unique:taxonomy parent  display:false",
 	"description  type:string  length:255  input_type:textarea  default:",
 	"taxonomy  type:string  views:taxonomies  input_type:hidden",
-	"parent  type:int  default:0  input_type:category_select  readonly:",
-	"position  type:int  ordered:taxonomy parent  display:false"
+	"parent  type:int  default:0  input_type:category_select  readonly:  materialized_path:term_path",
+	"position  type:int  ordered:taxonomy parent  display:false",
+	"term_path  type:string  length:255  display:false"
 );
 $this->table("settings",
 	"name  type:string  length:255",
@@ -54,7 +55,7 @@ $this->table("settings",
 );
 $this->store("settings", "name:meta", "type:textarea  label:Custom Analytics, etc..");
 $this->store("settings", "name:seo_hide", "type:checkbox  value:1  label:Hide from search engines");
-$this->table("uris  label:Pages  singular_label:Page",
+$this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"title  type:string  length:128  list:true",
 	"path  type:string  length:64  unique:  list:true",
 	"template  type:string  length:64  default:  list:false",
@@ -80,16 +81,16 @@ $this->table("blocks  list:all",
 	"content  type:text  default:",
 	"position  type:int  ordered:uris_id"
 );
-$this->table("menus  list:all",
-	"name  type:string  length:32"
-);
-$this->table("uris_menus  list:all",
-	"uris_id  type:int  references:uris id  update:cascade  delete:cascade",
-	"menus_id  type:int  references:menus id  update:cascade  delete:cascade",
-	"href  type:string  length:255  default:",
+$this->table("menus",
+	"menu  type:string  length:32  list:true  display:false",
+	"parent  type:int  default:0  materialized_path:menu_path  references:menus id  constraint:false",
+	"uris_id  type:int  references:uris id  label:Page  null:  update:cascade  delete:cascade",
+	"href  type:string  length:255  label:URL  default:",
 	"content  type:string  length:255  default:",
-	"position  type:int  ordered:menus_id parent",
-	"parent  type:int  default:0"
+	"target  type:string  default:",
+	"template  type:string  length:128  default:",
+	"position  type:int  ordered:menu parent",
+	"menu_path  type:string  length:255  display:false"
 );
 // URIS
 $this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");

@@ -169,7 +169,7 @@ class Schemer {
 							}
 						}
 					}
-					if (isset($field['references']) && ($field['constraint'] != "false")) {
+					if (isset($field['references']) && ($field['constraint'] !== false)) {
 						$fks = $this->db->pdo->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".Etc::DB_NAME."'");
 						if (false === ($row = $fks->fetch())) {
 							// ADD CONSTRAINT																																								// CONSTRAINT
@@ -813,6 +813,7 @@ class Schemer {
 				else if ($field['type'] == "tags") $field['input_type'] = "tag_input";
 				else if (isset($field['upload'])) $field['input_type'] = "file_select";
 				else if ($this->db->has($field['type'])) $field['input_type'] = "multiple_select";
+				else if (isset($field['references'])) $field['input_type'] = "select";
 				else $field['input_type'] = "text";
 			}
 			$field[$field['type']] = "";
