@@ -17,7 +17,12 @@
 	else $records = query("menus,uris", "select:menus.*,uris.title,uris.path,uris.breadcrumb  join:left  where:menus.menu=?  orderby:menus.menu_path ASC, menus.position ASC", array($menu));
 	$links = array();
 	
+	$forbidden = array();
 	foreach ($records as $link) {
+		if ($forbidden[$link['parent']] || (!empty($link['collective']) && !(userinfo("memberships") & $link['collective']))) {
+			$forbidden[$link['id']] = true;
+			continue;
+		}
 		$link['children'] = array();
 		if ($link['parent'] == 0) $links[$link['id']] = $link;
 		else {

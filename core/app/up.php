@@ -36,7 +36,7 @@ $this->table("permits  list:all",
 	"related_id  type:int  default:0"
 );
 $this->table("terms",
-	"term  type:string  length:128",
+	"term  type:string  length:128  slug:slug",
 	"slug  type:string  length:128  unique:taxonomy parent  display:false",
 	"description  type:string  length:255  input_type:textarea  default:",
 	"taxonomy  type:string  views:taxonomies  input_type:hidden",
@@ -53,8 +53,6 @@ $this->table("settings",
 	"description  type:text  default:",
 	"category  type:category  null:"
 );
-$this->store("settings", "name:meta", "type:textarea  label:Custom Analytics, etc..");
-$this->store("settings", "name:seo_hide", "type:checkbox  value:1  label:Hide from search engines");
 $this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"title  type:string  length:128  list:true",
 	"path  type:string  length:64  unique:  list:true",
@@ -105,17 +103,42 @@ $this->uri("upload", "prefix:core/app/views/  format:xhr  groups:root");
 $this->uri("terms", "prefix:core/app/views/  format:xhr  groups:user");
 $this->uri("robots", "prefix:core/app/views/  format:txt");
 
-// PERMITS
-//GLOBAL READ AND WRITE PERMITS FOR ADMIN
-$this->permit("%::%", "admin:%");
-// URI PERMITS
-$this->permit("uris::read", "collective:global 4");
-// USER PERMITS
-$this->permit("users::login", "everyone:table");
-$this->permit("users::logout", "everyone:table");
-$this->permit("users::register", "everyone:table");
-$this->permit("users::update_profile", "self:global");
-$this->permit("users::reset_password", "everyone:table");
+//Admin Menu
+$this->menu("admin",
+	array(
+		"content" => '<span class="icon-reorder"></span>',
+		"children" => array(
+			"href:admin/settings  content:Settings",
+			"template:divider",
+			"href:admin/menus  content:Menus",
+			"href:admin/taxonomies  content:Taxonomy",
+			"template:divider  collective:1",
+			"href:sb-admin  content:The Bridge  target:_blank"
+		)
+	),
+	"href:admin/users  content:Users",
+	"href:admin/uris  content:Pages"
+);
+
+//uris categories
+$this->taxonomy("uris_categories",
+	"term:Uncategorized"
+);
+//uris tags
+$this->taxonomy("uris_tags",
+	"term:Uncategorized"
+);
+//settings categories
+$this->taxonomy("settings_categories",
+	"term:General",
+	"term:SEO",
+	"term:Theme"
+);
+
+//settings
+$this->store("settings", "name:meta", "type:textarea  label:Custom Analytics, etc..");
+$this->store("settings", "name:seo_hide", "type:checkbox  value:1  label:Hide from search engines");
+
 
 //LOGGING TABLES
 //ERROR LOG

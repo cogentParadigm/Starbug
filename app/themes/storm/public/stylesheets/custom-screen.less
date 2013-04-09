@@ -22,7 +22,7 @@ h2{color:#419bc0;font-size:150%}
 #nav .caret{border-top-color:#FFF;margin-left:8px}
 #nav > li > a:hover, #nav > li > a:focus{background:transparent;text-decoration:underline}
 #nav > li.first > a{padding-left:0}
-#nav li ul{#gradient > .vertical(@black, @grayDarker)}
+#nav li ul{#gradient > .vertical(@grayDarker, @black)}
 #nav .dropdown-menu li a{color:#FFF}
 .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {background:transparent;text-decoration:underline}
 .dropdown-toggle{cursor:pointer}
@@ -51,7 +51,7 @@ h2{color:#419bc0;font-size:150%}
 /********************* the box *********************/
 .box{background:#FFF;padding:0;overflow:hidden;width:100%;.border-radius(@baseBorderRadius);.box-shadow(0 1px 4px #888);.clearfix()}
 .box-top{padding-left:7px;height:7px;width:100%}
-.box .inside{padding:10px 20px 10px 10px;position:relative}
+.box .inside{padding:10px 20px 10px 10px;position:relative;.clearfix}
 
 /********************* links *********************/
 a{color:#419bc0;text-decoration:none}
@@ -121,6 +121,8 @@ body ol.menu_items button img{width:14px;height:14px}
 .sortable.nav li .btn-group.right{position:absolute;top:10px;right:5px}
 .sortable.nav li ul li .btn-group.right{top:3px}
 .sortable.nav li a.btn{cursor:pointer}
+#nav > li > a > .icon-reorder{font-size:1.6em}
+#nav > li > a.dropdown-toggle:hover{text-decoration:none}
 .menu-form .inline-fields .input{width:280px}
 
 /********************* icons *********************/

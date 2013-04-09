@@ -37,7 +37,7 @@
 			</select>
 			<span class="info">Leave empty to place the item at the top level.</span>
 		</div>
-		<?php text("position  info:Enter 0 for first position, leave empty for last."); ?>
+		<?php text("position  info:Enter 1 for first position, leave empty for last."); ?>
 	</div>
 	<div class="inline-fields">
 	<?php
