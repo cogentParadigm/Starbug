@@ -14,14 +14,16 @@ function(dojo, strings, put, on){
 			var base_url = grid.base_url || dojo.global.location.pathname;
 			put(parent && parent.contents ? parent : cell, ".dgrid-options");
 			
+			var div = put(cell, 'div.btn-group');
+			
 			//edit button
 			if (typeof grid['dialog'] == 'undefined') var edit = base_url+'/update/'+row.id+dojo.global.location.search;
 			else var edit = 'javascript:'+grid['dialog']+'.show('+row.id+')';
-			put(cell, 'a.Edit.button[title=Edit][href='+edit+']', put('div.sprite.icon'));
+			put(div, 'a.Edit.btn[title=Edit][href='+edit+']', put('div.sprite.icon'));
 			
 			//delete button
 			var remove = 'javascript:;';
-			remove = put(cell, 'a.Delete.button[title=Delete][href='+remove+']', put('div.sprite.icon'));
+			remove = put(div, 'a.Delete.btn[title=Delete][href='+remove+']', put('div.sprite.icon'));
 			on(remove, 'click', function() {
 				if (confirm('Are you sure you want to delete this item?')) {
 					var d = grid.store.remove(row.id);

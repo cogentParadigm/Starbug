@@ -1,7 +1,9 @@
-<div id="main" class="<?= $request->layout; ?>">
-	<? render_layout(); ?>
-	<ul id="footer" class="small right clear">
-		<li>Powered by <a href="http://www.starbugphp.com">Starbug PHP</a></li>
-	</ul>
+<? render_layout(); ?>
+<div class="navbar" id="footer">
+	<div class="navbar-inner">
+		<ul>
+			<li>Powered by <a href="http://www.starbugphp.com">Starbug PHP</a></li>
+		</ul>
+	</div>
 </div>
 <?php $sb->publish("footer"); ?>

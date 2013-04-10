@@ -1,0 +1,144 @@
+/********************* bootstrap ************************************/
+@import "../../../../../core/app/public/stylesheets/src/bootstrap.less";
+
+/********************* structural elements *********************/
+body{background:url(../images/bg.png) repeat-x #FFF;color:#666}
+.page{position:relative;padding:7px 12px;text-align:left}
+#top-right{float:right;color:#FFF}
+body h1, body.claro h1{margin:0 0 8px 0;font-weight:bold;font-size:140%}
+#subhead{display:block;margin:0 0 10px 2px;color:#999;font-size:90%;height:16px}
+#tabs{width:auto;position:absolute;right:12px}
+#nav{height:50px;margin-bottom:0}
+#main{margin:0 0 10px;padding:9px 0;float:left;width:100%}
+#content{width:100%}
+
+/********************* headers *********************/
+h2{color:#419bc0;font-size:150%}
+
+/********************* nav *********************/
+#nav > li{float:left;background:url(../images/nav-col-border.png) top right no-repeat}
+#nav > li.last{background:transparent}
+#nav > li > a{padding:21px 20px 0px 15px;height:29px;line-height:14px;color:#FFF;font-weight:bold;font-size:95%}
+#nav .caret{border-top-color:#FFF;margin-left:8px}
+#nav > li > a:hover, #nav > li > a:focus{background:transparent;text-decoration:underline}
+#nav > li.first > a{padding-left:0}
+#nav li ul{#gradient > .vertical(@grayDarker, @black)}
+#nav .dropdown-menu li a{color:#FFF}
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {background:transparent;text-decoration:underline}
+.dropdown-toggle{cursor:pointer}
+#tabs{border-bottom:none}
+#tabs > li + li{margin-left:5px}
+.blue.button, a.blue.button, .blue.button:hover, a.blue.button:hover, button.blue, button.blue:hover
+{background:url(../images/button-left.png) no-repeat;padding:0 0 0 6px;color:#fff;border:none;margin:0;font-size:12px;font-weight:normal}
+.blue.button span, a .blue.button span, button.blue span
+{display:block;float:left;background:url(../images/button-right.png) top right no-repeat;padding:2px 9px 3px 3px}
+.small.blue.button, a.small.blue.button, .small.blue.button:hover, a.small.blue.button:hover, button.small.blue, button.small.blue:hover
+{background:url(../images/button-left-small.png) no-repeat;padding:0 0 0 4px;color:#fff;border:none;margin:0;font-size:80%;font-weight:normal}
+.small.blue.button span, a .small.blue.button span, button.small.blue span
+{background:url(../images/button-right-small.png) top right no-repeat;padding:1px 7px 2px 3px}
+#tabs .button, #tabs a.button, #tabs .button:hover, #tabs a.button:hover{background:url(../images/tab-left.png) no-repeat;.border-radius(0);padding:0 0 0 5px;color:#419bc0;border:none;margin:0;font-size:80%;font-weight:normal;text-transform:uppercase;display:block;height:21px}
+#tabs .button span, #tabs a.button span{display:block;float:left;background:url(../images/tab-right.png) top right no-repeat;padding:0px 7px 3px 3px}
+#footer{margin-top:10px}
+#footer ul{padding:12px 0;margin:0}
+#footer ul li{list-style-type:none;float:left}
+
+/********************* classes *********************/
+.input .alert-error{display:block;width:300px;padding:5px;margin-bottom:8px}
+.right{float:right}
+.left{float:left}
+.required .asterisk{font-size:125%;color:#C00;position:relative;left:4px}
+
+/********************* the box *********************/
+.box{background:#FFF;padding:0;overflow:hidden;width:100%;.border-radius(@baseBorderRadius);.box-shadow(0 1px 4px #888);.clearfix()}
+.box-top{padding-left:7px;height:7px;width:100%}
+.box .inside{padding:10px 20px 10px 10px;position:relative;.clearfix}
+
+/********************* links *********************/
+a{color:#419bc0;text-decoration:none}
+#top-right a, h1 a, h1 a:hover{color:#FFF}
+a:hover{text-decoration:underline}
+
+/********************* forms *********************/
+textarea{width:309px;height:100px}
+#login_form{width:234px;height:128px;margin:34px auto 0;padding:136px 85px 0;background:url(../images/login-bg.png) no-repeat}
+#login_form input.text{width:221px;color:#419bc0}
+#login_form span.error{width:221px;position:absolute;top:330px}
+.left.field{margin-right:5px}
+.infield span.alert-error{width:auto}
+.input.left{margin-right:8px}
+
+/********************* dojo *********************/
+body .dijitDialogUnderlay{background:#111;opacity:0.6}
+body.tundra .dijitDialog{-webkit-box-shadow:none;background:none;border:none}
+body.tundra .dijitDialogTitleBar{display:none}
+body.tundra .dijitDialogPaneContent{background:none;border:none}
+.attribute{float:left;width:135px}
+.attribute h4{font-size:12px;margin:10px 0px 5px;font-weight:bold}
+.attribute ul{margin:0;padding:0;list-style-type:none}
+.attribute ul li{margin:0px;padding:5px 0px}
+.attribute ul li label{font-size:11px;padding-left:5px;font-weight:normal}
+.attribute ul li.active label, .attribute ul li:hover label{background:#666;color:#FFF}
+.attribute ul li input{display:none}
+
+/********************* CMS Pages *********************/
+.pages_form input.title-field{width:99%;font-size:18px}
+#link-label{float:left;padding:6px 0;margin-right:5px}
+.link-span{display:block;float:left;padding:5px 0;font-size:12px}
+.link-span .editable{background:#FE9}
+.infield{float:right;border:1px solid #999;margin:10px 0;padding:10px;width:15%}
+.infield select{width:100%}
+.infield input.text{width:96%}
+.pages_form .big.button{font-size:36px;margin-top:10px;width:200px;line-height:normal;margin:0}
+.pages_form .infield .big.button{width:100%}
+.editable a{background:white;padding:0px 5px}
+
+#applied_tags{clear:both;list-style-type:none;font-size:10px;margin:0}
+#applied_tags li{float:left;margin-right:10px;margin-bottom:10px}
+#applied_tags a{border:1px solid #666;padding:0px 4px 1px}
+#applied_tags a:hover{background:#666;color:#FFF;text-decoration:none}
+.infield, #applied_tags a{border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px}
+
+/********************* CMS Menus *********************/
+.uris_list{clear:both;height:300px;width:300px;overflow-y:scroll;margin-bottom:15px}
+.uris_list li{list-style-type:none;clear:both;margin-bottom:5px;border-bottom:1px solid}
+.menu_items li{padding:5px 0;list-style-type:none;clear:both}
+.menu_items li input{width:25px;text-align:center}
+.menu_item{width:500px}
+.menu_items .menu-toggle{position:relative;top:5px}
+.menu_items .menu-toggle .caret{border-top-color:#555}
+body ol.menu_items button, body ol.menu_items button{margin:0 0 0 10px;padding:0px;background:transparent;border:none;position:relative;top:-3px}
+body ol.menu_items button img{width:14px;height:14px}
+.dojoDndHandle{float:right;width:15px;height:15px;background:url(../images/drag-handle.png) no-repeat;overflow:hidden;display:block;cursor:move}
+.dojoDndHandle:hover, .dojoDndItem:hover > .dojoDndHandle{background-position:0 -20px}
+.claro .dojoDndItemAfter{border-top:none;border-bottom:1px solid #769DC0}
+
+.sortable.nav .dropdown-menu{position:static;float:none;margin:0;.border-radius(0)}
+.sortable.nav .dropdown-menu > .active > a, .sortable.nav .dropdown-menu > .active > a:hover, .sortable.nav .dropdown-menu > .active > a:focus{color:inherit}
+.sortable.nav li a{cursor:move}
+.sortable.nav li.over > a{background:#EEE}
+.sortable.nav .dropdown-menu .divider{margin:0;padding:12px 1px}
+.sortable.nav li{position:relative}
+.sortable.nav li .btn-group.right{position:absolute;top:10px;right:5px}
+.sortable.nav li ul li .btn-group.right{top:3px}
+.sortable.nav li a.btn{cursor:pointer}
+#nav > li > a > .icon-reorder{font-size:1.6em}
+#nav > li > a.dropdown-toggle:hover{text-decoration:none}
+.menu-form .inline-fields .input{width:280px}
+
+/********************* icons *********************/
+.icon.sprite{width:16px;height:16px}
+.Edit .icon{background:url(../icons/file-edit.png) no-repeat}
+.Delete .icon{background:url(../icons/cross.png) no-repeat}
+
+/********************* dgrid *********************/
+.dgrid table{margin:0}
+.dgrid button, .dgrid a.button{margin:0}
+.dgrid .field-options{width:95px}
+/* auto-height code */
+/*
+.ui-widget.dgrid{height:auto}
+.dgrid .dgrid-scroller{position:relative;overflow-y:hidden}
+.has-ie-6 .dgrid .dgrid-scroller{overflow-y:visible}
+.dgrid .dgrid-header-scroll{display:none}
+.dgrid .dgrid-header{right:0}
+*/

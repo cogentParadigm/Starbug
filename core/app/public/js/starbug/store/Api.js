@@ -1,8 +1,7 @@
 define([
-	"dojo",
-	"dojo/store/util/QueryResults"
-], function(dojo, QueryResults) {
-return dojo.declare("starbug.store.Api", null, {
+	"dojo", "dojo/_base/declare", "dojo/_base/lang", "dojo/store/util/QueryResults"
+], function(dojo, declare, lang, QueryResults) {
+return declare(null, {
 	// query: String
 	//		The API query string
 	apiQuery: "",
@@ -21,7 +20,7 @@ return dojo.declare("starbug.store.Api", null, {
 		//		formatted data.
 		// options:
 		//		This provides any configuration information that will be mixed into the store
-		dojo.mixin(this, options);
+		lang.mixin(this, options);
 	},
 	get: function(id, options){
 		//	summary:

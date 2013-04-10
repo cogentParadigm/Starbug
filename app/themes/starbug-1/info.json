@@ -3,19 +3,12 @@
 	"name":"Starbug 1",
 	"description":"The Original",
 	//content regions
-	"regions": [
-		"header",
-		{"main":["content","sidebar"]},
-		"footer"
-	],
-	//default layout
-	"layout": "one-column",
+	"regions": ["header", "main", "footer"],
 	//menus
 	"menus": ["top", "main", "footer"],
 	//stylesheets
 	"styles": {
-		"blueprint": true,
-		"screen" : ["dojo.css"],
-		"plugins" : ["buttons", "rounding"]
+		"less": true,
+		"screen" : ["dojo.css"]
 	}
 }

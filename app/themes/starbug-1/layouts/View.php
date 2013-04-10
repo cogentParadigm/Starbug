@@ -1,1 +1,2 @@
-<div id="content" class="span-24"><? render_content(); ?></div>
+<div id="content"><? render_content(); ?></div>
+<?php render("sidebar"); ?>

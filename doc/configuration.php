@@ -11,7 +11,7 @@
  * </ul>
  * @section Etc Etc.php
  * @em Etc.php is the project wide configuration file and it holds some basic constants that should apply to the application in ALL host environments.
- * These can be accessed as constants of the @em Etc class like so: @code <?php echo Etc::WEBSITE_NAME; ?> @endcode
+ * These can be accessed as constants of the @em Etc class like so: @code <?php echo Etc::DEBUG; ?> @endcode
  * @section Host Host.php
  * @em Host.php is the @em host @em specific configuration file. It holds constants that are dependent on the particular host environment the application is running in.
  * These constants can also be accessed through the @em Etc class like so: @code <?php echo Etc::WEBSITE_URL; ?> @endcode

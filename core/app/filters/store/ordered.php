@@ -9,13 +9,19 @@ foreach ($args as $field => $ordered) {
 		$h = $this->query($name, "select:MAX(`$field`) as highest  where:$where"."1  limit:1");
 		$fields[$field] = $h['highest']+1;
 		unset($errors[$field]['required']);
-	} else if (!empty($fields[$field])) {
+	} else if (is_numeric($fields[$field])) {
 		$x = $fields[$field];
 		unset($fields[$field]);
-		$row = $this->query($name, "select:id,$field  where:id='$fields[id]'  limit:1");
+		$select = array("id", $field);
+		if (!empty($ordered)) $select = array_merge($select, $ordered);
+		$row = $this->query($name, "select:".implode(",", $select)."  where:id='$fields[id]'  limit:1");
+		$same_level = true;
+		if (!empty($ordered)) {
+			foreach ($ordered as $o) if ($row[$o] != $fields[$o]) $same_level = false;
+		}
 		$ids = $row['id'];
-		$increment = ($row[$field] < $x) ? -1 : 1;
-		//$increment = 1;
+		if ($same_level) $increment = ($row[$field] < $x) ? -1 : 1;
+		else $increment = 1;
 		while (!empty($row)) {
 			raw_query("UPDATE ".P($name)." SET $field='$x' where id='$row[id]'");
 			$row = $this->query($name, "where:$where"."id NOT IN ($ids) && `$field`='$x'  limit:1");

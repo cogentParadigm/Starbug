@@ -1,7 +1,7 @@
 <?php
 foreach ($args as $field => $alias) {
 	if ((!empty($fields[$field])) && (!is_numeric($fields[$field]))) {
-		$referenced_model = explode(" ", $thefilters[$field]['references']);
+		$referenced_model = explode(" ", $byfilter['references'][$field]);
 		// $alias might be '%first_name% %last_name%
 		$alias = explode("%", $alias);
 		$match = '';
@@ -17,7 +17,7 @@ foreach ($args as $field => $alias) {
 			}
 			$num++;
 		}
-		$row = query($referenced_model[0], "select:$referenced_model[1]  where:$match='$fields[field]'  limit:1");
+		$row = query($referenced_model[0], "select:$referenced_model[1]  where:$match='$fields[$field]'  limit:1");
 		$fields[$field] = $row[$referenced_model[1]];
 	} else if (isset($fields[$field])) $fields[$field] = "NULL";
 }

@@ -8,7 +8,7 @@ _sb() {
 	#
 	#  The basic options we'll complete.
 	#
-	opts=$(for x in `ls script/*.php`; do echo ${x:0:${#x}-4} ; done | xargs -n1 basename )
+	opts=$(for x in `ls core/app/script/*.php app/script/*.php modules/*/script/*.php 2>/dev/null`; do if [[ "$x" != *:* ]]; then echo ${x:0:${#x}-4} ; fi ; done | xargs -n1 basename )
 
 
 	#
@@ -21,11 +21,9 @@ _sb() {
 			return 0
 			;;
 		* )
-			if [ -d script/${prev} ]; then
-				local options=$(for x in `ls script/${prev}`; do echo ${x} ; done | xargs -n1 basename )
-				COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
-				return 0
-			fi
+			local options=$(for x in `ls core/app/script/${prev} app/script/${prev} modules/*/script/${prev} 2>/dev/null`; do if [[ "$x" != *:* ]]; then echo ${x} ; fi ; done | xargs -n1 basename )
+			COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
+			return 0
 		;;
 	esac
 

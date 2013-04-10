@@ -73,7 +73,7 @@
 		
 		if ($field['list'] || isset($columns[$name])) {
 			if (false !== $columns[$name]) {
-				foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list', "options") as $remove) unset($field[$remove]);
+				foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list', "options", "null", "update", "delete", "auto_increment", "key", "index") as $remove) unset($field[$remove]);
 				$ordered_columns[$name] = empty($columns[$name]) ? $field : star($columns[$name]);
 				foreach ($merge as $k => $v) if (empty($ordered_columns[$name][$k])) $ordered_columns[$name][$k] = $v;
 			}

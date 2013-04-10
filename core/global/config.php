@@ -128,7 +128,7 @@ function schema($model) {
 	*/
 function theme($var="", $name="") {
 	efault($name, request("theme"));
-	efault($name, Etc::THEME);
+	efault($name, settings("theme"));
 	if (!empty($var)) $var = ".".$var;
 	return config("info$var", null, "app/themes/$name/");
 }
@@ -148,10 +148,11 @@ function module($key) {
 	* @ingroup config
 	* @param string $name the option name
 	* @param mixed $value (optional) value to set
+	* @param bool $update pass true to force update the value
 	*/
-function settings($name, $value=null) {
+function settings($name, $value=null, $update=false) {
 	if ($value == null) {
-		if (is_cached("settings-".$name)) return cache($name);
+		if (!$update && is_cached("settings-".$name)) return cache($name);
 		else {
 			$value = query("settings", "where:name='$name'  limit:1");
 			cache("settings-".$name, $value['value']);

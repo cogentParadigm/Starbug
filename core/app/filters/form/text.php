@@ -2,7 +2,7 @@
 		$field['type'] = 'text';
 		//POSTed or default value
 		$var = $this->get($field['name']);
-		if (!empty($var)) $field['value'] = htmlentities($var);
+		if ($var != "") $field['value'] = htmlentities($var);
 		else if (!empty($field['default'])) {
 			$field['value'] = $field['default'];
 			unset($field['default']);

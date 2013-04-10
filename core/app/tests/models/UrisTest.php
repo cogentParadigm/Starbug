@@ -14,27 +14,27 @@ class UrisTest extends ModelTest {
 	}
 	
 	function test_update() {
-		$object = $this->get(array("path" => "phpunit"));
+		$object = $this->get("path:phpunit", "limit:1");
 		//test setting a normal field
 		$object['title'] = "Test Title";
 		//test setting block content
 		$_POST['block-content-1']['content'] = "Test Content";
 		$this->action("update", $object);
 		//re fetch and test for updates
-		$object = $this->get(array("path" => "phpunit"));
-		$block = get("blocks", array("uris_id" => $object["id"]));
+		$object = $this->get("path:phpunit", "limit:1");
+		$block = get("blocks", array("uris_id" => $object["id"]), "limit:1");
 		$this->assertEquals("Test Title", $object['title']);
 		$this->assertEquals("Test Content", $block['content']);
 	}
 
 	function test_delete() {
 		//first assert that the record exists
-		$object = $this->get(array("path" => "phpunit"));
+		$object = $this->get("path:phpunit", "limit:1");
 		$this->assertEquals(empty($object), false);
 		
 		//remove it and assert that the record is gone
 		$this->action("delete", $object);
-		$object = $this->get(array("path" => "phpunit"));
+		$object = $this->get("path:phpunit", "limit:1");
 		$this->assertEquals(empty($object), true);
 	}
 

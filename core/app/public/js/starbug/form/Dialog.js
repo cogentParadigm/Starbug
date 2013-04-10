@@ -52,6 +52,7 @@ define(["dojo", "dojo/io/iframe", "dijit/Dialog"], function(dojo, iframe, Dialog
 			else this.item_id = 0;
 			dojo.xhrGet({
 				url: this.url+((id) ? 'update/'+id : 'create')+'.xhr',
+				content:this.post_data,
 				load: dojo.hitch(this, 'loadForm')
 			});
 		},

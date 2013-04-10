@@ -19,7 +19,7 @@ include(dirname(__FILE__)."/classes/Table.php");
 // included driver class
 if (Etc::DB_TYPE == "mysql") include(dirname(__FILE__)."/classes/mysql.php");
 /**
- * get single records or columns
+ * get records or columns
  * @ingroup data
  * @param string $model the name of the model
  * @param string $id the id of the record
@@ -27,21 +27,7 @@ if (Etc::DB_TYPE == "mysql") include(dirname(__FILE__)."/classes/mysql.php");
  */
 function get() {
 	$args = func_get_args();
-	$count = count($args);
-	if ($count == 1) return query($args[0]);
-	else if ($count > 1) {
-		$where = star($args[1]);
-		$params = array();
-		foreach ($where as $k => $v) {
-			$col = ($k === 0) ? "id" : $k;
-			$where[$k] = $col."=?";
-			$params[] = $v;
-		}
-		$query = "where:".implode(" && ", $where);
-	}
-	if ($count == 3) $query .= "  select:$args[2]";
-	$ret = query($args[0], $query, $params);
-	if (count($ret) == 1) return $ret[0];
+	return call_user_func_array(array(sb()->db, "get"), $args);
 }
 /**
 	* getter/caller for model properties/functions

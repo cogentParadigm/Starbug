@@ -3,13 +3,13 @@
 	if (!empty($div)) {
 		echo $div;
 		assign("div", "");
-	} else {
-		echo ($control == "input") ? $type : $control;
-		if (!empty($form->schema) && !empty($form->schema[$field_name]) && !isset($form->schema[$field_name]['filters']['default']) && !isset($form->schema[$field_name]['null'])) {
-			echo " required";
-			assign("required", true);
-		} else assign("required", false);
 	}
+	echo ($control == "input") ? $type : $control;
+	$object_id = $form->get('id');
+	if (!empty($form->schema) && !empty($form->schema[$field_name]) && !isset($form->schema[$field_name]['filters']['default']) && !isset($form->schema[$field_name]['null']) && (!isset($form->schema[$field_name]['filters']['optional_update']) || empty($object_id))) {
+		echo " required";
+		assign("required", true);
+	} else assign("required", false);
 ?>"><?php } ?>
 	<?php if ($type != "checkbox" && $type != "radio") render("form/label"); ?>
 	<?php

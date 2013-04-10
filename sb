@@ -1,9 +1,14 @@
 #!/usr/bin/php
 <?php
-	if (file_exists("etc/Host.php")) include("core/cli.php");
+	define('SB_CLI', true);
+	$status = 0;
+	if (file_exists("etc/Host.php")) {
+		include("core/cli.php");
+		$status = 1;
+	}
 	$command = array_shift($argv);
 	$script = array_shift($argv);
-	if (file_exists("script/$script.php")) {
-		include("script/$script.php");
-	}
+	if ($status) $path = end(locate($script.".php", "script"));
+	else $path = "core/app/script/$script.php";
+	if (file_exists($path)) include($path);
 ?>

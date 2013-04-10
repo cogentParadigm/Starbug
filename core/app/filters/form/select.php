@@ -24,8 +24,8 @@
 			unset($field['values']);
 		}
 		if (!empty($field['caption'])) {
+			$list = $options;
 			if (!empty($field['from'])) $options = query($field['from'], $field);
-			$list = array();
 			$keys = array();
 			if (!empty($options)) foreach ($options[0] as $k => $v) if (false !== strpos($field['caption'], "%$k%")) $keys[] = $k;
 			foreach ($options as $o) {
