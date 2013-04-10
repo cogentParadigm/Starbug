@@ -10,6 +10,9 @@
 	assign("action", $action);
 	assign("url", (empty($uri) ? "" : uri($uri)));
 	assign("fields", $options['fields']);
+	efault($form_header, '<h1>Update '.$options['singular_label'].'</h1>');
+	
+	echo $form_header;
+	if (!empty($form)) render_form($form);
+	else render("form");
 ?>
-	<h1>Update <?= $options['singular_label']; ?></h1>
-	<? render("form"); ?>

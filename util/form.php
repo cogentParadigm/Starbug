@@ -64,7 +64,7 @@ class form {
 		$this->url = $args['url'];
 		$this->method = $args['method'];
 		$this->postback = $args['postback'];
-		if (!empty($this->model) && sb()->db->has($model)) {
+		if (!empty($this->model) && sb()->db->has($this->model)) {
 			$schema = schema($this->model);
 			$this->schema = $schema['fields'];
 		}

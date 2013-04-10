@@ -3,6 +3,9 @@
 	assign("action", "create");
 	assign("url", (empty($uri) ? "" : uri($uri)));
 	assign("fields", $options['fields']);
+	efault($form_header, '<h1>New '.$options['singular_label'].'</h1>');
+	
+	echo $form_header;
+	if (!empty($form)) render_form($form);
+	else render("form");
 ?>
-	<h1>New <?php echo $options['singular_label']; ?></h1>
-	<?php render("form"); ?>

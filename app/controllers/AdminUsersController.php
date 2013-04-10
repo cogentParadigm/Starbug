@@ -16,6 +16,7 @@ class AdminUsersController {
 	}
 	function update($id=null) {
 		assign("id", $id);
+		assign("form", "users");
 		$this->render("admin/update");
 	}
 }

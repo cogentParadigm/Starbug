@@ -1,5 +1,5 @@
 <?
 	list($controller, $action) = $request->uri;
 	$object = controller($controller);
-	$object->action($action, array_splice($request->uri, 2));
+	$object->action($action, array_slice($request->uri, 2));
 ?>
