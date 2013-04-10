@@ -13,35 +13,12 @@ include(BASE_DIR."/etc/Host.php");
  * @ingroup etc
  */
 class Etc extends Host {
-	/**
-	 * the name of your application
-	 */
-	const WEBSITE_NAME = "Starbug";
-	/**
-	 * a tagline or short description for your application
-	 */
-	const TAGLINE = "Fresh XHTML and CSS, just like mom used to serve!";
-	
-	/**
-	 * default template used for missing and forbidden pages
-	 */
-	const DEFAULT_TEMPLATE = "html";
-	/**
-	 * default page to load when request uri is /
-	 */
-	const DEFAULT_PATH = "home";
-	/**
-	 * default page style
-	 */
-	const DEFAULT_STYLE = "screen";
-	
-	const THEME = "starbug-1";
 
-	/* integration */
-	const BLUEPRINT_ENABLED = true;
-	const DOJO_ENABLED = true;
-	const PHPMAILER_ENABLED = true;
-	const SIMPLETEST_ENABLED = false;
+	/**
+	 * THIS FILE IS DEPRECATED
+	 * settings are stored in the settings table and accessed via the settings function
+	 * eg. $site_name = settings("site_name");
+	 */
 	
 	const ENABLE_SQL_LOG = false;
 

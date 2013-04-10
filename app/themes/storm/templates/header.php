@@ -2,7 +2,7 @@
 	<a href="<?php echo uri("logout"); ?>" class="small right blue button" style="margin:2px 0 0 5px"><span>Logout</span></a>
 	<a href="#"><?php echo userinfo("username"); ?></a>
 </div>
-<h1><a href="./"><span><?php echo Etc::WEBSITE_NAME; ?></span></a></h1>
+<h1><a href="./"><span><?php echo settings("site_name"); ?></span></a></h1>
 <ul id="tabs" class="nav nav-tabs">
 		<li><a class="button" href="<?php echo uri("profile"); ?>"><span>Profile</span></a></li>
 </ul>

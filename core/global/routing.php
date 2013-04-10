@@ -72,7 +72,7 @@ function locate_view($uri, $prefix="") {
  */
 function is_default_path() {
 	global $request;
-	return ($request->path == Etc::DEFAULT_PATH);
+	return ($request->path == settings("default_path"));
 }
 /**
  * redirect to another page

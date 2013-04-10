@@ -119,7 +119,10 @@ class Schemer {
 		$primary = array();
 		foreach ($fields as $column => $options) {
 			if ((isset($options['key'])) && ("primary" == $options['key'])) $primary[] = $column;
-			if ($options['type'] == "category") $fields[$column]['references'] = "terms id";
+			if ($options['type'] == "category") {
+				$fields[$column]['references'] = "terms id";
+				efault($fields[$column]['alias'], '%taxonomy% %slug%');
+			}
 		}
 		if (empty($primary)) $fields['id'] = star("type:int  auto_increment:  key:primary");
 		if (empty($fields["owner"])) $fields["owner"] = star("type:int  default:1  references:users id");
@@ -902,7 +905,7 @@ class Schemer {
 		$fields = $this->get_table($model);
 		$options = $this->options[$model];
 		//SET UP MODEL ARRAY
-		$data = array_merge(array("name" => $model, "label" => ucwords($model), "package" => Etc::WEBSITE_NAME, "fields" => array(), "relations" => array()), $options);
+		$data = array_merge(array("name" => $model, "label" => ucwords($model), "package" => settings("site_name"), "fields" => array(), "relations" => array()), $options);
 		//ADD FIELDS
 		foreach($fields as $name => $field) {
 			$data["fields"][$name] = array("filters" => array());

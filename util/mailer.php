@@ -11,11 +11,11 @@ class mailer extends PHPMailer {
 	# TODO: add getters/setters for private vars
 
 	function __construct() {
-		if (defined("Etc::EMAIL_HOST")) $this->host = Etc::EMAIL_HOST;
-		if (defined("Etc::DEFAULT_EMAIL_USERNAME")) $this->username = Etc::DEFAULT_EMAIL_USERNAME;
-		if (defined("Etc::DEFAULT_EMAIL_PASSWORD")) $this->password = Etc::DEFAULT_EMAIL_PASSWORD;
-		if (defined("Etc::DEFAULT_EMAIL_ADDRESS")) $this->from_email = Etc::DEFAULT_EMAIL_ADDRESS;
-		if (defined("Etc::WEBSITE_NAME")) $this->from_name = Etc::WEBSITE_NAME;
+		$this->host = settings("email_host");
+		$this->username = settings("email_username");
+		$this->password = settings("email_password");
+		$this->from_email = settings("contact_email_address");
+		$this->from_name = settings("site_name");
 		if ($this->host) {
 			$this->IsSMTP(); // send via SMTP
 			$this->Host     = $this->host;

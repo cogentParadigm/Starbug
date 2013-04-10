@@ -32,7 +32,7 @@ function import($util, $module="util") {
 function locate($file, $dir="templates") {
 	global $request;
 	if ($request) $theme = request("theme");
-	efault($theme, Etc::THEME);
+	//efault($theme, settings("theme"));
 	if (!empty($dir)) $dir .= "/";
 	$path = $dir.$file;
 	$key = $theme.'_'.$path;

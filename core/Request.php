@@ -89,7 +89,7 @@ class Request {
 		}
 
 		//if we are left with an empty path, set it to the default path
-		efault($this->path, Etc::DEFAULT_PATH);
+		efault($this->path, settings("default_path"));
 	}
 
 	/**
@@ -128,7 +128,7 @@ class Request {
 		$this->uri = explode("/", ($this->path = ((empty($this->payload)) ? "" : $this->path)));
 		efault($this->payload['format'], $this->format);
 		foreach ($this->payload as $k => $v) if ($k != "path") $this->{$k} = $v;
-		efault($this->theme, Etc::THEME);
+		efault($this->theme, settings("theme"));
 		efault($this->layout, $this->type);
 		if ($this->type == 'View') $this->file = locate_view($this->uri);
 	}

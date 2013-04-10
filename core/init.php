@@ -25,7 +25,7 @@ include(BASE_DIR."/etc/Etc.php");
 if (defined('Etc::TIME_ZONE')) date_default_timezone_set(Etc::TIME_ZONE);
 
 //set the appropriate level of error reporting
-error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE | E_PARSE);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERROR);
 
 // include the sb class
 include(BASE_DIR."/core/sb.php");

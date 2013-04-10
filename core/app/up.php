@@ -51,7 +51,8 @@ $this->table("settings",
 	"options  type:text  default:",
 	"value  type:text  default:",
 	"description  type:text  default:",
-	"category  type:category  null:"
+	"category  type:category  null:",
+	"autoload  type:bool  default:0"
 );
 $this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"title  type:string  length:128  list:true",
@@ -129,16 +130,21 @@ $this->taxonomy("uris_tags",
 	"term:Uncategorized"
 );
 //settings categories
-$this->taxonomy("settings_categories",
+$this->taxonomy("settings_category",
 	"term:General",
 	"term:SEO",
-	"term:Theme"
+	"term:Themes",
 );
 
-//settings
-$this->store("settings", "name:meta", "type:textarea  label:Custom Analytics, etc..");
-$this->store("settings", "name:seo_hide", "type:checkbox  value:1  label:Hide from search engines");
-
+//general settings
+$this->store("settings", "name:site_name", "category:settings_category general  type:text  label:Site Name  autoload:1  value:Starbug");
+$this->store("settings", "name:tagline", "category:settings_category general  type:text  label:Tagline  autoload:1  value:Fresh XHTML and CSS, just like mom used to serve!");
+$this->store("settings", "name:default_path", "category:settings_category general  type:text  label:Default Path  autoload:1  value:home");
+//seo settings
+$this->store("settings", "name:meta",  "category:settings_category seo  type:textarea  label:Custom Analytics, etc..  autoload:1");
+$this->store("settings", "name:seo_hide",  "category:settings_category seo  type:checkbox  value:1  label:Hide from search engines  autoload:1");
+//theme settings
+$this->store("settings", "name:theme",  "category:settings_category themes  type:text  label:Theme  autoload:1  value:starbug-1");
 
 //LOGGING TABLES
 //ERROR LOG

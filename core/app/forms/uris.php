@@ -98,7 +98,7 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 	
 	$templates = array("default" => $type);
 	if (logged_in("root")) $templates["View"] = "View";
-	foreach (array("core/app/layouts/", "app/themes/".Etc::THEME."/layouts/", "app/layouts") as $dir) {
+	foreach (array("core/app/layouts/", "app/themes/".settings("theme")."/layouts/", "app/layouts") as $dir) {
 		if (file_exists($dir) && false !== ($handle = opendir($dir))) {
 			while (false !== ($file = readdir($handle))) if ((strpos($file, ".") !== 0)) $templates[substr($file, 0, strpos($file, "."))] = substr($file, 0, strpos($file, "."));
 			closedir($handle);

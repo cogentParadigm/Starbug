@@ -2,11 +2,8 @@
 		<!--[if lt IE 9]>
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-		<?php if (Etc::DOJO_ENABLED) { ?>
 			<script type="text/javascript" src="<?php echo uri("core/app/public/js/dojo/release/dojo/dojo/dojo.js"); ?>" data-dojo-config="parseOnLoad: true, serverTime:'<?php echo date("Y-m-d H:i:s"); ?>'"></script>
-		<?php } ?>
 	<?php } else { ?>
-		<?php if (Etc::DOJO_ENABLED) { ?>
 			<?php
 				$profile = file_get_contents(BASE_DIR."/etc/dojo.profile.js");
 				$profile = explode("\n", substr($profile, 15));
@@ -28,7 +25,6 @@
 				]);
 				define.amd.jQuery = true;
 			</script>
-		<?php } ?>
 	<?php } ?>
 	<?php
 		$scripts = theme("scripts", $request->theme);
