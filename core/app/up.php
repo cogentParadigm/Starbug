@@ -95,6 +95,7 @@ $this->table("menus",
 $this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
 $this->uri("api", "template:api  prefix:core/app/views/  type:Page");
 $this->uri("documentation", "template:documentation  prefix:core/app/views/  type:Page  groups:root");
+$this->uri("profile", "template:controller");
 //Rogue IDE
 $this->uri("rogue", "title:Rogue IDE  format:xhr  prefix:core/app/views/  groups:root");
 //Admin
@@ -133,7 +134,7 @@ $this->taxonomy("uris_tags",
 $this->taxonomy("settings_category",
 	"term:General",
 	"term:SEO",
-	"term:Themes",
+	"term:Themes"
 );
 
 //general settings
