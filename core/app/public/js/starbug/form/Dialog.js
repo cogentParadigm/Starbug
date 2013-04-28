@@ -1,11 +1,12 @@
-define(["dojo", "dojo/io/iframe", "dijit/Dialog"], function(dojo, iframe, Dialog) {
-	return dojo.declare("starbug.form.Dialog", [Dialog], {
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/request/xhr", "dojo/query", "dojo/dom-class", "dojo/request/iframe", "dijit/Dialog"], function(declare, lang, xhr, query, domclass, iframe, Dialog) {
+	return declare([Dialog], {
 		dialog:null,
 		url:'',
 		callback:null,
 		form:null,
 		item_id: 0,
 		post_data:{},
+		crudSuffixes:true,
 		postCreate: function() {
 			this.inherited(arguments);
 			this.set('content', '');
@@ -16,45 +17,43 @@ define(["dojo", "dojo/io/iframe", "dijit/Dialog"], function(dojo, iframe, Dialog
 			return false;
 		},
 		execute: function() {
-			dojo.addClass(this.form, 'loading');
-			dojo.query('.loading', this.form).style('display','block');
-			iframe.send({
+			domclass.add(this.form, 'loading');
+			query('.loading', this.form).style('display','block');
+			iframe(
+			this.url+(this.crudSuffixes ? ((this.item_id) ? 'update/'+this.item_id : 'create') : '')+'.xhr',
+			{
 				form: this.form,
-				url: this.url+((this.item_id) ? 'update/'+this.item_id : 'create')+'.xhr',
-				content: this.post_data,
-				handleAs: 'html',
-				load: dojo.hitch(this, 'load')
-			});
+				data: this.post_data,
+				handleAs:'html'
+			}).then(lang.hitch(this, 'load'));
 		},
 		upload: function(evt) {
-			dojo.query('.submit', this.form).attr('disabled','true');
-			dojo.addClass(this.form, 'loading');
+			query('.submit', this.form).attr('disabled','true');
+			domclass.add(this.form, 'loading');
 			this.post_data['action[files]'] = 'prepare';
 			this.execute();
 			delete this.post_data['action[files]'];
 		},
 		load: function(data) {
-			res = dojo.byId("dojoIoIframe").contentWindow.document.body.innerHTML;
-			this.loadForm(res);
-			if (dojo.hasClass(this.form, 'submitted')) {
+			this.loadForm(data.body.innerHTML);
+			if (domclass.contains(this.form, 'submitted')) {
 				this.hide();
 				if (this.callback != null) this.callback(data, this);
 			}
 		},
 		setValues: function(args) {
 			for (var i in args) {
-				dojo.query('[name="'+i+'"]').attr('value', args[i]);
+				query('[name="'+i+'"]').attr('value', args[i]);
 			}
 		},
 		show: function(id) {
 			this.inherited(arguments);
 			if (id) this.item_id = id;
 			else this.item_id = 0;
-			dojo.xhrGet({
-				url: this.url+((id) ? 'update/'+id : 'create')+'.xhr',
-				content:this.post_data,
-				load: dojo.hitch(this, 'loadForm')
-			});
+			xhr(
+				this.url+(this.crudSuffixes ? ((id) ? 'update/'+id : 'create') : '')+'.xhr',
+				{data:this.post_data}
+			).then(lang.hitch(this, 'loadForm'));
 		},
 		hide: function(evt) {
 			if (evt) evt.preventDefault();
@@ -68,11 +67,11 @@ define(["dojo", "dojo/io/iframe", "dijit/Dialog"], function(dojo, iframe, Dialog
 		},
 		loadForm: function(data) {
 			this.set('content', data);
-			this.form = dojo.query('form', this.domNode)[0];
-			dojo.query('form', this.domNode).on('submit', function(evt) {evt.preventDefault();});
-			dojo.query('.submit, [type=\"submit\"]', this.form).attr('onclick', '').on('click', dojo.hitch(this, '_onSubmit'));
-			dojo.query('.cancel', this.form).attr('onclick', '').on('click', dojo.hitch(this, 'hide'));
-			dojo.query('input[type="file"]', this.form).on('change', dojo.hitch(this, 'upload'));
+			this.form = query('form', this.domNode)[0];
+			query('form', this.domNode).on('submit', function(evt) {evt.preventDefault();});
+			query('.submit, [type=\"submit\"]', this.form).attr('onclick', '').on('click', lang.hitch(this, '_onSubmit'));
+			query('.cancel', this.form).attr('onclick', '').on('click', lang.hitch(this, 'hide'));
+			query('input[type="file"]', this.form).on('change', lang.hitch(this, 'upload'));
 		}
 	});
 });

@@ -1,6 +1,6 @@
 define([
-	"dojo", "dojo/_base/declare", "dojo/_base/lang", "dojo/store/util/QueryResults"
-], function(dojo, declare, lang, QueryResults) {
+	"dojo", "dojo/_base/declare", "dojo/_base/lang", "dojo/store/util/QueryResults", "starbug/form/Dialog"
+], function(dojo, declare, lang, QueryResults, dialog) {
 return declare(null, {
 	// query: String
 	//		The API query string
@@ -13,6 +13,7 @@ return declare(null, {
 	post_action: 'create',
 	idProperty: "id",
 	last_query:'',
+	results:null,
 	params:{},
 	constructor: function(/*starbug.store.Api*/ options){
 		// summary:
@@ -38,11 +39,13 @@ return declare(null, {
 		q = q ? "?" + q: "";
 		var headers = options || {};
 		headers.Accept = "application/javascript, application/json";
-		return dojo.xhrGet({
+		this.results = dojo.xhrGet({
 			url: WEBSITE_URL+'api/'+this.model+'/get.json'+(q || ''),
 			handleAs: "json",
-			headers: headers
+			headers: headers,
+			error: dojo.hitch(this, 'handleError')
 		});
+		return this.results;
 	},
 	getIdentity: function(object){
 		// summary:
@@ -65,11 +68,14 @@ return declare(null, {
 		for (var k in object) data[this.model+'['+k+']'] = object[k];
 		options = options || {};
 		data['action['+this.model+']'] = this.post_action;
-		return dojo.xhrPost({
-				url: WEBSITE_URL+'api/'+this.model+'/get.json',
+		this.results = dojo.xhrPost({
+				url: WEBSITE_URL+'api/'+this.model+'/'+this.action+'.json',
 				content: data,
-				handleAs: "json"
+				handleAs: "json",
+				failOk:true,
+				error: dojo.hitch(this, 'handleError')
 			});
+		return this.results;
 	},
 	add: function(object, options){
 		// summary:
@@ -92,10 +98,13 @@ return declare(null, {
 		var args = {};
 		args['action['+this.model+']'] = 'delete';
 		args[this.model+'[id]'] = id;
-		return dojo.xhrPost({
+		this.results = dojo.xhrPost({
 			url: WEBSITE_URL+'api/'+this.model+'/get.json',
-			content: args
+			content: args,
+			failOk:true,
+			error: dojo.hitch(this, 'handleError')
 		});
+		return this.results;
 	},
 	query: function(query, options){
 		// summary:
@@ -130,13 +139,46 @@ return declare(null, {
 		var results = dojo.xhrGet({
 			url: query_url,
 			handleAs: "json",
-			headers: headers
+			headers: headers,
+			failOk:true,
+			error: dojo.hitch(this, 'handleError')
 		});
 		results.total = results.then(function(){
 			var range = results.ioArgs.xhr.getResponseHeader("Content-Range");
 			return range && (range=range.match(/\/(.*)/)) && +range[1];
 		});
-		return QueryResults(results);
+		this.results = QueryResults(results);
+		return this.results;
+	},
+	mayHaveChildren: function(object) {
+		if (typeof object['children'] != "undefined" && object['children'] == 0) return false;
+		return true;
+	},
+	getChildren: function(object, options){
+		var old_result = this.results;
+		this.query({parent:object.id}, options);
+		return this.results;
+		this.results = old_result;
+	},
+	handleError: function(error, ioargs) {
+		var self = this;
+		if (ioargs.xhr.status == 403) {
+			var d = new dialog({url:WEBSITE_URL+'forbidden', crudSuffixes:false, callback:function() {
+				/*
+					var method = (typeof ioargs.args['content'] == "undefined") ? dojo.xhrGet : dojo.xhrPost;
+					method(ioargs.args).then(function(results) {
+						self.results.resolve(results);
+					});
+				*/
+			}});
+			d.show();
+		} else if (ioargs.xhr.status == 500 && error.responseText.substr(0, 1) == '{') {
+			var data = JSON.parse(error.responseText);
+			var message = 'Message: '+data.message+'\n\nFile: '+data.file+'\n\nLine: '+data.line;
+			alert(message);
+		}	else {
+			alert('An unknown error occurred.');
+		}
 	}
 });
 });

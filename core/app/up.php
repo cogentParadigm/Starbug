@@ -108,14 +108,14 @@ $this->uri("robots", "prefix:core/app/views/  format:txt");
 //Admin Menu
 $this->menu("admin",
 	array(
-		"content" => '<span class="icon-reorder"></span>',
+		"content" => '<span class="icon-cog"></span>',
 		"children" => array(
 			"href:admin/settings  content:Settings",
 			"template:divider",
 			"href:admin/menus  content:Menus",
 			"href:admin/taxonomies  content:Taxonomy",
 			"template:divider  collective:1",
-			"href:sb-admin  content:The Bridge  target:_blank"
+			"href:sb-admin  content:The Bridge  target:_blank  collective:1"
 		)
 	),
 	"href:admin/users  content:Users",

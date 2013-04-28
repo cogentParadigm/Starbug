@@ -13,7 +13,7 @@ class Files {
 			$this->store($record);
 			if ((!errors()) && (!empty($record['filename']))) {
 				$id = (empty($record['id'])) ? $this->insert_id : $record['id'];
-				move_uploaded_file($file["tmp_name"], "app/public/uploads/".$id."_".$record['filename']);
+				return move_uploaded_file($file["tmp_name"], "app/public/uploads/".$id."_".$record['filename']);
 			}
 		} else {
 			$record['filename'] = "";

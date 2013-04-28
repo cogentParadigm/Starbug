@@ -18,7 +18,7 @@ h2{color:#419bc0;font-size:150%}
 /********************* nav *********************/
 #nav > li{float:left;background:url(../images/nav-col-border.png) top right no-repeat}
 #nav > li.last{background:transparent}
-#nav > li > a{padding:21px 20px 0px 15px;height:29px;line-height:14px;color:#FFF;font-weight:bold;font-size:95%}
+#nav > li > a{padding:21px 20px 0px 15px;height:29px;line-height:14px;color:#FFF;font-weight:bold}
 #nav .caret{border-top-color:#FFF;margin-left:8px}
 #nav > li > a:hover, #nav > li > a:focus{background:transparent;text-decoration:underline}
 #nav > li.first > a{padding-left:0}
@@ -43,10 +43,10 @@ h2{color:#419bc0;font-size:150%}
 #footer ul li{list-style-type:none;float:left}
 
 /********************* classes *********************/
-.input .alert-error{display:block;width:300px;padding:5px;margin-bottom:8px}
+.input .alert-error{display:block;width:auto;padding:5px;margin-bottom:8px}
 .right{float:right}
 .left{float:left}
-.required .asterisk{font-size:125%;color:#C00;position:relative;left:4px}
+.required .asterisk{color:#C00;position:relative;left:4px}
 
 /********************* the box *********************/
 .box{background:#FFF;padding:0;overflow:hidden;width:100%;.border-radius(@baseBorderRadius);.box-shadow(0 1px 4px #888);.clearfix()}
@@ -108,8 +108,8 @@ body.tundra .dijitDialogPaneContent{background:none;border:none}
 .menu_items .menu-toggle .caret{border-top-color:#555}
 body ol.menu_items button, body ol.menu_items button{margin:0 0 0 10px;padding:0px;background:transparent;border:none;position:relative;top:-3px}
 body ol.menu_items button img{width:14px;height:14px}
-.dojoDndHandle{float:right;width:15px;height:15px;background:url(../images/drag-handle.png) no-repeat;overflow:hidden;display:block;cursor:move}
-.dojoDndHandle:hover, .dojoDndItem:hover > .dojoDndHandle{background-position:0 -20px}
+div.dojoDndHandle{display:block;cursor:hand;cursor:grab;cursor:-moz-grab;cursor:-webkit-grab}
+.dgrid-scroller.dojoDndSourceMoved, .dgrid-scroller.dojoDndSourceMoved .dojoDndItemOver{cursor:grabbing;cursor:-moz-grabbing;cursor:-webkit-grabbing}
 .claro .dojoDndItemAfter{border-top:none;border-bottom:1px solid #769DC0}
 
 .sortable.nav .dropdown-menu{position:static;float:none;margin:0;.border-radius(0)}
@@ -121,7 +121,7 @@ body ol.menu_items button img{width:14px;height:14px}
 .sortable.nav li .btn-group.right{position:absolute;top:10px;right:5px}
 .sortable.nav li ul li .btn-group.right{top:3px}
 .sortable.nav li a.btn{cursor:pointer}
-#nav > li > a > .icon-reorder{font-size:1.6em}
+#nav > li > a > .icon-cog{font-size:1.9em;margin-top:-3px}
 #nav > li > a.dropdown-toggle:hover{text-decoration:none}
 .menu-form .inline-fields .input{width:280px}
 
@@ -134,11 +134,25 @@ body ol.menu_items button img{width:14px;height:14px}
 .dgrid table{margin:0}
 .dgrid button, .dgrid a.button{margin:0}
 .dgrid .field-options{width:95px}
+.dgrid .dijitDateTextBox{width:90px}
+.claro .dijitTextBox .dijitInputInner{margin-bottom:0}
+.dgrid-cell input{width:auto}
+.claro .dgrid-cell pre{background:transparent;border:none;font-size:inherit}
+.dgrid-no-data{font-weight:bold;text-align:center;padding:20px}
+body.claro table.dojoDndAvatar{width:auto !important;background:transparent;border:none;box-shadow:none;pointer-events:none}
+body.claro.dojoDndMove .dojoDndAvatarHeader{display:none}
+body.claro.dojoDndMove .dojoDndAvatarItem{position:relative;display:block;top:-80px;left:-40px}
+.ui-widget.dgrid{height:auto}
+.dgrid .dgrid-scroller{position:relative;overflow:auto;max-height:600px}
 /* auto-height code */
 /*
-.ui-widget.dgrid{height:auto}
-.dgrid .dgrid-scroller{position:relative;overflow-y:hidden}
 .has-ie-6 .dgrid .dgrid-scroller{overflow-y:visible}
 .dgrid .dgrid-header-scroll{display:none}
 .dgrid .dgrid-header{right:0}
 */
+
+.dijitTooltipContents{.clearfix}
+ 
+.dgrid.dgrid-list{height:auto;border:none;background:transparent}
+.dgrid.dgrid-list .dgrid-scroller{position:relative;overflow:visible;outline:none}
+.dgrid.dgrid-list .dgrid-no-data{display:none}

@@ -135,7 +135,7 @@ class mysql extends db {
 		
 		//set defaults from schema, only use search if $args[search] is set and empty
 		if (!isset($args['search'])) unset($schema['search']);
-		else if (empty($args['search'])) unset($args['search']);
+		else if (empty($args['search'])) $args['search'] = $schema['search'];
 		foreach ($schema as $k => $v) if (!isset($args[$k]) && is_string($v)) $args[$k] = $v;
 
 		//after schema defaults have been set, set global defaults

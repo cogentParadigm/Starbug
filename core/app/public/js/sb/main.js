@@ -1,7 +1,10 @@
 define([
 	"dojo",
 	"sb/kernel",
-	"sb/templates"
+	"sb/templates",
+	"sb/strings",
+	"sb/data",
+	"starbug/form/_FormWidget"
 ], function(dojo, sb){
 	// module:
 	//		sb/main

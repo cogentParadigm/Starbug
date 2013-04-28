@@ -194,6 +194,7 @@ class Schemer {
 			passthru("sb generate model $table -u");
 			$is += $this->populate($table);
 		}
+		foreach ($this->population as $table => $populus) if (!isset($this->tables[$table])) $is += $this->populate($table);
 		foreach ($this->triggers as $name => $triggers) {
 			foreach ($triggers as $event => $trigger) {
 				$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($trigger['table']."_".$event."_".$trigger['action'])."'")->fetch();
@@ -328,7 +329,7 @@ class Schemer {
 					$primary_fields .= $field_sql;
 				} else $sql_fields .= $field_sql;
 				if (isset($options['index'])) $index[] = $fieldname;
-				if (!empty($options['references']) && $options['constraint'] != "false") {
+				if (!empty($options['references']) && $options['constraint'] !== false) {
 					$ref = explode(" ", $options['references']);
 					$rec = array("table" => $ref[0], "column" => $ref[1]);
 					if (!empty($options['update'])) $rec['update'] = $options['update'];
@@ -992,7 +993,7 @@ class Schemer {
 					default:
 						foreach ($value as $tag) {
 							$node = $root->appendChild($xmlDoc->createElement(rtrim($key, 's')));
-							foreach ($tag as $k => $v) $node->appendChild($xmlDoc->createAttribute($k))->appendChild($xmlDoc->createTextNode($v));
+							foreach ($tag as $k => $v) if (!empty($k)) $node->appendChild($xmlDoc->createAttribute($k))->appendChild($xmlDoc->createTextNode($v));
 						}
 						break;
 				}
