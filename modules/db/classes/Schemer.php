@@ -100,7 +100,7 @@ class Schemer {
 	}
 
 	function fill() {
-		$to = (file_exists(BASE_DIR."/var/migration")) ? trim(file_get_contents(BASE_DIR."/var/migration")) : 0;
+		$to = count($this->migrations);
 		//MOVE TO CURRENT MIGRATION
 		$current = 0;
 		while ($current < $to) {
@@ -151,50 +151,53 @@ class Schemer {
 		$gs = 0; //created triggers
 		$gu = 0; //updated triggers
 		$gd = 0; //dropped triggers
+		
+		//CREATE TABLES FIRST
 		foreach ($this->tables as $table => $fields) {
-			$fields = $this->get_table($table);
 			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
 			if (false === ($row = $records->fetch())) {
 				// NEW TABLE																																													// NEW TABLE
 				fwrite(STDOUT, "Creating table ".P($table)."...\n");
 				$this->create($table);
 				$ts++;
-			} else {
-				// OLD TABLE																																													// OLD TABLE
-				foreach ($fields as $name => $field) {
-					if (!$this->db->has($field['type'])) {
-						// REAL COLUMN
-						$records = $this->db->pdo->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
-						if (false === ($row = $records->fetch())) {
-							// NEW COLUMN																																											// NEW COLUMN
-							fwrite(STDOUT, "Adding column $name...\n");
-							$this->add($table, $name);
-							$cs++;
-						} else {
-							// OLD COLUMN																																											// OLD COLUMN
-							$type = explode(" ", $this->get_sql_type($field));
-							if (($row['Type'] != $type[0]) || ((isset($field['default'])) && ($row['Default'] != $field['default'])) || (isset($field['null']) && ($row['Null'] == "NO")) || (!isset($field['null']) && ($row['Null'] == "YES"))) {
-								fwrite(STDOUT, "Altering column $name...\n");
-								$this->modify($table, $name);
-								$ms++;
-							}
-						}
-					}
-					if (isset($field['references']) && ($field['constraint'] !== false)) {
-						$fks = $this->db->pdo->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".Etc::DB_NAME."'");
-						if (false === ($row = $fks->fetch())) {
-							// ADD CONSTRAINT																																								// CONSTRAINT
-							fwrite(STDOUT, "Adding foreign key ".P($table)."_".$name."_fk...\n");
-							$this->add_foreign_key($table, $name);
+			}			
+		}
+		//UPDATE TABLES WITH COLUMN ALTERATIONS AND FOREIGN KEYS
+		foreach ($this->tables as $table => $fields) {
+			$fields = $this->get_table($table);
+			// OLD TABLE																																														// OLD TABLE
+			foreach ($fields as $name => $field) {
+				if (!$this->db->has($field['type'])) {
+					// REAL COLUMN
+					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
+					if (false === ($row = $records->fetch())) {
+						// NEW COLUMN																																												// NEW COLUMN
+						fwrite(STDOUT, "Adding column $name...\n");
+						$this->add($table, $name);
+						$cs++;
+					} else {
+						// OLD COLUMN																																												// OLD COLUMN
+						$type = explode(" ", $this->get_sql_type($field));
+						if (($row['Type'] != $type[0]) || ((isset($field['default'])) && ($row['Default'] != $field['default'])) || (isset($field['null']) && ($row['Null'] == "NO")) || (!isset($field['null']) && ($row['Null'] == "YES"))) {
+							fwrite(STDOUT, "Altering column $name...\n");
+							$this->modify($table, $name);
 							$ms++;
 						}
+					}
+				}
+				if (isset($field['references']) && ($field['constraint'] !== false)) {
+					$fks = $this->db->pdo->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".Etc::DB_NAME."'");
+					if (false === ($row = $fks->fetch())) {
+						// ADD CONSTRAINT																																									// CONSTRAINT
+						fwrite(STDOUT, "Adding foreign key ".P($table)."_".$name."_fk...\n");
+						$this->add_foreign_key($table, $name);
+						$ms++;
 					}
 				}
 			}
 			passthru("sb generate model $table -u");
 			$is += $this->populate($table);
 		}
-		foreach ($this->population as $table => $populus) if (!isset($this->tables[$table])) $is += $this->populate($table);
 		foreach ($this->triggers as $name => $triggers) {
 			foreach ($triggers as $event => $trigger) {
 				$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($trigger['table']."_".$event."_".$trigger['action'])."'")->fetch();
@@ -318,7 +321,6 @@ class Schemer {
 		$sql = "CREATE TABLE `".P($name)."` (";
 		$primary = array();
 		$index = array();
-		$foreign = array();
 		$sql_fields = "";
 		$primary_fields = "";
 		foreach ($fields as $fieldname => $options) {
@@ -329,24 +331,11 @@ class Schemer {
 					$primary_fields .= $field_sql;
 				} else $sql_fields .= $field_sql;
 				if (isset($options['index'])) $index[] = $fieldname;
-				if (!empty($options['references']) && $options['constraint'] !== false) {
-					$ref = explode(" ", $options['references']);
-					$rec = array("table" => $ref[0], "column" => $ref[1]);
-					if (!empty($options['update'])) $rec['update'] = $options['update'];
-					if (!empty($options['delete'])) $rec['delete'] = $options['delete'];
-					$foreign[$fieldname] = $rec;
-				}
 			}
 		}
 		$primary = join(", ", $primary);
 		$sql .= $primary_fields.$sql_fields."PRIMARY KEY ($primary)";
 		foreach($index as $k) $sql .= ", KEY `".$k."` (`$k`)";
-		foreach($foreign as $k => $v) $sql .= ", KEY `".$k."` (`$k`)";
-		foreach($foreign as $k => $v) {
-			$sql .=", CONSTRAINT `".P($name)."_".$k."_fk` FOREIGN KEY (`$k`) REFERENCES `".P($v['table'])."` (`".$v['column']."`)";
-			if ($v['update']) $sql .= " ON UPDATE ".$v['update'];
-			if ($v['delete']) $sql .= " ON DELETE ".$v['delete'];
-		}
 		$result = $this->db->exec($sql." ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 		//if ($write) $this->write_model($name, $backup);
 	}
@@ -428,7 +417,7 @@ class Schemer {
 						.((isset($field['zerofill'])) ? " ZEROFILL" : "")
 						.((isset($field['auto_increment'])) ? " AUTO_INCREMENT" : "")
 						.((isset($field['unique']) && empty($field['unique'])) ? " UNIQUE" : "")
-						.((!isset($field['default'])) ? "" : " default '".$field['default']."'");
+						.((!isset($field['default'])) ? "" : " default ".(($field['default'] == "NULL" || substr($field['default'], -2) == "()") ? $field['default'] : "'".$field['default']."'"));
 		return $type;
 	}
 
@@ -803,39 +792,9 @@ class Schemer {
 	 * @param int $to the migration to go to
 	 * @param int $from the migration to start from
 	 */
-	function migrate($to="top", $from=0) {
-		global $sb;
-		$last_at = (file_exists(BASE_DIR."/var/migration")) ? trim(file_get_contents(BASE_DIR."/var/migration")) : 0;
-		if (empty($to) && ("0" !== $to)) $to = "top";
-		if ($to == "top") $to = count($this->migrations);
-		if ($from === "current") $from = $last_at;
-		//MOVE TO FROM
-		$current = $from;
-		//UPDATE CURRENT
-		$file = fopen(BASE_DIR."/var/migration", "wb");
-		fwrite($file, $to);
-		fclose($file);
-		//MIGRATE
-		$result = false;
-		if ($to < $from) { //DOWN
-			while($current > $to) {
-				$this->clean();
-				$this->down($current-1);
-				if ($this->update()) $result = true;
-				//$this->removed($current-1);
-				$current--;
-			}
-		} else {  //UP
-			while($current < $to) {
-				$this->clean();
-				$this->up($current);
-				if ($this->update()) $result = true;
-				//$this->created($current);
-				$current++;
-			}
-		}
+	function migrate() {
 		$this->fill();
-		if ($result) {
+		if ($this->update()) {
 			fwrite(STDOUT, "Database update completed.\n");
 		} else {
 			fwrite(STDOUT, "The Database already matches the schema.\n");
@@ -878,7 +837,7 @@ class Schemer {
 	function get_logging_trigger($table, $type) {
 		if ($type == "insert") {
 			$trigger = "BEGIN
-				INSERT INTO ".P("log")." (table_name, object_id, action, created, modified) VALUES ('users', NEW.id, 'INSERT', NOW(), NOW());
+				INSERT INTO ".P("log")." (table_name, object_id, action, created, modified) VALUES ('$table', NEW.id, 'INSERT', NOW(), NOW());
 			END";
 		} else if ($type == "update") {
 			$trigger = "BEGIN";
@@ -886,14 +845,14 @@ class Schemer {
 			unset($fields['modified']);
 			foreach ($fields as $name => $ops) { $trigger .= "
 				IF OLD.$name != NEW.$name THEN
-					INSERT INTO ".P("log")." (table_name, object_id, action, column_name, old_value, new_value, created, modified) VALUES ('users', NEW.id, 'UPDATE', '$name', OLD.$name, NEW.$name, NOW(), NOW());
+					INSERT INTO ".P("log")." (table_name, object_id, action, column_name, old_value, new_value, created, modified) VALUES ('$table', NEW.id, 'UPDATE', '$name', OLD.$name, NEW.$name, NOW(), NOW());
 				END IF;";
 			}
 			$trigger .= "
 			END";
 		} else if ($type == "delete") {
 			$trigger = "BEGIN
-				INSERT INTO ".P("log")." (table_name, object_id, action, created, modified) VALUES ('users', OLD.id, 'DELETE', NOW(), NOW());
+				INSERT INTO ".P("log")." (table_name, object_id, action, created, modified) VALUES ('$table', OLD.id, 'DELETE', NOW(), NOW());
 			END";
 		}
 		return $trigger;
