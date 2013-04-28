@@ -50,9 +50,6 @@ class CSSParser {
 		$search = array("/{\s+/", "/\s+{/", "/;\s+/", "/:\s+/", "/}\s+/", "/;}/", "/\s+}/", "/\('/", '/\("/', "/'\)/", '/"\)/');
 		$replace = array("{", "{", ";", ":", "}", "}", "}", "(", "(", ")", ")");
 		$sheet = preg_replace($search, $replace, $sheet);
-		$search = array("}", "/*", "*/");
-		$replace = array("}\n", "\n/*", "*/\n");
-		$sheet = str_replace("}", "}\n", $sheet);
 		preg_match_all("/@import url\(\"?([^\)]*)\"?\)/", $sheet, $matches);
 		$sheet = preg_replace("/@import url\([^\)]*\);/", "", $sheet);
 		if (!empty($matches[0])) {
@@ -60,74 +57,10 @@ class CSSParser {
 		}
 		return $sheet;
 	}
-	function parse() {
-		foreach($this->css as $desc => $file) {
-			$styles = array();
-			$fontfaces = array();
-			//OPTIMIZED FILE CONTAINS 1 RULESET PER LINE SO FIRST BREAK UP THE LINES
-			$lines = explode("\n", rtrim($file, "\n"));
-			// NOW WE LOOP THROUGH EACH LINE AND FILL THE STYLES ARRAY
-			// array("selectors" => array("property" => "value"))
-			foreach($lines as $idx => $line) {
-				// SPLIT THE SELECTORS FROM THE RULESET
-				$line = explode("{", rtrim($line, '}'));
-				// SELECTORS
-				$s = $line[0];
-				// PROPERTIES
-				$props = explode(";", $line[1]);
-				$p = array();
-				foreach($props as $prop) {
-					$prop = explode(":", $prop);
-					$p[] = array($prop[0], $prop[1]);
-				}
-				$s = trim($s);
-				if (!empty($s)) {
-					$styles[] = array($s, $p);
-				}
-			}
-			$this->css[$desc] = $styles;
-		}
-	}
-	function add_semantic_classes($semantic) {
-		$styles = array();
-		foreach ($semantic as $selector => $classes) {
-			$append = array();
-			$classes = explode(" ", $classes);
-			foreach($classes as $class) {
-				foreach ($this->css as $file) {
-					foreach ($file as $sels => $ruleset) {
-						$sels = explode(",", $sels);
-						foreach ($sels as $s) {
-							$s = trim($s);
-							if ($class == $s) $append = array_merge($append, $ruleset);
-						}
-					}
-				}
-			}
-			$styles[$selector] = $append;
-		}
-		$this->css["semantic class names"] = $styles;
-	}
-	function add_plugin($plugin) {
-		$file = end(explode("/", $this->path));
-		if (($file != "print.css") && ($file != "screen.css") && ($file != "ie.css")) $file = "screen.css";
-		$filename = BASE_DIR."/core/app/public/stylesheets/plugins/$plugin/$file";
-		if (file_exists($filename)) $this->add_file($filename, "$plugin plugin");
-	}
 	function write() {
-		$output = "";
-		foreach ($this->css as $desc => $lines) {
-			if (!empty($output)) $output .= "\n";
-			$output .= "/* $desc */\n";
-			foreach ($lines as $idx => $rule) {
-					$output .= $rule[0]."{";
-					foreach ($rule[1] as $idx => $property) $output .= $property[0].":".$property[1].";";
-					$output = rtrim($output, ';');
-					$output .= "}";
-			}
-		}
+		foreach ($this->css as $desc => $css) $this->css[$desc] = "/* $desc */".$css;
 		$file = fopen($this->path, "wb");
-		fwrite($file, $output);
+		fwrite($file, implode("\n", $this->css));
 		fclose($file);
 	}
 }
