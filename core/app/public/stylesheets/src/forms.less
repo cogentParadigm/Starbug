@@ -167,7 +167,7 @@ select {
 }
 
 // Make select elements obey height by applying a border
-body.claro .dijitSelect {
+body.claro .dijitSelect, body.claro .dijitTextBox {
   width: 220px;
   border: 1px solid @inputBorder;
   background-color: @inputBackground;
@@ -186,9 +186,18 @@ body.claro .dijitSelect .dijitInputField{
   color: @gray;
   vertical-align: middle;
 }
+body.claro .dijitDateTextBox .dijitInputField{
+  height: @baseLineHeight + 6 !important;
+  font-size: @baseFontSize;
+  line-height: @baseLineHeight + 6;
+  outline:none;
+  border:none;
+  color: @gray;
+  vertical-align: middle;
+}
 
-body.claro .dijitSelect .dijitArrowButton{background:transparent}
-.claro .dijitSelect .dijitArrowButtonInner{border:none;.box-shadow(none);cursor:pointer}
+body.claro .dijitSelect .dijitArrowButton, body.claro .dijitTextBox .dijitButtonNode{background:transparent}
+.claro .dijitSelect .dijitArrowButtonInner, body.claro .dijitTextBox .dijitArrowButtonInner{border:none;.box-shadow(none);cursor:pointer}
 
 // Make multiple select elements height not fixed
 select[multiple],

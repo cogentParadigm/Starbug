@@ -100,8 +100,9 @@ $this->uri("profile", "template:controller");
 $this->uri("rogue", "title:Rogue IDE  format:xhr  prefix:core/app/views/  groups:root");
 //Admin
 $this->uri("admin", "template:controller-group  collective:4  theme:storm");
-//Uploader - default permission only allows root to upload
-$this->uri("upload", "prefix:core/app/views/  format:xhr  groups:root");
+//Uploader
+$this->uri("upload", "prefix:core/app/views/  format:xhr  groups:admin");
+//terms
 $this->uri("terms", "prefix:core/app/views/  format:xhr  groups:user");
 $this->uri("robots", "prefix:core/app/views/  format:txt");
 
