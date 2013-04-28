@@ -155,8 +155,7 @@ $this->table("errors",
 	"field  type:string  length:64",
 	"message  type:text  length:512"
 );
-//SQL TRANSACTION LOG (MUST BE ENABLED IN etc/Etc.php)
-if (Etc::ENABLE_SQL_LOG) {
+//SQL TRANSACTION LOG
 	$this->table("log",
 		"table_name  type:string  length:100",
 		"object_id  type:int  default:0",
@@ -165,10 +164,4 @@ if (Etc::ENABLE_SQL_LOG) {
 		"old_value  type:text",
 		"new_value  type:text"
 	);
-	foreach ($this->tables as $tbl => $columns) {
-		$this->after("$tbl::insert", $this->get_logging_trigger("$tbl", "insert"));
-		$this->after("$tbl::update", $this->get_logging_trigger("$tbl", "update"));
-		$this->after("$tbl::delete", $this->get_logging_trigger("$tbl", "delete"));
-	}
-}
 ?>

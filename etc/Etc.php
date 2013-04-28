@@ -20,7 +20,6 @@ class Etc extends Host {
 	 * eg. $site_name = settings("site_name");
 	 */
 	
-	const ENABLE_SQL_LOG = false;
 
 }
 ?>
