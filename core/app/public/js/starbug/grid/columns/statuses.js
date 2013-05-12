@@ -27,6 +27,10 @@ function(dojo, when, sb, put, editor, Select){
 	 };
 
 		column.editorArgs = {style:'width:100%', labelAttr:'label', multiple:true};
+ 		column.editorArgs.onSetStore = function(store, items) {
+			for (var i in this.options) this.options[i].label = this.options[i].label.replace('_', ' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+ 			this._loadChildren();
+ 		};
 
 		column = editor(column, Select, "dblclick");
 				

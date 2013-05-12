@@ -14,7 +14,7 @@ class mailer extends PHPMailer {
 		$this->host = settings("email_host");
 		$this->username = settings("email_username");
 		$this->password = settings("email_password");
-		$this->from_email = settings("contact_email_address");
+		$this->from_email = settings("email_address");
 		$this->from_name = settings("site_name");
 		if ($this->host) {
 			$this->IsSMTP(); // send via SMTP

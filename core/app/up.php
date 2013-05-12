@@ -135,7 +135,8 @@ $this->taxonomy("uris_tags",
 $this->taxonomy("settings_category",
 	"term:General",
 	"term:SEO",
-	"term:Themes"
+	"term:Themes",
+	"term:Email"
 );
 
 //general settings
@@ -147,6 +148,11 @@ $this->store("settings", "name:meta",  "category:settings_category seo  type:tex
 $this->store("settings", "name:seo_hide",  "category:settings_category seo  type:checkbox  value:1  label:Hide from search engines  autoload:1");
 //theme settings
 $this->store("settings", "name:theme",  "category:settings_category themes  type:text  label:Theme  autoload:1  value:starbug-1");
+//email settings
+$this->store("settings", "name:email_address", "category:settings_category email  type:text  label:Email Address");
+$this->store("settings", "name:email_host", "category:settings_category email  type:text  label:Email Host");
+$this->store("settings", "name:email_username", "category:settings_category email  type:text  label:Email Username");
+$this->store("settings", "name:email_password", "category:settings_category email  type:text  label:Email Password");
 
 //LOGGING TABLES
 //ERROR LOG
