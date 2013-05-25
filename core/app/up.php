@@ -120,7 +120,8 @@ $this->menu("admin",
 		)
 	),
 	"href:admin/users  content:Users",
-	"href:admin/uris  content:Pages"
+	"href:admin/uris  content:Pages",
+	"href:admin/media  content:Media  target:_blank"
 );
 
 //uris categories

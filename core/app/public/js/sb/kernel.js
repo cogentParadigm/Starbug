@@ -1,10 +1,11 @@
-define(['dojo', 'dojo/_base/config', 'dojo/_base/xhr'], function(dojo, config) {
+define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", 'dojo/_base/xhr'], function(dojo, config, Deferred) {
 	if (!dojo.global['sb']) {
 		dojo.global['sb'] = {
 			severTime: config.serverTime,
 			notifier:config.notifier,
 			stores:{},
 			errors:{},
+			dialogs:{},
 			require: function(module) {
 				dojo['require']("starbug."+module);
 			},
@@ -47,6 +48,29 @@ define(['dojo', 'dojo/_base/config', 'dojo/_base/xhr'], function(dojo, config) {
 				for (var key in args) if (args.hasOwnProperty(key)) dojo.create('input', {'type':'hidden', 'name':key, 'value':args[key]}, form);
 				var button = dojo.create('button', {'type':'submit', 'innerHTML':'submit'}, form);
 				button.click();
+			},
+			dialog: function(id, params, noshow) {
+				/**
+				 * create a dialog
+				 */
+				var promise = new Deferred();
+				//create the new category dialog if it does not exist
+				if (this.dialogs[id] == null) {
+					var self = this;
+					//dynamically require the dialog class
+					require(["starbug/form/Dialog"], function(Dialog) {
+						//create the new dialog, pointing to the terms creation form
+						self.dialogs[id] = new Dialog(params);
+						//start up and show the dialog
+						self.dialogs[id].startup();
+						if (!noshow) self.dialogs[id].show();
+						promise.resolve(self.dialogs[id]);
+					});
+				} else {
+					if (!noshow) self.dialogs[id].show();
+					promise.resolve(this.dialogs[id]);
+				}
+				return promise;
 			}
 		};
 		/*

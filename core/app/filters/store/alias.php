@@ -19,6 +19,6 @@ foreach ($args as $field => $alias) {
 		}
 		$row = query($referenced_model[0], "select:$referenced_model[1]  where:$match='$fields[$field]'  limit:1");
 		$fields[$field] = $row[$referenced_model[1]];
-	} else if (isset($fields[$field])) $fields[$field] = "NULL";
+	}
 }
 ?>

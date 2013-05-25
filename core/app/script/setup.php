@@ -12,10 +12,9 @@
 	$host = (file_exists(BASE_DIR."/etc/Host.php"));
 
 	//CREATE FOLDERS & SET FILE PERMISSIONS
-	$dirs = array("var", "var/xml", "var/json", "var/models", "var/tmp", "var/public", "var/public/stylesheets", "app/hooks", "app/templates", "app/links", "app/forms", "app/public/js", "app/public/uploads", "app/public/thumbnails");
+	$dirs = array("var", "var/xml", "var/json", "var/models", "var/tmp", "var/public", "var/public/stylesheets", "var/public/thumbnails", "app/hooks", "app/templates", "app/forms", "app/public/js", "app/public/uploads");
 	foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) exec("mkdir ".BASE_DIR."/".$dir);
-	exec("chmod -R a+w ".BASE_DIR."/var ".BASE_DIR."/app/public/uploads ".BASE_DIR."/app/public/thumbnails");
-	exec("cp ".BASE_DIR."/etc/setup/var/migration ".BASE_DIR."/var/");
+	exec("chmod -R a+w ".BASE_DIR."/var ".BASE_DIR."/app/public/uploads");
 
 	if ($host) {
 		//INIT TABLES
