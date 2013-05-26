@@ -34,6 +34,7 @@ define([
 		widgetsInTemplate: true,
 		dialog:null,
 		mode:'icons',
+		modal:false,
 		postCreate:function() {
 			var self = this;
 
@@ -69,6 +70,11 @@ define([
 					}
 					
 					on(anchorNode, 'click', function() {
+						if (self.modal) {
+							window.opener.SetUrl(WEBSITE_URL+'app/public/uploads/'+object.id+'_'+object.filename);
+							self.close();
+							return;
+						}
 						if (self.files[object.id]) {
 							delete self.files[object.id];
 							domclass.remove(node, 'selected');
@@ -157,6 +163,17 @@ define([
 				if (self.mode == 'details') self.grid.set('query', self.query);
 				else self.list.set('query', self.query); 
 			});
+			
+			//query string params
+			var parts = window.location.search.substr(1).split('&');
+			for (var i in parts) {
+				var value = parts[i].split('=');
+				if (value[0] == 'mode') this.setMode(value[1]);
+				else if (value[0] == 'modal') {
+					this.modal = true;
+					this.modalMenu.style.display = 'block';
+				}
+			}			
 			
 		},
 		setMode: function(mode) {
@@ -249,6 +266,9 @@ define([
 			for (var i in files) files[i].filename = files[i].original_name;
 			this.list.renderArray(files);
 			if (this.grid != null) this.grid.renderArray(files);
+		},
+		close: function() {
+			window.close();
 		}
 	});
 });
