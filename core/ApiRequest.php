@@ -194,7 +194,6 @@ class ApiRequest {
  	 */
  	protected function getCSV($data, $headers=true) {
  		if ($this->headers) header('Content-Disposition: attachment; filename="'.$this->model.'.csv"');
- 		$lines = array();
  		$buffer = fopen("php://temp", 'r+');
  		$display_headers = true;
  		if (is_array($headers)) fputcsv($buffer, $headers);
@@ -202,10 +201,9 @@ class ApiRequest {
  		else $display_headers = false;
  		foreach ($data as $row) fputcsv($buffer, sb($this->model, "filter", $row));
  		rewind($buffer);
- 		foreach ($data as $row) $lines[] = fgets($buffer);
- 		if ($display_headers) $lines[] = fgets($buffer);
+		$results = stream_get_contents($buffer);
  		fclose($buffer);
- 		return implode("", $lines);
+ 		return $results;
 	}
 
 	/**

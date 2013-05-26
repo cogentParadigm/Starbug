@@ -91,8 +91,11 @@ var Grid = dojo.declare('starbug.grid.Grid', [GridFromHtml, List, Keyboard, Sele
 			return promise;
 		},
 		filterChange:function(node) {
-			var name = attr.get(node, 'name');
-			var value = attr.get(node, 'value');
+			var name = (typeof node['get'] == "undefined") ? attr.get(node, 'name') : node.get('name');
+			var value = (typeof node['get'] == "undefined") ? attr.get(node, 'value') : node.get('value');
+			if (typeof value == "object" && typeof node['serialize'] == "function") {
+				value = node.serialize(value);
+			}
 			this.query[name] = value;
 			this.set('query', this.query);
 		}

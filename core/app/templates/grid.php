@@ -69,7 +69,7 @@
 			if (!empty($field['filters']['references'])) $merge['from'] = "'".reset(explode(" ", $field['filters']['references']))."'";
 		} else if ($field['type'] == "bool") {
 			$merge['plugin'] = "starbug.grid.columns.select";
-			$merge['options'] = "{0:'Yes', 1:'No'}";
+			$merge['options'] = "{1:'Yes', 0:'No'}";
 		}
 		
 		if ($field['list'] || isset($columns[$name])) {
