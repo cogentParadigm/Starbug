@@ -1,5 +1,4 @@
 @import url("../../../../../core/app/public/js/dojo/dijit/themes/dijit.css");
-@import url("../../../../../core/app/public/js/dojo/dijit/themes/claro/document.css");	/* rules on the document itself (rather than widgets), overriding dojo.css */
 @import url("../../../../../core/app/public/js/dojo/dijit/icons/commonIcons.css");/*sprite containing common icons to be used by all themes*/
 @import url("../../../../../core/app/public/js/dojo/dijit/themes/claro/Common.css");
 @import url("../../../../../core/app/public/js/dojo/dijit/themes/claro/form/Common.css");
@@ -33,4 +32,28 @@
 @import url("../../../../../core/app/public/js/dojo/dojox/grid/enhanced/resources/EnhancedGrid.css");
 @import url("../../../../../core/app/public/js/dojo/dojox/grid/enhanced/resources/claro/EnhancedGrid.css");
 @import url("../../../../../core/app/public/js/dojo/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css");
+.claro {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: .688em;
+  color: #131313;
+}
+/* Headings */
+.claro h1 {
+  font-size: 1.545em;
+  margin-bottom: 0.727em;
+  line-height:1em;
+}
+.claro h2 {
+  font-size: 1.364em;
+  line-height: 1.455em;
+  margin-top: 1em;
+  margin-bottom: 0.60em;
+  font-weight: normal;
+}
+.claro h3,
+.claro h4,
+.claro h5,
+.claro h6 {font-size:1.091em;font-weight:normal}
+/* paragraphs, quotes and lists */
+.claro p {line-height: 1.3em;}
 .dojoxGridRowTable{margin-bottom:0}

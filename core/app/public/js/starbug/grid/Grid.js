@@ -9,13 +9,15 @@ define([
 	"dgrid/Keyboard",
 	"dgrid/Selection",
 	"dgrid/editor",
-	"dojo/_base/Deferred"
-], function(dojo, starbug, sb, data, api, GridFromHtml, List, Keyboard, Selection, editor, Deferred){
+	"dojo/_base/Deferred",
+	"dojo/dom-attr"
+], function(dojo, starbug, sb, data, api, GridFromHtml, List, Keyboard, Selection, editor, Deferred, attr){
 window.dgrid = window.dgrid || {GridFromHtml:GridFromHtml, editor:editor};
 var Grid = dojo.declare('starbug.grid.Grid', [GridFromHtml, List, Keyboard, Selection], {
+	keepScrollPosition:true,
+	noDataMessage:'No Results',
 	getBeforePut:false,
 	constructor: function(args) {
-		this.inherited(arguments);
 		this.store = sb.get(args.model, args.action);
 	},
 	startup: function() {
@@ -87,6 +89,15 @@ var Grid = dojo.declare('starbug.grid.Grid', [GridFromHtml, List, Keyboard, Sele
 			// save will stop at the first error it encounters.
 			dfd.resolve();
 			return promise;
+		},
+		filterChange:function(node) {
+			var name = (typeof node['get'] == "undefined") ? attr.get(node, 'name') : node.get('name');
+			var value = (typeof node['get'] == "undefined") ? attr.get(node, 'value') : node.get('value');
+			if (typeof value == "object" && typeof node['serialize'] == "function") {
+				value = node.serialize(value);
+			}
+			this.query[name] = value;
+			this.set('query', this.query);
 		}
 });
 return Grid;

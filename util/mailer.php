@@ -14,8 +14,11 @@ class mailer extends PHPMailer {
 		$this->host = settings("email_host");
 		$this->username = settings("email_username");
 		$this->password = settings("email_password");
-		$this->from_email = settings("contact_email_address");
+		$this->from_email = settings("email_address");
 		$this->from_name = settings("site_name");
+		$port = settings("email_port");
+		$secure = settings("email_secure");
+		
 		if ($this->host) {
 			$this->IsSMTP(); // send via SMTP
 			$this->Host     = $this->host;
@@ -25,6 +28,8 @@ class mailer extends PHPMailer {
 		}
 		if ($this->from_email) $this->From = $this->from_email;
 		if ($this->from_name) $this->FromName = $this->from_name;
+		if (!empty($port)) $this->Port = $port;
+		if (!empty($secure)) $this->SMTPSecure = $secure;
 		$this->WordWrap = 50;
 		$this->IsHTML(true);
 	}

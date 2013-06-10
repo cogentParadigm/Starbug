@@ -110,10 +110,21 @@ function image_save($image, $path, $format="auto") {
  * @param star $dimensions the desired width or height (or both to constrain) in pixels
  * @return string an absolute URL to the thumbnail
  */
-function image_thumb($current_file, $dimensions) {
-	$dimensions = star($dimensions);
-	$loc = uri("app/public/php/phpthumb/phpThumb.php?").http_build_query($dimensions).'&src=/'.request()->base_dir.'/'.$current_file;
-	return $loc;
+function image_thumb($current_file, $dimensions, $options=array()) {
+	import("thumb");
+	$dimensions = array_merge(array('w' => 0, 'h' => 0, 'a' => false), star($dimensions));
+	$options = star($options);
+	$filename = basename($current_file);
+	$dir = "var/public/thumbnails/".$dimensions['w']."x".$dimensions['h']."a".$dimensions['a'];
+	$target = $dir."/".$filename;
+	if (!file_exists(BASE_DIR."/".$target) || $dimensions['f']) {
+		if (!file_exists(BASE_DIR."/".$dir)) mkdir(BASE_DIR."/".$dir);
+		$thumb = PhpThumbFactory::create(BASE_DIR."/".$current_file);
+		if ($dimensions['a']) $thumb->adaptiveResize($dimensions['w'], $dimensions['h']);
+		else $thumb->resize($dimensions['w'], $dimensions['h']);
+		$thumb->save(BASE_DIR."/".$target);
+	}
+	return uri($target);
 }
 
 /**

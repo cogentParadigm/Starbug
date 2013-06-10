@@ -2,6 +2,7 @@
 [
 	"db",
 	"users",
+	"emails",
 	"files",
 	"comments",
 	"css",

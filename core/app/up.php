@@ -26,7 +26,7 @@ $this->table("users  label_select:CONCAT(first_name, ' ', last_name, ' (', email
 	"last_visit  type:datetime  default:0000-00-00 00:00:00  list:true  display:false"
 );
 //This will be stored immediately after the creation of the users table
-$this->store("users", "email:root", "memberships:1");
+$this->store("users", "email:root", "memberships:1", true);
 $this->table("permits  list:all",
 	"role  type:string  length:30",
 	"who  type:int  default:0",
@@ -82,7 +82,7 @@ $this->table("blocks  list:all",
 );
 $this->table("menus",
 	"menu  type:string  length:32  list:true  display:false",
-	"parent  type:int  default:0  materialized_path:menu_path  references:menus id  constraint:false",
+	"parent  type:int  default:0  materialized_path:menu_path",
 	"uris_id  type:int  references:uris id  label:Page  null:  update:cascade  delete:cascade",
 	"href  type:string  length:255  label:URL  default:",
 	"content  type:string  length:255  default:",
@@ -100,26 +100,28 @@ $this->uri("profile", "template:controller");
 $this->uri("rogue", "title:Rogue IDE  format:xhr  prefix:core/app/views/  groups:root");
 //Admin
 $this->uri("admin", "template:controller-group  collective:4  theme:storm");
-//Uploader - default permission only allows root to upload
-$this->uri("upload", "prefix:core/app/views/  format:xhr  groups:root");
+//Uploader
+$this->uri("upload", "prefix:core/app/views/  format:xhr  groups:admin");
+//terms
 $this->uri("terms", "prefix:core/app/views/  format:xhr  groups:user");
 $this->uri("robots", "prefix:core/app/views/  format:txt");
 
 //Admin Menu
 $this->menu("admin",
 	array(
-		"content" => '<span class="icon-reorder"></span>',
+		"content" => '<span class="icon-cog"></span>',
 		"children" => array(
 			"href:admin/settings  content:Settings",
 			"template:divider",
 			"href:admin/menus  content:Menus",
 			"href:admin/taxonomies  content:Taxonomy",
 			"template:divider  collective:1",
-			"href:sb-admin  content:The Bridge  target:_blank"
+			"href:sb-admin  content:The Bridge  target:_blank  collective:1"
 		)
 	),
 	"href:admin/users  content:Users",
-	"href:admin/uris  content:Pages"
+	"href:admin/uris  content:Pages",
+	"href:admin/media  content:Media  target:_blank"
 );
 
 //uris categories
@@ -134,7 +136,8 @@ $this->taxonomy("uris_tags",
 $this->taxonomy("settings_category",
 	"term:General",
 	"term:SEO",
-	"term:Themes"
+	"term:Themes",
+	"term:Email"
 );
 
 //general settings
@@ -146,6 +149,13 @@ $this->store("settings", "name:meta",  "category:settings_category seo  type:tex
 $this->store("settings", "name:seo_hide",  "category:settings_category seo  type:checkbox  value:1  label:Hide from search engines  autoload:1");
 //theme settings
 $this->store("settings", "name:theme",  "category:settings_category themes  type:text  label:Theme  autoload:1  value:starbug-1");
+//email settings
+$this->store("settings", "name:email_address", "category:settings_category email  type:text  label:Email Address");
+$this->store("settings", "name:email_host", "category:settings_category email  type:text  label:Email Host");
+$this->store("settings", "name:email_port", "category:settings_category email  type:text  label:Email Port");
+$this->store("settings", "name:email_username", "category:settings_category email  type:text  label:Email Username");
+$this->store("settings", "name:email_password", "category:settings_category email  type:text  label:Email Password");
+$this->store("settings", "name:email_secure", "category:settings_category email  type:select  options:{\"options\":\",ssl,tls\"}  label:Secure SMTP");
 
 //LOGGING TABLES
 //ERROR LOG
@@ -155,8 +165,7 @@ $this->table("errors",
 	"field  type:string  length:64",
 	"message  type:text  length:512"
 );
-//SQL TRANSACTION LOG (MUST BE ENABLED IN etc/Etc.php)
-if (Etc::ENABLE_SQL_LOG) {
+//SQL TRANSACTION LOG
 	$this->table("log",
 		"table_name  type:string  length:100",
 		"object_id  type:int  default:0",
@@ -165,10 +174,4 @@ if (Etc::ENABLE_SQL_LOG) {
 		"old_value  type:text",
 		"new_value  type:text"
 	);
-	foreach ($this->tables as $tbl => $columns) {
-		$this->after("$tbl::insert", $this->get_logging_trigger("$tbl", "insert"));
-		$this->after("$tbl::update", $this->get_logging_trigger("$tbl", "update"));
-		$this->after("$tbl::delete", $this->get_logging_trigger("$tbl", "delete"));
-	}
-}
 ?>

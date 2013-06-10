@@ -7,7 +7,9 @@ dependencies = {
 			name: "dojo.js",
 			dependencies: [
 				'sb',
-				'sb/data'
+				'dojo/selector/acme',
+				'dojo/query',
+				'bootstrap/Dropdown'
 			]
 		},
 		{
@@ -24,7 +26,7 @@ dependencies = {
 		["dgrid", "../dgrid"],
 		["put-selector", "../put-selector"],
 		["xstyle", "../xstyle"],
-		["jquery", "//ajax.googleapis.com/ajax/libs/jquery/1.9.1"],
+		["bootstrap", "../bootstrap"],
 		["sb", "../../sb"],
 		["starbug", "../../starbug"],
 		["app", "../../../../../../app/public/js"]

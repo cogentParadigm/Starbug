@@ -35,7 +35,7 @@
 		</select>
 		<span class="info">Leave empty to place the item at the top level.</span>
 	</div>
-	<?php text("position  info:Enter 0 for first position, leave empty for last."); ?>
+	<?php //text("position  info:Enter 0 for first position, leave empty for last."); ?>
 	<?php text("term"); ?>
 	<?php textarea("description"); ?>
 	<br/>

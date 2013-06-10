@@ -147,9 +147,9 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 	</div>
 	<?php
 	if ($action == "update") {
-		$count = query("blocks", "select:COUNT(*) as count  where:uris_id=?  limit:1", array($_POST['uris']['id']));
+		$count = query("blocks", "select:COUNT(*) as count  where:uris_id=? && !(status & 1)  limit:1", array($_POST['uris']['id']));
 		if ($count['count'] == 0) store("blocks", "uris_id:".$_POST['uris']['id']."  type:text  region:content  position:1");
-		$containers = query("blocks", "where:uris_id=?  orderby:position ASC", array($_POST['uris']['id']));
+		$containers = query("blocks", "where:uris_id=? && !(status & 1)  orderby:position ASC", array($_POST['uris']['id']));
 		$l = new form("model:new-block");
 		$r = new form("model:remove-block");
 		foreach($containers as $container) { ?>
@@ -178,4 +178,3 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 		<?php text("breadcrumb  label:Breadcrumbs Title  style:width:100%"); ?>
 	</fieldset>
 <? close_form(); ?>
-<?php $sb->import("util/tinymce"); ?>

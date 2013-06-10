@@ -135,7 +135,7 @@ class mysql extends db {
 		
 		//set defaults from schema, only use search if $args[search] is set and empty
 		if (!isset($args['search'])) unset($schema['search']);
-		else if (empty($args['search'])) unset($args['search']);
+		else if (empty($args['search'])) $args['search'] = $schema['search'];
 		foreach ($schema as $k => $v) if (!isset($args[$k]) && is_string($v)) $args[$k] = $v;
 
 		//after schema defaults have been set, set global defaults
@@ -274,9 +274,9 @@ class mysql extends db {
 			if ($value === "") $errors[$col]["required"] = "This field is required.";
 		}
 		foreach($byfilter as $filter => $args) {
-			$on_store = false;
+			$on_store = $after_store = false;
 			foreach (locate("store/$filter.php", "filters") as $f) include($f);
-			if (!$on_store) unset($byfilter[$filter]);
+			if (!$on_store && !$after_store) unset($byfilter[$filter]);
 		}
 		foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
 		$this->to_store[] = array("model" => $name, "fields" => $fields, "from" => $from, "filters" => $byfilter);
@@ -302,7 +302,9 @@ class mysql extends db {
 				$updating = true;
 			} else $inserting = true;
 			foreach ($filters as $filter => $args) {
+				$after_store = false;
 				foreach (locate("store/$filter.php", "filters") as $f) include($f);
+				if (!$after_store) unset($filters[$filter]);
 			}
 			foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
 			if (!errors()) { //no errors
@@ -316,13 +318,13 @@ class mysql extends db {
 							$prize[] = $value;
 							$s = "?";
 						}
-						if(empty($setstr)) $setstr = $col."= $s";
-						else $setstr .= ", ".$col."= $s";
+						if(empty($setstr)) $setstr = "`".$col."`= $s";
+						else $setstr .= ", `".$col."`= $s";
 					}
 					foreach($from as $c => $v) {
 						$prize[] = $v;
-						if (empty($wherestr)) $wherestr = $c." = ?";
-						else $wherestr .= " && ".$c." = ?";
+						if (empty($wherestr)) $wherestr = "`".$c."` = ?";
+						else $wherestr .= " && `".$c."` = ?";
 					}
 					$stmt = $this->pdo->prepare("UPDATE ".$this->prefix.$name." SET ".$setstr." WHERE ".$wherestr);
 					$this->record_count = $stmt->execute($prize);
@@ -346,6 +348,10 @@ class mysql extends db {
 					$this->record_count = $stmt->execute($prize);
 					$this->insert_id = $this->pdo->lastInsertId();
 					db::model($name)->insert_id = $this->insert_id;
+					$fields["id"] = $this->insert_id;
+					foreach ($filters as $filter => $args) {
+						foreach (locate("store/$filter.php", "filters") as $f) include($f);
+					}
 				}
 				//NOTIFY CLIENTS
 				if (defined("Etc::API_NOTIFIER")) {

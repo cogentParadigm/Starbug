@@ -12,8 +12,9 @@
  * - $columns: (optional) an array of column overrides. set a column to false to hide it
  * - $attributes: (optional) attributes for the table
  * - $view: (optional) view name. only show fields within this view
- */
-	js("starbug/grid/Grid");
+ */	
+	$grid_class = $dnd ? "starbug/grid/DnDGrid" : "starbug/grid/Grid";
+	js($grid_class);
 	$attributes = star($grid_attributes);
 
 	//set up default attributes
@@ -22,7 +23,7 @@
 	efault($attributes['id'], $attributes['model']."_grid");
 	efault($attributes['data-dojo-id'], $attributes['id']);
 	efault($attributes['style'], "width:100%;height:615px");
-	efault($attributes['data-dojo-type'], "starbug.grid.Grid");
+	efault($attributes['data-dojo-type'], $grid_class);
 	if ($query) {
 		$params = star($query);
 		$query = array_shift($params);
@@ -68,23 +69,48 @@
 			if (!empty($field['filters']['references'])) $merge['from'] = "'".reset(explode(" ", $field['filters']['references']))."'";
 		} else if ($field['type'] == "bool") {
 			$merge['plugin'] = "starbug.grid.columns.select";
-			$merge['options'] = "{0:'Yes', 1:'No'}";
+			$merge['options'] = "{1:'Yes', 0:'No'}";
 		}
 		
 		if ($field['list'] || isset($columns[$name])) {
 			if (false !== $columns[$name]) {
-				foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list', "options", "null", "update", "delete", "auto_increment", "key", "index") as $remove) unset($field[$remove]);
+				foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list', "options", "null", "update", "delete", "auto_increment", "key", "index", "append", "prepend", "before", "after", "between") as $remove) unset($field[$remove]);
 				$ordered_columns[$name] = empty($columns[$name]) ? $field : star($columns[$name]);
 				foreach ($merge as $k => $v) if (empty($ordered_columns[$name][$k])) $ordered_columns[$name][$k] = $v;
 			}
 		}
 		unset($columns[$name]);
 	}
-	$ordered_columns = array_merge($ordered_columns, $columns);
-	efault($ordered_columns['Options'], "field:'id'  class:field-options  plugin:starbug.grid.columns.options");
+
+	$final = $positions = array();
+	foreach ($columns as $k => $c) {
+		if (false == $c) unset($columns[$k]);
+		else {
+			$c = star($c);
+			if (isset($c['position'])) {
+				$positions[intval($c['position'])][$k] = $c;
+				unset($columns[$k]);
+			}
+		}
+	}
+	$index = 0;
+	foreach ($ordered_columns as $k => $c) {
+		if (!empty($positions[$index])) {
+			foreach($positions[$index] as $sk => $sv) $final[$sk] = $sv;
+		}
+		$final[$k] = $c;
+		$index++;
+	}
+
+	$final = array_merge($final, $columns);
+	
+	efault($final['Options'], "field:'id'  class:field-options  plugin:starbug.grid.columns.options");
+	
+	//add drag handle for dnd
+	if ($dnd) $final = array_merge(array('-' => "field:'id'  class:field-drag  plugin:starbug.grid.columns.handle"), $final);
 	
 	//build data-dgrid-column attributes
-	foreach ($ordered_columns as $key => $value) {
+	foreach ($final as $key => $value) {
 		$value = star($value);
 		$props = array();
 		foreach ($value as $k => $v) {
@@ -102,16 +128,16 @@
 			js(str_replace(".", "/", $props['plugin']));
 			$value['data-dgrid-column'] = $props['plugin']."(".$value['data-dgrid-column'].")";
 		}
-		if (empty($props['plugin'])) efault($props['editor'], "'text'");
+		if (empty($props['plugin']) && !isset($props['readonly'])) efault($props['editor'], "'text'");
 		if (isset($props['editor'])) {
 			$value['data-dgrid-column'] = "dgrid.editor(".$value['data-dgrid-column'].", ".$props['editor'].", 'dblclick')";
 		}
-		$ordered_columns[$key] = $value;
+		$final[$key] = $value;
 	}
 	
 	//render table
 	assign("attributes", $attributes);
-	assign("columns", $ordered_columns);
+	assign("columns", $final);
 	render("table");
 	
 ?>

@@ -1,0 +1,55 @@
+<div class="media-browser">
+	<div class="navbar" style="position:absolute;top:0;width:100%;margin:0">
+		<div class="navbar-inner">
+			<div class="btn-toolbar pull-right">
+				<div class="btn-group">
+					<a class="btn active" href="javascript:;" data-dojo-attach-point="iconsMode"><span class="icon-th"></span></a>
+					<a class="btn" href="javascript:;" data-dojo-attach-point="detailsMode"><span class="icon-list"></span></a>
+				</div>
+				<div class="btn-group">
+					<input type="text" data-dojo-attach-point="search" placeholder="search.." style="margin:0"/>
+				</div>
+			</div>
+			<div class="btn-toolbar">
+				<a class="btn" href="javascript:;" data-dojo-attach-event="click: new_category"><span class="icon-plus"></span> New Category</a>
+				<input data-dojo-attach-point="uploader" style="width:auto" type="file" multiple="true" data-dojo-type="starbug/form/Uploader" label="<span class='icon-upload'></span> Upload" url="/upload" uploadOnSelect="true"/>
+			</div>
+		</div>
+	</div>
+	<div data-dojo-attach-point="outerBC" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:false, design:'sidebar', liveSplitters:true" style="position:fixed;top:58px;bottom:58px;left:0;right:0">
+		<div data-dojo-attach-point="sidebar" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'leading'" style="width: 200px;">
+			<div class="categories" data-dojo-attach-point="clistNode"></div>
+		</div>
+    <div data-dojo-attach-point="center" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'" style="padding:0">
+				<div class="status-indicator" data-dojo-attach-point="statusNode"></div>
+				<div class="selected-image pull-right media" data-dojo-attach-point="selection"></div>
+				<div class="media" data-dojo-attach-point="listNode" style="margin:0"></div>
+				<div class="media" data-dojo-attach-point="gridNode"  style="display:none;margin:0">
+					<table data-dojo-attach-point="gridTableNode">
+							<thead>
+									<tr>
+											<th data-dgrid-column="{ field: 'filename' }">Filename</th>
+											<th data-dgrid-column="starbug.grid.columns.filesize({ field: 'size'})">Size</th>
+											<th data-dgrid-column="{ field: 'mime_type'}">Type</th>
+											<th data-dgrid-column="{ field: 'modified'}">Modified</th>
+											<th data-dgrid-column="starbug.grid.columns.options({field:'id'})">Options</th>
+									</tr>
+							</thead>
+					</table>
+				</div>
+    </div>
+	</div>
+	<div class="navbar" style="position:absolute;bottom:0;width:100%;margin:0">
+		<div class="navbar-inner">
+			<div class="btn-toolbar pull-right" data-dojo-attach-point="modalMenu" style="display:none">
+				<a class="btn" href="javascript:;" data-dojo-attach-event="click: close">Close</a>
+			</div>
+			<div class="btn-toolbar pull-right" data-dojo-attach-point="contextMenu" style="display:none">
+				<a class="btn" href="javascript:;" data-dojo-attach-event="click: edit"><span class="icon-edit"></span> Edit</a>
+				<a class="btn" href="javascript:;" data-dojo-attach-event="click: delete"><span class="icon-remove"></span> Delete</a>
+			</div>
+			<div class="btn-toolbar" style="height:35px">
+			</div>
+		</div>
+	</div>
+</div>

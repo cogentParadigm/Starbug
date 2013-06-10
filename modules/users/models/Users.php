@@ -24,7 +24,9 @@ class Users {
 		$this->store($user);
 		if ((!errors()) && (empty($user['id']))) {
 			$uid = $this->insert_id;
-			$result = exec("sb email account_created $uid $user[password]");
+			$data = array("user" => get("users", $uid));
+			$data['user']['password'] = $user['password'];
+			send_email("template:Account Creation  to:".$user['email'], $data);
 		}
 	}
 

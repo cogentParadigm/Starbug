@@ -15,17 +15,11 @@
 			for ($i=$range[0];$i<=$range[1];$i++) $options[$i] = $i;
 			unset($field['range']);
 		}
-		if (!empty($field['options'])) {
-			$keys = explode(",", $field['options']);
-			$values = (!empty($field['values'])) ? explode(",", $field['values']) : $keys;
-			$options = array();
-			foreach ($keys as $i => $k) $options[$k] = $values[$i];
-			unset($field['options']);
-			unset($field['values']);
-		}
 		if (!empty($field['caption'])) {
-			$list = $options;
-			if (!empty($field['from'])) $options = query($field['from'], $field);
+			if (!empty($field['from'])) {
+				$list = $options;
+				$options = query($field['from'], $field);
+			} else $list = array();
 			$keys = array();
 			if (!empty($options)) foreach ($options[0] as $k => $v) if (false !== strpos($field['caption'], "%$k%")) $keys[] = $k;
 			foreach ($options as $o) {
@@ -34,6 +28,13 @@
 				$list[$cap] = $o[$field['value']];
 			}
 			$options = $list; unset($field['caption']); unset($field['value']);
+		} else if (!empty($field['options'])) {
+			$keys = explode(",", $field['options']);
+			$values = (!empty($field['values'])) ? explode(",", $field['values']) : $keys;
+			$options = array();
+			foreach ($keys as $i => $k) $options[$k] = $values[$i];
+			unset($field['options']);
+			unset($field['values']);
 		}
 		assign("value", $this->get($name));
 		assign("options", $options);

@@ -18,7 +18,7 @@ h2{color:#419bc0;font-size:150%}
 /********************* nav *********************/
 #nav > li{float:left;background:url(../images/nav-col-border.png) top right no-repeat}
 #nav > li.last{background:transparent}
-#nav > li > a{padding:21px 20px 0px 15px;height:29px;line-height:14px;color:#FFF;font-weight:bold;font-size:95%}
+#nav > li > a{padding:21px 20px 0px 15px;height:29px;line-height:14px;color:#FFF;font-weight:bold}
 #nav .caret{border-top-color:#FFF;margin-left:8px}
 #nav > li > a:hover, #nav > li > a:focus{background:transparent;text-decoration:underline}
 #nav > li.first > a{padding-left:0}
@@ -28,25 +28,18 @@ h2{color:#419bc0;font-size:150%}
 .dropdown-toggle{cursor:pointer}
 #tabs{border-bottom:none}
 #tabs > li + li{margin-left:5px}
-.blue.button, a.blue.button, .blue.button:hover, a.blue.button:hover, button.blue, button.blue:hover
-{background:url(../images/button-left.png) no-repeat;padding:0 0 0 6px;color:#fff;border:none;margin:0;font-size:12px;font-weight:normal}
-.blue.button span, a .blue.button span, button.blue span
-{display:block;float:left;background:url(../images/button-right.png) top right no-repeat;padding:2px 9px 3px 3px}
-.small.blue.button, a.small.blue.button, .small.blue.button:hover, a.small.blue.button:hover, button.small.blue, button.small.blue:hover
-{background:url(../images/button-left-small.png) no-repeat;padding:0 0 0 4px;color:#fff;border:none;margin:0;font-size:80%;font-weight:normal}
-.small.blue.button span, a .small.blue.button span, button.small.blue span
-{background:url(../images/button-right-small.png) top right no-repeat;padding:1px 7px 2px 3px}
-#tabs .button, #tabs a.button, #tabs .button:hover, #tabs a.button:hover{background:url(../images/tab-left.png) no-repeat;.border-radius(0);padding:0 0 0 5px;color:#419bc0;border:none;margin:0;font-size:80%;font-weight:normal;text-transform:uppercase;display:block;height:21px}
-#tabs .button span, #tabs a.button span{display:block;float:left;background:url(../images/tab-right.png) top right no-repeat;padding:0px 7px 3px 3px}
+.blue.button{color:#FFF;background:#419BC0;.border-radius(7px);padding:0 7px}
+.small.blue.button{font-size:9px;line-height:17px}
+#tabs .button, #tabs a.button{background:#282828;.border-radius(0 0 7px 7px);padding:0 5px;color:#419bc0;border:none;margin:0;font-size:80%;font-weight:normal;text-transform:uppercase;display:block;height:21px}
 #footer{margin-top:10px}
 #footer ul{padding:12px 0;margin:0}
 #footer ul li{list-style-type:none;float:left}
 
 /********************* classes *********************/
-.input .alert-error{display:block;width:300px;padding:5px;margin-bottom:8px}
+.input .alert-error{display:block;width:auto;padding:5px;margin-bottom:8px}
 .right{float:right}
 .left{float:left}
-.required .asterisk{font-size:125%;color:#C00;position:relative;left:4px}
+.required .asterisk{color:#C00;position:relative;left:4px}
 
 /********************* the box *********************/
 .box{background:#FFF;padding:0;overflow:hidden;width:100%;.border-radius(@baseBorderRadius);.box-shadow(0 1px 4px #888);.clearfix()}
@@ -66,12 +59,24 @@ textarea{width:309px;height:100px}
 .left.field{margin-right:5px}
 .infield span.alert-error{width:auto}
 .input.left{margin-right:8px}
+div.mce-tinymce{margin-bottom:10px}
 
 /********************* dojo *********************/
-body .dijitDialogUnderlay{background:#111;opacity:0.6}
-body.tundra .dijitDialog{-webkit-box-shadow:none;background:none;border:none}
-body.tundra .dijitDialogTitleBar{display:none}
-body.tundra .dijitDialogPaneContent{background:none;border:none}
+body.claro .dijitTabContainerTop-dijitContentPane, body.claro .dijitTabContainerLeft-dijitContentPane, body.claro .dijitTabContainerBottom-dijitContentPane, body.claro .dijitTabContainerRight-dijitContentPane, body.claro .dijitAccordionContainer-dijitContentPane{background-color:transparent;padding:0px;overflow:visible}
+body.claro div div.dijitTabPaneWrapper{background:transparent;overflow:visible}
+.dijitContentPane .box-top{margin-top:-6px;margin-left:-5px}
+.dijitContentPane .box{margin-left:-5px}
+body.claro .dijitTabPaneWrapper, body.claro .dijitTabContainerTop-tabs, body.claro .dijitTabContainerBottom-tabs, body.claro .dijitTabContainerLeft-tabs, body.claro .dijitTabContainerRight-tabs{border:none}
+body.claro .dijitTabCloseButton{background:url(../images/sprite.png) -53px -68px no-repeat}
+body.claro .dijitTabContainerTop-tabs .dijitTabContent, body.claro .dijitTabContainerTop-tabs .dijitTabInnerDiv,body.claro .dijitTabListContainer-top .tabStripButton,body.claro .dijitTabListContainer-bottom .tabStripButton{background-image:none}
+body.claro .dijitTabStripIcon{background:transparent}
+body.claro .dijitContentPaneLoading, body.claro .dijitTreeExpandoLoading, body.dijitRtl .dijitContentPaneLoading, body.claro .dojoxGridLoading{background-image:url(../js/dojo/dijit/themes/claro/images/loadingAnimation.gif)}
+body.claro .dijitDialogTitleBar, body.claro .dijitTitlePaneTitle{background-image:none}
+body.claro .dijitDialogUnderlay{background:#111;opacity:0.8}
+body.claro .dijitDialog{-webkit-box-shadow:none;background:none;border:none}
+body.claro .dijitDialogTitleBar{display:none}
+body.claro .dijitDialogPaneContent{background:none;border:none}
+.dijitTooltipContents{.clearfix}
 .attribute{float:left;width:135px}
 .attribute h4{font-size:12px;margin:10px 0px 5px;font-weight:bold}
 .attribute ul{margin:0;padding:0;list-style-type:none}
@@ -79,6 +84,7 @@ body.tundra .dijitDialogPaneContent{background:none;border:none}
 .attribute ul li label{font-size:11px;padding-left:5px;font-weight:normal}
 .attribute ul li.active label, .attribute ul li:hover label{background:#666;color:#FFF}
 .attribute ul li input{display:none}
+
 
 /********************* CMS Pages *********************/
 .pages_form input.title-field{width:99%;font-size:18px}
@@ -108,8 +114,8 @@ body.tundra .dijitDialogPaneContent{background:none;border:none}
 .menu_items .menu-toggle .caret{border-top-color:#555}
 body ol.menu_items button, body ol.menu_items button{margin:0 0 0 10px;padding:0px;background:transparent;border:none;position:relative;top:-3px}
 body ol.menu_items button img{width:14px;height:14px}
-.dojoDndHandle{float:right;width:15px;height:15px;background:url(../images/drag-handle.png) no-repeat;overflow:hidden;display:block;cursor:move}
-.dojoDndHandle:hover, .dojoDndItem:hover > .dojoDndHandle{background-position:0 -20px}
+div.dojoDndHandle{display:block;cursor:hand;cursor:grab;cursor:-moz-grab;cursor:-webkit-grab}
+.dgrid-scroller.dojoDndSourceMoved, .dgrid-scroller.dojoDndSourceMoved .dojoDndItemOver{cursor:grabbing;cursor:-moz-grabbing;cursor:-webkit-grabbing}
 .claro .dojoDndItemAfter{border-top:none;border-bottom:1px solid #769DC0}
 
 .sortable.nav .dropdown-menu{position:static;float:none;margin:0;.border-radius(0)}
@@ -121,7 +127,7 @@ body ol.menu_items button img{width:14px;height:14px}
 .sortable.nav li .btn-group.right{position:absolute;top:10px;right:5px}
 .sortable.nav li ul li .btn-group.right{top:3px}
 .sortable.nav li a.btn{cursor:pointer}
-#nav > li > a > .icon-reorder{font-size:1.6em}
+#nav > li > a > .icon-cog{font-size:1.9em;margin-top:-3px}
 #nav > li > a.dropdown-toggle:hover{text-decoration:none}
 .menu-form .inline-fields .input{width:280px}
 
@@ -134,11 +140,49 @@ body ol.menu_items button img{width:14px;height:14px}
 .dgrid table{margin:0}
 .dgrid button, .dgrid a.button{margin:0}
 .dgrid .field-options{width:95px}
+.dgrid .dijitDateTextBox{width:90px}
+.claro .dijitTextBox .dijitInputInner{margin-bottom:0}
+.dgrid-cell input{width:auto}
+.claro .dgrid-cell pre{background:transparent;border:none;font-size:inherit}
+.dgrid-no-data{font-weight:bold;text-align:center;padding:20px}
+body.claro table.dojoDndAvatar{width:auto !important;background:transparent;border:none;box-shadow:none;pointer-events:none}
+body.claro.dojoDndMove .dojoDndAvatarHeader{display:none}
+body.claro.dojoDndMove .dojoDndAvatarItem{position:relative;display:block;top:-80px;left:-40px}
+.ui-widget.dgrid{height:auto}
+.dgrid .dgrid-scroller{position:relative;overflow:auto;max-height:600px}
+.dgrid-cell:focus{outline:none}
 /* auto-height code */
 /*
-.ui-widget.dgrid{height:auto}
-.dgrid .dgrid-scroller{position:relative;overflow-y:hidden}
 .has-ie-6 .dgrid .dgrid-scroller{overflow-y:visible}
 .dgrid .dgrid-header-scroll{display:none}
 .dgrid .dgrid-header{right:0}
 */
+
+.dijitTooltipContents{.clearfix}
+ 
+.dgrid.dgrid-list{height:auto;border:none;background:transparent}
+.dgrid.dgrid-list .dgrid-scroller{position:relative;overflow:visible;outline:none}
+.dgrid.dgrid-list .dgrid-no-data{display:none}
+
+.dgrid.dgrid-list.media .dgrid-row{float:left;margin-left:10px;position:relative}
+.dgrid.dgrid-list.media .dgrid-row a{color:#333;display:block;border:2px solid #333}
+.dgrid.dgrid-list.media .dgrid-row div.name{white-space:nowrap;text-overflow:ellipsis;overflow:hidden;width:90px;padding:2px 5px}
+.dgrid.dgrid-list.media .dgrid-row a:hover, .dgrid.dgrid-list.media .dgrid-row.selected a{color:#FFF}
+.dgrid.dgrid-list.media .dgrid-row a:hover div.name{background:#999}
+.dgrid.dgrid-list.media .dgrid-row.selected a div.name{background:#555}
+.dgrid.dgrid-list.media .dgrid-row a.close-btn{padding:0 4px;background:#333;position:absolute;top:0;right:0;text-decoration:none;display:none;color:#FFF}
+.dgrid.dgrid-list.media .dgrid-row:hover a.close-btn{display:block;border:none}
+.dgrid.dgrid-list.categories .dgrid-row.category a{cursor:pointer;padding:5px;color:#333;border-bottom:2px solid #333;display:block;text-decoration:none}
+.dgrid.dgrid-list.categories .dgrid-row.category a:hover{background:#999;color:#FFF}
+.dgrid.dgrid-list.categories .dgrid-row.category.active a{background:#555;color:#FFF}
+.media .dgrid-grid{border:none}
+.media .dgrid-grid .dgrid-cell{border-left:none;border-right:none}
+.media .dgrid-grid .dgrid-header,.media .dgrid-grid .dgrid-content{width:100% !important}
+.media .dgrid-grid .dgrid-cell.field-modified{width:180px}
+.media .dgrid-grid .dgrid-cell.field-mime_type{width:200px}
+.media .dgrid-grid .dgrid-cell.field-size{width:120px}
+.media .dgrid-grid .dgrid-cell.field-id{width:100px}
+
+/********************* email templates *********************/
+.email_templates-name.input,.email_templates-subject.input,.email_templates-from.input,.email_templates-from_name.input{float:left;clear:left;margin-right:10px}
+.email_templates-cc.input textarea,.email_templates-bcc.input textarea{height:85px}

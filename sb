@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/php -Cq
 <?php
 	define('SB_CLI', true);
 	$status = 0;
@@ -8,7 +8,8 @@
 	}
 	$command = array_shift($argv);
 	$script = array_shift($argv);
-	if ($status) $path = end(locate($script.".php", "script"));
+	if (file_exists("script/$script.php")) include("script/$script.php");
+	else if ($status) $path = end(locate($script.".php", "script"));
 	else $path = "core/app/script/$script.php";
 	if (file_exists($path)) include($path);
 ?>

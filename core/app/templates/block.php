@@ -1,3 +1,3 @@
 <div class="block block-<?= $block['position']; ?>">
-	<?= $block['content']; ?>
+	<?= token_replace($block['content']); ?>
 </div>

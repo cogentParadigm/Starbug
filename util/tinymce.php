@@ -1,35 +1,35 @@
 <?php $sb->provide("util/tinymce"); ?>
 <!-- TinyMCE -->
-<script type="text/javascript" src="<?php echo uri("core/app/public/js/tiny_mce/tiny_mce.js"); ?>"></script>
+<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+<!--<script type="text/javascript" src="<?php echo uri("core/app/public/js/tiny_mce/tiny_mce.js"); ?>"></script>-->
 <script type="text/javascript">
-	function kfm_for_tiny_mce(field_name, url, type, win){
+	function tiny_mce_browser_callback(field_name, url, type, win){
 					window.SetUrl=function(url,width,height,caption){
 					 var input_field = dojo.byId(field_name, win.document);
-					 dojo.attr(input_field, 'value', '//'+url);
+					 dojo.attr(input_field, 'value', url);
 					 if(caption){
 									dojo.attr(input_field, 'alt', caption);
 					 }
 					}
-					window.open('<?php echo uri("core/app/public/js/tiny_mce/plugins/"); ?>kfm/index.php?mode=selector&type='+type,'kfm','modal,width=800,height=600');
+					window.open('<?php echo uri("admin/media?modal=true"); ?>','media','modal,width=800,height=600');
 	}
 	tinyMCE.init({
 		// General options
-		mode : "textareas",
-		theme : "advanced",
-		plugins : "safari,spellchecker,pagebreak,style,table,advlink,iespell,inlinepopups,insertdatetime,paste,fullscreen,xhtmlxtras",
+		selector : "textarea.rich-text",
+		theme : "modern",
+    plugins: [
+        "advlist autolink autoresize textcolor lists link image charmap print preview hr anchor pagebreak",
+        "searchreplace wordcount visualblocks visualchars code fullscreen charmap",
+        "insertdatetime media nonbreaking save table contextmenu directionality",
+        "emoticons template paste"
+    ],
 
-		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect,|,cut,copy,paste,pastetext,pasteword,|,forecolor,backcolor,|,cleanup,code,|,fullscreen",
-		theme_advanced_buttons2 : "bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,|,tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,iespell,|,styleprops,spellchecker,attribs,|,blockquote,pagebreak",
-		theme_advanced_buttons3 : "",
-		theme_advanced_toolbar_location : "top",
-		theme_advanced_toolbar_align : "left",
-		theme_advanced_statusbar_location : "bottom",
-		theme_advanced_resizing : true,
-		file_browser_callback: "kfm_for_tiny_mce",
-		editor_deselector: "plain",
+    toolbar1: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | print preview",
+    image_advtab: true,
+		file_browser_callback: tiny_mce_browser_callback,
 		relative_urls : false,
 		remove_script_host : false,
-		document_base_url : "<?php echo uri(""); ?>"
+		document_base_url : "<?php echo uri("", 'u'); ?>"
 
 		// Example content CSS (should be your site CSS)
 		//content_css : "<?php echo uri("var/public/stylesheets/screen.css"); ?>"

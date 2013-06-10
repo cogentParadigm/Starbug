@@ -27,10 +27,10 @@
 		$field = array($setting['name']);
 		$options = array();
 		if (!empty($setting['label'])) $field['label'] = $setting['label'];
-		if (!empty($setting['options'])) $options = json_decode($setting['options'], true);
+		if (!empty($setting['options'])) $field += json_decode($setting['options'], true);
 		if ($setting['type'] == "textarea") $field['data-dojo-type'] = 'dijit.form.Textarea';
 		else if ($setting['type'] == "checkbox") $field['value'] = 1;
-		f($setting['type'], $field, $options);
+		f($setting['type'], $field);
 	}
 	button("Save");
 	close_form();

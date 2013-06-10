@@ -45,7 +45,7 @@ class ApiRequest {
 		$parts = explode("/", str_replace(".$format", "", $what));
 		$call = reset($parts);
 		$action = next($parts);
-		$ops = array_merge(array("action" => "read", "where" => array()), star($ops));
+		$ops = array_merge(array("action" => "read", "where" => array(), "params" => array()), star($ops));
 		if (!is_array($ops['where'])) $ops['where'] = array($ops['where']);
 		if ($this->headers) {
 			header("Content-Type: ".$this->types[$format]);
@@ -65,9 +65,10 @@ class ApiRequest {
 		list($action, $format, $ops) = $args;
 		$this->model = $model;
 		if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) {
-			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : sb("insert_id");
+			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : sb($model)->insert_id;
 			$ops['where'][] = $model.".id='$id'";
 		}
+		if (!empty($_GET['keywords'])) efault($ops['search'], '');
 		
 		//paging
 		if (isset($_SERVER['HTTP_RANGE'])) {
@@ -81,8 +82,8 @@ class ApiRequest {
 		$query = sb($model)->$action_name($ops);
 		$models = (isset($query['models'])) ? $query['models'] : $model;
 		$query['where'] = implode(' && ', $query['where']);
-		if (!empty($_GET['keywords'])) efault($query['search'], '');
 		$data = (isset($query['data'])) ? $query['data'] : query($models, $query);
+		if (isset($query['limit']) && $query['limit'] == 1) $data = array($data);
 		$f = strtoupper($format);
 		$error = $f."errors";
 		if (empty($sb->errors[$model])) {
@@ -100,6 +101,8 @@ class ApiRequest {
 					case "jsonp": return $this->getJSONP($ops['pad'], $data); break;
 					case "csv": return $this->getCSV($data, $query['headers']); break;
 				}
+			} else {
+				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min(request()->pager->count, $finish).'/'.request()->pager->count);
 			}
 		} else return $this->$error($model);
 	}
@@ -191,7 +194,6 @@ class ApiRequest {
  	 */
  	protected function getCSV($data, $headers=true) {
  		if ($this->headers) header('Content-Disposition: attachment; filename="'.$this->model.'.csv"');
- 		$lines = array();
  		$buffer = fopen("php://temp", 'r+');
  		$display_headers = true;
  		if (is_array($headers)) fputcsv($buffer, $headers);
@@ -199,10 +201,9 @@ class ApiRequest {
  		else $display_headers = false;
  		foreach ($data as $row) fputcsv($buffer, sb($this->model, "filter", $row));
  		rewind($buffer);
- 		foreach ($data as $row) $lines[] = fgets($buffer);
- 		if ($display_headers) $lines[] = fgets($buffer);
+		$results = stream_get_contents($buffer);
  		fclose($buffer);
- 		return implode("", $lines);
+ 		return $results;
 	}
 
 	/**

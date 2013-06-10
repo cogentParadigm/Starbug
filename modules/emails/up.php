@@ -10,12 +10,30 @@
  * emails module migration
  * @ingroup migrations
  */
-$this->table("emails",
-	"name  type:string  length:64  list:true",
-	"subject  type:string  length:128  list:true",
-	"body  type:text"
+$this->table("email_templates",
+	"name  type:string  length:128  list:true",
+	"subject  type:string  length:155",
+	"from  type:string  length:255  default:",
+	"from_name  type:string  length:128  default:",
+	"cc  type:text  default:",
+	"bcc  type:text  default:",
+	"body  type:text  class:rich-text"
 );
-$this->permit("emails::create", "admin:");
-$this->permit("emails::delete", "admin:global");
-$this->permit("emails::read", "admin:global");
+$this->store(
+	"email_templates",
+	"name:Registration",
+	array(
+		"subject" => "Welcome to [site:name]!",
+		"body" => "<h2>Welcome to [site:name]!</h2>\n<p>You can login using this email address ([user:email]) at <a href=\"[url:login]\">[url:login]</a></p>"
+	)
+);
+$this->store(
+	"email_templates",
+	"name:Account Creation",
+	array(
+		"subject" => "Welcome to [site:name]!",
+		"body" => "<h2>Welcome to [site:name]!</h2>\n<p>An account has been created for you. You can login at <a href=\"[url:login]\">[url:login]</a>.</p><p>Here are your credentials.<br/>login: [user:email]<br/>password: [user:password]</p>"
+	)
+);
+$this->store("menus", "menu:admin  href:admin/emails", "content:Email Templates  parent:1  position:5");
 ?>

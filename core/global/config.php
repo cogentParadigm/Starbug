@@ -113,9 +113,9 @@ function schema($model) {
 	$args = func_get_args();
 	$count = count($args);
 	$value = config($args[0], null, "var/json/");
-	efault($value['label'], ucwords($args[0]));
+	efault($value['label'], ucwords(str_replace(array("-", "_"), array(" ", " "), $args[0])));
 	efault($value['singular'], rtrim($args[0], 's'));
-	efault($value['singular_label'], ucwords($value['singular']));
+	efault($value['singular_label'], ucwords(str_replace(array("-", "_"), array(" ", " "), $value['singular'])));
 	efault($value['list'], "only");
 	if ($count == 1) return $value;
 	else if ($count == 2) return $value[$args[1]];

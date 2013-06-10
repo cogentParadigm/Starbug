@@ -22,3 +22,9 @@
 [submodule "core/app/public/js/dojo/bootstrap"]
 	path = core/app/public/js/dojo/bootstrap
 	url = https://github.com/xsokev/Dojo-Bootstrap.git
+[submodule "util/phpthumb"]
+	path = util/phpthumb
+	url = git://github.com/masterexploder/PHPThumb.git
+[submodule "util/phpmailer"]
+	path = util/phpmailer
+	url = git://github.com/PHPMailer/PHPMailer.git

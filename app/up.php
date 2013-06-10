@@ -110,6 +110,18 @@ $this->permit("users::reset_password", "everyone:table");
  
  
  
+
+
+/**************************************************************************
+ * Uncomment the lines below to enable triggers to log database activity
+ **************************************************************************/ 
+/*
+ 	foreach ($this->tables as $tbl => $columns) {
+		$this->after("$tbl::insert", $this->get_logging_trigger("$tbl", "insert"));
+		$this->after("$tbl::update", $this->get_logging_trigger("$tbl", "update"));
+		$this->after("$tbl::delete", $this->get_logging_trigger("$tbl", "delete"));
+	}
+*/
  
  
 ?>

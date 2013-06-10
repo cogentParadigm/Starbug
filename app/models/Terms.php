@@ -27,6 +27,15 @@ class Terms {
 		$query['where'][] = '!(terms.status & 1)';
 		return $query;
 	}
+	
+	function query_list($query) {
+		if (!empty($query['taxonomy'])) {
+			$query['where'][] = "taxonomy=?";
+			$query['params'][] = $query['taxonomy'];
+		}
+		$query['orderby'] = "term_path ASC, position ASC";
+		return $query;
+	}
 
 }
 ?>

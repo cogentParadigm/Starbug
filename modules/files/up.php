@@ -1,10 +1,10 @@
 <?php
 $this->table("files  list:all",
-	"mime_type  type:string  length:128",
 	"filename  type:string  length:128",
 	"category  type:category  null:",
-	"caption  type:string  length:255",
-	"directory  type:int  default:1  display:false"
+	"mime_type  type:string  length:128  display:false",
+	"size  type:int  default:0  display:false",
+	"caption  type:string  length:255  display:false"
 );
 
 //add file attachments to terms

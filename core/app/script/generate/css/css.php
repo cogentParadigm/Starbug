@@ -1,5 +1,5 @@
 <?php
-	$sb->import("core/lib/CSSParser");
+	import("lib/CSSParser", "core");
 	$themes = config("themes");
 	foreach ($themes as $name) {
 		
@@ -19,7 +19,6 @@
 		if (!empty($conf['screen'])) foreach ($conf['screen'] as $custom) $screen->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/$custom");
 		//add plugins
 		if (!empty($conf['plugins'])) foreach ($conf['plugins'] as $plugin) $screen->add_plugin($plugin);
-		$screen->parse();
 		$screen->write();
 		
 		/******************PRINT********************/
@@ -31,7 +30,6 @@
 		if (!empty($conf['print'])) foreach ($conf['print'] as $custom) $print->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/$custom");
 		//add plugins
 		if (!empty($conf['plugins'])) foreach ($conf['plugins'] as $plugin) $print->add_plugin($plugin);
-		$print->parse();
 		$print->write();
 
 		/******************IE********************/
@@ -43,7 +41,6 @@
 		if (!empty($conf['ie'])) foreach ($conf['ie'] as $custom) $ie->add_file(BASE_DIR."/app/themes/".$name."/public/stylesheets/$custom");
 		//add plugins
 		if (!empty($conf['plugins'])) foreach ($conf['plugins'] as $plugin) $ie->add_plugin($plugin);
-		$ie->parse();
 		$ie->write();
 	}
 ?>

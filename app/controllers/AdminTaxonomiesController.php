@@ -11,7 +11,7 @@ class AdminTaxonomiesController {
 	}
 	function create() {
 		assign("taxonomy", $_GET['taxonomy']);
-		if (success("terms", "create")) {
+		if (success("terms", "create") && request()->format != "xhr") {
 			$term = get("terms", sb("terms")->insert_id);
 			redirect(uri("admin/taxonomies/taxonomy/".$term['taxonomy']));
 		} else $this->render("admin/taxonomies/create");
