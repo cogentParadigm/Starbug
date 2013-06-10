@@ -167,7 +167,7 @@ class Schemer {
 			$fields = $this->get_table($table);
 			// OLD TABLE																																														// OLD TABLE
 			foreach ($fields as $name => $field) {
-				if (!$this->db->has($field['type'])) {
+				if (!isset($this->tables[$field['type']])) {
 					// REAL COLUMN
 					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
 					if (false === ($row = $records->fetch())) {
@@ -195,8 +195,8 @@ class Schemer {
 					}
 				}
 			}
-			passthru("sb generate model $table -u");
-			$is += $this->populate($table);
+			$this->generate_model($table);
+			$is += $this->populate($table, true);
 		}
 		foreach ($this->triggers as $name => $triggers) {
 			foreach ($triggers as $event => $trigger) {
@@ -261,7 +261,7 @@ class Schemer {
 				//CREATE MENU                                                                                          //CREATE MENU
 				fwrite(STDOUT, "Creating menu ".$menu."...\n");
 				$is += $this->create_menu($menu);
-			}
+			} else $is += $this->create_menu($menu, true);
 		}
 		foreach ($this->taxonomies as $taxonomy => $items) {
 			$records = query("terms", "select:count(*) as count  where:taxonomy=?  limit:1", array($taxonomy));
@@ -269,8 +269,9 @@ class Schemer {
 				//CREATE TAXONOMY                                                                                     //CREATE TAXONOMY
 				fwrite(STDOUT, "Creating taxonomy ".$taxonomy."...\n");
 				$is += $this->create_taxonomy($taxonomy);
-			}
+			} else $is += $this->create_taxonomy($taxonomy, true);
 		}
+		foreach ($this->tables as $table => $fields) $is += $this->populate($table, false);
 		foreach ($this->table_drops as $table) {
 			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
 			if ($row = $records->fetch()) {
@@ -324,7 +325,7 @@ class Schemer {
 		$sql_fields = "";
 		$primary_fields = "";
 		foreach ($fields as $fieldname => $options) {
-			if (!$this->db->has($options['type'])) {
+			if (!isset($this->tables[$options['type']])) {
 				$field_sql = "`".$fieldname."` ".$this->get_sql_type($options).", ";
 				if (isset($options['key']) && ("primary" == $options['key'])) {
 					$primary[] = "`$fieldname`";
@@ -448,7 +449,7 @@ class Schemer {
 		foreach ($args as $col) {
 			$col = star($col);
 			$colname = array_shift($col);
-			if ($this->db->has($col['type'])) {
+			if (isset($this->tables[$col['type']])) {
 				$additional[] = array($table."_".$colname,
 					$col['type']."_id  type:int  default:0  key:primary  references:$col[type] id  update:cascade  delete:cascade",
 					"owner  type:int  default:1  key:primary  references:users id  update:cascade  delete:cascade",
@@ -621,8 +622,8 @@ class Schemer {
 	 * @param star $match the fields which if exist, do not store this record
 	 * @param star $others the other, non-unique fields
 	 */
-	function store($table, $match, $others) {
-		$merge = array($table => array(array("match" => star($match), "others" => star($others))));
+	function store($table, $match, $others=array(), $immediate=false) {
+		$merge = array($table => array(array("match" => star($match), "others" => star($others), "immediate" => $immediate)));
 		$this->population = array_merge_recursive($this->population, $merge);
 	}
 
@@ -630,21 +631,25 @@ class Schemer {
 	 * insert records from a menu
 	 * @param string $menu the name of the menu
 	 */
-	function create_menu($menu) {
+	function create_menu($menu, $update=false) {
 		$rs = 0;
 		$items = $this->menus[$menu];
-		if (!empty($items)) foreach ($items as $record) $rs += $this->create_menu_item($menu, $record);
+		if (!empty($items)) foreach ($items as $record) $rs += $this->create_menu_item($menu, $record, $update);
 		return $rs;
 	}
 	
-	function create_menu_item($menu, $item) {
+	function create_menu_item($menu, $item, $update=false) {
 		$children = empty($item['children']) ? array() : $item['children'];
 		unset($item['children']);
 		$item['menu'] = $menu;
-		$item['position'] = "";
-		store("menus", $item);
-		$id = sb("menus")->insert_id;
-		$count = 1;
+		$record = get("menus", $item, array("limit" => "1"));
+		if (empty($record)) {
+			$item['position'] = "";
+			if ($update) fwrite(STDOUT, "Creating $menu menu item...\n");
+			store("menus", $item);
+			$id = sb("menus")->insert_id;
+			$count = 1;
+		} else $id = $record['id'];
 		foreach ($children as $child) {
 			$child = star($child);
 			$child['parent'] = $id;
@@ -657,21 +662,25 @@ class Schemer {
 	 * insert records from a taxonomy
 	 * @param string $taxonomy the name of the taxonomy
 	 */
-	function create_taxonomy($taxonomy) {
+	function create_taxonomy($taxonomy, $update=false) {
 		$rs = 0;
 		$items = $this->taxonomies[$taxonomy];
-		if (!empty($items)) foreach ($items as $record) $rs += $this->create_taxonomy_item($taxonomy, $record);
+		if (!empty($items)) foreach ($items as $record) $rs += $this->create_taxonomy_item($taxonomy, $record, $update);
 		return $rs;
 	}
 	
-	function create_taxonomy_item($taxonomy, $item) {
+	function create_taxonomy_item($taxonomy, $item, $update=false) {
 		$children = empty($item['children']) ? array() : $item['children'];
 		unset($item['children']);
 		$item['taxonomy'] = $taxonomy;
-		$item['position'] = "";
-		store("terms", $item);
-		$id = sb("terms")->insert_id;
-		$count = 1;
+		$record = get("terms", $item, array("limit" => "1"));
+		if (empty($record)) {
+			$item['position'] = "";
+			if ($update) fwrite(STDOUT, "Creating $taxonomy taxonomy term...\n");
+			store("terms", $item);
+			$id = sb("terms")->insert_id;
+			$count = 1;
+		} else $id = $record['id'];
 		foreach ($children as $child) {
 			$child = star($child);
 			$child['parent'] = $id;
@@ -684,17 +693,21 @@ class Schemer {
 	 * insert records from population
 	 * @param string $table the name of the table to populate
 	 */
-	function populate($table) {
+	function populate($table, $immediate=false) {
 		$rs = 0;
 		$pop = $this->population[$table];
-		if (!empty($pop)) foreach ($pop as $record) {
-			$query = ""; foreach ($record['match'] as $k => $v) $query .= "$k='$v' && "; $query = rtrim($query, '& ');
-			$match = query($table, "where:$query");
-			if (empty($match)) {
-				$store = array_merge($record['match'], $record['others']);
-				fwrite(STDOUT, "Inserting $table record...\n");
-				store($table, $store);
-				$rs++;
+		if (!empty($pop)) {
+			foreach ($pop as $record) {
+				if ($record['immediate'] == $immediate) {
+					$query = ""; foreach ($record['match'] as $k => $v) $query .= "$k='$v' && "; $query = rtrim($query, '& ');
+					$match = query($table, "where:$query");
+					if (empty($match)) {
+						$store = array_merge($record['match'], $record['others']);
+						fwrite(STDOUT, "Inserting $table record...\n");
+						store($table, $store);
+						$rs++;
+					}
+				}
 			}
 		}
 		return $rs;
@@ -793,7 +806,6 @@ class Schemer {
 	 * @param int $from the migration to start from
 	 */
 	function migrate() {
-		$this->fill();
 		if ($this->update()) {
 			fwrite(STDOUT, "Database update completed.\n");
 		} else {
@@ -801,10 +813,24 @@ class Schemer {
 		}
 		fwrite(STDOUT, "Generating Models...\n");
 		fwrite(STDOUT, "Run 'sb generate models' to generate models manually.\n");
-		passthru("sb generate models");
+		foreach ($this->tables as $table => $fields) $this->generate_model($table);
 		fwrite(STDOUT, "Generating CSS...\n");
 		fwrite(STDOUT, "Run 'sb generate css' to generate CSS manually.\n");
-		passthru("sb generate css");
+		include(end(locate("generate/css/css.php", "script")));
+	}
+	
+	function generate_model($table) {
+		import("lib/Renderer", "core");
+		global $renderer;
+		$data = $this->get($table);
+		$this->toXML($data);
+		$this->toJSON($data);
+		$result = end(locate("generate/model/update.php", "script"));
+		$renderer->prefix = reset(explode("/model/", str_replace(BASE_DIR, "", $result)))."/model/";
+		$o = BASE_DIR."/var/models/".ucwords($table)."Model.php"; //output
+		assign("model", $table);
+		$data = capture("base");
+		file_put_contents($o, $data);
 	}
 
 	/**
@@ -865,7 +891,7 @@ class Schemer {
 		$fields = $this->get_table($model);
 		$options = $this->options[$model];
 		//SET UP MODEL ARRAY
-		$data = array_merge(array("name" => $model, "label" => ucwords($model), "package" => settings("site_name"), "fields" => array(), "relations" => array()), $options);
+		$data = array_merge(array("name" => $model, "label" => ucwords(str_replace(array("-", "_"), array(" ", " "), $model)), "package" => settings("site_name"), "fields" => array(), "relations" => array()), $options);
 		//ADD FIELDS
 		foreach($fields as $name => $field) {
 			$data["fields"][$name] = array("filters" => array());
@@ -877,7 +903,7 @@ class Schemer {
 				else if ($field['type'] == "category") $field['input_type'] = "category_select";
 				else if ($field['type'] == "tags") $field['input_type'] = "tag_input";
 				else if (isset($field['upload'])) $field['input_type'] = "file_select";
-				else if ($this->db->has($field['type'])) $field['input_type'] = "multiple_select";
+				else if (isset($this->tables[$field['type']])) $field['input_type'] = "multiple_select";
 				else if (isset($field['references'])) $field['input_type'] = "select";
 				else $field['input_type'] = "text";
 			}

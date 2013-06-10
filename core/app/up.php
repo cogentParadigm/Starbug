@@ -26,7 +26,7 @@ $this->table("users  label_select:CONCAT(first_name, ' ', last_name, ' (', email
 	"last_visit  type:datetime  default:0000-00-00 00:00:00  list:true  display:false"
 );
 //This will be stored immediately after the creation of the users table
-$this->store("users", "email:root", "memberships:1");
+$this->store("users", "email:root", "memberships:1", true);
 $this->table("permits  list:all",
 	"role  type:string  length:30",
 	"who  type:int  default:0",
@@ -82,7 +82,7 @@ $this->table("blocks  list:all",
 );
 $this->table("menus",
 	"menu  type:string  length:32  list:true  display:false",
-	"parent  type:int  default:0  materialized_path:menu_path  references:menus id  constraint:false",
+	"parent  type:int  default:0  materialized_path:menu_path",
 	"uris_id  type:int  references:uris id  label:Page  null:  update:cascade  delete:cascade",
 	"href  type:string  length:255  label:URL  default:",
 	"content  type:string  length:255  default:",
@@ -152,8 +152,10 @@ $this->store("settings", "name:theme",  "category:settings_category themes  type
 //email settings
 $this->store("settings", "name:email_address", "category:settings_category email  type:text  label:Email Address");
 $this->store("settings", "name:email_host", "category:settings_category email  type:text  label:Email Host");
+$this->store("settings", "name:email_port", "category:settings_category email  type:text  label:Email Port");
 $this->store("settings", "name:email_username", "category:settings_category email  type:text  label:Email Username");
 $this->store("settings", "name:email_password", "category:settings_category email  type:text  label:Email Password");
+$this->store("settings", "name:email_secure", "category:settings_category email  type:select  options:{\"options\":\",ssl,tls\"}  label:Secure SMTP");
 
 //LOGGING TABLES
 //ERROR LOG

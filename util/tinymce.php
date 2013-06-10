@@ -15,7 +15,7 @@
 	}
 	tinyMCE.init({
 		// General options
-		mode : "textareas",
+		selector : "textarea.rich-text",
 		theme : "modern",
     plugins: [
         "advlist autolink autoresize textcolor lists link image charmap print preview hr anchor pagebreak",
@@ -27,7 +27,6 @@
     toolbar1: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | print preview",
     image_advtab: true,
 		file_browser_callback: tiny_mce_browser_callback,
-		editor_deselector: "plain",
 		relative_urls : false,
 		remove_script_host : false,
 		document_base_url : "<?php echo uri("", 'u'); ?>"

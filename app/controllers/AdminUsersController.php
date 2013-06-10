@@ -11,6 +11,7 @@ class AdminUsersController {
 		$this->render("admin/list");
 	}
 	function create() {
+		assign("form", "users");
 		if (success("users", "create")) redirect(uri("admin/users/update", 'u'));
 		else $this->render("admin/create");
 	}

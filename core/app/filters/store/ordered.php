@@ -5,7 +5,18 @@ foreach ($args as $field => $ordered) {
 		$ordered = explode(" ", $ordered);
 		foreach ($ordered as $o) $where .= $o."='".$fields[$o]."' && ";
 	}
+	$varname = "_".$field;
+	if (!empty($$varname)) {
+		$fields[$field] = $$varname;
+	} else if (!empty($fields[$varname])) {
+		$$varname = $fields[$varname];
+		unset($fields[$varname]);
+	}
 	if (empty($fields['id'])) {
+		if (!empty($fields[$field]) && is_numeric($fields[$field])) {
+			$after_store = true;
+			if (!$storing) $fields[$varname] = $fields[$field];
+		}
 		$h = $this->query($name, "select:MAX(`$field`) as highest  where:$where"."1  limit:1");
 		$fields[$field] = $h['highest']+1;
 		unset($errors[$field]['required']);

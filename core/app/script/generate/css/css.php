@@ -1,5 +1,5 @@
 <?php
-	$sb->import("core/lib/CSSParser");
+	import("lib/CSSParser", "core");
 	$themes = config("themes");
 	foreach ($themes as $name) {
 		

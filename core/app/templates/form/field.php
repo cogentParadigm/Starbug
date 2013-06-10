@@ -4,7 +4,7 @@
 	}
 ?>
 <?php $field_name = rtrim(end(explode("[", $name)), ']'); ?>
-<?php if (!$nodiv) { ?><div class="input <?php
+<?php if (!$nodiv) { ?><div class="<?php echo $model."-".$field_name; ?> input <?php
 	if (!empty($div)) {
 		echo $div." ";
 		assign("div", "");
