@@ -55,8 +55,7 @@ class Renderer {
 		global $sb;
 		global $request;
 		efault($scope, "templates");
-		if ($scope == "views" && empty($paths)) $filename = request("file");
-		else if (!empty($this->prefix)) $filename = BASE_DIR."/".$this->prefix.$scope."/".$paths.".php";
+		if (!empty($this->prefix)) $filename = BASE_DIR."/".$this->prefix.$scope."/".$paths.".php";
 		else {
 			//resolve path
 			if (!is_array($paths)) $paths = array($paths);

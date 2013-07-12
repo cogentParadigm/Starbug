@@ -70,8 +70,13 @@ class Uris {
 	}
 	
 	function query_admin($query) {
-		$query['where'] += array("prefix='app/views/'", "type='Page'", "!(uris.status & 1)");
-		$query['orderby'] = "title";
+		if (logged_in("admin")) unset($query['action']);
+		$query['where'][] = "uris.prefix='app/views/' && !(uris.status & 1)";
+		if (!empty($query['type'])) {
+			$query['where'][] = "uris.type=?";
+			$query['params'][] = $query['type'];
+		}
+		efault($query['orderby'], "title");
 		return $query;
 	}
 

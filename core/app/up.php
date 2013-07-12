@@ -74,7 +74,7 @@ $this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"breadcrumb  type:string  length:255  default:  list:false"
 );
 $this->table("blocks  list:all",
-	"uris_id  type:int  references:uris id",
+	"uris_id  type:int  references:uris id  alias:%path%",
 	"region  type:string  length:64  default:content",
 	"type  type:string  length:32  default:text",
 	"content  type:text  default:",

@@ -57,12 +57,12 @@ function request() {
  * @return the file to be loaded
  */
 function locate_view($uri, $prefix="") {
-	efault($prefix, request()->payload['prefix']);
+	//efault($prefix, request()->payload['prefix']);
 	if (!is_array($uri)) $uri = explode("/", $uri);
 	$current = (empty($uri)) ? "default" : array_shift($uri);
-	if (file_exists($prefix.$current.".php")) return $prefix.$current.".php"; // file found
-	else if (file_exists($prefix.$current)) return locate_view($uri, $prefix.$current."/"); // directory found
-	else if (file_exists($prefix."default.php")) return $prefix."default.php";
+	if (locate($prefix.$current, "views")) return locate_view($uri, $prefix.$current."/"); // directory found
+	else if (locate($prefix.$current.".php", "views")) return $prefix.$current; // file found
+	else if (locate($prefix."default.php", "views")) return $prefix."default";
 	else return false;
 }
 /**

@@ -46,7 +46,7 @@ class Controller {
 	 * set the view to render for this request
 	 */
 	function render($path="") {
-		if (!empty($path)) request()->file = locate_view($path);
+		if (!empty($path)) request()->file = $path;
 	}
 
 	/**

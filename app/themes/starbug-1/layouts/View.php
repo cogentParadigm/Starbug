@@ -1,2 +1,2 @@
-<div id="content"><? render_content(); ?></div>
+<div id="content"><? render_view(); ?></div>
 <?php render("sidebar"); ?>

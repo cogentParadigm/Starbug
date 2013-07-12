@@ -130,7 +130,6 @@ class Request {
 		foreach ($this->payload as $k => $v) if ($k != "path") $this->{$k} = $v;
 		efault($this->theme, settings("theme"));
 		efault($this->layout, $this->type);
-		if ($this->type == 'View') $this->file = locate_view($this->uri);
 	}
 
 	/**
@@ -138,14 +137,9 @@ class Request {
 	 */
 	public function execute() {
 		ob_start();
-		global $sb;
-		global $request;
 		$this->check_post();
 		$this->locate();
-		if (!empty($_GET['template'])) {
-			foreach ($_POST as $k => $v) assign($k, $v);
-			render($_GET['template'], $_GET['scope']);
-		} else if (!empty($this->template)) render($this->template);
+		if (!empty($this->template)) render($this->template);
 		else render($this->format);
 		ob_end_flush();
 	}
