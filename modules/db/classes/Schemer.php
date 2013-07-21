@@ -41,6 +41,10 @@ class Schemer {
 	 */
 	var $uris = array();
 	/**
+	 * @var array Holds blocks
+	 */
+	var $blocks = array();
+	/**
 	 * @var array Holds permits
 	 */
 	var $permits = array();
@@ -82,7 +86,7 @@ class Schemer {
 	}
 
 	function  clean() {
-		$this->tables = $this->table_drops = $this->column_drops = $this->uris = $this->permits = $this->population = $this->triggers = $this->trigger_drops = $this->menus = $this->taxonomies = array();
+		$this->tables = $this->table_drops = $this->column_drops = $this->uris = $this->blocks = $this->permits = $this->population = $this->triggers = $this->trigger_drops = $this->menus = $this->taxonomies = array();
 	}
 	
 	function up($migration) {
@@ -143,6 +147,7 @@ class Schemer {
 		$cd = 0; //dropped tables
 		$ms = 0; //mods
 		$us = 0; //uris
+		$bs = 0; //blocks
 		$ud = 0; //dropped uris
 		$ps = 0; //permits
 		$pd = 0; //dropped permits
@@ -233,6 +238,7 @@ class Schemer {
 				}
 			}
 		}
+		foreach ($this->blocks as $path => $blocks) $bs += $this->create_blocks($path, $blocks);
 		foreach ($this->permits as $model => $actions) {
 			foreach ($actions as $action => $roles) {
 				foreach ($roles as $role => $ops) {
@@ -305,7 +311,7 @@ class Schemer {
 				$gd++;
 			}
 		}
-		if (($ts == 0) && ($cs == 0) && ($ms == 0) && ($ds == 0) && ($us == 0) && ($ps == 0) && ($is == 0) && ($td == 0) && ($cd == 0) && ($gs == 0) && ($gd == 0) && ($gu == 0)) {
+		if (($ts == 0) && ($cs == 0) && ($ms == 0) && ($ds == 0) && ($us == 0) && ($ps == 0) && ($is == 0) && ($td == 0) && ($cd == 0) && ($gs == 0) && ($gd == 0) && ($gu == 0) && ($bs == 0)) {
 			return false;
 		} else {
 			return true;
@@ -521,6 +527,19 @@ class Schemer {
 	}
 
 	/**
+	 * Add a block to the schema
+	 * @param string $path the uri path
+	 * @param string $content the content
+	 * @param star $ops options (region, type, position)
+	 */
+	function block($path, $content, $ops=array()) {
+		$ops = star($ops);
+		$ops["content"] = $content;
+		efault($this->blocks[$path], array());
+		$this->blocks[$path][] = $ops;
+	}
+
+	/**
 	 * Add a permit to the db from the schema
 	 * @param array $permit the permit to add
 	 */
@@ -625,6 +644,35 @@ class Schemer {
 	function store($table, $match, $others=array(), $immediate=false) {
 		$merge = array($table => array(array("match" => star($match), "others" => star($others), "immediate" => $immediate)));
 		$this->population = array_merge_recursive($this->population, $merge);
+	}
+
+	/**
+	 * create blocks
+	 * @param string $path the name of the path
+	 */
+	function create_blocks($path, $blocks=array()) {
+		$rs = 0;
+		$uri = get("uris", "path:$path", "limit:1");
+		if (!empty($blocks)) foreach ($blocks as $block) $rs += $this->create_block($uri, $block);
+		return $rs;
+	}
+
+	/**
+	 * create block
+	 * @param string $path the name of the path
+	 * @param array $block
+	 */	
+	function create_block($uri, $block) {
+		efault($block['region'], "content");
+		$block['uris_id'] = $uri['id'];
+		$results = get("blocks", $block);
+		if (empty($results)) {
+			fwrite(STDOUT, "Creating block for /".$uri['path']."...\n");
+			efault($block['position'], "");
+			store("blocks", $block);
+			return 1;
+		}
+		return 0;
 	}
 
 	/**

@@ -23,16 +23,29 @@
  * groups - a list of groups that have access (see etc/groups.json for available groups)
  *
  *
- * Examples
+ * * examples
  *
  * //create a page called register that loads the view app/views/register.php
  * $this->uri("register");
  *
  * //create a page called secret-sauce that can only be accessed by users in the user group
  * $this->uri("secret-sauce", "groups:user");
+ * 
+ * 
+ * Blocks
+ * a block is a CMS region. Place content in blocks if you want it to be editable.
+ * 
+ * add a block
+ * $this->block("[path]", "[content]", "[option]:[value]  [option2]:[value2]");
+ * options:
+ * region - a region name (default is 'content'). If an existing block is found in the same region for the same page, it will not be stored
+ * type - the block type. default is 'text'
+ * position - specify to add additional blocks in the same space
+ * 
  ********************************************************/
 //HOME PAGE
 $this->uri("home");
+$this->block("home", "<h1>Congratulations, she rides!</h1>\n<p>You&#39;ve successfully installed Starbug PHP!</p>");
 //404 PAGE
 $this->uri("missing");
 //403 PAGE

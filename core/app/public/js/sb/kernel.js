@@ -73,8 +73,10 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", 'dojo/_base/xhr'], f
 				return promise;
 			},
 			editable: function() {
+				var sb = this;
 				var rt = dojo.global.document.getElementsByClassName("rich-text");
-				if (rt.length > 0) {
+				var ed = dojo.global.document.getElementsByClassName("editable");
+				if (rt.length > 0 || ed.length > 0) {
 					var script = dojo.global.document.createElement('script');
 					script.type = 'text/javascript';
 					script.src = '//tinymce.cachefly.net/4.0/tinymce.min.js';
@@ -82,7 +84,6 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", 'dojo/_base/xhr'], f
 					script.onload = script.onreadystatechange = function() {
 						if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
 							done = true;
-							console.log(dojo.global.tinymce);	
 							var tiny_mce_browser_callback = function(field_name, url, type, win){
 								window.SetUrl=function(url,width,height,caption){
 								 var input_field = win.document.getElementById(field_name);
@@ -91,23 +92,42 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", 'dojo/_base/xhr'], f
 										input_field.setAttribute('alt', caption);
 								 }
 								}
-								window.open(WEBSITE_URL+'admin/media?modal=true','media','modal,width=800,height=600');
+								window.open(WEBSITE_URL+'admin/media?modal=true','media','modal,width=1020,height=600');
 							};
-							dojo.global.tinymce.init({
+
+							var tiny_options = {
 								// General options
-								selector : "textarea.rich-text",
 								theme : "modern",
 								plugins: [
 										"advlist autolink autoresize textcolor lists link image charmap print preview hr anchor pagebreak",
 										"searchreplace wordcount visualblocks visualchars code fullscreen charmap",
 										"insertdatetime media nonbreaking save table contextmenu directionality",
-										"emoticons template paste"
+										"emoticons template paste save"
 								],
 
 								toolbar1: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | print preview",
 								image_advtab: true,
 								file_browser_callback: tiny_mce_browser_callback
-							});
+							};
+							
+							if (rt.length > 0) {
+								tiny_options.selector = "textarea.rich-text";
+								dojo.global.tinymce.init(tiny_options);
+							}
+							if (ed.length > 0) {
+								tiny_options.selector = "div.editable";
+								tiny_options.inline = true;
+								tiny_options.save_enablewhendirty = true;
+								tiny_options.toolbar1 += " save cancel";
+								tiny_options.save_onsavecallback = function(editor) {
+									var content = editor.getContent();
+									var block_id = editor.bodyElement.getAttribute('data-block-id');
+									sb.get('blocks').put({id:block_id, content:content}).then(function() {
+										editor.bodyElement.blur();
+									});
+								};
+								dojo.global.tinymce.init(tiny_options);
+							}
 
 							// Handle memory leak in IE
 							script.onload = script.onreadystatechange = null;

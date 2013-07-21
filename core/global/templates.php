@@ -65,6 +65,7 @@ function render_region($region) {
 	* @param string $view the view to render
 	*/
 function render_view($view="", $render=true) {
+	if (empty($view)) $view = empty(request()->file) ? locate_view(request()->uri) : request()->file;
 	if ($render) render($view, "views");
 	else return capture($view, "views");
 }
@@ -93,9 +94,7 @@ function render_layout($layout="", $render=true) {
 	* @param string $layout the layout to render
 	*/
 function render_content($content="") {
-	$view = request("file");
-	if (empty($content) && !empty($view)) render_view($content);
-	else render_blocks($content);
+	render_blocks($content);
 }
 /**
 	* render blocks

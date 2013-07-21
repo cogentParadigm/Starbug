@@ -1,5 +1,5 @@
 <?php efault($type, "Page"); if (success("uris", "update")) { ?>
-<div class="success"><?php echo $type; ?> updated successfully</div>
+<div class="alert alert-success"><?php echo $type; ?> updated successfully</div>
 <?php } ?>
 <script type="text/javascript">
 var old_link = '<?php if ($action == "update") echo $_POST['uris']['path']; ?>';
