@@ -51,11 +51,12 @@ class Renderer {
 	 * render a template
 	 * @param string $path relative path to the template from the view directory without file extension
 	 */
-	function render($paths=array(""), $scope="") {
+	function render($paths=array(""), $scope="", $prefix="") {
+		efault($prefix, $this->prefix);
 		global $sb;
 		global $request;
 		efault($scope, "templates");
-		if (!empty($this->prefix)) $filename = BASE_DIR."/".$this->prefix.$scope."/".$paths.".php";
+		if (!empty($prefix)) $filename = BASE_DIR."/".$prefix.$scope."/".$paths.".php";
 		else {
 			//resolve path
 			if (!is_array($paths)) $paths = array($paths);
@@ -77,16 +78,16 @@ class Renderer {
 			$output = str_replace(array("<? ", "<?\n", "<?="), array("<?php ", "<?php\n", "<?php echo"), $output);
 			eval("?>".$output);
 			array_pop($this->stack);
-		} else die("template not found: ".implode("\n", $paths));
+		} else die("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
 	}
 	
 	/**
 	 * capture a rendered template
 	 * @param string $path relative path to the template from the view directory without file extension
 	 */
-	function capture($path="", $scope) {
+	function capture($path="", $scope="", $prefix="") {
 		ob_start();
-		$this->render($path, $scope);
+		$this->render($path, $scope, $prefix);
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;

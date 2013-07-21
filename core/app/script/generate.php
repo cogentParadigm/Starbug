@@ -39,8 +39,6 @@ $app_dir = "app/";
 if (!empty($args['module'])) $app_dir = "modules/".$args['module']."/";
 $dirs = array(); $generate = array(); $copy = array();
 
-global $renderer;
-
 //EXPORT LATEST SCHEMER DATA TO XML AND JSON
 if ((!empty($model)) && (isset($schemer->tables[$model]))) {
 	$data = $schemer->get($model);
@@ -54,14 +52,14 @@ if ((!empty($model)) && (isset($schemer->tables[$model]))) {
 $path = (isset($args['u'])) ? "generate/$generator/update.php" : "generate/$generator/$generator.php";
 if ($result = end(locate($path, "script"))) include($result);
 else die("Could not find generator '$generator'");
-$renderer->prefix = reset(explode("/$generator/", str_replace(BASE_DIR, "", $result)))."/$generator/";
+$render_prefix = reset(explode("/$generator/", str_replace(BASE_DIR, "", $result)))."/$generator/";
 
 //CREATE DIRECTORIES
 foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) passthru("mkdir ".BASE_DIR."/$dir");
 //CREATE FILES
 foreach ($generate as $template => $output) {
 	$o = BASE_DIR."/$output"; //output
-	$data = capture($template);
+	$data = capture($template, "", $render_prefix);
 	file_put_contents($o, $data);
 }
 //COPY FILES

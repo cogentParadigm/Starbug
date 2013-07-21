@@ -30,22 +30,22 @@ function assign($key, $value) {
 	* @param string $path the path, relative to the request prefix and without the file extension
 	* @param string $scope a rendering scope. if this is empty we will use the active scope. If there is no active scope we will use 'global'
 	*/
-function render($path, $scope="") {
+function render($path, $scope="", $prefix="") {
 	global $sb;
 	$sb->import("core/lib/Renderer");
 	global $renderer;
-	$renderer->render($path, $scope);
+	$renderer->render($path, $scope, $prefix);
 }
 /**
 	* capture a rendered template
 	* @ingroup templates
 	* @param string $path the path, relative to the request prefix and without the file extension
 	*/
-function capture($path, $scope="") {
+function capture($path, $scope="", $prefix="") {
 	global $sb;
 	$sb->import("core/lib/Renderer");
 	global $renderer;
-	return $renderer->capture($path, $scope);
+	return $renderer->capture($path, $scope, $prefix);
 }
 /**
 	* render a region
