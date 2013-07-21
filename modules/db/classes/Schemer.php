@@ -869,15 +869,14 @@ class Schemer {
 	
 	function generate_model($table) {
 		import("lib/Renderer", "core");
-		global $renderer;
 		$data = $this->get($table);
 		$this->toXML($data);
 		$this->toJSON($data);
 		$result = end(locate("generate/model/update.php", "script"));
-		$renderer->prefix = reset(explode("/model/", str_replace(BASE_DIR, "", $result)))."/model/";
+		$render_prefix = reset(explode("/model/", str_replace(BASE_DIR, "", $result)))."/model/";
 		$o = BASE_DIR."/var/models/".ucwords($table)."Model.php"; //output
 		assign("model", $table);
-		$data = capture("base");
+		$data = capture("base", "", $render_prefix);
 		file_put_contents($o, $data);
 	}
 
