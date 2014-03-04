@@ -8,7 +8,7 @@
  * Default template implementation to display a list of data in a grid with options to edit and delete.
  *
  * Available variables:
- * - $query: a starbug style query string. eg: "users  select:first_name,last_name,id  where:memberships & 2  orderby:last_name ASC"
+ * - $query: an API query string. eg: "list  groups:user" - this will call query_list of the assigned model and will pass "groups" => "user" in the second argument.
  * - $columns: (optional) an array of column overrides. set a column to false to hide it
  * - $attributes: (optional) attributes for the table
  * - $view: (optional) view name. only show fields within this view
@@ -74,7 +74,7 @@
 		
 		if ($field['list'] || isset($columns[$name])) {
 			if (false !== $columns[$name]) {
-				foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list', "options", "null", "update", "delete", "auto_increment", "key", "index", "append", "prepend", "before", "after", "between") as $remove) unset($field[$remove]);
+				foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list', "options", "null", "update", "delete", "auto_increment", "key", "index", "append", "prepend", "before", "after", "between", "unique") as $remove) unset($field[$remove]);
 				$ordered_columns[$name] = empty($columns[$name]) ? $field : star($columns[$name]);
 				foreach ($merge as $k => $v) if (empty($ordered_columns[$name][$k])) $ordered_columns[$name][$k] = $v;
 			}
@@ -121,6 +121,7 @@
 		}
 		$value['data-dgrid-column'] = array();
 		foreach ($props as $k => $v) {
+			if ($k == "default" && !is_numeric($v)) $v = "'".$v."'";
 			$value['data-dgrid-column'][] = "$k:$v";
 		}
 		$value['data-dgrid-column'] = '{'.implode(', ', $value['data-dgrid-column']).'}';

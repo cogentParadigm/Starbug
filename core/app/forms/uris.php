@@ -136,9 +136,9 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 				<label>Tags</label>
 				<input type="text" id="tagbox" class="text left" style="width:65%" /><a class="round right button" href="javascript:apply_tags();">apply</a>
 				<ul id="applied_tags">
-					<?php foreach(query("uris_tags,terms", "select:DISTINCT term, slug  where:!(terms.status & 1) and uris_tags.uris_id='".$_POST['uris']['id']."'") as $tag) { ?>
+					<?php /*foreach(query("uris_tags,terms", "select:DISTINCT term, slug  where:!(terms.status & 1) and uris_tags.uris_id='".$_POST['uris']['id']."'") as $tag) { ?>
 						<li><a href="javascript:remove_tag('<?php echo $tag['term']; ?>');">x</a> <?php echo $tag['term']; ?></li>
-					<?php } ?>
+					<?php } */ ?>
 				</ul>
 		</div>
 		<div class="left">

@@ -27,7 +27,7 @@
 		$_post['type'] = end(explode(".", $_post['name']));
 		$_post['size'] = filesize($_post['file']);
 		$_post['image'] = $image;
-		$_post['status'] = 4;
+		$_post['statuses'] = "published";
 		$_post['owner'] = userinfo("id");
 		$htmldata[] = $_post;
 	} else {

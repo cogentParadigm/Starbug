@@ -10,7 +10,7 @@
 <?php
 	js("dijit/form/Textarea");
 	if (success("settings", "update")) echo '<div class="alert alert-success">Settings updated successfully</div>';
-	$settings = query("settings,terms", "select:settings.*,terms.term,terms.slug  join:left  orderby:terms.term_path, terms.position ASC");
+	$settings = query("settings<terms", "select:settings.*,terms.term,terms.slug  orderby:terms.term_path, terms.position ASC");
 	$_POST['settings'] = array();
 	$last = "";
 	open_form("model:settings  action:update", "class:options_form");

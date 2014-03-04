@@ -8,7 +8,8 @@ class UsersFixture extends Fixture {
 				"last_name" => "Admin",
 				"username" => "admin",
 				"email" => "admin@localhost",
-				"password" => "#adm1n"
+				"password" => "#adm1n",
+				"groups" => "admin,-~"
 			),
 			"abdul" => array(
 				"first_name" => "Abdul",
@@ -16,12 +17,9 @@ class UsersFixture extends Fixture {
 				"username" => "user",
 				"email" => "abdul@localhost",
 				"password" => "#us3r",
+				"groups" => "user,-~"
 			)
 		);
-		$this->records["omar"]["memberships"] = config("groups.admin");
-		$this->records["omar"]["collective"] = config("groups.admin");
-		$this->records["abdul"]["memberships"] = config("groups.user");
-		$this->records["abdul"]["collective"] = config("groups.user");
 		$this->storeAll();
 	}
 }

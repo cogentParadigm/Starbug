@@ -10,7 +10,10 @@ function send_email($options=array(), $data=array()) {
 	
 	//get template params
 	if (!empty($options['template'])) {
-		$template = get("email_templates", array("name" => $options['template'], "status" => 4), array("limit" => 1));
+		$template = query("email_templates")->condition(array(
+			"name" => $options['template'],
+			"email_templates.statuses" => "published"
+		))->one();
 		if (!empty($template)) $options = array_merge($template, $options);
 	}
 	

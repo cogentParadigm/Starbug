@@ -17,10 +17,6 @@ class Users {
 		if (logged_in("root") || logged_in("admin")) {
 			foreach ($user as $k => $v) if (empty($v) && $k != "email") unset($user[$k]);
 		}
-		if (!empty($user['groups'])) {
-			$user['memberships'] = array_sum($user['groups']);
-			unset($user['groups']);
-		}
 		$this->store($user);
 		if ((!errors()) && (empty($user['id']))) {
 			$uid = $this->insert_id;
@@ -48,8 +44,10 @@ class Users {
 	 * A function for logging in
 	 */
 	function login($login) {
-		$user = $this->query("select:*  where:email=?  limit:1", array($login['username']));
+		$user = $this->query("select:users.*,users.groups as groups,users.statuses as statuses  where:email=?  limit:1", array($login['username']));
 		if (Session::authenticate($user['password'], $login['password'], $user['id'], Etc::HMAC_KEY)) {
+			$user['groups'] = explode(",", $user['groups']);
+			$user['statuses'] = explode(",", $user['statuses']);
 			sb()->user = $user;
 			unset($user['password']);
 			$this->store(array("id" => $user['id'], "last_visit" => date("Y-m-d H:i:s")));
@@ -92,15 +90,16 @@ class Users {
 		}
 	}
 	
-	function query_admin($query) {
-		$query['params'] = array();
-		if (!empty($query['group']) && is_numeric($query['group'])) {
-			$query['where'][] = 'memberships & ?';
-			$query['params'][] = $query['group'];
+	function query_admin($query, &$ops) {
+		$query->select("users.*");
+		$query->select("users.groups.id as groups");
+		$query->select("users.statuses.id as statuses");
+		if (!empty($ops['group']) && is_numeric($ops['group'])) {
+			$query->condition("users.groups.id", $ops['group']); 
 		}
 		
-		if (!empty($query['status']) && is_numeric($query['status'])) $query['where'][] = "(users.status & ".$query['status'].")";
-		else $query['where'][] = "!(users.status & 1)";
+		if (!empty($ops['status']) && is_numeric($ops['status'])) $query->condition("users.statuses.id", $ops['status']);
+		else $query->condition("users.statuses", "deleted", "!=");
 		return $query;
 	}
 	

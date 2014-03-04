@@ -14,6 +14,9 @@
     <testsuite name="core">
       <directory>../core/app/tests/</directory>
 		</testsuite>
+    <testsuite name="db">
+      <directory>../modules/db/tests/</directory>
+		</testsuite>
   </testsuites>
  
 </phpunit>

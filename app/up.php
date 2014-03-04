@@ -77,13 +77,15 @@ $this->uri("forgot-password");
  *********************************************************/
  
 //GLOBAL READ AND WRITE PERMITS FOR ADMIN
-$this->permit("%::%", "admin:%");
+$this->permit("%::%", "groups admin:%");
 
 // URI PERMITS
 // 'collective' is a column on every table representing the groups that own the records.
 // each record can have different group owners.
 // We can assign permissions based on those groups:
-$this->permit("uris::read", "collective:global 4");
+//$this->permit("uris::read", "collective:global 4");
+$this->permit("uris::read", "groups:global", array("statuses" => "published"));
+$this->permit("menus::read", "groups:global", array("statuses" => "published"));
 // above, I am assigning read permissions to the owning groups (collective = owning groups).
 // For example, If we have these groups: user = 2, admin = 4, editor = 8
 // To make a page accessible to admins and editors, we can set collective:12 on that uri (see uris above).

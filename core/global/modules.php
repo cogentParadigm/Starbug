@@ -72,7 +72,7 @@ function get_module_index() {
  * @return the instantiated controller
  */
 function controller($name, $type="") {
-	import("Controller", "core/lib");
+	import("core/lib/Controller");
 
 	$class = ucwords($type).ucwords($name)."Controller";
 
@@ -101,4 +101,43 @@ function controller($name, $type="") {
 
 	//instantiate save the object
 	return new $class($name, $type);
+}
+
+/**
+ * get a controller by name
+ * @param string $name the name of the controller, such as 'users'
+ * @param string $type a sub type such as 'admin'
+ * @return the instantiated controller
+ */
+function build_hook($path, $base="lib/Hook", $mid="core") {
+	import($base, $mid);
+
+	$class = "hook_".str_replace("/", "_", $path);
+
+	$parts = explode("/", $base);
+	$last = end($parts);
+	
+	//get extending controllers
+	$hooks = locate($path.".php", "hooks");
+	$count = count($hooks);
+	$search = "class $class {";
+	
+	//loop through found hooks
+	for ($i = 0; $i < $count; $i++) {
+		//get file contents
+		$contents = file_get_contents($hooks[$i]);
+		//make class name unique and extend the previous class
+		$class = str_replace(array(BASE_DIR.'/', '/'), array('', '_'), reset(explode('/hooks/', $hooks[$i])))."__$class";
+		$replace = "class $class extends $last {";
+		//replace and eval
+		eval('?>'.str_replace($search, $replace, $contents));
+		//set $last for the next round
+		$last = $class;
+	}
+	
+	//return the base model if no others
+	if ($count == 0) $class = $last;
+
+	//instantiate save the object
+	return new $class();
 }

@@ -58,12 +58,10 @@ class Fixture {
 	
 	function remove($idx) {
 		if (isset($this->ids[$idx])) {
-			remove($this->type, "id='".$this->ids[$idx]."'");
+			remove($this->type, "id:".$this->ids[$idx]);
 			unset($this->ids[$idx]);
 		} else {
-			$where = array();
-			foreach ($this->records[$idx] as $k => $v) $where[] = "$k='$v'";
-			remove($this->type, implode(" && ", $where));
+			remove($this->type, $this->records[$idx]);
 		}
 	}
 	

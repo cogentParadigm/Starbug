@@ -146,13 +146,6 @@ class Table {
 		return $data;
 	}
 
-	function query_statuses($query) {
-		$statuses = array();
-		foreach ($this->statuses as $label => $id) $statuses[] = array("id" => $id, "label" => $label);
-		$query['data'] = $statuses;
-		return $query;
-	}
-
 	protected function mixin($object) {
 		if (!class_exists($object)) include(BASE_DIR."/app/plugins/$object/$object.php");
 		$new_import = new $object();

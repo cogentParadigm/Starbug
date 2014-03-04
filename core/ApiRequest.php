@@ -64,11 +64,12 @@ class ApiRequest {
 		global $sb;
 		list($action, $format, $ops) = $args;
 		$this->model = $model;
+		$query = query($model);
 		if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) {
 			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : sb($model)->insert_id;
-			$ops['where'][] = $model.".id='$id'";
+			$query->condition($model.".id", $id);
 		}
-		if (!empty($_GET['keywords'])) efault($ops['search'], '');
+		if (!empty($_GET['keywords'])) $query->search($_GET['keywords']);
 		
 		//paging
 		if (isset($_SERVER['HTTP_RANGE'])) {
@@ -77,32 +78,34 @@ class ApiRequest {
 			$ops['paged'] = true;
 			$ops['limit'] = 1 + (int) $finish - (int) $start;
 			$_GET['page'] = 1 + (int) $start/$ops['limit'];
+			$query->limit($ops['limit']);
 		}
 		$action_name = "query_".$action;
-		$query = sb($model)->$action_name($ops);
-		$models = (isset($query['models'])) ? $query['models'] : $model;
-		$query['where'] = implode(' && ', $query['where']);
-		$data = (isset($query['data'])) ? $query['data'] : query($models, $query);
-		if (isset($query['limit']) && $query['limit'] == 1) $data = array($data);
+		$query = sb($model)->query_filters($action, $query, $ops);
+		$query = sb($model)->$action_name($query, $ops);
+		//$models = (isset($query['models'])) ? $query['models'] : $model;
+		//$query['where'] = implode(' && ', $query['where']);
+		if ($ops['paged']) $pager = $query->pager($_GET['page']);
+		$data = (is_array($query) && isset($query['data'])) ? $query['data'] : $query->all();
 		$f = strtoupper($format);
 		$error = $f."errors";
 		if (empty($sb->errors[$model])) {
 			if (!empty($data)) {
-				$add = (request()->pager->start > 0) ? 1 : 0;
-				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min(request()->pager->count, $finish).'/'.request()->pager->count);
+				$add = (isset($pager) && $pager->start > 0) ? 1 : 0;
+				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
 				else {
 					$count = count($data);
 					header("Content-Range: items 0-$count/$count");
 				}
-				if (!isset($query['headers'])) $query['headers'] = true;
+				if (!isset($ops['headers'])) $ops['headers'] = true;
 				switch ($format) {
 					case "xml": return $this->getXML($model, $data); break;
 					case "json": return $this->getJSON("id", $data); break;
 					case "jsonp": return $this->getJSONP($ops['pad'], $data); break;
-					case "csv": return $this->getCSV($data, $query['headers']); break;
+					case "csv": return $this->getCSV($data, $ops['headers']); break;
 				}
 			} else {
-				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min(request()->pager->count, $finish).'/'.request()->pager->count);
+				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
 			}
 		} else return $this->$error($model);
 	}

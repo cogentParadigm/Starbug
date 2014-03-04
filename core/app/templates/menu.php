@@ -14,7 +14,7 @@
 	if ($sortable) $attributes['class'] .= " sortable";
 	
 	if ($menu_type == "taxonomy") $records = query("terms", "where:terms.taxonomy=?  orderby:terms.term_path ASC, terms.position ASC", array($taxonomy));
-	else $records = query("menus,uris", "select:menus.*,uris.title,uris.path,uris.breadcrumb  join:left  where:menus.menu=?  orderby:menus.menu_path ASC, menus.position ASC", array($menu));
+	else $records = query("menus<uris", "select:menus.*,uris.title,uris.path,uris.breadcrumb  action:read  where:menus.menu=?  orderby:menus.menu_path ASC, menus.position ASC", array($menu));
 	$links = array();
 	
 	$forbidden = array();

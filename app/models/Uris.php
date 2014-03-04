@@ -30,17 +30,9 @@ class Uris {
 		}
 		if ($_POST['type'] == "Post") $uris['path'] = "blog/".$uris['path'];
 		$row = $this->get($uris['id']);
-		efault($uris['categories'], array());
-		$categories = $uris['categories'];
-		unset($uris['categories']);
 		$this->store($uris);
 		if (!errors()) {
 			$uid = $uris['id'];
-			remove("uris_categories", "uris_id=$uid".(empty($categories) ? "" : " && terms_id NOT IN (".implode(", ", $categories).")"));
-			foreach ($categories as $tid) {
-				$exists = get("uris_categories", array("uris_id" => $uid, "terms_id" => $tid));
-				if (!$exists) store("uris_categories", "uris_id:$uid  terms_id:$tid");
-			}
 			$blocks = get("blocks", array("uris_id" => $uris['id']));
 			foreach ($blocks as $block) {
 				$key = 'block-'.$block['region'].'-'.$block['position'];
@@ -51,8 +43,8 @@ class Uris {
 
 	function delete($uris) {
 		$id = $uris['id'];
-		remove("blocks", "uris_id='".$uris['id']."'");
-		return $this->remove("id='".$id."'");
+		remove("blocks", "uris_id:".$uris['id']);
+		return $this->remove("id:".$id);
 	}
 	
 	function apply_tags() {
@@ -69,14 +61,17 @@ class Uris {
 		untag("uris_tags", $uri, $tag);
 	}
 	
-	function query_admin($query) {
-		if (logged_in("admin")) unset($query['action']);
-		$query['where'][] = "uris.prefix='app/views/' && !(uris.status & 1)";
-		if (!empty($query['type'])) {
-			$query['where'][] = "uris.type=?";
-			$query['params'][] = $query['type'];
+	function query_admin($query, &$ops) {
+		$query->select("uris.*,uris.statuses.id as statuses");
+		if (!logged_in("admin")) $query->action("read");
+		$query->condition("uris.prefix", "app/views/");
+		$query->condition("uris.statuses", "deleted", "!=");
+		if (!empty($ops['type'])) {
+			$query->condition("uris.type", $ops['type']);
 		}
-		efault($query['orderby'], "title");
+		if (!empty($ops['status'])) $query->condition("uris.statuses.id", $ops['status']);
+		efault($ops['orderby'], "title");
+		$query->sort($ops['orderby']);
 		return $query;
 	}
 

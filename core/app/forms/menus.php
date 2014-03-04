@@ -1,5 +1,7 @@
 <?php
-	$records = query("menus,uris", "select:menus.*,uris.title,uris.path,uris.breadcrumb  join:left  where:menus.menu=? && !(menus.status & 1)  orderby:menus.menu_path ASC, menus.position ASC", array($menu));
+	$records = query("menus<uris")->select("menus.*,uris.title,uris.path,uris.breadcrumb")
+							->condition("menus.menu", $menu)->condition("menus.statuses", "deleted", "!=")
+							->sort("menus.menu_path")->sort("menus.position")->all();
 	$links = array();
 	
 	foreach ($records as $link) {

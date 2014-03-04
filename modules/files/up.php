@@ -8,5 +8,5 @@ $this->table("files  list:all",
 );
 
 //add file attachments to terms
-$this->column("terms", "attachment  type:int  upload:term_attachment  null:  references:files id");
+$this->column("terms", "attachments  type:files");
 ?>

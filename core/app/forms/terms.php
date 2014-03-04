@@ -1,5 +1,8 @@
 <?php
-	$records = query("terms", "where:taxonomy=? && !(terms.status & 1)  orderby:terms.term_path ASC, terms.position ASC", array($taxonomy));
+	$records = query("terms")
+							->condition("taxonomy", $taxonomy)
+							->condition("terms.statuses", "deleted", "!=")
+							->sort("terms.term_path")->sort("terms.position")->all();
 	$links = array();
 	
 	foreach ($records as $link) {

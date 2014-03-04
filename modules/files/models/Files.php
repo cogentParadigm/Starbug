@@ -46,7 +46,7 @@ class Files {
 	}
 
 	function delete($file) {
-		$this->remove("id='" .$file['id'] ."'");
+		$this->remove("id:" .$file['id']);
 		return array();
 	}
 	
@@ -65,11 +65,10 @@ class Files {
 		return $mtype;
 	}
 	
-	function query_list($query) {
-		$query['where'][] = "!(files.status & 1)";
-		if (!empty($query['category']) && is_numeric($query['category'])) {
-			$query['where'][] = "category=?";
-			$query['params'][] = $query['category'];
+	function query_list($query, &$ops) {
+		$query->condition("files.statuses", "deleted", "!=");
+		if (!empty($ops['category']) && is_numeric($ops['category'])) {
+			$query->condition("category", $ops['category']);
 		}
 		return $query;
 	}

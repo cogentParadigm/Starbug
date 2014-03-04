@@ -19,21 +19,39 @@ class <?= ucwords($name); ?>Model extends Table {
 	}
 
 	function delete($<?= $singular; ?>) {
-		return $this->store(array('status' => 1,  'id' => $<?= $singular; ?>['id']));
+		return $this->store(array('statuses' => "deleted",  'id' => $<?= $singular; ?>['id']));
 	}
 	
-	function query_admin($query) {
-		$query['where'][] = "!(<?= $name; ?>.status & 1)";
+	function query_admin($query, &$ops) {
+		$query->condition("<?= $name; ?>.statuses", "deleted", "!=");
 		return $query;
 	}
 	
-	function query_get($query) {
+	function query_get($query, &$ops) {
 		return $query;
 	}
 	
-	function query_select($query) {
-		$query['where'][] = "!(<?= $name; ?>.status & 1)";
-		$query['select'] = "<?= $name; ?>.id,<?= efault($label_select, $name.".id"); ?> as label";
+	function query_select($query, &$ops) {
+		$query->condition("<?= $name; ?>.statuses", "deleted", "!=");
+		$query->select("<?= $name; ?>.id");
+		$query->select("<?= efault($label_select, $name.".id"); ?> as label");
+		return $query;
+	}
+
+	function query_terms($query, &$ops) {
+		$query = query("terms");
+		$query->select("terms.id,terms.term as label");
+		if (!empty($ops['taxonomy'])) $query->condition("taxonomy", $ops['taxonomy']);
+		if (!empty($ops['id'])) {
+			$query->join("terms_index");
+			$query->condition("terms_index.type", "<?= $name; ?>");
+			$query->condition("terms_index.type_id", $ops['id']);
+		}
+		$query->sort("terms.parent ASC, terms.term ASC");
+		return $query;
+	}
+
+	function query_filters($action, $query, &$ops) {
 		return $query;
 	}
 

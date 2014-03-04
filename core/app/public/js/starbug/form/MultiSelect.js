@@ -18,7 +18,7 @@ define([
 		//		Multiple select widget,
 		//		for selecting multiple options.
 		multiple:true,
-		mode:'bitwise',
+		mode:'csv',
 		
 		templateString: '<div class="multiple_select" data-dojo-attach-point="containerNode, focusNode"></div>',
 		
@@ -38,7 +38,10 @@ define([
 		
 		_loadChildren: function() {
 			window.ms = this;
-			query('.multiple_select_item', this.containerNode).forEach(function(item){item.parentNode.removeChild(item);});
+			query('.multiple_select_item', this.containerNode).forEach(function(item){
+				console.log(item);
+				//item.parentNode.removeChild(item);
+			});
 			this.inherited(arguments);
 		},
 		
@@ -73,6 +76,7 @@ define([
 			// description:
 			//		Set the value(s) of this Select based on passed values
 			var mode = this.mode, newValues = [];
+			values = values || [];
 			if (mode == "csv" && !lang.isArray(values)) values = values.split(/,/g);
 			query("input", this.containerNode).forEach(function(n){
 				if (lang.isArray(values)) {
@@ -94,6 +98,18 @@ define([
 			}
 		},
 
+		_getValueFromOpts: function(){
+                        // summary:
+                        //              Returns the value of the widget by reading the options for
+                        //              the selected flag
+                        var opts = this.getOptions() || [];
+                        // Set value to be the sum of all selected
+                        return array.map(opts, function(i){
+                                if (i.selected) return i.value;
+				return "-"+i.value;
+                        }) || [];
+                        return "";
+                },
 
 		_onChange: function(/*Event*/){
 			this._handleOnChange(this.get('value'), true);
@@ -104,7 +120,7 @@ define([
 			this.inherited(arguments);
 		}
 
-	});
 
+	});
 	return MultiSelect;
 });

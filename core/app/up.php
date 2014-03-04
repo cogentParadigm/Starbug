@@ -16,7 +16,6 @@ $this->table("users  label_select:CONCAT(first_name, ' ', last_name, ' (', email
 	"last_name  type:string  length:64  list:true",
 	"email  type:string  length:128  unique:  list:true",
 	"password  type:password  confirm:password_confirm  optional_update:",
-	"memberships  type:int  list:true",
 	"address  type:string  length:128",
 	"address2  type:string  length:128  default:",
 	"city  type:string  length:32",
@@ -26,7 +25,7 @@ $this->table("users  label_select:CONCAT(first_name, ' ', last_name, ' (', email
 	"last_visit  type:datetime  default:0000-00-00 00:00:00  list:true  display:false"
 );
 //This will be stored immediately after the creation of the users table
-$this->store("users", "email:root", "memberships:1", true);
+$this->store("users", "email:root", "groups:root", true);
 $this->table("permits  list:all",
 	"role  type:string  length:30",
 	"who  type:int  default:0",
@@ -35,7 +34,7 @@ $this->table("permits  list:all",
 	"related_table  type:string  length:100",
 	"related_id  type:int  default:0"
 );
-$this->table("terms",
+$this->table("terms  label_select:terms.term",
 	"term  type:string  length:128  slug:slug",
 	"slug  type:string  length:128  unique:taxonomy parent  display:false",
 	"description  type:string  length:255  input_type:textarea  default:",
@@ -43,6 +42,12 @@ $this->table("terms",
 	"parent  type:int  default:0  input_type:category_select  readonly:  materialized_path:term_path",
 	"position  type:int  ordered:taxonomy parent  display:false",
 	"term_path  type:string  length:255  display:false"
+);
+$this->table("terms_index",
+	"type  type:string  length:64",
+	"type_id  type:int  index:",
+	"terms_id  type:int  references:terms id",
+	"rel  type:string  length:64"
 );
 $this->table("settings",
 	"name  type:string  length:255",
@@ -99,9 +104,9 @@ $this->uri("profile", "template:controller");
 //Rogue IDE
 $this->uri("rogue", "title:Rogue IDE  format:xhr  prefix:core/app/views/  groups:root");
 //Admin
-$this->uri("admin", "template:controller-group  collective:4  theme:storm");
+$this->uri("admin", "template:controller-group  groups:admin  theme:storm");
 //Uploader
-$this->uri("upload", "prefix:core/app/views/  format:xhr  groups:admin");
+$this->uri("upload", "prefix:core/app/views/  format:xhr  groups:user");
 //terms
 $this->uri("terms", "prefix:core/app/views/  format:xhr  groups:user");
 $this->uri("robots", "prefix:core/app/views/  format:txt");
@@ -123,7 +128,19 @@ $this->menu("admin",
 	"href:admin/uris  content:Pages",
 	"href:admin/media  content:Media  target:_blank"
 );
-
+//groups
+$this->taxonomy("groups",
+	"term:Root",
+	"term:User",
+	"term:Admin"
+);
+//statuses
+$this->taxonomy("statuses",
+	"term:Deleted",
+	"term:Pending",
+	"term:Published",
+	"term:Private"
+);
 //uris categories
 $this->taxonomy("uris_categories",
 	"term:Uncategorized"

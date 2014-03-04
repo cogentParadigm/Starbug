@@ -1,11 +1,22 @@
 <?
 	efault($action, "create");
-	$record = (is_numeric($id)) ? query($model, "select:$model.*  action:$action  where:$model.id=?  limit:1", array($id)) : query($model, "select:$model.*  action:$action  limit:1  orderby:$model.created DESC");	
+	$record = (is_numeric($id)) ? query($model, "select:$model.*  action:$action  where:$model.id=?", array($id)) : query($model, "select:$model.*  action:$action  orderby:$model.created DESC");	
+	
+	$options = schema($model);
+	$refs = array();
+	foreach ($options['fields'] as $name => $field) {
+		if ($field['type'] == "terms" || $field['type'] == "category") {
+			$record->select($model.".".$name.".id as ".$name);
+			$refs[] = $name;
+		}
+	}
+	$record = $record->one();
+	foreach ($refs as $name) if (!is_array($record[$name])) $record[$name] = explode(",", $record[$name]);
+	
 	efault($_POST[$model], array());
 	foreach ($record as $k => $v) dfault($_POST[$model][$k], $v);
 	if (!empty($_POST[$model]['id'])) $id = $_POST[$model]['id'];
 		
-	$options = schema($model);
 	assign("model", $model);
 	assign("action", $action);
 	assign("url", (empty($uri) ? "" : uri($uri)));

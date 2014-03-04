@@ -73,8 +73,10 @@ class sb {
 		$this->import("core/lib/Session");
 		if (false !== ($session = Session::active())) {
 			if (!empty($session['v']) && is_numeric($session['v'])) {
-				$user = $this->db->query("users", "where:id=?  limit:1", array($session['v']));
+				$user = $this->db->query("users", "select:users.*,users.groups as groups,users.statuses as statuses  where:id=?  limit:1", array($session['v']));
 				if (Session::validate($session, $user['password'], Etc::HMAC_KEY)) {
+					$user['groups'] = is_null($user['groups']) ? array() : explode(",", $user['groups']);
+					$user['statuses'] = is_null($user['statuses']) ? array() : explode(",", $user['statuses']);
 					$this->user = $user;
 				}
 			}
@@ -104,7 +106,16 @@ class sb {
 	 * import function. only imports once when used with provide
 	 * @param string $loc path of file to import without '.php' at the end
 	 */
-	function import($loc) {$sb = self::$instance; $args = func_get_args(); foreach($args as $l) if (!isset($this->provided[$l])) include(BASE_DIR."/".$l.".php");}
+	function import($loc) {
+		$sb = self::$instance;
+		$args = func_get_args();
+		foreach($args as $l) {
+			$parts = explode("/", $l);
+			if (!in_array($parts[0], array("app", "core", "util", "var")) && file_exists(BASE_DIR."/modules/".$parts[0])) $parts[0] = "modules/".$parts[0];
+			$l = implode("/", $parts);
+			if (!isset($this->provided[$l])) include(BASE_DIR."/".$l.".php");
+		}
+	}
 
 	/**
 	 * when imported use provide to prevent further imports from attempting to include it again

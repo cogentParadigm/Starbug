@@ -1,4 +1,28 @@
 <?php
+class hook_store_category {
+	function store(&$query, $key, $value, $column, $argument) {
+		if (!is_numeric($value)) error("This field is required", $column);
+	}
+	
+	function after_store(&$query, $key, $value, $column, $argument) {
+		$existing = query("terms_index");
+		$existing->condition("type", $query->model);
+		$existing->condition("rel", $column);
+		$existing->condition("type_id", $query->getId());
+		$result = $existing->one();
+		
+		$existing->set("type", $query->model);
+		$existing->set("rel", $column);
+		$existing->set("type_id", $query->getId());
+		$existing->set("terms_id", $value);
+		if (empty($result)) {
+			$existing->insert();
+		} else {
+			$existing->update();
+		}
+	}
+}
+/*
 foreach($args as $field => $category) {
 	$varname = "_".$field;
 	if (!$storing) {
@@ -45,4 +69,5 @@ foreach($args as $field => $category) {
 		}
 	}
 }
+*/
 ?>

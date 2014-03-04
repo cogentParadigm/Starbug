@@ -1,4 +1,5 @@
 <?php
+/*
 foreach($args as $field => $category) {
 	if (is_array($fields[$field])) {
 		$category_column_info = schema($name.".fields.".$field);
@@ -15,4 +16,5 @@ foreach($args as $field => $category) {
 	}
 	unset($fields[$field]);
 }
+*/
 ?>
