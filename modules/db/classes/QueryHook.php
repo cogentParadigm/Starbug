@@ -8,6 +8,10 @@
 			//this hook is invoked when updating and the field has not been specified
 		}
 		
+		function empty_validate(&$query, $column, $argument) {
+			//this hook is invoked when inserting or updating and the field has not been specified
+		}
+		
 		function before_insert(&$query, $key, $value, $column, $argument) {
 			//this hook is invoked when inserting and a value has been specified
 			//the value must be returned

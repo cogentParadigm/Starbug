@@ -47,7 +47,7 @@ class mysql extends db {
 	/**
 	 * @var array holds records waiting to be stored
 	 */
-	var $to_store = array();
+	var $queue;
 
 	public function __construct($params) {
 		try {
@@ -58,6 +58,7 @@ class mysql extends db {
 		} catch (PDOException $e) { 
 			die("PDO CONNECTION ERROR: " . $e->getMessage() . "\n");
 		}
+		$this->queue = new queue();
 	}
 
 	public function set_debug($debug) {
@@ -148,9 +149,9 @@ class mysql extends db {
 	 * @return array validation errors
 	 */
 	function store($name, $fields, $from="auto") {
-		$this->queue($name, $fields, $from);
-		$last = array_pop($this->to_store);
-		$this->to_store = array_merge(array($last), $this->to_store);
+		$this->queue($name, $fields, $from, true);
+		//$last = array_pop($this->to_store);
+		//$this->to_store = array_merge(array($last), $this->to_store);
 		$this->store_queue();
 	}
 
@@ -161,7 +162,25 @@ class mysql extends db {
 	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
 	 * @return array validation errors
 	 */
-	function queue($name, $fields, $from="auto") {
+	function queue($name, $fields, $from="auto", $unshift=false) {
+		if (!is_array($fields)) $fields = star($fields);
+		
+		$query = new query($name);
+		foreach ($fields as $col => $value) $query->set($col, $value);
+		
+		if ($from == "auto" && !empty($fields['id'])) $from = array("id" => $fields['id']);
+		else if (!is_array($from) && false !== $from && "auto" != $from) $from = star($from);
+		else $from = array();
+		
+		if (!empty($from)) {
+			$query->mode("update");
+			foreach ($from as $c => $v) $query->condition($c, $v);
+		}
+		
+		if ($unshift) $this->queue->unshift($query);
+		else $this->queue->push($query);
+		
+		/*
 		$oldscope = error_scope();
 		error_scope($name);
 		$thefilters = db::model($name)->filters;
@@ -185,11 +204,16 @@ class mysql extends db {
 		foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
 		$this->to_store[] = array("model" => $name, "fields" => $fields, "from" => $from, "filters" => $byfilter);
 		error_scope($oldscope);
+		*/
 	}
 
 	/**
 	 * proccess the queue of data for storage
 	 */
+	function store_queue() {
+		$this->queue->execute();
+	}
+	/*
 	function store_queue() {
 		$oldscope = error_scope();
 		foreach ($this->to_store as $store) {
@@ -290,6 +314,7 @@ class mysql extends db {
 		$this->to_store = array();
 		error_scope($oldscope);
 	}
+	*/
 
 	/**
 	 * remove from the database
