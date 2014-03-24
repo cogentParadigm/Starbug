@@ -39,12 +39,13 @@ class Harness {
 	}
 
 	function  clean() {
-		foreach ($this->fixtures as $fixture) $fixture->tearDown();
+		foreach ($this->fixtures as $fixture) $fixture->_tearDown();
 		$this->fixtures = array();
 	}
 
 	function layer($layer, $up=true) {
 		$dependencies = $this->layers[$layer];
+		if (!$up) $dependencies = array_reverse($dependencies);
 		foreach ($dependencies as $dep) {
 			if (isset($this->layers[$dep])) $this->layer($dep, $up);
 			else if (file_exists(BASE_DIR."/app/fixtures/".ucwords($dep)."Fixture.php")) $this->fixture($dep, $up);
@@ -52,11 +53,13 @@ class Harness {
 	}
 	
 	function fixture($fixture, $up=true) {
-		$fixture = ucwords($fixture)."Fixture";
-		include(BASE_DIR."/app/fixtures/".$fixture.".php");
-		$fixture = new $fixture();
-		if ($up) $fixture->setUp();
-		else $fixture->tearDown();
+		if (empty($this->fixtures[$fixture])) {
+			$classname = ucwords($fixture)."Fixture";
+			include(BASE_DIR."/app/fixtures/".$classname.".php");
+			$this->fixtures[$fixture] = new $classname();
+		}
+		if ($up) $this->fixtures[$fixture]->_setUp();
+		else $this->fixtures[$fixture]->_tearDown();
 	}
 
 }

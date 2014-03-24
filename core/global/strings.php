@@ -37,7 +37,7 @@ function star($str=array()) {
  * @param string $var the value to prefix
  * @return string the prefixed value
  */
-function P($var) {return Etc::PREFIX.$var;}
+function P($var) {return sb()->db->prefix.$var;}
 /**
  * normalize a string
  * @ingroup strings

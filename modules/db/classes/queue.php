@@ -32,7 +32,7 @@ class queue implements Countable, IteratorAggregate {
 		$queries = func_get_args();
 		foreach ($queries as $query) {
 			$query->validate();
-			$this->queries[] = $query;
+			$this->queue[] = $query;
 		}
 	}
 
@@ -44,7 +44,7 @@ class queue implements Countable, IteratorAggregate {
 		$queries = func_get_args();
 		foreach ($queries as $query) {
 			$query->validate();
-			array_unshift($this->queries, $query);
+			array_unshift($this->queue, $query);
 		}
 	}
 
@@ -52,7 +52,8 @@ class queue implements Countable, IteratorAggregate {
 	 * Execute the queue of queries
 	 */
 	function execute() {
-		foreach ($this->queue as $query) {
+		while (!empty($this->queue)) {
+			$query = array_shift($this->queue);
 			$query->execute();
 		}
 	}

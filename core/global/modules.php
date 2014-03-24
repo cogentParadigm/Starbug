@@ -110,33 +110,44 @@ function controller($name, $type="") {
  * @return the instantiated controller
  */
 function build_hook($path, $base="lib/Hook", $mid="core") {
-	import($base, $mid);
-
-	$class = "hook_".str_replace("/", "_", $path);
-
-	$parts = explode("/", $base);
-	$last = end($parts);
+	static $hooks;
+	efault($hooks, array());
 	
-	//get extending controllers
-	$hooks = locate($path.".php", "hooks");
-	$count = count($hooks);
-	$search = "class $class {";
+	$hook_key = implode("/", array($mid, $base, $path));
 	
-	//loop through found hooks
-	for ($i = 0; $i < $count; $i++) {
-		//get file contents
-		$contents = file_get_contents($hooks[$i]);
-		//make class name unique and extend the previous class
-		$class = str_replace(array(BASE_DIR.'/', '/'), array('', '_'), reset(explode('/hooks/', $hooks[$i])))."__$class";
-		$replace = "class $class extends $last {";
-		//replace and eval
-		eval('?>'.str_replace($search, $replace, $contents));
-		//set $last for the next round
-		$last = $class;
+	if (!isset($hooks[$hook_key])) {
+		import($base, $mid);
+
+		$class = "hook_".str_replace("/", "_", $path);
+
+		$parts = explode("/", $base);
+		$last = end($parts);
+		
+		//get extending hooks
+		$files = locate($path.".php", "hooks");
+		$count = count($files);
+		$search = "class $class {";
+		
+		//loop through found hooks
+		for ($i = 0; $i < $count; $i++) {
+			//get file contents
+			$contents = file_get_contents($files[$i]);
+			//make class name unique and extend the previous class
+			$class = str_replace(array(BASE_DIR.'/', '/'), array('', '_'), reset(explode('/hooks/', $files[$i])))."__$class";
+			$replace = "class $class extends $last {";
+			//replace and eval
+			eval('?>'.str_replace($search, $replace, $contents));
+			//set $last for the next round
+			$last = $class;
+		}
+		
+		//return the base model if no others
+		if ($count == 0) $class = $last;
+		
+		$hooks[$hook_key] = $class;
 	}
 	
-	//return the base model if no others
-	if ($count == 0) $class = $last;
+	$class = $hooks[$hook_key];
 
 	//instantiate save the object
 	return new $class();

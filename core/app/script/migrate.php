@@ -7,16 +7,36 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
-$next = array_shift($argv);
-if (false !== strpos($next, ":")) {
-	$next = explode(":", $next);
-	$from = $next[0];
-	$to = $next[1];
-	$schemer->migrate($to, $from);
-} else if ((!empty($next)) && (0 !== $next)) {
-	$to = $next;
-	$schemer->migrate($to);
-} else {
-	$schemer->migrate();
+
+//default options
+$options = array(
+	"t" => false
+);
+
+//parse option flags
+$args = array();
+foreach ($argv as $i => $arg) {
+	if (0 === strpos($arg, "-")) {
+		$arg = str_replace("-", "", $arg);
+		$parts = (false !== strpos($arg, "=")) ? explode("=", $arg, 2) : array($arg, true);
+		$options[$parts[0]] = $parts[1];
+	} else {
+		$args[] = $arg;
+	}
 }
+$argv = $args;
+
+//select database
+$next = array_shift($argv);
+if ((!empty($next)) && (0 !== $next)) {
+	select_database($next);
+}
+
+//test mode
+if ($options["t"]) {
+	$schemer->testMode();
+}
+
+//migrate
+$schemer->migrate();
 ?>

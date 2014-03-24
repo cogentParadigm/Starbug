@@ -21,11 +21,11 @@
  * call $this->missing()
  */
 		//set up a query for uris where the path is a prefix of the current path
-		$query = "select:uris.*  where:(uris.status & 4) && '".$this->path."' LIKE CONCAT(path, '%')";
+		$query = "select:uris.*  where:'".$this->path."' LIKE CONCAT(path, '%')";
 		//run the query, looking for read permits
-		$this->payload = query("uris", $query."  action:read")->sort("CHAR_LENGTH(path) DESC")->limit(1)->execute();
+		$this->payload = query("uris", $query."  action:read")->sort("CHAR_LENGTH(path) DESC")->one();
 		if (empty($this->payload)) { //if we find nothing, query without looking for permits
-			$row = query("uris", $query);
+			$row = query("uris", $query)->one();
 			if (!empty($row)) $this->forbidden(); //if we find something that means we don't have permission to see it, so show the forbidden page
 			else $this->missing(); //if we don't find anything, there is nothing there, so show the missing page
 		}

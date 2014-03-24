@@ -9,17 +9,18 @@ class hook_store_ordered {
 			foreach ($fields as $field) $this->conditions[$field] = $query->fields[$field];
 		}
 	}
-	function empty_insert(&$query, $column, $argument) {
-		$query->set($column, $this->before_insert($query, $column, "", $column, $argument));
+	function empty_before_insert(&$query, $column, $argument) {
+		$query->set($column, $this->insert($query, $column, "", $column, $argument));
 	}
-	function before_insert(&$query, $key, $value, $column, $argument) {
+	function insert(&$query, $key, $value, $column, $argument) {
 		$this->set_conditions($query, $argument);
 		if (!empty($value) && is_numeric($value)) $this->value = $value;
 		$h = query($query->model)->select("MAX(`$column`) as highest")->conditions($this->conditions)->one();
 		return $h['highest']+1;
 	}
 	function after_store(&$query, $key, $value, $column, $argument) {
-		if (false !== $this->value) $value = this->value;
+		if (false !== $this->value) $value = $this->value;
+		if (empty($value)) return;
 		$select = array("id", $column);
 		if (!empty($argument)) $select = array_merge($select, array_keys($this->conditions));
 		$id = $query->getId();
@@ -30,7 +31,7 @@ class hook_store_ordered {
 		if ($same_level) $increment = ($row[$column] < $value) ? -1 : 1;
 		else $increment = 1;
 		while (!empty($row)) {
-			query($query->model)->condition("id", $row['id'])->set($column, $value)->update();
+			query($query->model)->condition("id", $row['id'])->set($column, $value)->raw()->update();
 			$row = query($query->model)->select(implode(",", $select))->conditions($this->conditions)->condition("id", $ids, "!=")->condition($column, $value)->one();
 			$ids[] = $row['id'];
 			$value += $increment;

@@ -2,6 +2,7 @@
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 include(dirname(__FILE__)."/query.php");
+include(dirname(__FILE__)."/queue.php");
 /**
  * This file is part of StarbugPHP
  * @file modules/db/class/mysql.php
@@ -43,6 +44,10 @@ class mysql extends db {
 	 * @var string prefix
 	 */
 	var $prefix;
+	/**
+	 * @var string database_name
+	 */
+	var $database_name;
 	/**#@-*/
 	/**
 	 * @var array holds records waiting to be stored
@@ -54,6 +59,7 @@ class mysql extends db {
 			$this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
 			$this->set_debug(false);
 			$this->prefix = $params['prefix'];
+			$this->database_name = $params['db'];
 			if (defined('Etc::TIME_ZONE')) $this->exec("SET time_zone='".Etc::TIME_ZONE."'");
 		} catch (PDOException $e) { 
 			die("PDO CONNECTION ERROR: " . $e->getMessage() . "\n");
@@ -175,6 +181,8 @@ class mysql extends db {
 		if (!empty($from)) {
 			$query->mode("update");
 			foreach ($from as $c => $v) $query->condition($c, $v);
+		} else {
+			$query->mode("insert");
 		}
 		
 		if ($unshift) $this->queue->unshift($query);

@@ -16,7 +16,7 @@
  * @ingroup db
  */
 
-class query implements IteratorAggregate {
+class query implements IteratorAggregate, ArrayAccess {
 	
 	//query array, holds the parts of the query
 	var $query = array(
@@ -45,7 +45,7 @@ class query implements IteratorAggregate {
 	var $parameters = array();
 	var $fields = array();
 	var $exclusions = array();
-	var $result;
+	var $result = false;
 	var $pager = null;
 	
 	var $parameter_count = array();
@@ -61,6 +61,9 @@ class query implements IteratorAggregate {
 	var $op = "default";
 	var $tags = array();
 	var $operations = array();
+	var $hooks = array();
+	
+	var $raw = false;
 	
 	/**
 	 * create a new query
@@ -70,8 +73,8 @@ class query implements IteratorAggregate {
 	function __construct($collection, $params=array()) {
 		$this->db = sb()->db;
 		$params = star($params);
-		foreach ($params as $key => $value) $this->{$key}($value);
 		$this->from($collection);
+		foreach ($params as $key => $value) $this->{$key}($value);
 	}
 	
 	/**************************************************************
@@ -130,7 +133,7 @@ class query implements IteratorAggregate {
 		$collections = $this->parse_collections($collections);
 		$collection = array_shift($collections);
 		$this->query['from'][$collection['alias']] = $collection['collection'];
-		$this->model = $collection['colection'];
+		$this->model = $collection['collection'];
 		$this->base_collection = $this->last_collection = $collection['alias'];
 		$this->operation("from", $collection);
 		foreach ($collections as $collection) {
@@ -281,7 +284,7 @@ class query implements IteratorAggregate {
 				if ($operation['operation'] == "condition") $this->condition($operation['field'], $operation['value'], $operation['op'], $operation['ops']);
 			}
 			return $this;
-		} else return $this->condition(star($fields), $op, $ops);
+		} else return $this->condition(star($fields), "", $op, $ops);
 	}
 
 	/**
@@ -458,6 +461,7 @@ class query implements IteratorAggregate {
 	
 	function set($field, $value) {
 		$this->fields[$this->parse_field($field, "set")] = $value;
+		$this->dirty();
 		return $this;
 	}
 	
@@ -634,7 +638,11 @@ class query implements IteratorAggregate {
 		
 		$sql = array();
 		
-		if ($this->mode == "insert" || $this->mode == "update") {
+		if ($this->mode == "insert" && !empty($this->parameters)) {
+			$this->parameters = array();
+		}
+		
+		if (!$this->raw && $this->mode == "insert" || $this->mode == "update") {
 			if (!$this->validated) $this->validate(0);
 			$this->validate(1);
 		}
@@ -679,6 +687,7 @@ class query implements IteratorAggregate {
 			'DELETE' => '', //delete
 			'INSERT INTO' => '', //insert
 			'UPDATE' => '', //update
+			'TRUNCATE TABLE' => '', //truncate
 			'FROM' => '', //query, delete
 			'SET' => '', //insert, update
 			'WHERE' => '', //query, delete, update
@@ -691,10 +700,10 @@ class query implements IteratorAggregate {
 		//select, delete, or set
 		if ($this->mode == "query") $query['SELECT'] = $this->build_select();
 		else if ($this->mode == "delete") $query['DELETE'] = $this->build_select();
-		else $query['SET'] = $this->build_set();
+		else if ($this->mode == "insert" || $this->mode == "update") $query['SET'] = $this->build_set();
 		
 		//where
-		if ($this->mode != "insert") $query['WHERE'] = $this->build_condition_set("default");
+		if ($this->mode == "query" || $this->mode == "update" || $this->mode == "delete") $query['WHERE'] = $this->build_condition_set("default");
 		
 		//group
 		if ($this->mode == "query") $query['GROUP BY'] = $this->build_group();
@@ -703,15 +712,16 @@ class query implements IteratorAggregate {
 		if ($this->mode == "query") $query['HAVING'] = $this->build_condition_set("having");
 		
 		//order
-		$query['ORDER BY'] = $this->build_sort();
+		if ($this->mode == "query" || $this->mode == "update" || $this->mode == "delete") $query['ORDER BY'] = $this->build_sort();
 
 		//limit
-		$query['LIMIT'] = $this->build_limit();
+		if ($this->mode == "query" || $this->mode == "update" || $this->mode == "delete") $query['LIMIT'] = $this->build_limit();
 
 		//from
 		if ($this->mode == "query" || $this->mode == "delete") $query['FROM'] = $this->build_from();
 		else if ($this->mode == "insert") $query['INSERT INTO'] = $this->build_from();
 		else if ($this->mode == "update") $query['UPDATE'] = $this->build_from();
+		else if ($this->mode == "truncate") $query['TRUNCATE TABLE'] = $this->build_from();
 		
 		foreach ($query as $key => $clause) if (empty($clause)) unset($query[$key]);
 		
@@ -744,7 +754,7 @@ class query implements IteratorAggregate {
 		foreach ($this->query['from'] as $alias => $collection) {
 			if (empty($from)) {
 				$from = "`".P($collection)."`";
-				if ($this->mode != "insert") $from .= " AS `".$alias."`";
+				if ($this->mode != "insert" && $this->mode != "truncate") $from .= " AS `".$alias."`";
 			} else {
 				efault($this->query['join'][$alias], "LEFT");
 				$segment = " ".$this->query['join'][$alias]." JOIN `".P($collection)."` AS `".$alias."`";
@@ -792,7 +802,7 @@ class query implements IteratorAggregate {
 			if (!isset($this->exclusions[$k]) || true != $this->exclusions[$k]) {
 				if ($v == "NULL") $v = null;
 				$idx = $this->increment_parameter_index("set");
-				$set[] = $k." = :set".$idx;
+				$set[] = "`".$k."` = :set".$idx;
 				$this->param("set".$idx, $v);
 			}
 		}
@@ -863,6 +873,11 @@ class query implements IteratorAggregate {
 		if (!empty($this->query['skip'])) $limit[] = $this->query['skip'];
 		if (!empty($this->query['limit'])) $limit[] = $this->query['limit'];
 		return implode(', ', $limit);
+	}
+	
+	function raw($raw=true) {
+		$this->raw = $raw;
+		return $this;
 	}
 
 	/**************************************************************
@@ -1043,7 +1058,7 @@ class query implements IteratorAggregate {
 			# build a regular expression for each parameter
 			foreach ($params as $key => $value) {
 					if (is_string($key)) {
-							$keys[] = '/:'.$key.'/';
+							$keys[] = '/'.$key.'/';
 					} else {
 							$keys[] = '/[?]/';
 					}
@@ -1056,7 +1071,7 @@ class query implements IteratorAggregate {
 			}
 			// Walk the array to see if we can add single-quotes to strings
 			array_walk($values, create_function('&$v, $k', 'if (!is_numeric($v) && $v!="NULL") $v = "\'".$v."\'";'));
-
+			
 			$query = preg_replace($keys, $values, $query, 1, $count);
 
 			return $query;
@@ -1070,32 +1085,34 @@ class query implements IteratorAggregate {
 		$this->exclusions[$key] = true;
 	}
 	 
-	function validate($hook=0) {
+	function validate($phase=0) {
 		$oldscope = error_scope();
 		error_scope($this->model);
 		foreach (db::model($this->model)->filters as $col => $filters) {
 			$filters = star(db::model($this->model)->filters[$col]);
 			if (!isset($filters['required']) && !isset($filters['default'])) $filters['required'] = "";
 			foreach ($filters as $filter => $args) {
-				$this->invoke_hook($hook, $col, $filter, $args);
+				$this->invoke_hook($phase, $col, $filter, $args);
 			}
 		}
 		error_scope($oldscope);
-		if ($hook == 0) $this->validated = true;
+		if ($phase == 0) $this->validated = true;
 	}
 	
-	function invoke_hook($hook, $column, $hook, $argument) {
+	function invoke_hook($phase, $column, $hook, $argument) {
 		$key = false;
 		if (isset($this->fields[$column])) $key = $column;
 		else if (isset($this->fields[$this->model.".".$column])) $key = $this->model.".".$column;
 		else if (isset($this->fields[$this->base_collection.".".$column])) $key = $this->base_collection.".".$column;
-		$hook = build_hook("store/".$hook, "classes/QueryHook", "db");
+		
+		if (!isset($this->hooks[$column."_".$hook])) $this->hooks[$column."_".$hook] = build_hook("store/".$hook, "classes/QueryHook", "db");
+		$hook = $this->hooks[$column."_".$hook];
 		
 		//hooks are invoked in 3 phases
 		//0 = validate (before)
 		//1 = store (during)
 		//2 = after
-		if ($hook == 0) {
+		if ($phase == 0) {
 			if ($key == false) {
 				if ($this->mode == "insert") $hook->empty_before_insert($this, $column, $argument);
 				else if ($this->mode == "update") $hook->empty_before_update($this, $column, $argument);
@@ -1105,11 +1122,11 @@ class query implements IteratorAggregate {
 				else if ($this->mode == "update") $this->fields[$key] = $hook->before_update($this, $key, $this->fields[$key], $column, $argument);
 				$this->fields[$key] = $hook->validate($this, $key, $this->fields[$key], $column, $argument);
 			}
-		} else if ($hook == 1 && $key != false) {
+		} else if ($phase == 1 && $key != false) {
 			if ($this->mode == "insert") $this->fields[$key] = $hook->insert($this, $key, $this->fields[$key], $column, $argument);
 			else if ($this->mode == "update") $this->fields[$key] = $hook->update($this, $key, $this->fields[$key], $column, $argument);
 			$this->fields[$key] = $hook->store($this, $key, $this->fields[$key], $column, $argument);
-		} else if ($hook == 2 && $key != false) {
+		} else if ($phase == 2 && $key != false) {
 			if ($this->mode == "insert") $hook->after_insert($this, $key, $this->fields[$key], $column, $argument);
 			else if ($this->mode == "update") $hook->after_update($this, $key, $this->fields[$key], $column, $argument);
 			$hook->after_store($this, $key, $this->fields[$key], $column, $argument);
@@ -1126,22 +1143,26 @@ class query implements IteratorAggregate {
 	 */
 	function execute($params=array(), $debug=false) {
 		$this->build();
-		if (errors()) return false;
+		if (errors() && $this->mode != "query") return false;
 		if (empty($params)) $params = $this->parameters;
 		if ($debug) {
-			print_r($this->parameters);
-			echo $thi->sql;
-			print_r($params);
+			echo $this->interpolate();
+			exit();
 		}
 		$records = $this->db->prepare($this->sql);
 		$records->execute($params);
+		$this->executed = true;
 		if ($this->mode == "query") {
 			$rows = $records->fetchAll(PDO::FETCH_ASSOC);
+			$this->result = $rows;
 			return ((!empty($this->query['limit'])) && ($this->query['limit'] == 1)) ? $rows[0] : $rows;
 		} else {
 			$this->record_count = $records->rowCount();
-			if ($this->mode == "insert") $this->insert_id = $this->db->lastInsertId();
-			if ($this->mode != "delete") $this->validate(2);
+			if ($this->mode == "insert") {
+				$this->insert_id = $this->db->lastInsertId();
+				$this->db->model($this->model)->insert_id = $this->insert_id;
+			}
+			if (!$this->raw && $this->mode != "delete") $this->validate(2);
 			return $this->record_count;
 		}
 	}
@@ -1156,19 +1177,29 @@ class query implements IteratorAggregate {
 	}
 	
 	 function delete($run=true) {
+		 if ($this->mode != "delete") $this->dirty();
 		 $this->mode = "delete";
 		  if ($run) return $this->execute();
 		  else return $this;
 	 }
 	 
 	 function insert($run=true) {
+		 if ($this->mode != "insert") $this->dirty();
 		 $this->mode = "insert";
 		 if ($run) return $this->execute();
 		 else return $this;
 	 }
 	 
 	 function update($run=true) {
+		 if ($this->mode != "update") $this->dirty();
 		 $this->mode = "update";
+		 if ($run) return $this->execute();
+		 else return $this;
+	 }
+	 
+	 function truncate($run=true) {
+		 if ($this->mode != "truncate") $this->dirty();
+		 $this->mode = "truncate";
 		 if ($run) return $this->execute();
 		 else return $this;
 	 }
@@ -1193,6 +1224,7 @@ class query implements IteratorAggregate {
 	 */
 	function mode($mode) {
 		$this->mode = $mode;
+		return $this;
 	}
 
 	/**
@@ -1257,6 +1289,31 @@ class query implements IteratorAggregate {
 	 */
 	public function getIterator() {
 		return new ArrayIterator($this->execute());
+	}
+	
+	public function offsetExists($offset) {
+		if (!$this->executed) $this->execute();
+		if (!$this->result) return false;
+		return isset($this->result[$offset]);
+	}
+	
+	public function offsetGet($offset) {
+		if (!$this->executed) $this->execute();
+		if (!$this->result) return false;
+		return isset($this->result[$offset]) ? $this->result[$offset] : null;
+	}
+	
+	public function offsetSet($offset, $value) {
+		if (!$this->executed) $this->execute();
+		if (!$this->result) return false;
+		if (is_null($offset)) $this->result[] = $value;
+		else $this->result[$offset] = $value;
+	}
+	
+	public function offsetUnset($offset) {
+		if (!$this->executed) $this->execute();
+		if (!$this->result) return false;
+		unset($this->result[$offset]);
 	}
 	
 }

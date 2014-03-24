@@ -8,13 +8,14 @@ class UrisTest extends ModelTest {
 	
 	function test_create() {
 		$this->action("create", array("path" => "phpunit")); 
-		$object = $this->get($this->insert_id);
+		$object = query($this->model)->condition("id", $this->insert_id)->one();
 		//lets verify the explicit values were set
 		$this->assertEquals("phpunit", $object['path']);
 	}
 	
 	function test_update() {
 		$object = $this->get("path:phpunit", "limit:1");
+
 		//test setting a normal field
 		$object['title'] = "Test Title";
 		//test setting block content
@@ -22,6 +23,7 @@ class UrisTest extends ModelTest {
 		$this->action("update", $object);
 		//re fetch and test for updates
 		$object = $this->get("path:phpunit", "limit:1");
+
 		$block = get("blocks", array("uris_id" => $object["id"]), "limit:1");
 		$this->assertEquals("Test Title", $object['title']);
 		$this->assertEquals("Test Content", $block['content']);

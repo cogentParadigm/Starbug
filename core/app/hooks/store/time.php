@@ -1,9 +1,9 @@
 <?php
 class hook_store_time {
-	function empty_insert(&$query, $column, $argument) {
+	function empty_before_insert(&$query, $column, $argument) {
 		$query->set($column, date("Y-m-d H:i:s"));
 	}
-	function empty_update(&$query, $column, $argument) {
+	function empty_before_update(&$query, $column, $argument) {
 		if ($argument == "update") $query->set($column, date("Y-m-d H:i:s"));
 	}
 	function before_insert(&$query, $key, $value, $column, $argument) {

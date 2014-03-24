@@ -22,6 +22,8 @@ class db {
 	 * @var array holds instantiated models
 	 */
 	static $objects = array();
+	
+	var $prefix;
 
 	/**
 	 * check if a model exists

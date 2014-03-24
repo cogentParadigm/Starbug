@@ -1,5 +1,6 @@
 <?php
-	class QueryHook extends Hook {
+$sb->provide("db/classes/QueryHook");
+	class QueryHook {
 		function empty_before_insert(&$query, $column, $argument) {
 			//this hook is invoked when inserting and the field has not been specified
 		}

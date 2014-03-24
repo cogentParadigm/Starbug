@@ -74,6 +74,8 @@ class Schemer {
 	var $trigger_drops = array();
 	
 	var $current;
+	
+	var $testMode = false;
 
 	/**
 	 * constructor. loads migrations
@@ -83,6 +85,10 @@ class Schemer {
 		$this->migrations = config("modules");
 		foreach ($this->migrations as $i => $m) $this->migrations[$i] = "modules/".$m;
 		$this->migrations = array_merge(array("core/app"), $this->migrations, array("app"));
+	}
+	
+	function set_database($db) {
+		$this->db = $db;
 	}
 
 	function  clean() {
@@ -94,6 +100,10 @@ class Schemer {
 		$this->current = $migration;
 		$migration = BASE_DIR."/".$migration."/up.php";
 		if (file_exists($migration)) include($migration);
+		if ($this->testMode) {
+			$migration = BASE_DIR."/".$this->current."/tests/up.php";
+			if (file_exists($migration)) include($migration);
+		}
 	}
 	
 	function down($migration) {
@@ -101,6 +111,10 @@ class Schemer {
 		$this->current = $migration;
 		$migration = BASE_DIR."/".$migration."/down.php";
 		if (file_exists($migration)) include($migration);
+		if ($this->testMode) {
+			$migration = BASE_DIR."/".$this->current."/tests/down.php";
+			if (file_exists($migration)) include($migration);
+		}
 	}
 
 	function fill() {
@@ -111,6 +125,12 @@ class Schemer {
 			$this->up($current);
 			$current++;
 		}
+	}
+	
+	function testMode($to=true) {
+		$this->testMode = $to;
+		$this->clean();
+		$this->fill();
 	}
 
 	/**
@@ -194,8 +214,8 @@ class Schemer {
 						}
 					}
 				}
-				if (isset($field['references']) && ($field['constraint'] !== false)) {
-					$fks = $this->db->pdo->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".Etc::DB_NAME."'");
+				if (isset($field['references']) && ($field['type'] != "category") && ($field['constraint'] !== false)) {
+					$fks = $this->db->pdo->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".$this->db->database_name."'");
 					if (false === ($row = $fks->fetch())) {
 						// ADD CONSTRAINT																																									// CONSTRAINT
 						fwrite(STDOUT, "Adding foreign key ".P($table)."_".$name."_fk...\n");
@@ -233,7 +253,7 @@ class Schemer {
 			} else $is += $this->create_taxonomy($taxonomy, true);
 		}
 		foreach ($this->uris as $path => $uri) {
-			$rows = query("uris", "where:path='$path'");
+			$rows = query("uris")->condition("path", $path)->one();
 			if (empty($rows)) {
 				// ADD URI																																														// ADD URI
 				fwrite(STDOUT, "Adding URI '$path'...\n");
@@ -786,9 +806,13 @@ class Schemer {
 		$children = empty($item['children']) ? array() : $item['children'];
 		unset($item['children']);
 		$item['menu'] = $menu;
-		$record = get("menus", $item, array("limit" => "1"));
+		$match = array();
+		foreach ($item as $k => $v) {
+			if ($k == "groups" || $k == "statuses") $k = "menus.".$k;
+			$match[$k] = $v;
+		}
+		$record = query("menus")->conditions($match)->one();
 		if (empty($record)) {
-			$item['position'] = "";
 			if ($update) fwrite(STDOUT, "Creating $menu menu item...\n");
 			store("menus", $item);
 			$id = sb("menus")->insert_id;
@@ -817,9 +841,8 @@ class Schemer {
 		$children = empty($item['children']) ? array() : $item['children'];
 		unset($item['children']);
 		$item['taxonomy'] = $taxonomy;
-		$record = get("terms", $item, array("limit" => "1"));
+		$record = query("terms")->conditions($item)->one();
 		if (empty($record)) {
-			$item['position'] = "";
 			if ($update) fwrite(STDOUT, "Creating $taxonomy taxonomy term...\n");
 			store("terms", $item);
 			$id = sb("terms")->insert_id;
@@ -843,8 +866,7 @@ class Schemer {
 		if (!empty($pop)) {
 			foreach ($pop as $record) {
 				if ($record['immediate'] == $immediate) {
-					$query = ""; foreach ($record['match'] as $k => $v) $query .= "$k='$v' && "; $query = rtrim($query, '& ');
-					$match = query($table, "where:$query");
+					$match = query($table)->conditions($record['match'])->one();
 					if (empty($match)) {
 						$store = array_merge($record['match'], $record['others']);
 						fwrite(STDOUT, "Inserting $table record...\n");
@@ -1068,6 +1090,7 @@ class Schemer {
 		//ADD ACTIONS
 		$permits = ($this->db->has("permits")) ? query("permits", "where:related_table='".P($model)."'") : array();
 		$actions = array();
+		/*
 		foreach ($permits as $p) {
 			if (!isset($actions[$p['action']])) $actions[$p['action']] = array();
 				if ("object" == $p['priv_type']) $val = $p['related_id'];
@@ -1077,6 +1100,7 @@ class Schemer {
 				$actions[$p['action']][array_search($p['who'], $groups)] = (empty($actions[$p['action']][$groups[$p['who']]])) ? $val : ",".$val;
 			} else $actions[$p['action']][$p['role']] = (empty($actions[$p['action']][$p['role']])) ? $val : ",".$val;
 		}
+		*/
 		$data['actions'] = $actions;
 		//ADD URIS
 		if ($model == "uris") $data['uris'] = query("uris")->execute();

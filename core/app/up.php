@@ -25,7 +25,7 @@ $this->table("users  label_select:CONCAT(first_name, ' ', last_name, ' (', email
 	"last_visit  type:datetime  default:0000-00-00 00:00:00  list:true  display:false"
 );
 //This will be stored immediately after the creation of the users table
-$this->store("users", "email:root", "groups:root", true);
+$this->store("users", "email:root", array(), true);
 $this->table("permits  list:all",
 	"role  type:string  length:30",
 	"who  type:int  default:0",
@@ -41,7 +41,7 @@ $this->table("terms  label_select:terms.term",
 	"taxonomy  type:string  views:taxonomies  input_type:hidden",
 	"parent  type:int  default:0  input_type:category_select  readonly:  materialized_path:term_path",
 	"position  type:int  ordered:taxonomy parent  display:false",
-	"term_path  type:string  length:255  display:false"
+	"term_path  type:string  length:255  default:  display:false"
 );
 $this->table("terms_index",
 	"type  type:string  length:64",
@@ -94,7 +94,7 @@ $this->table("menus",
 	"target  type:string  default:",
 	"template  type:string  length:128  default:",
 	"position  type:int  ordered:menu parent",
-	"menu_path  type:string  length:255  display:false"
+	"menu_path  type:string  length:255  default:  display:false"
 );
 // URIS
 $this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
@@ -120,8 +120,8 @@ $this->menu("admin",
 			"template:divider",
 			"href:admin/menus  content:Menus",
 			"href:admin/taxonomies  content:Taxonomy",
-			"template:divider  collective:1",
-			"href:sb-admin  content:The Bridge  target:_blank  collective:1"
+			"template:divider  groups:root",
+			"href:sb-admin  content:The Bridge  target:_blank  groups:root"
 		)
 	),
 	"href:admin/users  content:Users",

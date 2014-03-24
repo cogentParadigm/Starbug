@@ -1,0 +1,8 @@
+{
+	"type":"mysql",
+	"host":"localhost",
+	"username":"root",
+	"password":"test",
+	"database":"test",
+	"prefix":"sb_"
+}

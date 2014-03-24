@@ -1,13 +1,6 @@
 {
 	"ENVIRONMENT" : "development",
 
-	"DB_TYPE" : ["mysql", "DB settings"],
-	"DB_HOST" : "localhost",
-	"DB_USERNAME" : "",
-	"DB_PASSWORD" : "",
-	"DB_NAME" : "",
-	"PREFIX" : "sb_",
-
 	"HMAC_KEY" : ["%HMAC_KEY%", "Used for managing sessions"],
 
 	"WEBSITE_URL" : ["/", "Relative path of the site"],

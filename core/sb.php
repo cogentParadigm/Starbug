@@ -40,6 +40,10 @@ class sb {
 	 * @var array holds alerts
 	 */
 	var $alerts = array();
+	/**
+	 * @var array holds $db change listeners
+	 */
+	var $listeners = array();
 	/**#@-*/
 	/**
 	 * @var array holds mixed in objects
@@ -64,6 +68,11 @@ class sb {
 		$this->db = $db;
 		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
 		$this->start_session();
+	}
+	
+	function set_database($db) {
+		$this->db = $db;
+		foreach ($this->listeners as $object) $object->set_database($db);
 	}
 	
 	/**
@@ -112,8 +121,8 @@ class sb {
 		foreach($args as $l) {
 			$parts = explode("/", $l);
 			if (!in_array($parts[0], array("app", "core", "util", "var")) && file_exists(BASE_DIR."/modules/".$parts[0])) $parts[0] = "modules/".$parts[0];
-			$l = implode("/", $parts);
-			if (!isset($this->provided[$l])) include(BASE_DIR."/".$l.".php");
+			$path = implode("/", $parts);
+			if (!isset($this->provided[$l])) include(BASE_DIR."/".$path.".php");
 		}
 	}
 
@@ -130,6 +139,10 @@ class sb {
 	 */
 	function get($name) {
 		return $this->db->model($name);
+	}
+	
+	function add_listener($object) {
+		$this->listeners[] = $object;
 	}
 	
 	/**

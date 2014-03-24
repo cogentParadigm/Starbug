@@ -17,18 +17,7 @@ include(dirname(__FILE__)."/classes/db.php");
 // include the Table class
 include(dirname(__FILE__)."/classes/Table.php");
 // included driver class
-if (Etc::DB_TYPE == "mysql") include(dirname(__FILE__)."/classes/mysql.php");
-/**
- * get records or columns
- * @ingroup data
- * @param string $model the name of the model
- * @param string $id the id of the record
- * @param string $column optional column name
- */
-function get() {
-	$args = func_get_args();
-	return call_user_func_array(array(sb()->db, "get"), $args);
-}
+include(dirname(__FILE__)."/classes/mysql.php");
 /**
 	* getter/caller for model properties/functions
 	* @ingroup data
@@ -50,12 +39,42 @@ function sb() {
 	}
 }
 /**
+ * get database
+ * @ingroup data
+ */
+function get_database($name) {
+	static $databases;
+	efault($databases, array());
+	if (!isset($databases[$name])) {
+		$config = config($name, null, "etc/db/");
+		if ($config['type'] == "mysql") {
+			$databases[$name] = new mysql($config);
+		}
+	}
+	return $databases[$name];
+}
+function select_database($name) {
+	$db = get_database($name);
+	sb()->set_database($db);
+}
+/**
  * @copydoc db::query
  * @ingroup data
  */
 function query($froms, $args="", $replacements=array()) {
 	global $sb;
 	return $sb->db->query($froms, $args, $replacements);
+}
+/**
+ * get records or columns
+ * @ingroup data
+ * @param string $model the name of the model
+ * @param string $id the id of the record
+ * @param string $column optional column name
+ */
+function get() {
+	$args = func_get_args();
+	return call_user_func_array(array(sb()->db, "get"), $args);
 }
 /**
  * perform a raw query

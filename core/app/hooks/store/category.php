@@ -2,6 +2,7 @@
 class hook_store_category {
 	function store(&$query, $key, $value, $column, $argument) {
 		if (!is_numeric($value)) error("This field is required", $column);
+		return $value;
 	}
 	
 	function after_store(&$query, $key, $value, $column, $argument) {
