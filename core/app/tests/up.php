@@ -100,7 +100,7 @@ $this->table("hook_store_md5",
 //only real use case is for password field -
 //on the user profile form, the user can optionally update their password
 $this->table("hook_store_optional_update",
-	"value  type:string  optional_update:"
+	"value  type:string  optional_update:  default:"
 );
 
 /*****************************************

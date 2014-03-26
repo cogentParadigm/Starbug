@@ -291,14 +291,62 @@ class storeTest extends UnitTest {
 	 * hook_store_optional_update
 	 */
 	function test_optional_update() {
+		//store the value
+		store("hook_store_optional_update", "value:starbug");
 		
+		//retrieve the record
+		$id = sb("hook_store_optional_update")->insert_id;
+		$record = get("hook_store_optional_update", $id);
+		
+		//assert that the initial value was stored
+		$this->assertSame("starbug", $record['value']);
+		
+		//update the record with an empty value
+		store("hook_store_optional_update", array("id" => $id, "value" => ""));
+		
+		//retrieve the record
+		$record = get("hook_store_optional_update", $id);
+
+		//assert that the initial value was not changed
+		$this->assertSame("starbug", $record['value']);
+
+		//truncate the table
+		query("hook_store_optional_update")->truncate();
 	}
 	
 	/**
 	 * hook_store_ordered
 	 */
 	function test_ordered() {
-		
+		//store 5 items
+		store("hook_store_ordered", array());
+		$id1 = sb("hook_store_ordered")->insert_id;
+		$r1 = get("hook_store_ordered", $id1);
+		/*
+		store("hook_store_ordered", array());
+		$id2 = sb("hook_store_ordered")->insert_id;
+		$r2 = get("hook_store_ordered", $id2);
+		store("hook_store_ordered", array());
+		$id3 = sb("hook_store_ordered")->insert_id;
+		$r3 = get("hook_store_ordered", $id2);
+		store("hook_store_ordered", array());
+		$id4 = sb("hook_store_ordered")->insert_id;
+		$r4 = get("hook_store_ordered", $id4);
+		store("hook_store_ordered", array());
+		$id5 = sb("hook_store_ordered")->insert_id;
+		$r5 = get("hook_store_ordered", $id5);
+		*/
+		//assert that they have incrementing values
+		$this->assertSame(1, $r1['value']);
+		/*
+		$this->assertSame(2, $r2['value']);
+		$this->assertSame(3, $r3['value']);
+		$this->assertSame(4, $r4['value']);
+		$this->assertSame(5, $r5['value']);
+		*/
+
+		//truncate the table
+		query("hook_store_ordered")->truncate();
 	}
 	
 	/**

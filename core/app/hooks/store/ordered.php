@@ -4,9 +4,11 @@ class hook_store_ordered {
 	var $value = false;
 	function set_conditions($query, $argument) {
 		if (false === $this->conditions) {
-			$this->conditions == array();
-			$fields = explode(" ", $argument);
-			foreach ($fields as $field) $this->conditions[$field] = $query->fields[$field];
+			$this->conditions = array();
+			if (!empty($argument)) {
+				$fields = explode(" ", $argument);
+				foreach ($fields as $field) $this->conditions[$field] = $query->fields[$field];
+			}
 		}
 	}
 	function empty_before_insert(&$query, $column, $argument) {
