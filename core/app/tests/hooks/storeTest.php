@@ -350,21 +350,61 @@ class storeTest extends UnitTest {
 	 * hook_store_owner
 	 */
 	function test_owner() {
+		//store the record
+		store("hook_store_owner", array());
 		
+		//retrieve the record
+		$id = sb("hook_store_owner")->insert_id;
+		$record = get("hook_store_owner", $id);
+		
+		//assert that the owner was stored
+		$this->assertSame("1", $record['value']);
+		
+		//truncate the table
+		query("hook_store_owner")->truncate();
 	}
 	
 	/**
 	 * hook_store_password
 	 */
 	function test_password() {
+		$pass = "myPassword";
 		
+		//store record
+		store("hook_store_password", "value:".$pass);
+		
+		//retrieve record
+		$id = sb("hook_store_password")->insert_id;
+		$record = get("hook_store_password", $id);
+		
+		//assert that the hashed password was stored
+		$this->assertTrue(Session::authenticate($record['value'], $pass, "0", Etc::HMAC_KEY));
+		
+		//truncate table
+		query("hook_store_password")->truncate();
 	}
 	
 	/**
 	 * hook_store_references
 	 */
 	function test_references() {
+		//store a uri
+		store("uris", "path:hook_store_references");
+		$uid = sb("uris")->insert_id;
 		
+		//store a record
+		store("hook_store_references", array("value" => ""));
+		
+		//retrieve record
+		$id = sb("hook_store_references")->insert_id;
+		$record = get("hook_store_references", $id);
+		
+		//assert that the record contains the last inserted uris id
+		$this->assertSame($uid, $record['value']);
+		
+		//remove uri and truncate table
+		query("uris")->condition("path", "hook_store_references")->delete();
+		query("hook_store_references")->truncate();
 	}
 	
 	/**
