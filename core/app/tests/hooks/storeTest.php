@@ -403,8 +403,8 @@ class storeTest extends UnitTest {
 		$this->assertSame($uid, $record['value']);
 		
 		//remove uri and truncate table
-		query("uris")->condition("path", "hook_store_references")->delete();
 		query("hook_store_references")->truncate();
+		query("uris")->condition("path", "hook_store_references")->delete();
 	}
 	
 	/**
