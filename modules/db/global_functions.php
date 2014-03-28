@@ -91,7 +91,7 @@ function raw_query($query) {
  * @copydoc db::store
  * @ingroup data
  */
-function store($name, $fields, $from="auto") {
+function store($name, $fields=array(), $from="auto") {
 	global $sb;
 	return $sb->db->store($name, $fields, $from);
 }

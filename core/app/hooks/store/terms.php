@@ -28,7 +28,9 @@ class hook_store_terms {
 				"type" => $name,
 				"type_id" => $id,
 				"rel" => $category_column_info['taxonomy']
-			))->condition("terms_id", $mentioned_tags, "!=")->delete();		
+			))->condition("terms_id", $mentioned_tags, "!=")
+			->condition("terms_id.slug", $mentioned_tags, "!=")
+			->condition("terms_id.term", $mentioned_tags, "!=")->delete();		
 		}
 	}
 }

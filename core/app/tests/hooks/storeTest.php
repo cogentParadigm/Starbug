@@ -411,21 +411,106 @@ class storeTest extends UnitTest {
 	 * hook_store_required
 	 */
 	function test_required() {
+		//attempt insert
+		store("hook_store_required");
 		
+		//verify the error exists
+		$this->assertSame("This field is required.", sb()->errors["hook_store_required"]["value"][0]);
+		
+		//clear errors
+		sb()->errors = array();
+		
+		//store a record
+		store("hook_store_required", "value:value");
+		
+		//retrieve the record
+		$id = sb("hook_store_required")->insert_id;
+		$record = get("hook_store_required", $id);
+		
+		//assert that the value is what we stored
+		$this->assertSame("value", $record['value']);
+		
+		//try to update it without specifying the value
+		store("hook_store_required", array("id" => $id));
+		
+		//verify the error exists
+		$this->assertSame("This field is required.", sb()->errors["hook_store_required"]["value"][0]);
+		
+		//clear errors
+		sb()->errors = array();
+		
+		//do a successful update
+		$record['value'] = "changed";
+		store("hook_store_required", $record);
+		
+		//retrieve the record
+		$row = get("hook_store_required", $id);
+		
+		//assert that the value is what we stored
+		$this->assertSame("changed", $record['value']);
+		
+		//empty the table
+		query("hook_store_required")->truncate();
 	}
 	
 	/**
 	 * hook_store_slug
 	 */
 	function test_slug() {
+		//store the record
+		store("hook_store_slug", array("title_field" => "Abdul's House of Rugs"));
 		
+		//retrieve the record
+		$id = sb("hook_store_slug")->insert_id;
+		$record = get("hook_store_slug", $id);
+		
+		//assert that the slug is stored correctly
+		$this->assertSame("abduls-house-of-rugs", $record['slug_field']);
+		
+		//empty the table
+		query("hook_store_slug")->truncate();
 	}
 	
 	/**
 	 * hook_store_terms
 	 */
 	function test_terms() {
+		//store terms
+		store("hook_store_terms", "statuses:published,pending,deleted");
 		
+		//get the id
+		$id = sb("hook_store_terms")->insert_id;
+		
+		//retrieve the terms_index entries
+		$terms = query("terms_index")->conditions("type:hook_store_terms  rel:statuses  type_id:$id")->select("terms_id.slug as slug")->sort("slug")->all();
+		
+		//verify the terms_index records are what we expect
+		$this->assertSame("deleted", $terms[0]["slug"]);
+		$this->assertSame("pending", $terms[1]["slug"]);
+		$this->assertSame("published", $terms[2]["slug"]);
+		
+		//update the terms (remove deleted)
+		store("hook_store_terms", "id:$id  statuses:-deleted");
+		
+		//retrieve the terms_index entries
+		$terms = query("terms_index")->conditions("type:hook_store_terms  rel:statuses  type_id:$id")->select("terms_id.slug as slug")->sort("slug")->all();
+		
+		//verify the terms_index records are what we expect
+		$this->assertSame("pending", $terms[0]["slug"]);
+		$this->assertSame("published", $terms[1]["slug"]);
+		
+		//update the terms (add deleted, remove others)
+		store("hook_store_terms", "id:$id  statuses:deleted,-~");
+		
+		//retrieve the terms_index entries
+		$terms = query("terms_index")->conditions("type:hook_store_terms  rel:statuses  type_id:$id")->select("terms_id.slug as slug")->sort("slug")->all();
+		
+		//verify the terms_index records are what we expect
+		$this->assertSame("deleted", $terms[0]["slug"]);
+		
+		//truncate the table
+		query("terms_index")->condition("type", "hook_store_terms")->delete();
+		query("hook_store_terms")->truncate();
 	}
 	
 	/**

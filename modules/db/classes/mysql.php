@@ -154,7 +154,7 @@ class mysql extends db {
 	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
 	 * @return array validation errors
 	 */
-	function store($name, $fields, $from="auto") {
+	function store($name, $fields=array(), $from="auto") {
 		$this->queue($name, $fields, $from, true);
 		//$last = array_pop($this->to_store);
 		//$this->to_store = array_merge(array($last), $this->to_store);
@@ -168,7 +168,7 @@ class mysql extends db {
 	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
 	 * @return array validation errors
 	 */
-	function queue($name, $fields, $from="auto", $unshift=false) {
+	function queue($name, $fields=array(), $from="auto", $unshift=false) {
 		if (!is_array($fields)) $fields = star($fields);
 		
 		$query = new query($name);
