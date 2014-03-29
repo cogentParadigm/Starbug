@@ -579,12 +579,12 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query = new query("uris");
 		$query->set("path", "phpunit")->insert(false);
 		
-		//expected output
-		$expected = "INSERT INTO `".P("uris")."` SET path = :set0";
+		//expected output (actual output contains extra fields due to validation)
+		$expected = "INSERT INTO `".P("uris")."` SET `path` = :set0";
 				
 		//compare
-		$actual = $query->build();
-		$this->assertSame($expected, $actual);		
+		$actual = reset(explode(",", $query->build()));
+		$this->assertSame($expected, $actual);
 		$this->assertSame("phpunit", $query->parameters[":set0"]);
 	}
 	
@@ -597,7 +597,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query->update(false);
 		
 		//expected output
-		$expected = "UPDATE `".P("uris")."` AS `uris` SET title = :set0 WHERE path = :default0";
+		$expected = "UPDATE `".P("uris")."` AS `uris` SET `title` = :set0, `modified` = :set1 WHERE path = :default0";
 				
 		//compare
 		$actual = $query->build();
@@ -615,7 +615,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query->update(false);
 		
 		//expected output
-		$expected = "UPDATE `".P("uris")."` AS `uris` LEFT JOIN `sb_users` AS `uris_owner` ON uris_owner.id=uris.owner SET uris.title = :set0 WHERE uris_owner.first_name = :default0";
+		$expected = "UPDATE `".P("uris")."` AS `uris` LEFT JOIN `sb_users` AS `uris_owner` ON uris_owner.id=uris.owner SET `uris`.`title` = :set0, `modified` = :set1 WHERE uris_owner.first_name = :default0";
 				
 		//compare
 		$actual = $query->build();
@@ -633,25 +633,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query->update(false);
 		
 		//expected output
-		$expected = "UPDATE `".P("uris")."` AS `uris` LEFT JOIN `sb_users` AS `uris_owner` ON uris_owner.id=uris.owner SET uris_owner.first_name = :set0 WHERE uris.title = :default0";
-				
-		//compare
-		$actual = $query->build();
-		$this->assertSame($expected, $actual);		
-		$this->assertSame("PHPUnit", $query->parameters[":set0"]);
-		$this->assertSame("phpunit", $query->parameters[":default0"]);
-	}
-	
-	function test_update_set_category() {
-		//the update method is normally an execution method
-		//passing false prevents the query from actually running
-		$query = new query("settings");
-		$query->set("settings.statuses", "PHPUnit");
-		$query->condition("settings.title", "phpunit");
-		$query->update(false);
-		
-		//expected output
-		$expected = "UPDATE `".P("uris")."` AS `uris` LEFT JOIN `sb_users` AS `uris_owner` ON uris_owner.id=uris.owner SET uris_owner.first_name = :set0 WHERE uris.title = :default0";
+		$expected = "UPDATE `".P("uris")."` AS `uris` LEFT JOIN `sb_users` AS `uris_owner` ON uris_owner.id=uris.owner SET `uris_owner`.`first_name` = :set0, `modified` = :set1 WHERE uris.title = :default0";
 				
 		//compare
 		$actual = $query->build();

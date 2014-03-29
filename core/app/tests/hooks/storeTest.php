@@ -516,15 +516,65 @@ class storeTest extends UnitTest {
 	/**
 	 * hook_store_time
 	 */
-	function test_time() {
+	function test_time() {		
+		//store a record
+		$before = time();
+		store("hook_store_time");
+		$after = time();
 		
+		//retrieve the record
+		$id = sb("hook_store_time")->insert_id;
+		$record = get("hook_store_time", $id);
+		
+		//verify that 2 time stamps were stored
+		$create = strtotime($record['creation_stamp']);
+		$update = strtotime($record['update_stamp']);
+		$this->assertTrue(($create >= $before && $create <= $after));
+		$this->assertTrue(($update >= $before && $update <= $after));
+		
+		//sleep for 1 second so the update time is different
+		sleep(1);
+		
+		//update the record
+		$before_update = time();
+		store("hook_store_time", array("id" => $id));
+		$after_update = time();
+		
+		//retrieve the record
+		$record = get("hook_store_time", $id);
+		
+		//verify that 2 time stamps were stored
+		$create = strtotime($record['creation_stamp']);
+		$update = strtotime($record['update_stamp']);
+		$this->assertTrue(($create >= $before && $create <= $after));
+		$this->assertFalse(($update >= $before && $update <= $after));
+		$this->assertTrue(($update >= $before_update && $update <= $after_update));
+		
+		//truncate the table
+		query("hook_store_time")->truncate();
 	}
 	
 	/**
 	 * hook_store_unique
 	 */
 	function test_unique() {
+		//store a value
+		store("hook_store_unique", "value:one");
 		
+		//assert that there are no errors
+		$this->assertFalse(errors());
+		
+		//try it again
+		store("hook_store_unique", "value:one");
+		
+		//verify the error exists
+		$this->assertSame("That value already exists.", sb()->errors["hook_store_unique"]["value"][0]);
+		
+		//clear errors
+		sb()->errors = array();
+		
+		//truncate the table
+		query("hook_store_unique")->truncate();
 	}
 	
 }

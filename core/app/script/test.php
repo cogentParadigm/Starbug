@@ -51,5 +51,7 @@
 	}
 	if ($no_errors) fwrite(STDOUT, "\nNo syntax errors detected!\n\n");
 	else exit(1);
-	if ($unit) passthru("phpunit -c etc/phpunit.xml $what ".implode(" ", $argv));
+	if ($unit) {
+		passthru("phpunit -c etc/phpunit.xml $what ".implode(" ", $argv));
+	}
 ?>

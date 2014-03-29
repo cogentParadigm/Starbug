@@ -14,7 +14,7 @@
     <testsuite name="core">
       <directory>../core/app/tests/</directory>
 		</testsuite>
-    <testsuite name="db">
+    <testsuite name="dbmodule">
       <directory>../modules/db/tests/</directory>
 		</testsuite>
   </testsuites>

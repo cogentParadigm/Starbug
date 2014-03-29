@@ -18,6 +18,11 @@
 
 class query implements IteratorAggregate, ArrayAccess {
 	
+	const PHASE_VALIDATION = 0;
+	const PHASE_STORE = 1;
+	const PHASE_AFTER_STORE = 2;
+	const PHASE_AFTER_DELETE = 3;
+	
 	//query array, holds the parts of the query
 	var $query = array(
 		'distinct' => false,
@@ -802,7 +807,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			if (!isset($this->exclusions[$k]) || true != $this->exclusions[$k]) {
 				if ($v == "NULL") $v = null;
 				$idx = $this->increment_parameter_index("set");
-				$set[] = "`".$k."` = :set".$idx;
+				$set[] = "`".str_replace(".", "`.`", $k)."` = :set".$idx;
 				$this->param("set".$idx, $v);
 			}
 		}
@@ -1085,7 +1090,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		$this->exclusions[$key] = true;
 	}
 	 
-	function validate($phase=0) {
+	function validate($phase=query::PHASE_VALIDATION) {
 		$oldscope = error_scope();
 		error_scope($this->model);
 		foreach (db::model($this->model)->filters as $col => $filters) {
@@ -1096,7 +1101,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			}
 		}
 		error_scope($oldscope);
-		if ($phase == 0) $this->validated = true;
+		if ($phase == query::PHASE_VALIDATION) $this->validated = true;
 	}
 	
 	function invoke_hook($phase, $column, $hook, $argument) {
@@ -1112,7 +1117,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		//0 = validate (before)
 		//1 = store (during)
 		//2 = after
-		if ($phase == 0) {
+		if ($phase == query::PHASE_VALIDATION) {
 			if ($key == false) {
 				if ($this->mode == "insert") $hook->empty_before_insert($this, $column, $argument);
 				else if ($this->mode == "update") $hook->empty_before_update($this, $column, $argument);
@@ -1122,11 +1127,11 @@ class query implements IteratorAggregate, ArrayAccess {
 				else if ($this->mode == "update") $this->fields[$key] = $hook->before_update($this, $key, $this->fields[$key], $column, $argument);
 				$this->fields[$key] = $hook->validate($this, $key, $this->fields[$key], $column, $argument);
 			}
-		} else if ($phase == 1 && $key != false) {
+		} else if ($phase == query::PHASE_STORE && $key != false) {
 			if ($this->mode == "insert") $this->fields[$key] = $hook->insert($this, $key, $this->fields[$key], $column, $argument);
 			else if ($this->mode == "update") $this->fields[$key] = $hook->update($this, $key, $this->fields[$key], $column, $argument);
 			$this->fields[$key] = $hook->store($this, $key, $this->fields[$key], $column, $argument);
-		} else if ($phase == 2 && $key != false) {
+		} else if ($phase == query::PHASE_AFTER_STORE && $key != false) {
 			if ($this->mode == "insert") $hook->after_insert($this, $key, $this->fields[$key], $column, $argument);
 			else if ($this->mode == "update") $hook->after_update($this, $key, $this->fields[$key], $column, $argument);
 			$hook->after_store($this, $key, $this->fields[$key], $column, $argument);
