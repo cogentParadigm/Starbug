@@ -1,7 +1,0 @@
-// @file etc/groups.json the list of user groups and their membership value (must be a power of 2)
-// @ingroup etc
-{
-	"root":			1,
-	"user":			2,
-	"admin":		4
-}

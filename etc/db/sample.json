@@ -3,6 +3,6 @@
 	"host":"localhost",
 	"username":"root",
 	"password":"test",
-	"database":"test",
+	"db":"test",
 	"prefix":"sb_"
 }

@@ -1,8 +1,0 @@
-// @file etc/statuses.json the list of row/object statuses and their numeric value (must be a power of 2)
-// @ingroup etc
-{
-	"deleted":		1,
-	"pending":		2,
-	"public":			4,
-	"private":		8
-}
