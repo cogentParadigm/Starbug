@@ -24,7 +24,8 @@
 	<h1 class="heading"><?php echo $options['label']; ?></h1>
 	<?
 		render(array($model."/admin-toolbar", "admin-toolbar"));
-		echo $grid;
+		render_display("grid", $model, $query, array("attributes" => $grid_attributes));
+		//echo $grid;
 	?>
 <?php if ($dialog) { ?>
 <div id="<?php echo $model; ?>_dialog" data-dojo-type="starbug/form/Dialog" data-dojo-id="<?php echo $model; ?>_form" data-dojo-props="url:'<?php echo $request->path."/"; ?>', callback:function(){<?php echo $model; ?>_grid.refresh()}"></div>

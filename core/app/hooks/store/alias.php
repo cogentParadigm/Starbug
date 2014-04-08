@@ -2,7 +2,7 @@
 class hook_store_alias {
 	function validate(&$query, $key, $value, $column, $alias) {
 		if (!empty($value) && !is_numeric($value) && $value != "NULL") {
-			$referenced_model = explode(" ", schema($query->model.".fields.".$column.".filters.references"));
+			$referenced_model = explode(" ", schema($query->model.".fields.".$column.".references"));
 			// $alias might be '%first_name% %last_name%'
 			$alias = explode("%", $alias);
 			$match = '';

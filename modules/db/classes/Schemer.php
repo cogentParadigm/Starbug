@@ -1059,7 +1059,7 @@ class Schemer {
 		$data = array_merge(array("name" => $model, "label" => ucwords(str_replace(array("-", "_"), array(" ", " "), $model)), "package" => settings("site_name"), "fields" => array(), "relations" => array()), $options);
 		//ADD FIELDS
 		foreach($fields as $name => $field) {
-			$data["fields"][$name] = array("filters" => array());
+			$data["fields"][$name] = array();
 			$data["fields"][$name]['display'] = ((isset($this->tables[$model][$name])) && ($field['display'] !== "false")) ? true : false;
 			if (!isset($field['input_type'])) {
 				if ($field['type'] == "text") $field['input_type'] = "textarea";
@@ -1074,10 +1074,12 @@ class Schemer {
 			}
 			$field[$field['type']] = "";
 			efault($field[$field['input_type']], "");
+			efault($field["label"], format_label($name));
 			foreach ($field as $k => $v) {
 				//if (("references" == $k) && (false === strpos($v, $model))) $data["fields"][$name]["references"] = $v;
-				$filter_locations = locate("store/$k.php", "hooks");
-				if (!empty($filter_locations)) $data["fields"][$name]["filters"][$k] = $v;
+				//$filter_locations = locate("store/$k.php", "hooks");
+				//if (!empty($filter_locations))
+				//$data["fields"][$name]["filters"][$k] = $v;
 				$data["fields"][$name][$k] = $v;
 			}
 		}

@@ -4,10 +4,6 @@ class AdminUsersController {
 		assign("model", "users");
 	}
 	function default_action() {
-		assign("columns", array(
-			"Groups" => "field:'groups'  plugin:starbug.grid.columns.terms  taxonomy:'groups'",	
-			"Statuses" => "field:'statuses'  plugin:starbug.grid.columns.terms  taxonomy:'statuses'"
-		));
 		$this->render("admin/list");
 	}
 	function create() {

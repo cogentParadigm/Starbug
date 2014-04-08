@@ -39,8 +39,7 @@ define([
 		_loadChildren: function() {
 			window.ms = this;
 			query('.multiple_select_item', this.containerNode).forEach(function(item){
-				console.log(item);
-				//item.parentNode.removeChild(item);
+				item.parentNode.removeChild(item);
 			});
 			this.inherited(arguments);
 		},

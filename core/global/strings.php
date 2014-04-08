@@ -78,6 +78,12 @@ function format_plural($singular) {
 	return $plural; 
 }
 /**
+ * helper function to format a machine name into a label
+ */
+function format_label($name) {
+	return ucwords(str_replace('_',' ',$name));
+}
+/**
  * convert an array to an HTML attribute string
  * @ingroup strings
  * @param array $ops an associative array

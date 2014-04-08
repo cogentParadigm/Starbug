@@ -74,6 +74,10 @@ class Uris {
 		$query->sort($ops['orderby']);
 		return $query;
 	}
+	
+	function display_admin($display, $options) {
+		$display->add("title", "type", "statuses  label:Status");
+	}
 
 }
 ?>

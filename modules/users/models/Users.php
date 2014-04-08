@@ -102,6 +102,10 @@ class Users {
 		else $query->condition("users.statuses", "deleted", "!=");
 		return $query;
 	}
+
+	function display_admin($display, $options) {
+		$display->add("first_name", "last_name", "email", "last_visit", "groups", "statuses  label:Status");
+	}
 	
 	function filter($row) {
 		//even though it shouldn't be useful to attackers,

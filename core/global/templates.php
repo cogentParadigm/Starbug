@@ -134,4 +134,10 @@ function link_to($text, $url="", $attributes=array()) {
 	assign("innerHTML", $text);
 	render("tag");
 }
+
+function render_display($name, $model, $query, $options=array()) {
+	$class = get_module_class("displays/".ucwords($name)."Display", "lib/Display", "core");
+	$display = new $class($model, $query, $options);
+	$display->render();
+}
 ?>
