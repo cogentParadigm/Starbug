@@ -93,7 +93,7 @@ $this->table("menus",
 	"content  type:string  length:255  default:",
 	"target  type:string  default:",
 	"template  type:string  length:128  default:",
-	"position  type:int  ordered:menu parent",
+	"position  type:int  ordered:menu parent  default:0",
 	"menu_path  type:string  length:255  default:  display:false"
 );
 // URIS

@@ -19,7 +19,7 @@ function(dojo, strings, put, on){
 			//edit button
 			if (typeof grid['dialog'] != 'undefined') var href = 'javascript:'+grid['dialog']+'.show('+row.id+')';
 			else var href = base_url+'/update/'+row.id+dojo.global.location.search;
-			var edit = put(div, 'a.Edit.btn[title=Edit][href='+href+']', put('div.icon-edit'));
+			var edit = put(div, 'a.Edit.btn.btn-default[title=Edit][href='+href+']', put('div.fa.fa-edit'));
 			if (typeof grid['editor'] != 'undefined') {
 				on(edit, 'click', function(evt) {
 					grid.editor.edit(row.id);
@@ -30,7 +30,7 @@ function(dojo, strings, put, on){
 			
 			//delete button
 			var remove = 'javascript:;';
-			remove = put(div, 'a.Delete.btn[title=Delete][href='+remove+']', put('div.icon-remove'));
+			remove = put(div, 'a.Delete.btn.btn-default[title=Delete][href='+remove+']', put('div.fa.fa-times'));
 			on(remove, 'click', function() {
 				if (confirm('Are you sure you want to delete this item?')) {
 					var d = grid.store.remove(row.id);

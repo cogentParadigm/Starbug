@@ -19,14 +19,16 @@
 		$grid_attributes['dialog'] = $model."_form";
 		assign("grid_attributes", $grid_attributes);
 	}
-	$grid = capture("grid");
 ?>
-	<h1 class="heading"><?php echo $options['label']; ?></h1>
+<div class="panel panel-default">
+	<div class="panel-heading"><strong> <span data-i18n="<?php echo $options['label']; ?>"><?php echo $options['label']; ?></span></strong></div>
+	<div class="panel-body">
 	<?
 		render(array($model."/admin-toolbar", "admin-toolbar"));
 		render_display("grid", $model, $query, array("attributes" => $grid_attributes));
-		//echo $grid;
 	?>
+	</div>
+</div>
 <?php if ($dialog) { ?>
 <div id="<?php echo $model; ?>_dialog" data-dojo-type="starbug/form/Dialog" data-dojo-id="<?php echo $model; ?>_form" data-dojo-props="url:'<?php echo $request->path."/"; ?>', callback:function(){<?php echo $model; ?>_grid.refresh()}"></div>
 <?php } ?>

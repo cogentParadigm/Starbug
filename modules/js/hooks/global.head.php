@@ -2,7 +2,7 @@
 		<!--[if lt IE 9]>
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-			<script type="text/javascript" src="<?php echo uri("core/app/public/js/dojo/release/dojo/dojo/dojo.js"); ?>" data-dojo-config="parseOnLoad: true, serverTime:'<?php echo date("Y-m-d H:i:s"); ?>'"></script>
+			<script type="text/javascript" src="<?php echo uri("libraries/dojo/release/dojo/dojo/dojo.js"); ?>" data-dojo-config="parseOnLoad: true, serverTime:'<?php echo date("Y-m-d H:i:s"); ?>'"></script>
 	<?php } else { ?>
 			<?php
 				$profile = file_get_contents(BASE_DIR."/etc/dojo.profile.js");
@@ -13,7 +13,7 @@
 				$paths = "";
 				foreach ($profile['prefixes'] as $p) $paths .= "'$p[0]':'$p[1]', ";
 			?>
-			<script type="text/javascript" src="<?php echo uri("core/app/public/js/dojo/dojo/dojo.js"); ?>" data-dojo-config="async: true, parseOnLoad: true, serverTime:'<?php echo date("Y-m-d H:i:s"); ?>', isDebug:true"></script>
+			<script type="text/javascript" src="<?php echo uri("libraries/dojo/dojo/dojo.js"); ?>" data-dojo-config="async: true, parseOnLoad: true, serverTime:'<?php echo date("Y-m-d H:i:s"); ?>', isDebug:true"></script>
 			<script type="text/javascript">
 				require({
 						packages: [<?php foreach ($profile['prefixes'] as $idx => $p) { if ($idx > 0) echo ','; echo "\n"; ?>

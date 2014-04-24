@@ -8,7 +8,7 @@
 	if (!empty($file['category'])) $record['category'] = $file['category'];
 	$moved = sb("files")->upload($record, $file);
 	if ($moved) {
-		$id = sb('insert_id');
+		$id = sb('files')->insert_id;
 		$_post['id'] = $id;
 		$_post['original_name'] = str_replace(" ", "_", $file['name']); 
 		$_post['name'] = $id."_".$_post['original_name'];

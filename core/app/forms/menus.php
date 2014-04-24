@@ -30,34 +30,33 @@
 		if (!empty($_GET['new'])) text("menu");
 		else hidden("menu  default:".$_GET['menu']);
 	?>
-	<div class="inline-fields">
-		<div class="input select">
+	<div class="row">
+		<div class="form-group select col-md-6">
 			<label>Parent</label>
-			<select id="parent_select" name="menus[parent]">
+			<select id="parent_select" name="menus[parent]" class="form-control">
 					<option value="0"></option>
 					<?php foreach ($links as $link) menu_option($link) ?>
 			</select>
-			<span class="info">Leave empty to place the item at the top level.</span>
+			<span class="help-block">Leave empty to place the item at the top level.</span>
 		</div>
-		<?php text("position  info:Enter 1 for first position, leave empty for last."); ?>
+		<?php text("position  div:col-md-6  info:Enter 1 for first position, leave empty for last."); ?>
 	</div>
-	<div class="inline-fields">
+	<div class="row">
 	<?php
 		//select("type  options:Link to page,Custom link,Divider  values:page,link,divider  onchange:this.parentNode.parentNode.className = 'menu_form '+this.options[this.selectedIndex].value");
-		select("uris_id  label:Page  from:uris  caption:%title%  value:id  info:Select a page.", array("" => "NULL"));
-		text("href  label:URL  info:Enter a URL manually.");
+		select("uris_id  div:col-md-6  label:Page  from:uris  caption:%title%  value:id  info:Select a page.", array("" => "NULL"));
+		text("href  div:col-md-6  label:URL  info:Enter a URL manually.");
 	?>
 	</div>
-	<div class="inline-fields">
-		<div class="input">
+	<div class="row">
+		<?php text("content  div:col-md-6  id:content-field  info:Override the link text."); ?>
+		<div class="col-md-6">
 			<?php
-				checkbox("target  label:Open in new tab/window  value:_blank  div:checkbox");
-				echo "<br/>";
+				checkbox("target  label:Open in new tab/window  value:_blank");
 				checkbox("template  label:Divider  value:divider  div:checkbox");
 			?>
 		</div>
-		<?php text("content  id:content-field  info:Override the link text."); ?>
 	</div>
-	<div class="btn-group"><button class="submit btn" type="submit">Save</button><button type="button" class="cancel btn" onclick="window.location='<?= uri("admin/menus/menu/".$menu); ?>'">Cancel</button></div>
+	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger" onclick="window.location='<?= uri("admin/menus/menu/".$menu); ?>'">Cancel</button></div>
 	<?php close_form(); ?>	
 	<br class="clear"/>

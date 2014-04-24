@@ -1,26 +1,26 @@
 [submodule "core/app/public/js/dojo/dojo"]
-	path = core/app/public/js/dojo/dojo
+	path = libraries/dojo/dojo
 	url = git://github.com/dojo/dojo.git
 [submodule "core/app/public/js/dojo/dijit"]
-	path = core/app/public/js/dojo/dijit
+	path = libraries/dojo/dijit
 	url = git://github.com/dojo/dijit.git
 [submodule "core/app/public/js/dojo/dojox"]
-	path = core/app/public/js/dojo/dojox
+	path = libraries/dojo/dojox
 	url = git://github.com/dojo/dojox.git
 [submodule "core/app/public/js/dojo/util"]
-	path = core/app/public/js/dojo/util
+	path = libraries/dojo/util
 	url = git://github.com/dojo/util.git
 [submodule "core/app/public/js/dojo/dgrid"]
-	path = core/app/public/js/dojo/dgrid
+	path = libraries/dojo/dgrid
 	url = git://github.com/SitePen/dgrid.git
 [submodule "core/app/public/js/dojo/put-selector"]
-	path = core/app/public/js/dojo/put-selector
+	path = libraries/dojo/put-selector
 	url = git://github.com/kriszyp/put-selector.git
 [submodule "core/app/public/js/dojo/xstyle"]
-	path = core/app/public/js/dojo/xstyle
+	path = libraries/dojo/xstyle
 	url = git://github.com/kriszyp/xstyle.git
 [submodule "core/app/public/js/dojo/bootstrap"]
-	path = core/app/public/js/dojo/bootstrap
+	path = libraries/dojo/bootstrap
 	url = https://github.com/xsokev/Dojo-Bootstrap.git
 [submodule "util/phpthumb"]
 	path = util/phpthumb
@@ -28,3 +28,12 @@
 [submodule "util/phpmailer"]
 	path = util/phpmailer
 	url = git://github.com/PHPMailer/PHPMailer.git
+[submodule "libraries/dojo/dbootstrap"]
+	path = libraries/dojo/dbootstrap
+	url = https://github.com/cogentParadigm/dbootstrap.git
+[submodule "libraries/bootstrap"]
+	path = libraries/bootstrap
+	url = https://github.com/twbs/bootstrap.git
+[submodule "libraries/font-awesome"]
+	path = libraries/font-awesome
+	url = https://github.com/FortAwesome/Font-Awesome.git

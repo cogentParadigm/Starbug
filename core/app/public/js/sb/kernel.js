@@ -104,7 +104,7 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", 'dojo/_base/xhr'], f
 										"insertdatetime media nonbreaking save table contextmenu directionality",
 										"emoticons template paste save"
 								],
-
+								relative_urls:false,
 								toolbar1: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | print preview",
 								image_advtab: true,
 								file_browser_callback: tiny_mce_browser_callback

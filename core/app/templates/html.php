@@ -3,7 +3,7 @@
 	<head>
 		<?php $sb->publish("head"); ?>
 	</head>
-	<body class="claro">
+	<body class="dbootstrap">
 		<?php render("page"); ?>
 		<?php $sb->publish("footer"); ?>
 	</body>

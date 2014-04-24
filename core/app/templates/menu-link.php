@@ -32,14 +32,14 @@
 		$class[] = "dropdown";
 		$attributes['data-dojo-type'] = "bootstrap/Dropdown";
 		$link_attributes['class'] = "dropdown-toggle";
-		$link_attributes['data-taggle'] = "dropdown";
+		$link_attributes['data-toggle'] = "dropdown";
 		$link_attributes['role'] = "button";
 	}
 	
 	//if sortable, set draggable attribute
 	if ($sortable) {
 		$attributes['draggable'] = "true";
-		unset($link_attributes['href']);
+		$link_attributes['href'] = "javascript:;";
 	}
 	$attributes['data-menu-id'] = $link['id'];
 	$attributes['data-parent'] = $link['parent'];
@@ -59,9 +59,9 @@
 <?php if (empty($link['template'])) { ?>
 	<li<?php html_attributes($attributes); ?>>
 		<?php if ($editable) { ?>
-			<div class="btn-group right">
-				<a href="<?php echo uri("admin/$area/update/".$link['id']); ?>" class="btn btn-mini Edit"><div class="sprite icon"></div></a>
-				<a href="javascript:(function(){sb.get('<?php echo $model; ?>').remove('<?php echo $link['id']; ?>').then(function(){window.location.reload();});return false;})()" class="btn btn-mini Delete"><div class="sprite icon"></div></a>
+			<div class="btn-group pull-right" style="position:relative;z-index:100">
+				<a href="<?php echo uri("admin/$area/update/".$link['id']); ?>" class="btn btn-default Edit"><div class="fa fa-edit"></div></a>
+				<a href="javascript:(function(){sb.get('<?php echo $model; ?>').remove('<?php echo $link['id']; ?>').then(function(){window.location.reload();});return false;})()" class="btn btn-default Delete"><div class="fa fa-times"></div></a>
 			</div>
 		<?php } ?>
 		<a<?php html_attributes($link_attributes); ?>><?php echo $link_text; ?></a>

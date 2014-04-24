@@ -27,6 +27,10 @@ class <?= ucwords($name); ?>Model extends Table {
 		return $query;
 	}
 	
+	function display_admin($display, $ops) {
+		$display->add("id");
+	}
+	
 	function query_get($query, &$ops) {
 		return $query;
 	}

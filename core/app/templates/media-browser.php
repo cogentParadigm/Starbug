@@ -8,7 +8,7 @@
 			body.claro div.dijitSplitter{background:#cfe5fa}
 		</style>
 	</head>
-	<body id="body" class="claro">
+	<body id="body" class="dbootstrap">
 		<div data-dojo-type="starbug/media/Browser" data-dojo-id="mediabrowser" style="height:100%"></div>
 	</body>
 </html>

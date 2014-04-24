@@ -615,7 +615,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query->update(false);
 		
 		//expected output
-		$expected = "UPDATE `".P("uris")."` AS `uris` LEFT JOIN `sb_users` AS `uris_owner` ON uris_owner.id=uris.owner SET `uris`.`title` = :set0, `modified` = :set1 WHERE uris_owner.first_name = :default0";
+		$expected = "UPDATE `".P("uris")."` AS `uris` LEFT JOIN `".P("users")."` AS `uris_owner` ON uris_owner.id=uris.owner SET `uris`.`title` = :set0, `modified` = :set1 WHERE uris_owner.first_name = :default0";
 				
 		//compare
 		$actual = $query->build();
@@ -633,7 +633,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query->update(false);
 		
 		//expected output
-		$expected = "UPDATE `".P("uris")."` AS `uris` LEFT JOIN `sb_users` AS `uris_owner` ON uris_owner.id=uris.owner SET `uris_owner`.`first_name` = :set0, `modified` = :set1 WHERE uris.title = :default0";
+		$expected = "UPDATE `".P("uris")."` AS `uris` LEFT JOIN `".P("users")."` AS `uris_owner` ON uris_owner.id=uris.owner SET `uris_owner`.`first_name` = :set0, `modified` = :set1 WHERE uris.title = :default0";
 				
 		//compare
 		$actual = $query->build();

@@ -1,1 +1,1 @@
-<span class="alert alert-error"><?= $error; ?></span>
+<p class="alert alert-danger"><?= $error; ?></p>

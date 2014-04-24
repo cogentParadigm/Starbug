@@ -21,7 +21,7 @@ class Files {
 		if (!empty($file['name'])) {
 			if ($file["error"] > 0) error($file["error"], "filename");
 			$record['filename'] = str_replace(" ", "_", $file['name']);
-			$record['mime_type'] = $this->get_mime($file['tmp_name']);
+			$record['mime_type'] = $file['type'];//$this->get_mime($file['tmp_name']);
 			$record['size'] = filesize($file['tmp_name']);
 			efault($record['category'], "files_category uncategorized");
 			$this->store($record);
@@ -52,9 +52,7 @@ class Files {
 	
 	function get_mime($file_path) {
 		$mtype = '';
-		if (function_exists('mime_content_type')){
-			$mtype = mime_content_type($file_path);
-		} else if (function_exists('finfo_file')){
+		if (function_exists('finfo_file')){
 			$finfo = finfo_open(FILEINFO_MIME);
 			$mtype = finfo_file($finfo, $file_path);
 			finfo_close($finfo);  

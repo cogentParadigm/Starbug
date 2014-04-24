@@ -3,6 +3,7 @@ define(['dojo', 'sb/kernel', 'starbug', 'starbug/store/Api'], function(dojo, sb,
 				if (!action) action = 'admin';
 				if (typeof this.stores[model+'.'+action] != 'undefined') return this.stores[model+'.'+action];
 				var store = new ApiStore({model:model, action:action});
+				if (model == "uris") store.post_action = "update";
 				this.stores[model+'.'+action] = store;
 				return store;
 			};

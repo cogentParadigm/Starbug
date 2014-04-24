@@ -24,8 +24,8 @@ class GridDisplay {
     efault($this->attributes['data-dojo-type'], $this->grid_class);
     
     //parse query		
-		$params = star($this->query);
-		$query = array_shift($params);
+		$params = $options;
+		$query = $this->query;
 		$this->attributes['action'] = $query;
 		$params = array_merge($_GET, $params);
 		

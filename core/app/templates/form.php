@@ -39,6 +39,6 @@
 				?>
 		<?php } ?>
 	<?php } ?>
-	<div class="btn-group"><button class="submit btn" type="submit">Save</button><button type="button" class="cancel btn"<?php if (!empty($cancel_url)) { ?> onclick="window.location='<?= $cancel_url; ?>'"<?php } ?>>Cancel</button></div>
+	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger"<?php if (!empty($cancel_url)) { ?> onclick="window.location='<?= $cancel_url; ?>'"<?php } ?>>Cancel</button></div>
 	<br class="clear"/>
 <?php close_form(); ?>
