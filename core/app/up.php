@@ -114,7 +114,7 @@ $this->uri("robots", "prefix:core/app/views/  format:txt");
 //Admin Menu
 $this->menu("admin",
 	array(
-		"content" => '<span class="icon-cog"></span>',
+		"content" => '<span class="fa fa-cog"></span>',
 		"children" => array(
 			"href:admin/settings  content:Settings",
 			"template:divider",
