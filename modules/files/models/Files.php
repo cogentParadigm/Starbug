@@ -21,7 +21,7 @@ class Files {
 		if (!empty($file['name'])) {
 			if ($file["error"] > 0) error($file["error"], "filename");
 			$record['filename'] = str_replace(" ", "_", $file['name']);
-			$record['mime_type'] = $this->get_mime($file['tmp_name']);
+			$record['mime_type'] = $file['type'];//$this->get_mime($file['tmp_name']);
 			$record['size'] = filesize($file['tmp_name']);
 			efault($record['category'], "files_category uncategorized");
 			$this->store($record);
@@ -46,15 +46,13 @@ class Files {
 	}
 
 	function delete($file) {
-		$this->remove("id='" .$file['id'] ."'");
+		$this->remove("id:" .$file['id']);
 		return array();
 	}
 	
 	function get_mime($file_path) {
 		$mtype = '';
-		if (function_exists('mime_content_type')){
-			$mtype = mime_content_type($file_path);
-		} else if (function_exists('finfo_file')){
+		if (function_exists('finfo_file')){
 			$finfo = finfo_open(FILEINFO_MIME);
 			$mtype = finfo_file($finfo, $file_path);
 			finfo_close($finfo);  
@@ -65,11 +63,10 @@ class Files {
 		return $mtype;
 	}
 	
-	function query_list($query) {
-		$query['where'][] = "!(files.status & 1)";
-		if (!empty($query['category']) && is_numeric($query['category'])) {
-			$query['where'][] = "category=?";
-			$query['params'][] = $query['category'];
+	function query_list($query, &$ops) {
+		$query->condition("files.statuses", "deleted", "!=");
+		if (!empty($ops['category']) && is_numeric($ops['category'])) {
+			$query->condition("category", $ops['category']);
 		}
 		return $query;
 	}

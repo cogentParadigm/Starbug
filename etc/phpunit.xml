@@ -8,11 +8,14 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="../core/cli.php"
+         bootstrap="../core/test.php"
 >
   <testsuites>
     <testsuite name="core">
       <directory>../core/app/tests/</directory>
+		</testsuite>
+    <testsuite name="dbmodule">
+      <directory>../modules/db/tests/</directory>
 		</testsuite>
   </testsuites>
  

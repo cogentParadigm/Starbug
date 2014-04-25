@@ -11,5 +11,8 @@ $name = array_shift($argv);
 $params = join("  ", $argv);
 $records = query($name, $params);
 echo "query $name $params\n";
+$params = star($params);
+if (!empty($params['limit']) && $params['limit'] == 1) $records = array($records);
+else $records = $records->execute();
 cli::table($records);
 ?>

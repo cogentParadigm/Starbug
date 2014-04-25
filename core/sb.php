@@ -40,6 +40,10 @@ class sb {
 	 * @var array holds alerts
 	 */
 	var $alerts = array();
+	/**
+	 * @var array holds $db change listeners
+	 */
+	var $listeners = array();
 	/**#@-*/
 	/**
 	 * @var array holds mixed in objects
@@ -66,6 +70,11 @@ class sb {
 		$this->start_session();
 	}
 	
+	function set_database($db) {
+		$this->db = $db;
+		foreach ($this->listeners as $object) $object->set_database($db);
+	}
+	
 	/**
 	 * load the Session class and validate the current session if the user has a cookie
 	 */
@@ -73,8 +82,10 @@ class sb {
 		$this->import("core/lib/Session");
 		if (false !== ($session = Session::active())) {
 			if (!empty($session['v']) && is_numeric($session['v'])) {
-				$user = $this->db->query("users", "where:id=?  limit:1", array($session['v']));
+				$user = $this->db->query("users", "select:users.*,users.groups as groups,users.statuses as statuses  where:id=?  limit:1", array($session['v']));
 				if (Session::validate($session, $user['password'], Etc::HMAC_KEY)) {
+					$user['groups'] = is_null($user['groups']) ? array() : explode(",", $user['groups']);
+					$user['statuses'] = is_null($user['statuses']) ? array() : explode(",", $user['statuses']);
 					$this->user = $user;
 				}
 			}
@@ -104,7 +115,16 @@ class sb {
 	 * import function. only imports once when used with provide
 	 * @param string $loc path of file to import without '.php' at the end
 	 */
-	function import($loc) {$sb = self::$instance; $args = func_get_args(); foreach($args as $l) if (!isset($this->provided[$l])) include(BASE_DIR."/".$l.".php");}
+	function import($loc) {
+		$sb = self::$instance;
+		$args = func_get_args();
+		foreach($args as $l) {
+			$parts = explode("/", $l);
+			if (!in_array($parts[0], array("app", "core", "util", "var")) && file_exists(BASE_DIR."/modules/".$parts[0])) $parts[0] = "modules/".$parts[0];
+			$path = implode("/", $parts);
+			if (!isset($this->provided[$l])) include(BASE_DIR."/".$path.".php");
+		}
+	}
 
 	/**
 	 * when imported use provide to prevent further imports from attempting to include it again
@@ -119,6 +139,10 @@ class sb {
 	 */
 	function get($name) {
 		return $this->db->model($name);
+	}
+	
+	function add_listener($object) {
+		$this->listeners[] = $object;
 	}
 	
 	/**

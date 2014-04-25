@@ -18,6 +18,7 @@ $sb->provide("core/lib/test/Fixture");
  * @ingroup Fixture
  */
 class Fixture {
+	var $keys = array("id");
 	var $type = '';
 	var $records = array();
 	var $ids = array();
@@ -48,8 +49,7 @@ class Fixture {
 	
 	function store($idx) {
 		store($this->type, $this->filter($idx, $this->records[$idx]));
-		global $sb;
-		$this->ids[$idx] = sb("insert_id");
+		if (count($this->keys)==1 && $this->keys[0] == "id") $this->ids[$idx] = sb($this->type)->insert_id;
 	}
 	
 	function storeAll() {
@@ -58,17 +58,18 @@ class Fixture {
 	
 	function remove($idx) {
 		if (isset($this->ids[$idx])) {
-			remove($this->type, "id='".$this->ids[$idx]."'");
+			remove($this->type, "id:".$this->ids[$idx]);
 			unset($this->ids[$idx]);
-		} else {
-			$where = array();
-			foreach ($this->records[$idx] as $k => $v) $where[] = "$k='$v'";
-			remove($this->type, implode(" && ", $where));
+		} else if (!empty($this->records[$idx])) {
+			$r = array();
+			foreach ($this->records as $k => $v) $r[$this->type.".".$k] = $v;
+			remove($this->type, $r);
 		}
 	}
 	
 	function removeAll() {
-		foreach ($this->records as $idx => $record) $this->remove($idx);
+		$records = array_reverse($this->records);
+		foreach ($records as $idx => $record) $this->remove($idx);
 	}
 	
 	function filter($key, $record) {

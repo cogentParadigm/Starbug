@@ -10,6 +10,9 @@
 // define SB_START_TIME to record application start time
 defined('SB_START_TIME') or define('SB_START_TIME',microtime(true));
 
+//define test mode as false
+if (!defined('SB_TEST_MODE')) define('SB_TEST_MODE', false);
+
 // define directory paths and set the include path
 if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("/core", "", dirname(__FILE__)));
 set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);
@@ -20,6 +23,9 @@ if (!defined('STDIN')) define("STDIN", fopen("php://stdin", "r"));
 
 // load configuration
 include(BASE_DIR."/etc/Etc.php");
+
+//define default database
+if (!defined('DEFAULT_DATABASE')) define("DEFAULT_DATABASE", "default");
 
 // set the default time zone
 if (defined('Etc::TIME_ZONE')) date_default_timezone_set(Etc::TIME_ZONE);
@@ -37,15 +43,7 @@ include(BASE_DIR."/core/global_functions.php");
  * instantiate the database to be passed to sb
  * @ingroup global
  */
-$driver_class = Etc::DB_TYPE;
-$db = new $driver_class(array(
-	"type" => Etc::DB_TYPE,
-	"host" => Etc::DB_HOST,
-	"db" => Etc::DB_NAME,
-	"username" => Etc::DB_USERNAME,
-	"password" => Etc::DB_PASSWORD,
-	"prefix" => Etc::PREFIX
-));
+$db = get_database(DEFAULT_DATABASE);
 
 /**
  * global instance of the sb class

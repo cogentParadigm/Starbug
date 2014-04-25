@@ -4,6 +4,9 @@ class AdminUrisController {
 		assign("model", "uris");
 	}
 	function default_action() {
+		assign("columns", array(
+			"Statuses" => "field:'statuses'  plugin:starbug.grid.columns.terms  taxonomy:'statuses'"
+		));
 		$this->render("admin/list");
 	}
 	function create() {

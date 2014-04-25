@@ -4,7 +4,7 @@
 	}
 ?>
 <?php $field_name = rtrim(end(explode("[", $name)), ']'); ?>
-<?php if (!$nodiv) { ?><div class="<?php echo $model."-".$field_name; ?> input <?php
+<?php if (!$nodiv) { ?><div class="form-group <?php echo $model."-".$field_name; ?> <?php
 	if (!empty($div)) {
 		echo $div." ";
 		assign("div", "");
@@ -16,7 +16,8 @@
 		assign("required", true);
 	} else assign("required", false);
 ?>"><?php } ?>
-	<?php if ($control != "input" || ($type != "checkbox" && $type != "radio")) render("form/label"); ?>
+	<?php //if ($control != "input" || ($type != "checkbox" && $type != "radio")) render("form/label"); ?>
+		<?php render("form/label"); ?>
 	<?php
 		if (!empty($between)) {
 			echo $between; assign("between", "");
@@ -34,15 +35,15 @@
 			}
 		}
 	?>
-<? render(array("$model/form/$field-$control", "form/$field-$control", "$model/form/$control", "form/$control")); ?>
-<?php if ($control == "input" && ($type == "checkbox" || $type == "radio")) render("form/label"); ?>
+<? if ($control != "input" || ($type != "checkbox" && $type != "radio")) render(array("$model/form/$field-$control", "form/$field-$control", "$model/form/$control", "form/$control")); ?>
+<?php //if ($control == "input" && ($type == "checkbox" || $type == "radio")) render("form/label"); ?>
 <?php
 	if (!empty($after)) {
 		echo $after; assign("after", "");
 	}
 ?>
 <?php if (!empty($info)) { ?>
-	<span class="info"><?php echo $info; assign("info", ""); ?></span>
+	<span class="help-block"><?php echo $info; assign("info", ""); ?></span>
 <?php } ?>
 <?php if (!$nodiv) { ?></div><?php } else assign("nodiv", false); ?>
 <?php

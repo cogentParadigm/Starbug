@@ -11,7 +11,7 @@ class Settings {
 	}
 
 	function delete($setting) {
-		return $this->remove('id='.$setting['id']);
+		return $this->remove('id:'.$setting['id']);
 	}
 
 }

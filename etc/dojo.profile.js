@@ -6,6 +6,7 @@ dependencies = {
 			// in addition to the standard dojo.js base APIs. 
 			name: "dojo.js",
 			dependencies: [
+				'dbootstrap',
 				'sb',
 				'dojo/selector/acme',
 				'dojo/query',
@@ -26,9 +27,10 @@ dependencies = {
 		["dgrid", "../dgrid"],
 		["put-selector", "../put-selector"],
 		["xstyle", "../xstyle"],
+		["dbootstrap", "../dbootstrap"],
 		["bootstrap", "../bootstrap"],
-		["sb", "../../sb"],
-		["starbug", "../../starbug"],
-		["app", "../../../../../../app/public/js"]
+		["sb", "../../../core/app/public/js/sb"],
+		["starbug", "../../../core/app/public/js/starbug"],
+		["app", "../../../app/public/js"]
 	]
 }

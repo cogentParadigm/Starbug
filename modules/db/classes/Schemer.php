@@ -74,6 +74,8 @@ class Schemer {
 	var $trigger_drops = array();
 	
 	var $current;
+	
+	var $testMode = false;
 
 	/**
 	 * constructor. loads migrations
@@ -83,6 +85,10 @@ class Schemer {
 		$this->migrations = config("modules");
 		foreach ($this->migrations as $i => $m) $this->migrations[$i] = "modules/".$m;
 		$this->migrations = array_merge(array("core/app"), $this->migrations, array("app"));
+	}
+	
+	function set_database($db) {
+		$this->db = $db;
 	}
 
 	function  clean() {
@@ -94,6 +100,10 @@ class Schemer {
 		$this->current = $migration;
 		$migration = BASE_DIR."/".$migration."/up.php";
 		if (file_exists($migration)) include($migration);
+		if ($this->testMode) {
+			$migration = BASE_DIR."/".$this->current."/tests/up.php";
+			if (file_exists($migration)) include($migration);
+		}
 	}
 	
 	function down($migration) {
@@ -101,6 +111,10 @@ class Schemer {
 		$this->current = $migration;
 		$migration = BASE_DIR."/".$migration."/down.php";
 		if (file_exists($migration)) include($migration);
+		if ($this->testMode) {
+			$migration = BASE_DIR."/".$this->current."/tests/down.php";
+			if (file_exists($migration)) include($migration);
+		}
 	}
 
 	function fill() {
@@ -111,6 +125,12 @@ class Schemer {
 			$this->up($current);
 			$current++;
 		}
+	}
+	
+	function testMode($to=true) {
+		$this->testMode = $to;
+		$this->clean();
+		$this->fill();
 	}
 
 	/**
@@ -129,11 +149,11 @@ class Schemer {
 			}
 		}
 		if (empty($primary)) $fields['id'] = star("type:int  auto_increment:  key:primary");
-		if (empty($fields["owner"])) $fields["owner"] = star("type:int  default:1  references:users id");
-		if (empty($fields["collective"])) $fields["collective"] = star("type:int  default:0");
-		if (empty($fields["status"])) $fields["status"] = star("type:int  default:4");
-		if (empty($fields["created"])) $fields["created"] = star("type:datetime  default:0000-00-00 00:00:00");
-		if (empty($fields["modified"])) $fields["modified"] = star("type:datetime  default:0000-00-00 00:00:00");
+		if (empty($fields["owner"])) $fields["owner"] = star("type:int  default:1  references:users id  owner:");
+		if (empty($fields["groups"])) $fields["groups"] = star("type:terms  taxonomy:groups");
+		if (empty($fields["statuses"])) $fields["statuses"] = star("type:terms  taxonomy:statuses");
+		if (empty($fields["created"])) $fields["created"] = star("type:datetime  default:0000-00-00 00:00:00  time:insert");
+		if (empty($fields["modified"])) $fields["modified"] = star("type:datetime  default:0000-00-00 00:00:00  time:update");
 		return $fields;
 	}
 
@@ -172,7 +192,7 @@ class Schemer {
 			$fields = $this->get_table($table);
 			// OLD TABLE																																														// OLD TABLE
 			foreach ($fields as $name => $field) {
-				if (!isset($this->tables[$field['type']])) {
+				if ($field['type'] != "category" && !isset($this->tables[$field['type']])) {
 					// REAL COLUMN
 					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
 					if (false === ($row = $records->fetch())) {
@@ -188,10 +208,14 @@ class Schemer {
 							$this->modify($table, $name);
 							$ms++;
 						}
+						if (isset($row['index'])) {
+							$index = $this->db->pdo->query("SHOW INDEXES FROM ".P($table)." WHERE key_name='".$name."'");
+							if (empty($index)) $this->create_index($table, $name);
+						}
 					}
 				}
-				if (isset($field['references']) && ($field['constraint'] !== false)) {
-					$fks = $this->db->pdo->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".Etc::DB_NAME."'");
+				if (isset($field['references']) && ($field['type'] != "category") && ($field['constraint'] !== false)) {
+					$fks = $this->db->pdo->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".$this->db->database_name."'");
 					if (false === ($row = $fks->fetch())) {
 						// ADD CONSTRAINT																																									// CONSTRAINT
 						fwrite(STDOUT, "Adding foreign key ".P($table)."_".$name."_fk...\n");
@@ -220,20 +244,49 @@ class Schemer {
 				}
 			}
 		}
+		foreach ($this->taxonomies as $taxonomy => $items) {
+			$records = query("terms", "select:count(*) as count  where:taxonomy=?  limit:1", array($taxonomy));
+			if ($records['count'] == 0) {
+				//CREATE TAXONOMY                                                                                     //CREATE TAXONOMY
+				fwrite(STDOUT, "Creating taxonomy ".$taxonomy."...\n");
+				$is += $this->create_taxonomy($taxonomy);
+			} else $is += $this->create_taxonomy($taxonomy, true);
+		}
 		foreach ($this->uris as $path => $uri) {
-			$rows = query("uris", "where:path='$path'");
+			$rows = query("uris")->condition("path", $path)->one();
 			if (empty($rows)) {
 				// ADD URI																																														// ADD URI
 				fwrite(STDOUT, "Adding URI '$path'...\n");
 				$this->add_uri($path);
 				$us++;
 			} else {
-				$query = ''; foreach ($uri as $k => $v) $query .= $k."='$v' && ";
-				$rows = query("uris", "where:".rtrim($query, '& '));
-				if (empty($rows)) {
+				$query = query("uris"); $extra_terms = array();
+				foreach ($uri as $k => $v) $query->condition("uris.".$k, $v);
+				$rows = $query->execute();
+				if (!empty($rows)) {
+					$s = query("terms_index", "select:terms_index.id as id,terms_index.terms_id.slug as slug")->condition(array(
+						"terms_index.type" => "uris",
+						"terms_index.rel" => "statuses",
+						"terms_index.type_id" => $rows[0]['id']
+					))->execute();
+					$g = query("terms_index", "select:terms_index.id as id,terms_index.terms_id.slug as slug")->condition(array(
+						"terms_index.type" => "uris",
+						"terms_index.rel" => "groups",
+						"terms_index.type_id" => $rows[0]['id']
+					))->execute();
+					$statuses = explode(",", $uri['statuses']);
+					$groups = explode(",", $uri['groups']);
+					foreach ($s as $status) {
+						if (!in_array($status['slug'], $statuses)) $extra_terms[] = $status['id'];
+					}
+					foreach ($g as $group) {
+						if (!in_array($group['slug'], $groups)) $extra_terms[] = $group['id'];
+					}
+				}
+				if (empty($rows) || !empty($extra_terms)) {
 					// UPDATE URI																																												// UPDATE URI
 					fwrite(STDOUT, "Updating URI '$path'...\n");
-					$this->update_uri($path);
+					$this->update_uri($path, $extra_terms);
 					$us++;
 				}
 			}
@@ -241,21 +294,49 @@ class Schemer {
 		foreach ($this->blocks as $path => $blocks) $bs += $this->create_blocks($path, $blocks);
 		foreach ($this->permits as $model => $actions) {
 			foreach ($actions as $action => $roles) {
-				foreach ($roles as $role => $ops) {
-					$permits = $this->get_permits($model, $action, $role);
+				foreach ($roles as $ridx => $ops) {
+					$role = $ops['role'];
+					$permits = $this->get_permits($model, $action, $ops);
 					foreach ($permits as $permit) {
-						$query = ''; foreach ($permit as $k => $v) if ("status" != $k) $query .= $k."='$v' && ";
-						$row = query("permits", "where:".rtrim($query, '& ')."  limit:1");
+						$query = ''; foreach ($permit as $k => $v) if (!in_array($k, array("status", "roles", "terms"))) $query .= $k."='$v' && ";
+						foreach ($permit['roles'] as $tax => $items) {
+							$items = explode(",", $items);
+							foreach ($items as $item) {
+								$query .= "id IN (SELECT type_id FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE type='permits' && t.taxonomy='$tax' && t.slug='$item') && ";
+							}
+						}
+						//echo $query;
+						$query = query("permits", "where:".rtrim($query, '& '));
+						foreach ($ops['terms'] as $field => $value) $query->where("permits.id IN (SELECT type_id FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE type='permits' && t.taxonomy='$field' && t.slug='$value')");
+						$row = $query->one();
 						if (empty($row)) {
 							// ADD PERMIT																																										// ADD PERMIT
 							fwrite(STDOUT, "Adding $permit[priv_type] permit on $model::$action for $role...\n");
 							$this->add_permit($permit);
 							$ps++;
-						} else if ($row['status'] != $permit['status']) {
-							// UPDATE PERMIT																																								// UPDATE PERMIT
-							fwrite(STDOUT, "Updating $permit[priv_type] permit on $model::$action for $role...\n");
-							$this->update_permit($permit);
-							$ps++;
+						} else {
+							$update = false;
+							$new_terms = $permit['terms'];
+							foreach ($new_terms as $tax => $items) {
+								$new_terms[$tax] = array();
+								foreach (explode(",", $items) as $item) {
+									$new_terms[$tax][$item] = true;
+								}
+							}
+							$current_terms = query("terms", "select:id,taxonomy,slug  where:id IN (SELECT terms_id FROM ".P("terms_index")." WHERE type='permits' && type_id='".$row['id']."' && rel='terms')");
+							$remove_terms = array();
+							foreach ($current_terms as $term) {
+									if (!isset($new_terms[$term['taxonomy']][$term['slug']])) {
+										$remove_terms[] = $term['id'];
+									} else unset($new_terms[$term['taxonomy']][$term['slug']]);
+							}
+							foreach ($new_terms as $tax => $items) if (empty($items)) unset($new_terms[$tax]);
+							if (!empty($new_terms) || !empty($remove_terms)) {
+								// UPDATE PERMIT																																								// UPDATE PERMIT
+								fwrite(STDOUT, "Updating $permit[priv_type] permit on $model::$action for $role...\n");
+								$this->update_permit($permit, $new_terms, $remove_terms);
+								$ps++;
+							}
 						}
 					}
 				}
@@ -268,14 +349,6 @@ class Schemer {
 				fwrite(STDOUT, "Creating menu ".$menu."...\n");
 				$is += $this->create_menu($menu);
 			} else $is += $this->create_menu($menu, true);
-		}
-		foreach ($this->taxonomies as $taxonomy => $items) {
-			$records = query("terms", "select:count(*) as count  where:taxonomy=?  limit:1", array($taxonomy));
-			if ($records['count'] == 0) {
-				//CREATE TAXONOMY                                                                                     //CREATE TAXONOMY
-				fwrite(STDOUT, "Creating taxonomy ".$taxonomy."...\n");
-				$is += $this->create_taxonomy($taxonomy);
-			} else $is += $this->create_taxonomy($taxonomy, true);
 		}
 		foreach ($this->tables as $table => $fields) $is += $this->populate($table, false);
 		foreach ($this->table_drops as $table) {
@@ -331,7 +404,7 @@ class Schemer {
 		$sql_fields = "";
 		$primary_fields = "";
 		foreach ($fields as $fieldname => $options) {
-			if (!isset($this->tables[$options['type']])) {
+			if ($options['type'] != "category" && !isset($this->tables[$options['type']])) {
 				$field_sql = "`".$fieldname."` ".$this->get_sql_type($options).", ";
 				if (isset($options['key']) && ("primary" == $options['key'])) {
 					$primary[] = "`$fieldname`";
@@ -387,6 +460,18 @@ class Schemer {
 		$field = $fields[$name];
 		$sql = "`".$name."` `".$name."` ".$this->get_sql_type($field);
 		$this->db->exec("ALTER TABLE `".P($table)."` CHANGE ".$sql); 
+	}
+
+	/**
+	 * Run SQL to add an index
+	 * @param string $table the name of the table from tables array
+	 * @param string $name the name of column
+	 */
+	function create_index($table, $name) {
+		$args = func_get_args();
+		$table = array_shift($args);
+		$sql = "CREATE INDEX ".P($table)."_".implode("_", $args)."_index ON ".$table." (".implode(", ", $args).")";
+		$this->db->exec($sql); 
 	}
 
 	/**
@@ -455,7 +540,7 @@ class Schemer {
 		foreach ($args as $col) {
 			$col = star($col);
 			$colname = array_shift($col);
-			if (isset($this->tables[$col['type']])) {
+			if ($col['type'] != "terms" && isset($this->tables[$col['type']])) {
 				$additional[] = array($table."_".$colname,
 					$col['type']."_id  type:int  default:0  key:primary  references:$col[type] id  update:cascade  delete:cascade",
 					"owner  type:int  default:1  key:primary  references:users id  update:cascade  delete:cascade",
@@ -464,7 +549,9 @@ class Schemer {
 			}
 			$this->tables[$table][$colname] = $col;
 		}
-		efault($this->options[$table], array("select" => "$table.*", "search" => $table.'.'.implode(",$table.", array_keys($this->tables[$table]))));
+		$search_cols = array_keys($this->tables[$table]);
+		foreach ($search_cols as $colname_index => $colname_value) if (isset($this->tables[$this->tables[$table][$colname_value]['type']])) unset($search_cols[$colname_index]);
+		efault($this->options[$table], array("select" => "$table.*", "search" => $table.'.'.implode(",$table.", $search_cols)));
 		foreach ($ops as $k => $v) $this->options[$table][$k] = $v;
 		foreach ($additional as $tbl) call_user_func_array(array($this, "column"), $tbl);
 	}
@@ -498,9 +585,12 @@ class Schemer {
 	 * Update a uri in the db from the schema
 	 * @param string $path the path of the uri
 	 */
-	function update_uri($path) {
+	function update_uri($path, $extra_terms) {
 		$uri = $this->uris[$path];
 		store("uris", $uri, "path:$path");
+		if (!empty($extra_terms)) {
+			foreach ($extra_terms as $tid) remove("terms_index", "id:".$tid);
+		}
 	}
 
 	/**
@@ -509,19 +599,20 @@ class Schemer {
 	 * @param star $args other fields
 	 */
 	function uri($path, $args=array(), $groups=array()) {
-		$statuses = config("statuses");
 		$options = array();
 		$args = star($args);
 		$args['path'] = $path;
 		efault($args['title'], ucwords(str_replace("-", " ", $path)));
+		/*
 		if (!empty($args['groups'])) {
 			$args['groups'] = explode(",", $args['groups']);
 			$args['collective'] = 0;
 			foreach ($args['groups'] as $group) $args['collective'] += intval($group);
 			unset($args['groups']);
 		}
-		efault($args['collective'], 0);
-		efault($args['status'], "4");
+		*/
+		//efault($args['collective'], 0);
+		efault($args['statuses'], "published");
 		if ($this->current != "core/app") efault($args['prefix'], $this->current."/views/");
 		$this->uris[$path] = $args;
 	}
@@ -544,17 +635,50 @@ class Schemer {
 	 * @param array $permit the permit to add
 	 */
 	function add_permit($permit) {
+		$roles = $terms = array();
+		if (isset($permit['roles'])) {
+			$roles = $permit['roles'];
+			unset($permit['roles']);
+		}
+		if (isset($permit['terms'])) {
+			$terms = $permit['terms'];
+			unset($permit['terms']);
+		}
 		store("permits", $permit);
+		$id = sb("permits")->insert_id;
+		foreach ($roles as $tax => $items) {
+			$items = explode(",", $items);
+			foreach ($items as $item) {
+				$term = get("terms", array("taxonomy" => $tax, "slug" => $item), array("limit" => 1));
+				store("terms_index", array("type" => 'permits', "type_id" => $id, "terms_id" => $term['id'], "rel" => "roles"));
+			}
+		}
+		foreach ($terms as $tax => $items) {
+			$items = explode(",", $items);
+			foreach ($items as $item) {
+				$term = get("terms", array("taxonomy" => $tax, "slug" => $item), array("limit" => 1));
+				store("terms_index", array("type" => 'permits', "type_id" => $id, "terms_id" => $term['id'], "rel" => "terms"));
+			}
+		}
 	}
 
 	/**
 	 * Update a permit in the db from the schema
 	 * @param string $permit the updated record
 	 */
-	function update_permit($permit) {
-		$old = $permit;
-		unset($old['status']);
-		store("permits", $permit, $old);
+	function update_permit($permit, $new, $remove) {
+		unset($permit['roles']);
+		unset($permit['terms']);
+		$permit = get("permits", $permit, array("limit" => 1));
+		foreach($remove as $id) {
+			remove("terms_index", "type:permits  type_id:".$permit['id']."  terms_id:".$id."  rel:terms");
+		}
+		foreach($new as $tax => $items) {
+			foreach ($items as $item => $val) {
+				$term = get("terms", array("taxonomy" => $tax, "slug" => $item), array("limit" => 1));
+				store("terms_index", array("type" => 'permits', "type_id" => $permit['id'], "terms_id" => $term['id'], "rel" => "terms"));
+			}
+		}
 	}
 
 	/**
@@ -562,14 +686,13 @@ class Schemer {
 	 * @param string $on the model and action to apply the permit on
 	 * @param star $args a field string where keys are roles and values are priv_type and status
 	 */
-	function permit($on, $args) {
-		$groups = config("groups");
+	function permit($on, $args, $terms=array()) {
 		$on = explode("::", $on);
 		$args = star($args);
+		foreach ($args as $role => $type) $args[$role] = array("role" => $role, "type" => $type, "terms" => $terms);
 		efault($this->permits[$on[0]], array());
 		efault($this->permits[$on[0]][$on[1]], array());
- 		$this->permits[$on[0]][$on[1]] = array_merge($this->permits[$on[0]][$on[1]], $args);
-
+ 		$this->permits[$on[0]][$on[1]] = array_merge($this->permits[$on[0]][$on[1]], array_values($args));
 	}
 
 	/**
@@ -578,28 +701,18 @@ class Schemer {
 	 * @param string $action the function on the model that the permit is applied to
 	 * @param string $role the role that the permit is applied to
 	 */
-	function get_permits($model, $action, $role) {
-		$groups = config("groups");
-		$statuses = config("statuses");
-		$permit = array("related_table" => P($model), "action" => $action);
-		$ops = $this->permits[$model][$action][$role];
-		if (isset($groups[$role])) {
-			$permit['role'] = "group";
-			$permit['who'] = $groups[$role];
-		} else $permit['role'] = $role;
-		$ops = explode(" ", $ops);
-		$count = count($ops);
-		if (1 == $count) {
-			if (is_numeric($ops[0])) {
-				$ops[1] = $ops[0];
-				$ops[0] = "table,global";
-			}
+	function get_permits($model, $action, $ops) {
+		$permit = array("related_table" => P($model), "action" => $action, "roles" => array(), "terms" => array());
+		$role = $ops['role'];
+		$parts = explode(" ", $role, 2);
+		if (count($parts) == 1) $permit['role'] = $role;
+		else {
+			$permit['role'] = "taxonomy";
+			$permit['roles'] = array($parts[0] => $parts[1]);
 		}
-		efault($ops[0], "table,global");
-		efault($ops[1], array_sum($statuses));
-		$permit['status'] = $ops[1];
+		$permit['terms'] = $ops['terms'];
 		$return = array();
-		$types = explode(",", $ops[0]);
+		$types = explode(",", $ops['type']);
 		foreach ($types as $type) {
 			$copy = $permit;
 			if (is_numeric($type)) {
@@ -665,10 +778,13 @@ class Schemer {
 	function create_block($uri, $block) {
 		efault($block['region'], "content");
 		$block['uris_id'] = $uri['id'];
+		$content = $block['content'];
+		unset($block['content']);
 		$results = get("blocks", $block);
 		if (empty($results)) {
 			fwrite(STDOUT, "Creating block for /".$uri['path']."...\n");
 			efault($block['position'], "");
+			$block['content'] = $content;
 			store("blocks", $block);
 			return 1;
 		}
@@ -690,9 +806,13 @@ class Schemer {
 		$children = empty($item['children']) ? array() : $item['children'];
 		unset($item['children']);
 		$item['menu'] = $menu;
-		$record = get("menus", $item, array("limit" => "1"));
+		$match = array();
+		foreach ($item as $k => $v) {
+			if ($k == "groups" || $k == "statuses") $k = "menus.".$k;
+			$match[$k] = $v;
+		}
+		$record = query("menus")->conditions($match)->one();
 		if (empty($record)) {
-			$item['position'] = "";
 			if ($update) fwrite(STDOUT, "Creating $menu menu item...\n");
 			store("menus", $item);
 			$id = sb("menus")->insert_id;
@@ -721,9 +841,8 @@ class Schemer {
 		$children = empty($item['children']) ? array() : $item['children'];
 		unset($item['children']);
 		$item['taxonomy'] = $taxonomy;
-		$record = get("terms", $item, array("limit" => "1"));
+		$record = query("terms")->conditions($item)->one();
 		if (empty($record)) {
-			$item['position'] = "";
 			if ($update) fwrite(STDOUT, "Creating $taxonomy taxonomy term...\n");
 			store("terms", $item);
 			$id = sb("terms")->insert_id;
@@ -747,8 +866,7 @@ class Schemer {
 		if (!empty($pop)) {
 			foreach ($pop as $record) {
 				if ($record['immediate'] == $immediate) {
-					$query = ""; foreach ($record['match'] as $k => $v) $query .= "$k='$v' && "; $query = rtrim($query, '& ');
-					$match = query($table, "where:$query");
+					$match = query($table)->conditions($record['match'])->one();
 					if (empty($match)) {
 						$store = array_merge($record['match'], $record['others']);
 						fwrite(STDOUT, "Inserting $table record...\n");
@@ -941,7 +1059,7 @@ class Schemer {
 		$data = array_merge(array("name" => $model, "label" => ucwords(str_replace(array("-", "_"), array(" ", " "), $model)), "package" => settings("site_name"), "fields" => array(), "relations" => array()), $options);
 		//ADD FIELDS
 		foreach($fields as $name => $field) {
-			$data["fields"][$name] = array("filters" => array());
+			$data["fields"][$name] = array();
 			$data["fields"][$name]['display'] = ((isset($this->tables[$model][$name])) && ($field['display'] !== "false")) ? true : false;
 			if (!isset($field['input_type'])) {
 				if ($field['type'] == "text") $field['input_type'] = "textarea";
@@ -956,11 +1074,13 @@ class Schemer {
 			}
 			$field[$field['type']] = "";
 			efault($field[$field['input_type']], "");
+			efault($field["label"], format_label($name));
 			foreach ($field as $k => $v) {
 				//if (("references" == $k) && (false === strpos($v, $model))) $data["fields"][$name]["references"] = $v;
-				$filter_locations = locate("store/$k.php", "filters");
-				if (!empty($filter_locations)) $data["fields"][$name]["filters"][$k] = $v;
-				else $data["fields"][$name][$k] = $v;
+				//$filter_locations = locate("store/$k.php", "hooks");
+				//if (!empty($filter_locations))
+				//$data["fields"][$name]["filters"][$k] = $v;
+				$data["fields"][$name][$k] = $v;
 			}
 		}
 		//ADD RELATIONS
@@ -972,6 +1092,7 @@ class Schemer {
 		//ADD ACTIONS
 		$permits = ($this->db->has("permits")) ? query("permits", "where:related_table='".P($model)."'") : array();
 		$actions = array();
+		/*
 		foreach ($permits as $p) {
 			if (!isset($actions[$p['action']])) $actions[$p['action']] = array();
 				if ("object" == $p['priv_type']) $val = $p['related_id'];
@@ -981,9 +1102,10 @@ class Schemer {
 				$actions[$p['action']][array_search($p['who'], $groups)] = (empty($actions[$p['action']][$groups[$p['who']]])) ? $val : ",".$val;
 			} else $actions[$p['action']][$p['role']] = (empty($actions[$p['action']][$p['role']])) ? $val : ",".$val;
 		}
+		*/
 		$data['actions'] = $actions;
 		//ADD URIS
-		if ($model == "uris") $data['uris'] = query("uris");
+		if ($model == "uris") $data['uris'] = query("uris")->execute();
 		return $data;
 	}
 	/**

@@ -1,6 +1,8 @@
 <?php
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
+include(dirname(__FILE__)."/query.php");
+include(dirname(__FILE__)."/queue.php");
 /**
  * This file is part of StarbugPHP
  * @file modules/db/class/mysql.php
@@ -42,21 +44,27 @@ class mysql extends db {
 	 * @var string prefix
 	 */
 	var $prefix;
+	/**
+	 * @var string database_name
+	 */
+	var $database_name;
 	/**#@-*/
 	/**
 	 * @var array holds records waiting to be stored
 	 */
-	var $to_store = array();
+	var $queue;
 
 	public function __construct($params) {
 		try {
 			$this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
 			$this->set_debug(false);
 			$this->prefix = $params['prefix'];
+			$this->database_name = $params['db'];
 			if (defined('Etc::TIME_ZONE')) $this->exec("SET time_zone='".Etc::TIME_ZONE."'");
 		} catch (PDOException $e) { 
 			die("PDO CONNECTION ERROR: " . $e->getMessage() . "\n");
 		}
+		$this->queue = new queue();
 	}
 
 	public function set_debug($debug) {
@@ -124,116 +132,19 @@ class mysql extends db {
 		$args = star($args);
 		if (!empty($args['params'])) $replacements = $args['params'];
 		
-		//list of tables
-		$froms = explode(",", $froms);
+		//create query object
+		$query = new query($froms);
 		
-		//first table
-		$first = array_shift($froms);
-		
-		//schema
-		$schema = (function_exists("schema")) ? schema($first) : array();
-		
-		//set defaults from schema, only use search if $args[search] is set and empty
-		if (!isset($args['search'])) unset($schema['search']);
-		else if (empty($args['search'])) $args['search'] = $schema['search'];
-		foreach ($schema as $k => $v) if (!isset($args[$k]) && is_string($v)) $args[$k] = $v;
-
-		//after schema defaults have been set, set global defaults
-		efault($args['select'], "*");
-		efault($args['join'], "INNER");
-		efault($args['mine'], true);
-		
-		//build FROM clause with joins
-		$from = "`".$this->prefix.$first."` AS `".$first."`";
-		if (!$args['mine']) foreach ($froms as $f) $from .= " $args[join] JOIN `".$this->prefix.$f."` AS `".$f."`";
-		else if (!empty($froms)) {
-			
-			//build JOINs
-			$relations = db::model($first)->relations;
-			$last = "";
-			$joined = array();
-			
-			//loop through joining models to determine relations
-			foreach ($froms as $f) {
-
-				//if the relationship is ambiguous, use via to be clear
-				$f = explode(" via ", $f);
-				
-				if (1 == count($f)) { //determine best relation
-				
-					if (isset($relations[$f[0]][$last])) $rel = reset(reset($relations[$f[0]][$last]));
-					else if (isset($relations[$f[0]][$first])) $rel = reset(reset($relations[$f[0]][$first]));
-					else if (isset($relations[$f[0]][$f[0]])) $rel = reset(reset($relations[$f[0]][$f[0]]));
-					else if (isset($relations[$f[0]])) $rel = reset(reset(reset($relations[$f[0]])));
-					else if (!empty($last)) {
-						$set = db::model($last)->relations;
-						if (isset($set[$f[0]])) $rel = reset(reset(reset($set[$f[0]])));
-					}
-					
-				} else { //use via
-
-					$parts = explode(" ", $f[1]);
-					$f[1] = $parts[0];
-					$rel = $relations[$f[0]][$f[1]];
-					if (1 == count($parts)) $rel = reset(reset($rel));
-					else if (2 == count($parts)) {
-						$rel = reset($rel);
-						$rel = $rel[$parts[1]];
-					} else $rel = $rel[$parts[1]][$parts[2]];
-
-				}
-				
-				//convert relationship to JOIN clause
-				$last = $f[0];
-				$lookup = $f[1];
-				$f = $f[0];
-				$namejoin = " $args[join] JOIN `".$this->prefix.$f."` AS `$f`";
-				$joined[] = $f;
-				if (empty($rel)) $from .= $namejoin;
-				else {
-					$namejoin .= " ON ";
-					if ($rel['type'] == "one") $from .= $namejoin."$rel[lookup].$rel[ref]=".(($rel['lookup'] == $f) ? $first : $f).".id";
-					else if ($rel['type'] == "many") {
-						if ($rel['lookup']) {
-							if (false === array_search($rel['lookup'], $joined)) {
-								$from .= " $args[join] JOIN ".P($rel['lookup'])." AS $rel[lookup] ON ".$first.".id=$rel[lookup].$rel[hook]";
-								$joined[] = $rel['lookup'];
-							}
-							$from .= $namejoin." $rel[lookup].$rel[ref]=$f.id";
-						} else {
-							$from .= $namejoin.$first.".id=$f.$rel[hook]";
-						}
-					}
-				}
-
-			} //end loop for JOINs
-		} //end FROM clause
-		$args['from'] = $from;
-		
-		//run filters
+		//call functions
 		foreach ($args as $k => $v) {
-			foreach (locate("query/$k.php", "filters") as $filter) include($filter);
+			if (method_exists($query, $k)) call_user_func(array($query, $k), $v);
 		}
 		
-		//prepare query parts
-		$select = "SELECT $args[select]";
-		$from = " FROM $args[from]";
-		$where = (!(empty($args['where']))) ? " WHERE $args[where]" : "";
-		$groupby = (!(empty($args['groupby']))) ? " GROUP BY $args[groupby]" : "";
-		$having = (!(empty($args['having']))) ? " HAVING $args[having]" : "";
-		$limit = (!(empty($args['limit']))) ? " LIMIT $args[limit]" : "";
-		$order = (!(empty($args['orderby']))) ? " ORDER BY $args[orderby]" : "";
-		$sql = "$select$from$where$groupby$having$order$limit";
+		//set parameters
+		$query->parameters = $replacements;
 
-		if (isset($args['echo'])) {
-			echo $sql;
-			exit();
-		}
-
-		$records = $this->pdo->prepare($sql);
-		$records->execute($replacements);
-		$rows = $records->fetchAll(PDO::FETCH_ASSOC);
-		return ((!empty($args['limit'])) && ($args['limit'] == 1)) ? $rows[0] : $rows;
+		//fetch results
+		return ((!empty($args['limit'])) && ($args['limit'] == 1)) ? $query->execute() : $query;
 	}
 
 	/**
@@ -243,10 +154,10 @@ class mysql extends db {
 	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
 	 * @return array validation errors
 	 */
-	function store($name, $fields, $from="auto") {
-		$this->queue($name, $fields, $from);
-		$last = array_pop($this->to_store);
-		$this->to_store = array_merge(array($last), $this->to_store);
+	function store($name, $fields=array(), $from="auto") {
+		$this->queue($name, $fields, $from, true);
+		//$last = array_pop($this->to_store);
+		//$this->to_store = array_merge(array($last), $this->to_store);
 		$this->store_queue();
 	}
 
@@ -257,7 +168,27 @@ class mysql extends db {
 	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
 	 * @return array validation errors
 	 */
-	function queue($name, $fields, $from="auto") {
+	function queue($name, $fields=array(), $from="auto", $unshift=false) {
+		if (!is_array($fields)) $fields = star($fields);
+		
+		$query = new query($name);
+		foreach ($fields as $col => $value) $query->set($col, $value);
+		
+		if ($from == "auto" && !empty($fields['id'])) $from = array("id" => $fields['id']);
+		else if (!is_array($from) && false !== $from && "auto" != $from) $from = star($from);
+		else $from = array();
+		
+		if (!empty($from)) {
+			$query->mode("update");
+			foreach ($from as $c => $v) $query->condition($c, $v);
+		} else {
+			$query->mode("insert");
+		}
+		
+		if ($unshift) $this->queue->unshift($query);
+		else $this->queue->push($query);
+		
+		/*
 		$oldscope = error_scope();
 		error_scope($name);
 		$thefilters = db::model($name)->filters;
@@ -281,16 +212,21 @@ class mysql extends db {
 		foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
 		$this->to_store[] = array("model" => $name, "fields" => $fields, "from" => $from, "filters" => $byfilter);
 		error_scope($oldscope);
+		*/
 	}
 
 	/**
 	 * proccess the queue of data for storage
 	 */
 	function store_queue() {
+		$this->queue->execute();
+	}
+	/*
+	function store_queue() {
 		$oldscope = error_scope();
 		foreach ($this->to_store as $store) {
 			$storing = true;
-			$inserting = $updating = false;
+			$inserting = $updating = $is_after_store = false;
 			$name = $store['model'];
 			error_scope($name);
 			$fields = $store['fields'];
@@ -306,6 +242,7 @@ class mysql extends db {
 				foreach (locate("store/$filter.php", "filters") as $f) include($f);
 				if (!$after_store) unset($filters[$filter]);
 			}
+			$is_after_store = true;
 			foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
 			if (!errors()) { //no errors
 				$pre_store_time = date("Y-m-d H:i:s");
@@ -323,11 +260,19 @@ class mysql extends db {
 					}
 					foreach($from as $c => $v) {
 						$prize[] = $v;
+						$fields[$c] = $v;
 						if (empty($wherestr)) $wherestr = "`".$c."` = ?";
 						else $wherestr .= " && `".$c."` = ?";
 					}
 					$stmt = $this->pdo->prepare("UPDATE ".$this->prefix.$name." SET ".$setstr." WHERE ".$wherestr);
 					$this->record_count = $stmt->execute($prize);
+					if (empty($fields['id'])) {
+						$id_query = query($name);
+						foreach ($from as $c => $v) $id_query->condition($c, $v);
+						$id_query->limit(1);
+						$result = $id_query->execute();
+						$fields['id'] = $result['id'];
+					}
 				} else { //creating new record
 					$fields['created'] = date("Y-m-d H:i:s");
 					if (!isset($fields['owner'])) $fields['owner'] = (logged_in()) ? sb()->user['id'] : 1;
@@ -349,9 +294,10 @@ class mysql extends db {
 					$this->insert_id = $this->pdo->lastInsertId();
 					db::model($name)->insert_id = $this->insert_id;
 					$fields["id"] = $this->insert_id;
-					foreach ($filters as $filter => $args) {
-						foreach (locate("store/$filter.php", "filters") as $f) include($f);
-					}
+				}
+				foreach ($filters as $filter => $args) {
+					$after_store = true;
+					foreach (locate("store/$filter.php", "filters") as $f) include($f);
 				}
 				//NOTIFY CLIENTS
 				if (defined("Etc::API_NOTIFIER")) {
@@ -376,6 +322,7 @@ class mysql extends db {
 		$this->to_store = array();
 		error_scope($oldscope);
 	}
+	*/
 
 	/**
 	 * remove from the database
@@ -384,10 +331,9 @@ class mysql extends db {
 	 */
 	function remove($from, $where) {
 		if (!empty($where)) {
-			$del = $this->pdo->prepare("DELETE FROM ".$this->prefix.$from." WHERE ".$where);
-			$del->execute();
-			$this->record_count = $del->rowCount();
-			return array();
+			$del = new query($from);
+			$this->record_count = $del->condition(star($where))->delete();
+			return $this->record_count;
 		}
 	}
 	

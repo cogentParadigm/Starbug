@@ -8,10 +8,6 @@
  * @ingroup script
  */
 $name = array_shift($argv);
-foreach($argv as $index => $arg) {
-	$arg = explode(":", $arg, 2);
-	$argv[$index] = $arg[0]."='".$arg[1]."'";
-}
-$params = join(" && ", $argv);
+$params = implode("  ", $argv);
 remove($name, $params);
 ?>

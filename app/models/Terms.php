@@ -14,27 +14,31 @@ class Terms {
 	}
 
 	function delete($term) {
-		return $this->remove('id='.$term['id']);
+		return $this->remove('id:'.$term['id']);
 	}
 	
 	function delete_taxonomy($term) {
 		$tax = $term['taxonomy'];
-		$this->remove("taxonomy='$tax'");
+		$this->remove("taxonomy:$tax");
 	}
 	
-	function query_admin($query) {
-		$query['select'] = "DISTINCT taxonomy";
-		$query['where'][] = '!(terms.status & 1)';
+	function query_admin($query, &$ops) {
+		$query = parent::query_admin($query, $ops);
+		$query->select("DISTINCT taxonomy");
 		return $query;
 	}
 	
-	function query_list($query) {
-		if (!empty($query['taxonomy'])) {
-			$query['where'][] = "taxonomy=?";
-			$query['params'][] = $query['taxonomy'];
+	function query_list($query, &$ops) {
+		$query->sort("term_path ASC, position ASC");
+		return $query;
+	}
+
+	function query_filters($action, $query, &$ops) {
+		$query = parent::query_filters($action, $query, $ops);
+		if (!empty($ops['taxonomy'])) {
+			$query->condition("taxonomy", $ops['taxonomy']);
 		}
-		$query['orderby'] = "term_path ASC, position ASC";
-		return $query;
+		return $query;	
 	}
 
 }

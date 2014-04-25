@@ -34,6 +34,9 @@
 			<!--[if IE]><link rel="stylesheet" href="<?php echo uri("app/themes/".$request->theme."/public/stylesheets/$ie"); ?>" type="text/css" media="screen, projection"><![endif]-->
 		<?php } ?>
 		<?php if ($styles['less']) { ?>
-			<script src="<?php echo uri("core/app/public/js/less-1.3.3.min.js"); ?>" type="text/javascript"></script>
+			<script type="text/javascript">
+				less = { env: 'development' };
+			</script>
+			<script src="<?php echo uri("libraries/less-1.7.0.min.js"); ?>" type="text/javascript"></script>
 		<?php } ?>
 	<?php } ?>

@@ -72,7 +72,7 @@ function get_module_index() {
  * @return the instantiated controller
  */
 function controller($name, $type="") {
-	import("Controller", "core/lib");
+	import("lib/Controller", "core");
 
 	$class = ucwords($type).ucwords($name)."Controller";
 
@@ -101,4 +101,103 @@ function controller($name, $type="") {
 
 	//instantiate save the object
 	return new $class($name, $type);
+}
+
+/**
+ * get a controller by name
+ * @param string $name the name of the controller, such as 'users'
+ * @param string $type a sub type such as 'admin'
+ * @return the instantiated controller
+ * build_class("displays/GridDisplay", "lib/Display", "core");
+ */
+function get_module_class($path, $base="lib/Controller", $mid="core") {
+	static $classes;
+	efault($classes, array());
+	
+	$class_key = implode("/", array($mid, $base, $path));
+	
+	if (!isset($classes[$class_key])) {
+		import($base, $mid);
+
+		$parts = explode("/", $path);
+		$class = $parts[1];
+		
+		$last = end(explode("/", $base));;
+	
+		//get extending classes
+		$files = locate("$class.php", $parts[0]);
+		$count = count($files);
+		$search = "class $class {";
+	
+		//loop through found classes
+		for ($i = 0; $i < $count; $i++) {
+			//get file contents
+			$contents = file_get_contents($files[$i]);
+			//make class name unique and extend the previous class
+			$class = str_replace(array(BASE_DIR.'/', '/'), array('', '_'), reset(explode('/'.$parts[0].'/', $files[$i])))."__$class";
+			$replace = "class $class extends $last {";
+			//replace and eval
+			eval('?>'.str_replace($search, $replace, $contents));
+			//set $last for the next round
+			$last = $class;
+		}
+		
+		//return the base class if no others
+		if ($count == 0) $class = $last;
+		
+		$classes[$class_key] = $class;
+	}
+
+	//instantiate save the object
+	return $classes[$class_key];
+}
+
+/**
+ * get a controller by name
+ * @param string $name the name of the controller, such as 'users'
+ * @param string $type a sub type such as 'admin'
+ * @return the instantiated controller
+ */
+function build_hook($path, $base="lib/Hook", $mid="core") {
+	static $hooks;
+	efault($hooks, array());
+	
+	$hook_key = implode("/", array($mid, $base, $path));
+	
+	if (!isset($hooks[$hook_key])) {
+		import($base, $mid);
+
+		$class = "hook_".str_replace("/", "_", $path);
+
+		$parts = explode("/", $base);
+		$last = end($parts);
+		
+		//get extending hooks
+		$files = locate($path.".php", "hooks");
+		$count = count($files);
+		$search = "class $class {";
+		
+		//loop through found hooks
+		for ($i = 0; $i < $count; $i++) {
+			//get file contents
+			$contents = file_get_contents($files[$i]);
+			//make class name unique and extend the previous class
+			$class = str_replace(array(BASE_DIR.'/', '/'), array('', '_'), reset(explode('/hooks/', $files[$i])))."__$class";
+			$replace = "class $class extends $last {";
+			//replace and eval
+			eval('?>'.str_replace($search, $replace, $contents));
+			//set $last for the next round
+			$last = $class;
+		}
+		
+		//return the base model if no others
+		if ($count == 0) $class = $last;
+		
+		$hooks[$hook_key] = $class;
+	}
+	
+	$class = $hooks[$hook_key];
+
+	//instantiate save the object
+	return new $class();
 }

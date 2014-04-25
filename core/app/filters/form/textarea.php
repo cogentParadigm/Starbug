@@ -7,5 +7,5 @@
 		efault($value, $field['default']);
 		unset($field['default']);
 	}
-	assign("value", $this->set($field['name'], htmlentities($value)));
+	assign("value", $this->set($field['name'], htmlentities($value, ENT_QUOTES, "UTF-8");));
 ?>

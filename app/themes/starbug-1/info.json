@@ -9,6 +9,6 @@
 	//stylesheets
 	"styles": {
 		"less": true,
-		"screen" : ["dojo.css"]
+		"screen" : []
 	}
 }

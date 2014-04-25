@@ -12,7 +12,7 @@
 		<?php text("email"); ?>
 		<?php password("password"); ?>
 		<?php password("password_confirm"); ?>
-		<?php text("memberships"); ?>
+		<?php multiple_category_select("groups  taxonomy:groups"); ?>
 	</div>
 	<div style="margin-left:320px">
 		<h2 class="well">User Information</h2>

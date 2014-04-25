@@ -13,12 +13,12 @@ class Menus {
 	}
 
 	function delete($menu) {
-		return $this->remove('id='.$menu['id']);
+		return $this->remove('id:'.$menu['id']);
 	}
 
-	function query_admin($query) {
-		$query['select'] = "DISTINCT menu";
-		$query['where'][] = '!(menus.status & 1)';
+	function query_admin($query, &$ops) {
+		$query = parent::query_admin($query, $ops);
+		$query->select("DISTINCT menu");
 		return $query;
 	}
 

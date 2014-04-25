@@ -16,4 +16,5 @@
 		." && ".$roles.")"
 		.((empty($args['where'])) ? "" : " && ".$args['where']);
 	}
+	
 ?>

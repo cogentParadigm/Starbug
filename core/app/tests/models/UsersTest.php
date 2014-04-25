@@ -7,14 +7,14 @@ class UsersTest extends ModelTest {
 	var $model = "users";
 		
 	function test_create() {
-		remove("users", "email='phpunit@neonrain.com'");
-		$this->action("create", star("email:phpunit@neonrain.com  memberships:2"));
-		$user = get("users", sb("insert_id"));
+		remove("users", "email:phpunit@neonrain.com");
+		$this->action("create", star("email:phpunit@neonrain.com  groups:user"));
+		$user = query("users")->select("users.*,users.statuses as statuses,users.groups as groups")
+							->condition("id", sb("users")->insert_id)->condition("users.statuses", "deleted", "!=")->one();
 		//lets verify the explicit values were set
 		$this->assertEquals($user['email'], "phpunit@neonrain.com");
 		//lets also verify that the implicit values were set
-		$this->assertEquals($user['memberships'], "2");
-		$this->assertEquals($user['status'], "4");
+		$this->assertEquals($user['groups'], "user");
 	}
 
 	function test_delete() {
@@ -24,9 +24,14 @@ class UsersTest extends ModelTest {
 		
 		//remove it and assert that the record is gone
 		$this->action("delete", $user);
-		$user = get("users", array("email" => "phpunit@neonrain.com"), array("limit" => 1));
-		$this->assertEquals($user['status'], "1");
-		remove("users", "email='phpunit@neonrain.com'");
+		$user = query("users")->select("users.*,users.statuses as statuses,users.groups as groups")
+							->condition(array(
+								"email" => "phpunit@neonrain.com",
+								"users.statuses" => "deleted"
+							))->one();
+		$this->assertEquals($user['statuses'], "deleted");
+		remove("terms_index", "type:users  type_id:".$user['id']);
+		remove("users", "email:phpunit@neonrain.com");
 	}
 
 }

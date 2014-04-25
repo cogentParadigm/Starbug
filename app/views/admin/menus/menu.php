@@ -1,13 +1,15 @@
 <?php if (success("menus", "create")) { ?>
 	<div class="success">Menu <?= (empty($_POST['menus']['id'])) ? "created" : "updated"; ?> successfully</div>
 <?php } ?>
+<div class="panel panel-default">
+	<div class="panel-heading"><strong> <span data-i18n="Update Menu">Update Menu '<?php echo $menu; ?>'</span></strong></div>
+	<div class="panel-body">
 <div style="width:500px;" class="left">
-	<h1>Update Menu '<?php echo $menu; ?>'</h1>
-	<div class="btn-toolbar">
+	<p>
 		<?php
-			link_to("Add Menu Item <b class=\"icon-plus\"></b>", "admin/menus/create?menu=".$menu, "class:btn");
+			link_to("Add Menu Item <b class=\"icon-plus\"></b>", "admin/menus/create?menu=".$menu, "class:btn btn-default");
 		?>
-	</div>
+	</p>
 	<?php
 		assign("attributes", array("class" => "nav-tabs nav-stacked"));
 		assign("sortable", true);
@@ -15,6 +17,8 @@
 		assign("menu", $menu);
 		render("menu");
 	?>
+</div>
+	</div>
 </div>
 <div id="menus_dialog" data-dojo-type="starbug/form/Dialog" data-dojo-id="menus_form" data-dojo-props="url:'<?php echo uri("admin/menus/", 'u'); ?>', post_data:{menu:'<?php echo $menu; ?>'}"></div>
 <script type="text/javascript">
@@ -34,6 +38,7 @@
 			//this.style.position = 'static';
 		});
 		on(win.doc, '[draggable]:dragenter', function(evt) {
+			evt.preventDefault();
 			this.classList.add('over');
 		});
 		/*
@@ -66,7 +71,7 @@
 				if (this_parent == dragNode.getAttribute('data-parent') && this_index > list.indexOf(dragNode)) this.parentNode.insertBefore(dragNode, list[this_index+1])
 				else this.parentNode.insertBefore(dragNode, this);
 				//store it
-				sb.get('menus').put({id:dragNode.getAttribute('data-menu-id'), menu:'<?php echo $menu; ?>', parent:this_parent, position:this_index}).then(function(result) {
+				sb.get('menus').put({id:dragNode.getAttribute('data-menu-id'), menu:'<?php echo $menu; ?>', parent:this_parent, position:this_index+1}).then(function(result) {
 					if (result.errors) {
 						alert(result.errors[0].errors[0]);
 					}

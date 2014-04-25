@@ -16,5 +16,6 @@
 	 */
 	global $schemer;
 	$schemer = new Schemer($sb->db);
+	sb()->add_listener($schemer);
 	$schemer->fill();
 ?>

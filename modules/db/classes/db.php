@@ -22,6 +22,8 @@ class db {
 	 * @var array holds instantiated models
 	 */
 	static $objects = array();
+	
+	var $prefix;
 
 	/**
 	 * check if a model exists
@@ -67,7 +69,7 @@ class db {
 			} else $class = "Table"; //return the base table if the model does not exist
 			
 			//instantiate save the object
-			self::$objects[$name] = new $class($this, $name);
+			self::$objects[$name] = new $class(sb()->db, $name);
 		}
 		
 		//return the saved object

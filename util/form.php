@@ -146,7 +146,7 @@ class form {
 	 * converts the option string given to form elements into an array and sets up default values
 	 * @param star $ops the option string
 	 */
-	function fill_ops(&$ops) {
+	function fill_ops(&$ops, $control="") {
 		$ops = star($ops);
 		$name = array_shift($ops);
 		$ops['name'] = $name;
@@ -155,6 +155,7 @@ class form {
 		$ops['nolabel'] = (isset($ops['nolabel'])) ? true : false;
 		if (empty($ops['label'])) $ops['label'] = ucwords(str_replace("_", " ", $ops['name']));
 		$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ").$ops['name']."-field";
+		if (!in_array($control, array("checkbox", "radio"))) $ops['class'] .= " form-control";
 	}
 
 	/**
@@ -167,7 +168,7 @@ class form {
 	 * @param bool $self if true, will use a self closing tag. If false, will use an opening tag and a closing tag (default is false)
 	 */
 	function form_control($control, $field, $options=array()) {
-		$this->fill_ops($field);
+		$this->fill_ops($field, $control);
 		//run filters
 		foreach (locate("form/".$control.".php", "filters") as $filter) include($filter);
 		

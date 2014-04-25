@@ -37,7 +37,7 @@ function star($str=array()) {
  * @param string $var the value to prefix
  * @return string the prefixed value
  */
-function P($var) {return Etc::PREFIX.$var;}
+function P($var) {return sb()->db->prefix.$var;}
 /**
  * normalize a string
  * @ingroup strings
@@ -76,6 +76,12 @@ function format_plural($singular) {
 		if ($singular != $plural) break; // leave if plural found 
 	} 
 	return $plural; 
+}
+/**
+ * helper function to format a machine name into a label
+ */
+function format_label($name) {
+	return ucwords(str_replace('_',' ',$name));
 }
 /**
  * convert an array to an HTML attribute string

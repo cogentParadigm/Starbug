@@ -1,11 +1,14 @@
 /********************* bootstrap ************************************/
-@import "../../../../../core/app/public/stylesheets/src/bootstrap.less";
+@import "../../../../../libraries/bootstrap/less/bootstrap.less";
+
+/********************* dbootstrap ************************************/
+@import "../../../../../libraries/dojo/dbootstrap/theme/dbootstrap/index.less";
 
 /********************* structural elements *********************/
 body{background:url(../images/bg.png) repeat-x #FFF;color:#666}
-.page{position:relative;padding:7px 12px;text-align:left}
+.page{position:relative;padding:5px 12px;text-align:left}
+#logo{font-size:18px;color:#FFF}
 #top-right{float:right;color:#FFF}
-body h1, body.claro h1{margin:0 0 8px 0;font-weight:bold;font-size:140%}
 #subhead{display:block;margin:0 0 10px 2px;color:#999;font-size:90%;height:16px}
 #tabs{width:auto;position:absolute;right:12px}
 #nav{height:50px;margin-bottom:0}
@@ -16,21 +19,21 @@ body h1, body.claro h1{margin:0 0 8px 0;font-weight:bold;font-size:140%}
 h2{color:#419bc0;font-size:150%}
 
 /********************* nav *********************/
-#nav > li{float:left;background:url(../images/nav-col-border.png) top right no-repeat}
+#nav > li{float:left;background:url(../images/nav-col-border.png) top right no-repeat;height:50px}
 #nav > li.last{background:transparent}
 #nav > li > a{padding:21px 20px 0px 15px;height:29px;line-height:14px;color:#FFF;font-weight:bold}
 #nav .caret{border-top-color:#FFF;margin-left:8px}
 #nav > li > a:hover, #nav > li > a:focus{background:transparent;text-decoration:underline}
 #nav > li.first > a{padding-left:0}
-#nav li ul{#gradient > .vertical(@grayDarker, @black)}
+#nav li ul{#gradient > .vertical(@gray-darker, #000)}
 #nav .dropdown-menu li a{color:#FFF}
 .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {background:transparent;text-decoration:underline}
 .dropdown-toggle{cursor:pointer}
 #tabs{border-bottom:none}
 #tabs > li + li{margin-left:5px}
-.blue.button{color:#FFF;background:#419BC0;.border-radius(7px);padding:0 7px}
+.blue.button{color:#FFF;background:#419BC0;border-radius:7px;padding:0 7px}
 .small.blue.button{font-size:9px;line-height:17px}
-#tabs .button, #tabs a.button{background:#282828;.border-radius(0 0 7px 7px);padding:0 5px;color:#419bc0;border:none;margin:0;font-size:80%;font-weight:normal;text-transform:uppercase;display:block;height:21px}
+#tabs .button, #tabs a.button{background:#282828;border-radius:0 0 7px 7px;padding:0 5px;color:#419bc0;border:none;margin:0;font-size:80%;font-weight:normal;text-transform:uppercase;display:block;height:21px}
 #footer{margin-top:10px}
 #footer ul{padding:12px 0;margin:0}
 #footer ul li{list-style-type:none;float:left}
@@ -42,7 +45,7 @@ h2{color:#419bc0;font-size:150%}
 .required .asterisk{color:#C00;position:relative;left:4px}
 
 /********************* the box *********************/
-.box{background:#FFF;padding:0;overflow:hidden;width:100%;.border-radius(@baseBorderRadius);.box-shadow(0 1px 4px #888);.clearfix()}
+.box{background:#FFF;padding:0;overflow:hidden;width:100%;border-radius:@border-radius-base;.box-shadow(0 1px 4px #888);.clearfix()}
 .box-top{padding-left:7px;height:7px;width:100%}
 .box .inside{padding:10px 20px 10px 10px;position:relative;.clearfix}
 
@@ -62,6 +65,7 @@ textarea{width:309px;height:100px}
 div.mce-tinymce{margin-bottom:10px}
 
 /********************* dojo *********************/
+/*
 body.claro .dijitTabContainerTop-dijitContentPane, body.claro .dijitTabContainerLeft-dijitContentPane, body.claro .dijitTabContainerBottom-dijitContentPane, body.claro .dijitTabContainerRight-dijitContentPane, body.claro .dijitAccordionContainer-dijitContentPane{background-color:transparent;padding:0px;overflow:visible}
 body.claro div div.dijitTabPaneWrapper{background:transparent;overflow:visible}
 .dijitContentPane .box-top{margin-top:-6px;margin-left:-5px}
@@ -77,6 +81,7 @@ body.claro .dijitDialog{-webkit-box-shadow:none;background:none;border:none}
 body.claro .dijitDialogTitleBar{display:none}
 body.claro .dijitDialogPaneContent{background:none;border:none}
 .dijitTooltipContents{.clearfix}
+*/
 .attribute{float:left;width:135px}
 .attribute h4{font-size:12px;margin:10px 0px 5px;font-weight:bold}
 .attribute ul{margin:0;padding:0;list-style-type:none}
@@ -118,7 +123,7 @@ div.dojoDndHandle{display:block;cursor:hand;cursor:grab;cursor:-moz-grab;cursor:
 .dgrid-scroller.dojoDndSourceMoved, .dgrid-scroller.dojoDndSourceMoved .dojoDndItemOver{cursor:grabbing;cursor:-moz-grabbing;cursor:-webkit-grabbing}
 .claro .dojoDndItemAfter{border-top:none;border-bottom:1px solid #769DC0}
 
-.sortable.nav .dropdown-menu{position:static;float:none;margin:0;.border-radius(0)}
+.sortable.nav .dropdown-menu{position:static;float:none;margin:0;border-radius:0}
 .sortable.nav .dropdown-menu > .active > a, .sortable.nav .dropdown-menu > .active > a:hover, .sortable.nav .dropdown-menu > .active > a:focus{color:inherit}
 .sortable.nav li a{cursor:move}
 .sortable.nav li.over > a{background:#EEE}
