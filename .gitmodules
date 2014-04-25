@@ -1,25 +1,25 @@
-[submodule "core/app/public/js/dojo/dojo"]
+[submodule "libraries/dojo/dojo"]
 	path = libraries/dojo/dojo
 	url = git://github.com/dojo/dojo.git
-[submodule "core/app/public/js/dojo/dijit"]
+[submodule "libraries/dojo/dijit"]
 	path = libraries/dojo/dijit
 	url = git://github.com/dojo/dijit.git
-[submodule "core/app/public/js/dojo/dojox"]
+[submodule "libraries/dojo/dojox"]
 	path = libraries/dojo/dojox
 	url = git://github.com/dojo/dojox.git
-[submodule "core/app/public/js/dojo/util"]
+[submodule "libraries/dojo/util"]
 	path = libraries/dojo/util
 	url = git://github.com/dojo/util.git
-[submodule "core/app/public/js/dojo/dgrid"]
+[submodule "libraries/dojo/dgrid"]
 	path = libraries/dojo/dgrid
 	url = git://github.com/SitePen/dgrid.git
-[submodule "core/app/public/js/dojo/put-selector"]
+[submodule "libraries/dojo/put-selector"]
 	path = libraries/dojo/put-selector
 	url = git://github.com/kriszyp/put-selector.git
-[submodule "core/app/public/js/dojo/xstyle"]
+[submodule "libraries/dojo/xstyle"]
 	path = libraries/dojo/xstyle
 	url = git://github.com/kriszyp/xstyle.git
-[submodule "core/app/public/js/dojo/bootstrap"]
+[submodule "libraries/dojo/bootstrap"]
 	path = libraries/dojo/bootstrap
 	url = https://github.com/xsokev/Dojo-Bootstrap.git
 [submodule "util/phpthumb"]
