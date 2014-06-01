@@ -9,4 +9,9 @@ $this->table("files  list:all",
 
 //add file attachments to terms
 $this->column("terms", "attachments  type:files");
+
+//files category
+$this->taxonomy("files_category",
+	"term:Uncategorized"
+);
 ?>
