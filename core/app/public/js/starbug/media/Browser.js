@@ -64,14 +64,16 @@ define([
 						//lb.startup();
 					} else {
 						var anchorNode = put(
-							put(node, 'a[href="'+WEBSITE_URL+'app/public/uploads/'+object.id+'_'+object.filename+'"][target="_blank"]', put('span.caption', object.filename)),
-							'img.media-object[width="100"][src="'+WEBSITE_URL+'app/themes/storm/public/images/file.png"]'
+							node,
+							'a[href="javascript:;"][group="files"]',
+							put('div.fa.fa-file.fa-4x[style="line-height:100px;width:100px;text-align:center"]')
 						);
+						put(anchorNode, 'div.name', object.filename);
 					}
 					
 					on(anchorNode, 'click', function() {
 						if (self.modal) {
-							window.opener.SetUrl(WEBSITE_URL+'app/public/uploads/'+object.id+'_'+object.filename);
+							window.opener.SetUrl(WEBSITE_URL+'app/public/uploads/'+object.id+'_'+object.filename, object);
 							self.close();
 							return;
 						}
@@ -95,7 +97,7 @@ define([
 					});
 					
 					//delete
-					on(put(node, 'a.close-btn[href="javascript:;"]', put('div.icon-remove')), 'click', function() {
+					on(put(node, 'a.close-btn[href="javascript:;"]', put('div.fa.fa-times')), 'click', function() {
 						if (confirm('Are you sure you want to delete this image?')) {
 							self.list.store.remove(object.id).then(function() {
 								self.list.removeRow(node);
@@ -195,7 +197,7 @@ define([
 				this.list.set('query', this.query);
 			}
 		},
-		delete: function() {
+		remove: function() {
 			var self = this;
 			if (confirm('Are you sure you want to delete this image?')) {
 				for (var id in self.files) {

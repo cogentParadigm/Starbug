@@ -1,7 +1,7 @@
 <div class="multiple_category_select">
 	<?php efault($value, array()); foreach ($terms as $term) { ?>
-		<div class="category" style="padding-left:<?php echo $term['depth']*15; ?>px">
-			<input <? html_attributes("type:checkbox  class:left checkbox  name:".$name."[]  value:$term[id]".((in_array($term['id'], $value)) ? "  checked:checked" : "")); ?>/><label><?= $term['term']; ?></label>
+		<div class="form-group checkbox" style="padding-left:<?php echo $term['depth']*15; ?>px">
+			<label><input <? html_attributes("type:checkbox  class:left checkbox  name:".$name."[]  value:$term[id]".((in_array($term['id'], $value)) ? "  checked:checked" : "")); ?>/><?= $term['term']; ?></label>
 		</div>
 	<?php } ?>
 	<input <? html_attributes("type:hidden  name:".$name."[]  value:-~"); ?>/>

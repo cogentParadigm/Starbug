@@ -22,7 +22,8 @@
 	$attributes['data-dojo-props'] = array();
 	efault($attributes['id'], $attributes['model']."_grid");
 	efault($attributes['data-dojo-id'], $attributes['id']);
-	efault($attributes['style'], "width:100%;height:615px");
+	//efault($attributes['style'], "width:100%;height:615px");
+	efault($attributes['class'], "dgrid-autoheight");
 	efault($attributes['data-dojo-type'], $grid_class);
 	if ($query) {
 		$params = star($query);

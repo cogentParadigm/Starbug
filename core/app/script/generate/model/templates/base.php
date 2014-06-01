@@ -5,8 +5,8 @@
  */
 class <?= ucwords($name); ?>Model extends Table {
 
-	var $filters = array(<? $count = 0; foreach ($fields as $column => $field) { if (!empty($field)) { if ($count > 0) echo ','; echo "\n"; ?>
-		"<?= $column; ?>" => "<? foreach ($field as $k => $v) { ?><? if ($count > 0) echo "  "; $count++ ?><?= $k; ?>:<?= $v; ?><? } ?>"<? } } echo "\n"; ?>
+	var $hooks = array(<? $count = 0; foreach ($fields as $column => $field) { if (!empty($field)) { $fcount = 0; if ($count > 0) echo ','; $count++; echo "\n"; ?>
+		"<?= $column; ?>" => array(<? foreach ($field as $k => $v) { ?><? if ($fcount > 0) echo ", "; $fcount++ ?>"<?= $k; ?>" => "<?= $v; ?>"<? } ?>)<? } } echo "\n"; ?>
 	);
 
 	function init() {<? foreach ($fields as $column => $field) { foreach ($field as $k => $v) { if ($k == "references") { $v = explode(" ", $v); echo "\n"; ?>

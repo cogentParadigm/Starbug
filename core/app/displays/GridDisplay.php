@@ -1,6 +1,7 @@
 <?php
 class GridDisplay {
 	var $type = "grid";
+	var $template = "grid";
 	var $grid_class = "starbug/grid/PagedGrid";
 	var $attributes = array();
 	var $fields = array(
@@ -11,7 +12,7 @@ class GridDisplay {
 		//dnd
 		if ($options['dnd']) {
 			$this->grid_class = "starbug/grid/DnDGrid";
-			$this->fields = array_merge(array('dnd' => array("field" => "id", "label" => "-", "class" => "field-drag",  "plugin" => "starbug.grid.columns.handle")), $this->fields);
+			$this->fields = array_merge(array('dnd' => array("field" => "id", "label" => "-", "class" => "field-drag",  "plugin" => "starbug.grid.columns.handle", "sortable" => false)), $this->fields);
 		}
 		
 		//set defaults
@@ -19,13 +20,14 @@ class GridDisplay {
 		if ($options['attributes']) $this->attributes = star($options['attributes']);
 		$this->attributes['model'] = $this->model;
 		$this->attributes['data-dojo-props'] = array("className" => "dgrid-autoheight");
-    efault($this->attributes['id'], $this->model."_grid");
-    efault($this->attributes['data-dojo-id'], $this->attributes['id']);
-    efault($this->attributes['data-dojo-type'], $this->grid_class);
+    	efault($this->attributes['id'], $this->model."_grid");
+    	efault($this->attributes['data-dojo-id'], $this->attributes['id']);
+    	efault($this->attributes['data-dojo-type'], $this->grid_class);
     
-    //parse query		
+    	//parse query		
 		$params = $options;
-		$query = $this->query;
+		unset($params['attributes']);
+		$query = $this->name;
 		$this->attributes['action'] = $query;
 		$params = array_merge($_GET, $params);
 		
@@ -69,11 +71,12 @@ class GridDisplay {
 		foreach ($options as $k => $v) {
 			if (!in_array($k, array("id", "class", "style", "label", "data-dgrid-column")) && $v !== "") {
 				if ($k == "model" || $k == "field" || ($k == "default" && !is_numeric($v))) $v = "'".$v."'";
+				else if ($v === false) $v = "false";
 				$options['data-dgrid-column'][] = $k.":".$v;
 			}
 		}
 		$options['data-dgrid-column'] = '{'.implode(', ', $options['data-dgrid-column']).'}';
-		if (isset($options['plugin'])) {
+		if (isset($options['plugin']) && !isset($options['readonly'])) {
 			js(str_replace(".", "/", $options['plugin']));
 			$options['data-dgrid-column'] = $options['plugin']."(".$options['data-dgrid-column'].")";
 		}
@@ -84,8 +87,8 @@ class GridDisplay {
 		return $options;
 	}
 
-	function build() {
-
+	function query() {
+		//defer query responsibilities to dgrid
 	}
 }
 ?>

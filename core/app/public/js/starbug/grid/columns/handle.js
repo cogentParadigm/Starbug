@@ -6,11 +6,11 @@ function(dojo, sb, put, editor){
 		//populate the cell with the label or value
 		column.renderCell = function(object, value, cell, options){
 			put(parent && parent.contents ? parent : cell, ".dgrid-handle");
-			node = put(cell, 'div.dojoDndHandle', put('div.icon-reorder'));
+			node = put(cell, 'div.dojoDndHandle', put('div.fa.fa-bars'));
 		};
 
 		column.renderHeaderCell = function(node) {
-			put(node, 'div.icon-reorder');
+			put(node, 'div.fa.fa-bars');
 		}
 				
 		return column;

@@ -8,7 +8,7 @@ class AdminUsersController {
 	}
 	function create() {
 		assign("form", "users");
-		if (success("users", "create")) redirect(uri("admin/users/update", 'u'));
+		if (success("users", "create")) redirect(uri("admin/users", 'u'));
 		else $this->render("admin/create");
 	}
 	function update($id=null) {

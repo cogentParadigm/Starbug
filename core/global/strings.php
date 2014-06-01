@@ -37,7 +37,10 @@ function star($str=array()) {
  * @param string $var the value to prefix
  * @return string the prefixed value
  */
-function P($var) {return sb()->db->prefix.$var;}
+function P($var) {
+	if (substr($var, 0, 1) == "(") return $var;
+	return sb()->db->prefix.$var;
+}
 /**
  * normalize a string
  * @ingroup strings
@@ -45,7 +48,7 @@ function P($var) {return sb()->db->prefix.$var;}
  * @param string $valid_chars valid characters. default is 'a-zA-Z0-9'
  * @return string the normalized version of $raw
  */
-function normalize($raw, $valid_chars='a-zA-Z0-9 ') {
+function normalize($raw, $valid_chars='a-zA-Z0-9 \-') {
 	return preg_replace("/[^".$valid_chars."]/", "", $raw);
 }
 /**
@@ -172,5 +175,34 @@ function token_replace($text, $data=array()) {
 	$search = array_keys($replacements);
 	$replace = array_values($replacements);
 	return str_replace($search, $replace, $text);
+}
+
+function time_elapsed_string($datetime, $full = false) {
+    $now = new DateTime;
+    $ago = new DateTime($datetime);
+    $diff = $now->diff($ago);
+
+    $diff->w = floor($diff->d / 7);
+    $diff->d -= $diff->w * 7;
+
+    $string = array(
+        'y' => 'year',
+        'm' => 'month',
+        'w' => 'week',
+        'd' => 'day',
+        'h' => 'hour',
+        'i' => 'minute',
+        's' => 'second',
+    );
+    foreach ($string as $k => &$v) {
+        if ($diff->$k) {
+            $v = $diff->$k . ' ' . t($v . ($diff->$k > 1 ? 's' : ''));
+        } else {
+            unset($string[$k]);
+        }
+    }
+
+    if (!$full) $string = array_slice($string, 0, 1);
+    return $string ? implode(', ', $string) : 'just now';
 }
 ?>

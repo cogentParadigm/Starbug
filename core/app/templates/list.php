@@ -21,7 +21,7 @@
 	}
 ?>
 <div class="panel panel-default">
-	<div class="panel-heading"><strong> <span data-i18n="<?php echo $options['label']; ?>"><?php echo $options['label']; ?></span></strong></div>
+	<div class="panel-heading"><strong> <span><?php echo $options['label']; ?></span></strong></div>
 	<div class="panel-body">
 	<?
 		render(array($model."/admin-toolbar", "admin-toolbar"));

@@ -10,14 +10,14 @@ define([
 		_createInput: function(){
 			this.inherited(arguments);
 			domstyle.set(this.inputNode, 'left', '5px');
-			domstyle.set(this.inputNode, 'top', '6px');
 			domstyle.set(this.inputNode, 'right', 'auto');
-			domstyle.set(this.inputNode, 'width', '91px');
-			domstyle.set(this.inputNode, 'height', '30px');
+			domstyle.set(this.inputNode, 'width', '88px');
+			domstyle.set(this.inputNode, 'height', '34px');
 			domstyle.set(this.inputNode, 'cursor', 'pointer');
 		},
 		upload: function(formData) {
-			formData.category = this.category;
+			if (typeof formData == "undefined") return false;
+			if (this.category != null) formData.category = this.category;
 			this.inherited(arguments);
 		}
 	});

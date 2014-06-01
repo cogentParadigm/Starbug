@@ -62,7 +62,7 @@ class Uris {
 	}
 	
 	function query_admin($query, &$ops) {
-		$query->select("uris.*,uris.statuses.id as statuses");
+		$query->select("uris.*,uris.statuses.term as statuses");
 		if (!logged_in("admin")) $query->action("read");
 		$query->condition("uris.prefix", "app/views/");
 		$query->condition("uris.statuses", "deleted", "!=");

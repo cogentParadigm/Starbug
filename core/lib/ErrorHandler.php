@@ -106,12 +106,9 @@ class ErrorHandler {
 	function expand_evals($error, $traces) {
 		$ret = array();
 		foreach ($traces as $i => $trace) {
-			if (false !== strpos($trace['file'], "/modules/db/classes/db.php")) {
-				//interpret path from class
-				$ret = array_merge($ret, ErrorHandler::expand_eval($trace, $error, "model"));
-				$trace = array_pop($ret);
-			} else if (isset($trace['class']) && false !== strpos($trace['class'], "__")) {
-				$ret = array_merge($ret, ErrorHandler::expand_eval($trace, $error, "model"));
+			if (isset($trace['class']) && false !== strpos($trace['class'], "__")) {
+				$type = (false !== strpos($trace['class'], "__hook_")) ? "hook" : "model";
+				$ret = array_merge($ret, ErrorHandler::expand_eval($trace, end($ret), $type));
 			} else if ($trace['function'] == 'eval' || (false != strpos($trace['file'], 'eval()\'d code'))) {
 				$path = str_replace(BASE_DIR, "", $trace['file']);
 				$expand = $i ? array_pop($ret) : $error;
@@ -157,11 +154,14 @@ class ErrorHandler {
 				$ret[] = $parent;
 			} else {
 				$parts = explode("__", $expand['class']);
-				$expand['file'] = BASE_DIR."/".str_replace("_", "/", $parts[0])."/models/".$parts[1].".php";
-				$expand['message'] = $parent['message'];
-				$expand['line'] = $parent['line'];
-				$ret[] = $expand;
+				$parent['file'] = BASE_DIR."/".str_replace("_", "/", $parts[0])."/models/".$parts[1].".php";
+				$ret[] = $parent;
 			}
+		} else if ($type == "hook") {
+				$parts = explode("__hook_", $expand['class']);
+				$parts[1] = explode("_", $parts[1], 2);
+				$parent['file'] = BASE_DIR."/".str_replace("_", "/", $parts[0])."/hooks/".$parts[1][0]."/".$parts[1][1].".php";
+				$ret[] = $parent;
 		}
 		return $ret;
 	}

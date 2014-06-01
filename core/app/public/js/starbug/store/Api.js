@@ -156,7 +156,7 @@ return declare(null, {
 	},
 	getChildren: function(object, options){
 		var old_result = this.results;
-		this.query({parent:object.id}, options);
+		this.query(lang.mixin({}, options && options.originalQuery || null, {parent:object.id}), options);
 		return this.results;
 		this.results = old_result;
 	},
@@ -176,7 +176,7 @@ return declare(null, {
 			var data = JSON.parse(error.responseText);
 			var message = 'Message: '+data.message+'\n\nFile: '+data.file+'\n\nLine: '+data.line;
 			alert(message);
-		}	else {
+		}	else if (ioargs.xhr.status > 0) {
 			alert('An unknown error occurred.');
 		}
 	}

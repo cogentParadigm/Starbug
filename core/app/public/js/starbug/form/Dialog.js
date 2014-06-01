@@ -6,7 +6,9 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/request/xhr", "dojo/query
 		form:null,
 		item_id: 0,
 		post_data:{},
+		get_data:{},
 		crudSuffixes:true,
+		format:"xhr",
 		postCreate: function() {
 			this.inherited(arguments);
 			this.set('content', '');
@@ -20,7 +22,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/request/xhr", "dojo/query
 			domclass.add(this.form, 'loading');
 			query('.loading', this.form).style('display','block');
 			iframe(
-			this.url+(this.crudSuffixes ? ((this.item_id) ? 'update/'+this.item_id : 'create') : '')+'.xhr',
+			this.url+(this.crudSuffixes ? ((this.item_id) ? 'update/'+this.item_id : 'create') : '')+((this.format != false) ? '.xhr' : ''),
 			{
 				form: this.form,
 				data: this.post_data,
@@ -50,10 +52,13 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/request/xhr", "dojo/query
 			this.inherited(arguments);
 			if (id) this.item_id = id;
 			else this.item_id = 0;
-			xhr(
-				this.url+(this.crudSuffixes ? ((id) ? 'update/'+id : 'create') : '')+'.xhr',
-				{data:this.post_data}
-			).then(lang.hitch(this, 'loadForm'));
+			var request_url = this.url+(this.crudSuffixes ? ((id) ? 'update/'+id : 'create') : '')+((this.format != false) ? '.xhr' : '');
+			var token = '?';
+			for (var i in this.get_data) {
+				request_url += token+i+'='+this.get_data[i];
+				token = '&';
+			}
+			xhr(request_url, {data:this.post_data}).then(lang.hitch(this, 'loadForm'));
 		},
 		hide: function(evt) {
 			if (evt) evt.preventDefault();

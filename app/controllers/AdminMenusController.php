@@ -4,7 +4,7 @@ class AdminMenusController {
 		assign("model", "menus");
 	}
 	function default_action() {
-		$this->render("admin/menus/list");
+		$this->render("admin/list");
 	}
 	function create() {
 		assign("menu", $_GET['menu']);

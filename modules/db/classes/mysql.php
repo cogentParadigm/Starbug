@@ -174,11 +174,10 @@ class mysql extends db {
 		$query = new query($name);
 		foreach ($fields as $col => $value) $query->set($col, $value);
 		
-		if ($from == "auto" && !empty($fields['id'])) $from = array("id" => $fields['id']);
-		else if (!is_array($from) && false !== $from && "auto" != $from) $from = star($from);
-		else $from = array();
+		if ($from === "auto" && !empty($fields['id'])) $from = array("id" => $fields['id']);
+		else if (!is_array($from) && false !== $from && "auto" !== $from) $from = star($from);
 		
-		if (!empty($from)) {
+		if (!empty($from) && is_array($from)) {	
 			$query->mode("update");
 			foreach ($from as $c => $v) $query->condition($c, $v);
 		} else {

@@ -260,9 +260,9 @@ class Schemer {
 				$this->add_uri($path);
 				$us++;
 			} else {
-				$query = query("uris"); $extra_terms = array();
-				foreach ($uri as $k => $v) $query->condition("uris.".$k, $v);
-				$rows = $query->execute();
+				$query = query("uris"); $extra_terms = false;
+				foreach ($uri as $k => $v) if (!in_array($k, array("groups", "statuses"))) $query->condition("uris.".$k, $v);
+				$rows = $query->all();
 				if (!empty($rows)) {
 					$s = query("terms_index", "select:terms_index.id as id,terms_index.terms_id.slug as slug")->condition(array(
 						"terms_index.type" => "uris",
@@ -274,19 +274,42 @@ class Schemer {
 						"terms_index.rel" => "groups",
 						"terms_index.type_id" => $rows[0]['id']
 					))->execute();
-					$statuses = explode(",", $uri['statuses']);
-					$groups = explode(",", $uri['groups']);
+					$statuses = (empty($uri['statuses'])) ? array() : explode(",", $uri['statuses']);
+					$groups = (empty($uri['groups'])) ? array() : explode(",", $uri['groups']);
+					$found_s = $found_g = array();
+					//check the existing statuses in the db to find items to remove
 					foreach ($s as $status) {
-						if (!in_array($status['slug'], $statuses)) $extra_terms[] = $status['id'];
+						if (!in_array($status['slug'], $statuses)) {
+							$statuses[] = "-".$status['slug'];
+							$extra_terms = true;
+						} else $found_s[] = $status['slug'];
 					}
+					//check the existing groups in the db to find items to remove
 					foreach ($g as $group) {
-						if (!in_array($group['slug'], $groups)) $extra_terms[] = $group['id'];
+						if (!in_array($group['slug'], $groups)) {
+							$groups[] = "-".$group['slug'];
+							$extra_terms = true;
+						} else $found_g[] = $group['slug'];
 					}
+					//check the requested statuses to see if any are not already stored
+					foreach ($statuses as $status) {
+						if (!in_array($status, $found_s)) {
+							$extra_terms = true;
+						}
+					}
+					//check the requested groups to see if any are not already stored
+					foreach ($groups as $group) {
+						if (!in_array($group, $found_g)) {
+							$extra_terms = true;
+						}
+					}
+					if (!empty($statuses)) $uri['statuses'] = implode(",", $statuses);
+					if (!empty($groups)) $uri['groups'] = implode(",", $groups);
 				}
-				if (empty($rows) || !empty($extra_terms)) {
+				if (empty($rows) || $extra_terms) {
 					// UPDATE URI																																												// UPDATE URI
 					fwrite(STDOUT, "Updating URI '$path'...\n");
-					$this->update_uri($path, $extra_terms);
+					$this->update_uri($path, $uri);
 					$us++;
 				}
 			}
@@ -585,12 +608,14 @@ class Schemer {
 	 * Update a uri in the db from the schema
 	 * @param string $path the path of the uri
 	 */
-	function update_uri($path, $extra_terms) {
-		$uri = $this->uris[$path];
-		store("uris", $uri, "path:$path");
+	function update_uri($path, $uri=array()) {
+		if (empty($uri)) $uri = $this->uris[$path];
+		store("uris", $uri, array("path" => $path));
+		/*
 		if (!empty($extra_terms)) {
 			foreach ($extra_terms as $tid) remove("terms_index", "id:".$tid);
 		}
+		*/
 	}
 
 	/**
@@ -1076,10 +1101,6 @@ class Schemer {
 			efault($field[$field['input_type']], "");
 			efault($field["label"], format_label($name));
 			foreach ($field as $k => $v) {
-				//if (("references" == $k) && (false === strpos($v, $model))) $data["fields"][$name]["references"] = $v;
-				//$filter_locations = locate("store/$k.php", "hooks");
-				//if (!empty($filter_locations))
-				//$data["fields"][$name]["filters"][$k] = $v;
 				$data["fields"][$name][$k] = $v;
 			}
 		}
@@ -1123,24 +1144,7 @@ class Schemer {
 							$node = $root->appendChild($xmlDoc->createElement("field"));
 							$node->appendChild($xmlDoc->createAttribute("name"))->appendChild($xmlDoc->createTextNode($name));
 							foreach ($field as $k => $v) {
-								switch ($k) {
-									case "filters":
-										foreach ($v as $filter => $val) {
-											$f = $node->appendChild($xmlDoc->createElement("filter"));
-											$f->appendChild($xmlDoc->createAttribute("name"))->appendChild($xmlDoc->createTextNode($filter));
-											$f->appendChild($xmlDoc->createAttribute("value"))->appendChild($xmlDoc->createTextNode($val));
-										}
-										break;
-									case "references":
-										$ref = explode(" ", $v);
-										$f = $node->appendChild($xmlDoc->createElement("references"));
-										$f->appendChild($xmlDoc->createAttribute("model"))->appendChild($xmlDoc->createTextNode($ref[0]));
-										$f->appendChild($xmlDoc->createAttribute("field"))->appendChild($xmlDoc->createTextNode($ref[1]));
-										break;
-									default:
-										if (!empty($k)) $node->appendChild($xmlDoc->createAttribute($k))->appendChild($xmlDoc->createTextNode($v));
-										break;
-								}
+								if (!empty($k)) $node->appendChild($xmlDoc->createAttribute($k))->appendChild($xmlDoc->createTextNode($v));
 							}
 						}
 						break;

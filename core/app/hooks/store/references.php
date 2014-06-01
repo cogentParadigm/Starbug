@@ -4,13 +4,13 @@ class hook_store_references {
 	function validate(&$query, $key, $value, $column, $argument) {
 		if (empty($value)) {
 			$this->replace = true;
-			$value = "NULL";
+			$value = "";
 		}
 		return $value;
 	}
 	function store(&$query, $key, $value, $column, $argument) {
 		$model = reset(explode(" ", $argument));
-		return (($value == "NULL") ? sb($model)->insert_id : $value);
+		return ($value === "") ? sb($model)->insert_id : $value;
 	}
 }
 ?>

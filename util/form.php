@@ -174,7 +174,7 @@ class form {
 		
 		$capture = "field";
 		$field['field'] = reset(explode("[", $field['name']));
-		if ($control != "input" || $field['type'] != "file") $field['name'] = $this->get_name($field['name']);
+		$field['name'] = $this->get_name($field['name']);
 		foreach ($field as $k => $v) assign($k, $v);
 		if (isset($field['nofield'])) {
 			unset($field['nofield']);

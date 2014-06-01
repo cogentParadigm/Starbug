@@ -38,7 +38,7 @@ class db {
 	 * @return the instantiated model
 	 */
 	function model($name) {
-		$class = ucwords($name);
+		$class = $model = ucwords($name);
 		if (!isset(self::$objects[$name])) {
 			if (file_exists(BASE_DIR."/var/models/".$class."Model.php")) {
 				//include the base model
@@ -55,7 +55,7 @@ class db {
 					//get file contents
 					$contents = file_get_contents($models[$i]);
 					//make class name unique and extend the previous class
-					$class = str_replace(array(BASE_DIR.'/', '/'), array('', '_'), reset(explode('/models/', $models[$i])))."__$class";
+					$class = str_replace(array(BASE_DIR.'/', '/'), array('', '_'), reset(explode('/models/', $models[$i])))."__".$model;
 					$replace = "class $class extends $last {";
 					//replace and eval
 					eval('?>'.str_replace($search, $replace, $contents));

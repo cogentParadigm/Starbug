@@ -105,7 +105,7 @@ class Request {
 	function post_action($key, $value) {
 		if ($object = sb($key)) {
 			error_scope($key);
-			$permits = isset($_POST[$key]['id']) ? query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'") : query($key, "action:$value  priv_type:table");
+			$permits = isset($_POST[$key]['id']) ? query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'")->one() : query("permits")->action($value, $key)->one();
 			if ($permits || logged_in("root")) $object->$value($_POST[$key]);
 			else $this->forbidden();
 			error_scope("global");

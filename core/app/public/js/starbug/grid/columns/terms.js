@@ -13,7 +13,7 @@ function(dojo, when, sb, put, editor, MultiSelect){
 			if (typeof value == "string") values = value.split(/,/g);
 			var list = [];
 			for (var i in items) {
-				if (values.indexOf(items[i].value) != -1) list.push('<span class="term '+items[i].label+'">'+items[i].label+'</span>');	
+				if (values.indexOf(items[i].value) != -1 || values.indexOf(items[i].label) != -1) list.push('<span class="term '+items[i].label+'">'+items[i].label+'</span>');	
 			}
 			node.innerHTML = list.join(', ');
 		};

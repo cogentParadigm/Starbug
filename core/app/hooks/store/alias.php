@@ -19,7 +19,7 @@ class hook_store_alias {
 				$num++;
 			}
 			$row = query($referenced_model[0])->select($referenced_model[1])->condition($match, $value)->one();
-			$value = $row[$referenced_model[1]];
+			if (!empty($row)) $value = $row[$referenced_model[1]];
 		}
 		return $value;
 	}

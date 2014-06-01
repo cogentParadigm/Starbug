@@ -285,8 +285,10 @@ class query implements IteratorAggregate, ArrayAccess {
 	}
 	function conditions($fields, $op="=", $ops=array()) {
 		if ($fields instanceof query) {
-			foreach ($fields->operations as $operation) {
-				if ($operation['operation'] == "condition") $this->condition($operation['field'], $operation['value'], $operation['op'], $operation['ops']);
+			foreach ($fields->operations as $set => $operations) {
+				foreach ($operations as $operation) {
+					if ($operation['operation'] == "condition") $this->condition($operation['field'], $operation['value'], $operation['op'], $operation['ops']);
+				}
 			}
 			return $this;
 		} else return $this->condition(star($fields), "", $op, $ops);
@@ -473,6 +475,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	function fields($fields) {
 		$fields = star($fields);
 		foreach ($fields as $k => $v) $this->set($k, $v);
+		return $this;
 	}
 	
 	function open($set, $con="&&", $nest=false) {
@@ -480,10 +483,12 @@ class query implements IteratorAggregate, ArrayAccess {
 		if (!$nest && !empty($this->sets)) $this->close();
 		$this->sets[] = $this->set;
 		$this->set = $set;
+		return $this;
 	}
 	
 	function close() {
 		if (!empty($this->sets)) $this->set = array_pop($this->sets);
+		return $this;
 	}
 
 	/**
@@ -567,10 +572,9 @@ class query implements IteratorAggregate, ArrayAccess {
 			$join = false;
 		}
 		
-		//join permits - match table and action
-		if (!$this->has("permits")) $this->innerJoin("permits")->on("'".P($type)."' LIKE permits.related_table && '".$action."' LIKE permits.action");
-		
 		if ($join) {
+			//join permits - match table and action
+			if (!$this->has("permits")) $this->innerJoin("permits")->on("'".P($type)."' LIKE permits.related_table && '".$action."' LIKE permits.action");
 			//global or object permit
 			$this->where("('global' LIKE permits.priv_type || (permits.priv_type='object' && permits.related_id=".$collection.".id))");
 			//associate terms with permits without using the 'roles' relationship and it will require objects to bear those terms as well
@@ -584,7 +588,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			")");
 		} else {
 			//table permit
-			$this->where("'table' LIKE permits.priv_type");
+			$this->where("'table' LIKE permits.priv_type && '".P($type)."' LIKE permits.related_table && '".$action."' LIKE permits.action");
 		}
 		
 		//generate a condition for each role a permit can have. One of these must be satisfied
@@ -626,7 +630,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			")");
 		}
 		$this->close();
-		
+		return $this;
 	}
 
 	/**************************************************************
@@ -762,7 +766,8 @@ class query implements IteratorAggregate, ArrayAccess {
 				if ($this->mode != "insert" && $this->mode != "truncate") $from .= " AS `".$alias."`";
 			} else {
 				efault($this->query['join'][$alias], "LEFT");
-				$segment = " ".$this->query['join'][$alias]." JOIN `".P($collection)."` AS `".$alias."`";
+				$collection_segment = ("(" === substr($collection, 0, 1)) ? $collection : "`".P($collection)."`";
+				$segment = " ".$this->query['join'][$alias]." JOIN ".$collection_segment." AS `".$alias."`";
 				if (empty($this->query['on'][$alias])) {
 					$relations = db::model($collection)->relations;
 					$relator = $last_alias;
@@ -845,6 +850,9 @@ class query implements IteratorAggregate, ArrayAccess {
 							}
 							$conditions .= ')';
 						}
+					} else if ($condition['value'] === "NULL") {
+						$condition['op'] = str_replace(array('!=', '='), array("IS NOT ", "IS"), $condition['op']);
+						$conditions .= ' '.$condition['op'].' NULL';
 					} else {
 						$index = $this->increment_parameter_index($set);
 						if ($condition['invert']) {
@@ -1093,11 +1101,10 @@ class query implements IteratorAggregate, ArrayAccess {
 	function validate($phase=query::PHASE_VALIDATION) {
 		$oldscope = error_scope();
 		error_scope($this->model);
-		foreach (db::model($this->model)->filters as $col => $filters) {
-			$filters = star(db::model($this->model)->filters[$col]);
-			if (!isset($filters['required']) && !isset($filters['default'])) $filters['required'] = "";
-			foreach ($filters as $filter => $args) {
-				$this->invoke_hook($phase, $col, $filter, $args);
+		foreach (db::model($this->model)->hooks as $column => $hooks) {
+			if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) $hooks['required'] = "";
+			foreach ($hooks as $hook => $argument) {
+				$this->invoke_hook($phase, $column, $hook, $argument);
 			}
 		}
 		error_scope($oldscope);

@@ -11,7 +11,7 @@
  * $errors - errors if there are any
  */
 ?>
-<form <?= $attributes; ?>action="<?= $url; ?>" method="<?= $method; ?>">
+<form <?= $attributes; ?>action="<?= $url; ?>" method="<?= $method; ?>" accept-charset="UTF-8">
 <? if ($method == "post") { ?>
 	<input class="postback" name="postback" type="hidden" value="<?= $postback; ?>" />
 <? } ?>

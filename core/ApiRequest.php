@@ -24,6 +24,7 @@ class ApiRequest {
 	var $query = true;
 	var $headers = true;
 	var $model;
+	var $action;
 
 	/**
 	 * API Request constructor
@@ -51,6 +52,7 @@ class ApiRequest {
 			header("Content-Type: ".$this->types[$format]);
 			header("Cache-Control: no-store, no-cache");
 		}
+		$this->action = $action;
 		$this->result = call_user_func(array($this, $call), $action, $format, $ops);
 	}
 
@@ -157,7 +159,7 @@ class ApiRequest {
 	 */
 	protected function getJSON($identifier, $data) {
 		$json = ($this->query) ? '[' : '';
-		foreach($data as $row) $json .= json_encode(sb($this->model, "filter", $row)).", ";
+		foreach($data as $row) $json .= json_encode(sb($this->model)->filter($row, $this->action)).", ";
 		return rtrim($json, ", ").(($this->query) ? ']' : '');
 	}
 

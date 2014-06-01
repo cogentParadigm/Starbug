@@ -14,7 +14,8 @@
  */
 function terms($taxonomy, $parent=0, $depth=0) {
 	$terms = array();
-	$parents = query("terms", "where:taxonomy=? AND parent=?  orderby:position ASC", array($taxonomy, $parent));
+	$parents = query("terms")->condition("taxonomy", $taxonomy)->condition("parent", $parent)->sort("position");
+	if ($taxonomy == "groups" && !logged_in("root")) $parents->condition("slug", "root", "!=");
 	foreach ($parents as $idx => $term) {
 		$term['depth'] = $depth;
 		$terms[] = $term;
@@ -44,10 +45,11 @@ function tag($table, $object_id, $field, $tag="") {
 	//IF THE TERM DOESN'T EXIST, ADD IT
 	$term = query("terms", "where:(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax  limit:1", array("tag" => $tag, "tax" => $taxonomy));
 	if (empty($term)) store("terms", "term:$tag  slug:$slug  taxonomy:$taxonomy  parent:0  position:");
+	else if ($term['taxonomy'] == "groups" && !logged_in("root") && in_array($term['slug'], array("root"))) return false;
 	if (errors()) return false;
 		
 	//APPLY TAG
-	$term_id = (empty($term)) ? sb("insert_id") : $term['id'];
+	$term_id = (empty($term)) ? sb("terms")->insert_id : $term['id'];
 	store("terms_index", "terms_id:$term_id  type:$table  type_id:$object_id  rel:$field");
 	return (!errors());
 }

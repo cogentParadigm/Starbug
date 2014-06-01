@@ -1,8 +1,12 @@
-<? if($type=="file") $file = query("files", "where:id=?  limit:1", array($form->get($name))); ?>
-<?php if (!empty($file) && (reset(explode("/", $file['mime_type'])) == "image")) { ?>
-		<img src="<?php echo image_thumb("app/public/uploads/".$file['id']."_".$file['filename'], "w:100  h:100  a:1"); ?>"/>
-<?php } ?>
+<?php if ($type == "file") { $file = query("files", "where:id=?  limit:1", array($form->get($field))); ?>
+	<?php
+		$attrs = 'data-dojo-type="starbug/form/FileSelect" data-dojo-props="input_name:\''.$attributes['name'].'\'';
+		if (!empty($file)) {
+			$attrs .= ', files:['.str_replace('"', "'", json_encode($file)).']';
+		}
+		$attrs .= '"';
+	?>
+    <div <?php echo $attrs; ?>></div>
+<?php }  else { ?>
 <input <? html_attributes($attributes); ?>/>
-<? if (!empty($file)) { ?>
-<div class="field"><?= $file['filename']; ?></div>
-<? } ?>
+<?php } ?>

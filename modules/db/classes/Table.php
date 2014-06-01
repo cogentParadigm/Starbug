@@ -26,9 +26,9 @@ class Table {
 	 */
 	var $type;
 	/**
-	 * @var array The filters to apply to each column before attempting to store
+	 * @var array The hooks that apply to each column
 	 */
-	var $filters;
+	var $hooks;
 	/**
 	 * @var array The relationships to other tables
 	 */
@@ -55,10 +55,10 @@ class Table {
 	 * @param string $type the un-prefixed table name
 	 * @param array $filters the column filters
 	 */
-	function __construct($db, $type, $filters=array()) {
+	function __construct($db, $type, $hooks=array()) {
 		$this->db = $db;
 		$this->type = $type;
-		if (!isset($this->filters)) $this->filters = $filters;
+		if (!isset($this->hooks)) $this->hooks = $hooks;
 		$this->imported = array();
 		$this->imported_functions = array();
 		$this->init();

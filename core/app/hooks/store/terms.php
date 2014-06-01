@@ -9,7 +9,7 @@ class hook_store_terms {
 		$remove_unmentioned_tags = false;
 		if (!is_array($value)) $value = explode(",", $value);
 		foreach ($value as $tag) {
-			if ($tag == "-~") {
+			if ($tag === "-~") {
 				//remove all tags not mentioned
 				$remove_unmentioned_tags = true;
 			} else if (0 === strpos($tag, "-")) {
@@ -24,13 +24,17 @@ class hook_store_terms {
 			}
 		}
 		if ($remove_unmentioned_tags) {
-			query("terms_index")->condition(array(
+			$query = query("terms_index")->condition(array(
 				"type" => $name,
 				"type_id" => $id,
 				"rel" => $category_column_info['taxonomy']
-			))->condition("terms_id", $mentioned_tags, "!=")
-			->condition("terms_id.slug", $mentioned_tags, "!=")
-			->condition("terms_id.term", $mentioned_tags, "!=")->delete();		
+			));
+			if (!empty($mentioned_tags)) {
+				$query->condition("terms_id", $mentioned_tags, "!=")
+					->condition("terms_id.slug", $mentioned_tags, "!=")
+					->condition("terms_id.term", $mentioned_tags, "!=");
+			}
+			$query->delete();
 		}
 	}
 }

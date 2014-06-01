@@ -134,7 +134,23 @@ function link_to($text, $url="", $attributes=array()) {
 	assign("innerHTML", $text);
 	render("tag");
 }
-
+/**
+ * render a field
+ * @ingroup templates
+ * @param string $model the name of the model that the field belongs to
+ * @param array $row the row that this field should be rendered from
+ * @param string $field the name of the field to render
+ * @param array $options formatting options
+ */
+function render_field($model, $row, $field, $options=array()) {
+		static $hooks = array();
+		foreach (db::model($model)->hooks[$field] as $hook => $argument) {
+			if (!isset($hooks[$hook])) $hooks[$hook] = build_hook("display/".$hook, "lib/RenderHook", "core");
+			$hook = $hooks[$hook];
+			$hook->render($model, $row, $field, $options);
+		}
+		
+}
 function render_display($name, $model, $query, $options=array()) {
 	$class = get_module_class("displays/".ucwords($name)."Display", "lib/Display", "core");
 	$display = new $class($model, $query, $options);

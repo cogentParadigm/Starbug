@@ -21,14 +21,14 @@ class Files {
 		if (!empty($file['name'])) {
 			if ($file["error"] > 0) error($file["error"], "filename");
 			$record['filename'] = str_replace(" ", "_", $file['name']);
-			$record['mime_type'] = $file['type'];//$this->get_mime($file['tmp_name']);
+			$record['mime_type'] = $this->get_mime($file['tmp_name']);
 			$record['size'] = filesize($file['tmp_name']);
 			efault($record['category'], "files_category uncategorized");
 			$this->store($record);
 			if ((!errors()) && (!empty($record['filename']))) {
 				$id = (empty($record['id'])) ? $this->insert_id : $record['id'];
 				if (move_uploaded_file($file["tmp_name"], "app/public/uploads/".$id."_".$record['filename'])) {
-					image_thumb("app/public/uploads/".$id."_".$record['filename'], "w:100  h:100  a:1");
+					if (reset(explode("/", $record['mime_type'])) == "image") image_thumb("app/public/uploads/".$id."_".$record['filename'], "w:100  h:100  a:1");
 					return true;
 				} else {
 					return false;
@@ -51,6 +51,10 @@ class Files {
 	}
 	
 	function get_mime($file_path) {
+    	$output = exec("file --mime-type -b {$file_path}");
+    	return $output;
+		/*
+		BUG: below code doesn't always work. sometimes finfo is not able to locate the file
 		$mtype = '';
 		if (function_exists('finfo_file')){
 			$finfo = finfo_open(FILEINFO_MIME);
@@ -61,6 +65,7 @@ class Files {
 			$mtype = "application/force-download";
 		}
 		return $mtype;
+		*/
 	}
 	
 	function query_list($query, &$ops) {
@@ -72,7 +77,7 @@ class Files {
 	}
 	
 	function filter($file) {
-		image_thumb("app/public/uploads/".$file['id']."_".$file['filename'], "w:100  h:100  a:1");
+		if (reset(explode("/", $file['mime_type'])) == "image") image_thumb("app/public/uploads/".$file['id']."_".$file['filename'], "w:100  h:100  a:1");
 		return $file;
 	}
 
