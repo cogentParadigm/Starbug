@@ -43,7 +43,7 @@ function tag($table, $object_id, $field, $tag="") {
 	if (!empty($existing)) return true;
 
 	//IF THE TERM DOESN'T EXIST, ADD IT
-	$term = query("terms", "where:(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax  limit:1", array("tag" => $tag, "tax" => $taxonomy));
+	$term = query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->params(array("tag" => $tag, "tax" => $taxonomy))->one();
 	if (empty($term)) store("terms", "term:$tag  slug:$slug  taxonomy:$taxonomy  parent:0  position:");
 	else if ($term['taxonomy'] == "groups" && !logged_in("root") && in_array($term['slug'], array("root"))) return false;
 	if (errors()) return false;

@@ -7,16 +7,10 @@ class Uris {
 			$uris['type'] = $_POST['type'];
 		}
 		if ($_POST['type'] == "Post") $uris['path'] = "blog/".$uris['path'];
-		queue("blocks", "type:text  region:content  position:1  uris_id:");
-		efault($uris['categories'], array());
-		$categories = $uris['categories'];
-		unset($uris['categories']);
+		queue("blocks", array("type" => "text",  "region" => "content",  "position" => 1, "uris_id" => "", "content" => $_POST['block-content-1']['content']));
 		$this->store($uris);
 		if (!errors()) {
 			$uid = $this->insert_id;
-			foreach ($categories as $tid) store("uris_categories", "uris_id:$uid  terms_id:$tid");
-			if ($_POST['type'] == "Page") redirect(uri("admin/uris/update"));
-			else redirect(uri("admin/".strtolower($_POST['type'])."s/update"));
 		} else {
 			global $sb;
 			if (errors("uris[title]") && empty($uris['path'])) unset($sb->errors['uris']['path']);

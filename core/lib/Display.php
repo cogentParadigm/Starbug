@@ -161,11 +161,21 @@ class Display {
 	/**
 	 * render the display with the specified items
 	 */
-	function render() {
-		$this->query();
+	function render($query=true) {
+		if ($query) $this->query();
 		assign("display", $this);
 		//assign("items", $items);
 		render("display/".$this->template);
+	}
+	
+	/**
+	 * capture the display with the specified items
+	 */
+	function capture($query=true) {
+		if ($query) $this->query();
+		assign("display", $this);
+		//assign("items", $items);
+		return capture("display/".$this->template);
 	}
 
 }

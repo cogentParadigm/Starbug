@@ -1,10 +1,11 @@
 <?php
+	$value_name = $field['name'];
 	if (isset($field['multiple'])) {
 		$field['multiple'] = "multiple";
 		$field['name'] = $field['name']."[]";
 		efault($field['size'], 5);
 	}
-	$value = $this->get($field['name']);
+	$value = $this->get($value_name);
 	if ((empty($value)) && (!empty($field['default']))) {
 		$this->set($field['name'], $field['default']);
 		unset($field['default']);
@@ -19,7 +20,7 @@
 		$options["Add a new ".str_replace("_", " ", $field['name']).".."] = -1;
 		$field['onchange'] = "if (dojo.attr(this, 'value') == -1) dojo.style(this.id+'_new_category', 'display', 'block'); else dojo.style(this.id+'_new_category', 'display', 'none');";
 	}
-	assign("value", $this->get($field['name']));
+	$field['value'] = $this->get($value_name);
 	assign("options", $options);
-	assign("terms", $terms);
+	$field["terms"] = $terms;
 ?>

@@ -199,16 +199,10 @@ class ApiRequest {
  	 */
  	protected function getCSV($data, $headers=true) {
  		if ($this->headers) header('Content-Disposition: attachment; filename="'.$this->model.'.csv"');
- 		$buffer = fopen("php://temp", 'r+');
- 		$display_headers = true;
- 		if (is_array($headers)) fputcsv($buffer, $headers);
- 		else if (true === $headers) fputcsv($buffer, array_keys(sb($this->model, 'filter', $data[0])));
- 		else $display_headers = false;
- 		foreach ($data as $row) fputcsv($buffer, sb($this->model, "filter", $row));
- 		rewind($buffer);
-		$results = stream_get_contents($buffer);
- 		fclose($buffer);
- 		return $results;
+ 		foreach ($data as $idx => $row) $data[$idx] = sb($this->model)->filter($row, $this->action);
+		$display = build_display("list", $this->model, $this->action, array("template" => "csv"));
+		$display->items = $data;
+		return $display->capture(false);
 	}
 
 	/**
@@ -235,8 +229,11 @@ class ApiRequest {
 	 */
 	protected function JSONerrors($model) {
 		global $sb;
+		$schema = schema($model.".fields");
+		if (empty($schema)) $schema = array();
 		$json = '{ "errors" : [';
 		foreach($sb->errors[$model] as $k => $v) {
+			if (!empty($schema[$k]) && !empty($schema[$k]['label'])) $k = $schema[$k]['label'];
 			$json .= '{ "field":"'.$k.'", "errors": [ ';
 			foreach ($v as $e) $json .= '"'.$e.'", ';
 			$json = rtrim($json, ", ")." ] }, ";

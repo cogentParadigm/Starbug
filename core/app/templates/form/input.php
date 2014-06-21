@@ -8,5 +8,8 @@
 	?>
     <div <?php echo $attrs; ?>></div>
 <?php }  else { ?>
+<?php if ($type === "checkbox") { ?>
+	<input <? html_attributes(array("type" => "hidden", "id" => $attributes["id"]."-hidden", "value" => 0, "name" => $attributes['name'])); ?>/>
+<?php } ?>
 <input <? html_attributes($attributes); ?>/>
 <?php } ?>

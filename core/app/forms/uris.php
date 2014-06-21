@@ -163,6 +163,13 @@ require(['dojo/query', 'dojo/domReady!'], function($) {
 				?>
 			</fieldset>
 		<?php } ?>
+	<?php } else if ($action == "create") { ?>
+			<label>Content</label>
+			<?php
+				assign("region", "content");
+				assign("position", 1);
+				render("form/block/text");
+			?>
 	<?php } ?>
 	<fieldset style="margin-top:20px;width:82%">
 		<legend>SEO</legend>

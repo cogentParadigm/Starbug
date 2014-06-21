@@ -2,19 +2,19 @@
 class AdminUrisController {
 	function init() {
 		assign("model", "uris");
+		assign("form", "uris");
+		assign("cancel_url", "admin/uris");
+		if (success("uris", "create")) redirect(uri("admin/uris", "u"));
 	}
 	function default_action() {
-		assign("columns", array(
-			"Statuses" => "field:'statuses'  plugin:starbug.grid.columns.terms  taxonomy:'statuses'"
-		));
 		$this->render("admin/list");
 	}
 	function create() {
-		//autoloads admin/views/uris/create.php
+		$this->render("admin/create");
 	}
 	function update($id=null) {
 		assign("id", $id);
-		//autoloads admin/views/uris/update.php
+		$this->render("admin/update");
 	}
 }
 ?>

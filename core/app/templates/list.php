@@ -25,7 +25,7 @@
 	<div class="panel-body">
 	<?
 		render(array($model."/admin-toolbar", "admin-toolbar"));
-		render_display("grid", $model, $query, array("attributes" => $grid_attributes));
+		render_display("list", $model, $query, array("attributes" => $grid_attributes));
 	?>
 	</div>
 </div>

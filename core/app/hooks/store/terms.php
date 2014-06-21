@@ -27,7 +27,7 @@ class hook_store_terms {
 			$query = query("terms_index")->condition(array(
 				"type" => $name,
 				"type_id" => $id,
-				"rel" => $category_column_info['taxonomy']
+				"rel" => $column
 			));
 			if (!empty($mentioned_tags)) {
 				$query->condition("terms_id", $mentioned_tags, "!=")

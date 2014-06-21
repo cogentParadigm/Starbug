@@ -144,16 +144,32 @@ function link_to($text, $url="", $attributes=array()) {
  */
 function render_field($model, $row, $field, $options=array()) {
 		static $hooks = array();
-		foreach (db::model($model)->hooks[$field] as $hook => $argument) {
-			if (!isset($hooks[$hook])) $hooks[$hook] = build_hook("display/".$hook, "lib/RenderHook", "core");
-			$hook = $hooks[$hook];
-			$hook->render($model, $row, $field, $options);
+		if (isset(db::model($model)->hooks[$field])) {
+			foreach (db::model($model)->hooks[$field] as $hook => $argument) {
+				if (!isset($hooks[$hook])) $hooks[$hook] = build_hook("display/".$hook, "lib/RenderHook", "core");
+				$hook = $hooks[$hook];
+				$options = $hook->render($model, $row, $field, $options);
+			}
 		}
-		
+		if (empty($options['template'])) $options['template'] = sb($model)->hooks[$field]["type"];
+		if (empty($options['label'])) $column['label'] = (!empty(sb($model)->hooks[$field]["label"])) ? sb($model)->hooks[$field]["label"] : format_label($field);
+		assign("model", $model);
+		assign("row", $row);
+		assign("field", $field);
+		assign("options", $options);
+		render("field/field");
+}
+function build_display($name, $model, $query, $options=array()) {
+ 	$class = get_module_class("displays/".ucwords($name)."Display", "lib/Display", "core");
+ 	$display = new $class($model, $query, $options);
+	return $display;
 }
 function render_display($name, $model, $query, $options=array()) {
-	$class = get_module_class("displays/".ucwords($name)."Display", "lib/Display", "core");
-	$display = new $class($model, $query, $options);
+	$display = build_display($name, $model, $query, $options);
 	$display->render();
+}
+function capture_display($name, $model, $query, $options=array()) {
+	$display = build_display($name, $model, $query, $options);
+	return $display->capture();
 }
 ?>

@@ -7,7 +7,7 @@
 	efault($field['taxonomy'], ((empty($this->model)) ? "" : $this->model."_").$field['name']);
 	efault($field['parent'], 0);
 	$terms = terms($field['taxonomy'], $field['parent']);
-	assign("value", $this->get($field['name']));
-	assign("terms", $terms);
-	assign("writable", isset($field['writable']));
+	$field["value"] = $this->get($field['name']);
+	$field["terms"] = $terms;
+	$field["writable"] = isset($field['writable']);
 ?>

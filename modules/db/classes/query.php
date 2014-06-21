@@ -118,13 +118,17 @@ class query implements IteratorAggregate, ArrayAccess {
 	/**
 	 * specify fields for selection
 	 * @param string $field the name of the field
-	 * @param string $alias an alias
 	 */
-	function select($field) {
-		$field = $this->parse_collection($field);
-		$this->query['select'][$field['alias']] = $this->parse_fields($field['collection']);
-		$this->operation("select", $field);
-		$this->dirty();
+	function select($field, $prefix="") {
+		if (is_array($field)) {
+			foreach ($field as $f) $this->select($f, $prefix);
+ 		} else {
+ 			if (!empty($prefix)) $field = $prefix.".".$field;
+ 			$field = $this->parse_collection($field);
+ 			$this->query['select'][$field['alias']] = $this->parse_fields($field['collection']);
+ 			$this->operation("select", $field);
+ 			$this->dirty();
+ 		}
 		return $this;
 	}
 	
@@ -925,6 +929,8 @@ class query implements IteratorAggregate, ArrayAccess {
 			$count -= 2;
 		}
 		$name = implode(' ', $parts);
+		$alias = end(explode(".", $alias));
+		if ($alias == "*") $alias = $name;
 		return array("collection" => $name, "alias" => $alias, "on" => $on);
 	}
 

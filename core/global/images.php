@@ -110,10 +110,9 @@ function image_save($image, $path, $format="auto") {
  * @param star $dimensions the desired width or height (or both to constrain) in pixels
  * @return string an absolute URL to the thumbnail
  */
-function image_thumb($current_file, $dimensions, $options=array()) {
+function image_thumb($current_file, $dimensions, $flags="") {
 	import("thumb");
 	$dimensions = array_merge(array('w' => 0, 'h' => 0, 'a' => false), star($dimensions));
-	$options = star($options);
 	$filename = basename($current_file);
 	$dir = "var/public/thumbnails/".$dimensions['w']."x".$dimensions['h']."a".$dimensions['a'];
 	$target = $dir."/".$filename;
@@ -124,7 +123,7 @@ function image_thumb($current_file, $dimensions, $options=array()) {
 		else $thumb->resize($dimensions['w'], $dimensions['h']);
 		$thumb->save(BASE_DIR."/".$target);
 	}
-	return uri($target);
+	return uri($target, $flags);
 }
 
 /**
