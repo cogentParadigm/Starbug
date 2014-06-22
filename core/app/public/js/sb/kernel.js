@@ -1,4 +1,4 @@
-define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", 'dojo/_base/xhr'], function(dojo, config, Deferred) {
+define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", "dojo/ready", 'dojo/_base/xhr'], function(dojo, config, Deferred, ready) {
 	if (!dojo.global['sb']) {
 		dojo.global['sb'] = {
 			severTime: config.serverTime,
@@ -104,6 +104,7 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", 'dojo/_base/xhr'], f
 										"insertdatetime media nonbreaking save table contextmenu directionality",
 										"emoticons template paste save"
 								],
+								paste_auto_cleanup_on_paste : true,
 								relative_urls:false,
 								toolbar1: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | print preview",
 								image_advtab: true,
@@ -143,6 +144,8 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", 'dojo/_base/xhr'], f
 		if (parts[1]) dojo.global.$_GET = dojo.queryToObject(parts[1]);
 		*/
 	}
-	dojo.global.sb.editable();
+	ready(function() {
+		dojo.global.sb.editable();
+	});
 	return dojo.global.sb;
 });

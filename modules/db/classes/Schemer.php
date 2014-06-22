@@ -150,8 +150,10 @@ class Schemer {
 		}
 		if (empty($primary)) $fields['id'] = star("type:int  auto_increment:  key:primary");
 		if (empty($fields["owner"])) $fields["owner"] = star("type:int  default:1  references:users id  owner:");
-		if (empty($fields["groups"])) $fields["groups"] = star("type:terms  taxonomy:groups");
-		if (empty($fields["statuses"])) $fields["statuses"] = star("type:category  taxonomy:statuses");
+		if ($table !== "terms_index") {
+			if (empty($fields["groups"])) $fields["groups"] = star("type:terms  taxonomy:groups");
+			if (empty($fields["statuses"])) $fields["statuses"] = star("type:category  label:Status  taxonomy:statuses  optional:  default:published");
+		}
 		if (empty($fields["created"])) $fields["created"] = star("type:datetime  default:0000-00-00 00:00:00  time:insert");
 		if (empty($fields["modified"])) $fields["modified"] = star("type:datetime  default:0000-00-00 00:00:00  time:update");
 		return $fields;

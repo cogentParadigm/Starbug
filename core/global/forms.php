@@ -229,6 +229,10 @@ function textarea($ops) {
 	$form = global_form();
 	echo $form->textarea($ops);
 }
+function tag_select($ops) {
+	$form = global_form();
+	echo $form->tag_select($ops);
+}
 /**
  * outputs a closing form tag
  * @ingroup forms

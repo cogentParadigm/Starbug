@@ -1102,6 +1102,7 @@ class query implements IteratorAggregate, ArrayAccess {
 
 	function exclude($key) {
 		$this->exclusions[$key] = true;
+		return $this;
 	}
 	 
 	function validate($phase=query::PHASE_VALIDATION) {

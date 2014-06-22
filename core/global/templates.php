@@ -151,7 +151,7 @@ function render_field($model, $row, $field, $options=array()) {
 				$options = $hook->render($model, $row, $field, $options);
 			}
 		}
-		if (empty($options['template'])) $options['template'] = sb($model)->hooks[$field]["type"];
+		if (empty($options['formatter'])) $options['formatter'] = sb($model)->hooks[$field]["type"];
 		if (empty($options['label'])) $column['label'] = (!empty(sb($model)->hooks[$field]["label"])) ? sb($model)->hooks[$field]["label"] : format_label($field);
 		assign("model", $model);
 		assign("row", $row);
@@ -159,17 +159,50 @@ function render_field($model, $row, $field, $options=array()) {
 		assign("options", $options);
 		render("field/field");
 }
-function build_display($name, $model, $query, $options=array()) {
- 	$class = get_module_class("displays/".ucwords($name)."Display", "lib/Display", "core");
- 	$display = new $class($model, $query, $options);
+/**
+ * build a display
+ * @ingroup templates
+ * @param string $type the display type (list, table, grid, csv, etc..)
+ * @param array $model the model to get results from
+ * @param string $name the display/query name (admin, list, select, etc..).
+ * 										 For example, if you specify 'admin', then the the following model functions will be used:
+ * 										 query provider: query_admin
+ * 										 display provider: display_admin
+ * @param array $options parameters that will be passed to the display and query functions
+ */
+function build_display($type, $model, $name, $options=array()) {
+ 	$class = get_module_class("displays/".ucwords($type)."Display", "lib/Display", "core");
+ 	$display = new $class($model, $name, $options);
 	return $display;
 }
-function render_display($name, $model, $query, $options=array()) {
-	$display = build_display($name, $model, $query, $options);
+/**
+ * build and render a display
+ * @ingroup templates
+ * @param string $type the display type (list, table, grid, csv, etc..)
+ * @param array $model the model to get results from
+ * @param string $name the display/query name (admin, list, select, etc..).
+ * 										 For example, if you specify 'admin', then the the following model functions will be used:
+ * 										 query provider: query_admin
+ * 										 display provider: display_admin
+ * @param array $options parameters that will be passed to the display and query functions
+ */
+function render_display($type, $model, $name, $options=array()) {
+	$display = build_display($type, $model, $name, $options);
 	$display->render();
 }
-function capture_display($name, $model, $query, $options=array()) {
-	$display = build_display($name, $model, $query, $options);
+/**
+ * build and capture a display
+ * @ingroup templates
+ * @param string $type the display type (list, table, grid, csv, etc..)
+ * @param array $model the model to get results from
+ * @param string $name the display/query name (admin, list, select, etc..).
+ * 										 For example, if you specify 'admin', then the the following model functions will be used:
+ * 										 query provider: query_admin
+ * 										 display provider: display_admin
+ * @param array $options parameters that will be passed to the display and query functions
+ */
+function capture_display($type, $model, $name, $options=array()) {
+	$display = build_display($type, $model, $name, $options);
 	return $display->capture();
 }
 ?>

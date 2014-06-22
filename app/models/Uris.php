@@ -56,7 +56,7 @@ class Uris {
 	}
 	
 	function query_admin($query, &$ops) {
-		$query->select("uris.*,uris.statuses.term as statuses");
+		$query->select("uris.*,CONCAT(uris.image, '_', uris.image.filename) as image,uris.statuses.term as statuses");
 		if (!logged_in("admin")) $query->action("read");
 		$query->condition("uris.prefix", "app/views/");
 		$query->condition("uris.statuses", "deleted", "!=");
@@ -64,13 +64,13 @@ class Uris {
 			$query->condition("uris.type", $ops['type']);
 		}
 		if (!empty($ops['status'])) $query->condition("uris.statuses.id", $ops['status']);
-		efault($ops['orderby'], "title");
+		efault($ops['orderby'], "uris.modified DESC, uris.created DESC, uris.title DESC");
 		$query->sort($ops['orderby']);
 		return $query;
 	}
 	
 	function display_admin($display, $options) {
-		$display->add("title", "type", "statuses  label:Status");
+		$display->add("title", "type", "statuses");
 	}
 
 }
