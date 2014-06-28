@@ -19,7 +19,7 @@ class GridDisplay {
 		js($this->grid_class);
 		if ($options['attributes']) $this->attributes = star($options['attributes']);
 		$this->attributes['model'] = $this->model;
-		$this->attributes['data-dojo-props'] = array("className" => "dgrid-autoheight");
+		$this->attributes['class'][] = "dgrid-autoheight";
     	efault($this->attributes['id'], $this->model."_grid");
     	efault($this->attributes['data-dojo-id'], $this->attributes['id']);
     	efault($this->attributes['data-dojo-type'], $this->grid_class);
