@@ -65,6 +65,13 @@ textarea{width:309px;height:100px}
 .input.left{margin-right:8px}
 div.mce-tinymce{margin-bottom:10px}
 
+div.autocomplete{position:relative}
+div.dgrid.dgrid-list.autocomplete-list{display:none;position:absolute;top:58px;z-index:10;background-color:#fff;border:1px solid #aaa;height:auto;width:100% !important}
+div.dgrid.dgrid-list.autocomplete-list .dgrid-scroller{margin-top:0;overflow:auto;max-height:216px}
+div.dgrid.dgrid-list.autocomplete-list .city{padding:1px 6px;cursor:default}
+div.dgrid.dgrid-list.autocomplete-list.show{display:block}
+
+
 /********************* dojo *********************/
 body.claro .dijitTabContainerTop-dijitContentPane, body.claro .dijitTabContainerLeft-dijitContentPane, body.claro .dijitTabContainerBottom-dijitContentPane, body.claro .dijitTabContainerRight-dijitContentPane, body.claro .dijitAccordionContainer-dijitContentPane{background-color:transparent;padding:0px;overflow:visible}
 body.claro div div.dijitTabPaneWrapper{background:transparent;overflow:visible}
@@ -149,6 +156,8 @@ body.claro.dojoDndMove .dojoDndAvatarItem{position:relative;display:block;top:-8
 .media .dgrid-grid .dgrid-cell.field-mime_type{width:200px}
 .media .dgrid-grid .dgrid-cell.field-size{width:120px}
 .media .dgrid-grid .dgrid-cell.field-id{width:100px}
+
+.file-select .dgrid .dgrid-header-row,.file-select .dgrid .dgrid-content{width:100%}
 
 /********************* email templates *********************/
 .email_templates-name.input,.email_templates-subject.input,.email_templates-from.input,.email_templates-from_name.input{float:left;clear:left;margin-right:10px}

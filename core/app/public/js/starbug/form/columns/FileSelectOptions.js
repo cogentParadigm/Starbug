@@ -12,7 +12,7 @@ function(dojo, strings, put, on){
 
 		column.renderCell = function(object, value, cell, options, header){
 			var parent = cell.parentNode;
-			put(parent && parent.contents ? parent : cell, ".dgrid-options");
+			put(parent && parent.contents ? parent : cell, ".field-options");
 			
 			var div = put(cell, 'div.btn-group');
 			
@@ -25,6 +25,10 @@ function(dojo, strings, put, on){
 				}
 			});
 		};
+		
+		column.renderHeaderCell = function(node) {
+			put(node, '.field-options', 'Options');
+		}
 
 		return column;
 	};

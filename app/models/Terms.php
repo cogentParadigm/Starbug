@@ -27,19 +27,19 @@ class Terms {
 	
 	function query_admin($query, &$ops) {
 		$query = parent::query_admin($query, $ops);
-		$query->select("DISTINCT taxonomy");
+		$query->select("DISTINCT terms.taxonomy");
 		return $query;
 	}
 	
 	function query_list($query, &$ops) {
-		$query->sort("term_path ASC, position ASC");
+		$query->sort("terms.term_path ASC, terms.position ASC");
 		return $query;
 	}
 
 	function query_filters($action, $query, &$ops) {
 		$query = parent::query_filters($action, $query, $ops);
 		if (!empty($ops['taxonomy'])) {
-			$query->condition("taxonomy", $ops['taxonomy']);
+			$query->condition("terms.taxonomy", $ops['taxonomy']);
 		}
 		return $query;	
 	}
@@ -47,8 +47,8 @@ class Terms {
 	function query_tree($query, &$ops) {
 		$query->select("terms.*,(SELECT COUNT(*) FROM ".P("terms")." as t WHERE t.parent=terms.id) as children");
 		if (!empty($ops['parent'])) $query->condition("parent", $ops['parent']);
-		else $query->condition("parent", 0);
-		$query->sort("position");
+		else $query->condition("terms.parent", 0);
+		$query->sort("terms.position");
 		return $query;
 	}
 	

@@ -22,8 +22,8 @@ class hook_store_type {
 		if (!is_array($value)) $value = explode(",", $value);
 		foreach ($value as $position => $type_id) {
 			$entry = query($target)->conditions(array($model."_id" => $model_id, $type."_id" => $type_id));
-			if ($id == "-~") $clean = true;
-			else if (0 === strpos($id, "-")) {
+			if ($type_id === "-~") $clean = true;
+			else if (0 === strpos($type_id, "-")) {
 				//remove
 				$entry->delete();
 			} else {
@@ -33,7 +33,7 @@ class hook_store_type {
 				$entry->set("position", $position);
 				if ($entry->one()) $entry->update();
 				else $entry->insert();
-				$ids[] = $entry->getId();
+				$ids[] = $type_id;
 			}
 		}
 		

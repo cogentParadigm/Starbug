@@ -203,7 +203,6 @@ function multiple_category_select($ops) {
  * outputs a date select
  * @ingroup forms
  * @param string $ops the options
- * @ingroup form
  */
 function date_select($ops) {
 	$form = global_form();
@@ -213,7 +212,6 @@ function date_select($ops) {
  * outputs a time select
  * @ingroup forms
  * @param string $ops the options
- * @ingroup form
  */
 function time_select($ops) {
 	$form = global_form();
@@ -223,20 +221,32 @@ function time_select($ops) {
  * outputs a textarea
  * @ingroup forms
  * @param string $ops the options
- * @ingroup form
  */
 function textarea($ops) {
 	$form = global_form();
 	echo $form->textarea($ops);
 }
+/**
+ * outputs a tag selection widget
+ * @ingroup forms
+ * @param string $ops the options
+ */
 function tag_select($ops) {
 	$form = global_form();
 	echo $form->tag_select($ops);
 }
 /**
+ * outputs an autocomplete widget
+ * @ingroup forms
+ * @param string $ops the options
+ */
+function autocomplete($ops) {
+	$form = global_form();
+	echo $form->autocomplete($ops);
+}
+/**
  * outputs a closing form tag
  * @ingroup forms
- * @ingroup form
  */
 function close_form() {
 	$form = global_form();

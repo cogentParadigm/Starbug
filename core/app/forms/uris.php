@@ -74,6 +74,7 @@
 				</div>
 				<div data-dojo-type="dijit/layout/ContentPane" title="Breadcrumbs"<?php if (empty($_GET['tab'])) { ?> data-dojo-props="selected:true"<?php } ?> style="min-height:200px">
 					<?php text("breadcrumb  label:Breadcrumbs Title  style:width:100%"); ?>
+					<?php autocomplete("parent  info:Start typing the title of the page and autocomplete results will display"); ?>
 				</div>
 			</div>
 		</div>

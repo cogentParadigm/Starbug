@@ -4,7 +4,7 @@
 		$var = $this->get($field['name']);
 		if (!empty($var)) {
 			if (is_array($var)) {
-				foreach ($var as $idx => $v) $var[$idx] = htmlentities($v, ENT_QUOTES, "UTF-8");
+				foreach ($var as $idx => $v) if (substr($v, 0, 1) !== "-") $var[$idx] = htmlentities($v, ENT_QUOTES, "UTF-8");
 				$field['value'] = $var;
 			} else {
 				$field['value'] = htmlentities($var, ENT_QUOTES, "UTF-8");

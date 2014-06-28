@@ -80,14 +80,16 @@ class ApiRequest {
 			$ops['paged'] = true;
 			$ops['limit'] = 1 + (int) $finish - (int) $start;
 			$_GET['page'] = 1 + (int) $start/$ops['limit'];
-			$query->limit($ops['limit']);
 		}
 		$action_name = "query_".$action;
 		$query = sb($model)->query_filters($action, $query, $ops);
 		$query = sb($model)->$action_name($query, $ops);
-		//$models = (isset($query['models'])) ? $query['models'] : $model;
-		//$query['where'] = implode(' && ', $query['where']);
-		if ($ops['paged']) $pager = $query->pager($_GET['page']);
+
+		if ($ops['paged'] && $ops['limit']) {
+			$query->limit($ops['limit']);
+			$pager = $query->pager($_GET['page']);
+		}
+		
 		$data = (is_array($query) && isset($query['data'])) ? $query['data'] : $query->all();
 		$f = strtoupper($format);
 		$error = $f."errors";
