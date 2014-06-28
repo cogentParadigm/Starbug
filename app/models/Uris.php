@@ -41,22 +41,8 @@ class Uris {
 		return $this->remove("id:".$id);
 	}
 	
-	function apply_tags() {
-		global $sb;
-		$tags = explode(",", $_POST['tags']);
-		$uid = $_POST['uris']['id'];
-		foreach($tags as $tag) tag("uris_tags", $uid, trim($tag));
-	}
-	
-	function remove_tag() {
-		global $sb;
-		$tag = $_POST['tag'];
-		$uri = $_POST['uris']['id'];
-		untag("uris_tags", $uri, $tag);
-	}
-	
 	function query_admin($query, &$ops) {
-		$query->select("uris.*,CONCAT(uris.image, '_', uris.image.filename) as image,uris.statuses.term as statuses");
+		$query->select("uris.*,uris.statuses.term as statuses");
 		if (!logged_in("admin")) $query->action("read");
 		$query->condition("uris.prefix", "app/views/");
 		$query->condition("uris.statuses", "deleted", "!=");

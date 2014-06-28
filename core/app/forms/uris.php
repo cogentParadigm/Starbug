@@ -47,7 +47,7 @@
 					?>
 			<?php } ?>
 			<?php
-				file_select("image");
+				file_select("images  size:0");
 			?>
 		</div>
 		<div class="col-md-3">

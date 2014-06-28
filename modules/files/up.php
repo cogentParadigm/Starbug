@@ -7,6 +7,10 @@ $this->table("files  list:all",
 	"caption  type:string  length:255  display:false"
 );
 
+//add sortable images to content
+$this->column("uris", "images  type:files  optional:");
+$this->column("uris_images", "position  type:int  ordered:  default:0");
+
 //add file attachments to terms
 $this->column("terms", "attachments  type:files");
 

@@ -1,0 +1,31 @@
+define(["dojo", "sb/strings", "put-selector/put", "dojo/on"],
+function(dojo, strings, put, on){
+	dojo.global.starbug.form = dojo.global.starbug.form || {};
+	dojo.global.starbug.form.columns = dojo.global.starbug.form.columns || {};
+	dojo.global.starbug.form.columns.FileSelectOptions = function(column){
+		
+		var grid;
+		column.sortable = false;
+		column.init = function(){
+			grid = column.grid;
+		};
+
+		column.renderCell = function(object, value, cell, options, header){
+			var parent = cell.parentNode;
+			put(parent && parent.contents ? parent : cell, ".dgrid-options");
+			
+			var div = put(cell, 'div.btn-group');
+			
+			//delete button
+			var remove = 'javascript:;';
+			remove = put(div, 'a.btn.btn-default[title=Remove][href='+remove+']', put('div.fa.fa-times'));
+			on(remove, 'click', function() {
+				if (confirm('Are you sure you want to remove this item?')) {
+					grid.editor.remove(object.id);
+				}
+			});
+		};
+
+		return column;
+	};
+});

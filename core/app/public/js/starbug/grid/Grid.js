@@ -18,7 +18,7 @@ var Grid = dojo.declare('starbug.grid.Grid', [GridFromHtml, List, Keyboard, Sele
 	noDataMessage:'No Results',
 	getBeforePut:false,
 	constructor: function(args) {
-		this.store = sb.get(args.model, args.action);
+		if (args.model && args.action) this.store = sb.get(args.model, args.action);
 	},
 	startup: function() {
 		this.inherited(arguments);

@@ -37,6 +37,14 @@ class Schemer {
 	 */
 	var $column_drops = array();
 	/**
+	 * @var array indexes
+	 */
+	var $indexes = array();
+	/**
+	 * @var array drop indexes
+	 */
+	var $index_drops = array();
+	/**
 	 * @var array Holds uris
 	 */
 	var $uris = array();
@@ -76,6 +84,16 @@ class Schemer {
 	var $current;
 	
 	var $testMode = false;
+	
+	/**#@-*/
+	/**
+	 * @var array holds mixed in objects
+	 */
+	var $imported = array();
+	/**
+	 * @var array holds function names of mixed in objects
+	 */
+	var $imported_functions = array();
 
 	/**
 	 * constructor. loads migrations
@@ -178,6 +196,8 @@ class Schemer {
 		$gs = 0; //created triggers
 		$gu = 0; //updated triggers
 		$gd = 0; //dropped triggers
+		$xs = 0; //indexes
+		$xd = 0; //dropped indexes
 		
 		//CREATE TABLES FIRST
 		foreach ($this->tables as $table => $fields) {
@@ -229,6 +249,24 @@ class Schemer {
 			$this->generate_model($table);
 			$is += $this->populate($table, true);
 		}
+		foreach ($this->indexes as $idx => $index) {
+			$table = reset($index);
+			$name = P("").implode("_", $index)."_index";
+			$exists = $this->db->pdo->query("SHOW INDEXES FROM ".P($table)." WHERE key_name='".$name."'")->fetch();
+			if (empty($exists)) {
+				fwrite(STDOUT, "Creating index '$name'...\n");
+				call_user_method_array("create_index", $this, $index);
+			}
+		}
+		foreach ($this->index_drops as $idx => $index) {
+			$table = reset($index);
+			$name = P("").implode("_", $index)."_index";
+			$exists = $this->db->pdo->query("SHOW INDEXES FROM ".P($table)." WHERE key_name='".$name."'")->fetch();
+			if (!empty($exists)) {
+				fwrite(STDOUT, "Dropping index '$name'...\n");
+				call_user_method_array("drop_index", $this, $index);
+			}
+		}		
 		foreach ($this->triggers as $name => $triggers) {
 			foreach ($triggers as $event => $trigger) {
 				$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($trigger['table']."_".$event."_".$trigger['action'])."'")->fetch();
@@ -495,7 +533,19 @@ class Schemer {
 	function create_index($table, $name) {
 		$args = func_get_args();
 		$table = array_shift($args);
-		$sql = "CREATE INDEX ".P($table)."_".implode("_", $args)."_index ON ".$table." (".implode(", ", $args).")";
+		$sql = "CREATE INDEX ".P($table)."_".implode("_", $args)."_index ON ".P($table)." (".implode(", ", $args).")";
+		$this->db->exec($sql); 
+	}
+	
+	/**
+	 * Run SQL to drop an index
+	 * @param string $table the name of the table from tables array
+	 * @param string $name the name of column
+	 */
+	function drop_index($table, $name) {
+		$args = func_get_args();
+		$table = array_shift($args);
+		$sql = "ALTER TABLE ".P($table)." DROP INDEX ".P($table)."_".implode("_", $args)."_index";
 		$this->db->exec($sql); 
 	}
 
@@ -565,12 +615,14 @@ class Schemer {
 		foreach ($args as $col) {
 			$col = star($col);
 			$colname = array_shift($col);
-			if ($col['type'] != "terms" && isset($this->tables[$col['type']])) {
+			if ($col['type'] !== "terms" && isset($this->tables[$col['type']])) {
 				$additional[] = array($table."_".$colname,
-					$col['type']."_id  type:int  default:0  key:primary  references:$col[type] id  update:cascade  delete:cascade",
-					"owner  type:int  default:1  key:primary  references:users id  update:cascade  delete:cascade",
-					$table."_id  type:int  default:0  key:primary  references:$table id  update:cascade  delete:cascade"
+					$col['type']."_id  type:int  default:0  references:$col[type] id  update:cascade  delete:cascade",
+					"owner  type:int  default:1  references:users id  update:cascade  delete:cascade",
+					$table."_id  type:int  default:0  references:$table id  update:cascade  delete:cascade",
+					"position  type:int  ordered:".$table."_id  optional:"
 				);
+				$this->index($table."_".$colname, $table."_id", $col['type']."_id");
 			}
 			$this->tables[$table][$colname] = $col;
 		}
@@ -595,6 +647,23 @@ class Schemer {
 			$this->column_drops[$table][] = $col;
 			unset($this->tables[$table][$col]);
 		}
+	}
+
+	/**
+	 * Create an index
+	 * @param string $table the name of the table
+	 * @param string $col
+	 * @param string $col2
+	 * etc..
+	 */	
+	function index($table, $col) {
+		$args = func_get_args();
+		$this->indexes[] = $args;
+	}
+	
+	function index_drop($table, $col) {
+		$args = func_get_args();
+		$this->index_drops[] = $args;
 	}
 
 	/**

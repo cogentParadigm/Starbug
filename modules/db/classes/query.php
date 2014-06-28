@@ -246,7 +246,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			$type_schema = schema($schema['type']);
 			if (is_null($token)) $token = empty($type_schema['label_select']) ? $collection."_".$alias.".id" : str_replace($schema['type'], $collection."_".$alias, $type_schema['label_select']);
 			if ($mode == "select") {
-				$return = "(SELECT GROUP_CONCAT($token) FROM ".P($table."_".$field)." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$schema['type']."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
+				$return = "(SELECT GROUP_CONCAT(".$collection."_".$alias.".".$token.") FROM ".P($table."_".$field)." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$schema['type']."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
 			} else if ($mode == "where" || $mode == "condition") {
 				$return = "(SELECT $token FROM ".P($table."_".$field)." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$schema['type']."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
 			} else if ($mode == "group" || $mode == "set") {

@@ -5,7 +5,7 @@
 	$options = schema($model);
 	$refs = array();
 	foreach ($options['fields'] as $name => $field) {
-		if ($field['type'] == "terms" || $field['type'] == "category") {
+		if (sb()->db->has($field['type']) || $field['type'] == "category") {
 			if (empty($field['column'])) $field['column'] = "id";
 			$record->select($model.".".$name.".".$field['column']." as ".$name);
 			$refs[] = $name;

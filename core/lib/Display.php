@@ -12,7 +12,7 @@ class Display {
 	
 	var $type = "default"; //display type
 	var $template = "default"; // display template
-	var $attributes = array(); //attributes for top level node
+	var $attributes = array("class" => array("display")); //attributes for top level node
 	var $dirty = false; //dirty indicator
 	
 	var $fields = array(); //fields to display (columns)
@@ -34,6 +34,8 @@ class Display {
 		$this->options = $options;
 		if (isset($options['template'])) $this->template = $options['template'];
 		$action = "display_".$this->name;
+		$this->attributes["class"][] = "display-type-".$this->type;
+		$this->attributes["class"][] = "display-template-".$this->template;
 		$this->init($options);
 		sb($this->model)->$action($this, $options);
 	}
@@ -163,6 +165,7 @@ class Display {
 	 */
 	function render($query=true) {
 		if ($query) $this->query();
+		$this->attributes["class"] = implode(" ", $this->attributes["class"]);
 		assign("display", $this);
 		//assign("items", $items);
 		render("display/".$this->template);

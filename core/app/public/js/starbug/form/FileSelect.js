@@ -11,19 +11,37 @@ define([
 	"dojo/on",
 	"dojo/query",
 	"dojo/dom-class",
-	"starbug/form/Uploader"
-], function (dojo, declare, lang, Widget, Templated, _WidgetsInTemplate, sb, template, put, on, query, domclass) {
+	"dojo/_base/Deferred",
+	"starbug/store/Memory",
+	"dojo/store/Observable",
+	"dojo/store/util/QueryResults",
+	"dojo/ready",
+	"starbug/form/Uploader",
+	"starbug/grid/MemoryGrid",
+	"starbug/grid/columns/filesize",
+	"starbug/grid/columns/handle",
+	"starbug/grid/columns/html",
+	"starbug/form/columns/FileSelectOptions"
+], function (dojo, declare, lang, Widget, Templated, _WidgetsInTemplate, sb, template, put, on, query, domclass, Deferred, Memory, Observable, QueryResults, ready) {
 	return declare([Widget, Templated, _WidgetsInTemplate], {
 		files:[],
 		templateString: template, //the template (./templates/FileSelect.html)
 		widgetsInTemplate: true,
 		input_name:'file',
+		size:1,
+		store:null,
 		postCreate:function() {
 			var self = this;
+			this.store = Observable(new Memory({data: []}));
+			self.grid.editor = self;
+			ready(function() {
+				self.grid.set('store', self.store);
+			});
 			
+			// initialize hidden input
 			this.input.name = this.input_name;
 			
-			if (self.files.length > 0) self.set_file(self.files[0]);
+			if (self.files.length > 0) self.add(self.files);
 
 			//initialize the uploader
 			this.uploader.url = WEBSITE_URL+'upload';	
@@ -39,20 +57,57 @@ define([
 			var self = this;
 			var modal;
 			win.SetUrl=function(url, object){
-				self.set_file(object);
+				self.add([object]);
 			}
 			modal = win.open(WEBSITE_URL+'admin/media?modal=true','media','modal,width=1020,height=600');
 		},
-		set_file:function(object) {
+		add:function(files) {
+			var target_size = this.store.data.length + files.length;
+			if (this.size == 0) {
+				//unlimited
+			} else if (this.size == 1) {
+				this.store.setData([]);
+			} else if (target_size == this.size) {
+				this.controls.style.display = 'none';
+			} else if (target_size > this.size) {
+				alert("You have reached the limit.");
+				return;
+			} else {
+				this.controls.style.display = 'block';
+			}
 			this.set_status();
 			var self = this;
-			self.name.innerHTML = object.filename;
-			self.input.value = object.id;
-			self.image.innerHTML = '';
-			if (object.mime_type.split('/')[0] == "image") {
-				var img = put(self.image, 'img');
-				img.src = WEBSITE_URL+'var/public/thumbnails/100x100a1/'+object.id+'_'+object.filename;
+			for (var i in files) {
+				var object = files[i];
+				if (files[i].filename[0] != "<") {
+					var full_path = WEBSITE_URL+'var/public/thumbnails/100x100a1/'+object.id+'_'+object.filename;
+					var div = put('div');
+					if (object.mime_type.split('/')[0] == "image") {
+						var img = put(div, 'img');
+						img.src = full_path;
+					}
+					put(div, 'a.filename[href="'+full_path+'"][target="_blank"]', object.filename);
+					files[i].filename = div.innerHTML;
+				}
+				this.store.put(files[i]);
 			}
+			if (files.length > 0) {
+				self.gridNode.style.display = 'block';
+			} else {
+				self.gridNode.style.display = 'none';
+			}
+			self.refresh();
+			dojo.global.dispatchEvent(new Event('resize'));
+		},
+		remove: function(file_id) {
+			this.store.remove(file_id);
+			this.refresh();
+		},
+		refresh: function() {
+			var ids = [];
+			var items = this.store.data;
+			for (var i in items) ids.push(this.store.getIdentity(items[i]));
+			this.input.value = ids.join(',');
 		},
 		set_status: function(value) {
 			/**
@@ -68,7 +123,7 @@ define([
 			 * upload handler. adds the file to the list once it has been uploaded.
 			 */
 			files[0].filename = files[0].original_name;
-			this.set_file(files[0]);
+			this.add(files);
 		},
 		onCancelUpload: function() {
 			this.set_status();	
