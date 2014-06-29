@@ -282,9 +282,9 @@ class query implements IteratorAggregate, ArrayAccess {
 		$this->operation("condition", array("field" => $field, "value" => $value, "op" => $op, "ops" => $ops));
 		$set = $this->set;
 		$condition = array_merge(array("con" => "&&", "set" => $this->set, "value" => $value, "op" => $op), $this->parse_condition($field), star($ops));
-		if (isset($condition['set']) && isset($condition['field'])) $set = $condition['set'];
 		if (in_array($condition['op'], array("=", "!=", "IN", "NOT IN"))) $condition = array_merge($condition, $this->parse_field($condition['field'], "condition"));
 		else $condition['field'] = $this->parse_field($condition['field'], "group");
+		if (isset($condition['set']) && isset($condition['field'])) $set = $condition['set'];
 		$this->query['where'][$set][] = $condition;
 		$this->dirty();
 		return $this;
@@ -804,6 +804,7 @@ class query implements IteratorAggregate, ArrayAccess {
 					}
 				}
 				$segment .= " ON ".$this->query['on'][$alias];
+				if (isset($this->query['where']["on__".$alias])) $segment .= " && ".$this->build_condition_set("on__".$alias);
 				$from .= $segment;
 			}
 			$last_collection = $collection;
@@ -958,32 +959,51 @@ class query implements IteratorAggregate, ArrayAccess {
 	}
 	
 	function parse_field($field, $mode="select") {
+		//split the field into parts
 		$parts = explode(".", $field);
 		$count = count($parts);
+		//invert indicates that the operands should be flipped. eg 'some value' NOT IN (..sub query..)
+		//in the example above the value is on the left
 		$invert = false;
+		//a condition may be added to a set other than the default where clause
+		$set = false;
+		//we only proceed if there is more than one token, meaning this field name has a '.'
 		if ($count > 1) {
+			//the first token is either a collection name or the name of a column that references another collection
+			//if it's a column, then we'll assume it's a column of our base collection
 			$collection = $this->base_collection;
+			//if it's a collection, we'll use it
 			if (!empty($this->query['from'][$parts[0]]) || $this->db->has($parts[0])) {
-				$token = array_shift($parts);
-				if (empty($this->query['from'][$token])) $this->join($token); 
-				$collection = $token;				
+				$token = array_shift($parts); //remove from tokens
+				if (empty($this->query['from'][$token])) $this->join($token); //join if needed
+				$collection = $token;	//set the collection
 			}
+			//now we start a loop to process the remaining tokens
 			while (!empty($parts)) {
+				//shift off the first token
 				$token = array_shift($parts);
+				//if there are no more tokens, then this is the final column name
 				if (empty($parts)) {
+					//get the field string and table name
 					$field = $collection.".".$token;
 					$table = $this->query['from'][$collection];
+					//in a select query, the token may be '*'
 					if ($token == "*") {
-						$schema = schema($table.".fields");
-						foreach ($schema as $n => $f) {
+						//WHICH WE LEAVE AS IS FOR NOW
+						//$schema = schema($table.".fields");
+						//foreach ($schema as $n => $f) {
 							//if ($f['type'] == "terms" || $f['type'] == "category") $this->select($collection.".".$n);
-						}
+						//}
 					} else {
+						//otherwise we look at the field schema
 						$schema = schema($table.".fields.".$token);
 						if (!empty($schema)) {
 							if ($mode == "set" && ($schema['type'] == "category" || $this->db->has($schema['type']))) {
 								//do nothing
+								//if it's a SET we can ignore category fields and table references
 							} else if ($schema['type'] == "category" || ($schema['type'] == "terms" && $mode == "group")) {
+								//if it's a category reference field or a terms field in group mode
+								//we send it back around with the same token and 'slug' as the column name 
 								$parts = array($token, "slug");
 							} else if ($schema['type'] == "terms") {
 								$field = $this->with($token, $collection, $mode, "slug");
@@ -992,18 +1012,25 @@ class query implements IteratorAggregate, ArrayAccess {
 						}
 					}
 				} else {
+					//otherwise we need to join this reference, and pass along the next token
 					$result = $this->with($token, $collection, $mode, $parts[0]);
 					if ($result) {
+						//$this->with may return a sub query instead of performing a join. If it does, that means we're done
+						//and we can end the loop. In the case of a condition, it also means that the operands should be inverted
 						$field = $result;
 						$parts = array();
 						$invert = true;
 					}
+					//if the loop continues, the current token becomes the next collection
+					$column_info = sb($this->query['from'][$collection])->hooks[$token];
 					$collection = isset($this->query['from'][$collection.'_'.$token]) ? $collection.'_'.$token : $token;
+					if ($column_info['type'] == "category") $set = "on_".$collection;
 				}
 			}
 		}
 		if ($mode == "condition") {
 			$field = array("field" => $field, "invert" => $invert);
+			if (false !== $set) $field["set"] = $set;
 		}
 		return $field;
 	}

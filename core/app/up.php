@@ -25,7 +25,7 @@ $this->table("users  label_select:CONCAT(first_name, ' ', last_name, ' (', email
 	"last_visit  type:datetime  default:0000-00-00 00:00:00  list:true  display:false"
 );
 //This will be stored immediately after the creation of the users table
-$this->store("users", "email:root", array(), true);
+$this->store("users", "email:root", "groups:root");
 $this->table("permits  list:all",
 	"role  type:string  length:30",
 	"who  type:int  default:0",

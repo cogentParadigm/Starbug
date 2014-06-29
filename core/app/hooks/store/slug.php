@@ -22,7 +22,16 @@ class hook_store_slug {
 	
 	function exists($query, $column, $value) {
 			$exists = query($query->model)->condition($query->model.".".$column, $value);
-			if ($query->mode == "update") $exists->condition($query->model.".id", $query->getId(), "!=");
+			$id = 0; $record = false;
+			if ($query->mode == "update") {
+				$id = $query->getId();
+				//$record = query($query->model)->condition("id", $id)->one();
+				$exists->condition($query->model.".id", $id, "!=");
+			}
+			if (!empty(sb($query->model)->hooks[$column]["unique"])) {
+				$parts = explode(" ", sb($query->model)->hooks[$column]["unique"]);
+				foreach ($parts as $c) if (!empty($c)) $exists->condition($c, $query->fields[$c]);
+			}
 			return $exists;				
 	}
 }
