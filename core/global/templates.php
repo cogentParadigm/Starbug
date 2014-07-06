@@ -170,7 +170,7 @@ function render_field($model, $row, $field, $options=array()) {
  * 										 display provider: display_admin
  * @param array $options parameters that will be passed to the display and query functions
  */
-function build_display($type, $model, $name, $options=array()) {
+function build_display($type, $model=null, $name=null, $options=array()) {
  	$class = get_module_class("displays/".ucwords($type)."Display", "lib/Display", "core");
  	$display = new $class($model, $name, $options);
 	return $display;
@@ -186,7 +186,7 @@ function build_display($type, $model, $name, $options=array()) {
  * 										 display provider: display_admin
  * @param array $options parameters that will be passed to the display and query functions
  */
-function render_display($type, $model, $name, $options=array()) {
+function render_display($type, $model=null, $name=null, $options=array()) {
 	$display = build_display($type, $model, $name, $options);
 	$display->render();
 }
@@ -201,8 +201,30 @@ function render_display($type, $model, $name, $options=array()) {
  * 										 display provider: display_admin
  * @param array $options parameters that will be passed to the display and query functions
  */
-function capture_display($type, $model, $name, $options=array()) {
+function capture_display($type, $model=null, $name=null, $options=array()) {
 	$display = build_display($type, $model, $name, $options);
 	return $display->capture();
+}
+
+function put($parent, $selector="", $content="") {
+	import("lib/DOM/Renderable", "core");
+	if (!($parent instanceof Renderable)) {
+		$content = $selector;
+		$selector = $parent;
+		$parent = null;
+	}
+	
+	$selector = Renderable::parse_selector($selector);
+	if (empty($selector['tag'])) {
+		$node = $parent;
+		$node->attributes = array_merge($node->attributes, $selector['attributes']);
+	} else {
+		$node = new Renderable($selector);
+		if ($parent) $parent->appendChild($node);
+	}
+	
+	$node->setText($content);
+	
+	return $node;
 }
 ?>

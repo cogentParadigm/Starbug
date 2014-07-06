@@ -1,4 +1,5 @@
 <?php
+	if ($display) $form = $display;
 	if (!empty($prepend)) {
 		echo $prepend; assign("prepend", "");
 	}

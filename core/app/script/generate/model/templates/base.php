@@ -31,6 +31,35 @@ class <?= ucwords($name); ?>Model extends Table {
 		$display->add("id");
 	}
 	
+	function query_form($query, &$ops) {
+		if (empty($ops['action'])) $ops['action'] = "create";
+		$query->action($ops['action']);
+		$query->condition($query->model.".id", $ops['id']);
+		$query->select("*", $query->model);
+<?php
+		$tabs = "\t\t";
+		foreach ($fields as $name => $field) {
+				if (sb()->db->has($field['type']) || $field['type'] == "category") {
+					if (empty($field['column'])) $field['column'] = "id";
+					echo $tabs.'$query->select($query->model.".'.$name.'.'.$field['column'].' as '.$name.'");'."\n";
+				}
+		}
+		?>
+		return $query;
+	}
+	
+	function display_form($display, &$ops) {
+<?php
+			$tabs = "\t\t";
+			foreach ($fields as $name => $field) {
+				if ($field['display'] === true) {
+					echo $tabs.'$display->add("'.$name.'");'."\n";
+					if (!empty($field['confirm'])) echo $tabs.'$display->add("'.$field['confirm'].'  input_type:'.$field['input_type'].'");'."\n";
+				}
+			}
+		?>
+	}
+	
 	function query_get($query, &$ops) {
 		return $query;
 	}

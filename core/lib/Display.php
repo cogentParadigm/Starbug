@@ -28,16 +28,18 @@ class Display {
 	 * @param string $name the display name
 	 * @param array $options the display options
 	 */
-	function __construct($model, $name, $options=array()) {
+	function __construct($model=null, $name=null, $options=array()) {
 		$this->model = $model;
 		$this->name = $name;
 		$this->options = $options;
 		if (isset($options['template'])) $this->template = $options['template'];
-		$action = "display_".$this->name;
 		$this->attributes["class"][] = "display-type-".$this->type;
 		$this->attributes["class"][] = "display-template-".$this->template;
 		$this->init($options);
-		sb($this->model)->$action($this, $options);
+		if (!is_null($this->model) && !is_null($this->name)) {
+			$action = "display_".$this->name;
+			sb($this->model)->$action($this, $options);
+		}
 	}
 	
 	/**
@@ -47,6 +49,11 @@ class Display {
 	
 	}
 
+	/**
+	 * Allows you to filter the options for each column.
+	 * This is useful for adding defaults after the columns are set
+	 * or converting common parameters that have been specified to display specific parameters
+	 */
 	function filter($field, $options, $column) {
 		return $options;
 	}
@@ -95,8 +102,13 @@ class Display {
 			$this->fields[$field] = $options;
 		}
 	}
-	
-	function insert($key, $options) {
+
+	/**
+	 * insert a field at a specific index
+	 * @param int $index
+	 * @param star $options
+	 */	
+	function insert($index, $options) {
 		$args = func_get_args();
 		$index = array_shift($args);
 		$before = array_slice($this->fields, 0, $index, true);
@@ -160,11 +172,16 @@ class Display {
 		$this->items = (property_exists($this->query, "data")) ? $query->data : $query->all();
 	}
 	
+	function before_render() {
+		//extendable function
+	}
+	
 	/**
 	 * render the display with the specified items
 	 */
 	function render($query=true) {
 		if ($query) $this->query();
+		$this->before_render();
 		$this->attributes["class"] = implode(" ", $this->attributes["class"]);
 		assign("display", $this);
 		//assign("items", $items);
@@ -176,6 +193,7 @@ class Display {
 	 */
 	function capture($query=true) {
 		if ($query) $this->query();
+		$this->before_render();
 		assign("display", $this);
 		//assign("items", $items);
 		return capture("display/".$this->template);

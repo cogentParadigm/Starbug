@@ -1,7 +1,7 @@
 <?php if ($type == "file") { ?>
 	<?php
 		$files = "[]";
-		$column_info = sb($form->model)->hooks[$field];
+		$column_info = sb($display->model)->hooks[$field];
 		if ($column_info['type'] == "files") {
 			$table = $form->model."_".$field;
 			$records = query($table)->condition("files_id.id", $value)->select($table."_files_id.*")->sort($table.".position")->all();

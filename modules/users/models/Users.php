@@ -103,8 +103,21 @@ class Users {
 		return $query;
 	}
 
-	function display_admin($display, $options) {
+	function display_admin($display, &$options) {
 		$display->add("first_name", "last_name", "email", "last_visit", "groups", "statuses  label:Status");
+	}
+	
+	function display_form($display, &$options) {
+		//parent::display_form($display, $options);
+		$display->layout->add("top  left:div.col-md-6  right:div.col-md-6");
+		$display->layout->put('left', 'h2', 'User Information');
+		$display->layout->put('right', 'h2', 'Login Credentials');
+		$display->add("first_name  pane:left");
+		$display->add("last_name  pane:left");
+		$display->add("email  pane:right");
+		$display->add("password  pane:right");
+		$display->add("password_confirm  input_type:password  pane:right");
+		$display->add("groups  input_type:multiple_category_select  taxonomy:groups  pane:right");
 	}
 	
 	function filter($row) {

@@ -1,8 +1,9 @@
 <?
 	efault($action, "create");
+	$options = schema($model);
+	/*
 	$record = (is_numeric($id)) ? query($model, "select:$model.*  action:$action  where:$model.id=?", array($id)) : query($model, "select:$model.*  action:$action  sort:$model.created DESC");	
 	
-	$options = schema($model);
 	$refs = array();
 	foreach ($options['fields'] as $name => $field) {
 		if (sb()->db->has($field['type']) || $field['type'] == "category") {
@@ -22,6 +23,7 @@
 	assign("action", $action);
 	assign("url", (empty($uri) ? "" : uri($uri)));
 	assign("fields", $options['fields']);
+	*/
 	efault($form_header, 'Update '.$options['singular_label']);
 	
 ?>
@@ -29,8 +31,9 @@
 	<div class="panel-heading"><strong> <span data-i18n="New <?php echo $form_header; ?>"><?php echo $form_header; ?></span></strong></div>
 	<div class="panel-body">
 <?php
-	if (!empty($form)) render_form($form);
-	else render("form");
+	render_display("form", $model, "form", array("action" => $action, "id" => $id));
+	//if (!empty($form)) render_form($form);
+	//else render("form");
 ?>
 	</div>
 </div>

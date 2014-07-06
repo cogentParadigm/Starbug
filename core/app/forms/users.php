@@ -1,4 +1,5 @@
 <?php
+	render_display("form", "users", "form", array("action" => "create"));
 	efault($action, "create");
 ?>
 <?php if (success("users", $action)) { ?>
