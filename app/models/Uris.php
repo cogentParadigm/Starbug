@@ -2,11 +2,13 @@
 class Uris {
 
 	function create($uris) {
+		/*
 		if ($uris['type'] != "View" && $uris['type'] != $_POST['type']) {
 			$uris['layout'] = $uris['type'];
 			$uris['type'] = $_POST['type'];
 		}
 		if ($_POST['type'] == "Post") $uris['path'] = "blog/".$uris['path'];
+		*/
 		queue("blocks", array("type" => "text",  "region" => "content",  "position" => 1, "uris_id" => "", "content" => $_POST['block-content-1']['content']));
 		$this->store($uris);
 		if (!errors()) {
@@ -18,11 +20,13 @@ class Uris {
 	}
 	
 	function update($uris) {
+		/*
 		if ($uris['type'] != "View" && $uris['type'] != $_POST['type']) {
 			$uris['layout'] = $uris['type'];
 			$uris['type'] = $_POST['type'];
 		}
 		if ($_POST['type'] == "Post") $uris['path'] = "blog/".$uris['path'];
+		*/
 		$row = $this->get($uris['id']);
 		$this->store($uris);
 		if (!errors()) {
@@ -68,9 +72,10 @@ class Uris {
 		$display->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Breadcrumbs"]'.(($_GET['tab'] === "breadcrumbs") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'breadcrumbs');
 		//left
 		$display->add("title  pane:left");
+		$display->add("blocks  input_type:blocks  pane:left");
 		$display->add("images  pane:left  input_type:file_select  size:0");
 		//right
-		$display->add("type  pane:right  label:Template  input_type:select");
+		$display->add("type  pane:right  label:Template  input_type:select  options:Page,View  default:Page");
 		$display->add("statuses  label:Status  taxonomy:statuses  default:pending  input_type:category_select  pane:right");
 		$display->add("groups  taxonomy:groups  input_type:multiple_category_select  pane:right");
 		$display->add("categories  input_type:multiple_category_select  pane:right");
