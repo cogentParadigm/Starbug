@@ -7,12 +7,7 @@
 	<div class="panel-body">
 <?php
 	efault($action, "create");
-	render_display("form", $model, "form", array("action" => $action));
-	//assign("action", "create");
-	//assign("url", (empty($uri) ? "" : uri($uri)));
-	//assign("fields", $options['fields']);
-	//if (!empty($form)) render_form($form);
-	//else render("form");
+	render_display("form", $model, "form", array("action" => $action, "cancel_url" => $cancel_url));
 ?>
 	</div>
 </div>

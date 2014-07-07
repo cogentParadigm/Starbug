@@ -11,8 +11,9 @@ $this->table("files  list:all",
 $this->column("uris", "images  type:files  optional:");
 $this->column("uris_images", "position  type:int  ordered:  default:0");
 
-//add file attachments to terms
-$this->column("terms", "attachments  type:files");
+//add sortable images to content
+$this->column("terms", "images  type:files  optional:");
+$this->column("terms_images", "position  type:int  ordered:  default:0");
 
 //files category
 $this->taxonomy("files_category",

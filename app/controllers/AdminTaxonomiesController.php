@@ -3,6 +3,7 @@ class AdminTaxonomiesController {
 	function init() {
 		assign("model", "terms");
 		assign("form", "terms");
+		assign("cancel_url", "admin/taxonomies");
 		if (!empty($_GET['taxonomy'])) assign("taxonomy", normalize($_GET['taxonomy']));
 	}
 	function default_action() {
