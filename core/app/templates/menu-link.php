@@ -34,6 +34,7 @@
 		$link_attributes['class'] = "dropdown-toggle";
 		$link_attributes['data-toggle'] = "dropdown";
 		$link_attributes['role'] = "button";
+		$link_text .= '<b class="caret"></b>';
 	}
 	
 	//if sortable, set draggable attribute

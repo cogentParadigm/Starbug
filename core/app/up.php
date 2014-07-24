@@ -78,6 +78,12 @@ $this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"canonical  type:string  length:255  default:  list:false",
 	"breadcrumb  type:string  length:255  default:  list:false"
 );
+$this->table("content_types",
+	"type  type:string",
+	"name  type:string",
+	"table  type:string  default:",
+	"description  type:string  length:255  default:"
+);
 $this->table("blocks  list:all",
 	"uris_id  type:int  references:uris id  alias:%path%",
 	"region  type:string  length:64  default:content",
@@ -96,6 +102,10 @@ $this->table("menus",
 	"position  type:int  ordered:menu parent  default:0",
 	"menu_path  type:string  length:255  default:  display:false"
 );
+// CONTENT TYPES
+$this->content_type("View", "description:A basic view");
+$this->content_type("Page", "description:A basic page");
+$this->content_type("Post", "description:A blog post");
 // URIS
 $this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
 $this->uri("api", "template:api  prefix:core/app/views/  type:Page");
@@ -125,7 +135,15 @@ $this->menu("admin",
 		)
 	),
 	"href:admin/users  content:Users",
-	"href:admin/uris  content:Pages",
+	array(
+		"href" => "admin/uris",
+		"content" => "Content",
+		"children" => array(
+			"href:admin/uris?type=View  content:Views",
+			"href:admin/uris?type=Page  content:Pages",
+			"href:admin/uris?type=Post  content:Posts"
+		)
+	),
 	"href:admin/media  content:Media  target:_blank"
 );
 //groups

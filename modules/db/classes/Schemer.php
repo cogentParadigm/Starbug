@@ -48,6 +48,7 @@ class Schemer {
 	 * @var array Holds uris
 	 */
 	var $uris = array();
+	var $content_types = array();
 	/**
 	 * @var array Holds blocks
 	 */
@@ -192,6 +193,7 @@ class Schemer {
 		$ps = 0; //permits
 		$pd = 0; //dropped permits
 		$is = 0; //inserts
+		$as = 0; //updates
 		$ds = 0; //drops
 		$gs = 0; //created triggers
 		$gu = 0; //updated triggers
@@ -291,6 +293,25 @@ class Schemer {
 				fwrite(STDOUT, "Creating taxonomy ".$taxonomy."...\n");
 				$is += $this->create_taxonomy($taxonomy);
 			} else $is += $this->create_taxonomy($taxonomy, true);
+		}
+		foreach ($this->content_types as $type => $record) {
+			$rows = query("content_types")->condition("type", $type)->one();
+			if (empty($rows)) {
+				// ADD CONTENT TYPE																																														// ADD CONTENT TYPE
+				fwrite(STDOUT, "Adding Content Type '$type'...\n");
+				$this->add_content_type($type);
+				$is++;
+			} else {			
+				$query = query("content_types");
+				foreach ($record as $k => $v) $query->condition("content_types.".$k, $v);
+				$rows = $query->all();
+				if (empty($rows)) {
+					// UPDATE CONTENT TYPE																																												// UPDATE CONTENT TYPE
+					fwrite(STDOUT, "Updating Content Type '$type'...\n");
+					$this->update_content_type($type, $record);
+					$as++;
+				}
+			}
 		}
 		foreach ($this->uris as $path => $uri) {
 			$rows = query("uris")->condition("path", $path)->one();
@@ -447,7 +468,7 @@ class Schemer {
 				$gd++;
 			}
 		}
-		if (($ts == 0) && ($cs == 0) && ($ms == 0) && ($ds == 0) && ($us == 0) && ($ps == 0) && ($is == 0) && ($td == 0) && ($cd == 0) && ($gs == 0) && ($gd == 0) && ($gu == 0) && ($bs == 0)) {
+		if (($ts == 0) && ($cs == 0) && ($ms == 0) && ($ds == 0) && ($us == 0) && ($ps == 0) && ($is == 0) && ($td == 0) && ($cd == 0) && ($gs == 0) && ($gd == 0) && ($gu == 0) && ($bs == 0) && ($as == 0)) {
 			return false;
 		} else {
 			return true;
@@ -712,6 +733,37 @@ class Schemer {
 		if ($this->current != "core/app") efault($args['prefix'], $this->current."/views/");
 		$this->uris[$path] = $args;
 	}
+	
+	/**
+	 * Add a content type to the database
+	 * @param string $type the path of the uri
+	 */
+	function add_content_type($type) {
+		$record = $this->content_types[$type];
+		store("content_types", $record);
+	}
+
+	/**
+	 * Update a content type
+	 * @param string $type the type
+	 */
+	function update_content_type($type, $record=array()) {
+		if (empty($record)) $record = $this->content_types[$type];
+		store("content_types", $record, array("type" => $type));
+	}
+	
+	/**
+	 * Add a content type
+	 * @param string $type the type name
+	 * @param star $ops options (region, type, position)
+	 */
+	function content_type($type, $ops=array()) {
+		$ops = star($ops);
+		$ops["type"] = $type;
+		efault($this->content_types[$type], array());
+		foreach ($ops as $k => $v) $this->content_types[$type][$k] = $v;
+		if (empty($this->content_types[$type]["name"])) $this->content_types[$type]["name"] = $this->content_types[$type]["type"];
+	}	
 
 	/**
 	 * Add a block to the schema

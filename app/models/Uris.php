@@ -75,7 +75,7 @@ class Uris {
 		$display->add("blocks  input_type:blocks  pane:left");
 		$display->add("images  pane:left  input_type:file_select  size:0");
 		//right
-		$display->add("type  pane:right  label:Template  input_type:select  options:Page,View  default:Page");
+		$display->add("type  pane:right  input_type:hidden  default:".$ops['type']);
 		$display->add("statuses  label:Status  taxonomy:statuses  default:pending  input_type:category_select  pane:right");
 		$display->add("groups  taxonomy:groups  input_type:multiple_category_select  pane:right");
 		$display->add("categories  input_type:multiple_category_select  pane:right");
