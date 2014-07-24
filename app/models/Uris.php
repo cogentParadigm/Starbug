@@ -80,6 +80,7 @@ class Uris {
 		$display->add("groups  taxonomy:groups  input_type:multiple_category_select  pane:right");
 		$display->add("categories  input_type:multiple_category_select  pane:right");
 		$display->add("tags  input_type:tag_select  pane:right");
+		//tabs
 		$display->add("path  label:URL path  info:Leave empty to generate automatically  pane:path");
 		$display->add("description  label:Meta Description  input_type:textarea  class:plain  style:width:100%  data-dojo-type:dijit/form/Textarea  pane:meta");
 		$display->add("meta_keywords  label:Meta Keywords  input_type:textarea  class:plain  style:width:100%  data-dojo-type:dijit/form/Textarea  pane:meta");
