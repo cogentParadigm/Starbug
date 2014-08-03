@@ -53,8 +53,12 @@ class Uris {
 
 	function delete($uris) {
 		$id = intval($uris['id']);
-		remove("blocks", "uris_id:".$uris['id']);
-		return $this->remove("id:".$id);
+		$uris = query("uris")->condition("id", $uris['id'])->one();
+		$type = query("content_types")->condition("type", $uris['type'])->one();
+		$cond = array("uris_id" => $uris['id']);
+		if (!empty($type['table'])) remove($type['table'], $cond);
+		remove("blocks", $cond);
+		remove("uris", "id:".$id);
 	}
 	
 	function query_admin($query, &$ops) {
