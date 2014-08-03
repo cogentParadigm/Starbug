@@ -763,6 +763,9 @@ class Schemer {
 		efault($this->content_types[$type], array());
 		foreach ($ops as $k => $v) $this->content_types[$type][$k] = $v;
 		if (empty($this->content_types[$type]["name"])) $this->content_types[$type]["name"] = $this->content_types[$type]["type"];
+		if (!empty($this->content_types[$type]["table"])) {
+			$this->table($this->content_types[$type]["table"]."  base:uris", "uris_id  type:int  references:uris id");
+		}
 	}	
 
 	/**
@@ -1142,7 +1145,9 @@ class Schemer {
 		$render_prefix = reset(explode("/model/", str_replace(BASE_DIR, "", $result)))."/model/";
 		$o = BASE_DIR."/var/models/".ucwords($table)."Model.php"; //output
 		assign("model", $table);
-		$data = capture("base", "", $render_prefix);
+		$base = "";
+		if (!empty($this->options[$table]['base'])) $base = $this->options[$table]['base'];
+		$data = capture(array($base."/base", "base"), "", $render_prefix);
 		file_put_contents($o, $data);
 	}
 

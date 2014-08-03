@@ -56,19 +56,18 @@ class Renderer {
 		global $sb;
 		global $request;
 		efault($scope, "templates");
-		if (!empty($prefix)) $filename = BASE_DIR."/".$prefix.$scope."/".$paths.".php";
-		else {
-			//resolve path
-			if (!is_array($paths)) $paths = array($paths);
-			$this->path = reset($paths);
-			$found = array();
-			while(empty($found) && $this->path) {
-				
-				$found = locate($this->path.".php", $scope);
-				$this->path = next($paths);
-			}
-			$filename = end($found);
+		//resolve path
+		if (!is_array($paths)) $paths = array($paths);
+		$this->path = reset($paths);
+		$found = array();
+		while(empty($found) && $this->path) {
+			if (!empty($prefix)) {
+				$prefix_path = BASE_DIR."/".$prefix.$scope."/".$this->path.".php";
+				if (file_exists($prefix_path)) $found[] = $prefix_path;
+			} else $found = locate($this->path.".php", $scope);
+			$this->path = next($paths);
 		}
+		$filename = end($found);
 		//extract vars
 		extract($this->vars);
 		//render target

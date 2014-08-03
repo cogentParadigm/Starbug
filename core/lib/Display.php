@@ -145,12 +145,14 @@ class Display {
 		}
 	}
 	
-	function query($options=null) {
+	function query($options=null, $model="") {
+		if (empty($model)) $model = $this->model;
+		
 		//set options
 		if (is_null($options)) $options = $this->options;
 		
 		//init query
-		$this->query = query($this->model);
+		$this->query = query($model);
 		
 		//search
 		if (!empty($options['search'])) $query->search($options['search']);
@@ -160,8 +162,8 @@ class Display {
 
 		//pass to model
 		$action_name = "query_".$this->name;
-		$query = sb($this->model)->query_filters($this->name, $this->query, $options);
-		$query = sb($this->model)->$action_name($this->query, $options);
+		$query = sb($model)->query_filters($this->name, $this->query, $options);
+		$query = sb($model)->$action_name($this->query, $options);
 
 		//page
 		if (!empty($options['page'])) {

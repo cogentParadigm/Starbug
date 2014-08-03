@@ -21,7 +21,8 @@
 	<div class="row form-actions">
 		<div class="col-sm-12">
 			<div class="btn-group">
-				<?php button("Save", "class:btn-success"); ?>
+				<?php button("Save", "class:btn-success  name:operation  value:save"); ?>
+				<?php //button("Save and add another", "class:btn-success  name:operation  value:save_add_another"); ?>
 				<?php if (!empty($display->options['cancel_url'])) { ?>
 					<button type="button" class="cancel btn btn-danger" onclick="window.location='<?= uri($display->options['cancel_url']); ?>'">Cancel</button>
 				<?php } ?>

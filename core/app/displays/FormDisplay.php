@@ -26,9 +26,6 @@ class FormDisplay {
 			$this->schema = sb($this->model)->hooks;
 		}
 		
-		// grab errors
-		$this->errors = errors($this->model, true);
-		
 		// set form attributes
 		$this->attributes["action"] = $this->url;
 		$this->attributes["method"] = $this->method;
@@ -36,6 +33,9 @@ class FormDisplay {
 		
 		//create layout display
 		$this->layout = build_display("layout", $this->model);
+		
+		//run query
+		$this->query();
 	}
 	
 	/**
@@ -43,8 +43,9 @@ class FormDisplay {
 	 */
 	function filter($field, $options, $column) {
 		if (empty($options['input_type'])) $options['input_type'] = $column['input_type'];
-		if ($column['input_type'] == "password") $options['class'] .= ((empty($options['class'])) ? "" : " ")."text";
+		if ($options['input_type'] == "password") $options['class'] .= ((empty($options['class'])) ? "" : " ")."text";
 		else if ($column['type'] == "bool") $options['value'] = 1;
+		else if ($column['type'] == "datetime") $options['data-dojo-type'] = "starbug/form/DateTextBox";
 		return $options;
 	}
 	
@@ -57,17 +58,26 @@ class FormDisplay {
 		
 		if (empty($options['id'])) $this->items = array();
 		else parent::query($options);
-	}
-	
-	/**
-	 * after the query is run and before the display is rendered
-	 */
-	function before_render() {
+		
 		//load $_POST
 		if (!empty($this->items)) {
 			if(empty($_POST[$this->model])) $_POST[$this->model] = array();
 			foreach ($this->items[0] as $k => $v) if (!isset($_POST[$this->model][$k])) $_POST[$this->model][$k] = $v;
 		}
+	}
+	
+	function before_render() {
+		// grab errors and update schema
+		$this->errors = array();
+		foreach ($this->fields as $name => $field) {
+			$this->schema[$name] = sb($field['model'])->hooks[$name];
+			$errors = errors($this->get_name($name), true);
+			if (!empty($errors)) $this->errors[$name] = $errors;
+		}
+	}
+	
+	function render($query=false) {
+		parent::render($query);
 	}
 	
 	/**
@@ -77,12 +87,15 @@ class FormDisplay {
 	 * @param string $name the relative name
 	 * @return the full name
 	 */
-	function get_name($name) {
-		if (empty($this->model)) return $name;
+	function get_name($name, $model="") {
+		if (empty($model)) {
+			$model = (empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
+		}
+		if (empty($model)) return $name;
 		else if (false !== strpos($name, "[")) {
 			$parts = explode("[", $name, 2);
-			return $this->model."[".$parts[0]."][".$parts[1];
-		} else return $this->model."[".$name."]";
+			return $model."[".$parts[0]."][".$parts[1];
+		} else return $model."[".$name."]";
 	}
 
 	/**
@@ -90,10 +103,13 @@ class FormDisplay {
 	 * @param string $name the relative name
 	 * @return string the GET or POST value
 	 */
-	function get($name) {
+	function get($name, $model="") {
+		if (empty($model)) {
+			$model = (empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
+		}
 		$parts = explode("[", $name);
-		if ($this->method == "post") $var = (empty($this->model)) ? $_POST : $_POST[$this->model];
-		else $var = (empty($this->model)) ? $_GET : $_GET[$this->model];
+		if ($this->method == "post") $var = (empty($model)) ? $_POST : $_POST[$model];
+		else $var = (empty($model)) ? $_GET : $_GET[$model];
 		foreach($parts as $p) $var = $var[rtrim($p, "]")];
 		if (is_array($var)) return $var;
 		else return stripslashes($var);
@@ -104,15 +120,18 @@ class FormDisplay {
 	 * @param string $name the relative name
 	 * @param string $value the value
 	 */
-	function set($name, $value) {
+	function set($name, $value, $model="") {
+		if (empty($model)) {
+			$model = (!empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
+		}	
 		$parts = explode("[", $name);
 		$key = array_pop($parts);
-		if (empty($this->model)) {
+		if (empty($model)) {
 			if ($this->method == "post") $var = &$_POST;
 			else $var = &$_GET;
 		} else {
-			if ($this->method == "post") $var = &$_POST[$this->model];
-			else $var = &$_GET[$this->model];
+			if ($this->method == "post") $var = &$_POST[$model];
+			else $var = &$_GET[$model];
 		}
 		foreach($parts as $p) {
 			$var = &$var[rtrim($p, "]")];
@@ -129,6 +148,8 @@ class FormDisplay {
 		$ops = star($ops);
 		$name = array_shift($ops);
 		$ops['name'] = $name;
+		//model
+		if (empty($ops['model'])) $ops['model'] = $this->model;
 		//id, label, and class
 		if (empty($ops['id'])) $ops['id'] = $ops['name'];
 		$ops['nolabel'] = (isset($ops['nolabel'])) ? true : false;
@@ -153,7 +174,7 @@ class FormDisplay {
 
 		$capture = "field";
 		$field['field'] = reset(explode("[", $field['name']));
-		$field['name'] = $this->get_name($field['name']);
+		$field['name'] = $this->get_name($field['name'], $field['model']);
 		foreach ($field as $k => $v) assign($k, $v);
 		if (isset($field['nofield'])) {
 			unset($field['nofield']);
@@ -161,7 +182,7 @@ class FormDisplay {
 		}
 		assign("attributes", $field);
 		assign("control", $control);
-		return capture(array($this->model."/form/$field[field]-$capture", "form/$field[field]-$capture", $this->model."/form/$capture", "form/$capture"));
+		return capture(array($field['model']."/form/$field[field]-$capture", "form/$field[field]-$capture", $field['model']."/form/$capture", "form/$capture"));
 	}
 	
 	function __call($name, $arguments) {

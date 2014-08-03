@@ -61,7 +61,7 @@ $this->table("settings",
 );
 $this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"title  type:string  length:128  list:true",
-	"path  type:string  length:64  unique:  list:true  slug:title  null:",
+	"path  type:string  length:64  unique:  list:true  slug:title  null:  pattern:[path:token]",
 	"template  type:string  length:64  default:  list:false",
 	"categories  type:terms  optional:",
 	"tags  type:terms  column:term",
@@ -79,8 +79,10 @@ $this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"breadcrumb  type:string  length:255  default:  list:false"
 );
 $this->table("content_types",
+	"base  type:string  default:uris",
 	"type  type:string",
 	"name  type:string",
+	"url_pattern  type:string",
 	"table  type:string  default:",
 	"description  type:string  length:255  default:"
 );
@@ -134,16 +136,8 @@ $this->menu("admin",
 			"href:sb-admin  content:The Bridge  target:_blank  groups:root"
 		)
 	),
+	"href:admin/uris  content:Content",
 	"href:admin/users  content:Users",
-	array(
-		"href" => "admin/uris",
-		"content" => "Content",
-		"children" => array(
-			"href:admin/uris?type=View  content:Views",
-			"href:admin/uris?type=Page  content:Pages",
-			"href:admin/uris?type=Post  content:Posts"
-		)
-	),
 	"href:admin/media  content:Media  target:_blank"
 );
 //groups

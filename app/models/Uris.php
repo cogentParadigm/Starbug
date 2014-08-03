@@ -10,6 +10,12 @@ class Uris {
 		if ($_POST['type'] == "Post") $uris['path'] = "blog/".$uris['path'];
 		*/
 		queue("blocks", array("type" => "text",  "region" => "content",  "position" => 1, "uris_id" => "", "content" => $_POST['block-content-1']['content']));
+		$type = query("content_types")->condition("type", $uris['type'])->one();
+		if (!empty($type['table'])) {
+			$data = $_POST[$type['table']];
+			$data['uris_id'] = "";
+			sb($type['table'])->create($data);
+		}
 		$this->store($uris);
 		if (!errors()) {
 			$uid = $this->insert_id;
@@ -28,6 +34,12 @@ class Uris {
 		if ($_POST['type'] == "Post") $uris['path'] = "blog/".$uris['path'];
 		*/
 		$row = $this->get($uris['id']);
+		$type = query("content_types")->condition("type", $uris['type'])->one();
+		if (!empty($type['table'])) {
+			$data = $_POST[$type['table']];
+			$data['uris_id'] = $uris['id'];
+			sb($type['table'])->update($data);
+		}
 		$this->store($uris);
 		if (!errors()) {
 			$uid = $uris['id'];
@@ -40,7 +52,7 @@ class Uris {
 	}
 
 	function delete($uris) {
-		$id = $uris['id'];
+		$id = intval($uris['id']);
 		remove("blocks", "uris_id:".$uris['id']);
 		return $this->remove("id:".$id);
 	}
@@ -88,6 +100,16 @@ class Uris {
 		$display->add("meta  label:Custom Meta Tags  input_type:textarea  class:plain  style:width:100%  data-dojo-type:dijit/form/Textarea  pane:meta");
 		$display->add("breadcrumb  label:Breadcrumbs Title  style:width:100%  pane:breadcrumbs");
 		$display->add("parent  info:Start typing the title of the page and autocomplete results will display  input_type:autocomplete  pane:breadcrumbs");
+		//content type
+		$type = query("content_types")->condition("type", $display->get("type"))->one();
+		if (!empty($type['table'])) {
+			$items = $display->items;
+			$display->model = $type['table'];
+			$display->query();
+			sb($type['table'])->display_form($display, $ops);
+			$display->model = "uris";
+			$display->items = $items;
+		}
 	}
 
 

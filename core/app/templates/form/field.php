@@ -23,14 +23,14 @@
 		if (!empty($between)) {
 			echo $between; assign("between", "");
 		}
-		if (!empty($errors[$field])) {
+		if (!empty($form->errors[$field])) {
 			$attributes['class'] .= " form-error";
 			assign("attributes", $attributes);
 		}
 	?>
 	<?php
-		if (!empty($errors[$field])) {
-			foreach ($errors[$field] as $error => $message) {
+		if (!empty($form->errors[$field])) {
+			foreach ($form->errors[$field] as $error => $message) {
 				assign("error", $message);
 				render("form/error");
 			}

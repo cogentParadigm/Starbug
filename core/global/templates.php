@@ -85,7 +85,7 @@ function render_form($form="", $render=true) {
 	*/
 function render_layout($layout="", $render=true) {
 	efault($layout, request("layout"));
-	if ($render) render($layout, "layouts");
+	if ($render) render(array($layout."-".request("path"), $layout, "Default"), "layouts");
 	else return capture($layout, "layouts");
 }
 /**

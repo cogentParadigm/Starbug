@@ -8,8 +8,16 @@ class hook_store_slug {
 		if (empty($value) && isset($query->fields[$argument])) {
 			$value = $query->fields[$argument];
 		}
-		$value = $base = strtolower(str_replace(" ", "-", normalize($value)));
-
+		
+		$value = strtolower(str_replace(" ", "-", normalize($value)));
+		
+		if (!empty(sb($query->model)->hooks[$column]["pattern"])) {
+			$pattern = sb($query->model)->hooks[$column]["pattern"];
+			$data = array($query->model => array_merge($query->fields, array($column => $value)));
+			$value = token_replace($pattern, $data);
+		}
+		
+		$base = $value;
 		$exists = $this->exists($query, $column, $value);
 		$count = 2;
 		while ($exists->one()) {

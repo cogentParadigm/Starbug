@@ -47,7 +47,7 @@ if ((!empty($model)) && (isset($schemer->tables[$model]))) {
 		$schemer->toJSON($data);
 	}
 }
-
+$template_map = array();
 //LOCATE GENERATOR
 $path = (isset($args['u'])) ? "generate/$generator/update.php" : "generate/$generator/$generator.php";
 if ($result = end(locate($path, "script"))) include($result);
@@ -58,6 +58,7 @@ $render_prefix = reset(explode("/$generator/", str_replace(BASE_DIR, "", $result
 foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) passthru("mkdir ".BASE_DIR."/$dir");
 //CREATE FILES
 foreach ($generate as $template => $output) {
+	if (isset($template_map[$template])) $template = $template_map[$template];
 	$o = BASE_DIR."/$output"; //output
 	$data = capture($template, "", $render_prefix);
 	file_put_contents($o, $data);
