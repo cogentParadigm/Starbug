@@ -1,4 +1,7 @@
 <form <?php html_attributes($display->attributes); ?>>
+	<?php if (success($display->model, $display->action)) { ?>
+		<p class="alert alert-success">Saved</p>
+	<?php } ?>
 <? if ($display->method == "post") { ?>
 	<input class="postback" name="postback" type="hidden" value="<?= $display->postback; ?>" />
 <? } ?>

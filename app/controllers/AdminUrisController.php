@@ -4,10 +4,16 @@ class AdminUrisController {
 		assign("model", "uris");
 		assign("form", "uris");
 		assign("cancel_url", "admin/uris");		
-		if (success("uris", "create") || success("uris", "update")) redirect(uri("admin/uris", "u"));
+		if (success("uris", "create") || success("uris", "update")) {
+			if ($_POST['operation'] == "save") redirect(uri("admin/uris", "u"));
+			else if ($_POST['operation'] == "save_add_another") $_POST = array();
+		}
 	}
 	function default_action() {
 		$this->render("admin/list");
+	}
+	function add() {
+		
 	}
 	function create() {
 		$this->render("admin/create");

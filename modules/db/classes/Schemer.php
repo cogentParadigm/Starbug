@@ -624,7 +624,7 @@ class Schemer {
 	 * @param string $table the name of the table
 	 * @param string $col A star formatted column string
 	 */
-	function column($table, $col) {
+	function column($table) {
 		$args = func_get_args();
 		$table = array_shift($args);
 		if (false !== strpos($table, "  ")) {
