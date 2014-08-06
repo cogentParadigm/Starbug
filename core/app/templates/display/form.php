@@ -8,11 +8,9 @@
 <? if (!empty($display->action)) { ?>
 	<input class="action" name="action[<?= $display->model; ?>]" type="hidden" value="<?= $display->action; ?>" />
 <? } ?>
-<?php foreach ($display->items as $item) { ?>
-	<? if (!empty($item['id'])) { ?>
-		<input id="id" name="<?= $display->model; ?>[id]" type="hidden" value="<?= $item['id']; ?>" />
-	<? } ?>	
-<?php } ?>
+<? if (!empty($display->get("id"))) { ?>
+	<input id="id" name="<?= $display->model; ?>[id]" type="hidden" value="<?= $display->get('id'); ?>" />
+<? } ?>	
 <?php
 	if (!$display->layout->is_empty()) {
 		foreach ($display->fields as $name => $field) $display->layout->append($field['pane'], $display->form_control($field['input_type'], array_merge(array($name), $field)));

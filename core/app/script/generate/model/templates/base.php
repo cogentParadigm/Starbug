@@ -38,10 +38,10 @@ class <?= ucwords($name); ?>Model extends Table {
 		$query->select("*", $query->model);
 <?php
 		$tabs = "\t\t";
-		foreach ($fields as $name => $field) {
+		foreach ($fields as $fieldname => $field) {
 				if (sb()->db->has($field['type']) || $field['type'] == "category") {
 					if (empty($field['column'])) $field['column'] = "id";
-					echo $tabs.'$query->select($query->model.".'.$name.'.'.$field['column'].' as '.$name.'");'."\n";
+					echo $tabs.'$query->select($query->model.".'.$fieldname.'.'.$field['column'].' as '.$fieldname.'");'."\n";
 				}
 		}
 		?>
@@ -51,9 +51,9 @@ class <?= ucwords($name); ?>Model extends Table {
 	function display_form($display, &$ops) {
 <?php
 			$tabs = "\t\t";
-			foreach ($fields as $name => $field) {
+			foreach ($fields as $fieldname => $field) {
 				if ($field['display'] === true) {
-					echo $tabs.'$display->add("'.$name.'");'."\n";
+					echo $tabs.'$display->add("'.$fieldname.'");'."\n";
 					if (!empty($field['confirm'])) echo $tabs.'$display->add("'.$field['confirm'].'  input_type:'.$field['input_type'].'");'."\n";
 				}
 			}
