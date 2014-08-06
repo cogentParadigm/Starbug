@@ -17,10 +17,15 @@ function(dojo, strings, put, on){
 			var div = put(cell, 'div.btn-group');
 			
 			//edit button
-			if (typeof grid['dialog'] != 'undefined') var href = 'javascript:'+grid['dialog']+'.show('+row.id+')';
+			var href = "javascript:;";
+			if (typeof grid['dialog'] == 'string') href = 'javascript:'+grid['dialog']+'.show('+row.id+')';
 			else var href = base_url+'/update/'+row.id+dojo.global.location.search;
 			var edit = put(div, 'a.Edit.btn.btn-default[title=Edit][href='+href+']', put('div.fa.fa-edit'));
-			if (typeof grid['editor'] != 'undefined') {
+			if (typeof grid['dialog'] == "object") {
+				on(edit, 'click', function(evt) {
+					grid.dialog.show(row.id);
+				});
+			} else if (typeof grid['editor'] != 'undefined') {
 				on(edit, 'click', function(evt) {
 					grid.editor.edit(row.id);
 					evt.preventDefault();
