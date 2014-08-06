@@ -19,7 +19,7 @@ function(dojo, strings, put, on){
 			//edit button
 			var href = "javascript:;";
 			if (typeof grid['dialog'] == 'string') href = 'javascript:'+grid['dialog']+'.show('+row.id+')';
-			else var href = base_url+'/update/'+row.id+dojo.global.location.search;
+			else if (typeof grid['dialog'] == 'undefined') var href = base_url+'/update/'+row.id+dojo.global.location.search;
 			var edit = put(div, 'a.Edit.btn.btn-default[title=Edit][href='+href+']', put('div.fa.fa-edit'));
 			if (typeof grid['dialog'] == "object") {
 				on(edit, 'click', function(evt) {
