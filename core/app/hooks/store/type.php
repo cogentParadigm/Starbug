@@ -33,7 +33,7 @@ class hook_store_type {
 				$type_id = substr($type_id, 1);
 			}
 
-			if ($type_id === "-~") $clean = true;
+			if ($remove && $type_id === "~") $clean = true;
 			else if ($value_type === "id") {
 				$entry = query($target)->condition("id", $type_id);
 				if ($remove) {
