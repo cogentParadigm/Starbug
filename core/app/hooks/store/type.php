@@ -41,7 +41,7 @@ class hook_store_type {
 				} else {
 					//update
 					$entry->set($model."_id", $model_id);
-					$entry->set("position", $position);
+					$entry->set("position", intval($position)+1);
 					$entry->update();
 					$ids[] = $type_id;
 				}
