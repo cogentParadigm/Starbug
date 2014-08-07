@@ -15,33 +15,61 @@ class hook_store_type {
 		$model_id = $query->getId();
 		$target = $model."_".$column;
 		$type = $argument;
+		$type_ids = array();
 		$ids = array();
 		$clean = false;
 		
 		//loop through values
 		if (!is_array($value)) $value = explode(",", $value);
 		foreach ($value as $position => $type_id) {
-			$entry = query($target)->conditions(array($model."_id" => $model_id, $type."_id" => $type_id));
+			$remove = false;
+			$value_type = $type."_id";
+			if (0 === strpos($type_id, "-")) {
+				$remove = true;
+				$type_id = substr($type_id, 1);
+			}
+			if (0 === strpos($type_id, "#")) {
+				$value_type = "id";
+				$type_id = substr($type_id, 1);
+			}
+
 			if ($type_id === "-~") $clean = true;
-			else if (0 === strpos($type_id, "-")) {
-				//remove
-				$entry->delete();
+			else if ($value_type === "id") {
+				$entry = query($target)->condition("id", $type_id);
+				if ($remove) {
+					$entry->delete();
+				} else {
+					//update
+					$entry->set($model."_id", $model_id);
+					$entry->set("position", $position);
+					$entry->update();
+					$ids[] = $type_id;
+				}
 			} else {
-				//add
-				$entry->set($model."_id", $model_id);
-				$entry->set($type."_id", $type_id);
-				$entry->set("position", $position);
-				if ($entry->one()) $entry->update();
-				else $entry->insert();
-				$ids[] = $type_id;
+				$entry = query($target)->conditions(array($model."_id" => $model_id, $type."_id" => $type_id));
+				if ($remove) {
+					//remove
+					$entry->delete();
+				} else {
+					//add
+					$entry->set($model."_id", $model_id);
+					$entry->set($type."_id", $type_id);
+					$entry->set("position", $position);
+					if ($entry->one()) $entry->update();
+					else $entry->insert();
+					$type_ids[] = $type_id;
+				}
 			}
 		}
 		
 		//clean
 		if ($clean) {
 			$query = query($target)->condition($model."_id", $model_id);
+			if (!empty($type_ids)) {
+				$query->condition($type."_id", $type_ids, "!=");
+			}
 			if (!empty($ids)) {
-				$query->condition($type."_id", $ids, "!=");
+				$query->condition("id", $ids, "!=");
 			}
 			$query->delete();
 		}
