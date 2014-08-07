@@ -1,4 +1,4 @@
-define(["dojo/_base/declare", "dojo/_base/lang", "dojo/request/xhr", "dojo/query", "dojo/dom-class", "dojo/request/iframe", "dijit/Dialog"], function(declare, lang, xhr, query, domclass, iframe, Dialog) {
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/request/xhr", "dojo/query", "dojo/dom-class", "dojo/request/iframe", "dijit/Dialog", "dijit/registry"], function(declare, lang, array, xhr, query, domclass, iframe, Dialog, registry) {
 	return declare([Dialog], {
 		dialog:null,
 		url:'',
@@ -71,6 +71,9 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/request/xhr", "dojo/query
 			sb.post(args, 'return confirm(\'Are you sure you want to delete this item?\')');
 		},
 		loadForm: function(data) {
+			array.forEach(registry.findWidgets(this.domNode), function(w) {
+				w.destroyRecursive();
+			});
 			this.set('content', data);
 			this.form = query('form', this.domNode)[0];
 			query('form', this.domNode).on('submit', function(evt) {evt.preventDefault();});
