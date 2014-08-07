@@ -1,5 +1,5 @@
-define(["dojo/_base/Deferred", "starbug/grid/Grid", "dgrid/extensions/DnD"], function(Deferred, Grid, DnD){
-	var DnDGrid = dojo.declare('starbug.grid.MemoryGrid', [Grid, DnD], {
+define(["dojo/_base/Deferred", "starbug/grid/Grid", "dgrid/extensions/DijitRegistry", "dgrid/extensions/DnD"], function(Deferred, Grid, DijitRegistry, DnD){
+	var DnDGrid = dojo.declare('starbug.grid.MemoryGrid', [Grid, DijitRegistry, DnD], {
 		orderColumn:'position',
 		dndParams:{
 			withHandles:true,
