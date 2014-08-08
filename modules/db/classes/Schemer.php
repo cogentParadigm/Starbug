@@ -640,7 +640,7 @@ class Schemer {
 				$additional[] = array($table."_".$colname,
 					$col['type']."_id  type:int  default:0  references:$col[type] id  update:cascade  delete:cascade",
 					"owner  type:int  null:  default:NULL  references:users id  update:cascade  delete:cascade",
-					$table."_id  type:int  default:0  references:$table id  update:cascade  delete:cascade",
+					$table."_id  type:int  default:0  references:$table id  null:  update:cascade  delete:cascade",
 					"position  type:int  ordered:".$table."_id  optional:"
 				);
 				$this->index($table."_".$colname, $table."_id", $col['type']."_id");
