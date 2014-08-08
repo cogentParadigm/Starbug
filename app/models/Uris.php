@@ -80,6 +80,7 @@ class Uris {
 	}
 	
 	function display_form($display, &$ops) {
+		if (empty($_POST['uris']['type'])) $_POST['uris']['type'] = $ops['type'];
 		//layout
 		$display->layout->add("top  left:div.col-md-9  right:div.col-md-3", "bottom  tabs:div.col-sm-12");
 		$display->layout->put("tabs", 'div[data-dojo-type="dijit/layout/TabContainer"][data-dojo-props="doLayout:false, tabPosition:\'left-h\'"][style="width:100%;height:100%"]', '', 'tc');

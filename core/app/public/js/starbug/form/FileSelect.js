@@ -33,24 +33,25 @@ define([
 		postCreate:function() {
 			var self = this;
 			this.store = Observable(new Memory({data: []}));
-			self.grid.editor = self;
-			ready(function() {
-				self.grid.set('store', self.store);
-			});
-			
 			// initialize hidden input
 			this.input.name = this.input_name;
 			
-			if (self.files.length > 0) self.add(self.files);
-
+		},
+		startup:function() {
+			var self = this;
+			this.uploader.startup();
+			this.grid.editor = self;
 			//initialize the uploader
 			this.uploader.url = WEBSITE_URL+'upload';	
 			this.uploader.onBegin = lang.hitch(this, function() {
 				self.set_status('loading');
 			});
 			this.uploader.onComplete = lang.hitch(this, 'onUpload');
-			this.uploader.onAbort = lang.hitch(this, 'onCancelUpload');		
-			
+			this.uploader.onAbort = lang.hitch(this, 'onCancelUpload');
+			this.grid.set('store', this.store);
+			setTimeout(function() {
+				if (self.files.length > 0) self.add(self.files);
+			}, 100);
 		},
 		browse:function(){
 			var win = dojo.global;
@@ -66,7 +67,7 @@ define([
 			if (this.size == 0) {
 				//unlimited
 			} else if (this.size == 1) {
-				this.store.setData([]);
+				if (this.store.data.length) this.store.remove(this.store.data[0].id);
 			} else if (target_size == this.size) {
 				this.controls.style.display = 'none';
 			} else if (target_size > this.size) {

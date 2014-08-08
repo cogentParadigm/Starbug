@@ -7,23 +7,23 @@ class hook_store_slug {
 	function validate(&$query, $key, $value, $column, $argument) {
 		if (empty($value) && isset($query->fields[$argument])) {
 			$value = $query->fields[$argument];
-		}
 		
-		$value = strtolower(str_replace(" ", "-", normalize($value)));
-		
-		if (!empty(sb($query->model)->hooks[$column]["pattern"])) {
-			$pattern = sb($query->model)->hooks[$column]["pattern"];
-			$data = array($query->model => array_merge($query->fields, array($column => $value)));
-			$value = token_replace($pattern, $data);
-		}
-		
-		$base = $value;
-		$exists = $this->exists($query, $column, $value);
-		$count = 2;
-		while ($exists->one()) {
-			$value = $base."-".$count;
+			$value = strtolower(str_replace(" ", "-", normalize($value)));
+			
+			if (!empty(sb($query->model)->hooks[$column]["pattern"])) {
+				$pattern = sb($query->model)->hooks[$column]["pattern"];
+				$data = array($query->model => array_merge($query->fields, array($column => $value)));
+				$value = token_replace($pattern, $data);
+			}
+			
+			$base = $value;
 			$exists = $this->exists($query, $column, $value);
-			$count++;
+			$count = 2;
+			while ($exists->one()) {
+				$value = $base."-".$count;
+				$exists = $this->exists($query, $column, $value);
+				$count++;
+			}
 		}
 		return $value;
 	}

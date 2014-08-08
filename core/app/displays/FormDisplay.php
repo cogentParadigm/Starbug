@@ -31,6 +31,9 @@ class FormDisplay {
 		$this->attributes["method"] = $this->method;
 		$this->attributes["accept-charset"] = "UTF-8";
 		
+		if (success($this->model, $this->action)) $this->attributes['class'][] = "submitted";
+		else if (failure($this->model, $this->action)) $this->attributes['class'][] = "errors";
+		
 		//create layout display
 		$this->layout = build_display("layout", $this->model);
 		

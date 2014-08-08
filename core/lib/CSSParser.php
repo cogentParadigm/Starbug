@@ -50,7 +50,7 @@ class CSSParser {
 		$search = array("/{\s+/", "/\s+{/", "/;\s+/", "/:\s+/", "/}\s+/", "/;}/", "/\s+}/", "/\('/", '/\("/', "/'\)/", '/"\)/');
 		$replace = array("{", "{", ";", ":", "}", "}", "}", "(", "(", ")", ")");
 		$sheet = preg_replace($search, $replace, $sheet);
-		preg_match_all("/@import url\(\"?([^\)]*)\"?\)/", $sheet, $matches);
+		preg_match_all("/@import url\(\"([^\)]*)\"\)/", $sheet, $matches);
 		$sheet = preg_replace("/@import url\([^\)]*\);/", "", $sheet);
 		if (!empty($matches[0])) {
 			foreach ($matches[1] as $match) $this->add_file(realpath($dir."/".$match));
