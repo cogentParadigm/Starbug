@@ -637,13 +637,17 @@ class Schemer {
 			$col = star($col);
 			$colname = array_shift($col);
 			if ($col['type'] !== "terms" && isset($this->tables[$col['type']])) {
-				$additional[] = array($table."_".$colname,
-					$col['type']."_id  type:int  default:0  references:$col[type] id  update:cascade  delete:cascade",
+				$ref_table_name = (empty($col['table'])) ? $table."_".$colname : $col['table'];
+				$ref_table_def = array($ref_table_name,
 					"owner  type:int  null:  default:NULL  references:users id  update:cascade  delete:cascade",
 					$table."_id  type:int  default:0  references:$table id  null:  update:cascade  delete:cascade",
 					"position  type:int  ordered:".$table."_id  optional:"
 				);
-				$this->index($table."_".$colname, $table."_id", $col['type']."_id");
+				if ($ref_table_name != $col['type']) {
+					$ref_table_def[] = $col['type']."_id  type:int  default:0  references:$col[type] id  update:cascade  delete:cascade";
+					$this->index($ref_table_name, $table."_id", $col['type']."_id");
+				}
+				$additional[] = $ref_table_def;
 			}
 			$this->tables[$table][$colname] = $col;
 		}

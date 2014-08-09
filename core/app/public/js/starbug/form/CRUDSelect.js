@@ -24,6 +24,7 @@ define([
 ], function (dojo, declare, lang, Widget, Templated, _WidgetsInTemplate, sb, template, put, on, query, domclass, Deferred, Memory, Observable, QueryResults, ready, Dialog) {
 	return declare([Widget, Templated, _WidgetsInTemplate], {
 		value:[],
+		model:'',
 		templateString: template, //the template (./templates/FileSelect.html)
 		widgetsInTemplate: true,
 		input_name:'file',
@@ -33,9 +34,9 @@ define([
 		postCreate:function() {
 			var self = this;
 			this.store = Observable(new Memory({data: []}));
-			this.dialog = new Dialog({url:"admin/uris_images/", callback:function(data) {
-				var object_id = query('input[name="uris_images[id]"]').attr('value')[0];
-				sb.get('uris_images', 'select').query({'id':object_id}).then(function(data) {
+			this.dialog = new Dialog({url:"admin/"+self.model+"/", callback:function(data) {
+				var object_id = query('input[name="'+self.model+'[id]"]').attr('value')[0];
+				sb.get(self.model, 'select').query({'id':object_id}).then(function(data) {
 					self.add(data);
 				});
 			}});
@@ -49,7 +50,7 @@ define([
 			this.input.name = this.input_name;
 			
 			if (self.value.length > 0) {
-				sb.get('uris_images', 'select').query({'id':self.value.join(',')}).then(function(data) {
+				sb.get(self.model, 'select').query({'id':self.value.join(',')}).then(function(data) {
 					self.add(data);
 				});
 			}

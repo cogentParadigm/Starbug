@@ -13,7 +13,8 @@ class hook_store_type {
 		//vars
 		$model = $query->model;
 		$model_id = $query->getId();
-		$target = $model."_".$column;
+		$hooks = sb($model)->hooks[$column];
+		$target = (empty($hooks['table'])) ? $model."_".$column ? $hooks['table'];
 		$type = $argument;
 		$type_ids = array();
 		$ids = array();
@@ -23,7 +24,7 @@ class hook_store_type {
 		if (!is_array($value)) $value = explode(",", $value);
 		foreach ($value as $position => $type_id) {
 			$remove = false;
-			$value_type = $type."_id";
+			$value_type = ($type == $target) ? "id" : $type."_id";
 			if (0 === strpos($type_id, "-")) {
 				$remove = true;
 				$type_id = substr($type_id, 1);
