@@ -14,7 +14,7 @@ class hook_store_type {
 		$model = $query->model;
 		$model_id = $query->getId();
 		$hooks = sb($model)->hooks[$column];
-		$target = (empty($hooks['table'])) ? $model."_".$column ? $hooks['table'];
+		$target = (empty($hooks['table'])) ? $model."_".$column : $hooks['table'];
 		$type = $argument;
 		$type_ids = array();
 		$ids = array();
