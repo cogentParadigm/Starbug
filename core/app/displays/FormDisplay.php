@@ -51,6 +51,8 @@ class FormDisplay {
 		else if ($column['type'] == "datetime") $options['data-dojo-type'] = "starbug/form/DateTextBox";
 		else if ($options['input_type'] == "crud") {
 			if (empty($options['table'])) $options['table'] = (empty($column['table'])) ? $options['model']."_".$field : $column['table'];
+		} else if ($options['input_type'] == "category_select") {
+				if (empty($options['taxonomy'])) $options['taxonomy'] = (empty($column['taxonomy'])) ? $options['model']."_".$field : $column['taxonomy'];
 		}
 		return $options;
 	}
