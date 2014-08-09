@@ -54,7 +54,7 @@ class <?= ucwords($name); ?>Model extends Table {
 			$tabs = "\t\t";
 			foreach ($fields as $fieldname => $field) {
 				if ($field['display'] === true) {
-					echo $tabs.'$display->add("'.$fieldname.'");'."\n";
+					echo $tabs.'$display->add("'.$fieldname.'  pane:left");'."\n";
 					if (!empty($field['confirm'])) echo $tabs.'$display->add("'.$field['confirm'].'  input_type:'.$field['input_type'].'");'."\n";
 				}
 			}

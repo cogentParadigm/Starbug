@@ -1,6 +1,6 @@
 <?php
 	$base_model = "";
-	if (!empty($schemer->options[$base_model]['base'])) $base_model = $schemer->options[$base_model]['base'];
+	if (!empty($schemer->options[$model_name]['base'])) $base_model = $schemer->options[$model_name]['base'];
 	$generate = array("base" => "var/models/".ucwords($model_name)."Model.php");
 	if (!file_exists(BASE_DIR.$app_dir."models/".ucwords($model_name).".php")) {
 		$dirs = array($app_dir."models");
