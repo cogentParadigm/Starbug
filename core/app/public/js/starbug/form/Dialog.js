@@ -1,4 +1,4 @@
-define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/request/xhr", "dojo/query", "dojo/dom-class", "dojo/request/iframe", "dijit/Dialog", "dijit/registry"], function(declare, lang, array, xhr, query, domclass, iframe, Dialog, registry) {
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/request/xhr", "dojo/query", "dojo/dom-class", "dojo/dom-style", "dojo/request/iframe", "dijit/Dialog", "dijit/registry"], function(declare, lang, array, xhr, query, domclass, domstyle, iframe, Dialog, registry) {
 	return declare([Dialog], {
 		dialog:null,
 		url:'',
@@ -9,9 +9,22 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/reque
 		get_data:{},
 		crudSuffixes:true,
 		format:"xhr",
+		doLayout:false,
+		layoutParams:{},
+		showTitle:false,
+		draggable:false,
 		postCreate: function() {
 			this.inherited(arguments);
+			var layoutDefaults = {width:'90%', height:'90%', position:'fixed', top:'0', left:'0', right:'0', bottom:'0', margin:'auto'};
+			for (var i in layoutDefaults) if (typeof this.layoutParams[i] == "undefined") this.layoutParams[i] = layoutDefaults[i];
+			domstyle.set(this.domNode, this.layoutParams);
+			if (this.showTitle == false) domstyle.set(this.titleBar, 'display', 'none');
 			this.set('content', '');
+			
+		},
+		_position: function() {},
+		resize: function(dim) {
+			this._layoutChildren();
 		},
 		_onSubmit: function(evt){
 			evt.preventDefault();
