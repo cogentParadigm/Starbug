@@ -15,7 +15,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/reque
 		draggable:false,
 		postCreate: function() {
 			this.inherited(arguments);
-			var layoutDefaults = {width:'90%', height:'90%', position:'fixed', top:'0', left:'0', right:'0', bottom:'0', margin:'auto'};
+			var layoutDefaults = {width:'90%', height:'90%', position:'fixed', top:'0', left:'0', right:'0', bottom:'0', margin:'auto', overflow:'auto'};
 			for (var i in layoutDefaults) if (typeof this.layoutParams[i] == "undefined") this.layoutParams[i] = layoutDefaults[i];
 			domstyle.set(this.domNode, this.layoutParams);
 			if (this.showTitle == false) domstyle.set(this.titleBar, 'display', 'none');
@@ -24,6 +24,13 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/reque
 		},
 		_position: function() {},
 		resize: function(dim) {
+			/*
+			 * EXPERIMENTAL SCROLL BEHAVIOR - TO ENABLE, REMOVE overflow:auto FROM THE DIALOG
+			if (this.containerNode.clientHeight > this.domNode.clientHeight) {
+				var max = this.containerNode.clientHeight -this.domNode.clientHeight;
+				domstyle.set(this.containerNode, 'top', 0 - Math.min(window.scrollY, max) + 'px');
+			}
+			*/
 			this._layoutChildren();
 		},
 		_onSubmit: function(evt){
