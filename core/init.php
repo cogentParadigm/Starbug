@@ -56,6 +56,7 @@ $sb = new sb($db);
 $sb->publish("init");
 
 if (defined('SB_CLI')) {
+	$sb->user = array("groups" => array("root"));
 	//import cli utils
 	$sb->import("util/cli");
 	//publish cli init hook

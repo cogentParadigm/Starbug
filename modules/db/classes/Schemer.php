@@ -168,7 +168,7 @@ class Schemer {
 			}
 		}
 		if (empty($primary)) $fields['id'] = star("type:int  auto_increment:  key:primary");
-		if (empty($fields["owner"])) $fields["owner"] = star("type:int  null:  default:NULL  references:users id  owner:");
+		if (empty($fields["owner"])) $fields["owner"] = star("type:int  null:  references:users id  owner:  optional:");
 		if ($table !== "terms_index") {
 			if (empty($fields["groups"])) $fields["groups"] = star("type:terms  taxonomy:groups");
 			if (empty($fields["statuses"])) $fields["statuses"] = star("type:category  label:Status  taxonomy:statuses  optional:");
@@ -639,7 +639,7 @@ class Schemer {
 			if ($col['type'] !== "terms" && isset($this->tables[$col['type']])) {
 				$ref_table_name = (empty($col['table'])) ? $table."_".$colname : $col['table'];
 				$ref_table_def = array($ref_table_name,
-					"owner  type:int  null:  default:NULL  references:users id  update:cascade  delete:cascade",
+					"owner  type:int  null:  references:users id  update:cascade  delete:cascade  optional:",
 					$table."_id  type:int  default:0  references:$table id  null:  update:cascade  delete:cascade",
 					"position  type:int  ordered:".$table."_id  optional:"
 				);
