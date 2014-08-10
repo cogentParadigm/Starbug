@@ -66,7 +66,11 @@ class <?= ucwords($name); ?>Model extends Table {
 	}
 	
 	function query_select($query, &$ops) {
-		$query->condition("<?= $name; ?>.uris_id.statuses", "deleted", "!=");
+		if (!empty($ops['id'])) {
+			$query->condition($query->model.".id", explode(",", $ops['id']));
+		} else {
+			$query->condition("<?= $name; ?>.uris_id.statuses", "deleted", "!=");
+		}
 		$query->select("<?= $name; ?>.id");
 		$query->select("<?= efault($label_select, $name.".id"); ?> as label");
 		return $query;

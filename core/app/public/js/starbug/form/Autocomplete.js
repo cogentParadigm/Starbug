@@ -105,6 +105,13 @@ define([
 					self.domNode.value = self.placeholder;
 				}
 			});
+			if (self.hiddenInput.value != "") {
+				self.store.query({id:self.hiddenInput.value}).then(function(results) {
+					if (results) {
+						self.domNode.value = results[0].label;
+					}
+				});
+			}
 
 		},
 		

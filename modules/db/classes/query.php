@@ -804,7 +804,7 @@ class query implements IteratorAggregate, ArrayAccess {
 					}
 				}
 				$segment .= " ON ".$this->query['on'][$alias];
-				if (isset($this->query['where']["on__".$alias])) $segment .= " && ".$this->build_condition_set("on__".$alias);
+				if (isset($this->query['where']["on_".$alias])) $segment .= " && ".$this->build_condition_set("on_".$alias);
 				$from .= $segment;
 			}
 			$last_collection = $collection;
@@ -834,6 +834,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			if ($idx > 0) $conditions .= " ".$condition['con']." ";
 			if (empty($condition['field'])) $conditions .= "(".$this->build_condition_set($condition['set']).")";
 			else {
+				if ($condition['ornull'] && $condition['op'] === "!=") $conditions .= "(".$condition['field']." is NULL || ";
 				if (!$condition['invert']) $conditions .= $condition['field'];
 				if (!is_null($condition['value'])) {
 					if (is_array($condition['value'])) {
@@ -869,6 +870,7 @@ class query implements IteratorAggregate, ArrayAccess {
 						$this->param($set.$index, $condition['value']);
 					}
 				}
+				if ($condition['ornull'] && $condition['op'] === "!=") $conditions .= ")";
 			}
 		}
 		return $conditions;
@@ -967,6 +969,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		$invert = false;
 		//a condition may be added to a set other than the default where clause
 		$set = false;
+		$ornull = false;
 		//we only proceed if there is more than one token, meaning this field name has a '.'
 		if ($count > 1) {
 			//the first token is either a collection name or the name of a column that references another collection
@@ -1024,13 +1027,14 @@ class query implements IteratorAggregate, ArrayAccess {
 					//if the loop continues, the current token becomes the next collection
 					$column_info = sb($this->query['from'][$collection])->hooks[$token];
 					$collection = isset($this->query['from'][$collection.'_'.$token]) ? $collection.'_'.$token : $token;
-					if ($column_info['type'] == "category") $set = "on_".$collection;
+					if ($column_info['type'] == "category") $ornull = true;//$set = "on_".$collection;
 				}
 			}
 		}
 		if ($mode == "condition") {
 			$field = array("field" => $field, "invert" => $invert);
 			if (false !== $set) $field["set"] = $set;
+			if (false !== $ornull) $field["ornull"] = true;
 		}
 		return $field;
 	}

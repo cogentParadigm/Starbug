@@ -172,6 +172,9 @@ class Display {
 		}
 		
 		$this->items = (property_exists($this->query, "data")) ? $query->data : $query->all();
+		foreach($this->items as $idx => $item) {
+			$this->items[$idx] = sb($this->model)->filter($item, $this->name);
+		}
 	}
 	
 	function before_render() {

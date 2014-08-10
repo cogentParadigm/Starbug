@@ -155,7 +155,7 @@ class FormDisplay {
 	function fill_ops(&$ops, $control="") {
 		$ops = star($ops);
 		$name = array_shift($ops);
-		$ops['name'] = $name;
+		if (empty($ops['name'])) $ops['name'] = $name;
 		//model
 		if (empty($ops['model'])) $ops['model'] = $this->model;
 		//id, label, and class
