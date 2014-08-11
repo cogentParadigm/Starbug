@@ -181,7 +181,7 @@ class FormDisplay {
 		foreach (locate("form/".$control.".php", "filters") as $filter) include($filter);
 
 		$capture = "field";
-		$field['field'] = reset(explode("[", $field['name']));
+		if (empty($field['field'])) $field['field'] = reset(explode("[", $field['name']));
 		$field['name'] = $this->get_name($field['name'], $field['model']);
 		foreach ($field as $k => $v) assign($k, $v);
 		if (isset($field['nofield'])) {
