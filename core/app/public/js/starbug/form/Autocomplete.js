@@ -43,6 +43,7 @@ define([
 			self.hiddenInput = put(self.domNode.parentNode, 'input[type=hidden]');
 			self.hiddenInput.name = self.domNode.name;
 			self.hiddenInput.value = self.domNode.value;
+			if (self.domNode.disabled) self.hiddenInput.disabled = self.domNode.disabled;
 			self.domNode.name = self.domNode.value = "";
 			
 			self.domNode.autocomplete = "off";
@@ -107,7 +108,7 @@ define([
 			});
 			if (self.hiddenInput.value != "") {
 				self.store.query({id:self.hiddenInput.value}).then(function(results) {
-					if (results) {
+					if (results.length) {
 						self.domNode.value = results[0].label;
 					}
 				});

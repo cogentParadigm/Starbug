@@ -8,7 +8,7 @@
 <? if (!empty($display->action)) { ?>
 	<input class="action" name="action[<?= $display->model; ?>]" type="hidden" value="<?= $display->action; ?>" />
 <? } ?>
-<? if (!empty($display->get("id"))) { ?>
+<? $item_id = $display->get("id"); if (!empty($item_id)) { ?>
 	<input id="id" name="<?= $display->model; ?>[id]" type="hidden" value="<?= $display->get('id'); ?>" />
 <? } ?>	
 <?php

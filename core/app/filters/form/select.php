@@ -2,7 +2,6 @@
 		$name = $field['name'];
 		if (isset($field['multiple'])) {
 			$field['multiple'] = "multiple";
-			$field['name'] = $field['name']."[]";
 			efault($field['size'], 5);
 		}
 		$value = $this->get($field['name']);

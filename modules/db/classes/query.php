@@ -247,15 +247,30 @@ class query implements IteratorAggregate, ArrayAccess {
 		} else if ($this->db->has($schema['type'])) {
 			$type_schema = schema($schema['type']);
 			if (is_null($token)) $token = empty($type_schema['label_select']) ? $collection."_".$alias.".id" : str_replace($schema['type'], $collection."_".$alias, $type_schema['label_select']);
-			if ($mode == "select") {
-				$return = "(SELECT GROUP_CONCAT(".$collection."_".$alias.".".$token.") FROM ".P($table."_".$field)." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$schema['type']."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
-			} else if ($mode == "where" || $mode == "condition") {
-				$return = "(SELECT $token FROM ".P($table."_".$field)." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$schema['type']."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
-			} else if ($mode == "group" || $mode == "set") {
-				$this->join($table."_".$field." as ".$collection."_".$alias."_lookup")
-							->on($collection."_".$alias."_lookup.".$table."_id=".$collection.".id")
-							->join($schema['type']." as ".$collection."_".$alias)
-							->on($collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$schema['type']."_id");
+			else $token = $collection."_".$alias.".".$token;
+			if (empty($schema['table'])) $schema['table'] = $table."_".$field;
+			if ($schema['table'] == $schema['type']) {
+				//no lookup required
+				if ($mode == "select") {
+					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".P($schema['type'])." ".$collection."_".$alias." WHERE ".$collection."_".$alias.".".$table."_id=".$collection.".id)";
+				} else if ($mode == "where" || $mode == "condition") {
+					$return = "(SELECT ".$token." FROM ".P($schema['type'])." ".$collection."_".$alias." WHERE ".$collection."_".$alias.".".$table."_id=".$collection.".id)";
+				} else if ($mode == "group" || $mode == "set") {
+					$this->join($schema['type']." as ".$collection."_".$alias)
+								->on($collection."_".$alias.".".$table."_id=".$collection.".id");
+				}
+			} else {
+				//use lookup table
+				if ($mode == "select") {
+					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$schema['type']."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
+				} else if ($mode == "where" || $mode == "condition") {
+					$return = "(SELECT ".$token." FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$schema['type']."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
+				} else if ($mode == "group" || $mode == "set") {
+					$this->join($schema['table']." as ".$collection."_".$alias."_lookup")
+								->on($collection."_".$alias."_lookup.".$table."_id=".$collection.".id")
+								->join($schema['type']." as ".$collection."_".$alias)
+								->on($collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$schema['type']."_id");
+				}
 			}
 		}
 		$this->dirty();

@@ -42,12 +42,13 @@ define([
 			}});
 			this.dialog.startup();
 			self.grid.editor = self;
-			ready(function() {
-				self.grid.set('store', self.store);
-			});
-			
+
 			// initialize hidden input
 			this.input.name = this.input_name;
+		},
+		startup: function() {
+			var self = this;
+			self.grid.set('store', self.store);
 			
 			if (self.value.length > 0) {
 				sb.get(self.model, 'select').query({'id':self.value.join(',')}).then(function(data) {

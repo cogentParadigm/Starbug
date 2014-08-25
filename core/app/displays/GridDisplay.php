@@ -9,27 +9,13 @@ class GridDisplay {
 	);
 
 	function init($options) {
-		//dnd
-		if ($options['dnd']) {
-			$this->grid_class = "starbug/grid/DnDGrid";
-			$this->fields = array_merge(array('dnd' => array("field" => "id", "label" => "-", "class" => "field-drag",  "plugin" => "starbug.grid.columns.handle", "sortable" => false)), $this->fields);
-		}
-		
 		//set defaults
-		js($this->grid_class);
 		if ($options['attributes']) $this->attributes = star($options['attributes']);
 		$this->attributes['model'] = $this->model;
 		$this->attributes['class'][] = "dgrid-autoheight";
-    	efault($this->attributes['id'], $this->model."_grid");
-    	efault($this->attributes['data-dojo-id'], $this->attributes['id']);
-    	efault($this->attributes['data-dojo-type'], $this->grid_class);
-    
-    	//parse query		
-		$params = $options;
-		unset($params['attributes']);
-		$query = $this->name;
-		$this->attributes['action'] = $query;
-		$params = array_merge($_GET, $params);
+		efault($this->attributes['id'], $this->model."_grid");
+		efault($this->attributes['data-dojo-id'], $this->attributes['id']);
+		$this->attributes['action'] = $this->name;
 		
 		//build data-dojo-props attribute
 		foreach ($this->attributes as $k => $v) {
@@ -37,15 +23,16 @@ class GridDisplay {
 				$this->attributes['data-dojo-props'][$k] = $v;
 			}
 		}
-		//convert from array to string
-		$this->attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($this->attributes['data-dojo-props'])), '{}');
-		//add query params
-		if (!empty($params)) {
-			$this->attributes['data-dojo-props'] .= ', query: {';
-			foreach ($params as $k => $v) $this->attributes['data-dojo-props'] .= $k.":'".$v."', ";
-			$this->attributes['data-dojo-props'] = rtrim($this->attributes['data-dojo-props'], ', ').'}';
-		}
 		
+		//dnd
+		if ($options['dnd']) $this->dnd();
+		
+	}
+	
+	function dnd() {
+		$this->options['dnd'] = true;
+		$this->grid_class = "starbug/grid/DnDGrid";
+		$this->fields = array_merge(array('dnd' => array("field" => "id", "label" => "-", "class" => "field-drag",  "plugin" => "starbug.grid.columns.handle", "sortable" => false)), $this->fields);
 	}
 
 	function filter($field, $options, $column) {
@@ -89,6 +76,21 @@ class GridDisplay {
 
 	function query() {
 		//defer query responsibilities to dgrid
+	}
+	
+	function before_render() {
+		js($this->grid_class);
+		$this->attributes['data-dojo-type'] = $this->grid_class;
+		//convert from array to string
+		$this->attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($this->attributes['data-dojo-props'])), '{}');
+		//add query params
+		$params = array_merge($_GET, $this->options);
+		foreach ($params as $key => $value) if (is_array($value)) unset($params[$key]);
+		if (!empty($params)) {
+			$this->attributes['data-dojo-props'] .= ', query: {';
+			foreach ($params as $k => $v) $this->attributes['data-dojo-props'] .= $k.":'".$v."', ";
+			$this->attributes['data-dojo-props'] = rtrim($this->attributes['data-dojo-props'], ', ').'}';
+		}
 	}
 }
 ?>
