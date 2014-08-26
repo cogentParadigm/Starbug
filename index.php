@@ -7,7 +7,6 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
-session_start();
 
 // include init file
 include("core/init.php");

@@ -116,7 +116,21 @@ class Request {
 	/**
 	 * check $_POST['action'] for posted actions and run them through post_act
 	 */
-	function check_post() {if (!empty($_POST['action'])) foreach($_POST['action'] as $key => $val) $this->post_action($key, $val);}
+	function check_post() {
+		if (!empty($_POST['action'])) {
+			//validate csrf token for authenticated requests
+			if (logged_in()) {
+				$validated = false;
+				if (!empty($_COOKIE['oid']) && !empty($_POST['oid']) && $_COOKIE['oid'] === $_POST['oid']) $validated = true;
+				if (true !== $validated) {
+					$this->return_path();
+					return;
+				}
+			}
+			//execute post actions
+			foreach($_POST['action'] as $key => $val) $this->post_action($key, $val);
+		}
+	}
 
 	/**
 	 * lookup the path in the uris table and set the payload, tags, uri, and file. also will delivers 404, or 403 headers if needed

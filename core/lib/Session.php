@@ -82,7 +82,10 @@ class Session {
 		$session .= '&d='.urlencode(hash_hmac("sha256", $session, $key));
 		
 		//save cookie and return
-		if (!defined("SB_CLI")) setcookie("sid", $session, 0, uri(), null, false, true);
+		if (!defined("SB_CLI")) {
+			setcookie("sid", $session, 0, uri(), null, false, true);
+			setcookie("oid", md5(uniqid(mt_rand(), true)), 0, uri(), null, false, false);
+		}
 		return true;
 	}
 	

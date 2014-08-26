@@ -1,6 +1,6 @@
 define([
-	"dojo", "dojo/_base/declare", "dojo/_base/lang", "dojo/store/util/QueryResults", "starbug/form/Dialog"
-], function(dojo, declare, lang, QueryResults, dialog) {
+	"dojo", "dojo/_base/declare", "dojo/_base/lang", "dojo/store/util/QueryResults", "starbug/form/Dialog", "dojo/cookie"
+], function(dojo, declare, lang, QueryResults, dialog, cookie) {
 return declare(null, {
 	// query: String
 	//		The API query string
@@ -33,14 +33,13 @@ return declare(null, {
 		//		The object in the store that matches the given id.
 		var args = sb.star(this.apiQuery);
 		var parts = [];
-		if (typeof args['where'] == 'undefined') args['where'] = this.model+'.id='+id;
-		else args['where'] += ' && '+this.model+'.id='+id;
+		args['id'] = id;
 		var q = dojo.objectToQuery(args);
 		q = q ? "?" + q: "";
 		var headers = options || {};
 		headers.Accept = "application/javascript, application/json";
 		this.results = dojo.xhrGet({
-			url: WEBSITE_URL+'api/'+this.model+'/get.json'+(q || ''),
+			url: WEBSITE_URL+'api/'+this.model+'/'+this.action+'.json'+(q || ''),
 			handleAs: "json",
 			headers: headers,
 			error: dojo.hitch(this, 'handleError')
@@ -68,6 +67,7 @@ return declare(null, {
 		for (var k in object) data[this.model+'['+k+']'] = object[k];
 		options = options || {};
 		data['action['+this.model+']'] = this.post_action;
+		data['oid'] = cookie('oid');
 		this.results = dojo.xhrPost({
 				url: WEBSITE_URL+'api/'+this.model+'/'+this.action+'.json',
 				content: data,
@@ -98,6 +98,7 @@ return declare(null, {
 		var args = {};
 		args['action['+this.model+']'] = 'delete';
 		args[this.model+'[id]'] = id;
+		args['oid'] = cookie('oid');
 		this.results = dojo.xhrPost({
 			url: WEBSITE_URL+'api/'+this.model+'/get.json',
 			content: args,
