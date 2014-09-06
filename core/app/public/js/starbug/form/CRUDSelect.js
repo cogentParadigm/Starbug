@@ -28,12 +28,12 @@ define([
 		templateString: template, //the template (./templates/FileSelect.html)
 		widgetsInTemplate: true,
 		input_name:'file',
-		size:1,
+		size:0,
 		store:null,
 		dialog:null,
 		postCreate:function() {
 			var self = this;
-			this.store = Observable(new Memory({data: []}));
+			this.store = new Memory({data: []});
 			this.dialog = new Dialog({url:"admin/"+self.model+"/", callback:function(data) {
 				var object_id = query('input[name="'+self.model+'[id]"]').attr('value')[0];
 				sb.get(self.model, 'select').query({'id':object_id}).then(function(data) {
@@ -97,6 +97,7 @@ define([
 			for (var i in items) ids.push('#' + this.store.getIdentity(items[i]));
 			ids.push("-~");
 			this.input.value = ids.join(',');
+			this.grid.refresh();
 		},
 		set_status: function(value) {
 			/**

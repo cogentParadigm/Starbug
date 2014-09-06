@@ -2,6 +2,7 @@
 class AdminUsersController {
 	function init() {
 		assign("model", "users");
+		assign("cancel_url", "admin/users");
 	}
 	function default_action() {
 		$this->render("admin/list");

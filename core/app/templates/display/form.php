@@ -2,6 +2,11 @@
 	<?php if (success($display->model, $display->action)) { ?>
 		<p class="alert alert-success">Saved</p>
 	<?php } ?>
+	<?php if (errors($display->model."[global]")) { ?>
+		<?php foreach (sb()->errors[$display->model]["global"] as $key => $value) { ?>
+			<p class="alert alert-danger"><?php echo $value; ?></p>
+		<?php } ?>
+	<?php } ?>
 <? if ($display->method == "post") { ?>
 	<input class="postback" name="postback" type="hidden" value="<?= $display->postback; ?>" />
 <? } ?>
@@ -9,10 +14,11 @@
 	<input class="action" name="action[<?= $display->model; ?>]" type="hidden" value="<?= $display->action; ?>" />
 <? } ?>
 <?php if ($display->method == "post") { ?>
-	<input name="oid" type="hidden" value="<?php echo $_COOKIE['oid']; ?>"/>
+	<input name="oid" type="hidden" value="<?php echo normalize($_COOKIE['oid']); ?>"/>
 <?php } ?>
 <? $item_id = $display->get("id"); if (!empty($item_id)) { ?>
 	<input id="id" name="<?= $display->model; ?>[id]" type="hidden" value="<?= $display->get('id'); ?>" />
+	<input name="modified[<?php echo $display->model; ?>]" type="hidden" value="<?php echo normalize(empty($_POST['modified'][$display->model]) ? $display->get("modified") : $_POST['modified'][$display->model], '0-9 :'); ?>"/>
 <? } ?>	
 <?php
 	if (!$display->layout->is_empty()) {

@@ -8,7 +8,7 @@ class hook_store_type {
 		return $value;
 	}
 	function after_store(&$query, $key, $value, $column, $argument) {
-		if ($argument == "terms" || !sb()->db->has($argument)) return;
+		if ($argument == "terms" || !sb()->db->has($argument) || empty($value)) return;
 		
 		//vars
 		$model = $query->model;

@@ -48,7 +48,7 @@ function P($var) {
  * @param string $valid_chars valid characters. default is 'a-zA-Z0-9'
  * @return string the normalized version of $raw
  */
-function normalize($raw, $valid_chars='a-zA-Z0-9 \-') {
+function normalize($raw, $valid_chars='a-zA-Z0-9 \-_') {
 	return preg_replace("/[^".$valid_chars."]/", "", $raw);
 }
 /**

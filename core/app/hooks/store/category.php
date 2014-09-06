@@ -19,16 +19,19 @@ class hook_store_category {
 		$existing->condition("type", $query->model);
 		$existing->condition("rel", $column);
 		$existing->condition("type_id", $query->getId());
-		$result = $existing->one();
-		
-		$existing->set("type", $query->model);
-		$existing->set("rel", $column);
-		$existing->set("type_id", $query->getId());
-		$existing->set("terms_id", $value);
-		if (empty($result)) {
-			$existing->insert();
+		if (empty($value)) {
+			$existing->delete();
 		} else {
-			$existing->update();
+			$result = $existing->one();
+			$existing->set("type", $query->model);
+			$existing->set("rel", $column);
+			$existing->set("type_id", $query->getId());
+			$existing->set("terms_id", $value);
+			if (empty($result)) {
+				$existing->insert();
+			} else {
+				$existing->update();
+			}
 		}
 	}
 }

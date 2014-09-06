@@ -105,7 +105,18 @@ class Request {
 	function post_action($key, $value) {
 		if ($object = sb($key)) {
 			error_scope($key);
-			$permits = isset($_POST[$key]['id']) ? query($key, "action:$value  where:$key.id='".$_POST[$key]['id']."'")->one() : query("permits")->action($value, $key)->one();
+			if (isset($_POST[$key]['id'])) {
+				$permits = query($key)->action($value)->condition($key.".id", $_POST[$key]['id'])->one();
+				/*
+				if ($permits && $_POST['modified'][$key] !== $permits['modified']) {
+					error("This content has changed since you started editing it.", "global", $key);
+					$this->return_path();
+					return;
+				}
+				*/
+			} else {
+				$permits = query("permits")->action($value, $key)->one();
+			}
 			if ($permits || logged_in("root")) $object->$value($_POST[$key]);
 			else $this->forbidden();
 			error_scope("global");
@@ -128,7 +139,7 @@ class Request {
 				}
 			}
 			//execute post actions
-			foreach($_POST['action'] as $key => $val) $this->post_action($key, $val);
+			foreach($_POST['action'] as $key => $val) $this->post_action(normalize($key), normalize($val));
 		}
 	}
 

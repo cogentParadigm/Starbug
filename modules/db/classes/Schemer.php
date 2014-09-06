@@ -170,7 +170,7 @@ class Schemer {
 		if (empty($primary)) $fields['id'] = star("type:int  auto_increment:  key:primary");
 		if (empty($fields["owner"])) $fields["owner"] = star("type:int  null:  references:users id  owner:  optional:");
 		if ($table !== "terms_index") {
-			if (empty($fields["groups"])) $fields["groups"] = star("type:terms  taxonomy:groups");
+			if (empty($fields["groups"])) $fields["groups"] = star("type:terms  taxonomy:groups  optional:");
 			if (empty($fields["statuses"])) $fields["statuses"] = star("type:category  label:Status  taxonomy:statuses  optional:");
 		}
 		if (empty($fields["created"])) $fields["created"] = star("type:datetime  default:0000-00-00 00:00:00  time:insert");
@@ -1244,22 +1244,6 @@ class Schemer {
 			//foreach ($relations as $m => $r) $data["relations"][] = array("model" => $m, "field" => $r['hook'], "lookup" => $r['lookup'], "ref_field" => $r['ref_field']);
 		}
 		//ADD ACTIONS
-		$permits = ($this->db->has("permits")) ? query("permits", "where:related_table='".P($model)."'") : array();
-		$actions = array();
-		/*
-		foreach ($permits as $p) {
-			if (!isset($actions[$p['action']])) $actions[$p['action']] = array();
-				if ("object" == $p['priv_type']) $val = $p['related_id'];
-				else $val = $p['priv_type'];
-				if ($p['status'] != (array_sum($statuses)-1)) $val .= " ".$p['status'];
-			if ("group" == $p['role']) { //GROUP PERMIT
-				$actions[$p['action']][array_search($p['who'], $groups)] = (empty($actions[$p['action']][$groups[$p['who']]])) ? $val : ",".$val;
-			} else $actions[$p['action']][$p['role']] = (empty($actions[$p['action']][$p['role']])) ? $val : ",".$val;
-		}
-		*/
-		$data['actions'] = $actions;
-		//ADD URIS
-		if ($model == "uris") $data['uris'] = query("uris")->execute();
 		return $data;
 	}
 	/**
