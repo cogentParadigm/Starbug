@@ -14,11 +14,10 @@
 	<input class="action" name="action[<?= $display->model; ?>]" type="hidden" value="<?= $display->action; ?>" />
 <? } ?>
 <?php if ($display->method == "post") { ?>
-	<input name="oid" type="hidden" value="<?php echo normalize($_COOKIE['oid']); ?>"/>
+	<input name="oid" type="hidden" value="<?php echo filter_string($_COOKIE['oid']); ?>"/>
 <?php } ?>
 <? $item_id = $display->get("id"); if (!empty($item_id)) { ?>
-	<input id="id" name="<?= $display->model; ?>[id]" type="hidden" value="<?= $display->get('id'); ?>" />
-	<input name="modified[<?php echo $display->model; ?>]" type="hidden" value="<?php echo normalize(empty($_POST['modified'][$display->model]) ? $display->get("modified") : $_POST['modified'][$display->model], '0-9 :'); ?>"/>
+	<input id="id" name="<?= $display->model; ?>[id]" type="hidden" value="<?= filter_string($display->get('id')); ?>" />
 <? } ?>	
 <?php
 	if (!$display->layout->is_empty()) {

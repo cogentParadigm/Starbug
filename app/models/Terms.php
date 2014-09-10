@@ -69,7 +69,7 @@ class Terms {
 		$display->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Breadcrumbs"]'.(($_GET['tab'] === "breadcrumbs") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'breadcrumbs');
 		//left
 		$display->add("term  pane:left");
-		$display->add("taxonomy  pane:left  default:".normalize($_GET['taxonomy']));
+		$display->add("taxonomy  pane:left  default:".filter_string($_GET['taxonomy']));
 		$display->add("description  pane:left");
 		//$display->add("blocks  input_type:blocks  pane:left");
 		$display->add("images  pane:left  input_type:file_select  size:0");

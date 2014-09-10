@@ -358,7 +358,22 @@ class storeTest extends UnitTest {
 		$record = get("hook_store_owner", $id);
 		
 		//assert that the owner was stored
+		$this->assertSame(null, $record['value']);
+		
+		//become root
+		sb()->user = array("id" => 1, "groups" => array("admin", "root"));
+		
+		//store the record
+		store("hook_store_owner", array());
+		
+		//retrieve the record
+		$id = sb("hook_store_owner")->insert_id;
+		$record = get("hook_store_owner", $id);
+		
+		//assert that the owner was stored
 		$this->assertSame("1", $record['value']);
+		
+		sb()->user = array();
 		
 		//truncate the table
 		query("hook_store_owner")->truncate();
@@ -476,13 +491,13 @@ class storeTest extends UnitTest {
 	 */
 	function test_terms() {
 		//store terms
-		store("hook_store_terms", "statuses:published,pending,deleted");
+		store("hook_store_terms", "value:published,pending,deleted");
 		
 		//get the id
 		$id = sb("hook_store_terms")->insert_id;
 		
 		//retrieve the terms_index entries
-		$terms = query("terms_index")->conditions("type:hook_store_terms  rel:statuses  type_id:$id")->select("terms_id.slug as slug")->sort("slug")->all();
+		$terms = query("terms_index")->conditions("type:hook_store_terms  rel:value  type_id:$id")->select("terms_id.slug as slug")->sort("slug")->all();
 		
 		//verify the terms_index records are what we expect
 		$this->assertSame("deleted", $terms[0]["slug"]);
@@ -490,20 +505,20 @@ class storeTest extends UnitTest {
 		$this->assertSame("published", $terms[2]["slug"]);
 		
 		//update the terms (remove deleted)
-		store("hook_store_terms", "id:$id  statuses:-deleted");
+		store("hook_store_terms", "id:$id  value:-deleted");
 		
 		//retrieve the terms_index entries
-		$terms = query("terms_index")->conditions("type:hook_store_terms  rel:statuses  type_id:$id")->select("terms_id.slug as slug")->sort("slug")->all();
+		$terms = query("terms_index")->conditions("type:hook_store_terms  rel:value  type_id:$id")->select("terms_id.slug as slug")->sort("slug")->all();
 		
 		//verify the terms_index records are what we expect
 		$this->assertSame("pending", $terms[0]["slug"]);
 		$this->assertSame("published", $terms[1]["slug"]);
 		
 		//update the terms (add deleted, remove others)
-		store("hook_store_terms", "id:$id  statuses:deleted,-~");
+		store("hook_store_terms", "id:$id  value:deleted,-~");
 		
 		//retrieve the terms_index entries
-		$terms = query("terms_index")->conditions("type:hook_store_terms  rel:statuses  type_id:$id")->select("terms_id.slug as slug")->sort("slug")->all();
+		$terms = query("terms_index")->conditions("type:hook_store_terms  rel:value  type_id:$id")->select("terms_id.slug as slug")->sort("slug")->all();
 		
 		//verify the terms_index records are what we expect
 		$this->assertSame("deleted", $terms[0]["slug"]);

@@ -234,10 +234,10 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 */
 	function test_condition_expansion_many() {
 		$query = new query("terms");
-		$query->condition("attachments.mime_type", "image/png");
+		$query->condition("images.mime_type", "image/png");
 		
 		//expected output
-		$expected = "SELECT terms.* FROM `".P("terms")."` AS `terms` WHERE :default0 IN (SELECT mime_type FROM ".P("terms_attachments")." terms_attachments_lookup INNER JOIN ".P("files")." terms_attachments ON terms_attachments.id=terms_attachments_lookup.files_id WHERE terms_attachments_lookup.terms_id=terms.id)";
+		$expected = "SELECT terms.* FROM `".P("terms")."` AS `terms` WHERE :default0 IN (SELECT terms_images.mime_type FROM ".P("terms_images")." terms_images_lookup INNER JOIN ".P("files")." terms_images ON terms_images.id=terms_images_lookup.files_id WHERE terms_images_lookup.terms_id=terms.id)";
 		
 		//compare
 		$actual = $query->build();
@@ -251,10 +251,10 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 */
 	function test_condition_expansion_many_join() {
 		$query = new query("terms");
-		$query->condition("attachments.mime_type", "image/%", "LIKE")->group("terms.id");
+		$query->condition("images.mime_type", "image/%", "LIKE")->group("terms.id");
 		
 		//expected output
-		$expected = "SELECT terms.* FROM `".P("terms")."` AS `terms` LEFT JOIN `".P("terms_attachments")."` AS `terms_attachments_lookup` ON terms_attachments_lookup.terms_id=terms.id LEFT JOIN `".P("files")."` AS `terms_attachments` ON terms_attachments.id=terms_attachments_lookup.files_id WHERE terms_attachments.mime_type LIKE :default0 GROUP BY terms.id";
+		$expected = "SELECT terms.* FROM `".P("terms")."` AS `terms` LEFT JOIN `".P("terms_images")."` AS `terms_images_lookup` ON terms_images_lookup.terms_id=terms.id LEFT JOIN `".P("files")."` AS `terms_images` ON terms_images.id=terms_images_lookup.files_id WHERE terms_images.mime_type LIKE :default0 GROUP BY terms.id";
 		
 		//compare
 		$actual = $query->build();
@@ -299,15 +299,15 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 */
 	function test_condition_expansion_terms() {
 		$query = new query("uris");
-		$query->condition("uris.statuses", "deleted", "!=");
+		$query->condition("uris.groups", "user", "!=");
 		
 		//expected output
-		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE :default0 NOT IN (SELECT t.slug FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='statuses' GROUP BY ti.type, ti.type_id, ti.rel)";
+		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE :default0 NOT IN (SELECT t.slug FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='groups' GROUP BY ti.type, ti.type_id, ti.rel)";
 		
 		//compare
 		$actual = $query->build();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("deleted", $query->parameters[":default0"]);
+		$this->assertSame("user", $query->parameters[":default0"]);
 	}
 	
 	/**
@@ -315,15 +315,15 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 */
 	function test_condition_expansion_terms_explicit_comparator() {
 		$query = new query("uris");
-		$query->condition("uris.statuses.term", "Pending", '!=');
+		$query->condition("uris.groups.term", "User", '!=');
 		
 		//expected output
-		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE :default0 NOT IN (SELECT t.term FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='statuses' GROUP BY ti.type, ti.type_id, ti.rel)";
+		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE :default0 NOT IN (SELECT t.term FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='groups' GROUP BY ti.type, ti.type_id, ti.rel)";
 		
 		//compare
 		$actual = $query->build();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("Pending", $query->parameters[":default0"]);
+		$this->assertSame("User", $query->parameters[":default0"]);
 	}
 
 	/**
@@ -331,15 +331,15 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 */
 	function test_where_expansion_terms() {
 		$query = new query("uris");
-		$query->where(":status NOT IN uris.statuses")->param("status", "pending");
+		$query->where(":group NOT IN uris.groups")->param("group", "user");
 		
 		//expected output
-		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE :status NOT IN (SELECT t.slug FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='statuses' GROUP BY ti.type, ti.type_id, ti.rel)";
+		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE :group NOT IN (SELECT t.slug FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='groups' GROUP BY ti.type, ti.type_id, ti.rel)";
 		
 		//compare
 		$actual = $query->build();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("pending", $query->parameters[":status"]);
+		$this->assertSame("user", $query->parameters[":group"]);
 	}
 	
 	/**
@@ -534,15 +534,15 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	
 	function test_multivalue_term_expansion() {
 		$query = new query("uris");
-		$query->condition("uris.statuses", array("published", "pending"));
+		$query->condition("uris.groups", array("user", "admin"));
 		//expected output
-		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE (:default0 IN (SELECT t.slug FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='statuses' GROUP BY ti.type, ti.type_id, ti.rel) || :default1 IN (SELECT t.slug FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='statuses' GROUP BY ti.type, ti.type_id, ti.rel))";
+		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE (:default0 IN (SELECT t.slug FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='groups' GROUP BY ti.type, ti.type_id, ti.rel) || :default1 IN (SELECT t.slug FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='groups' GROUP BY ti.type, ti.type_id, ti.rel))";
 		
 		//compare
 		$actual = $query->build();
 		$this->assertSame($expected, $actual);		
-		$this->assertSame("published", $query->parameters[":default0"]);
-		$this->assertSame("pending", $query->parameters[":default1"]);
+		$this->assertSame("user", $query->parameters[":default0"]);
+		$this->assertSame("admin", $query->parameters[":default1"]);
 	}
 
 	function test_action() {

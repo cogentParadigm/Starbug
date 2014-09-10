@@ -176,7 +176,14 @@ function token_replace($text, $data=array()) {
 	$replace = array_values($replacements);
 	return str_replace($search, $replace, $text);
 }
-
+/**
+ * Generates a time elapsed phrase. Supported segments: years, months, weeks, days, hours, minutes, seconds
+ * For example, '4 hours' or '3 weeks' or '3 weeks, 1 day, 2 hours, 3 minutes, 10 seconds'
+ * @ingroup strings
+ * @param string $datetime the date/time string of a past date.
+ * @param boolean $full if true, all segments will be included where the value is greater than 0.
+ * @return string the time elapsed phrase
+ */
 function time_elapsed_string($datetime, $full = false) {
     $now = new DateTime;
     $ago = new DateTime($datetime);
@@ -204,5 +211,26 @@ function time_elapsed_string($datetime, $full = false) {
 
     if (!$full) $string = array_slice($string, 0, 1);
     return $string ? implode(', ', $string) : 'just now';
+}
+/**
+ * XSS filter functions
+ */
+function filter_boolean($boolean) {
+	return filter_var($boolean, FILTER_VALIDATE_BOOLEAN);
+}
+function filter_int($int) {
+	return filter_var($int, FILTER_VALIDATE_INT);
+}
+function filter_float($int) {
+	return filter_var($int, FILTER_VALIDATE_FLOAT);
+}
+function filter_string($string) {
+	return htmlentities(preg_replace('/  +/', ' ', strip_tags($string)), ENT_QUOTES, 'UTF-8');
+}
+function filter_url($url) {
+	return filter_var($url, FILTER_VALIDATE_URL);
+}
+function filter_email($email) {
+	return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 ?>

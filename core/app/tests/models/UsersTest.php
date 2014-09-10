@@ -10,7 +10,7 @@ class UsersTest extends ModelTest {
 		remove("users", "email:phpunit@neonrain.com");
 		$this->action("create", star("email:phpunit@neonrain.com  groups:user"));
 		$user = query("users")->select("users.*,users.statuses as statuses,users.groups as groups")
-							->condition("id", sb("users")->insert_id)->condition("users.statuses", "deleted", "!=")->one();
+							->condition("users.id", sb("users")->insert_id)->condition("users.statuses", "deleted", "!=")->one();
 		//lets verify the explicit values were set
 		$this->assertEquals($user['email'], "phpunit@neonrain.com");
 		//lets also verify that the implicit values were set

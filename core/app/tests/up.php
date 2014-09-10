@@ -119,7 +119,7 @@ $this->table("hook_store_ordered",
  ****************************************/
 //store the logged in users id to this field or 1 if not logged in
 $this->table("hook_store_owner",
-	"value  type:int  references:users id  owner:"
+	"value  type:int  references:users id  owner:  null:"
 );
 
 /*****************************************
@@ -161,8 +161,8 @@ $this->table("hook_store_required",
 //maintain a URL friendly copy of a field (called a slug).
 //specify the field name to store the slug.
 $this->table("hook_store_slug",
-	"title_field  type:string  slug:slug_field",
-	"slug_field  type:string"
+	"title_field  type:string",
+	"slug_field  type:string  slug:title_field"
 );
 
 /*****************************************
@@ -174,7 +174,7 @@ $this->table("hook_store_slug",
 //you can use a minus sign to remove terms - published,-pending
 //you can use a tilde (~) to remove other terms - published,-~
 $this->table("hook_store_terms",
-	"value  type:terms"
+	"value  type:terms  taxonomy:statuses"
 );
 
 /*****************************************
