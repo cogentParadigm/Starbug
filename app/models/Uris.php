@@ -9,7 +9,7 @@ class Uris {
 		}
 		if ($_POST['type'] == "Post") $uris['path'] = "blog/".$uris['path'];
 		*/
-		queue("blocks", array("type" => "text",  "region" => "content",  "position" => 1, "uris_id" => "", "content" => $_POST['block-content-1']['content']));
+		queue("blocks", array("type" => "text",  "region" => "content",  "position" => 1, "uris_id" => "", "content" => filter_html($_POST['block-content-1']['content'])));
 		$type = query("content_types")->condition("type", $uris['type'])->one();
 		if (!empty($type['table'])) {
 			$data = $_POST[$type['table']];
@@ -24,7 +24,7 @@ class Uris {
 			if (errors("uris[title]") && empty($uris['path'])) unset($sb->errors['uris']['path']);
 		}
 	}
-	
+
 	function update($uris) {
 		/*
 		if ($uris['type'] != "View" && $uris['type'] != $_POST['type']) {
@@ -46,7 +46,7 @@ class Uris {
 			$blocks = get("blocks", array("uris_id" => $uris['id']));
 			foreach ($blocks as $block) {
 				$key = 'block-'.$block['region'].'-'.$block['position'];
-				if (!empty($_POST[$key])) store("blocks", array("id" => $block['id'], "content" => $_POST[$key]["content"]));
+				if (!empty($_POST[$key])) store("blocks", array("id" => $block['id'], "content" => filter_html($_POST[$key]["content"])));
 			}
 		}
 	}
@@ -60,7 +60,7 @@ class Uris {
 		remove("blocks", $cond);
 		remove("uris", "id:".$id);
 	}
-	
+
 	function query_admin($query, &$ops) {
 		$query->select("uris.*,uris.statuses.term as statuses");
 		if (!logged_in("admin")) $query->action("read");
@@ -74,11 +74,11 @@ class Uris {
 		$query->sort($ops['orderby']);
 		return $query;
 	}
-	
+
 	function display_admin($display, $options) {
 		$display->add("title", "type", "statuses");
 	}
-	
+
 	function display_form($display, &$ops) {
 		if (empty($_POST['uris']['type'])) $_POST['uris']['type'] = $ops['type'];
 		//layout
