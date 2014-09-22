@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>starbug/form/Autocomplete</title>
+
+		<!--LOAD CSS-->
+		<link rel="stylesheet/less" type="text/css" href="../../stylesheets/style.less"/>
+		<script src="../../../../../../../libraries/less-1.7.0.min.js"></script>
+
+		<!--LOAD JS-->
+		<script>
+			var WEBSITE_URL = location.pathname.replace(/core\/app\/public\/js\/tests\/.*$/, '');
+			var dojoConfig = {
+				packages: [
+					{name:"dijit", location:WEBSITE_URL+"libraries/dojo/dijit"},
+					{name:"dojox", location:WEBSITE_URL+"libraries/dojo/dojox"},
+					{name:"dgrid", location:WEBSITE_URL+"libraries/dojo/dgrid"},
+					{name:"put-selector", location:WEBSITE_URL+"libraries/dojo/put-selector"},
+					{name:"xstyle", location:WEBSITE_URL+"libraries/dojo/xstyle"},
+					{name:"sb", location:WEBSITE_URL+"core/app/public/js/sb"},
+					{name:"starbug", location:WEBSITE_URL+"core/app/public/js/starbug"}
+				]
+			};
+		</script>
+		<script src="../../../../../../../libraries/dojo/dojo/dojo.js"></script>
+	</head>
+	<body class="dbootstrap">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<h1>starbug/form/Autocomplete</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<form>
+						<div class="form-group input autocomplete">
+							<label>Autocomplete field 1</label>
+							<input id="test1" type="text" class="form-control" autocomplete="off" />
+						</div>
+						<div class="form-group input autocomplete">
+							<label>Autocomplete field 2</label>
+							<input id="test2" type="text" class="form-control" autocomplete="off" value="2" />
+						</div>
+						<div class="form-group input autocomplete">
+							<label>Autocomplete field 3</label>
+							<input id="test3" type="text" class="form-control" autocomplete="off" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script>
+			require(['starbug/store/Memory', 'starbug/form/Autocomplete'], function (Memory, Autocomplete) {
+				var data = [
+					{id:1, label:'First Item'},
+					{id:2, label:'Second Item'},
+					{id:3, label:'Third Item'}
+				];
+				var store1 = new Memory({data:data});
+				new Autocomplete({store:store1}, 'test1');
+
+				var store2 = new Memory({data:data});
+				new Autocomplete({store:store2}, 'test2');
+
+				var store3 = new Memory({data:data});
+				new Autocomplete({store:store3, placeholder:'Start typing..'}, 'test3');
+			});
+		</script>
+	</body>
+</html>

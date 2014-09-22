@@ -16,12 +16,16 @@ class Menus {
 		return $this->remove('id:'.$menu['id']);
 	}
 
+	function delete_menu($menu) {
+		query("menus")->condition("menu", $menu['menu'])->delete();
+	}
+
 	function query_admin($query, &$ops) {
 		$query = parent::query_admin($query, $ops);
 		$query->select("DISTINCT menu");
 		return $query;
 	}
-	
+
 	function query_tree($query, &$ops) {
 		$query->select("menus.*,menus.uris_id.title,(SELECT COUNT(*) FROM ".P("menus")." as t WHERE t.parent=menus.id) as children");
 		$query->condition("menus.menu", $ops['menu']);
@@ -30,7 +34,7 @@ class Menus {
 		$query->sort("menus.menu_path ASC, menus.position ASC");
 		return $query;
 	}
-	
+
 	function display_admin($display, $ops) {
 		$display->add("menu", "row_options  plugin:starbug.grid.columns.menu_options");
 	}
@@ -39,7 +43,7 @@ class Menus {
 		$display->insert(0, "id  plugin:starbug.grid.columns.tree  sortable:false");
 		$display->add("content  label:Title  plugin:starbug.grid.columns.html  sortable:false", "position  sortable:false");
 	}
-	
+
 	function filter($item, $action) {
 		if ($action === "tree") {
 			if (empty($item['content']) && !empty($item['title'])) $item['content'] = $item['title'];

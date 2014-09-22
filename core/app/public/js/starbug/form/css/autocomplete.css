@@ -1,0 +1,5 @@
+div.autocomplete{position:relative}
+div.dgrid.dgrid-list.autocomplete-list{display:none;position:absolute;top:58px;z-index:10;background-color:#fff;border:1px solid #aaa;height:auto;width:100% !important}
+div.dgrid.dgrid-list.autocomplete-list .dgrid-scroller{margin-top:0;overflow:auto;max-height:216px}
+div.dgrid.dgrid-list.autocomplete-list .city{padding:1px 6px;cursor:default}
+div.dgrid.dgrid-list.autocomplete-list.show{display:block}

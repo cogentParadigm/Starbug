@@ -6,7 +6,7 @@ ex: text("location  label:Location (City, ST)  autocomplete:sb.get('cities')  da
 In this example, text() receives two additional parameters:
 - autocomplete
 	- This parameter tells starbug to use the autocomplete widget
-	- This parameter takes as a required value a string to set the store for the widget. 
+	- This parameter takes as a required value a string to set the store for the widget.
 - data-dojo-props
 	- This parameter is used to set optional parameters for the widget: query and limit.
 */
@@ -24,6 +24,7 @@ define([
 	"dojo/dom-class",
 	"dojo/dom-style",
 	"dojo/query",
+	"xstyle/css!./css/autocomplete.css"
 ], function (declare, lang, Widget, Templated, Tooltip, sb, List, put, on, dom, domclass,domstyle,query) {
 	return declare([Widget, Templated], {
 		store: null,	// a string setting the store for the widget
@@ -39,18 +40,18 @@ define([
 		interval:null,
 		postCreate:function() {
 			var self = this;
-			
+
 			self.hiddenInput = put(self.domNode.parentNode, 'input[type=hidden]');
 			self.hiddenInput.name = self.domNode.name;
 			self.hiddenInput.value = self.domNode.value;
 			if (self.domNode.disabled) self.hiddenInput.disabled = self.domNode.disabled;
 			self.domNode.name = self.domNode.value = "";
-			
+
 			self.domNode.autocomplete = "off";
-			
+
 			//list
-			self.listNode = put(self.domNode.parentNode,'div.autocomplete-list');
-			
+			self.listNode = put(self.domNode.parentNode,'div.autocomplete-list.dgrid-autoheight');
+
 			//set styles
 			var w = domstyle.get(self.domNode,'width');
 			//w += domstyle.get(self.domNode,'padding-left');
@@ -59,7 +60,7 @@ define([
 			var bottom = domstyle.get(self.domNode,'margin-bottom');
 			domstyle.set(self.domNode,'margin-bottom','0px');
 			self.domNode.parentNode.style.marginBottom = bottom+'px';
-			
+
 			//instantiate a dgrid on demand list
 			this.list = new List({
 
@@ -72,24 +73,25 @@ define([
 					on(node, 'click', function(e) {
 						self.domNode.value = object.label;
 						self.hiddenInput.value = object.id;
-						var a = setTimeout(function() {domclass.remove(self.listNode,'show');},200);	
+						var a = setTimeout(function() {domclass.remove(self.listNode,'show');},200);
 					});
 					return node;
 				}
 
 			}, this.listNode);
-			
+
+			/*
 			on(self.domNode, 'focus', function() {
 				if(self.placeholder && self.placeholder == self.domNode.value) {
 					self.domNode.value = '';
 				}
 			});
-			
+			*/
+
 			on(self.domNode, 'keyup,click', function(e) {
 				clearTimeout(self.interval);
 				var keyCode = (window.event) ? e.which : e.keyCode;
-				console.log(keyCode);
-				var valid = 
+				var valid =
 					(keyCode == 8)					 || // backspace
 					(keyCode > 47 && keyCode < 58)   || // number keys
 					(keyCode > 64 && keyCode < 91)   || // letter keys
@@ -97,16 +99,18 @@ define([
 					(keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
 					(keyCode > 218 && keyCode < 223);   // [\]' (in order)
 				if (valid) self.interval = setTimeout(function() {self.resetList(e);}, 500);
-				if (self.domNode.value == "") self.hiddenInput.value = "";
+				if (self.domNode.value === "") self.hiddenInput.value = "";
 			});
-			
+
 			on(self.domNode, 'blur', function(e) {
 				self.hideList(e);
-				if(self.placeholder && '' == self.domNode.value) {
+				/*
+				if(self.placeholder && '' === self.domNode.value) {
 					self.domNode.value = self.placeholder;
 				}
+				*/
 			});
-			if (self.hiddenInput.value != "") {
+			if (self.hiddenInput.value !== "") {
 				self.store.query({id:self.hiddenInput.value}).then(function(results) {
 					if (results.length) {
 						self.domNode.value = results[0].label;
@@ -115,11 +119,10 @@ define([
 			}
 
 		},
-		
+
 		// repopulate the list when called
 		resetList: function(evt) {
-			console.log("RESET LIST");
-			var self = this;			
+			var self = this;
 			var city = self.domNode.value.replace(',','');
 			if(city.length >= self.limit) {
 				self.query.keywords = city;
@@ -128,10 +131,9 @@ define([
 				self.query.keywords = null;
 				domclass.remove(self.listNode,'show');
 			}
-			console.log(self.query);
 			self.list.set('query',self.query);
 		},
-		
+
 		hideList: function(evt) {
 			var self = this;
 			setTimeout(function() {
