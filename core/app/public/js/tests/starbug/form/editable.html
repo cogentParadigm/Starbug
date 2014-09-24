@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>starbug/form/editable</title>
+
+		<!--LOAD CSS-->
+		<link rel="stylesheet/less" type="text/css" href="../../stylesheets/style.less"/>
+		<script src="../../../../../../../libraries/less-1.7.0.min.js"></script>
+
+		<!--LOAD JS-->
+		<script>
+			var WEBSITE_URL = location.pathname.replace(/core\/app\/public\/js\/tests\/.*$/, '');
+			var dojoConfig = {
+				parseOnLoad:true,
+				packages: [
+					{name:"dijit", location:WEBSITE_URL+"libraries/dojo/dijit"},
+					{name:"dojox", location:WEBSITE_URL+"libraries/dojo/dojox"},
+					{name:"dgrid", location:WEBSITE_URL+"libraries/dojo/dgrid"},
+					{name:"put-selector", location:WEBSITE_URL+"libraries/dojo/put-selector"},
+					{name:"xstyle", location:WEBSITE_URL+"libraries/dojo/xstyle"},
+					{name:"dbootstrap", location:WEBSITE_URL+"libraries/dojo/dbootstrap"},
+					{name:"sb", location:WEBSITE_URL+"core/app/public/js/sb"},
+					{name:"starbug", location:WEBSITE_URL+"core/app/public/js/starbug"}
+				]
+			};
+		</script>
+		<script src="../../../../../../../libraries/dojo/dojo/dojo.js"></script>
+	</head>
+	<body class="dbootstrap">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<h1>starbug/form/Editable</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+						<label>Editable field 1</label>
+						<div id="test1" data-dojo-type="starbug/form/editable/Editable">This is editable text</div>
+						<label>Editable field 2</label>
+						<div id="test2">Second Option</div>
+						<label>Editable field 3</label>
+						<div id="test3">This is a textarea</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			require(['dbootstrap', 'starbug/form/editable/Editable', 'starbug/form/editable/Select', 'starbug/form/editable/Textarea'], function (dbootstrap, Editable, Select, Textarea) {
+				var options = [
+						{label:"First Option", value:1},
+						{label:"Second Option", value:2},
+						{label:"Third Option", value:3},
+						{label:"Fourth Option", value:4}
+				];
+				new Select({editorParams:{options:options}}, 'test2');
+				new Textarea({}, 'test3');
+			});
+		</script>
+	</body>
+</html>
