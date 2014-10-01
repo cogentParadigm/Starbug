@@ -18,7 +18,9 @@ define(['dojo/request/registry', 'dojo/when'], function (registry, when) {
                 var model = parts[1];
                 var action = parts[2];
                 var records = [];
-                if (model == "users") {
+                if (action == "errors") {
+                  records = {errors:[{field:'first_name', errors:{required:'This field is required'}}]};
+                } else if (model == "users") {
                   records.push({id:1,first_name:'Ali',last_name:'Gangji'});
                 }
                 return when(records);

@@ -10,7 +10,6 @@ define(['dojo/_base/lang', 'sb/kernel', 'starbug', 'starbug/store/Api'], functio
 			sb.query = function(model, action, query) {
 				if (!query) query = {};
 				if (!action) action = 'admin';
-				if (typeof query == 'string') query = this.star(query);
 				return this.get(model, action).query(query);
 			},
 			sb.store = function(model, fields) {
