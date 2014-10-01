@@ -39,19 +39,31 @@ define({
 	// Configuration options for the module loader; any AMD configuration options supported by the specified AMD loader
 	// can be used here
 	loader: {
+		requestProvider: 'dojo/request/registry',
 		// Packages that should be registered with the loader in each testing environment
 		packages: [
-               		{name:"sb", location:"core/app/public/js/sb"},
-                	{name:"starbug", location:"core/app/public/js/starbug"}
+			{name:"dojo", location:"libraries/dojo/dojo"},
+			{name:"dijit", location:"libraries/dojo/dijit"},
+			{name:"dojox", location:"libraries/dojo/dojox"},
+			{name:"dgrid", location:"libraries/dojo/dgrid"},
+			{name:"put-selector", location:"libraries/dojo/put-selector"},
+			{name:"xstyle", location:"libraries/dojo/xstyle"},
+			{name:"dbootstrap", location:"libraries/dojo/dbootstrap"},
+			{name:"bootstrap", location:"libraries/dojo/bootstrap"},
+   		{name:"sb", location:"core/app/public/js/sb"},
+    	{name:"starbug", location:"core/app/public/js/starbug"}
 		]
 	},
 
 	// Non-functional test suite(s) to run in each browser
-	suites: [],
+	suites: [
+		'core/app/public/js/tests/unit/sb/data'
+	],
 
 	// Functional test suite(s) to run in each browser once non-functional tests are completed
 	functionalSuites: [
-		'core/app/public/js/tests/functional/starbug/form/Autocomplete'
+		'core/app/public/js/tests/functional/starbug/form/Autocomplete',
+		'core/app/public/js/tests/functional/starbug/form/editable'
 	],
 
 	// A regular expression matching URLs to files that should not be included in code coverage analysis

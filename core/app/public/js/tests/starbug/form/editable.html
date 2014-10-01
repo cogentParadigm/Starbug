@@ -12,6 +12,7 @@
 		<script>
 			var WEBSITE_URL = location.pathname.replace(/core\/app\/public\/js\/tests\/.*$/, '');
 			var dojoConfig = {
+				requestProvider: 'dojo/request/registry',
 				parseOnLoad:true,
 				packages: [
 					{name:"dijit", location:WEBSITE_URL+"libraries/dojo/dijit"},
@@ -37,7 +38,7 @@
 			<div class="row">
 				<div class="col-xs-12">
 						<label>Editable field 1</label>
-						<div id="test1" data-dojo-type="starbug/form/editable/Editable">This is editable text</div>
+						<div id="test1" data-dojo-type="starbug/form/editable/Editable" data-dojo-props="store:store, field:'label', object_id:1">This is editable text</div>
 						<label>Editable field 2</label>
 						<div id="test2">Second Option</div>
 						<label>Editable field 3</label>
@@ -46,15 +47,31 @@
 			</div>
 		</div>
 		<script type="text/javascript">
-			require(['dbootstrap', 'starbug/form/editable/Editable', 'starbug/form/editable/Select', 'starbug/form/editable/Textarea'], function (dbootstrap, Editable, Select, Textarea) {
-				var options = [
-						{label:"First Option", value:1},
-						{label:"Second Option", value:2},
-						{label:"Third Option", value:3},
-						{label:"Fourth Option", value:4}
+			var store;
+			require(['dbootstrap', 'starbug/store/Memory', 'starbug/form/editable/Editable', 'starbug/form/editable/Select', 'starbug/form/editable/Textarea'], function (dbootstrap, Memory, Editable, Select, Textarea) {
+				//set up a mock memory store. This store contains the items we are editing
+				var data = [
+					{id:1, label:'This is editable text', x:1, msg:'This is a textarea'},
+					{id:2, label:'Second Item', x:2, msg:'This is a textarea'},
+					{id:3, label:'Third Item', x:1, msg:'This is a textarea'}
 				];
-				new Select({editorParams:{options:options}}, 'test2');
-				new Textarea({}, 'test3');
+				store = new Memory({data:data});
+
+				//We want to make an inline edit box where the editor is a dropdown
+				//set up another store for the dropdown options
+				var options = [
+						{id:1, label:"First Option"},
+						{id:2, label:"Second Option"},
+						{id:3, label:"Third Option"},
+						{id:4, label:"Fourth Option"}
+				];
+				var option_store = new Memory({data:options});
+
+				//set up the editable dropdown
+				new Select({store:store, field:'x', object_id:2, editorParams:{store:option_store, value:2}}, 'test2');
+
+				//set up the editable textarea
+				new Textarea({store:store, field:'msg', object_id:3}, 'test3');
 			});
 		</script>
 	</body>

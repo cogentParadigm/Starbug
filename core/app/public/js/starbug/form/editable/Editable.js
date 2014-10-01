@@ -1,6 +1,6 @@
 define(["dojo/_base/declare", "dojo/_base/lang", "dojo/dom-construct", "dojo/dom-style", "sb", "dijit/InlineEditBox"], function(declare, lang, domConstruct, domStyle, sb, InlineEdit) {
 	return declare([InlineEdit], {
-		model:'',
+		store:null,
 		field:'',
 		object_id:0,
 		autoSave:false,
@@ -8,10 +8,10 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/dom-construct", "dojo/dom
 		onChange:function(value) {
 			this.inherited(arguments);
 			value = this.wrapperWidget.editWidget.get('value');
-			if (this.model && this.field && this.storeOnSave) {
+			if (this.store && this.field && this.storeOnSave) {
 				var data = {id:this.object_id};
 				data[this.field] = value;
-				sb.get(this.model).put(data).then(function(result) {
+				this.store.put(data).then(function(result) {
 					if (result.errors) alert(result.errors[0].errors[0]);
 				});
 			}
