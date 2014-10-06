@@ -1,6 +1,7 @@
 <?php
 	$containers = array(array("region" => "content", "position" => 1, "content" => "", "type" => "text"));
-	if (!empty($this->get("id"))) {
+	$item_id = $this->get("id");
+	if (!empty($item_id)) {
 		$containers = query("blocks")->condition("uris_id", $this->get("id"))->sort("position")->all();
 	}
 	$field['nolabel'] = true;

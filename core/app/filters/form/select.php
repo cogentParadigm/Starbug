@@ -1,13 +1,15 @@
 <?php
 		$name = $field['name'];
-		if (isset($field['multiple'])) {
-			$field['multiple'] = "multiple";
-			efault($field['size'], 5);
-		}
 		$value = $this->get($field['name']);
 		if ((empty($value)) && (!empty($field['default']))) {
 			$this->set($field['name'], $field['default']);
+			$value = $field['default'];
 			unset($field['default']);
+		}
+		if (isset($field['multiple'])) {
+			$field['multiple'] = "multiple";
+			efault($field['size'], 5);
+			if (!is_array($value)) $value = explode(',', $value);
 		}
 		if (!empty($field['range'])) {
 			$range = explode("-", $field['range']);
@@ -35,6 +37,6 @@
 			unset($field['options']);
 			unset($field['values']);
 		}
-		assign("value", $this->get($name));
+		assign("value", $value);
 		assign("options", $options);
 ?>
