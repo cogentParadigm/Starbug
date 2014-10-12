@@ -1,25 +1,25 @@
 <?php
 $sb->provide("core/lib/Display");
 class Display {
-	
+
 	const HOOK_PHASE_BUILD = 0;
 	const HOOK_PHASE_RENDER = 1;
-	
+
 	var $model; //base model. eg. users
 	var $name; //display name. eg. admin
 	var $query; //database query object
 	var $options = array(); //global options
-	
+
 	var $type = "default"; //display type
 	var $template = "default"; // display template
 	var $attributes = array("class" => array("display")); //attributes for top level node
 	var $dirty = false; //dirty indicator
-	
+
 	var $fields = array(); //fields to display (columns)
 	var $items = array(); //items to display (rows)
-	
+
 	var $hooks = array(); //active hooks
-	
+
 	var $paged = false; //pagination enabled indicator
 	var $pager; //pager object
 
@@ -41,12 +41,12 @@ class Display {
 			sb($this->model)->$action($this, $options);
 		}
 	}
-	
+
 	/**
 	 * empty function to override. this is called right after construction
 	 */
 	function init($options) {
-	
+
 	}
 
 	/**
@@ -57,7 +57,7 @@ class Display {
 	function filter($field, $options, $column) {
 		return $options;
 	}
-	
+
 	/**
 	 * option getter/setter
 	 */
@@ -65,7 +65,7 @@ class Display {
 		if (is_null($value)) return $this->options[$name];
 		else $this->options[$name] = $value;
 	}
-	
+
 	/**
 	 * multiple option getter/setter
 	 */
@@ -73,7 +73,7 @@ class Display {
 		$ops = star($ops);
 		foreach ($ops as $k => $v) $this->option($k, $v);
 	}
-	
+
 	/**
 	 * mark dirty
 	 */
@@ -91,7 +91,11 @@ class Display {
 			$field = array_shift($options);
 			efault($options['model'], $this->model);
 			$target = empty($options['extend']) ? $field : $options['extend'];
-			$column = schema($options['model'].".fields.".$target);
+			$base = $options['model'];
+			while (!isset(sb($base)->hooks[$target]) && !empty(sb($base)->base)) {
+				$base = sb($base)->base;
+			}
+			$column = sb($base)->hooks[$target];
 			efault($column, array());
 			if (empty($column['label'])) $column['label'] = format_label($field);
 			if (empty($this->fields[$field])) $options = $this->filter($field, $options, $column);
@@ -107,7 +111,7 @@ class Display {
 	 * insert a field at a specific index
 	 * @param int $index
 	 * @param star $options
-	 */	
+	 */
 	function insert($index, $options) {
 		$args = func_get_args();
 		$index = array_shift($args);
@@ -116,7 +120,7 @@ class Display {
 		$this->fields = array();
 		call_user_func_array(array($this, 'add'), $args);
 		$this->fields = $before + $this->fields + $after;
-		
+
 	}
 
 	function update($options) {
@@ -125,16 +129,16 @@ class Display {
 
 	/**
 	 * remove field
-	 */	
+	 */
 	function remove($field) {
 		unset($this->fields[$field]);
 	}
-	
+
 	function invoke_hook($phase, $hook, $field, &$options, $column) {
 
 		if (!isset($this->hooks[$field."_".$hook])) $this->hooks[$field."_".$hook] = build_hook("display/".$hook, "lib/DisplayHook", "core");
 		$hook = $this->hooks[$field."_".$hook];
-		
+
 		//hooks are invoked in 2 phases
 		//0 = build
 		//1 = render
@@ -144,19 +148,19 @@ class Display {
 			$hook->render($this, $field, $options, $column);
 		}
 	}
-	
+
 	function query($options=null, $model="") {
 		if (empty($model)) $model = $this->model;
-		
+
 		//set options
 		if (is_null($options)) $options = $this->options;
-		
+
 		//init query
-		$this->query = query($model);
-		
+		$this->query = entity_query($model);
+
 		//search
 		if (!empty($options['search'])) $query->search($options['search']);
-		
+
 		//limit
 		if (!empty($options['limit'])) $query->limit($options['limit']);
 
@@ -170,17 +174,17 @@ class Display {
 			$this->paged = true;
 			$this->pager = $this->query->pager($options['page']);
 		}
-		
+
 		$this->items = (property_exists($this->query, "data")) ? $query->data : $query->all();
 		foreach($this->items as $idx => $item) {
 			$this->items[$idx] = sb($this->model)->filter($item, $this->name);
 		}
 	}
-	
+
 	function before_render() {
 		//extendable function
 	}
-	
+
 	/**
 	 * render the display with the specified items
 	 */
@@ -192,7 +196,7 @@ class Display {
 		//assign("items", $items);
 		render("display/".$this->template);
 	}
-	
+
 	/**
 	 * capture the display with the specified items
 	 */

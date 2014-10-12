@@ -68,7 +68,7 @@ $this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"format  type:string  length:16  default:  list:false",
 	"parent  type:int  default:0  list:false",
 	"sort_order  type:int  default:0  list:false",
-	"type  type:string  default:View  list:false",
+	"type  type:string  default:views  list:false",
 	"prefix  type:string  length:128  default:app/views/",
 	"theme  type:string  length:128  default:  list:false",
 	"layout  type:string  length:64  default:",
@@ -78,12 +78,13 @@ $this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"canonical  type:string  length:255  default:  list:false",
 	"breadcrumb  type:string  length:255  default:  list:false"
 );
-$this->table("content_types",
-	"base  type:string  default:uris",
-	"type  type:string",
-	"name  type:string",
+$this->table("entities",
+	"base  type:string  default:",
+	"name  type:string  length:128",
+	"label  type:string  length:128",
+	"singular  type:string  length:128",
+	"singular_label  type:string  length:128",
 	"url_pattern  type:string",
-	"table  type:string  default:",
 	"description  type:string  length:255  default:"
 );
 $this->table("blocks  list:all",
@@ -93,6 +94,7 @@ $this->table("blocks  list:all",
 	"content  type:text  default:",
 	"position  type:int  ordered:uris_id"
 );
+$this->table("uris", "blocks  type:blocks  table:blocks");
 $this->table("menus",
 	"menu  type:string  length:32  list:true  display:false",
 	"parent  type:int  default:0  materialized_path:menu_path",
@@ -105,13 +107,13 @@ $this->table("menus",
 	"menu_path  type:string  length:255  default:  display:false"
 );
 // CONTENT TYPES
-$this->content_type("View", "description:A basic view");
-$this->content_type("Page", "description:A basic page");
-$this->content_type("Post", "description:A blog post");
+$this->table("views  base:uris  description:A basic view", "custom1  type:string");
+$this->table("pages  base:uris  description:A basic page");
+$this->table("posts  base:uris  description:A blog post");
 // URIS
 $this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
-$this->uri("api", "template:api  prefix:core/app/views/  type:Page");
-$this->uri("documentation", "template:documentation  prefix:core/app/views/  type:Page  groups:root");
+$this->uri("api", "template:api  prefix:core/app/views/  type:pages");
+$this->uri("documentation", "template:documentation  prefix:core/app/views/  type:pages  groups:root");
 $this->uri("profile", "template:controller");
 //Rogue IDE
 $this->uri("rogue", "title:Rogue IDE  format:xhr  prefix:core/app/views/  groups:root");

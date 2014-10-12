@@ -2,21 +2,8 @@
 class Uris {
 
 	function create($uris) {
-		/*
-		if ($uris['type'] != "View" && $uris['type'] != $_POST['type']) {
-			$uris['layout'] = $uris['type'];
-			$uris['type'] = $_POST['type'];
-		}
-		if ($_POST['type'] == "Post") $uris['path'] = "blog/".$uris['path'];
-		*/
-		queue("blocks", array("type" => "text",  "region" => "content",  "position" => 1, "uris_id" => "", "content" => filter_html($_POST['block-content-1']['content'])));
-		$type = query("content_types")->condition("type", $uris['type'])->one();
-		if (!empty($type['table'])) {
-			$data = $_POST[$type['table']];
-			$data['uris_id'] = "";
-			sb($type['table'])->create($data);
-		}
-		$this->store($uris);
+		queue("blocks", array("type" => "text",  "region" => "content",  "position" => 1, "uris_id" => "", "content" => filter_html($_POST['blocks']['content-1'])));
+		sb($uris['type'])->create($uris);
 		if (!errors()) {
 			$uid = $this->insert_id;
 		} else {
@@ -26,15 +13,8 @@ class Uris {
 	}
 
 	function update($uris) {
-		/*
-		if ($uris['type'] != "View" && $uris['type'] != $_POST['type']) {
-			$uris['layout'] = $uris['type'];
-			$uris['type'] = $_POST['type'];
-		}
-		if ($_POST['type'] == "Post") $uris['path'] = "blog/".$uris['path'];
-		*/
 		$row = $this->get($uris['id']);
-		$type = query("content_types")->condition("type", $uris['type'])->one();
+		$type = query("entities")->condition("name", $uris['type'])->one();
 		if (!empty($type['table'])) {
 			$data = $_POST[$type['table']];
 			$data['uris_id'] = $uris['id'];
@@ -54,7 +34,7 @@ class Uris {
 	function delete($uris) {
 		$id = intval($uris['id']);
 		$uris = query("uris")->condition("id", $uris['id'])->one();
-		$type = query("content_types")->condition("type", $uris['type'])->one();
+		$type = query("entities")->condition("name", $uris['type'])->one();
 		$cond = array("uris_id" => $uris['id']);
 		if (!empty($type['table'])) remove($type['table'], $cond);
 		remove("blocks", $cond);
@@ -62,7 +42,7 @@ class Uris {
 	}
 
 	function query_admin($query, &$ops) {
-		$query->select("uris.*,uris.statuses.term as statuses");
+		$query->select("uris.statuses.term as statuses");
 		if (!logged_in("admin")) $query->action("read");
 		$query->condition("uris.prefix", "app/views/");
 		$query->condition("uris.statuses", "deleted", "!=");
@@ -76,11 +56,10 @@ class Uris {
 	}
 
 	function display_admin($display, $options) {
-		$display->add("title", "type", "statuses");
+		$display->add("title", "statuses", "modified  label:Last Modified");
 	}
 
 	function display_form($display, &$ops) {
-		if (empty($_POST['uris']['type'])) $_POST['uris']['type'] = $ops['type'];
 		//layout
 		$display->layout->add("top  left:div.col-md-9  right:div.col-md-3", "bottom  tabs:div.col-sm-12");
 		$display->layout->put("tabs", 'div[data-dojo-type="dijit/layout/TabContainer"][data-dojo-props="doLayout:false, tabPosition:\'left-h\'"][style="width:100%;height:100%"]', '', 'tc');
@@ -92,7 +71,6 @@ class Uris {
 		$display->add("blocks  input_type:blocks  pane:left");
 		$display->add("images  pane:left  input_type:file_select  size:0");
 		//right
-		$display->add("type  pane:right  input_type:hidden  default:".$ops['type']);
 		$display->add("statuses  label:Status  taxonomy:statuses  default:pending  input_type:category_select  pane:right");
 		$display->add("groups  taxonomy:groups  input_type:multiple_category_select  pane:right");
 		$display->add("categories  input_type:multiple_category_select  pane:right");
@@ -105,16 +83,6 @@ class Uris {
 		$display->add("meta  label:Custom Meta Tags  input_type:textarea  class:plain  style:width:100%  data-dojo-type:dijit/form/Textarea  pane:meta");
 		$display->add("breadcrumb  label:Breadcrumbs Title  style:width:100%  pane:breadcrumbs");
 		$display->add("parent  info:Start typing the title of the page and autocomplete results will display  input_type:autocomplete  pane:breadcrumbs");
-		//content type
-		$type = query("content_types")->condition("type", $display->get("type"))->one();
-		if (!empty($type['table'])) {
-			$items = $display->items;
-			$display->model = $type['table'];
-			$display->query();
-			sb($type['table'])->display_form($display, $ops);
-			$display->model = "uris";
-			$display->items = $items;
-		}
 	}
 
 

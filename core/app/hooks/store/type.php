@@ -8,8 +8,8 @@ class hook_store_type {
 		return $value;
 	}
 	function after_store(&$query, $key, $value, $column, $argument) {
-		if ($argument == "terms" || !sb()->db->has($argument) || empty($value)) return;
-		
+		if ($argument == "terms" || $argument == "blocks" || !sb()->db->has($argument) || empty($value)) return;
+
 		//vars
 		$model = $query->model;
 		$model_id = $query->getId();
@@ -19,7 +19,7 @@ class hook_store_type {
 		$type_ids = array();
 		$ids = array();
 		$clean = false;
-		
+
 		//loop through values
 		if (!is_array($value)) $value = explode(",", $value);
 		foreach ($value as $position => $type_id) {
@@ -62,7 +62,7 @@ class hook_store_type {
 				}
 			}
 		}
-		
+
 		//clean
 		if ($clean) {
 			$query = query($target)->condition($model."_id", $model_id);

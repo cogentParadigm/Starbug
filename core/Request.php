@@ -53,7 +53,7 @@ class Request {
 	 * @var array the tags applied to the requested URI
 	 */
 	var $tags;
-	
+
 
 	/**
 	 * constructor. initiates tags and postback
@@ -80,7 +80,7 @@ class Request {
 
 		//if the path contains a query string, split it off and save it to $this->query
 		if (false !== strpos($this->path, "?")) list($this->path, $this->query) = explode("?", $this->path, 2);
-		
+
 		//if the path includes a format (such as .html, .json, .xml etc..) split it off and save it to $this->format
 		$file = end(explode("/", $this->path));
 		if (false !== strpos($file, ".")) {
@@ -89,7 +89,7 @@ class Request {
 		}
 
 		//if we are left with an empty path, set it to the default path
-		efault($this->path, settings("default_path"));
+		if (empty($this->path)) $this->path = settings("default_path");
 	}
 
 	/**
@@ -183,7 +183,7 @@ class Request {
 		$this->path="missing";
 		$this->locate();
 	}
-	
+
 	/**
 	 * sends a 403 and sets the payload, path, and uri
 	 */

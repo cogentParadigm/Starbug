@@ -54,6 +54,21 @@ class mysql extends db {
 	 */
 	var $queue;
 
+	var $operators = array(
+		'=' => 1,
+		'>' => 1,
+		'<' => 1,
+		'<=' => 1,
+		'>=' => 1,
+		'<>' => 1,
+		'<=>' => 1,
+		'!=' => 1,
+		'LIKE' => 1,
+		'RLIKE' => 1,
+		'NOT LIKE' => 1,
+		'NOT RLIKE' => 1
+	);
+
 	public function __construct($params) {
 		try {
 			$this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
@@ -61,7 +76,7 @@ class mysql extends db {
 			$this->prefix = $params['prefix'];
 			$this->database_name = $params['db'];
 			if (defined('Etc::TIME_ZONE')) $this->exec("SET time_zone='".Etc::TIME_ZONE."'");
-		} catch (PDOException $e) { 
+		} catch (PDOException $e) {
 			die("PDO CONNECTION ERROR: " . $e->getMessage() . "\n");
 		}
 		$this->queue = new queue();
@@ -86,38 +101,41 @@ class mysql extends db {
 	 */
 	function get() {
 		$args = func_get_args();
-		$query = $conditions = $replacements = array();
-		
+		$query = $conditions = $replacements = $arg = array();
+
 		//loop through the input arguments
-		foreach ($args as $idx => $arg) {
-				if ($idx == 0) $collection = $arg; //first argument is the collection
-				else if ($idx == 1) $conditions = star($arg); //second argument are the conditions
+		foreach ($args as $idx => $a) {
+				if ($idx == 0) $collection = $a; //first argument is the collection
+				else if ($idx == 1) $conditions = star($a); //second argument are the conditions
 				else {
-					$arg = star($arg);
+					$arg = star($a);
 					if (!empty($arg['orderby'])) $arg['sort'] = $arg['orderby']; //DEPRECATED: use sort
-					if (!empty($arg['sort'])) {
-						foreach ($arg['sort'] as $key => $direction) $query['orderby'][] = $key." ".(($direction > 0) ? "ASC" : "DESC");
-						$query['orderby'] = implode(", ", $query['orderby']);
-					}
-					if (!empty($arg['limit'])) $query['limit'] = $arg['limit'];
-					if (!empty($arg['skip'])) $query['limit'] = $arg['skip'].", ".$query['limit'];
 				}
 		}
-		
-		//if there are any conditions, convert them to string expressions
-		$conditions = star($conditions);
+		$args = $arg;
+
+		//apply conditions
+		$query = $this->query($collection);
 		foreach ($conditions as $k => $v) {
-			$col = ($k === 0) ? "id" : $k;
-			if (!is_array($v)) $v = array($v, '=');
-			$conditions[$k] = $col." ".$v[1]." ?";
-			$replacements[] = $v[0];
-			//if id is compared for equality, set the limit to 1
-			if ($col == "id" && $v[1] == "=") $query['limit'] = 1;
+			if (isset($this->operators[$k])) {
+				$query->conditions($v, $k);
+			} else {
+				$col = ($k === 0) ? "id" : $k;
+				//if id is compared for equality, set the limit to 1
+				if ($col === "id" && !is_array($v)) $args['limit'] = 1;
+				$query->condition($col, $v);
+			}
 		}
-		if (!empty($conditions)) $query['where'] = implode(" && ", $conditions);
-		
+
+		if (!empty($args['sort'])) {
+			foreach ($args['sort'] as $key => $direction) $query->sort($key, $direction);
+		}
+		if (!empty($args['limit'])) $query->limit($args['limit']);
+		if (!empty($args['skip'])) $query->skip($args['skip']);
+
+
 		//obtain query result
-		$result = $this->query($collection, $query, $replacements);
+		$result = $query->execute();
 		return $result;
 	}
 
@@ -131,15 +149,15 @@ class mysql extends db {
 	function query($froms, $args="", $replacements=array()) {
 		$args = star($args);
 		if (!empty($args['params'])) $replacements = $args['params'];
-		
+
 		//create query object
 		$query = new query($froms);
-		
+
 		//call functions
 		foreach ($args as $k => $v) {
 			if (method_exists($query, $k)) call_user_func(array($query, $k), $v);
 		}
-		
+
 		//set parameters
 		$query->parameters = $replacements;
 
@@ -170,48 +188,22 @@ class mysql extends db {
 	 */
 	function queue($name, $fields=array(), $from="auto", $unshift=false) {
 		if (!is_array($fields)) $fields = star($fields);
-		
+
 		$query = new query($name);
 		foreach ($fields as $col => $value) $query->set($col, $value);
-		
+
 		if ($from === "auto" && !empty($fields['id'])) $from = array("id" => $fields['id']);
 		else if (!is_array($from) && false !== $from && "auto" !== $from) $from = star($from);
-		
-		if (!empty($from) && is_array($from)) {	
+
+		if (!empty($from) && is_array($from)) {
 			$query->mode("update");
 			foreach ($from as $c => $v) $query->condition($c, $v);
 		} else {
 			$query->mode("insert");
 		}
-		
+
 		if ($unshift) $this->queue->unshift($query);
 		else $this->queue->push($query);
-		
-		/*
-		$oldscope = error_scope();
-		error_scope($name);
-		$thefilters = db::model($name)->filters;
-		$errors = $byfilter = array();
-		$storing = false;
-		if (!is_array($fields)) $fields = star($fields);
-		if ($from == "auto") {
-			if (!empty($fields['id'])) $from = array("id" => $fields['id']);
-		} else if ((false !== $from) && (!is_array($from))) $from = star($from);
-		foreach ($fields as $col => $value) {
-			$errors[$col] = array();
-			$filters = star($thefilters[$col]);
-			foreach($filters as $filter => $args) $byfilter[$filter][$col] = $args;
-			if ($value === "") $errors[$col]["required"] = "This field is required.";
-		}
-		foreach($byfilter as $filter => $args) {
-			$on_store = $after_store = false;
-			foreach (locate("store/$filter.php", "filters") as $f) include($f);
-			if (!$on_store && !$after_store) unset($byfilter[$filter]);
-		}
-		foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
-		$this->to_store[] = array("model" => $name, "fields" => $fields, "from" => $from, "filters" => $byfilter);
-		error_scope($oldscope);
-		*/
 	}
 
 	/**
@@ -220,108 +212,6 @@ class mysql extends db {
 	function store_queue() {
 		$this->queue->execute();
 	}
-	/*
-	function store_queue() {
-		$oldscope = error_scope();
-		foreach ($this->to_store as $store) {
-			$storing = true;
-			$inserting = $updating = $is_after_store = false;
-			$name = $store['model'];
-			error_scope($name);
-			$fields = $store['fields'];
-			$from = $store["from"];
-			$filters = $store["filters"];
-			$errors = $prize = array();
-			if (is_array($from)) {
-				if (!empty($fields['id']) && !empty($from['id'])) unset($fields['id']);
-				$updating = true;
-			} else $inserting = true;
-			foreach ($filters as $filter => $args) {
-				$after_store = false;
-				foreach (locate("store/$filter.php", "filters") as $f) include($f);
-				if (!$after_store) unset($filters[$filter]);
-			}
-			$is_after_store = true;
-			foreach($errors as $col => $err) foreach ($err as $e => $m) error($m, $col);
-			if (!errors()) { //no errors
-				$pre_store_time = date("Y-m-d H:i:s");
-				$fields['modified'] = date("Y-m-d H:i:s");
-				if ($updating) { //updating existing record
-					$setstr = $wherestr = "";
-					foreach($fields as $col => $value) {
-						if ($value == "NULL") $s = "NULL";
-						else {
-							$prize[] = $value;
-							$s = "?";
-						}
-						if(empty($setstr)) $setstr = "`".$col."`= $s";
-						else $setstr .= ", `".$col."`= $s";
-					}
-					foreach($from as $c => $v) {
-						$prize[] = $v;
-						$fields[$c] = $v;
-						if (empty($wherestr)) $wherestr = "`".$c."` = ?";
-						else $wherestr .= " && `".$c."` = ?";
-					}
-					$stmt = $this->pdo->prepare("UPDATE ".$this->prefix.$name." SET ".$setstr." WHERE ".$wherestr);
-					$this->record_count = $stmt->execute($prize);
-					if (empty($fields['id'])) {
-						$id_query = query($name);
-						foreach ($from as $c => $v) $id_query->condition($c, $v);
-						$id_query->limit(1);
-						$result = $id_query->execute();
-						$fields['id'] = $result['id'];
-					}
-				} else { //creating new record
-					$fields['created'] = date("Y-m-d H:i:s");
-					if (!isset($fields['owner'])) $fields['owner'] = (logged_in()) ? sb()->user['id'] : 1;
-					$keys = ""; $values = "";
-					foreach($fields as $col => $value) {
-						if ($value == "NULL") $s = "NULL";
-						else if ($value == "now()") $s = "now()";
-						else {
-							$prize[] = $value;
-							$s = "?";
-						}
-						if(empty($keys)) $keys = $col;
-						else $keys .= ", ".$col;
-						if(empty($values)) $values = "$s";
-						else $values .= ", $s";
-					}
-					$stmt = $this->pdo->prepare("INSERT INTO ".$this->prefix.$name." (".$keys.") VALUES (".$values.")");
-					$this->record_count = $stmt->execute($prize);
-					$this->insert_id = $this->pdo->lastInsertId();
-					db::model($name)->insert_id = $this->insert_id;
-					$fields["id"] = $this->insert_id;
-				}
-				foreach ($filters as $filter => $args) {
-					$after_store = true;
-					foreach (locate("store/$filter.php", "filters") as $f) include($f);
-				}
-				//NOTIFY CLIENTS
-				if (defined("Etc::API_NOTIFIER")) {
-					$this->import("core/ApiRequest");
-					$curl = get_curl();
-					$curl->follow_redirects = false;
-					$subs = $curl->get(Etc::API_NOTIFIER);
-					$subs = json_decode($subs->body, true);
-					if (!is_array($subs)) $subs = array();
-					$result = array();
-					foreach ($subs as $idx => $call) {
-						list($models, $query) = explode("  ", $call, 2);
-						$request = new ApiRequest($models.".json", $query."  log:log.created>='$pre_store_time'  select:log.*", false);
-						if (empty($request->result)) $result[] = '"'.$idx.'":[]';
-						else $result[] = '"'.$idx.'": '.$request->result;
-					}
-					$postdata = array("response" => "{ ".implode(", ", $result)." }");
-					$curl->post(Etc::API_NOTIFIER, $postdata);
-				}
-			}
-		}
-		$this->to_store = array();
-		error_scope($oldscope);
-	}
-	*/
 
 	/**
 	 * remove from the database
@@ -335,14 +225,14 @@ class mysql extends db {
 			return $this->record_count;
 		}
 	}
-	
+
 	/**
 	 * build a search clause to be put into a WHERE clause
 	 * @param string $text a natural language search string which can include operators 'and' and 'or' and quotes for exact matches
 	 * @param array $fields a list of columns to search on
 	 * @return string SQL WHERE component
 	 * examples,
-	 * 
+	 *
 	 * search string: 'beef and broccoli'
 	 * fields: array('name', 'description')
 	 * return: ((name LIKE '%beef%' OR description LIKE '%beef%') and (name LIKE '%broccoli%' OR description LIKE '%broccoli%'))

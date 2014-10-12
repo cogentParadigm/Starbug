@@ -5,38 +5,56 @@
  */
 class <?= ucwords($name); ?>Model extends Table {
 
+  var $base = "<? echo $base; ?>";
+
 	var $hooks = array(<? $count = 0; foreach ($fields as $column => $field) { if (!empty($field)) { $fcount = 0; if ($count > 0) echo ','; $count++; echo "\n"; ?>
 		"<?= $column; ?>" => array(<? foreach ($field as $k => $v) { ?><? if ($fcount > 0) echo ", "; $fcount++ ?>"<?= $k; ?>" => "<?= $v; ?>"<? } ?>)<? } } echo "\n"; ?>
 	);
 
 	function init() {<? foreach ($fields as $column => $field) { foreach ($field as $k => $v) { if ($k == "references") { $v = explode(" ", $v); echo "\n"; ?>
-		$this->has_one("<?= $v[0]; ?>", "<?= $column; ?>");<? } } } ?><? foreach ($relations as $relation) { echo "\n"; ?>
+	  $this->has_one("<?= $v[0]; ?>", "<?= $column; ?>");<? } } } ?><? foreach ($relations as $relation) { echo "\n"; ?>
 		$this->has_many("<?= $relation['model']; ?>", "<?= $relation['field']; ?>"<? if (!empty($relation['lookup'])) { ?>, "<?= $relation['lookup']; ?>", "<?= $relation['ref_field']; ?>"<? } ?>);<? } echo "\n"; ?>
 	}
-	
+
 	function create($<?= $singular; ?>) {
-		$this->store($<?= $singular; ?>);
+    <?php if (!empty($base)) { ?>
+      entity_save("<?= $model; ?>", $<?= $singular; ?> + array("type" => $this->type));
+    <?php } else { ?>
+		  $this->store($<?= $singular; ?>);
+    <?php } ?>
 	}
 
 	function delete($<?= $singular; ?>) {
-		return $this->store(array('statuses' => "deleted",  'id' => $<?= $singular; ?>['id']));
+    <?php if (!empty($base)) { ?>
+      entity_delete("<?= $model; ?>", $<?= $singular; ?>["id"]);
+    <?php } else { ?>
+      remove("<?= $model; ?>", array("id" => $<?= $singular; ?>["id"]));
+    <?php } ?>
 	}
-	
+
 	function query_admin($query, &$ops) {
-		$query->condition("<?= $name; ?>.statuses", "deleted", "!=");
-		return $query;
+    <?php if (!empty($base)) { ?>
+      $query = sb($this->base)->query_admin($query, $ops);
+    <?php } else { ?>
+      if (!logged_in("admin") && !logged_in("root")) $query->action("read");
+    <?php } ?>
+    return $query;
 	}
-	
+
 	function display_admin($display, $ops) {
-		$display->add("id");
+		<?php if (!empty($base)) { ?>
+    sb($this->base)->display_admin($display, $ops);
+    <?php } else { ?>
+      $display->add("id");
+    <?php } ?>
 	}
-	
+
 	function query_form($query, &$ops) {
 		if (empty($ops['action'])) $ops['action'] = "create";
 		$query->action($ops['action']);
-		$query->condition($query->model.".id", $ops['id']);
-		$query->select("*", $query->model);
+		$query->condition("<?= $model; ?>.id", $ops['id']);
 <?php
+    if (!empty($base)) foreach(array("id", $base."_id") as $idx) unset($fields[$idx]);
 		$tabs = "\t\t";
 		foreach ($fields as $fieldname => $field) {
 				if (sb()->db->has($field['type']) || $field['type'] == "category") {
@@ -47,10 +65,11 @@ class <?= ucwords($name); ?>Model extends Table {
 		?>
 		return $query;
 	}
-	
+
 	function display_form($display, &$ops) {
 <?php
 			$tabs = "\t\t";
+      if (!empty($base)) echo $tabs.'sb("'.$base.'")->display_form($display, $ops);'."\n";
 			foreach ($fields as $fieldname => $field) {
 				if ($field['display'] === true) {
 					echo $tabs.'$display->add("'.$fieldname.'");'."\n";
@@ -59,11 +78,11 @@ class <?= ucwords($name); ?>Model extends Table {
 			}
 		?>
 	}
-	
+
 	function query_get($query, &$ops) {
 		return $query;
 	}
-	
+
 	function query_select($query, &$ops) {
 		if (!empty($ops['id'])) {
 			$query->condition($query->model.".id", explode(",", $ops['id']));

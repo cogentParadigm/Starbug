@@ -129,8 +129,8 @@ return declare(null, {
 		this.last_query = query_url;
 		var results = request.get(query_url, {handleAs: "json", headers: headers});
 		results.then(function(){}, lang.hitch(this, 'handleError'));
-		results.total = results.then(function(){
-			var range = results.ioArgs.xhr.getResponseHeader("Content-Range");
+		results.total = results.response.then(function(response){
+			var range = response.getHeader("Content-Range");
 			return range && (range=range.match(/\/(.*)/)) && +range[1];
 		});
 		this.results = QueryResults(results);

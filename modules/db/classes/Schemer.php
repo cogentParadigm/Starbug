@@ -48,7 +48,6 @@ class Schemer {
 	 * @var array Holds uris
 	 */
 	var $uris = array();
-	var $content_types = array();
 	/**
 	 * @var array Holds blocks
 	 */
@@ -81,11 +80,11 @@ class Schemer {
 	 * @var array triggers to drop
 	 */
 	var $trigger_drops = array();
-	
+
 	var $current;
-	
+
 	var $testMode = false;
-	
+
 	/**#@-*/
 	/**
 	 * @var array holds mixed in objects
@@ -105,7 +104,7 @@ class Schemer {
 		foreach ($this->migrations as $i => $m) $this->migrations[$i] = "modules/".$m;
 		$this->migrations = array_merge(array("core/app"), $this->migrations, array("app"));
 	}
-	
+
 	function set_database($db) {
 		$this->db = $db;
 	}
@@ -113,7 +112,7 @@ class Schemer {
 	function  clean() {
 		$this->tables = $this->table_drops = $this->column_drops = $this->uris = $this->blocks = $this->permits = $this->population = $this->triggers = $this->trigger_drops = $this->menus = $this->taxonomies = array();
 	}
-	
+
 	function up($migration) {
 		if (is_numeric($migration)) $migration = $this->migrations[$migration];
 		$this->current = $migration;
@@ -124,7 +123,7 @@ class Schemer {
 			if (file_exists($migration)) include($migration);
 		}
 	}
-	
+
 	function down($migration) {
 		if (is_numeric($migration)) $migration = $this->migrations[$migration];
 		$this->current = $migration;
@@ -145,7 +144,7 @@ class Schemer {
 			$current++;
 		}
 	}
-	
+
 	function testMode($to=true) {
 		$this->testMode = $to;
 		$this->clean();
@@ -159,6 +158,7 @@ class Schemer {
 	 */
 	function get_table($table) {
 		$fields = $this->tables[$table];
+		$table_info = $this->options[$table];
 		$primary = array();
 		foreach ($fields as $column => $options) {
 			if ((isset($options['key'])) && ("primary" == $options['key'])) $primary[] = $column;
@@ -168,13 +168,15 @@ class Schemer {
 			}
 		}
 		if (empty($primary)) $fields['id'] = star("type:int  auto_increment:  key:primary");
-		if (empty($fields["owner"])) $fields["owner"] = star("type:int  null:  references:users id  owner:  optional:");
-		if ($table !== "terms_index") {
-			if (empty($fields["groups"])) $fields["groups"] = star("type:terms  taxonomy:groups  optional:");
-			if (empty($fields["statuses"])) $fields["statuses"] = star("type:category  label:Status  taxonomy:statuses  optional:");
+		if (empty($table_info['base'])) {
+			if (empty($fields["owner"])) $fields["owner"] = star("type:int  null:  references:users id  owner:  optional:");
+			if ($table !== "terms_index") {
+				if (empty($fields["groups"])) $fields["groups"] = star("type:terms  taxonomy:groups  optional:");
+				if (empty($fields["statuses"])) $fields["statuses"] = star("type:category  label:Status  taxonomy:statuses  optional:");
+			}
+			if (empty($fields["created"])) $fields["created"] = star("type:datetime  default:0000-00-00 00:00:00  time:insert");
+			if (empty($fields["modified"])) $fields["modified"] = star("type:datetime  default:0000-00-00 00:00:00  time:update");
 		}
-		if (empty($fields["created"])) $fields["created"] = star("type:datetime  default:0000-00-00 00:00:00  time:insert");
-		if (empty($fields["modified"])) $fields["modified"] = star("type:datetime  default:0000-00-00 00:00:00  time:update");
 		return $fields;
 	}
 
@@ -200,7 +202,7 @@ class Schemer {
 		$gd = 0; //dropped triggers
 		$xs = 0; //indexes
 		$xd = 0; //dropped indexes
-		
+
 		//CREATE TABLES FIRST
 		foreach ($this->tables as $table => $fields) {
 			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
@@ -209,11 +211,12 @@ class Schemer {
 				fwrite(STDOUT, "Creating table ".P($table)."...\n");
 				$this->create($table);
 				$ts++;
-			}			
+			}
 		}
 		//UPDATE TABLES WITH COLUMN ALTERATIONS AND FOREIGN KEYS
 		foreach ($this->tables as $table => $fields) {
-			$fields = $this->get_table($table);
+			$table_info = $this->get($table);
+			$fields = $table_info['fields'];
 			// OLD TABLE																																														// OLD TABLE
 			foreach ($fields as $name => $field) {
 				if ($field['type'] != "category" && !isset($this->tables[$field['type']])) {
@@ -248,6 +251,30 @@ class Schemer {
 					}
 				}
 			}
+			//entity type definition
+			$rows = query("entities")->condition("name", $table)->one();
+			unset($table_info['fields']);
+			unset($table_info['relations']);
+			unset($table_info['select']);
+			unset($table_info['search']);
+			unset($table_info['label_select']);
+			unset($table_info['list']);
+			if (empty($rows)) {
+				// ADD CONTENT TYPE																																														// ADD CONTENT TYPE
+				fwrite(STDOUT, "Adding Entity '$table'...\n");
+				store("entities", $table_info);
+				$is++;
+			} else {
+				$query = query("entities");
+				foreach ($table_info as $k => $v) $query->condition("entities.".$k, $v);
+				$rows = $query->all();
+				if (empty($rows)) {
+					// UPDATE CONTENT TYPE																																												// UPDATE CONTENT TYPE
+					fwrite(STDOUT, "Updating Entity '$table'...\n");
+					store("entities", $table_info, array("name" => $table));
+					$as++;
+				}
+			}
 			$this->generate_model($table);
 			$is += $this->populate($table, true);
 		}
@@ -268,7 +295,7 @@ class Schemer {
 				fwrite(STDOUT, "Dropping index '$name'...\n");
 				call_user_method_array("drop_index", $this, $index);
 			}
-		}		
+		}
 		foreach ($this->triggers as $name => $triggers) {
 			foreach ($triggers as $event => $trigger) {
 				$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($trigger['table']."_".$event."_".$trigger['action'])."'")->fetch();
@@ -293,25 +320,6 @@ class Schemer {
 				fwrite(STDOUT, "Creating taxonomy ".$taxonomy."...\n");
 				$is += $this->create_taxonomy($taxonomy);
 			} else $is += $this->create_taxonomy($taxonomy, true);
-		}
-		foreach ($this->content_types as $type => $record) {
-			$rows = query("content_types")->condition("type", $type)->one();
-			if (empty($rows)) {
-				// ADD CONTENT TYPE																																														// ADD CONTENT TYPE
-				fwrite(STDOUT, "Adding Content Type '$type'...\n");
-				$this->add_content_type($type);
-				$is++;
-			} else {			
-				$query = query("content_types");
-				foreach ($record as $k => $v) $query->condition("content_types.".$k, $v);
-				$rows = $query->all();
-				if (empty($rows)) {
-					// UPDATE CONTENT TYPE																																												// UPDATE CONTENT TYPE
-					fwrite(STDOUT, "Updating Content Type '$type'...\n");
-					$this->update_content_type($type, $record);
-					$as++;
-				}
-			}
 		}
 		foreach ($this->uris as $path => $uri) {
 			$rows = query("uris")->condition("path", $path)->one();
@@ -543,7 +551,7 @@ class Schemer {
 		$fields = $this->get_table($table);
 		$field = $fields[$name];
 		$sql = "`".$name."` `".$name."` ".$this->get_sql_type($field);
-		$this->db->exec("ALTER TABLE `".P($table)."` CHANGE ".$sql); 
+		$this->db->exec("ALTER TABLE `".P($table)."` CHANGE ".$sql);
 	}
 
 	/**
@@ -555,9 +563,9 @@ class Schemer {
 		$args = func_get_args();
 		$table = array_shift($args);
 		$sql = "CREATE INDEX ".P($table)."_".implode("_", $args)."_index ON ".P($table)." (".implode(", ", $args).")";
-		$this->db->exec($sql); 
+		$this->db->exec($sql);
 	}
-	
+
 	/**
 	 * Run SQL to drop an index
 	 * @param string $table the name of the table from tables array
@@ -567,7 +575,7 @@ class Schemer {
 		$args = func_get_args();
 		$table = array_shift($args);
 		$sql = "ALTER TABLE ".P($table)." DROP INDEX ".P($table)."_".implode("_", $args)."_index";
-		$this->db->exec($sql); 
+		$this->db->exec($sql);
 	}
 
 	/**
@@ -655,6 +663,12 @@ class Schemer {
 		foreach ($search_cols as $colname_index => $colname_value) if (isset($this->tables[$this->tables[$table][$colname_value]['type']])) unset($search_cols[$colname_index]);
 		efault($this->options[$table], array("select" => "$table.*", "search" => $table.'.'.implode(",$table.", $search_cols)));
 		foreach ($ops as $k => $v) $this->options[$table][$k] = $v;
+		if (isset($ops['base']) && $ops['base'] !== $table) {
+			//find the root
+			$base = $ops['base'];
+			while (!empty($this->options[$base]["base"])) $base = $this->options[$base]["base"];
+			$this->tables[$table][$base."_id"] = array("type" => "int", "references" => $base." id");
+		}
 		foreach ($additional as $tbl) call_user_func_array(array($this, "column"), $tbl);
 	}
 
@@ -680,12 +694,12 @@ class Schemer {
 	 * @param string $col
 	 * @param string $col2
 	 * etc..
-	 */	
+	 */
 	function index($table, $col) {
 		$args = func_get_args();
 		$this->indexes[] = $args;
 	}
-	
+
 	function index_drop($table, $col) {
 		$args = func_get_args();
 		$this->index_drops[] = $args;
@@ -724,53 +738,38 @@ class Schemer {
 		$args = star($args);
 		$args['path'] = $path;
 		efault($args['title'], ucwords(str_replace("-", " ", $path)));
-		/*
-		if (!empty($args['groups'])) {
-			$args['groups'] = explode(",", $args['groups']);
-			$args['collective'] = 0;
-			foreach ($args['groups'] as $group) $args['collective'] += intval($group);
-			unset($args['groups']);
-		}
-		*/
-		//efault($args['collective'], 0);
 		efault($args['statuses'], "published");
 		if ($this->current != "core/app") efault($args['prefix'], $this->current."/views/");
 		$this->uris[$path] = $args;
 	}
-	
+
 	/**
 	 * Add a content type to the database
 	 * @param string $type the path of the uri
 	 */
-	function add_content_type($type) {
-		$record = $this->content_types[$type];
-		store("content_types", $record);
+	function add_entity($name) {
+		$record = $this->entities[$name];
+		store("entities", $record);
 	}
 
 	/**
 	 * Update a content type
 	 * @param string $type the type
 	 */
-	function update_content_type($type, $record=array()) {
-		if (empty($record)) $record = $this->content_types[$type];
-		store("content_types", $record, array("type" => $type));
+	function update_entity($name, $record=array()) {
+		if (empty($record)) $record = $this->entities[$name];
+		store("entities", $record, array("name" => $name));
 	}
-	
+
 	/**
-	 * Add a content type
-	 * @param string $type the type name
-	 * @param star $ops options (region, type, position)
-	 */
-	function content_type($type, $ops=array()) {
-		$ops = star($ops);
-		$ops["type"] = $type;
-		efault($this->content_types[$type], array());
-		foreach ($ops as $k => $v) $this->content_types[$type][$k] = $v;
-		if (empty($this->content_types[$type]["name"])) $this->content_types[$type]["name"] = $this->content_types[$type]["type"];
-		if (!empty($this->content_types[$type]["table"])) {
-			$this->table($this->content_types[$type]["table"]."  base:uris", "uris_id  type:int  references:uris id");
-		}
-	}	
+	* Add a table to the schema
+	* @param string $arg0 the name of the table
+	* @param string $arg1-$arg(N-1) A star formatted column string
+	*/
+	function entity($arg) {
+		$args = func_get_args();
+		call_user_func_array(array($this, "column"), $args);
+	}
 
 	/**
 	 * Add a block to the schema
@@ -929,7 +928,7 @@ class Schemer {
 	 * create block
 	 * @param string $path the name of the path
 	 * @param array $block
-	 */	
+	 */
 	function create_block($uri, $block) {
 		efault($block['region'], "content");
 		$block['uris_id'] = $uri['id'];
@@ -956,7 +955,7 @@ class Schemer {
 		if (!empty($items)) foreach ($items as $record) $rs += $this->create_menu_item($menu, $record, $update);
 		return $rs;
 	}
-	
+
 	function create_menu_item($menu, $item, $update=false) {
 		$children = empty($item['children']) ? array() : $item['children'];
 		unset($item['children']);
@@ -991,7 +990,7 @@ class Schemer {
 		if (!empty($items)) foreach ($items as $record) $rs += $this->create_taxonomy_item($taxonomy, $record, $update);
 		return $rs;
 	}
-	
+
 	function create_taxonomy_item($taxonomy, $item, $update=false) {
 		$children = empty($item['children']) ? array() : $item['children'];
 		unset($item['children']);
@@ -1139,7 +1138,7 @@ class Schemer {
 		fwrite(STDOUT, "Run 'sb generate css' to generate CSS manually.\n");
 		include(end(locate("generate/css/css.php", "script")));
 	}
-	
+
 	function generate_model($table) {
 		import("lib/Renderer", "core");
 		$data = $this->get($table);
@@ -1150,7 +1149,7 @@ class Schemer {
 		$o = BASE_DIR."/var/models/".ucwords($table)."Model.php"; //output
 		assign("model", $table);
 		$base = "";
-		if (!empty($this->options[$table]['base'])) $base = $this->options[$table]['base'];
+		//if (!empty($this->options[$table]['base'])) $base = $this->options[$table]['base'];
 		$data = capture(array($base."/base", "base"), "", $render_prefix);
 		file_put_contents($o, $data);
 	}
@@ -1207,13 +1206,19 @@ class Schemer {
 	}
 
 	function get($model) {
-		$groups = config("groups");
-		$statuses = config("statuses");
 		$sb = sb();
 		$fields = $this->get_table($model);
 		$options = $this->options[$model];
 		//SET UP MODEL ARRAY
-		$data = array_merge(array("name" => $model, "label" => ucwords(str_replace(array("-", "_"), array(" ", " "), $model)), "package" => settings("site_name"), "fields" => array(), "relations" => array()), $options);
+		$data = array(
+			"name" => $model,
+			"label" => ucwords(str_replace(array("-", "_"), array(" ", " "), $model)),
+			"singular" => rtrim($model, 's'),
+			"fields" => array(),
+			"relations" => array()
+		);
+		$data["singular_label"] = ucwords(str_replace(array("-", "_"), array(" ", " "), $data["singular"]));
+		$data = array_merge($data, $options);
 		//ADD FIELDS
 		foreach($fields as $name => $field) {
 			$data["fields"][$name] = array();

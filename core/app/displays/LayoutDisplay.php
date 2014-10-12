@@ -5,6 +5,8 @@ class LayoutDisplay {
 
 	var $cells = array();
 
+	var $default_cell = false;
+
 
 	/**
 	 * Allows you to filter the options for each column.
@@ -31,6 +33,8 @@ class LayoutDisplay {
 	}
 
 	function append($parent, $html) {
+		if (empty($parent)) $parent = $this->default_cell;
+		else if (!$this->default_cell) $this->default_cell = $parent;
 		$this->cells[$parent]->appendChild($html);
 	}
 

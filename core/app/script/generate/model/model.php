@@ -6,6 +6,6 @@
 		$dirs = array($app_dir."models");
 		$generate["model"] = $app_dir."models/".ucwords($model_name).".php";
 	}
-	$template_map["base"] = array($base_model."/base", "base");
-	$template_map["model"] = array($base_model."/model", "model");
+	//$template_map["base"] = array($base_model."/base", "base");
+	//$template_map["model"] = array($base_model."/model", "model");
 ?>

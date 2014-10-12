@@ -5,6 +5,8 @@
  */
 class <?= ucwords($name); ?>Model extends Table {
 
+  var $base = "<? echo $base; ?>";
+
 	var $hooks = array(<? $count = 0; foreach ($fields as $column => $field) { if (!empty($field)) { $fcount = 0; if ($count > 0) echo ','; $count++; echo "\n"; ?>
 		"<?= $column; ?>" => array(<? foreach ($field as $k => $v) { ?><? if ($fcount > 0) echo ", "; $fcount++ ?>"<?= $k; ?>" => "<?= $v; ?>"<? } ?>)<? } } echo "\n"; ?>
 	);
@@ -13,24 +15,24 @@ class <?= ucwords($name); ?>Model extends Table {
 		$this->has_one("<?= $v[0]; ?>", "<?= $column; ?>");<? } } } ?><? foreach ($relations as $relation) { echo "\n"; ?>
 		$this->has_many("<?= $relation['model']; ?>", "<?= $relation['field']; ?>"<? if (!empty($relation['lookup'])) { ?>, "<?= $relation['lookup']; ?>", "<?= $relation['ref_field']; ?>"<? } ?>);<? } echo "\n"; ?>
 	}
-	
+
 	function create($<?= $singular; ?>) {
 		queue("<?= $name; ?>", $<?= $singular; ?>);
 	}
-	
+
 	function update($<?= $singular; ?>) {
 		queue("<?= $name; ?>", $<?= $singular; ?>, array("uris_id" => $<?= $singular; ?>['uris_id']));
 	}
-	
+
 	function query_admin($query, &$ops) {
 		$query->condition("<?= $name; ?>.uris_id.statuses", "deleted", "!=");
 		return $query;
 	}
-	
+
 	function display_admin($display, $ops) {
 		$display->add("id");
 	}
-	
+
 	function query_form($query, &$ops) {
 		if (empty($ops['action'])) $ops['action'] = "create";
 		$query->action($ops['action']);
@@ -48,7 +50,7 @@ class <?= ucwords($name); ?>Model extends Table {
 		$query->select(array("<?php echo implode('", "', array_keys($fields)); ?>"), $query->model);
 		return $query;
 	}
-	
+
 	function display_form($display, &$ops) {
 <?php
 			$tabs = "\t\t";
@@ -60,11 +62,11 @@ class <?= ucwords($name); ?>Model extends Table {
 			}
 		?>
 	}
-	
+
 	function query_get($query, &$ops) {
 		return $query;
 	}
-	
+
 	function query_select($query, &$ops) {
 		if (!empty($ops['id'])) {
 			$query->condition($query->model.".id", explode(",", $ops['id']));

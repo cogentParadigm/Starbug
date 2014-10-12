@@ -30,27 +30,38 @@ class ErrorHandler {
 			"line" => $exception->getLine()
 		);
 
+		if ($exception instanceof PDOException) {
+			if (sb()->db->queue->active) {
+				$error["message"] .= "\n\n".sb()->db->queue->active->interpolate();
+			}
+			if (count(sb()->db->queue)) {
+				foreach (sb()->db->queue as $query) {
+					$error["message"] .= "\n\n".$query->interpolate();
+				}
+			}
+		}
+
 		$traces = ErrorHandler::expand_evals($error, $exception->getTrace());
 		if (false !== strpos($error['file'], "eval()'d code")) {
 			$error = array_shift($traces);
 		}
 		$error['traces'] = $traces;
-		
+
 		assign("error", $error);
 		if (defined('SB_CLI')) render("exception-cli");
 		else render("exception");
 		exit(1);
 	}
-	
+
 	/**
 	 * error handler
 	 */
 	function handle_error($errno, $errstr, $errfile, $errline) {
 		restore_error_handler();
 		restore_exception_handler();
-		
+
 		ob_end_clean();
-		
+
 		$trace=debug_backtrace();
 		// skip the first 3 stacks as they do not tell the error position
 		if (count($trace)>2) $trace = array_slice($trace, 2);
@@ -99,7 +110,7 @@ class ErrorHandler {
 			else render("exception");
 			exit(1);
 	}
-	
+
 	/**
 	 * expand eval'd code messages from a trace where possible
 	 */
@@ -121,7 +132,7 @@ class ErrorHandler {
 		}
 		return $ret;
 	}
-	
+
 	function expand_eval($expand, $parent, $type="") {
 		$ret = array();
 		if (empty($type)) {
@@ -165,7 +176,7 @@ class ErrorHandler {
 		}
 		return $ret;
 	}
-	
+
 	/**
 	 * renders source around an line. used for exception and error output details
 	 */
@@ -190,7 +201,7 @@ class ErrorHandler {
 		}
 		return '<div class="code"><pre>'.$output.'</pre></div>';
 	}
-	
+
 	/**
 	 * converts function arguments from a trace into a readable string
 	 */

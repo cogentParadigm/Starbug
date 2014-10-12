@@ -19,26 +19,6 @@ include(dirname(__FILE__)."/classes/Table.php");
 // included driver class
 include(dirname(__FILE__)."/classes/mysql.php");
 /**
-	* getter/caller for model properties/functions
-	* @ingroup data
-	*/
-function sb() {
-	$sb = sb::$instance;
-	$args = func_get_args();
-	$count = count($args);
-	if ($count == 0) return $sb;
-	else if ($count == 1) {
-		if ($sb->db->has($args[0])) return $sb->db->model($args[0]);
-		else return $sb->db->$args[0];
-	} else if ($count == 2) {
-		return $sb->db->model($args[0])->$args[1];
-	} else {
-		$model = $sb->db->model(array_shift($args));
-		$function = array_shift($args);
-		return call_user_func_array(array($model, $function), $args);
-	}
-}
-/**
  * get database
  * @ingroup data
  */

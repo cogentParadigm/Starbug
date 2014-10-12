@@ -66,13 +66,13 @@ class ApiRequest {
 		global $sb;
 		list($action, $format, $ops) = $args;
 		$this->model = $model;
-		$query = query($model);
+		$query = entity_query($model);
 		if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) {
 			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : sb($model)->insert_id;
 			$query->condition($model.".id", $id);
 		}
 		if (!empty($_GET['keywords'])) $query->search($_GET['keywords']);
-		
+
 		//paging
 		if (isset($_SERVER['HTTP_RANGE'])) {
 			list($start, $finish) = explode("-", end(explode("=", $_SERVER['HTTP_RANGE'])));
@@ -89,7 +89,7 @@ class ApiRequest {
 			$query->limit($ops['limit']);
 			$pager = $query->pager($_GET['page']);
 		}
-		
+
 		$data = (is_array($query) && isset($query['data'])) ? $query['data'] : $query->all();
 		$f = strtoupper($format);
 		$error = $f."errors";

@@ -4,10 +4,10 @@
 		$region = $container['region'];
 		$position = $container['position'];
 		$type = $container['type'];
-		$block_id = "block-".$region."-".$position;
+		$block_id = $region."-".$position;
 		$_POST[$block_id] = $container;
-		$attributes['id'] = $block_id;
-		$attributes['name'] = $block_id."[content]";
+		$attributes['id'] = "block-".$block_id;
+		$attributes['name'] = $display->get_name("blocks[".$block_id."]");
 		assign("attributes", $attributes);
 		assign("value", $container['content']);
 		render("form/textarea");
