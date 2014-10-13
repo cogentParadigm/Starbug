@@ -65,6 +65,10 @@ class Schemer {
 	 */
 	var $population = array();
 	/**
+	* @var array Holds entities to be cerated
+	*/
+	var $entities = array();
+	/**
 	 * @var array Holds menus
 	 */
 	var $menus = array();
@@ -711,7 +715,8 @@ class Schemer {
 	 */
 	function add_uri($path) {
 		$uri = $this->uris[$path];
-		store("uris", $uri);
+		$entity = (empty($uri['type'])) ? "uris" : $uri['type'];
+		entity_save($entity, $uri);
 	}
 
 	/**
@@ -720,7 +725,8 @@ class Schemer {
 	 */
 	function update_uri($path, $uri=array()) {
 		if (empty($uri)) $uri = $this->uris[$path];
-		store("uris", $uri, array("path" => $path));
+		$entity = (empty($uri['type'])) ? "uris" : $uri['type'];
+		entity_save($entity, $uri, array("path" => $path));
 		/*
 		if (!empty($extra_terms)) {
 			foreach ($extra_terms as $tid) remove("terms_index", "id:".$tid);

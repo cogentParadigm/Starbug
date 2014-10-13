@@ -1,46 +1,6 @@
 <?php
 class Uris {
 
-	function create($uris) {
-		queue("blocks", array("type" => "text",  "region" => "content",  "position" => 1, "uris_id" => "", "content" => filter_html($_POST['blocks']['content-1'])));
-		sb($uris['type'])->create($uris);
-		if (!errors()) {
-			$uid = $this->insert_id;
-		} else {
-			global $sb;
-			if (errors("uris[title]") && empty($uris['path'])) unset($sb->errors['uris']['path']);
-		}
-	}
-
-	function update($uris) {
-		$row = $this->get($uris['id']);
-		$type = query("entities")->condition("name", $uris['type'])->one();
-		if (!empty($type['table'])) {
-			$data = $_POST[$type['table']];
-			$data['uris_id'] = $uris['id'];
-			sb($type['table'])->update($data);
-		}
-		$this->store($uris);
-		if (!errors()) {
-			$uid = $uris['id'];
-			$blocks = get("blocks", array("uris_id" => $uris['id']));
-			foreach ($blocks as $block) {
-				$key = 'block-'.$block['region'].'-'.$block['position'];
-				if (!empty($_POST[$key])) store("blocks", array("id" => $block['id'], "content" => filter_html($_POST[$key]["content"])));
-			}
-		}
-	}
-
-	function delete($uris) {
-		$id = intval($uris['id']);
-		$uris = query("uris")->condition("id", $uris['id'])->one();
-		$type = query("entities")->condition("name", $uris['type'])->one();
-		$cond = array("uris_id" => $uris['id']);
-		if (!empty($type['table'])) remove($type['table'], $cond);
-		remove("blocks", $cond);
-		remove("uris", "id:".$id);
-	}
-
 	function query_admin($query, &$ops) {
 		$query->select("uris.statuses.term as statuses");
 		if (!logged_in("admin")) $query->action("read");

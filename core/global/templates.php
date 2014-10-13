@@ -84,7 +84,7 @@ function render_form($form="", $render=true) {
 	* @param string $layout the layout to render
 	*/
 function render_layout($layout="", $render=true) {
-	efault($layout, request("layout"));
+	if (empty($layout)) $layout = empty(request("layout")) ? "views" : request("layout");
 	if ($render) render(array($layout."-".request("path"), $layout, "Default"), "layouts");
 	else return capture($layout, "layouts");
 }
@@ -213,7 +213,7 @@ function put($parent, $selector="", $content="") {
 		$selector = $parent;
 		$parent = null;
 	}
-	
+
 	$selector = Renderable::parse_selector($selector);
 	if (empty($selector['tag'])) {
 		$node = $parent;
@@ -222,9 +222,9 @@ function put($parent, $selector="", $content="") {
 		$node = new Renderable($selector);
 		if ($parent) $parent->appendChild($node);
 	}
-	
+
 	$node->setText($content);
-	
+
 	return $node;
 }
 ?>

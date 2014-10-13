@@ -68,7 +68,7 @@ $this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"format  type:string  length:16  default:  list:false",
 	"parent  type:int  default:0  list:false",
 	"sort_order  type:int  default:0  list:false",
-	"type  type:string  default:views  list:false",
+	"type  type:string  default:  list:false",
 	"prefix  type:string  length:128  default:app/views/",
 	"theme  type:string  length:128  default:  list:false",
 	"layout  type:string  length:64  default:",
@@ -111,12 +111,12 @@ $this->table("views  base:uris  description:A basic view", "custom1  type:string
 $this->table("pages  base:uris  description:A basic page");
 $this->table("posts  base:uris  description:A blog post");
 // URIS
-$this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
-$this->uri("api", "template:api  prefix:core/app/views/  type:pages");
-$this->uri("documentation", "template:documentation  prefix:core/app/views/  type:pages  groups:root");
+//$this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
+$this->uri("api", "template:api  prefix:core/app/views/");
+$this->uri("documentation", "template:documentation  prefix:core/app/views/  groups:root");
 $this->uri("profile", "template:controller");
 //Rogue IDE
-$this->uri("rogue", "title:Rogue IDE  format:xhr  prefix:core/app/views/  groups:root");
+//$this->uri("rogue", "title:Rogue IDE  format:xhr  prefix:core/app/views/  groups:root");
 //Admin
 $this->uri("admin", "template:controller-group  groups:admin  theme:storm");
 //Uploader
@@ -133,9 +133,7 @@ $this->menu("admin",
 			"href:admin/settings  content:Settings",
 			"template:divider",
 			"href:admin/menus  content:Menus",
-			"href:admin/taxonomies  content:Taxonomy",
-			"template:divider  groups:root",
-			"href:sb-admin  content:The Bridge  target:_blank  groups:root"
+			"href:admin/taxonomies  content:Taxonomy"
 		)
 	),
 	"href:admin/uris  content:Content",

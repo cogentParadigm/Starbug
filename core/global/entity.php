@@ -66,8 +66,17 @@ function entity_query($entity) {
   */
 function entity_load($name, $id, $reset=false) {
   static $entities = array();
-  if ($reset || !isset($entities[$id])) {
-    $entities[$id] = entity_query($name)->condition($name.".id", $id)->one();
+  if (is_array($id)) {
+    $conditions = $id;
+    $id = false;
+  }
+  if ($reset || !$id || !isset($entities[$id])) {
+    if ($id) $entities[$id] = entity_query($name)->condition($name.".id", $id)->one();
+    else if ($conditions) {
+      $entity = entity_query($name)->conditions($conditions)->one();
+      $id = $entity["id"];
+      $entities[$id] = $entity;
+    }
   }
   return $entities[$id];
 }
@@ -77,15 +86,22 @@ function entity_load($name, $id, $reset=false) {
  * @ingroup entity
  * @param string $name the name of the entity
  * @param array $fields the properties to save
+ * @param array $from the conditions to match on instead of an ID. must map to a single entity
  */
-function entity_save($name, $fields) {
+function entity_save($name, $fields, $from=array()) {
   $chain = array();
   $base = $name;
   $original = $update = false;
 
   if (!empty($fields["id"])) {
+    $update = true;
+    $original = entity_load($name, $fields["id"]);
+  } else if (!empty($from)) {
+    $original = entity_load($name, $from);
+    if ($original) {
       $update = true;
-      $original = entity_load($name, $fields["id"]);
+      $fields["id"] = $original["id"];
+    }
   }
 
   //build entity chain
@@ -112,8 +128,10 @@ function entity_save($name, $fields) {
         queue($name, $record);
       }
     } else {
-      unset($$fields[$chain[$last]."_id"]);
-      if ($update) $fields["id"] = $original[$chain[$last]."_id"];
+      if ($last > 0) {
+        unset($$fields[$chain[$last]."_id"]);
+        if ($update) $fields["id"] = $original[$chain[$last]."_id"];
+      }
       store($name, $fields);
     }
   }
