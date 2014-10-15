@@ -35,5 +35,4 @@ $this->store(
 		"body" => "<h2>Welcome to [site:name]!</h2>\n<p>An account has been created for you. You can login at <a href=\"[url:login]\">[url:login]</a>.</p><p>Here are your credentials.<br/>login: [user:email]<br/>password: [user:password]</p>"
 	)
 );
-$this->store("menus", "menu:admin  href:admin/emails", "content:Email Templates  parent:1  position:5");
 ?>

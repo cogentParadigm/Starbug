@@ -249,7 +249,18 @@ class query implements IteratorAggregate, ArrayAccess {
 		list($field, $alias) = array($parsed['collection'], $parsed['alias']);
 		efault($collection, $this->last_collection);
 		$table = $this->query['from'][$collection];
-		$schema = schema($table.".fields.".$field);
+		$schema = column_info($table, $field);
+		if ($schema['entity'] !== $table) {
+			$entity_collection = $collection."_".$schema['entity'];
+			if (!isset($this->query['from'][$entity_collection])) {
+				$base_entity = entity_base($table);
+				$this->join($schema['entity']." as ".$entity_collection);
+				if ($schema['entity'] === $base_entity) $this->on($entity_collection.".id=".$collection.".".$base_entity."_id");
+				else $this->on($entity_collection.".".$base_entity."_id=".$collection.".".$base_entity."_id");
+			}
+			$table = $schema['entity'];
+			$collection = $entity_collection;
+		}
 		if ($schema['type'] == "category" || ($schema['type'] == "terms" && ($mode == "group" || $mode == "set"))) {
 			$this->join("terms_index as ".$collection."_".$alias."_lookup")
 						->on($collection."_".$alias."_lookup.type='".$table."' && ".$collection."_".$alias."_lookup.type_id=".$collection.".id && ".$collection."_".$alias."_lookup.rel='".$field."'")
@@ -260,7 +271,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			if ($mode == "select") {
 				$return = "(SELECT GROUP_CONCAT(t.$token) FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='".$table."' && ti.type_id=".$collection.".id && ti.rel='".$field."' GROUP BY ti.type, ti.type_id, ti.rel)";
 			} else if ($mode == "where" || $mode == "condition") {
-				$return = "(SELECT t.$token FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='".$table."' && ti.type_id=".$collection.".id && ti.rel='".$field."' GROUP BY ti.type, ti.type_id, ti.rel)";
+				$return = "(SELECT t.$token FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='".$table."' && ti.type_id=".$collection.".id && ti.rel='".$field."')";
 			}
 		} else if (isset($schema['references'])) {
 			$ref = explode(" ", $schema['references']);
@@ -1038,8 +1049,19 @@ class query implements IteratorAggregate, ArrayAccess {
 						//}
 					} else {
 						//otherwise we look at the field schema
-						$schema = schema($table.".fields.".$token);
+						$schema = column_info($table, $token);
 						if (!empty($schema)) {
+							if ($schema['entity'] !== $table) {
+								$entity_collection = $collection."_".$schema['entity'];
+								if (!isset($this->query['from'][$entity_collection])) {
+									$base_entity = entity_base($table);
+									$this->join($schema['entity']." as ".$entity_collection);
+									if ($schema['entity'] === $base_entity) $this->on($entity_collection.".id=".$collection.".".$base_entity."_id");
+									else $this->on($entity_collection.".".$base_entity."_id=".$collection.".".$base_entity."_id");
+								}
+								$field = $entity_collection.".".$token;
+								$collection = $entity_collection;
+							}
 							if ($mode == "set" && ($schema['type'] == "category" || $this->db->has($schema['type']))) {
 								//do nothing
 								//if it's a SET we can ignore category fields and table references
@@ -1064,7 +1086,11 @@ class query implements IteratorAggregate, ArrayAccess {
 						$invert = true;
 					}
 					//if the loop continues, the current token becomes the next collection
-					$column_info = sb($this->query['from'][$collection])->hooks[$token];
+					$column_info = column_info($this->query['from'][$collection], $token);
+					if (!empty($column_info) && $column_info['entity'] !== $table) {
+						$table = $column_info['entity'];
+						$collection = $collection."_".$column_info['entity'];
+					}
 					$collection = isset($this->query['from'][$collection.'_'.$token]) ? $collection.'_'.$token : $token;
 					if ($column_info['type'] == "category") $ornull = true;//$set = "on_".$collection;
 				}

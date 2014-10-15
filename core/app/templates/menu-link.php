@@ -1,42 +1,44 @@
 <?php
 	$attributes = $class = $link_attributes = array();
 	$link_text = "";
-	
+
 	//add first class for first item in list
 	if ($link['position'] == 0) $class[] = "first";
-	
+
 	//determine where the link is going to
 	if (!empty($link['uris_id'])) {
 		$link_text = empty($link['breadcrumb']) ? $link['title'] : $link['breadcrumb'];
 		$link_attributes['href'] = uri($link["path"]);
 		$parts = explode("/", $link['path']);
-		$active = true;
-		foreach ($parts as $idx => $part) if ($request->uri[$idx] != $part) $active = false;
+		$active = !empty($link['path']);
+		foreach ($parts as $idx => $part) if (request()->uri[$idx] !== $part) $active = false;
 		if ($active) $class[] = "active";
 	}
-	
+
 	//taxonomy menus
 	if (!empty($link['term'])) $link['content'] = $link['term'];
-	
+
 	//href override
 	if (!empty($link['href'])) $link_attributes['href'] = (0 === strpos($link['href'], "http")) ? $link['href'] : uri($link['href']);
-	
+
 	//content override
 	if (!empty($link['content'])) $link_text = $link['content'];
-	
+
 	//set the link target
 	if (!empty($link['target'])) $link_attributes['target'] = $link['target'];
 
 	//if there are children, we need to build a dropdown
 	if (!empty($link['children'])) {
 		$class[] = "dropdown";
-		$attributes['data-dojo-type'] = "bootstrap/Dropdown";
+		$class[] = "clearfix";
+		//$attributes['data-dojo-type'] = "bootstrap/Dropdown";
 		$link_attributes['class'] = "dropdown-toggle";
 		$link_attributes['data-toggle'] = "dropdown";
 		$link_attributes['role'] = "button";
-		$link_text .= '<b class="caret"></b>';
+		$link_attributes['data-target'] = "#";
+		$link_text .= '<i class="fa chevron pull-right"></i>';
 	}
-	
+
 	//if sortable, set draggable attribute
 	if ($sortable) {
 		$attributes['draggable'] = "true";
@@ -44,12 +46,12 @@
 	}
 	$attributes['data-menu-id'] = $link['id'];
 	$attributes['data-parent'] = $link['parent'];
-	
+
 	if (!empty($link['template'])) $class[] = $link['template'];
-	
+
 	//serialize the array of classes
 	if (!empty($class)) $attributes['class'] = implode(" ", $class);
-	
+
 	if ($menu_type == "taxonomy") {
 		$area = "taxonomies";
 		$model = "terms";

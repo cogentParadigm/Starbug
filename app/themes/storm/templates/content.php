@@ -1,3 +1,1 @@
-<div id="content">
-	<? render_view(); ?>
-</div>
+<? render_view(); ?>

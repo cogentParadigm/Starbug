@@ -32,6 +32,20 @@ function entity_base($entity) {
 }
 
 /**
+ * get entity or column info
+ * @param string $entity entity name
+ * @param string $column column name
+ */
+function column_info($entity, $column) {
+  $info = array();
+  if (!db::has($entity)) return $info;
+  while (!isset(sb($entity)->hooks[$column]) && !empty(sb($entity)->base)) $entity = sb($entity)->base;
+  if (isset(sb($entity)->hooks[$column])) $info = sb($entity)->hooks[$column];
+  $info["entity"] = $entity;
+  return $info;
+}
+
+/**
   * Query helper to provide a query with all tables joined and columns selected
   * @ingroup entity
   * @param string $entity the name of the entity

@@ -4,9 +4,15 @@
 /********************* dbootstrap ************************************/
 @import "../../../../../libraries/dojo/dbootstrap/theme/dbootstrap/index.less";
 
+/********************* variables ************************************/
+@link-color:#419BC0;
+@dropdown-bg:#000;
+@component-active-bg:#FFF;
+@nav-link-hover-bg:#FFF;
+
 /********************* structural elements *********************/
-body{background:url(../images/bg.png) repeat-x #FFF;color:#666}
-.page{position:relative;padding:4px 12px;text-align:left}
+body{background:url(../images/bg.png) repeat-x #FFF;color:#666;overflow-x:hidden}
+.page{position:relative;padding:4px 12px;text-align:left;transition:transform 0.5s}
 #logo{font-size:16px;color:#FFF;display:block;margin-bottom:4px}
 #top-right{float:right;color:#FFF}
 body h1, body.claro h1{margin:0 0 4px 0;font-weight:bold;font-size:140%;line-height:100%}
@@ -14,7 +20,6 @@ body h1, body.claro h1{margin:0 0 4px 0;font-weight:bold;font-size:140%;line-hei
 #tabs{width:auto;position:absolute;right:12px}
 #nav{height:50px;margin-bottom:0;margin-top:5px}
 #main{margin:0 0 10px;padding:9px 0;float:left;width:100%}
-#content{width:100%}
 
 /********************* headers *********************/
 h2{color:#419bc0;font-size:150%}
@@ -29,7 +34,7 @@ h2{color:#419bc0;font-size:150%}
 #nav li ul{#gradient > .vertical(@gray-darker, #000)}
 #nav .dropdown-menu li a{color:#FFF}
 #nav .dropdown-menu li a:hover{color:@gray-darker}
-.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {background:transparent;text-decoration:underline}
+//.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {background:transparent;text-decoration:underline}
 .dropdown-toggle{cursor:pointer}
 #tabs{border-bottom:none}
 #tabs > li + li{margin-left:5px}
@@ -39,6 +44,28 @@ h2{color:#419bc0;font-size:150%}
 #footer{margin-top:10px}
 #footer ul{padding:0;margin:0}
 #footer ul li{list-style-type:none;float:left}
+#menu{width:200px;position:absolute;top:0;left:0;background:#000;z-index:999;height:100%;transition:transform 0.5s;transform:translateX(-200px);}
+#menu-checkbox{display:none}
+#menu-checkbox:checked ~ #menu{transform:translateX(0px)}
+#menu-checkbox:checked ~ .page{transform:translateX(200px)}
+#menu-checkbox:checked ~ .page #menu-toggle{background:#FFF}
+#menu a{color:#FFF}
+#menu .nav > li > a:hover, #menu .nav > li > a:focus, #menu .nav .open > a,
+#menu .dropdown-menu > .active > a, #menu .dropdown-menu > .active > a:hover, #menu .dropdown-menu > .active > a:focus,
+#menu .dropdown-menu > li > a:hover, #menu .dropdown-menu > li > a:focus{color:#222}
+#menu .dropdown-menu{width:100%}
+#menu .open > .dropdown-menu{position:static;background:transparent}
+.dropdown .chevron:before{content:@fa-var-chevron-down}
+.open.dropdown .chevron:before{content:@fa-var-chevron-up}
+#menu-toggle{display:none}
+
+@media (max-width:@screen-sm-max) {
+  #nav{display:none}
+  #menu-toggle{display:block;width:40px;cursor:pointer;margin-top:12px;margin-bottom:11px;padding:10px;border-radius:6px}
+  #menu-toggle:before{display:block;content:"";width:100%;border-top:7px double #FFF;padding-top:3px}
+  #menu-toggle:after{display:block;content:"";width:100%;border-bottom:2px solid #FFF}
+  #menu-checkbox:checked ~ .page #menu-toggle:before, #menu-checkbox:checked ~ .page #menu-toggle:after{border-color:#222}
+}
 
 /********************* classes *********************/
 .input .alert-error{display:block;width:auto;padding:5px;margin-bottom:8px}
@@ -52,7 +79,7 @@ h2{color:#419bc0;font-size:150%}
 .box .inside{padding:10px 20px 10px 10px;position:relative;.clearfix}
 
 /********************* links *********************/
-a{color:#419bc0;text-decoration:none}
+a{text-decoration:none}
 #top-right a, h1 a, h1 a:hover{color:#FFF}
 a:hover{text-decoration:underline}
 
@@ -125,7 +152,7 @@ body.claro.dojoDndMove .dojoDndAvatarItem{position:relative;display:block;top:-8
 .dgrid-cell:focus{outline:none}
 
 .dijitTooltipContents{.clearfix}
- 
+
 .dgrid.dgrid-list{height:auto;border:none;background:transparent}
 .dgrid.dgrid-list .dgrid-scroller{position:relative;overflow:visible;outline:none}
 .dgrid.dgrid-list .dgrid-no-data{display:none}

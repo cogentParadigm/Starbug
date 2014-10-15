@@ -128,17 +128,18 @@ $this->uri("robots", "prefix:core/app/views/  format:txt");
 //Admin Menu
 $this->menu("admin",
 	array(
-		"content" => '<span class="fa fa-cog"></span>',
+		"content" => "Content",
 		"children" => array(
-			"href:admin/settings  content:Settings",
-			"template:divider",
-			"href:admin/menus  content:Menus",
-			"href:admin/taxonomies  content:Taxonomy"
+			"href:admin/views  content:Views",
+			"href:admin/pages  content:Pages"
 		)
 	),
-	"href:admin/uris  content:Content",
 	"href:admin/users  content:Users",
-	"href:admin/media  content:Media  target:_blank"
+	"href:admin/taxonomies  content:Taxonomy",
+	"href:admin/menus  content:Menus",
+	"href:admin/media  content:Media  target:_blank",
+	"href:admin/emails  content:Email Templates",
+	"href:admin/settings  content:Settings"
 );
 //groups
 $this->taxonomy("groups",
