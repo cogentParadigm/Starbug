@@ -1087,7 +1087,7 @@ class query implements IteratorAggregate, ArrayAccess {
 					}
 					//if the loop continues, the current token becomes the next collection
 					$column_info = column_info($this->query['from'][$collection], $token);
-					if (!empty($column_info) && $column_info['entity'] !== $table) {
+					if (!empty($column_info) && $column_info['entity'] !== $this->query['from'][$collection]) {
 						$table = $column_info['entity'];
 						$collection = $collection."_".$column_info['entity'];
 					}

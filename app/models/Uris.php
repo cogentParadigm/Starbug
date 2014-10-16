@@ -2,15 +2,15 @@
 class Uris {
 
 	function query_admin($query, &$ops) {
-		$query->select("uris.statuses.term as statuses");
+		$query->select($query->model.".statuses.term as statuses");
 		if (!logged_in("admin")) $query->action("read");
-		$query->condition("uris.prefix", "app/views/");
-		$query->condition("uris.statuses", "deleted", "!=");
+		$query->condition($query->model.".prefix", "app/views/");
+		$query->condition($query->model.".statuses", "deleted", "!=");
 		if (!empty($ops['type'])) {
-			$query->condition("uris.type", $ops['type']);
+			$query->condition($query->model.".type", $ops['type']);
 		}
-		if (!empty($ops['status'])) $query->condition("uris.statuses.id", $ops['status']);
-		efault($ops['orderby'], "uris.modified DESC, uris.created DESC, uris.title DESC");
+		if (!empty($ops['status'])) $query->condition($query->model.".statuses.id", $ops['status']);
+		efault($ops['orderby'], "modified DESC, created DESC, title DESC");
 		$query->sort($ops['orderby']);
 		return $query;
 	}

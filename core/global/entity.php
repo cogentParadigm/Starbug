@@ -62,9 +62,10 @@ function entity_query($entity) {
 
   //build query
   foreach ($chain as $idx => $name) {
-    if ($idx === 0) $query = query($name)->select("*", $name);
+    $collection = ($name === $entity) ? $entity : $entity."_".$name;
+    if ($idx === 0) $query = query($name." as ".$collection)->select("*", $collection);
     else {
-      $query->join($name, "INNER")->select("*", $name);
+      $query->join($name." as ".$collection, "INNER")->select("*", $collection);
     }
   }
 
