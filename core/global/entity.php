@@ -144,7 +144,7 @@ function entity_save($name, $fields, $from=array()) {
       }
     } else {
       if ($last > 0) {
-        unset($$fields[$chain[$last]."_id"]);
+        unset($fields[$chain[$last]."_id"]);
         if ($update) $fields["id"] = $original[$chain[$last]."_id"];
       }
       store($name, $fields);

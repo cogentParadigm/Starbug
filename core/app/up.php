@@ -107,7 +107,7 @@ $this->table("menus",
 	"menu_path  type:string  length:255  default:  display:false"
 );
 // CONTENT TYPES
-$this->table("views  base:uris  description:A basic view", "custom1  type:string");
+$this->table("views  base:uris  description:A basic view");
 $this->table("pages  base:uris  description:A basic page");
 $this->table("posts  base:uris  description:A blog post");
 // URIS

@@ -4,12 +4,12 @@
  * @ingroup models
  */
 class Users {
-	
+
 	var $statuses = array(
 		"disabled" => 1,
 		"enabled" => 4
 	);
-	
+
 	/**
 	 * A function for an administrator to create and update users
 	 */
@@ -24,6 +24,10 @@ class Users {
 			$data['user']['password'] = $user['password'];
 			send_email("template:Account Creation  to:".$user['email'], $data);
 		}
+	}
+
+	function delete($user) {
+		store("users", array("id" => $user['id'], "statuses" => "deleted"));
 	}
 
 	/**
@@ -89,15 +93,15 @@ class Users {
 			} else error("Sorry, the email address you entered was not found. Please retry.", "email");
 		}
 	}
-	
+
 	function query_admin($query, &$ops) {
 		$query->select("users.*");
 		$query->select("users.groups.id as groups");
 		$query->select("users.statuses.id as statuses");
 		if (!empty($ops['group']) && is_numeric($ops['group'])) {
-			$query->condition("users.groups.id", $ops['group']); 
+			$query->condition("users.groups.id", $ops['group']);
 		}
-		
+
 		if (!empty($ops['status']) && is_numeric($ops['status'])) $query->condition("users.statuses.id", $ops['status']);
 		else $query->condition("users.statuses", "deleted", "!=");
 		return $query;
@@ -106,7 +110,7 @@ class Users {
 	function display_admin($display, &$options) {
 		$display->add("first_name", "last_name", "email", "last_visit", "groups", "statuses  label:Status");
 	}
-	
+
 	function display_form($display, &$options) {
 		//parent::display_form($display, $options);
 		$display->layout->add("top  left:div.col-md-6  right:div.col-md-6");
@@ -119,7 +123,7 @@ class Users {
 		$display->add("password_confirm  input_type:password  pane:right");
 		$display->add("groups  input_type:multiple_category_select  taxonomy:groups  pane:right");
 	}
-	
+
 	function filter($row) {
 		//even though it shouldn't be useful to attackers,
 		//we don't want the password hash to be returned in api calls
