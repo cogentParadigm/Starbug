@@ -74,13 +74,10 @@ class Table {
 	 * @param string $lookup optional lookup table (table that contains the id). default is this table
 	 * @param string $ref_field the column that contains the id of the related record
 	 */
-	protected function has_one($name, $lookup, $ref_field="") {
-		if (empty($ref_field)) {
-			$ref_field = $lookup;
-			$lookup = $this->type;
-		}
+	protected function has_one($name, $ref_field, $hook="id") {
+		$lookup = $this->type;
 		if (!isset($this->relations[$name])) $this->relations[$name] = array();
-		$this->relations[$name] = array_merge_recursive($this->relations[$name], array($lookup => array($ref_field => array("id" => array("type" => "one", "lookup" => $lookup, "ref" => $ref_field)))));
+		$this->relations[$name] = array_merge_recursive($this->relations[$name], array($lookup => array($ref_field => array("id" => array("type" => "one", "lookup" => $lookup, "ref" => $ref_field, "hook" => $hook)))));
 	}
 
 	/**

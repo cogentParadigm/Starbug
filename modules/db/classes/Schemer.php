@@ -1165,7 +1165,7 @@ class Schemer {
 	 * @param string $from the migration to go to
 	 * @param int $from the migration to start from
 	 */
-	function get_relations($from, $to) {
+	function get_relations($from, $to, $rels=array()) {
 		$fields = $this->get_table($from);
 		$return = $indirect = $hooks = array();
 		foreach($fields as $column => $options) {
@@ -1174,13 +1174,14 @@ class Schemer {
 				//if $to has a hook in $from, then it has an indirect relation to everything $from has a relation to
 				//otherwise, there are no relationships
 				if (0 === strpos($options['references'], $to)) $hooks[] = $column;
-				else $indirect[] = array("model" => $ref[0], "lookup" => $from, "ref_field" => $column);
+				else if (isset($rels[$options['references']])) $return[] = array("type" => "one", "model" => $from, "field" => $rels[$options['references']], "ref_field" => $column);
+				else $indirect[] = array("type" => "many", "model" => $ref[0], "lookup" => $from, "ref_field" => $column);
 			}
 		}
-		if (empty($hooks)) return array();
+		if (empty($hooks)) return $return;
 		foreach ($hooks as $hook) {
 			//add the direct relation to the hook
-			if (isset($fields['id'])) $return[] = array("model" => $from, "field" => $hook);
+			if (isset($fields['id'])) $return[] = array("type" => "many", "model" => $from, "field" => $hook);
 			//add each indirect relation through the hook
 			foreach ($indirect as $i) $return[] = array_merge($i, array("field" => $hook));
 		}
@@ -1225,6 +1226,7 @@ class Schemer {
 		);
 		$data["singular_label"] = ucwords(str_replace(array("-", "_"), array(" ", " "), $data["singular"]));
 		$data = array_merge($data, $options);
+		$rels = array();
 		//ADD FIELDS
 		foreach($fields as $name => $field) {
 			$data["fields"][$name] = array();
@@ -1247,10 +1249,11 @@ class Schemer {
 			foreach ($field as $k => $v) {
 				$data["fields"][$name][$k] = $v;
 			}
+			if (isset($field['references'])) $rels[$field['references']] = $name;
 		}
 		//ADD RELATIONS
 		foreach ($this->tables as $table => $fields) {
-			$relations = $this->get_relations($table, $model);
+			$relations = $this->get_relations($table, $model, $rels);
 			$data['relations'] = array_merge($data['relations'], $relations);
 			//foreach ($relations as $m => $r) $data["relations"][] = array("model" => $m, "field" => $r['hook'], "lookup" => $r['lookup'], "ref_field" => $r['ref_field']);
 		}

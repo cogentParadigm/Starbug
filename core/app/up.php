@@ -109,7 +109,7 @@ $this->table("menus",
 // CONTENT TYPES
 $this->table("views  base:uris  description:A basic view");
 $this->table("pages  base:uris  description:A basic page");
-$this->table("posts  base:uris  description:A blog post");
+$this->table("posts  base:pages  description:A blog post");
 // URIS
 //$this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
 $this->uri("api", "template:api  prefix:core/app/views/");

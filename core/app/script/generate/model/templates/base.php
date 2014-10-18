@@ -13,7 +13,7 @@ class <?= ucwords($name); ?>Model extends Table {
 
 	function init() {<? foreach ($fields as $column => $field) { foreach ($field as $k => $v) { if ($k == "references") { $v = explode(" ", $v); echo "\n"; ?>
 	  $this->has_one("<?= $v[0]; ?>", "<?= $column; ?>");<? } } } ?><? foreach ($relations as $relation) { echo "\n"; ?>
-		$this->has_many("<?= $relation['model']; ?>", "<?= $relation['field']; ?>"<? if (!empty($relation['lookup'])) { ?>, "<?= $relation['lookup']; ?>", "<?= $relation['ref_field']; ?>"<? } ?>);<? } echo "\n"; ?>
+		$this->has_<?php echo $relation['type']; ?>("<?= $relation['model']; ?>", "<?= $relation['field']; ?>"<?php if ($relation['type'] == "one" && !empty($relation['ref_field'])) { ?>, "<?php echo $relation['ref_field']; ?>"<?php } ?><? if (!empty($relation['lookup'])) { ?>, "<?= $relation['lookup']; ?>", "<?= $relation['ref_field']; ?>"<? } ?>);<? } echo "\n"; ?>
 	}
 
 	function create($<?= $singular; ?>) {

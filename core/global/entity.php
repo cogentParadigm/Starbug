@@ -22,13 +22,27 @@ function sb() {
 
 /**
  * get the root model of an entity
- * @param string $entity the root of the entity
+ * @param string $entity the entity
  * @return string the base model
  */
 function entity_base($entity) {
   $base = $entity;
   while (!empty(sb($base)->base)) $base = sb($base)->base;
   return $base;
+}
+
+/**
+ * get an array representing the chain of inheritance for an entity
+ * @param string $entity the name of the entity
+ * @return array the inheritance chain. the first member will be $entity
+ */
+function entity_chain($entity) {
+  $chain = array();
+  while (!empty($entity)) {
+    $chain[] = $entity;
+    $entity = sb($entity)->base;
+  }
+  return $chain;
 }
 
 /**
@@ -56,17 +70,24 @@ function entity_query($entity) {
 
   //build entity chain
   while (!empty($base)) {
-    array_unshift($chain, $base);
+    $chain[] = $base;
     $base = sb($base)->base;
   }
 
   //build query
   foreach ($chain as $idx => $name) {
     $collection = ($name === $entity) ? $entity : $entity."_".$name;
-    if ($idx === 0) $query = query($name." as ".$collection)->select("*", $collection);
+    if ($idx === 0) $query = query($name." as ".$collection);
     else {
-      $query->join($name." as ".$collection, "INNER")->select("*", $collection);
+      $query->join($name." as ".$collection, "INNER");
     }
+  }
+
+  //add selection
+  $reverse = array_reverse($chain);
+  foreach ($reverse as $idx => $name) {
+    $collection = ($name === $entity) ? $entity : $entity."_".$name;
+    $query->select("*", $collection);
   }
 
   return $query;

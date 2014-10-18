@@ -837,7 +837,7 @@ class query implements IteratorAggregate, ArrayAccess {
 						else if (isset($relations[$this->model])) $rel = reset(end(reset($relations[$this->model])));
 					}
 					if (!empty($rel)) {
-						if ($rel['type'] == "one") $this->query['on'][$alias] = "$rel[lookup].$rel[ref]=".(($rel['lookup'] == $collection) ? $relator : $alias).".id";
+						if ($rel['type'] == "one") $this->query['on'][$alias] = (($rel['lookup'] == $collection) ? $alias : $rel['lookup']).".$rel[ref]=".(($rel['lookup'] == $collection) ? $relator : $alias).".".$rel['hook'];
 						else if ($rel['type'] == "many") {
 							if ($rel['lookup']) {
 								if (!isset($this->query['from'][$rel['lookup']])) {

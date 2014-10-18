@@ -5,7 +5,7 @@ class hook_store_blocks {
 		if ($query->mode == "insert") {
 			queue("blocks", array("type" => "text",  "region" => "content",  "position" => 1, "uris_id" => "", "content" => filter_html($value['content-1'])));
 		} else {
-			$blocks = entity_query($query->model)->join("blocks")->select("blocks.*")->condition($query->model.".id", $query->fields["id"])->all();
+			$blocks = query("blocks")->select("blocks.*")->condition($query->model."_id", $query->fields["id"])->all();
 			foreach ($blocks as $block) {
 				$key = $block['region'].'-'.$block['position'];
 				if (isset($value[$key])) queue("blocks", array("id" => $block['id'], "content" => filter_html($value[$key])));
