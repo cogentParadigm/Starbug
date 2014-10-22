@@ -131,15 +131,21 @@ $this->menu("admin",
 		"content" => "Content",
 		"children" => array(
 			"href:admin/views  content:Views",
-			"href:admin/pages  content:Pages"
+			"href:admin/pages  content:Pages",
+			"href:admin/posts  content:Posts"
 		)
 	),
 	"href:admin/users  content:Users",
-	"href:admin/taxonomies  content:Taxonomy",
-	"href:admin/menus  content:Menus",
 	"href:admin/media  content:Media  target:_blank",
-	"href:admin/emails  content:Email Templates",
-	"href:admin/settings  content:Settings"
+	array(
+		"content" => "Configuration",
+		"children" => array(
+			"href:admin/taxonomies  content:Taxonomy",
+			"href:admin/menus  content:Menus",
+			"href:admin/emails  content:Email Templates",
+			"href:admin/settings  content:Settings"
+		)
+	)
 );
 //groups
 $this->taxonomy("groups",

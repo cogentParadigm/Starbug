@@ -54,7 +54,10 @@ class <?= ucwords($name); ?>Model extends Table {
 		$query->action($ops['action']);
 		$query->condition("<?= $model; ?>.id", $ops['id']);
 <?php
-    if (!empty($base)) foreach(array("id", $base."_id") as $idx) unset($fields[$idx]);
+    if (!empty($base)) {
+      unset($fields["id"]);
+      foreach(entity_chain($base) as $b) unset($fields[$b."_id"]);
+    }
 		$tabs = "\t\t";
 		foreach ($fields as $fieldname => $field) {
 				if (sb()->db->has($field['type']) || $field['type'] == "category") {
