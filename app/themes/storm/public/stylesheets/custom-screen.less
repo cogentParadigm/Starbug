@@ -27,7 +27,7 @@ h2{color:#419bc0;font-size:150%}
 /********************* nav *********************/
 #nav > li{float:left;background:url(../images/nav-col-border.png) top right no-repeat;height:100%}
 #nav > li.last{background:transparent}
-#nav > li > a{padding:20px 12px 0px 12px;height:29px;line-height:14px;color:#FFF;font-weight:bold;font-size:12px}
+#nav > li > a{padding:20px 12px 16px 12px;height:auto;line-height:14px;color:#FFF;font-weight:bold;font-size:12px}
 #nav .caret{border-top-color:#FFF;margin-left:8px}
 #nav > li > a:hover, #nav > li > a:focus{background:transparent;text-decoration:underline}
 #nav > li.first > a{padding-left:0}
@@ -35,6 +35,9 @@ h2{color:#419bc0;font-size:150%}
 #nav .dropdown-menu li a{color:#FFF}
 #nav .dropdown-menu li a:hover{color:@gray-darker}
 //.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {background:transparent;text-decoration:underline}
+//#nav > li:first-child > a.dropdown-toggle{padding-left:0;padding-right:12px;background:transparent}
+//#nav > li:first-child > a.dropdown-toggle:hover{text-decoration:none}
+#nav .open > a, #nav .open > a:hover, #nav .open > a:focus{background:#FFF;color:#000}
 .dropdown-toggle{cursor:pointer}
 #tabs{border-bottom:none}
 #tabs > li + li{margin-left:5px}
@@ -128,11 +131,6 @@ body.claro .dijitDialogPaneContent{background:none;border:none}
 div.dojoDndHandle{display:block;cursor:hand;cursor:grab;cursor:-moz-grab;cursor:-webkit-grab}
 .dgrid-scroller.dojoDndSourceMoved, .dgrid-scroller.dojoDndSourceMoved .dojoDndItemOver{cursor:grabbing;cursor:-moz-grabbing;cursor:-webkit-grabbing}
 .claro .dojoDndItemAfter{border-top:none;border-bottom:1px solid #769DC0}
-
-
-#nav > li:first-child > a > .fa-cog{font-size:24px;margin-top:-5px}
-#nav > li:first-child > a.dropdown-toggle{padding-left:0;padding-right:12px;background:transparent}
-#nav > li:first-child > a.dropdown-toggle:hover{text-decoration:none}
 .menu-form .inline-fields .input{width:280px}
 
 /********************* dgrid *********************/
