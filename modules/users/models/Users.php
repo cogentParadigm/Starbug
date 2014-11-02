@@ -103,7 +103,7 @@ class Users {
 		}
 
 		if (!empty($ops['status']) && is_numeric($ops['status'])) $query->condition("users.statuses.id", $ops['status']);
-		else $query->condition("users.statuses", "deleted", "!=");
+		else $query->condition("users.statuses.slug", "deleted", "!=");
 		return $query;
 	}
 

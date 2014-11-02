@@ -1,10 +1,10 @@
 <?php
 class hook_store_type {
 	function empty_validate(&$query, $column, $argument) {
-		if (sb()->db->has($argument) || $argument == "category") $query->exclude($column);
+		if (sb()->db->has($argument)) $query->exclude($column);
 	}
 	function validate(&$query, $key, $value, $column, $argument) {;
-		if (sb()->db->has($argument) || $argument == "category") $query->exclude($key);
+		if (sb()->db->has($argument)) $query->exclude($key);
 		return $value;
 	}
 	function after_store(&$query, $key, $value, $column, $argument) {
@@ -24,7 +24,7 @@ class hook_store_type {
 		if (!is_array($value)) $value = explode(",", $value);
 		foreach ($value as $position => $type_id) {
 			$remove = false;
-			$value_type = ($type == $target) ? "id" : $type."_id";
+			$value_type = ($type == $target) ? "id" : $column."_id";
 			if (0 === strpos($type_id, "-")) {
 				$remove = true;
 				$type_id = substr($type_id, 1);
@@ -47,14 +47,14 @@ class hook_store_type {
 					$ids[] = $type_id;
 				}
 			} else {
-				$entry = query($target)->conditions(array($model."_id" => $model_id, $type."_id" => $type_id));
+				$entry = query($target)->conditions(array($model."_id" => $model_id, $column."_id" => $type_id));
 				if ($remove) {
 					//remove
 					$entry->delete();
 				} else {
 					//add
 					$entry->set($model."_id", $model_id);
-					$entry->set($type."_id", $type_id);
+					$entry->set($column."_id", $type_id);
 					$entry->set("position", intval($position)+1);
 					if ($entry->one()) $entry->update();
 					else $entry->insert();

@@ -4,7 +4,7 @@ class Files {
 	function create($record) {
 		$this->upload($record, $_FILES['file']);
 	}
-	
+
 	function update($record) {
 		$original = $this->get($record['id']);
 		$this->store($record);
@@ -16,7 +16,7 @@ class Files {
 			}
 		}
 	}
-	
+
 	function upload($record, $file) {
 		if (!empty($file['name'])) {
 			if ($file["error"] > 0) error($file["error"], "filename");
@@ -39,7 +39,7 @@ class Files {
 			$this->store($record);
 		}
 	}
-	
+
 	function prepare() {
 		$this->create(array("caption" => "Pre Uploaded File"));
 		if (!errors()) $_POST['files']['id'] = $this->insert_id;
@@ -49,7 +49,7 @@ class Files {
 		$this->remove("id:" .$file['id']);
 		return array();
 	}
-	
+
 	function get_mime($file_path) {
     	$output = exec("file --mime-type -b {$file_path}");
     	return $output;
@@ -59,7 +59,7 @@ class Files {
 		if (function_exists('finfo_file')){
 			$finfo = finfo_open(FILEINFO_MIME);
 			$mtype = finfo_file($finfo, $file_path);
-			finfo_close($finfo);  
+			finfo_close($finfo);
 		}
 		if ($mtype == '') {
 			$mtype = "application/force-download";
@@ -67,15 +67,15 @@ class Files {
 		return $mtype;
 		*/
 	}
-	
+
 	function query_list($query, &$ops) {
-		$query->condition("files.statuses", "deleted", "!=");
+		$query->condition("files.statuses.slug", "deleted", "!=");
 		if (!empty($ops['category']) && is_numeric($ops['category'])) {
 			$query->condition("category", $ops['category']);
 		}
 		return $query;
 	}
-	
+
 	function filter($file) {
 		if (reset(explode("/", $file['mime_type'])) == "image") image_thumb("app/public/uploads/".$file['id']."_".$file['filename'], "w:100  h:100  a:1");
 		return $file;

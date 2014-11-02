@@ -261,19 +261,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			$table = $schema['entity'];
 			$collection = $entity_collection;
 		}
-		if ($schema['type'] == "category" || ($schema['type'] == "terms" && ($mode == "group" || $mode == "set"))) {
-			$this->join("terms_index as ".$collection."_".$alias."_lookup")
-						->on($collection."_".$alias."_lookup.type='".$table."' && ".$collection."_".$alias."_lookup.type_id=".$collection.".id && ".$collection."_".$alias."_lookup.rel='".$field."'")
-						->join("terms as ".$collection."_".$alias)
-						->on($collection."_".$alias.".id=".$collection."_".$alias."_lookup.terms_id");
-		} else if ($schema['type'] == "terms") {
-			if (is_null($token)) $token = "slug";
-			if ($mode == "select") {
-				$return = "(SELECT GROUP_CONCAT(t.$token) FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='".$table."' && ti.type_id=".$collection.".id && ti.rel='".$field."' GROUP BY ti.type, ti.type_id, ti.rel)";
-			} else if ($mode == "where" || $mode == "condition") {
-				$return = "(SELECT t.$token FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='".$table."' && ti.type_id=".$collection.".id && ti.rel='".$field."')";
-			}
-		} else if (isset($schema['references'])) {
+		if (isset($schema['references'])) {
 			$ref = explode(" ", $schema['references']);
 			$type = "";
 			if (isset($schema['null'])) $type = "left";
@@ -296,14 +284,14 @@ class query implements IteratorAggregate, ArrayAccess {
 			} else {
 				//use lookup table
 				if ($mode == "select") {
-					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$schema['type']."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
+					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
 				} else if ($mode == "where" || $mode == "condition") {
-					$return = "(SELECT ".$token." FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$schema['type']."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
+					$return = "(SELECT ".$token." FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
 				} else if ($mode == "group" || $mode == "set") {
 					$this->join($schema['table']." as ".$collection."_".$alias."_lookup")
 								->on($collection."_".$alias."_lookup.".$table."_id=".$collection.".id")
 								->join($schema['type']." as ".$collection."_".$alias)
-								->on($collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$schema['type']."_id");
+								->on($collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id");
 				}
 			}
 		}
@@ -628,23 +616,56 @@ class query implements IteratorAggregate, ArrayAccess {
 			$join = false;
 		}
 
+		$columns = column_info($type);
+		$user_columns = column_info("users");
+
 		if ($join) {
 			//join permits - match table and action
-			if (!$this->has("permits")) $this->innerJoin("permits")->on("'".P($type)."' LIKE permits.related_table && '".$action."' LIKE permits.action");
+			if (!$this->has("permits")) $this->innerJoin("permits")->on("'".$type."' LIKE permits.related_table && '".$action."' LIKE permits.action");
 			//global or object permit
 			$this->where("('global' LIKE permits.priv_type || (permits.priv_type='object' && permits.related_id=".$collection.".id))");
-			//associate terms with permits without using the 'roles' relationship and it will require objects to bear those terms as well
-			$this->where("NOT EXISTS (".
-				"SELECT COUNT(*) as count ".
-				"FROM ".P("terms_index")." as ti ".
-				"WHERE ti.terms_id IN (SELECT terms_id FROM ".P("terms_index")." WHERE type='permits' && type_id=permits.id && rel!='roles') ".
-				"&& ((ti.type='permits' && ti.type_id=permits.id) || (ti.type='".$type."' && ti.type_id=".$collection.".id)) ".
-				"GROUP BY ti.terms_id ".
-				"HAVING count=1".
-			")");
+
+			//determine what relationships the object must bear - defined by object_access fields
+			foreach ($columns as $cname => $column) {
+				if (isset($column['object_access'])) {
+					if ($this->db->has($column['type'])) {
+						//multiple reference
+						$object_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
+						$permit_field = "object_".$cname;
+						$ref = $cname."_id";
+						$target = ($type == $column['entity']) ? "id" : $column['entity']."_id";
+						$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$column['entity']."_id=".$collection.".".$target."))");
+					} else {
+						//single reference
+						$object_field = $cname;
+						$permit_field = "object_".$cname;
+						$this->where("(permits.".$permit_field." is null || permits.".$permit_field."=".$collection.".".$object_field.")");
+					}
+				}
+			}
+
+			//determine what relationships the user must bear - defined by user_access fields
+			foreach ($user_columns as $cname => $column) {
+				if (isset($column['user_access'])) {
+					$permit_field = "user_".$cname;
+					if (!logged_in()) {
+						$this->where("permits.".$permit_field." is null");
+					}else if ($this->db->has($column['type'])) {
+						//multiple reference
+						$user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
+						$ref = $cname."_id";
+						$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$ref." FROM ".P($user_table)." u WHERE u.users_id=".sb()->user['id']."))");
+					} else {
+						//single reference
+						$user_field = $cname;
+						$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$user_field." FROM ".P("users")." u WHERE u.id=".sb()->user['id']."))");
+					}
+				}
+			}
+
 		} else {
 			//table permit
-			$this->where("'table' LIKE permits.priv_type && '".P($type)."' LIKE permits.related_table && '".$action."' LIKE permits.action");
+			$this->where("'table' LIKE permits.priv_type && '".$type."' LIKE permits.related_table && '".$action."' LIKE permits.action");
 		}
 
 		//generate a condition for each role a permit can have. One of these must be satisfied
@@ -653,37 +674,40 @@ class query implements IteratorAggregate, ArrayAccess {
 		$this->where("permits.role='everyone'");
 		//user - a specific user
 		$this->orWhere("permits.role='user' && permits.who='".sb()->user['id']."'");
-		//taxonomy - associate terms with the permit to restrict access to users with the same associated terms
-		//						for example, group is a taxonomy. so tagging a permit with the 'admin' term means that this permit applies to users tagged with the 'admin' term.
-		$this->orWhere("permits.role='taxonomy' && NOT EXISTS (".
-			"SELECT COUNT(*) as count ".
-			"FROM ".P("terms_index")." as ti ".
-			"WHERE ti.terms_id IN (SELECT terms_id FROM ".P("terms_index")." WHERE type='permits' && type_id=permits.id && rel='roles') ".
-			"&& ((ti.type='permits' && ti.type_id=permits.id) || (ti.type='users' && ti.type_id='".sb()->user['id']."')) ".
-			"GROUP BY ti.terms_id ".
-			"HAVING count=1".
-		")");
+
 		if ($join) {
 			//self - permit for user actions
 			if ($type == "users") $this->orWhere("permits.role='self' && ".$collection.".id='".sb()->user['id']."'");
 			//owner - grant access to owner of object
-			$this->orWhere("permits.role='owner' && ".$base_type.".owner='".sb()->user['id']."'");
-			//[relationship/taxonomy] - requires users and objects to share the same terms for the given relationship
-			$this->orWhere("permits.role NOT IN ('everyone', 'self', 'owner', 'user', 'taxonomy') && (NOT EXISTS(".
-				"SELECT COUNT(*) as count ".
-				"FROM ".P("terms_index")." as ti ".
-				"WHERE ti.terms_id IN (SELECT terms_id FROM ".P("terms_index")." WHERE type='".$type."' && type_id=".$collection.".id && rel=permits.role) ".
-				"&& ((ti.type='users' && ti.type_id='".sb()->user['id']."') || (ti.type='".$type."' && ti.type_id=".$collection.".id)) ".
-				"GROUP BY ti.terms_id ".
-				"HAVING count=1) ".
-			"|| EXISTS (".
-				"SELECT COUNT(*) as count ".
-				"FROM ".P("terms_index")." as ti ".
-				"WHERE ti.terms_id IN (SELECT terms_id FROM ".P("terms_index")." WHERE type='".$type."' && type_id=".$collection.".id && rel=permits.role) ".
-				"&& ((ti.type='users' && ti.type_id='".sb()->user['id']."') || (ti.type='".$type."' && ti.type_id=".$collection.".id)) ".
-				"GROUP BY ti.terms_id ".
-				"HAVING count=2)".
-			")");
+			$this->orWhere("permits.role='owner' && ".$collection.".owner='".sb()->user['id']."'");
+			//[user_access field] - requires users and objects to share the same terms for the given relationship
+			foreach ($user_columns as $cname => $column) {
+				if (isset($column['user_access']) && isset($columns[$cname])) {
+					if ($this->db->has($column['type'])) {
+						//multiple reference
+						$user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
+						$object_table = empty($columns[$cname]['table']) ? $columns[$cname]['entity']."_".$cname : $columns[$cname]['table'];
+						$ref = $cname."_id";
+						$target = ($type == $columns[$cname]['entity']) ? "id" : $columns[$cname]['entity']."_id";
+						if (logged_in()) {
+							$this->orWhere("permits.role='".$cname."' && EXISTS (".
+								"SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target." && o.".$ref." IN (".
+									"SELECT ".$ref." FROM ".P($user_table)." u WHERE u.users_id=".sb()->user['id'].
+								")".
+							")");
+						} else {
+							$this->orWhere("permits.role='".$cname."' && NOT EXISTS (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target.")");
+						}
+					} else {
+						//single reference
+						if (logged_in()) {
+							$this->orWhere("permits.role='".$cname."' && (".$collection.".".$cname." is null || ".$collection.".".$cname." IN (SELECT ".$cname." FROM ".P("users")." id=".sb()->user['id']."))");
+						} else {
+							$this->orWhere("permits.role='".$cname."' && ".$collection.".".$cname." is null");
+						}
+					}
+				}
+			}
 		}
 		$this->close();
 		return $this;
@@ -1062,16 +1086,10 @@ class query implements IteratorAggregate, ArrayAccess {
 								$field = $entity_collection.".".$token;
 								$collection = $entity_collection;
 							}
-							if ($mode == "set" && ($schema['type'] == "category" || $this->db->has($schema['type']))) {
-								//do nothing
-								//if it's a SET we can ignore category fields and table references
-							} else if ($schema['type'] == "category" || ($schema['type'] == "terms" && $mode == "group")) {
+							if ($schema['type'] == "terms") {
 								//if it's a category reference field or a terms field in group mode
 								//we send it back around with the same token and 'slug' as the column name
 								$parts = array($token, "slug");
-							} else if ($schema['type'] == "terms") {
-								$field = $this->with($token, $collection, $mode, "slug");
-								$invert = true;
 							}
 						}
 					}
@@ -1092,7 +1110,7 @@ class query implements IteratorAggregate, ArrayAccess {
 						$collection = $collection."_".$column_info['entity'];
 					}
 					$collection = isset($this->query['from'][$collection.'_'.$token]) ? $collection.'_'.$token : $token;
-					if ($column_info['type'] == "category") $ornull = true;//$set = "on_".$collection;
+					//if ($column_info['type'] == "category") $ornull = true;//$set = "on_".$collection;
 				}
 			}
 		}

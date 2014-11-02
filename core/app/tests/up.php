@@ -32,7 +32,6 @@ $this->table("hook_store_alias",
  * category
  ****************************************/
 //category field type
-//this filter allows storing a value in the terms_index
 //you can optionally specify taxonomy:taxonomy_name
 //the default taxonomy will be [table_name]_[column_name]
 $this->table("hook_store_category",
@@ -150,7 +149,7 @@ $this->table("hook_store_references",
 //the required hook with one of these values:
 //insert - force this field to be specified only on insert
 //update - force this field to be specified only on update
-//always - always force this field to be specified 
+//always - always force this field to be specified
 $this->table("hook_store_required",
 	"value  type:string  required:always"
 );
@@ -168,7 +167,6 @@ $this->table("hook_store_slug",
 /*****************************************
  * terms
  ****************************************/
-//manages storing a multiple term reference in the terms_index.
 //you can store terms by id, slug or title
 //you can comma separate multiple terms - published,pending
 //you can use a minus sign to remove terms - published,-pending

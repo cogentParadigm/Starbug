@@ -214,19 +214,16 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in condition fields
 	 */
 	function test_condition_expansion_select() {
-		$query = query("terms_index")->select("terms_id.slug as slug")->condition("terms_index.type", "uris")
-						->condition("terms_index.rel", "statuses")->condition("terms_index.type_id", 14);
+		$query = query("uris")->select("uris.owner.email")->condition("uris.owner.email", "root");
 
 
 		//expected output
-		$expected = "SELECT terms_index_terms_id.slug as slug FROM `".P("terms_index")."` AS `terms_index` LEFT JOIN `".P("terms")."` AS `terms_index_terms_id` ON terms_index_terms_id.id=terms_index.terms_id WHERE terms_index.type = :default0 && terms_index.rel = :default1 && terms_index.type_id = :default2";
+		$expected = "SELECT uris_owner.email FROM `".P("uris")."` AS `uris` LEFT JOIN `".P("users")."` AS `uris_owner` ON uris_owner.id=uris.owner WHERE uris_owner.email = :default0";
 
 		//compare
 		$actual = $query->build();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("uris", $query->parameters[":default0"]);
-		$this->assertSame("statuses", $query->parameters[":default1"]);
-		$this->assertSame(14, $query->parameters[":default2"]);
+		$this->assertSame("root", $query->parameters[":default0"]);
 	}
 
 	/**
@@ -267,10 +264,10 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 */
 	function test_condition_expansion_category() {
 		$query = new query("settings");
-		$query->condition("settings.category", "general");
+		$query->condition("settings.category.slug", "general");
 
 		//expected output
-		$expected = "SELECT settings.* FROM `".P("settings")."` AS `settings` LEFT JOIN `".P("terms_index")."` AS `settings_category_lookup` ON settings_category_lookup.type='settings' && settings_category_lookup.type_id=settings.id && settings_category_lookup.rel='category' LEFT JOIN `".P("terms")."` AS `settings_category` ON settings_category.id=settings_category_lookup.terms_id WHERE settings_category.slug = :default0";
+		$expected = "SELECT settings.* FROM `".P("settings")."` AS `settings` LEFT JOIN `".P("terms")."` AS `settings_category` ON settings_category.id=settings.category WHERE settings_category.slug = :default0";
 
 		//compare
 		$actual = $query->build();
@@ -286,7 +283,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query->condition("settings.category.term", "General");
 
 		//expected output
-		$expected = "SELECT settings.* FROM `".P("settings")."` AS `settings` LEFT JOIN `".P("terms_index")."` AS `settings_category_lookup` ON settings_category_lookup.type='settings' && settings_category_lookup.type_id=settings.id && settings_category_lookup.rel='category' LEFT JOIN `".P("terms")."` AS `settings_category` ON settings_category.id=settings_category_lookup.terms_id WHERE settings_category.term = :default0";
+		$expected = "SELECT settings.* FROM `".P("settings")."` AS `settings` LEFT JOIN `".P("terms")."` AS `settings_category` ON settings_category.id=settings.category WHERE settings_category.term = :default0";
 
 		//compare
 		$actual = $query->build();
@@ -302,7 +299,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query->condition("uris.groups", "user", "!=");
 
 		//expected output
-		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE :default0 NOT IN (SELECT t.slug FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='groups')";
+		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE :default0 NOT IN (SELECT uris_groups.slug FROM ".P("uris_groups")." uris_groups_lookup INNER JOIN ".P("terms")." uris_groups ON uris_groups.id=uris_groups_lookup.groups_id WHERE uris_groups_lookup.uris_id=uris.id)";
 
 		//compare
 		$actual = $query->build();
@@ -318,7 +315,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query->condition("uris.groups.term", "User", '!=');
 
 		//expected output
-		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE :default0 NOT IN (SELECT t.term FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='groups')";
+		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE :default0 NOT IN (SELECT uris_groups.term FROM ".P("uris_groups")." uris_groups_lookup INNER JOIN ".P("terms")." uris_groups ON uris_groups.id=uris_groups_lookup.groups_id WHERE uris_groups_lookup.uris_id=uris.id)";
 
 		//compare
 		$actual = $query->build();
@@ -334,7 +331,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query->where(":group NOT IN uris.groups")->param("group", "user");
 
 		//expected output
-		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE :group NOT IN (SELECT t.slug FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='groups')";
+		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE :group NOT IN (SELECT uris_groups.slug FROM ".P("uris_groups")." uris_groups_lookup INNER JOIN ".P("terms")." uris_groups ON uris_groups.id=uris_groups_lookup.groups_id WHERE uris_groups_lookup.uris_id=uris.id)";
 
 		//compare
 		$actual = $query->build();
@@ -377,10 +374,10 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 */
 	function test_grouping_expansion_terms() {
 		$query = new query("uris");
-		$query->select("COUNT(*) as count")->group("uris.statuses");
+		$query->select("COUNT(*) as count")->group("uris.groups");
 
 		//expected output
-		$expected = "SELECT COUNT(*) as count FROM `".P("uris")."` AS `uris` LEFT JOIN `".P("terms_index")."` AS `uris_statuses_lookup` ON uris_statuses_lookup.type='uris' && uris_statuses_lookup.type_id=uris.id && uris_statuses_lookup.rel='statuses' LEFT JOIN `".P("terms")."` AS `uris_statuses` ON uris_statuses.id=uris_statuses_lookup.terms_id GROUP BY uris_statuses.slug";
+		$expected = "SELECT COUNT(*) as count FROM `".P("uris")."` AS `uris` LEFT JOIN `".P("uris_groups")."` AS `uris_groups_lookup` ON uris_groups_lookup.uris_id=uris.id LEFT JOIN `".P("terms")."` AS `uris_groups` ON uris_groups.id=uris_groups_lookup.groups_id GROUP BY uris_groups.slug";
 
 		//compare
 		$actual = $query->build();
@@ -536,7 +533,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query = new query("uris");
 		$query->condition("uris.groups", array("user", "admin"));
 		//expected output
-		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE (:default0 IN (SELECT t.slug FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='groups') || :default1 IN (SELECT t.slug FROM ".P("terms_index")." ti INNER JOIN ".P("terms")." t ON t.id=ti.terms_id WHERE ti.type='uris' && ti.type_id=uris.id && ti.rel='groups'))";
+		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` WHERE (:default0 IN (SELECT uris_groups.slug FROM ".P("uris_groups")." uris_groups_lookup INNER JOIN ".P("terms")." uris_groups ON uris_groups.id=uris_groups_lookup.groups_id WHERE uris_groups_lookup.uris_id=uris.id) || :default1 IN (SELECT uris_groups.slug FROM ".P("uris_groups")." uris_groups_lookup INNER JOIN ".P("terms")." uris_groups ON uris_groups.id=uris_groups_lookup.groups_id WHERE uris_groups_lookup.uris_id=uris.id))";
 
 		//compare
 		$actual = $query->build();
@@ -551,7 +548,14 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query->action("read");
 
 		//expected output
-		$expected = "SELECT uris.* FROM `".P("uris")."` AS `uris` INNER JOIN `".P("permits")."` AS `permits` ON '".P("uris")."' LIKE permits.related_table && 'read' LIKE permits.action WHERE ('global' LIKE permits.priv_type || (permits.priv_type='object' && permits.related_id=uris.id)) && NOT EXISTS (SELECT COUNT(*) as count FROM ".P("terms_index")." as ti WHERE ti.terms_id IN (SELECT terms_id FROM ".P("terms_index")." WHERE type='permits' && type_id=permits.id && rel!='roles') && ((ti.type='permits' && ti.type_id=permits.id) || (ti.type='uris' && ti.type_id=uris.id)) GROUP BY ti.terms_id HAVING count=1) && (permits.role='everyone' || permits.role='user' && permits.who='2' || permits.role='taxonomy' && NOT EXISTS (SELECT COUNT(*) as count FROM ".P("terms_index")." as ti WHERE ti.terms_id IN (SELECT terms_id FROM ".P("terms_index")." WHERE type='permits' && type_id=permits.id && rel='roles') && ((ti.type='permits' && ti.type_id=permits.id) || (ti.type='users' && ti.type_id='2')) GROUP BY ti.terms_id HAVING count=1) || permits.role='owner' && uris.owner='2' || permits.role NOT IN ('everyone', 'self', 'owner', 'user', 'taxonomy') && (NOT EXISTS(SELECT COUNT(*) as count FROM ".P("terms_index")." as ti WHERE ti.terms_id IN (SELECT terms_id FROM ".P("terms_index")." WHERE type='uris' && type_id=uris.id && rel=permits.role) && ((ti.type='users' && ti.type_id='2') || (ti.type='uris' && ti.type_id=uris.id)) GROUP BY ti.terms_id HAVING count=1) || EXISTS (SELECT COUNT(*) as count FROM ".P("terms_index")." as ti WHERE ti.terms_id IN (SELECT terms_id FROM ".P("terms_index")." WHERE type='uris' && type_id=uris.id && rel=permits.role) && ((ti.type='users' && ti.type_id='2') || (ti.type='uris' && ti.type_id=uris.id)) GROUP BY ti.terms_id HAVING count=2)))";
+		$expected = "SELECT uris.* ".
+								"FROM `".P("uris")."` AS `uris` ".
+								"INNER JOIN `".P("permits")."` AS `permits` ON 'uris' LIKE permits.related_table && 'read' LIKE permits.action ".
+								"WHERE ".
+									"('global' LIKE permits.priv_type || (permits.priv_type='object' && permits.related_id=uris.id)) && ".
+									"(permits.object_statuses is null || permits.object_statuses=uris.statuses) && ".
+									"(permits.user_groups is null || permits.user_groups IN (SELECT groups_id FROM ".P("users_groups")." u WHERE u.users_id=2)) && ".
+									"(permits.role='everyone' || permits.role='user' && permits.who='' || permits.role='owner' && uris.owner='' || permits.role='groups' && EXISTS (SELECT groups_id FROM ".P("uris_groups")." o WHERE o.uris_id=uris.id && o.groups_id IN (SELECT groups_id FROM ".P("users_groups")." u WHERE u.users_id=2)))";
 
 		//compare
 		$actual = $query->build();

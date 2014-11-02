@@ -50,12 +50,21 @@ function entity_chain($entity) {
  * @param string $entity entity name
  * @param string $column column name
  */
-function column_info($entity, $column) {
+function column_info($entity, $column="") {
   $info = array();
   if (!db::has($entity)) return $info;
-  while (!isset(sb($entity)->hooks[$column]) && !empty(sb($entity)->base)) $entity = sb($entity)->base;
-  if (isset(sb($entity)->hooks[$column])) $info = sb($entity)->hooks[$column];
-  $info["entity"] = $entity;
+  if (empty($column)) {
+    while (!empty($entity)) {
+      $hooks = sb($entity)->hooks;
+      foreach ($hooks as $col => $hook) $hooks[$col]["entity"] = $entity;
+      $info = array_merge($hooks, $info);
+      $entity = sb($entity)->base;
+    }
+  } else {
+    while (!isset(sb($entity)->hooks[$column]) && !empty(sb($entity)->base)) $entity = sb($entity)->base;
+    if (isset(sb($entity)->hooks[$column])) $info = sb($entity)->hooks[$column];
+    $info["entity"] = $entity;
+  }
   return $info;
 }
 

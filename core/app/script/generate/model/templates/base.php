@@ -90,23 +90,10 @@ class <?= ucwords($name); ?>Model extends Table {
 		if (!empty($ops['id'])) {
 			$query->condition($query->model.".id", explode(",", $ops['id']));
 		} else {
-			$query->condition("<?= $name; ?>.statuses", "deleted", "!=");
+			$query->condition("<?= $name; ?>.statuses.slug", "deleted", "!=");
 		}
 		$query->select("<?= $name; ?>.id");
 		$query->select("<?= efault($label_select, $name.".id"); ?> as label");
-		return $query;
-	}
-
-	function query_terms($query, &$ops) {
-		$query = query("terms");
-		$query->select("terms.id,terms.term as label");
-		if (!empty($ops['taxonomy'])) $query->condition("taxonomy", $ops['taxonomy']);
-		if (!empty($ops['id'])) {
-			$query->join("terms_index");
-			$query->condition("terms_index.type", "<?= $name; ?>");
-			$query->condition("terms_index.type_id", $ops['id']);
-		}
-		$query->sort("terms.parent ASC, terms.term ASC");
 		return $query;
 	}
 

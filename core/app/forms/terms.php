@@ -1,10 +1,9 @@
 <?php
 	$records = query("terms")
 							->condition("taxonomy", $taxonomy)
-							->condition("terms.statuses", "deleted", "!=")
 							->sort("terms.term_path")->sort("terms.position")->all();
 	$links = array();
-	
+
 	foreach ($records as $link) {
 		$link['children'] = array();
 		if ($link['parent'] == 0) $links[$link['id']] = $link;
@@ -21,7 +20,7 @@
 		echo '<option value="'.$link['id'].'"'.$selected.'>'.$prefix.$link['term'].'</option>';
 		foreach ($link['children'] as $child) menu_option($child, $prefix."-");
 	}
-	
+
 ?>
 <?php if (success("terms", "create")) { ?>
 	<div class="alert alert-success">Term <?= (empty($_POST['terms']['id'])) ? "created" : "updated"; ?> successfully</div>
@@ -43,5 +42,5 @@
 	<?php textarea("description"); ?>
 	<br/>
 	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger" onclick="window.location='<?= uri("admin/taxonomies/taxonomy/".$taxonomy); ?>'">Cancel</button></div>
-	<?php close_form(); ?>	
+	<?php close_form(); ?>
 	<br class="clear"/>

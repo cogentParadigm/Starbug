@@ -32,25 +32,27 @@ function terms($taxonomy, $parent=0, $depth=0) {
  * @return bool returns true on success, false otherwise.
  */
 function tag($table, $object_id, $field, $tag="") {
-	$category_column_info = schema($table.".fields.".$field);
-	efault($category_column_info['taxonomy'], $table."_".$field);
-	$taxonomy = $category_column_info['taxonomy'];
-	
+	$column_info = column_info($table, $field);
+	if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
+	$taxonomy = $column_info['taxonomy'];
+	$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
+
 	$tag = normalize($tag);
 	$slug = strtolower($tag);
 	//IF THE TAG IS ALREADY APPLIED, RETURN TRUE
-	$existing = query("terms_index,terms", "where:terms_index.type=:type && terms.taxonomy=:tax && terms_index.type_id=:id AND (terms.id=:tag || terms.slug=:tag || terms.term=:tag)", array("type" => $table, "tax" => $taxonomy, "id" => $object_id, "tag" => $tag))->execute();
-	if (!empty($existing)) return true;
+	$existing = query($table)->condition($table.".id", $object_id)
+									->open("tag")->condition($field.".id", $tag)->orCondition($field.".slug", $tag)->orCondition($field.".term", $tag)->close();
+	if (!empty($existing->one())) return true;
 
 	//IF THE TERM DOESN'T EXIST, ADD IT
 	$term = query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->params(array("tag" => $tag, "tax" => $taxonomy))->one();
 	if (empty($term)) store("terms", "term:$tag  slug:$slug  taxonomy:$taxonomy  parent:0  position:");
 	else if ($term['taxonomy'] == "groups" && !logged_in("root") && in_array($term['slug'], array("root"))) return false;
 	if (errors()) return false;
-		
+
 	//APPLY TAG
 	$term_id = (empty($term)) ? sb("terms")->insert_id : $term['id'];
-	store("terms_index", "terms_id:$term_id  type:$table  type_id:$object_id  rel:$field");
+	store($tags, array($field."_id" => $term_id, $table."_id" => $object_id));
 	return (!errors());
 }
 /**
@@ -62,9 +64,10 @@ function tag($table, $object_id, $field, $tag="") {
  * @param string $tag the tag
  */
 function untag($table, $object_id, $field, $tag="") {
-	$category_column_info = schema($table.".fields.".$field);
-	efault($category_column_info['taxonomy'], $table."_".$field);
-	$taxonomy = $category_column_info['taxonomy'];
-	query("terms_index")->where("type='$table' && type_id='$object_id' && rel='$field' && terms_id IN (SELECT id FROM ".P("terms")." WHERE taxonomy='$taxonomy' && (id='$tag' || term='$tag' || slug='$tag'))")->delete();
+	$column_info = column_info($table, $field);
+	if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
+	$taxonomy = $column_info['taxonomy'];
+	$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
+	query($tags)->condition($tags.".".$table."_id", $object_id)->open("terms")->condition($field."_id.id", $tag)->orCondition($field."_id.slug", $tag)->orCondition($field."_id.tag", $tag)->close()->delete();
 }
 ?>

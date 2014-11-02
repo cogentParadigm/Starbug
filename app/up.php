@@ -78,25 +78,31 @@ $this->uri("forgot-password", "type:views");
  *********************************************************/
 
 //GLOBAL READ AND WRITE PERMITS FOR ADMIN
-$this->permit("%::%", "groups admin:%");
+$this->permit("%::%",
+  "everyone  priv_type:%  user_groups:admin"
+);
 
 // URI PERMITS
 // 'collective' is a column on every table representing the groups that own the records.
 // each record can have different group owners.
 // We can assign permissions based on those groups:
 //$this->permit("uris::read", "collective:global 4");
-$this->permit("uris::read", "groups:global", array("statuses" => "published"));
-$this->permit("menus::read", "groups:global", array("statuses" => "published"));
+$this->permit("uris::read",
+  "groups  priv_type:global  object_statuses:published"
+);
+$this->permit("menus::read",
+  "groups  priv_type:global  object_statuses:published"
+);
 // above, I am assigning read permissions to the owning groups (collective = owning groups).
 // For example, If we have these groups: user = 2, admin = 4, editor = 8
 // To make a page accessible to admins and editors, we can set collective:12 on that uri (see uris above).
 
 // USER PERMITS
-$this->permit("users::login", "everyone:table");
-$this->permit("users::logout", "everyone:table");
-$this->permit("users::register", "everyone:table");
-$this->permit("users::update_profile", "self:global"); //the 'self' role should only be used for user actions.
-$this->permit("users::reset_password", "everyone:table");
+$this->permit("users::login", "everyone  priv_type:table");
+$this->permit("users::logout", "everyone  priv_type:table");
+$this->permit("users::register", "everyone  priv_type:table");
+$this->permit("users::update_profile", "self  priv_type:global"); //the 'self' role should only be used for user actions.
+$this->permit("users::reset_password", "everyone  priv_type:table");
 
 
 

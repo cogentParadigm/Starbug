@@ -16,8 +16,13 @@ class Terms {
 	}
 
 	function delete($term) {
-		query("terms_index")->condition("terms_id", $term['id'])->delete();
-		query("terms")->condition("id", $term['id'])->delete();
+		try {
+			query("terms")->condition("id", $term['id'])->delete();
+		} catch (Exception $e) {
+
+		}
+		$term = query("terms")->condition("id", $term['id'])->one();
+		if ($term) error("This term must be detached from all entities before it can be deleted.", "global");
 	}
 
 	function delete_taxonomy($term) {

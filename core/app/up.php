@@ -43,12 +43,6 @@ $this->table("terms  label_select:terms.term",
 	"position  type:int  ordered:taxonomy parent  display:false",
 	"term_path  type:string  length:255  default:  display:false"
 );
-$this->table("terms_index",
-	"type  type:string  length:64",
-	"type_id  type:int  index:",
-	"terms_id  type:int  references:terms id",
-	"rel  type:string  length:64"
-);
 $this->table("settings",
 	"name  type:string  length:255",
 	"type  type:string  length:128",

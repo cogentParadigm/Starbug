@@ -1,9 +1,9 @@
 <?php
 	$records = query("menus<uris")->select("menus.*,uris.title,uris.path,uris.breadcrumb")
-							->condition("menus.menu", $menu)->condition("menus.statuses", "deleted", "!=")
+							->condition("menus.menu", $menu)->condition("menus.statuses.slug", "deleted", "!=")
 							->sort("menus.menu_path")->sort("menus.position")->all();
 	$links = array();
-	
+
 	foreach ($records as $link) {
 		$link['children'] = array();
 		if ($link['parent'] == 0) $links[$link['id']] = $link;
@@ -20,7 +20,7 @@
 		echo '<option value="'.$link['id'].'"'.$selected.'>'.$prefix.(empty($link['content']) ? $link['title'] : $link['content']).'</option>';
 		foreach ($link['children'] as $child) menu_option($child, $prefix."-");
 	}
-	
+
 ?>
 <?php if (success("menus", "create")) { ?>
 	<div class="success">Menu <?= (empty($_POST['menus']['id'])) ? "created" : "updated"; ?> successfully</div>
@@ -58,5 +58,5 @@
 		</div>
 	</div>
 	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger" onclick="window.location='<?= uri("admin/menus/menu/".$menu); ?>'">Cancel</button></div>
-	<?php close_form(); ?>	
+	<?php close_form(); ?>
 	<br class="clear"/>
