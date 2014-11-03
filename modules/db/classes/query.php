@@ -852,8 +852,12 @@ class query implements IteratorAggregate, ArrayAccess {
 					$relations = db::model($collection)->relations;
 					$relator = $last_alias;
 					$rel = array();
-					if (isset($relations[$last_collection])) $rel = reset(end(reset($relations[$last_collection])));
-					else {
+					if (isset($relations[$last_collection])) {
+						if (isset($relations[$last_collection][$last_collection])) $rel = reset(end($relations[$last_collection][$last_collection]));
+						else if (isset($relations[$last_collection][$collection])) $rel = reset(end($relations[$last_collection][$collection]));
+						else if (isset($relations[$last_collection][$this->model])) $rel = reset(end($relations[$last_collection][$this->model]));
+						else if (isset($relations[$last_collection])) $rel = reset(end(reset($relations[$last_collection])));
+					} else {
 						$relator = $this->base_collection;
 						if (isset($relations[$this->model][$last_collection])) $rel = reset(end($relations[$this->model][$last_collection]));
 						else if (isset($relations[$this->model][$collection])) $rel = reset(end($relations[$this->model][$collection]));
@@ -1344,6 +1348,15 @@ class query implements IteratorAggregate, ArrayAccess {
 		 if ($run) return $this->execute();
 		 else return $this;
 	 }
+
+	function unsafe_truncate() {
+		if ($this->mode != "truncate") $this->dirty();
+		$this->mode = "truncate";
+		$this->db->exec("SET FOREIGN_KEY_CHECKS=0");
+		$payload = $this->execute();
+		$this->db->exec("SET FOREIGN_KEY_CHECKS=1");
+		return $payload;
+	}
 
 	function count($params=array()) {
 		$this->build();

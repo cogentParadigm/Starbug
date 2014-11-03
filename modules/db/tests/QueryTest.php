@@ -234,7 +234,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query->condition("images.mime_type", "image/png");
 
 		//expected output
-		$expected = "SELECT terms.* FROM `".P("terms")."` AS `terms` WHERE :default0 IN (SELECT terms_images.mime_type FROM ".P("terms_images")." terms_images_lookup INNER JOIN ".P("files")." terms_images ON terms_images.id=terms_images_lookup.files_id WHERE terms_images_lookup.terms_id=terms.id)";
+		$expected = "SELECT terms.* FROM `".P("terms")."` AS `terms` WHERE :default0 IN (SELECT terms_images.mime_type FROM ".P("terms_images")." terms_images_lookup INNER JOIN ".P("files")." terms_images ON terms_images.id=terms_images_lookup.images_id WHERE terms_images_lookup.terms_id=terms.id)";
 
 		//compare
 		$actual = $query->build();
@@ -251,7 +251,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query->condition("images.mime_type", "image/%", "LIKE")->group("terms.id");
 
 		//expected output
-		$expected = "SELECT terms.* FROM `".P("terms")."` AS `terms` LEFT JOIN `".P("terms_images")."` AS `terms_images_lookup` ON terms_images_lookup.terms_id=terms.id LEFT JOIN `".P("files")."` AS `terms_images` ON terms_images.id=terms_images_lookup.files_id WHERE terms_images.mime_type LIKE :default0 GROUP BY terms.id";
+		$expected = "SELECT terms.* FROM `".P("terms")."` AS `terms` LEFT JOIN `".P("terms_images")."` AS `terms_images_lookup` ON terms_images_lookup.terms_id=terms.id LEFT JOIN `".P("files")."` AS `terms_images` ON terms_images.id=terms_images_lookup.images_id WHERE terms_images.mime_type LIKE :default0 GROUP BY terms.id";
 
 		//compare
 		$actual = $query->build();
@@ -555,7 +555,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 									"('global' LIKE permits.priv_type || (permits.priv_type='object' && permits.related_id=uris.id)) && ".
 									"(permits.object_statuses is null || permits.object_statuses=uris.statuses) && ".
 									"(permits.user_groups is null || permits.user_groups IN (SELECT groups_id FROM ".P("users_groups")." u WHERE u.users_id=2)) && ".
-									"(permits.role='everyone' || permits.role='user' && permits.who='' || permits.role='owner' && uris.owner='' || permits.role='groups' && EXISTS (SELECT groups_id FROM ".P("uris_groups")." o WHERE o.uris_id=uris.id && o.groups_id IN (SELECT groups_id FROM ".P("users_groups")." u WHERE u.users_id=2)))";
+									"(permits.role='everyone' || permits.role='user' && permits.who='2' || permits.role='owner' && uris.owner='2' || permits.role='groups' && EXISTS (SELECT groups_id FROM ".P("uris_groups")." o WHERE o.uris_id=uris.id && o.groups_id IN (SELECT groups_id FROM ".P("users_groups")." u WHERE u.users_id=2)))";
 
 		//compare
 		$actual = $query->build();

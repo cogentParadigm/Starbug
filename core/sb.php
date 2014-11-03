@@ -72,6 +72,7 @@ class sb {
 	
 	function set_database($db) {
 		$this->db = $db;
+		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
 		foreach ($this->listeners as $object) $object->set_database($db);
 	}
 	

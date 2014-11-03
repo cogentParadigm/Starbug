@@ -68,6 +68,6 @@ function untag($table, $object_id, $field, $tag="") {
 	if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
 	$taxonomy = $column_info['taxonomy'];
 	$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
-	query($tags)->condition($tags.".".$table."_id", $object_id)->open("terms")->condition($field."_id.id", $tag)->orCondition($field."_id.slug", $tag)->orCondition($field."_id.tag", $tag)->close()->delete();
+	query($tags)->condition($tags.".".$table."_id", $object_id)->open("terms")->condition($field."_id.id", $tag)->orCondition($field."_id.slug", $tag)->orCondition($field."_id.term", $tag)->close()->delete();
 }
 ?>

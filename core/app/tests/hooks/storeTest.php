@@ -65,7 +65,7 @@ class storeTest extends UnitTest {
 		$this->assertSame($abdul['id'], $record["by_name"]);
 
 		//truncate the table
-		query("hook_store_alias")->truncate();
+		query("hook_store_alias")->unsafe_truncate();
 	}
 
 	/**
@@ -95,7 +95,7 @@ class storeTest extends UnitTest {
 		$record = get("hook_store_category", $rid);
 
 		//verify the correct id is set
-		$this->assertSame($term['id'], $category["value"]);
+		$this->assertSame($term['id'], $record["value"]);
 
 		//update the record
 		store("hook_store_category", "id:$rid  value:deleted");
@@ -107,7 +107,7 @@ class storeTest extends UnitTest {
 		$this->assertSame($del['id'], $record["value"]);
 
 		//truncate the table
-		query("hook_store_category")->truncate();
+		query("hook_store_category")->unsafe_truncate();
 	}
 
 	/**
@@ -130,7 +130,7 @@ class storeTest extends UnitTest {
 		$this->assertFalse(errors());
 
 		//truncate the table
-		query("hook_store_confirm")->truncate();
+		query("hook_store_confirm")->unsafe_truncate();
 	}
 
 	/**
@@ -149,7 +149,7 @@ class storeTest extends UnitTest {
 		$this->assertSame("1988-02-12 00:00:00", $record["value"]);
 
 		//truncate the table
-		query("hook_store_datetime")->truncate();
+		query("hook_store_datetime")->unsafe_truncate();
 	}
 
 	/**
@@ -168,7 +168,7 @@ class storeTest extends UnitTest {
 		$this->assertSame("", $record['value2']);
 
 		//truncate the table
-		query("hook_store_default")->truncate();
+		query("hook_store_default")->unsafe_truncate();
 	}
 
 	/**
@@ -195,7 +195,7 @@ class storeTest extends UnitTest {
 		$this->assertFalse(errors());
 
 		//truncate the table
-		query("hook_store_length")->truncate();
+		query("hook_store_length")->unsafe_truncate();
 	}
 
 	/**
@@ -253,7 +253,7 @@ class storeTest extends UnitTest {
 		$this->assertSame("-".$l1."-".$l2."-".$l3."-".$l4."-", $l5_record["value_field"]);
 
 		//truncate the table
-		query("hook_store_materialized_path")->truncate();
+		query("hook_store_materialized_path")->unsafe_truncate();
 	}
 
 	/**
@@ -273,7 +273,7 @@ class storeTest extends UnitTest {
 		$this->assertSame(md5($str), $record["value"]);
 
 		//truncate the table
-		query("hook_store_md5")->truncate();
+		query("hook_store_md5")->unsafe_truncate();
 	}
 
 	/**
@@ -300,7 +300,7 @@ class storeTest extends UnitTest {
 		$this->assertSame("starbug", $record['value']);
 
 		//truncate the table
-		query("hook_store_optional_update")->truncate();
+		query("hook_store_optional_update")->unsafe_truncate();
 	}
 
 	/**
@@ -332,7 +332,7 @@ class storeTest extends UnitTest {
 		$this->assertSame("5", $r5['value']);
 
 		//truncate the table
-		query("hook_store_ordered")->truncate();
+		query("hook_store_ordered")->unsafe_truncate();
 	}
 
 	/**
@@ -365,7 +365,7 @@ class storeTest extends UnitTest {
 		sb()->user = array();
 
 		//truncate the table
-		query("hook_store_owner")->truncate();
+		query("hook_store_owner")->unsafe_truncate();
 	}
 
 	/**
@@ -385,7 +385,7 @@ class storeTest extends UnitTest {
 		$this->assertTrue(Session::authenticate($record['value'], $pass, "0", Etc::HMAC_KEY));
 
 		//truncate table
-		query("hook_store_password")->truncate();
+		query("hook_store_password")->unsafe_truncate();
 	}
 
 	/**
@@ -407,7 +407,7 @@ class storeTest extends UnitTest {
 		$this->assertSame($uid, $record['value']);
 
 		//remove uri and truncate table
-		query("hook_store_references")->truncate();
+		query("hook_store_references")->unsafe_truncate();
 		query("uris")->condition("path", "hook_store_references")->delete();
 	}
 
@@ -454,7 +454,7 @@ class storeTest extends UnitTest {
 		$this->assertSame("changed", $record['value']);
 
 		//empty the table
-		query("hook_store_required")->truncate();
+		query("hook_store_required")->unsafe_truncate();
 	}
 
 	/**
@@ -472,7 +472,7 @@ class storeTest extends UnitTest {
 		$this->assertSame("abduls-house-of-rugs", $record['slug_field']);
 
 		//empty the table
-		query("hook_store_slug")->truncate();
+		query("hook_store_slug")->unsafe_truncate();
 	}
 
 	/**
@@ -513,8 +513,8 @@ class storeTest extends UnitTest {
 		$this->assertSame("deleted", $terms[0]["slug"]);
 
 		//truncate the table
-		query("hook_store_terms_value")->truncate();
-		query("hook_store_terms")->truncate();
+		query("hook_store_terms_value")->unsafe_truncate();
+		query("hook_store_terms")->unsafe_truncate();
 	}
 
 	/**
@@ -555,7 +555,7 @@ class storeTest extends UnitTest {
 		$this->assertTrue(($update >= $before_update && $update <= $after_update));
 
 		//truncate the table
-		query("hook_store_time")->truncate();
+		query("hook_store_time")->unsafe_truncate();
 	}
 
 	/**
@@ -578,7 +578,7 @@ class storeTest extends UnitTest {
 		sb()->errors = array();
 
 		//truncate the table
-		query("hook_store_unique")->truncate();
+		query("hook_store_unique")->unsafe_truncate();
 	}
 
 }

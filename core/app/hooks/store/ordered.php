@@ -34,7 +34,7 @@ class hook_store_ordered {
 	function insert(&$query, $key, $value, $column, $argument) {
 		$this->set_conditions($query, $column, $argument, "insert");
 		if (!empty($value) && is_numeric($value)) $this->value = $value;
-		$h = query($query->model)->select("MAX(".$query->model.".$column) as highest")->conditions($this->conditions)->condition($query->model.".statuses.slug", "deleted", "!=")->one();
+		$h = query($query->model)->select("MAX(".$query->model.".$column) as highest")->conditions($this->conditions)->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true))->one();
 		return $h['highest']+1;
 	}
 	function update(&$query, $key, $value, $column, $argument) {
@@ -51,7 +51,7 @@ class hook_store_ordered {
 		$ids = array($row['id']);
 		while (!empty($row)) {
 			query($query->model)->condition("id", $row['id'])->set($column, $value)->raw()->update();
-			$row = query($query->model)->select($select, $query->model)->conditions($this->conditions)->condition($query->model.".id", $ids, "!=")->condition($query->model.".statuses.slug", "deleted", "!=")->condition($query->model.".".$column, $value)->one();
+			$row = query($query->model)->select($select, $query->model)->conditions($this->conditions)->condition($query->model.".id", $ids, "!=")->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true))->condition($query->model.".".$column, $value)->one();
 			$ids[] = $row['id'];
 			$value += $this->increment;
 		}
