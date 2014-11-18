@@ -12,7 +12,7 @@
 	}
 	echo ($control == "input") ? $type : $control;
 	$object_id = $form->get('id');
-	if (!empty($form->schema) && !empty($form->schema[$field_name]) && !isset($form->schema[$field_name]['default']) && !isset($form->schema[$field_name]['optional']) && !isset($form->schema[$field_name]['null']) && (!isset($form->schema[$field_name]['optional_update']) || empty($object_id))) {
+	if ($required) {
 		echo " required";
 		assign("required", true);
 	} else assign("required", false);

@@ -644,28 +644,28 @@ class query implements IteratorAggregate, ArrayAccess {
 				}
 			}
 
-			//determine what relationships the user must bear - defined by user_access fields
-			foreach ($user_columns as $cname => $column) {
-				if (isset($column['user_access'])) {
-					$permit_field = "user_".$cname;
-					if (!logged_in()) {
-						$this->where("permits.".$permit_field." is null");
-					}else if ($this->db->has($column['type'])) {
-						//multiple reference
-						$user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
-						$ref = $cname."_id";
-						$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$ref." FROM ".P($user_table)." u WHERE u.users_id=".sb()->user['id']."))");
-					} else {
-						//single reference
-						$user_field = $cname;
-						$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$user_field." FROM ".P("users")." u WHERE u.id=".sb()->user['id']."))");
-					}
-				}
-			}
-
 		} else {
 			//table permit
 			$this->where("'table' LIKE permits.priv_type && '".$type."' LIKE permits.related_table && '".$action."' LIKE permits.action");
+		}
+
+		//determine what relationships the user must bear - defined by user_access fields
+		foreach ($user_columns as $cname => $column) {
+			if (isset($column['user_access'])) {
+				$permit_field = "user_".$cname;
+				if (!logged_in()) {
+					$this->where("permits.".$permit_field." is null");
+				}else if ($this->db->has($column['type'])) {
+					//multiple reference
+					$user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
+					$ref = $cname."_id";
+					$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$ref." FROM ".P($user_table)." u WHERE u.users_id=".sb()->user['id']."))");
+				} else {
+					//single reference
+					$user_field = $cname;
+					$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$user_field." FROM ".P("users")." u WHERE u.id=".sb()->user['id']."))");
+				}
+			}
 		}
 
 		//generate a condition for each role a permit can have. One of these must be satisfied
@@ -690,11 +690,11 @@ class query implements IteratorAggregate, ArrayAccess {
 						$ref = $cname."_id";
 						$target = ($type == $columns[$cname]['entity']) ? "id" : $columns[$cname]['entity']."_id";
 						if (logged_in()) {
-							$this->orWhere("permits.role='".$cname."' && EXISTS (".
+							$this->orWhere("permits.role='".$cname."' && (EXISTS (".
 								"SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target." && o.".$ref." IN (".
 									"SELECT ".$ref." FROM ".P($user_table)." u WHERE u.users_id=".sb()->user['id'].
 								")".
-							")");
+							") || NOT EXISTS (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target."))");
 						} else {
 							$this->orWhere("permits.role='".$cname."' && NOT EXISTS (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target.")");
 						}

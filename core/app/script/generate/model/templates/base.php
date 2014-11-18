@@ -49,9 +49,17 @@ class <?= ucwords($name); ?>Model extends Table {
     <?php } ?>
 	}
 
+  function display_select($display, $ops) {
+    <?php if (!empty($base)) { ?>
+    sb($this->base)->display_select($display, $ops);
+    <?php } else { ?>
+      $display->add("id", "label");
+    <?php } ?>
+  }
+
 	function query_form($query, &$ops) {
 		if (empty($ops['action'])) $ops['action'] = "create";
-		$query->action($ops['action']);
+		$query->action($ops['action'], "<?= $model; ?>");
 		$query->condition("<?= $model; ?>.id", $ops['id']);
 <?php
     if (!empty($base)) {
@@ -90,7 +98,7 @@ class <?= ucwords($name); ?>Model extends Table {
 		if (!empty($ops['id'])) {
 			$query->condition($query->model.".id", explode(",", $ops['id']));
 		} else {
-			$query->condition("<?= $name; ?>.statuses.slug", "deleted", "!=");
+			$query->condition("<?= $name; ?>.statuses.slug", "deleted", "!=", array("ornull" => true));
 		}
 		$query->select("<?= $name; ?>.id");
 		$query->select("<?= efault($label_select, $name.".id"); ?> as label");

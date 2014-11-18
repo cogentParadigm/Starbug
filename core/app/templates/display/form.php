@@ -21,7 +21,10 @@
 <? } ?>	
 <?php
 	if (!$display->layout->is_empty()) {
-		foreach ($display->fields as $name => $field) $display->layout->append($field['pane'], $display->form_control($field['input_type'], array_merge(array($name), $field)));
+		foreach ($display->fields as $name => $field) {
+			assign("display", $display);
+			$display->layout->append($field['pane'], $display->form_control($field['input_type'], array_merge(array($name), $field)));
+		}
 		$display->layout->render();
 	} else {
 		foreach ($display->fields as $name => $field) echo $display->form_control($field['input_type'], array_merge(array($name), $field));

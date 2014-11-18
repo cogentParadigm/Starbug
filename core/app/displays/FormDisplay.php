@@ -2,7 +2,7 @@
 class FormDisplay {
 	var $type = "form";
 	var $template = "form";
-	
+
 	var $url;
 	var $action;
 	var $method;
@@ -14,33 +14,33 @@ class FormDisplay {
 		if (empty($options['url'])) $options['url'] = empty($options['uri']) ? $_SERVER['REQUEST_URI'] : $options['uri'] ;
 		if (empty($options['method'])) $options['method'] = 'post';
 		if (empty($options['postback'])) $options['postback'] = request()->path;
-		
+
 		// assign options to properties
 		$this->action = $options['action'];
 		$this->url = $options['url'];
 		$this->method = strtolower($options['method']);
 		$this->postback = $options['postback'];
-		
+
 		// grab schema
 		if (!empty($this->model) && sb()->db->has($this->model)) {
 			$this->schema = sb($this->model)->hooks;
 		}
-		
+
 		// set form attributes
 		$this->attributes["action"] = $this->url;
 		$this->attributes["method"] = $this->method;
 		$this->attributes["accept-charset"] = "UTF-8";
-		
+
 		if (success($this->model, $this->action)) $this->attributes['class'][] = "submitted";
 		else if (failure($this->model, $this->action)) $this->attributes['class'][] = "errors";
-		
+
 		//create layout display
 		$this->layout = build_display("layout", $this->model);
-		
+
 		//run query
 		$this->query();
 	}
-	
+
 	/**
 	 * filter columns to set the input type and some other defaults
 	 */
@@ -54,26 +54,35 @@ class FormDisplay {
 		} else if ($options['input_type'] == "category_select") {
 				if (empty($options['taxonomy'])) $options['taxonomy'] = (empty($column['taxonomy'])) ? $options['model']."_".$field : $column['taxonomy'];
 		}
+		$default = isset($column['default']);
+		$optional = isset($column['optional']);
+		$nullable = isset($column['null']);
+		$not_optional_updating = (!isset($column['optional_update']) || empty($object_id));
+		if (!$default && !$optional && !$nullable && $not_optional_updating) {
+				$options['required'] = true;
+		} else {
+			if (!isset($options['required'])) $options['required'] = false;
+		}
 		return $options;
 	}
-	
+
 	/**
 	 * override query function to only query with id
 	 */
 	function query($options=null) {
 		//set options
 		if (is_null($options)) $options = $this->options;
-		
+
 		if (empty($options['id'])) $this->items = array();
 		else parent::query($options);
-		
+
 		//load $_POST
 		if (!empty($this->items)) {
 			if(empty($_POST[$this->model])) $_POST[$this->model] = array();
 			foreach ($this->items[0] as $k => $v) if (!isset($_POST[$this->model][$k])) $_POST[$this->model][$k] = $v;
 		}
 	}
-	
+
 	function before_render() {
 		// grab errors and update schema
 		$this->errors = array();
@@ -83,11 +92,11 @@ class FormDisplay {
 			if (!empty($errors)) $this->errors[$name] = $errors;
 		}
 	}
-	
+
 	function render($query=false) {
 		parent::render($query);
 	}
-	
+
 	/**
 	 * get the full name attribute
 	 * eg. name becomes users[name]
@@ -122,7 +131,7 @@ class FormDisplay {
 		if (is_array($var)) return $var;
 		else return stripslashes($var);
 	}
-	
+
 	/**
 	 * set the GET or POST value
 	 * @param string $name the relative name
@@ -131,7 +140,7 @@ class FormDisplay {
 	function set($name, $value, $model="") {
 		if (empty($model)) {
 			$model = (!empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
-		}	
+		}
 		$parts = explode("[", $name);
 		$key = array_pop($parts);
 		if (empty($model)) {
@@ -192,10 +201,10 @@ class FormDisplay {
 		assign("control", $control);
 		return capture(array($field['model']."/form/$field[field]-$capture", "form/$field[field]-$capture", $field['model']."/form/$capture", "form/$capture"));
 	}
-	
+
 	function __call($name, $arguments) {
 		efault($arguments[1], array());
 		return $this->form_control($name, $arguments[0], $arguments[1]);
-	}	
+	}
 }
 ?>
