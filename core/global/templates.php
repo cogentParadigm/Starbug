@@ -84,7 +84,8 @@ function render_form($form="", $render=true) {
 	* @param string $layout the layout to render
 	*/
 function render_layout($layout="", $render=true) {
-	if (empty($layout)) $layout = empty(request("layout")) ? "views" : request("layout");
+	$rlayout = request("layout");
+	if (empty($layout)) $layout = empty($rlayout) ? "views" : request("layout");
 	if ($render) render(array($layout."-".request("path"), $layout, "Default"), "layouts");
 	else return capture($layout, "layouts");
 }

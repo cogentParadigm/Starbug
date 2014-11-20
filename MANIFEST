@@ -1,0 +1,18 @@
+--------------------------------------------------------------------------------------------------------------------------------
+WHEN FIRST CLONING A STARBUG PROJECT OR TO UPDATE YOUR SYSTEMS sb COMMAND:
+run command: sudo cp sb /usr/bin/
+
+--------------------------------------------------------------------------------------------------------------------------------
+WHEN FIRST CLONING THIS PROJECT:
+run command: git submodule init
+run command: git submodule update
+run command: sb generate host
+edit files : etc/db/default.json (db credentials), and etc/Host.php (URL sub-directory, Timezone)
+run command: sb setup
+run command: sb migrate
+run command: sb store users id:1 groups:root,admin password:[replace with password]
+
+--------------------------------------------------------------------------------------------------------------------------------
+WHEN PULLING NEW CODE:
+run command: sb migrate
+

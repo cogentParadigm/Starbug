@@ -42,7 +42,7 @@ function tag($table, $object_id, $field, $tag="") {
 	//IF THE TAG IS ALREADY APPLIED, RETURN TRUE
 	$existing = query($table)->condition($table.".id", $object_id)
 									->open("tag")->condition($field.".id", $tag)->orCondition($field.".slug", $tag)->orCondition($field.".term", $tag)->close();
-	if (!empty($existing->one())) return true;
+	if ($existing->one()) return true;
 
 	//IF THE TERM DOESN'T EXIST, ADD IT
 	$term = query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->params(array("tag" => $tag, "tax" => $taxonomy))->one();
