@@ -54,14 +54,16 @@ class FormDisplay {
 		} else if ($options['input_type'] == "category_select") {
 				if (empty($options['taxonomy'])) $options['taxonomy'] = (empty($column['taxonomy'])) ? $options['model']."_".$field : $column['taxonomy'];
 		}
-		$default = isset($column['default']);
-		$optional = isset($column['optional']);
-		$nullable = isset($column['null']);
-		$not_optional_updating = (!isset($column['optional_update']) || empty($object_id));
-		if (!$default && !$optional && !$nullable && $not_optional_updating) {
-				$options['required'] = true;
-		} else {
-			if (!isset($options['required'])) $options['required'] = false;
+		if (!isset($options['required'])) {
+			$default = isset($column['default']);
+			$optional = isset($column['optional']);
+			$nullable = isset($column['null']);
+			$not_optional_updating = (!isset($column['optional_update']) || empty($object_id));
+			if (!$default && !$optional && !$nullable && $not_optional_updating) {
+					$options['required'] = true;
+			} else {
+				$options['required'] = false;
+			}
 		}
 		return $options;
 	}
