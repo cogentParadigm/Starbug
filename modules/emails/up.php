@@ -35,4 +35,12 @@ $this->store(
 		"body" => "<h2>Welcome to [site:name]!</h2>\n<p>An account has been created for you. You can login at <a href=\"[url:login]\">[url:login]</a>.</p><p>Here are your credentials.<br/>login: [user:email]<br/>password: [user:password]</p>"
 	)
 );
+$this->store(
+	"email_templates",
+	"name:Password Reset",
+	array(
+		"subject" => "Your [site:name] password has been reset!",
+		"body" => "<p>Your new password is <strong>[user:password]</strong>. You can login at <a href=\"[url:login]\">[url:login]</a>.</p>"
+	)
+);
 ?>

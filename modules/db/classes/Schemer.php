@@ -599,7 +599,7 @@ class Schemer {
 			//if (isset($this->tables[$col['type']])) {
 			if (db::has($col['type'])) {
 				$ref_table_name = (empty($col['table'])) ? $table."_".$colname : $col['table'];
-				$ref_table_def = array($ref_table_name.($colname == "groups" ? "  groups:false" : ""),
+				$ref_table_def = array($ref_table_name."  groups:false",
 					"owner  type:int  null:  references:users id  update:cascade  delete:cascade  optional:",
 					$table."_id  type:int  default:0  references:$table id  null:  update:cascade  delete:cascade",
 					"position  type:int  ordered:".$table."_id  optional:"

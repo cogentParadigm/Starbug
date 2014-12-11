@@ -41,5 +41,16 @@ class LayoutDisplay {
 	function is_empty() {
 		return empty($this->cells);
 	}
+
+	function output($match="") {
+		foreach ($this->fields as $name => $field) {
+				if (!empty($match) && substr($name, 0, strlen($match)) != $match) continue;
+				$field['attributes']['class'] = implode(' ',$field['attributes']['class']);
+				$node = '<div '.html_attributes($field['attributes'], false).'>';
+				foreach ($field as $key => $value) if($key != 'attributes') $node .= (string) $this->cells[$key];
+				$node .= '</div>';
+				echo $node;
+		}
+	}
 }
 ?>

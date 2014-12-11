@@ -9,6 +9,7 @@ class FormDisplay {
 	var $postback;
 	var $errors = array();
 	var $layout;
+	var $submit_label = "Save";
 	function init($options) {
 		// set default options
 		if (empty($options['url'])) $options['url'] = empty($options['uri']) ? $_SERVER['REQUEST_URI'] : $options['uri'] ;

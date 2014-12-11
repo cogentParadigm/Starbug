@@ -17,9 +17,8 @@
 		assign("required", true);
 	} else assign("required", false);
 ?>"><?php } ?>
-	<?php //if ($control != "input" || ($type != "checkbox" && $type != "radio")) render("form/label"); ?>
-		<?php render("form/label"); ?>
 	<?php
+		if ($control != "input" || ($type != "checkbox" && $type != "radio")) render("form/label");
 		if (!empty($between)) {
 			echo $between; assign("between", "");
 		}
@@ -27,24 +26,22 @@
 			$attributes['class'] .= " form-error";
 			assign("attributes", $attributes);
 		}
-	?>
-	<?php
 		if (!empty($form->errors[$field])) {
 			foreach ($form->errors[$field] as $error => $message) {
 				assign("error", $message);
 				render("form/error");
 			}
 		}
+		if ($control == "input" && ($type == "checkbox" || $type == "radio")) render("form/label");
 	?>
 <? if ($control != "input" || ($type != "checkbox" && $type != "radio")) render(array("$model/form/$field-$control", "form/$field-$control", "$model/form/$control", "form/$control")); ?>
-<?php //if ($control == "input" && ($type == "checkbox" || $type == "radio")) render("form/label"); ?>
 <?php
 	if (!empty($after)) {
 		echo $after; assign("after", "");
 	}
 ?>
 <?php if (!empty($info)) { ?>
-	<span class="help-block"><?php echo $info; assign("info", ""); ?></span>
+	<span class="help-block"><?php echo nl2br($info); assign("info", ""); ?></span>
 <?php } ?>
 <?php if (!$nodiv) { ?></div><?php } else assign("nodiv", false); ?>
 <?php
