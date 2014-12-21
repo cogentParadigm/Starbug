@@ -71,6 +71,8 @@ class query implements IteratorAggregate, ArrayAccess {
 
 	var $raw = false;
 
+	public $store_on_errors = false;
+
 	/**
 	 * create a new query
 	 * @param string $collection the name of the primary table/collection to query
@@ -316,6 +318,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			foreach ($field as $k => $v) $this->condition($k, $v, $op, $ops);
 			return $this;
 		}
+		if (is_null($value)) $value = "";
 		$this->operation("condition", array("field" => $field, "value" => $value, "op" => $op, "ops" => $ops));
 		$set = $this->set;
 		$condition = array_merge(array("con" => "&&", "set" => $this->set, "value" => $value, "op" => $op), $this->parse_condition($field), star($ops));
@@ -829,7 +832,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 */
 	function build_select() {
 		$select = array();
-		if (empty($this->query['select'])) $select[] = $this->base_collection.".*";
+		if (empty($this->query['select'])) $select[] = "`".$this->base_collection."`.*";
 		else {
 			foreach ($this->query['select'] as $alias => $field) {
 				$select[] = $field.(($alias == $field) ? "" : " as ".$alias);
@@ -1066,7 +1069,7 @@ class query implements IteratorAggregate, ArrayAccess {
 				//if there are no more tokens, then this is the final column name
 				if (empty($parts)) {
 					//get the field string and table name
-					$field = $collection.".".$token;
+					$field = "`".$collection."`.".$token;
 					$table = $this->query['from'][$collection];
 					//in a select query, the token may be '*'
 					if ($token == "*") {
@@ -1087,7 +1090,7 @@ class query implements IteratorAggregate, ArrayAccess {
 									if ($schema['entity'] === $base_entity) $this->on($entity_collection.".id=".$collection.".".$base_entity."_id");
 									else $this->on($entity_collection.".".$base_entity."_id=".$collection.".".$base_entity."_id");
 								}
-								$field = $entity_collection.".".$token;
+								$field = "`".$entity_collection."`.".$token;
 								$collection = $entity_collection;
 							}
 							if ($schema['type'] == "terms") {
@@ -1284,7 +1287,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 */
 	function execute($params=array(), $debug=false) {
 		$this->build();
-		if (errors() && $this->mode != "query") return false;
+		if (errors() && $this->mode != "query" && false === $this->store_on_errors) return false;
 		if (empty($params)) $params = $this->parameters;
 		if ($debug) {
 			echo $this->interpolate();

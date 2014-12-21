@@ -31,7 +31,7 @@
 			}
 			$options = $list; unset($field['caption']); unset($field['value']);
 		} else if (!empty($field['options'])) {
-			$keys = explode(",", $field['options']);
+			$keys = is_array($field['options']) ? $field['options'] : explode(",", $field['options']);
 			$values = (!empty($field['values'])) ? explode(",", $field['values']) : $keys;
 			$options = array();
 			foreach ($keys as $i => $k) $options[$k] = $values[$i];
@@ -47,6 +47,9 @@
 				$mode = "display";
 			}
 		}
+		$optional = false;
+		if (isset($field['optional'])) $optional = $field['optional'];
+		assign("optional", $optional);
 		assign("value", $value);
 		assign("options", $options);
 		assign("mode", $mode);
