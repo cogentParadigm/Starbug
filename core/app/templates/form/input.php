@@ -1,12 +1,12 @@
 <?php if ($type == "file") { ?>
 	<?php
 		$files = "[]";
-		$column_info = sb($display->model)->hooks[$field];
+		$column_info = column_info($display->model, $field);
 		$records = array();
 		if (!empty($value)) {
 			if ($column_info['type'] == "files") {
-				$table = $display->model."_".$field;
-				$records = query($table)->condition("files_id.id", $value)->select($table."_files_id.*")->sort($table.".position")->all();
+				$table = $column_info['entity']."_".$field;
+				$records = query($table)->condition($table.".".$field."_id", $value)->select($field."_id.*")->sort($table.".position")->all();
 			} else {
 				$records = query("files")->condition("id", $value)->all();
 			}
