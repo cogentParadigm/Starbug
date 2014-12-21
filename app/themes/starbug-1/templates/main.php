@@ -1,3 +1,1 @@
-<div class="container">
-	<? render_layout(); ?>
-</div>
+<? render_layout(); ?>

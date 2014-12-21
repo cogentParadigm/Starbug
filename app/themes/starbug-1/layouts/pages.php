@@ -1,1 +1,1 @@
-<div id="content"><? render_content(); ?></div>
+<div class="container"><?php render_content(); ?></div>
