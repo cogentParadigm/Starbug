@@ -44,7 +44,7 @@
  *
  ********************************************************/
 //HOME PAGE
-$this->uri("home", "type:views");
+$this->uri("home", "type:views  layout:home");
 $this->block("home", "<h1>Congratulations, she rides!</h1>\n<p>You&#39;ve successfully installed Starbug PHP!</p>");
 //404 PAGE
 $this->uri("missing", "title:404 - Not Found  type:views");
