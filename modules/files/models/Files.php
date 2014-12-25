@@ -69,7 +69,7 @@ class Files {
 	}
 
 	function query_list($query, &$ops) {
-		$query->condition("files.statuses.slug", "deleted", "!=");
+		$query->condition("files.statuses.slug", "deleted", "!=", array("ornull" => true));
 		if (!empty($ops['category']) && is_numeric($ops['category'])) {
 			$query->condition("category", $ops['category']);
 		}
