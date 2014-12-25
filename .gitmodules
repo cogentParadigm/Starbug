@@ -40,3 +40,6 @@
 [submodule "util/htmlpurifier"]
 	path = util/htmlpurifier
 	url = https://github.com/ezyang/htmlpurifier.git
+[submodule "libraries/dojo/dstore"]
+	path = libraries/dojo/dstore
+	url = https://github.com/SitePen/dstore.git
