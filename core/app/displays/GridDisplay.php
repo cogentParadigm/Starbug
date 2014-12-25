@@ -16,19 +16,19 @@ class GridDisplay {
 		efault($this->attributes['id'], $this->model."_grid");
 		efault($this->attributes['data-dojo-id'], $this->attributes['id']);
 		$this->attributes['action'] = $this->name;
-		
+
 		//build data-dojo-props attribute
 		foreach ($this->attributes as $k => $v) {
 			if (!in_array($k, array("id", "class", "style", "data-dojo-type", "data-dojo-props", "data-dojo-id"))) {
 				$this->attributes['data-dojo-props'][$k] = $v;
 			}
 		}
-		
+
 		//dnd
 		if ($options['dnd']) $this->dnd();
-		
+
 	}
-	
+
 	function dnd() {
 		$this->options['dnd'] = true;
 		$this->grid_class = "starbug/grid/DnDGrid";
@@ -55,29 +55,33 @@ class GridDisplay {
 	function column_attributes($field, $options) {
 		if (empty($options["field"])) $options["field"] = $field;
 		$options['data-dgrid-column'] = array();
+		if (empty($options['plugin']) && !isset($options['readonly'])) {
+			efault($options['editor'], "'text'");
+			efault($options['editOn'], "'dblclick'");
+		}
 		foreach ($options as $k => $v) {
-			if (!in_array($k, array("id", "class", "style", "label", "data-dgrid-column")) && $v !== "") {
+			if (!in_array($k, array("id", "class", "style", "label", "data-dgrid-column", "plugin")) && $v !== "") {
 				if ($k == "model" || $k == "field" || ($k == "default" && !is_numeric($v))) $v = "'".$v."'";
 				else if ($v === false) $v = "false";
 				$options['data-dgrid-column'][] = $k.":".$v;
 			}
+		}
+		if (isset($options['editor'])) {
+			//$options['data-dgrid-column'] = "dgrid.editor(".$options['data-dgrid-column'].", ".$options['editor'].", 'dblclick')";
 		}
 		$options['data-dgrid-column'] = '{'.implode(', ', $options['data-dgrid-column']).'}';
 		if (isset($options['plugin']) && !isset($options['readonly'])) {
 			js(str_replace(".", "/", $options['plugin']));
 			$options['data-dgrid-column'] = $options['plugin']."(".$options['data-dgrid-column'].")";
 		}
-		if (empty($options['plugin']) && !isset($options['readonly'])) efault($options['editor'], "'text'");
-		if (isset($options['editor'])) {
-			$options['data-dgrid-column'] = "dgrid.editor(".$options['data-dgrid-column'].", ".$options['editor'].", 'dblclick')";
-		}
+
 		return $options;
 	}
 
 	function query() {
 		//defer query responsibilities to dgrid
 	}
-	
+
 	function before_render() {
 		js($this->grid_class);
 		$this->attributes['data-dojo-type'] = $this->grid_class;

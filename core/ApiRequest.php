@@ -79,7 +79,7 @@ class ApiRequest {
 			//$start = max((int) $start, 1);
 			$ops['paged'] = true;
 			$ops['limit'] = 1 + (int) $finish - (int) $start;
-			$_GET['page'] = 1 + (int) $start/$ops['limit'];
+			$ops['page'] = 1 + (int) $start/$ops['limit'];
 		}
 		$action_name = "query_".$action;
 		$query = sb($model)->query_filters($action, $query, $ops);
@@ -87,8 +87,13 @@ class ApiRequest {
 
 		if ($ops['paged'] && $ops['limit']) {
 			$query->limit($ops['limit']);
-			$pager = $query->pager($_GET['page']);
-		}
+			$pager = $query->pager($ops['page']);
+		} else if ($ops['limit']) {
+      $ops['paged'] = true;
+      $ops['page'] = $ops['skip'] ? intval($ops['skip'])/intval($ops['limit']) : 1;
+      $query->limit($ops['limit']);
+      $pager = $query->pager($ops['page']);
+    }
 
 		$data = (is_array($query) && isset($query['data'])) ? $query['data'] : $query->all();
 		$f = strtoupper($format);

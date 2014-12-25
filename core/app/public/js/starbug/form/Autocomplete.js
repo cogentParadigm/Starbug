@@ -65,8 +65,7 @@ define([
 			this.list = new List({
 
 				rowHeight: 13,
-				store: self.store,
-				query: this.query,
+				collection: self.store.filter(self.query),
 				keepScrollPosition:true,
 				renderRow: function(object, options){
 					var node = put('div.autocomplete-item',object.label);
@@ -111,7 +110,7 @@ define([
 				*/
 			});
 			if (self.hiddenInput.value !== "") {
-				self.store.query({id:self.hiddenInput.value}).then(function(results) {
+				self.store.filter({id:self.hiddenInput.value}).fetch().then(function(results) {
 					if (results.length) {
 						self.domNode.value = results[0].label;
 					}
@@ -131,7 +130,7 @@ define([
 				self.query.keywords = null;
 				domclass.remove(self.listNode,'show');
 			}
-			self.list.set('query',self.query);
+			self.list.set('collection', self.store.filter(self.query));
 		},
 
 		hideList: function(evt) {

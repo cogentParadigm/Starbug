@@ -1,4 +1,4 @@
-define(["dojo", "dojo/on", "sb", "put-selector/put", "dgrid/tree"],
+define(["dojo", "dojo/on", "sb", "put-selector/put"],
 function(dojo, on, sb, put, tree){
 	dojo.global.starbug.grid.columns = dojo.global.starbug.grid.columns || {};
 	dojo.global.starbug.grid.columns.tree = function(column){
@@ -13,8 +13,8 @@ function(dojo, on, sb, put, tree){
 			put(node, 'div.fa.fa-plus-circle');
 		}
 
-		column = tree(column);
-				
+		column.renderExpando = true;
+
 		return column;
 	};
 });

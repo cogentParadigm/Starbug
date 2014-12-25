@@ -12,16 +12,14 @@ define([
 	"dojo/query",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
-	"starbug/store/Memory",
-	"dojo/store/Observable",
-	"dojo/store/util/QueryResults",
+	"dstore/Memory",
 	"dojo/ready",
 	"starbug/form/Dialog",
 	"starbug/grid/MemoryGrid",
 	"starbug/grid/columns/handle",
 	"starbug/grid/columns/html",
 	"starbug/grid/columns/options"
-], function (dojo, declare, lang, Widget, Templated, _WidgetsInTemplate, sb, template, put, on, query, domclass, Deferred, Memory, Observable, QueryResults, ready, Dialog) {
+], function (dojo, declare, lang, Widget, Templated, _WidgetsInTemplate, sb, template, put, on, query, domclass, Deferred, Memory, ready, Dialog) {
 	return declare([Widget, Templated, _WidgetsInTemplate], {
 		value:[],
 		model:'',
@@ -36,7 +34,7 @@ define([
 			this.store = new Memory({data: []});
 			this.dialog = new Dialog({url:"admin/"+self.model+"/", callback:function(data) {
 				var object_id = query('input[name="'+self.model+'[id]"]').attr('value')[0];
-				sb.get(self.model, 'select').query({'id':object_id}).then(function(data) {
+				sb.get(self.model, 'select').filter({'id':object_id}).fetch().then(function(data) {
 					self.add(data);
 				});
 			}});
@@ -48,14 +46,14 @@ define([
 		},
 		startup: function() {
 			var self = this;
-			self.grid.set('store', self.store);
-			
+			self.grid.set('collection', self.store);
+
 			if (self.value.length > 0) {
-				sb.get(self.model, 'select').query({'id':self.value.join(',')}).then(function(data) {
+				sb.get(self.model, 'select').filter({'id':self.value.join(',')}).fetch().then(function(data) {
 					self.add(data);
 				});
 			}
-			
+
 		},
 		add:function(items) {
 			var target_size = this.store.data.length + items.length;
@@ -92,6 +90,7 @@ define([
 			this.refresh();
 		},
 		refresh: function() {
+			this.grid.set('collection', this.store);
 			var ids = [];
 			var items = this.store.data;
 			for (var i in items) ids.push('#' + this.store.getIdentity(items[i]));

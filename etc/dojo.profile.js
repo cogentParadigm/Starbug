@@ -25,6 +25,7 @@ dependencies = {
 	prefixes: [
 		["dijit", "../dijit"],
 		["dojox", "../dojox"],
+		["dstore", "../dstore"],
 		["dgrid", "../dgrid"],
 		["put-selector", "../put-selector"],
 		["xstyle", "../xstyle"],

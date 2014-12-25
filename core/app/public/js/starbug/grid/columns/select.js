@@ -1,10 +1,10 @@
-define(["dojo", "dojo/when", "sb", "put-selector/put", "dgrid/editor", "dijit/form/Select"],
-function(dojo, when, sb, put, editor, Select){
+define(["dojo", "dojo/when", "sb", "put-selector/put", "dijit/form/Select"],
+function(dojo, when, sb, put, Select){
 	dojo.global.starbug.grid.columns = dojo.global.starbug.grid.columns || {};
 	dojo.global.starbug.grid.columns.select = function(column){
-		
+
 		column.options = column.options || {};
-		
+
 		//allow specifying a range, eg. '1-5'
 		if (column.range) {
 			range = column.range.split('-');
@@ -20,25 +20,25 @@ function(dojo, when, sb, put, editor, Select){
 				if (column.options && column.options[value]) populate(cell, column.options[value]);
 				else if (value == "NULL") populate(cell, "");
 				else if (column.from) {
-					when(column.editorInstance._queryRes, function(data) {
-						items = column.editorInstance.getOptions();
-						for (var i in items) if (value == items[i].value) value = items[i].label;						
+					when(column.grid._editorInstances[column.id]._queryRes, function(data) {
+						items = column.grid._editorInstances[column.id].getOptions();
+						for (var i in items) if (value == items[i].value) value = items[i].label;
 						populate(cell, value);
 					});
 				}
 			}
 		};
-		
+
 		var populate = function(cell, value) {
 			put(cell, 'span.'+value.replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, '-').replace(/[\/\\]/g, '').toLowerCase(), value);
 		};
 
 		column.editorArgs = {style:'width:100%'};
-		
+
 		if (column.from) {
 			column.init = function() {
 				column.grid.on('.dgrid-cell:dgrid-editor-show', function(evt) {
-					column.editorInstance.set('value', evt.cell.row.data[column.field]);
+					column.grid._editorInstances[column.id].set('value', evt.cell.row.data[column.field]);
 				});
 			};
 			column.editorArgs.store = sb.get(column.from, 'select');
@@ -57,8 +57,9 @@ function(dojo, when, sb, put, editor, Select){
 			for (var o in column.options) column.editorArgs.options.push({label:column.options[o].toString(), value:o.toString()});
 		}
 
-		column = editor(column, Select, "dblclick");
-				
+		column.editor = Select;
+		column.editOn = column.editOn || "dblclick";
+
 		return column;
 	};
 });

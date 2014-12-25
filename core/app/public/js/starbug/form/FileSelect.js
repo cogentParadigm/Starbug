@@ -12,9 +12,7 @@ define([
 	"dojo/query",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
-	"starbug/store/Memory",
-	"dojo/store/Observable",
-	"dojo/store/util/QueryResults",
+	"dstore/Memory",
 	"dojo/ready",
 	"starbug/form/Uploader",
 	"starbug/grid/MemoryGrid",
@@ -22,7 +20,7 @@ define([
 	"starbug/grid/columns/handle",
 	"starbug/grid/columns/html",
 	"starbug/form/columns/FileSelectOptions"
-], function (dojo, declare, lang, Widget, Templated, _WidgetsInTemplate, sb, template, put, on, query, domclass, Deferred, Memory, Observable, QueryResults, ready) {
+], function (dojo, declare, lang, Widget, Templated, _WidgetsInTemplate, sb, template, put, on, query, domclass, Deferred, Memory, ready) {
 	return declare([Widget, Templated, _WidgetsInTemplate], {
 		files:[],
 		templateString: template, //the template (./templates/FileSelect.html)
@@ -32,23 +30,23 @@ define([
 		store:null,
 		postCreate:function() {
 			var self = this;
-			this.store = Observable(new Memory({data: []}));
+			this.store = new Memory({data: []});
 			// initialize hidden input
 			this.input.name = this.input_name;
-			
+
 		},
 		startup:function() {
 			var self = this;
 			this.uploader.startup();
 			this.grid.editor = self;
 			//initialize the uploader
-			this.uploader.url = WEBSITE_URL+'upload';	
+			this.uploader.url = WEBSITE_URL+'upload';
 			this.uploader.onBegin = lang.hitch(this, function() {
 				self.set_status('loading');
 			});
 			this.uploader.onComplete = lang.hitch(this, 'onUpload');
 			this.uploader.onAbort = lang.hitch(this, 'onCancelUpload');
-			this.grid.set('store', this.store);
+			this.grid.set('collection', this.store);
 			setTimeout(function() {
 				if (self.files.length > 0) self.add(self.files);
 			}, 100);
@@ -105,6 +103,7 @@ define([
 			this.refresh();
 		},
 		refresh: function() {
+			this.grid.set('collection', this.store);
 			var ids = [];
 			var items = this.store.data;
 			for (var i in items) ids.push(this.store.getIdentity(items[i]));
@@ -128,7 +127,7 @@ define([
 			this.add(files);
 		},
 		onCancelUpload: function() {
-			this.set_status();	
+			this.set_status();
 		}
 	});
 });

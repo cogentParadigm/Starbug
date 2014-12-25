@@ -19,6 +19,7 @@ define([
 	return declare([Widget, Templated, _WidgetsInTemplate], {
 		currentUser:0, //logged in user
 		readOnly:false,
+		store:null,
 		query:{}, //parameters for the comments (eg. {request:1950} or {task:2730})
 		mode:'update',
 		listNode:null, //attached in the template, the node for the dgrid OnDemandList
@@ -31,11 +32,12 @@ define([
 		input_name:'tags',
 		postCreate:function() {
 			var self = this;
+			this.store = sb.get('terms', 'tags');
+
 			this.input.name = this.input_name;
 			//instantiate a dgrid on demand list
 			this.list = new List({
-				store: sb.get('terms', 'tags'),
-				query: this.query,
+				store: this.store.filter(this.query),
 				mode: this.mode,
 				keepScrollPosition:true,
 				renderRow: function(tag, options){
@@ -43,10 +45,10 @@ define([
 					//and attach events within the item.
 					//We can use the scope of this function to access
 					//the target node from within the event handlers
-					
+
 					//first put in a root node
 					var node = put("div.tag");
-					
+
 					//delete
 					on(put(node, 'a.right[href="javascript:;"]', put('div.fa.fa-times')), 'click', function() {
 							var terms = self.value;
@@ -61,7 +63,7 @@ define([
 					});
 					// put tag into the node
 					put(node, 'div.term', tag);
-										
+
 					//return the node
 					return node;
 				}
@@ -76,7 +78,7 @@ define([
 				this.value = values;
 				if(this.value.length > 0) this.apply();
 			}
-					
+
 		},
 		apply:function(){
 			//the newItem function is attached to the 'Apply' button.
