@@ -22,10 +22,12 @@ var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard,
 	pageSizeOptions: [10, 15, 25, 50],
 	noDataMessage:'No Results',
 	getBeforePut:false,
+	query:{},
 	constructor: function(args) {
 		if (args.model && args.action) {
 			args.query = args.query || {};
-			this.collection = new api({model:args.model, action:args.action}).filter(args.query);
+			this.query = args.query;
+			this.collection = (new api({model:args.model, action:args.action})).filter(args.query);
 		}
 	},
 	startup: function() {
@@ -90,7 +92,7 @@ var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard,
 				// getting the item from the store first if desired.
 				promise = promise.then(getFunc(id)).then(put);
 			}
-			promise = promise.then(function(){self.refresh()});
+			promise = promise.then(function(){self.refresh();});
 
 			// Kick off and return the promise representing all applicable get/put ops.
 			// If the success callback is fired, all operations succeeded; otherwise,
@@ -99,13 +101,13 @@ var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard,
 			return promise;
 		},
 		filterChange:function(node) {
-			var name = (typeof node['get'] == "undefined") ? attr.get(node, 'name') : node.get('name');
-			var value = (typeof node['get'] == "undefined") ? attr.get(node, 'value') : node.get('value');
-			if (typeof value == "object" && typeof node['serialize'] == "function") {
+			var name = (typeof node.get == "undefined") ? attr.get(node, 'name') : node.get('name');
+			var value = (typeof node.get == "undefined") ? attr.get(node, 'value') : node.get('value');
+			if (typeof value == "object" && typeof node.serialize == "function") {
 				value = node.serialize(value);
 			}
 			this.query[name] = value;
-			this.set('query', this.query);
+			this.set('collection', this.collection.root.filter(this.query));
 		}
 });
 return Grid;

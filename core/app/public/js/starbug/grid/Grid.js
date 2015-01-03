@@ -86,7 +86,7 @@ var Grid = dojo.declare('starbug.grid.Grid', [GridFromHtml, List, Keyboard, Sele
 				// getting the item from the store first if desired.
 				promise = promise.then(getFunc(id)).then(put);
 			}
-			promise = promise.then(function(){self.refresh()});
+			promise = promise.then(function(){self.refresh();});
 
 			// Kick off and return the promise representing all applicable get/put ops.
 			// If the success callback is fired, all operations succeeded; otherwise,
@@ -95,13 +95,13 @@ var Grid = dojo.declare('starbug.grid.Grid', [GridFromHtml, List, Keyboard, Sele
 			return promise;
 		},
 		filterChange:function(node) {
-			var name = (typeof node['get'] == "undefined") ? attr.get(node, 'name') : node.get('name');
-			var value = (typeof node['get'] == "undefined") ? attr.get(node, 'value') : node.get('value');
-			if (typeof value == "object" && typeof node['serialize'] == "function") {
+			var name = (typeof node.get == "undefined") ? attr.get(node, 'name') : node.get('name');
+			var value = (typeof node.get == "undefined") ? attr.get(node, 'value') : node.get('value');
+			if (typeof value == "object" && typeof node.serialize == "function") {
 				value = node.serialize(value);
 			}
 			this.query[name] = value;
-			this.set('query', this.query);
+			this.set('collection', this.collection.root.filter(this.query));
 		}
 });
 return Grid;
