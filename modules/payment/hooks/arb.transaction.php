@@ -3,9 +3,9 @@
 		//notify on failed subscription
 		import("mailer");
 		$mailer = new mailer();
-		$result = $mailer->quickSend(
+		$result = $mailer->quickSend(array(
 			'subject' => "Failed ARB transaction",
 			'body' => "Failed ARB transaction for subscription ".$_POST['x_subscription_id']
-		);
+		));
 	}
 ?>
