@@ -105,6 +105,14 @@ module.exports = function(grunt) {
           configuration: "etc/phpunit.xml"
         }
       }
+    },
+    intern: {
+      all: {
+         options: {
+           runType: 'runner',
+           config: 'core/app/public/js/tests/intern'
+         }
+      }
     }
   });
 
@@ -117,12 +125,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-phpmd');
   grunt.loadNpmTasks('grunt-phpcs');
   grunt.loadNpmTasks('grunt-phpunit');
+  grunt.loadNpmTasks('intern');
 
   grunt.registerTask('lint', ['phplint', 'jsvalidate', 'jshint:local', 'lesslint']);
   grunt.registerTask('lint-ci', ['phplint', 'jsvalidate', 'jshint:ci', 'lesslint']);
 
-  grunt.registerTask('local', ['lint', 'shell:phploc', 'phpmd:local', 'phpcs:local', 'shell:phpcpd', 'phpunit']);
-  grunt.registerTask('ci', ['lint-ci', 'shell:phploc', 'phpmd:ci', 'phpcs:ci', 'shell:phpcpd', 'phpunit']);
+  grunt.registerTask('local', ['lint', 'shell:phploc', 'phpmd:local', 'phpcs:local', 'shell:phpcpd', 'phpunit', 'intern']);
+  grunt.registerTask('ci', ['lint-ci', 'shell:phploc', 'phpmd:ci', 'phpcs:ci', 'shell:phpcpd', 'phpunit', 'intern']);
 
   grunt.registerTask('default', ['local']);
 
