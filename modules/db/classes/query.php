@@ -900,7 +900,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			if (!isset($this->exclusions[$k]) || true != $this->exclusions[$k]) {
 				if ($v == "NULL") $v = null;
 				$idx = $this->increment_parameter_index("set");
-				$set[] = "`".str_replace(".", "`.`", $k)."` = :set".$idx;
+				$set[] = "`".str_replace(".", "`.`", str_replace('`', '', $k))."` = :set".$idx;
 				$this->param("set".$idx, $v);
 			}
 		}
