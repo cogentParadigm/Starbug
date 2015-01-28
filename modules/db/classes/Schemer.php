@@ -19,85 +19,85 @@ class Schemer {
 	/**
 	 * @var db The db class is a PDO wrapper
 	 */
-	var $db;
+	public $db;
 	/**
 	 * @var array Holds tables, columns and column options
 	 */
-	var $tables = array();
+	public $tables = array();
 	/**
 	 * @var array Holds table options
 	 */
-	var $options = array();
+	public $options = array();
 	/**
 	 * @var array Tables that have been dropped
 	 */
-	var $table_drops = array();
+	public $table_drops = array();
 	/**
 	 * @var array Columns that have been dropped
 	 */
-	var $column_drops = array();
+	public $column_drops = array();
 	/**
 	 * @var array indexes
 	 */
-	var $indexes = array();
+	public $indexes = array();
 	/**
 	 * @var array drop indexes
 	 */
-	var $index_drops = array();
+	public $index_drops = array();
 	/**
 	 * @var array Holds uris
 	 */
-	var $uris = array();
+	public $uris = array();
 	/**
 	 * @var array Holds blocks
 	 */
-	var $blocks = array();
+	public $blocks = array();
 	/**
 	 * @var array Holds permits
 	 */
-	var $permits = array();
+	public $permits = array();
 	/**
 	 * @var array Ordered list of migrations
 	 */
-	var $migrations = array();
+	public $migrations = array();
 	/**
 	 * @var array Holds records to be inserted immediately after a table is created
 	 */
-	var $population = array();
+	public $population = array();
 	/**
 	* @var array Holds entities to be cerated
 	*/
-	var $entities = array();
+	public $entities = array();
 	/**
 	 * @var array Holds menus
 	 */
-	var $menus = array();
+	public $menus = array();
 	/**
 	 * @var array Holds taxonomies
 	 */
-	var $taxonomies = array();
+	public $taxonomies = array();
 	/**
 	 * @var array Holds sql triggers
 	 */
-	var $triggers = array();
+	public $triggers = array();
 	/**
 	 * @var array triggers to drop
 	 */
-	var $trigger_drops = array();
+	public $trigger_drops = array();
 
-	var $current;
+	public $current;
 
-	var $testMode = false;
+	public $testMode = false;
 
 	/**#@-*/
 	/**
 	 * @var array holds mixed in objects
 	 */
-	var $imported = array();
+	public $imported = array();
 	/**
 	 * @var array holds function names of mixed in objects
 	 */
-	var $imported_functions = array();
+	public $imported_functions = array();
 
 	/**
 	 * constructor. loads migrations
@@ -113,7 +113,7 @@ class Schemer {
 		$this->db = $db;
 	}
 
-	function  clean() {
+	function clean() {
 		$this->tables = $this->table_drops = $this->column_drops = $this->uris = $this->blocks = $this->permits = $this->population = $this->triggers = $this->trigger_drops = $this->menus = $this->taxonomies = $this->indexes = $this->index_drops = $this->entities = array();
 	}
 
@@ -149,7 +149,7 @@ class Schemer {
 		}
 	}
 
-	function testMode($to=true) {
+	function testMode($to = true) {
 		$this->testMode = $to;
 		$this->clean();
 		$this->fill();
@@ -162,7 +162,6 @@ class Schemer {
 	 */
 	function get_table($table) {
 		$fields = $this->tables[$table];
-		$table_info = $this->options[$table];
 		$primary = array();
 		foreach ($fields as $column => $options) {
 			if ((isset($options['key'])) && ("primary" == $options['key'])) $primary[] = $column;
@@ -321,7 +320,8 @@ class Schemer {
 				$this->add_uri($path);
 				$us++;
 			} else {
-				$query = query("uris")->select("uris.*,uris.groups.slug as groups"); $extra_terms = false;
+				$query = query("uris")->select("uris.*,uris.groups.slug as groups");
+				$extra_terms = false;
 				foreach ($uri as $k => $v) {
 					if ($k == "groups" || $k == "statuses") $query->condition("uris.".$k.".slug", $v);
 					else $query->condition("uris.".$k, $v);
@@ -347,7 +347,7 @@ class Schemer {
 		foreach ($this->blocks as $path => $blocks) $bs += $this->create_blocks($path, $blocks);
 		foreach ($this->permits as $model => $actions) {
 			foreach ($actions as $action => $roles) {
-				foreach ($roles as $ridx => $permit) {
+				foreach ($roles as $permit) {
 					$permit['related_table'] = $model;
 					$permit['action'] = $action;
 					if (empty($permit['priv_type'])) $permit['priv_type'] = "*";
@@ -387,7 +387,7 @@ class Schemer {
 		foreach ($this->column_drops as $table => $cols) {
 			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
 			if ($row = $records->fetch()) {
-				foreach($cols as $col) {
+				foreach ($cols as $col) {
 					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".P($table)." WHERE field='".$col."'");
 					if ($row = $records->fetch()) {
 						// DROP COLUMN																																										// DROP COLUMN
@@ -419,7 +419,7 @@ class Schemer {
 	 * Run SQL to create a table in the DB from the schema
 	 * @param string $name the name of the table from tables array
 	 */
-	function create($name, $backup=false, $write=true) {
+	function create($name, $backup = false, $write = true) {
 		$fields = $this->get_table($name);
 		$this->drop_table($name);
 		$sql = "CREATE TABLE `".P($name)."` (";
@@ -439,9 +439,8 @@ class Schemer {
 		}
 		$primary = join(", ", $primary);
 		$sql .= $primary_fields.$sql_fields."PRIMARY KEY ($primary)";
-		foreach($index as $k) $sql .= ", KEY `".$k."` (`$k`)";
-		$result = $this->db->exec($sql." ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-		//if ($write) $this->write_model($name, $backup);
+		foreach ($index as $k) $sql .= ", KEY `".$k."` (`$k`)";
+		$this->db->exec($sql." ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 	}
 
 	/**
@@ -638,7 +637,7 @@ class Schemer {
 	 * @param string $table the name of the table
 	 * @param string $col (optional) column name
 	 */
-	function drop($table, $col="") {
+	function drop($table, $col = "") {
 		if (empty($col)) {
 			$this->table_drops[] = $table;
 			unset($this->tables[$table]);
@@ -680,7 +679,7 @@ class Schemer {
 	 * Update a uri in the db from the schema
 	 * @param string $path the path of the uri
 	 */
-	function update_uri($path, $uri=array()) {
+	function update_uri($path, $uri = array()) {
 		if (empty($uri)) $uri = $this->uris[$path];
 		$entity = (empty($uri['type'])) ? "uris" : $uri['type'];
 		entity_save($entity, $uri, array("path" => $path));
@@ -691,8 +690,7 @@ class Schemer {
 	 * @param string $path the path
 	 * @param star $args other fields
 	 */
-	function uri($path, $args=array(), $groups=array()) {
-		$options = array();
+	function uri($path, $args = array(), $groups = array()) {
 		$args = star($args);
 		$args['path'] = $path;
 		efault($args['title'], ucwords(str_replace("-", " ", $path)));
@@ -714,7 +712,7 @@ class Schemer {
 	 * Update a content type
 	 * @param string $type the type
 	 */
-	function update_entity($name, $record=array()) {
+	function update_entity($name, $record = array()) {
 		if (empty($record)) $record = $this->entities[$name];
 		store("entities", $record, array("name" => $name));
 	}
@@ -735,7 +733,7 @@ class Schemer {
 	 * @param string $content the content
 	 * @param star $ops options (region, type, position)
 	 */
-	function block($path, $content, $ops=array()) {
+	function block($path, $content, $ops = array()) {
 		$ops = star($ops);
 		$ops["content"] = $content;
 		efault($this->blocks[$path], array());
@@ -840,7 +838,7 @@ class Schemer {
 	 * @param star $match the fields which if exist, do not store this record
 	 * @param star $others the other, non-unique fields
 	 */
-	function store($table, $match, $others=array(), $immediate=false) {
+	function store($table, $match, $others = array(), $immediate = false) {
 		$merge = array($table => array(array("match" => star($match), "others" => star($others), "immediate" => $immediate)));
 		$this->population = array_merge_recursive($this->population, $merge);
 	}
@@ -849,11 +847,11 @@ class Schemer {
 	 * create blocks
 	 * @param string $path the name of the path
 	 */
-	function create_blocks($path, $blocks=array()) {
-		$rs = 0;
+	function create_blocks($path, $blocks = array()) {
+		$count = 0;
 		$uri = get("uris", "path:$path", "limit:1");
-		if (!empty($blocks)) foreach ($blocks as $block) $rs += $this->create_block($uri, $block);
-		return $rs;
+		if (!empty($blocks)) foreach ($blocks as $block) $count += $this->create_block($uri, $block);
+		return $count;
 	}
 
 	/**
@@ -881,11 +879,11 @@ class Schemer {
 	 * insert records from a menu
 	 * @param string $menu the name of the menu
 	 */
-	function create_menu($menu, $update=false) {
-		$rs = 0;
+	function create_menu($menu, $update = false) {
+		$count = 0;
 		$items = $this->menus[$menu];
-		if (!empty($items)) foreach ($items as $record) $rs += $this->create_menu_item($menu, $record, $update);
-		return $rs;
+		if (!empty($items)) foreach ($items as $record) $count += $this->create_menu_item($menu, $record, $update);
+		return $count;
 	}
 
 	function create_menu_item($menu, $item, $update=false) {
@@ -916,11 +914,11 @@ class Schemer {
 	 * insert records from a taxonomy
 	 * @param string $taxonomy the name of the taxonomy
 	 */
-	function create_taxonomy($taxonomy, $update=false) {
-		$rs = 0;
+	function create_taxonomy($taxonomy, $update = false) {
+		$count = 0;
 		$items = $this->taxonomies[$taxonomy];
-		if (!empty($items)) foreach ($items as $record) $rs += $this->create_taxonomy_item($taxonomy, $record, $update);
-		return $rs;
+		if (!empty($items)) foreach ($items as $record) $count += $this->create_taxonomy_item($taxonomy, $record, $update);
+		return $count;
 	}
 
 	function create_taxonomy_item($taxonomy, $item, $update=false) {
@@ -946,8 +944,8 @@ class Schemer {
 	 * insert records from population
 	 * @param string $table the name of the table to populate
 	 */
-	function populate($table, $immediate=false) {
-		$rs = 0;
+	function populate($table, $immediate = false) {
+		$count = 0;
 		$pop = $this->population[$table];
 		if (!empty($pop)) {
 			foreach ($pop as $record) {
@@ -957,12 +955,12 @@ class Schemer {
 						$store = array_merge($record['match'], $record['others']);
 						fwrite(STDOUT, "Inserting $table record...\n");
 						store($table, $store);
-						$rs++;
+						$count++;
 					}
 				}
 			}
 		}
-		return $rs;
+		return $count;
 	}
 
 	/**
@@ -970,7 +968,7 @@ class Schemer {
 	 * @param string $name in the form model::action, where action is insert, update, or delete
 	 * @param string $trig the statement to attach
 	 */
-	function before($name, $trig, $each=true) {
+	function before($name, $trig, $each = true) {
 		$parts = explode("::", $name);
 		efault($this->triggers[$name], array());
 		$trigger = array("table" => $parts[0], "action" => $parts[1], "type" => "before", "each" => $each, "trigger" => $trig);
@@ -982,7 +980,7 @@ class Schemer {
 	 * @param string $name in the form model::action, where action is insert, update, or delete
 	 * @param string $trig the statement to attach
 	 */
-	function after($name, $trig, $each=true) {
+	function after($name, $trig, $each = true) {
 		$parts = explode("::", $name);
 		efault($this->triggers[$name], array());
 		$trigger = array("table" => $parts[0], "action" => $parts[1], "type" => "after", "each" => $each, "trigger" => $trig);
@@ -1022,14 +1020,6 @@ class Schemer {
 	}
 
 	/**
-	 * Write a model file
-	 * @param string $name the name of the model
-	 */
-	function write_model($name, $backup) {
-		exec("./sb generate model ".$name);
-	}
-
-	/**
 	 * Delete a model
 	 * @param string $name the name of the model
 	 */
@@ -1044,7 +1034,7 @@ class Schemer {
 	 */
 	function add_migrations($arg) {
 		$args = func_get_args();
-		foreach($args as $i => $a) {
+		foreach ($args as $i => $a) {
 			if (!in_array($a, $this->migrations)) {
 				$this->migrations[] = $a;
 				config("migrations", $this->migrations);
@@ -1078,12 +1068,12 @@ class Schemer {
 		$this->toJSON($data);
 		$result = end(locate("generate/model/update.php", "script"));
 		$render_prefix = reset(explode("/model/", str_replace(BASE_DIR, "", $result)))."/model/";
-		$o = BASE_DIR."/var/models/".ucwords($table)."Model.php"; //output
+		$output_path = BASE_DIR."/var/models/".ucwords($table)."Model.php"; //output
 		assign("model", $table);
 		$base = "";
 		//if (!empty($this->options[$table]['base'])) $base = $this->options[$table]['base'];
 		$data = capture(array($base."/base", "base"), "", $render_prefix);
-		file_put_contents($o, $data);
+		file_put_contents($output_path, $data);
 	}
 
 	/**
@@ -1091,10 +1081,10 @@ class Schemer {
 	 * @param string $from the migration to go to
 	 * @param int $from the migration to start from
 	 */
-	function get_relations($from, $to, $rels=array()) {
+	function get_relations($from, $to, $rels = array()) {
 		$fields = $this->get_table($from);
 		$return = $indirect = $hooks = array();
-		foreach($fields as $column => $options) {
+		foreach ($fields as $column => $options) {
 			if (isset($options['references'])) {
 				$ref = explode(" ", $options['references']);
 				//if $to has a hook in $from, then it has an indirect relation to everything $from has a relation to
@@ -1123,7 +1113,8 @@ class Schemer {
 			$trigger = "BEGIN";
 			$fields = $this->get_table($table);
 			unset($fields['modified']);
-			foreach ($fields as $name => $ops) { $trigger .= "
+			foreach ($fields as $name => $ops) {
+				$trigger .= "
 				IF OLD.$name != NEW.$name THEN
 					INSERT INTO ".P("log")." (table_name, object_id, action, column_name, old_value, new_value, created, modified) VALUES ('$table', NEW.id, 'UPDATE', '$name', OLD.$name, NEW.$name, NOW(), NOW());
 				END IF;";
@@ -1139,7 +1130,6 @@ class Schemer {
 	}
 
 	function get($model) {
-		$sb = sb();
 		$fields = $this->get_table($model);
 		$options = $this->options[$model];
 		//SET UP MODEL ARRAY
@@ -1154,7 +1144,7 @@ class Schemer {
 		$data = array_merge($data, $options);
 		$rels = array();
 		//ADD FIELDS
-		foreach($fields as $name => $field) {
+		foreach ($fields as $name => $field) {
 			$data["fields"][$name] = array();
 			$data["fields"][$name]['display'] = ((isset($this->tables[$model][$name])) && ($field['display'] !== "false")) ? true : false;
 			if (!isset($field['input_type'])) {
@@ -1236,6 +1226,5 @@ class Schemer {
 		passthru("chmod 0777 ".BASE_DIR."/var/json/$model[name].json");
 		return $json;
 	}
-
 }
 ?>
