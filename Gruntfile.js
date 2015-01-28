@@ -110,6 +110,7 @@ module.exports = function(grunt) {
       all: {
          options: {
            runType: 'runner',
+           reporters: ['pretty', 'cobertura'],
            config: 'core/app/public/js/tests/intern'
          }
       }
