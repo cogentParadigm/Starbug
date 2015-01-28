@@ -47,7 +47,7 @@ module.exports = function(grunt) {
         csslint:{
           'adjoining-classes': false
         },
-        formatters: [{id: 'csslint-xml', dest: 'build/logs/lesslint.xml'}]
+        formatters: [{id: 'lint-xml', dest: 'build/logs/lesslint.xml'}]
       }
     },
     shell: {
