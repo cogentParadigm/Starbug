@@ -25,7 +25,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	const PHASE_AFTER_DELETE = 4;
 
 	//query array, holds the parts of the query
-	var $query = array(
+	public $query = array(
 		'distinct' => false,
 		'select' => array(),
 		'from' => array(),
@@ -40,36 +40,36 @@ class query implements IteratorAggregate, ArrayAccess {
 		'on' => array()
 	);
 
-	var $db; //pdo instance
-	var $model; //model name
-	var $base_collection; //base collection
-	var $last_collection; //last added collection
-	var $mode = "query"; // mode (query, delete, insert, update)
+	public $db; //pdo instance
+	public $model; //model name
+	public $base_collection; //base collection
+	public $last_collection; //last added collection
+	public $mode = "query"; // mode (query, delete, insert, update)
 
-	var $clauses = array();
-	var $statements = array();
-	var $parameters = array();
-	var $fields = array();
-	var $exclusions = array();
-	var $result = false;
-	var $pager = null;
+	public $clauses = array();
+	public $statements = array();
+	public $parameters = array();
+	public $fields = array();
+	public $exclusions = array();
+	public $result = false;
+	public $pager = null;
 
-	var $parameter_count = array();
+	public $parameter_count = array();
 
-	var $sets = array();
-	var $set = "default";
+	public $sets = array();
+	public $set = "default";
 
-	var $sql = null;
-	var $count_sql = null;
-	var $dirty = true;
-	var $validated = false;
-	var $executed = false;
-	var $op = "default";
-	var $tags = array();
-	var $operations = array();
-	var $hooks = array();
+	public $sql = null;
+	public $count_sql = null;
+	public $dirty = true;
+	public $validated = false;
+	public $executed = false;
+	public $op = "default";
+	public $tags = array();
+	public $operations = array();
+	public $hooks = array();
 
-	var $raw = false;
+	public $raw = false;
 
 	public $store_on_errors = false;
 
@@ -78,7 +78,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param string $collection the name of the primary table/collection to query
 	 * @param array $params parameters to merge into the query
 	 */
-	function __construct($collection, $params=array()) {
+	function __construct($collection, $params = array()) {
 		$this->db = sb()->db;
 		$params = star($params);
 		$this->from($collection);
@@ -106,7 +106,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	/**
 	 * Log an operation
 	 */
-	function operation($name, $args=array()) {
+	function operation($name, $args = array()) {
 		$args["operation"] = $name;
 		$args['tag'] = $this->op;
 		$this->operations[$this->op][] = $args;
@@ -115,9 +115,10 @@ class query implements IteratorAggregate, ArrayAccess {
 	/**
 	 * undo an operation
 	 */
-	function undo($name, $args=array()) {
+	function undo($name, $args = array()) {
 		$any = false;
-		foreach ($this->operations as $tag => $operations) {
+		//$this->operation[$tag] = $operations
+		foreach ($this->operations as $operations) {
 			foreach ($operations as $operation) {
 				if ($operation['operation'] === $name) {
 					$undo = true;
@@ -144,18 +145,18 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * specify fields for selection
 	 * @param string $field the name of the field
 	 */
-	function select($field, $prefix="") {
+	function select($field, $prefix = "") {
 		if (is_array($field)) {
 			foreach ($field as $f) $this->select($f, $prefix);
- 		} else {
- 			if (!empty($prefix)) $field = $prefix.".".$field;
- 			$field = $this->parse_collection($field);
- 			$selection = $this->parse_fields($field['collection']);
- 			$alias = ($field['alias'] === $field['collection']) ? $selection : $field['alias'];
- 			$this->query['select'][$alias] = $selection;
- 			$this->operation("select", array("alias" => $alias));
- 			$this->dirty();
- 		}
+		} else {
+			if (!empty($prefix)) $field = $prefix.".".$field;
+			$field = $this->parse_collection($field);
+			$selection = $this->parse_fields($field['collection']);
+			$alias = ($field['alias'] === $field['collection']) ? $selection : $field['alias'];
+			$this->query['select'][$alias] = $selection;
+			$this->operation("select", array("alias" => $alias));
+			$this->dirty();
+		}
 		return $this;
 	}
 
@@ -189,7 +190,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param string $collection the name of the table or collection
 	 * @param string $join the join type
 	 */
-	function join($collection, $type="") {
+	function join($collection, $type = "") {
 		$collection = $this->parse_collection($collection);
 		$this->query['from'][$collection['alias']] = $collection['collection'];
 		$this->last_collection = $collection['alias'];
@@ -231,7 +232,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param string $expr the ON expression (not including 'ON ')
 	 * @param string $collection the name of the table or collection
 	 */
-	function on($expr, $collection="") {
+	function on($expr, $collection = "") {
 		efault($collection, $this->last_collection);
 		$this->query['on'][$collection] = $expr;
 		$this->dirty();
@@ -245,7 +246,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param string $expr the ON expression (not including 'ON ')
 	 * @param string $collection the name of the table or collection
 	 */
-	function with($field, $collection="", $mode="select", $token=null) {
+	function with($field, $collection = "", $mode = "select", $token = null) {
 		$return = false;
 		$parsed = $this->parse_collection($field);
 		list($field, $alias) = array($parsed['collection'], $parsed['alias']);
@@ -313,7 +314,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- op: the operator (eg. '=', '<', '>')
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
-	function condition($field, $value="", $op="=", $ops=array()) {
+	function condition($field, $value = "", $op = "=", $ops = array()) {
 		if (is_array($field)) {
 			foreach ($field as $k => $v) $this->condition($k, $v, $op, $ops);
 			return $this;
@@ -329,7 +330,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		$this->dirty();
 		return $this;
 	}
-	function conditions($fields, $op="=", $ops=array()) {
+	function conditions($fields, $op = "=", $ops = array()) {
 		if ($fields instanceof query) {
 			foreach ($fields->operations as $set => $operations) {
 				foreach ($operations as $operation) {
@@ -350,7 +351,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- op: the operator (eg. '=', '<', '>')
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
-	function andCondition($field, $value, $op="=", $ops=array()) {
+	function andCondition($field, $value, $op = "=", $ops = array()) {
 		return $this->condition($field, $value, $op, $ops);
 	}
 
@@ -364,7 +365,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- op: the operator (eg. '=', '<', '>')
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
-	function orCondition($field, $value, $op="=", $ops=array()) {
+	function orCondition($field, $value, $op = "=", $ops = array()) {
 		return $this->condition($field, $value, $op, array_merge(array("con" => "||"), star($ops)));
 	}
 
@@ -375,12 +376,12 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param string $name the parameter name
 	 * @param mixed $value the parameter value
 	 */
-	function param($name, $value=null) {
+	function param($name, $value = null) {
 		if (!is_array($name)) $name = array($name => $value);
 		foreach ($name as $k => $v) $this->parameters[":".$k] = $v;
 		return $this;
 	}
-	function params($name, $value=null) {
+	function params($name, $value = null) {
 		return $this->param($name, $value);
 	}
 
@@ -392,7 +393,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- op: the operator (eg. '=', '<', '>')
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
-	function where($clause, $options=array()) {
+	function where($clause, $options = array()) {
 		$condition = array_merge($this->parse_condition($clause), array('con' => '&&', 'set' => $this->set), star($options));
 		$condition['field'] = $this->parse_fields($condition['field'], "where");
 		$this->query['where'][$condition['set']][] = $condition;
@@ -408,7 +409,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- op: the operator (eg. '=', '<', '>')
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
-	function andWhere($clause, $options=array()) {
+	function andWhere($clause, $options = array()) {
 		return $this->where($clause, $options);
 	}
 
@@ -420,7 +421,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- op: the operator (eg. '=', '<', '>')
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
-	function orWhere($clause, $options=array()) {
+	function orWhere($clause, $options = array()) {
 		return $this->where($clause, array_merge(array('con' => '||'), star($options)));
 	}
 
@@ -444,7 +445,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- op: the operator (eg. '=', '<', '>')
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
-	function havingCondition($field, $value, $op="=", $ops=array()) {
+	function havingCondition($field, $value, $op = "=", $ops = array()) {
 		return $this->condition($field, $value, $op, array_merge(array("set" => ($this->set == "default" ? "having" : $this->set)), star($ops)));
 	}
 
@@ -458,7 +459,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- op: the operator (eg. '=', '<', '>')
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
-	function andHavingCondition($field, $value, $op="=", $ops=array()) {
+	function andHavingCondition($field, $value, $op = "=", $ops = array()) {
 		return $this->havingCondition($field, $value, $op, $ops);
 	}
 
@@ -472,7 +473,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- op: the operator (eg. '=', '<', '>')
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
-	function orHavingCondition($field, $value, $op="=", $ops=array()) {
+	function orHavingCondition($field, $value, $op = "=", $ops = array()) {
 		return $this->havingCondition($field, $value, $op, array_merge(array("con" => "||"), star($ops)));
 	}
 
@@ -484,7 +485,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- op: the operator (eg. '=', '<', '>')
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
-	function having($clause, $options=array()) {
+	function having($clause, $options = array()) {
 		return $this->where($clause, array_merge(array("set" => ($this->set == "default" ? "having" : $this->set)), star($options)));
 	}
 
@@ -496,7 +497,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- op: the operator (eg. '=', '<', '>')
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
-	function andHaving($clause, $options=array()) {
+	function andHaving($clause, $options = array()) {
 		return $this->having($clause, $options);
 	}
 
@@ -508,7 +509,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- op: the operator (eg. '=', '<', '>')
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
-	function orHaving($clause, $options=array()) {
+	function orHaving($clause, $options = array()) {
 		return $this->having($clause, array_merge(array("con" => "||"), star($options)));
 	}
 
@@ -524,7 +525,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		return $this;
 	}
 
-	function open($set, $con="&&", $nest=false) {
+	function open($set, $con = "&&", $nest = false) {
 		$this->condition('#'.$set, null, "=", "con:".$con);
 		if (!$nest && !empty($this->sets)) $this->close();
 		$this->sets[] = $this->set;
@@ -542,7 +543,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param string $column the column or ORDER BY statement
 	 * @param int $direction (optional) sorting direction (-1 or 1)
 	 */
-	function sort($column, $direction=0) {
+	function sort($column, $direction = 0) {
 		$this->query['sort'][$column] = $direction;
 		$this->dirty();
 		return $this;
@@ -582,7 +583,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * fields: 'name,description'
 	 * conditions: ((name LIKE '%beef%' OR description LIKE '%beef%') and (name LIKE '%broccoli%' OR description LIKE '%broccoli%'))
 	 */
-	function search($keywords="", $fields="") {
+	function search($keywords = "", $fields = "") {
 		//if there are no search terms, there's nothing to do
 		if (empty($keywords)) return $this;
 
@@ -608,7 +609,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		return $this;
 	}
 
-	function action($action, $collection="") {
+	function action($action, $collection = "") {
 		efault($collection, $this->last_collection);
 		if ($this->has($collection)) {
 			$type = $this->query['from'][$collection];
@@ -725,7 +726,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param bool $force set true to force building, otherwise building will only occur if the query is dirty
 	 * @return string SQL query
 	 */
-	function build($force=false) {
+	function build($force = false) {
 		if (!$this->dirty && !$force) return $this->sql;
 
 		$sql = array();
@@ -1041,7 +1042,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		return $fields;
 	}
 
-	function parse_field($field, $mode="select") {
+	function parse_field($field, $mode = "select") {
 		//split the field into parts
 		$parts = explode(".", $field);
 		$count = count($parts);
@@ -1189,7 +1190,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param array $params The array of substitution parameters
 	 * @return string The interpolated query
 	 */
-	public function interpolate($query=null, $params=null) {
+	public function interpolate($query = null, $params = null) {
 			if (is_null($query)) $query = $this->build();
 			if (is_null($params)) $params = $this->parameters;
 			$keys = array();
@@ -1226,7 +1227,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		return $this;
 	}
 
-	function validate($phase=query::PHASE_VALIDATION) {
+	function validate($phase = query::PHASE_VALIDATION) {
 		$oldscope = error_scope();
 		error_scope($this->model);
 		foreach (db::model($this->model)->hooks as $column => $hooks) {
@@ -1285,7 +1286,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * execute the query and get back the rows
 	 * @param array $params the query parameters
 	 */
-	function execute($params=array(), $debug=false) {
+	function execute($params = array(), $debug = false) {
 		$this->build();
 		if (errors() && $this->mode != "query" && false === $this->store_on_errors) return false;
 		if (empty($params)) $params = $this->parameters;
@@ -1324,28 +1325,28 @@ class query implements IteratorAggregate, ArrayAccess {
 		return ((!empty($this->query['limit'])) && ($this->query['limit'] == 1)) ? array($records) : $records;
 	}
 
-	 function delete($run=true) {
+	 function delete($run = true) {
 		 if ($this->mode != "delete") $this->dirty();
 		 $this->mode = "delete";
 		  if ($run) return $this->execute();
 		  else return $this;
 	 }
 
-	 function insert($run=true) {
+	 function insert($run = true) {
 		 if ($this->mode != "insert") $this->dirty();
 		 $this->mode = "insert";
 		 if ($run) return $this->execute();
 		 else return $this;
 	 }
 
-	 function update($run=true) {
+	 function update($run = true) {
 		 if ($this->mode != "update") $this->dirty();
 		 $this->mode = "update";
 		 if ($run) return $this->execute();
 		 else return $this;
 	 }
 
-	 function truncate($run=true) {
+	 function truncate($run = true) {
 		 if ($this->mode != "truncate") $this->dirty();
 		 $this->mode = "truncate";
 		 if ($run) return $this->execute();
@@ -1361,7 +1362,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		return $payload;
 	}
 
-	function count($params=array()) {
+	function count($params = array()) {
 		$this->build();
 		if (errors()) return false;
 		if (empty($params)) $params = $this->parameters;
@@ -1389,7 +1390,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param string $collection, the alias or table name of the collection, depending on the value of $alias
 	 * @param bool $alias, pass false if specifying the table name instead of the alias
 	 */
-	function has($collection, $alias=true) {
+	function has($collection, $alias = true) {
 		if ($alias) return isset($this->query['from'][$collection]);
 		else return in_array($collection, $this->query['from'], true);
 	}
@@ -1400,7 +1401,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param bool $force, pass true to force re-querying the count
 	 * @return pager
 	 */
-	function pager($page, $force=false) {
+	function pager($page, $force = false) {
 		import("pager");
 		if ($force || is_null($this->pager)) {
 			$this->pager = new pager($this->count(), $this->query['limit'], $page);
@@ -1414,7 +1415,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param string $set, the set you're adding a parameter to
 	 * @return int the next number
 	 */
-	function increment_parameter_index($set="default") {
+	function increment_parameter_index($set = "default") {
 		if (empty($this->parameter_count[$set])) $this->parameter_count[$set] = 0;
 		return $this->parameter_count[$set]++;
 	}
