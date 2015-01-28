@@ -1145,7 +1145,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		$output = array();
 		$output2 = array();
 		$arr = explode("&quot;", $text);
-		for ($i = 0; $i < count($arr); $i++){
+		for ($i = 0; $i < count($arr); $i++) {
 			if ($i % 2 == 0) $output = array_merge($output, explode(" ", $arr[$i]));
 			else $output[] = $arr[$i];
 		}
@@ -1157,7 +1157,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			if ($w!="") {
 				if ($w!="and" && $w!="or") {
 					$conditions .= "(";
-					for($field = 0; $field < count($fields); $field++) {
+					for ($field = 0; $field < count($fields); $field++) {
 						$conditions .= $fields[$field]." LIKE '%".$w."%'";
 						if ($field<(count($fields)-1)) {
 							$conditions .= " OR ";
@@ -1189,29 +1189,29 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @return string The interpolated query
 	 */
 	public function interpolate($query = null, $params = null) {
-			if (is_null($query)) $query = $this->build();
-			if (is_null($params)) $params = $this->parameters;
-			$keys = array();
-			$values = $params;
+		if (is_null($query)) $query = $this->build();
+		if (is_null($params)) $params = $this->parameters;
+		$keys = array();
+		$values = $params;
 
 			# build a regular expression for each parameter
-			foreach ($params as $key => $value) {
-				if (is_string($key)) {
-					$keys[] = '/'.$key.'/';
-				} else {
-					$keys[] = '/[?]/';
-				}
-
-				if (is_array($value)) $values[$key] = implode(',', $value);
-
-				if (is_null($value)) $values[$key] = 'NULL';
+		foreach ($params as $key => $value) {
+			if (is_string($key)) {
+				$keys[] = '/'.$key.'/';
+			} else {
+				$keys[] = '/[?]/';
 			}
-			// Walk the array to see if we can add single-quotes to strings
-			array_walk($values, create_function('&$v, $k', 'if (!is_numeric($v) && $v!="NULL") $v = "\'".$v."\'";'));
 
-			$query = preg_replace($keys, $values, $query, 1, $count);
+			if (is_array($value)) $values[$key] = implode(',', $value);
 
-			return $query;
+			if (is_null($value)) $values[$key] = 'NULL';
+		}
+		// Walk the array to see if we can add single-quotes to strings
+		array_walk($values, create_function('&$v, $k', 'if (!is_numeric($v) && $v!="NULL") $v = "\'".$v."\'";'));
+
+		$query = preg_replace($keys, $values, $query, 1, $count);
+
+		return $query;
 	}
 
 	/**************************************************************
@@ -1322,32 +1322,32 @@ class query implements IteratorAggregate, ArrayAccess {
 	}
 
 	function delete($run = true) {
-		 if ($this->mode != "delete") $this->dirty();
-		 $this->mode = "delete";
-		  if ($run) return $this->execute();
-		  else return $this;
-	 }
+		if ($this->mode != "delete") $this->dirty();
+		$this->mode = "delete";
+		if ($run) return $this->execute();
+	  else return $this;
+	}
 
-	 function insert($run = true) {
-		 if ($this->mode != "insert") $this->dirty();
-		 $this->mode = "insert";
-		 if ($run) return $this->execute();
-		 else return $this;
-	 }
+	function insert($run = true) {
+		if ($this->mode != "insert") $this->dirty();
+		$this->mode = "insert";
+		if ($run) return $this->execute();
+		else return $this;
+	}
 
-	 function update($run = true) {
-		 if ($this->mode != "update") $this->dirty();
-		 $this->mode = "update";
-		 if ($run) return $this->execute();
-		 else return $this;
-	 }
+	function update($run = true) {
+		if ($this->mode != "update") $this->dirty();
+		$this->mode = "update";
+		if ($run) return $this->execute();
+		else return $this;
+	}
 
-	 function truncate($run = true) {
-		 if ($this->mode != "truncate") $this->dirty();
-		 $this->mode = "truncate";
-		 if ($run) return $this->execute();
-		 else return $this;
-	 }
+	function truncate($run = true) {
+		if ($this->mode != "truncate") $this->dirty();
+		$this->mode = "truncate";
+		if ($run) return $this->execute();
+		else return $this;
+	}
 
 	function unsafe_truncate() {
 		if ($this->mode != "truncate") $this->dirty();

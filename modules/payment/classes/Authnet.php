@@ -7,7 +7,9 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup payment
  */
-class AuthnetXMLException extends Exception {}
+class AuthnetXMLException extends Exception {
+	//generic exception class to allow instanceof matches
+}
 /**
  * The Authnet class. A simple wrapper for the Authorize.Net XML APIs
  * API documentation available at http://developer.authorize.net/api/
@@ -15,13 +17,13 @@ class AuthnetXMLException extends Exception {}
  */
 class Authnet {
 
-	var $url;
-	var $login_id;
-	var $transaction_key;
-	var $test_mode;
-	var $ch;
-	var $xml;
-	var $response;
+	public $url;
+	public $login_id;
+	public $transaction_key;
+	public $test_mode;
+	public $ch;
+	public $xml;
+	public $response;
 
 	/**
 	 * constructor. initializes the Authnet object capable of connecting to AIM, ARB or CIM
@@ -35,12 +37,12 @@ class Authnet {
 	}
 
 	/**
-	 * generic API function caller. 
+	 * generic API function caller.
 	 * example:
 	 * $authnet = new Authnet();
 	 * $params = array(...ARB params..);
 	 * $authnet->ARBCreateSubscriptionRequest($params);
-	 * 
+	 *
 	 * such a call will build the XML request from templates/Authnet/ARBCreateSubscriptionRequest.php within this module
 	 */
 	public function __call($api_call, $args) {
@@ -57,7 +59,7 @@ class Authnet {
 		$this->ch = curl_init();
 		curl_setopt($this->ch, CURLOPT_URL, $this->url);
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($this->ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml"));
+		curl_setopt($this->ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml"));
 		curl_setopt($this->ch, CURLOPT_HEADER, 1);
 		curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->xml);
 		curl_setopt($this->ch, CURLOPT_POST, 1);

@@ -41,7 +41,7 @@ function select_database($name) {
  * @copydoc db::query
  * @ingroup data
  */
-function query($froms, $args="", $replacements=array()) {
+function query($froms, $args="", $replacements = array()) {
 	global $sb;
 	return $sb->db->query($froms, $args, $replacements);
 }
@@ -71,7 +71,7 @@ function raw_query($query) {
  * @copydoc db::store
  * @ingroup data
  */
-function store($name, $fields=array(), $from="auto") {
+function store($name, $fields = array(), $from = "auto") {
 	global $sb;
 	return $sb->db->store($name, $fields, $from);
 }
@@ -79,7 +79,7 @@ function store($name, $fields=array(), $from="auto") {
  * @copydoc db::queue
  * @ingroup data
  */
-function queue($name, $fields, $from="auto") {
+function queue($name, $fields, $from = "auto") {
 	global $sb;
 	return $sb->db->queue($name, $fields, $from);
 }
@@ -96,7 +96,7 @@ function store_queue() {
  * @ingroup data
  * @copydoc db::store
  */
-function store_once($name, $fields, $from="auto") {
+function store_once($name, $fields, $from = "auto") {
 	if (!is_array($fields)) $fields = star($fields);
 	$where = "";
 	$values = array();
