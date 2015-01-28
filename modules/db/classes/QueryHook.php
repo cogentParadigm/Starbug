@@ -74,6 +74,5 @@ $sb->provide("db/classes/QueryHook");
 		function after_delete($query, $column, $argument) {
 			//this hook is invoked after deletion
 		}
-
 	}
 ?>

@@ -159,6 +159,5 @@ class Table {
 		}
 		throw new Exception('Call to undefined method/class function: ' . $method);
 	}
-
 }
 ?>

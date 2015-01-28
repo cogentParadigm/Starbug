@@ -645,6 +645,5 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame("PHPUnit", $query->parameters[":set0"]);
 		$this->assertSame("phpunit", $query->parameters[":default0"]);
 	}
-
 }
 ?>

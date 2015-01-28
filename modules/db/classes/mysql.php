@@ -230,6 +230,5 @@ class mysql extends db {
 		if (method_exists($this->pdo, $method)) return call_user_func_array(array($this->pdo, $method), $args);
 		throw new Exception ('Call to undefined method/class function: ' . $method);
 	}
-
 }
 ?>

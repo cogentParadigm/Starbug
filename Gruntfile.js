@@ -82,7 +82,7 @@ module.exports = function(grunt) {
         dir: ['app', 'modules'],
         options: {
           extensions: 'php',
-          ignore: 'views,templates',
+          ignore: 'views,templates,layouts,hooks/global.head.php',
           standard: 'etc/phpcs.xml',
           ignoreExitCode: true
         }
@@ -91,7 +91,7 @@ module.exports = function(grunt) {
         dir: ['app', 'modules'],
         options: {
           extensions: 'php',
-          ignore: 'views,templates',
+          ignore: 'views,templates,layouts,hooks/global.head.php',
           standard: 'etc/phpcs.xml',
           ignoreExitCode: true,
           report: 'checkstyle',
