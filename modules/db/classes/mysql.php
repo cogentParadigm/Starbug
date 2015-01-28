@@ -226,57 +226,6 @@ class mysql extends db {
 		}
 	}
 
-	/**
-	 * build a search clause to be put into a WHERE clause
-	 * @param string $text a natural language search string which can include operators 'and' and 'or' and quotes for exact matches
-	 * @param array $fields a list of columns to search on
-	 * @return string SQL WHERE component
-	 * examples,
-	 *
-	 * search string: 'beef and broccoli'
-	 * fields: array('name', 'description')
-	 * return: ((name LIKE '%beef%' OR description LIKE '%beef%') and (name LIKE '%broccoli%' OR description LIKE '%broccoli%'))
-	 */
-	function search_clause($text, $fields) {
-		$text = strtolower(trim(str_replace("\\\"","&quot;",$text)));
-		//tokenize the text
-		$output = array();
-		$output2 = array();
-		$arr = explode("&quot;",$text);
-		for ($i=0;$i<count($arr);$i++){
-			if ($i%2==0) $output=array_merge($output,explode(" ",$arr[$i]));
-			else $output[] = $arr[$i];
-		}
-		foreach($output as $token) if (trim($token)!="") $words[]=$token;
-		//generate condition string
-		$conditions = "(";
-		for($word=0;$word<count($words);$word++) {
-			$w = $words[$word];
-			if ($w!="") {
-				if ($w!="and" && $w!="or") {
-					$conditions .= "(";
-					for($field=0;$field<count($fields);$field++) {
-						$conditions .= $fields[$field]." LIKE '%".$w."%'";
-						if ($field<(count($fields)-1)) {
-							$conditions .= " OR ";
-						} else {
-							$conditions .= ")";
-						}
-					}
-					if ($word<(count($words)-1)) {
-						if ($words[$word+1]=="and" || $words[$word+1]=="or") {
-							$conditions .= " ".$words[$word+1]." ";
-						} else {
-							$conditions .= " AND ";
-						}
-					}
-				}
-			}
-		}
-		$conditions .= ")";
-		return $conditions;
-	}
-
 	public function __call($method, $args) {
 		if(method_exists($this->pdo, $method)) return call_user_func_array(array($this->pdo, $method), $args);
 		throw new Exception ('Call to undefined method/class function: ' . $method);
