@@ -695,10 +695,11 @@ class query implements IteratorAggregate, ArrayAccess {
 						$target = ($type == $columns[$cname]['entity']) ? "id" : $columns[$cname]['entity']."_id";
 						if (logged_in()) {
 							$this->orWhere("permits.role='".$cname."' && (EXISTS (".
-								"SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target." && o.".$ref." IN (".
-									"SELECT ".$ref." FROM ".P($user_table)." u WHERE u.users_id=".sb()->user['id'].
-								")".
-							") || NOT EXISTS (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target."))");
+									"SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target." && o.".$ref." IN (".
+										"SELECT ".$ref." FROM ".P($user_table)." u WHERE u.users_id=".sb()->user['id'].
+									")".
+								") || NOT EXISTS (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target."))"
+							);
 						} else {
 							$this->orWhere("permits.role='".$cname."' && NOT EXISTS (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target.")");
 						}
@@ -742,14 +743,10 @@ class query implements IteratorAggregate, ArrayAccess {
 
 		$query = $this->build_query();
 
-		if ($this->mode == "query") {
+		if ($this->mode === "query") {
 			if (empty($query['SELECT'])) error("Missing SELECT clause for query.", "global");
-		} else if ($this->mode == "insert") {
-			//if (empty($query['SET'])) error("Missing SET clause for insert query.", "global");
-		} else if ($this->mode == "update") {
+		} else if ($this->mode === "update") {
 			if (empty($query['SET'])) error("Missing SET clause for update query.", "global");
-		} else if ($this->mode == "delete") {
-
 		}
 
 		foreach ($query as $key => $clause) $sql[$key] = $key." ".$clause;
@@ -843,7 +840,8 @@ class query implements IteratorAggregate, ArrayAccess {
 	}
 
 	function build_from() {
-		$relations = array(); $from = $last_collection = $last_alias = "";
+		$relations = array();
+		$from = $last_collection = $last_alias = "";
 		foreach ($this->query['from'] as $alias => $collection) {
 			if (empty($from)) {
 				$from = "`".P($collection)."`";
@@ -979,7 +977,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		return implode(', ', $limit);
 	}
 
-	function raw($raw=true) {
+	function raw($raw = true) {
 		$this->raw = $raw;
 		return $this;
 	}
@@ -991,7 +989,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		$collections = preg_split('/([,\<\>]+)/', $collections, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$results = array($this->parse_collection($collections[0]));
 		$count = count($collections);
-		for ($i=2;$i<$count;$i+=2) {
+		for ($i = 2; $i < $count; $i += 2) {
 			$collection = $collections[$i];
 			$type = str_replace(array(",", "<>", "<", ">"), array("INNER", "OUTER", "LEFT", "RIGHT"), trim($collections[$i-1]));
 			$results[] = array_merge($this->parse_collection($collection), array("join" => $type));
@@ -1024,7 +1022,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		else return array("field" => $name);
 	}
 
-	function parse_fields($fields, $mode="select") {
+	function parse_fields($fields, $mode = "select") {
 		preg_match_all('/[a-zA-Z_\.\*]+/', $fields, $matches, PREG_OFFSET_CAPTURE);
 		$offset = 0;
 		foreach ($matches[0] as $match) {
@@ -1142,24 +1140,24 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * return: ((name LIKE '%beef%' OR description LIKE '%beef%') and (name LIKE '%broccoli%' OR description LIKE '%broccoli%'))
 	 */
 	function search_clause($text, $fields) {
-		$text = strtolower(trim(str_replace("\\\"","&quot;",$text)));
+		$text = strtolower(trim(str_replace("\\\"", "&quot;", $text)));
 		//tokenize the text
 		$output = array();
 		$output2 = array();
-		$arr = explode("&quot;",$text);
-		for ($i=0;$i<count($arr);$i++){
-			if ($i%2==0) $output=array_merge($output,explode(" ",$arr[$i]));
+		$arr = explode("&quot;", $text);
+		for ($i = 0; $i < count($arr); $i++){
+			if ($i % 2 == 0) $output = array_merge($output, explode(" ", $arr[$i]));
 			else $output[] = $arr[$i];
 		}
-		foreach($output as $token) if (trim($token)!="") $words[]=$token;
+		foreach ($output as $token) if (trim($token) != "") $words[] = $token;
 		//generate condition string
 		$conditions = "(";
-		for($word=0;$word<count($words);$word++) {
+		for ($word = 0; $word < count($words); $word++) {
 			$w = $words[$word];
 			if ($w!="") {
 				if ($w!="and" && $w!="or") {
 					$conditions .= "(";
-					for($field=0;$field<count($fields);$field++) {
+					for($field = 0; $field < count($fields); $field++) {
 						$conditions .= $fields[$field]." LIKE '%".$w."%'";
 						if ($field<(count($fields)-1)) {
 							$conditions .= " OR ";
@@ -1167,8 +1165,8 @@ class query implements IteratorAggregate, ArrayAccess {
 							$conditions .= ")";
 						}
 					}
-					if ($word<(count($words)-1)) {
-						if ($words[$word+1]=="and" || $words[$word+1]=="or") {
+					if ($word < (count($words)-1)) {
+						if ($words[$word+1] == "and" || $words[$word+1] == "or") {
 							$conditions .= " ".$words[$word+1]." ";
 						} else {
 							$conditions .= " AND ";
@@ -1198,17 +1196,15 @@ class query implements IteratorAggregate, ArrayAccess {
 
 			# build a regular expression for each parameter
 			foreach ($params as $key => $value) {
-					if (is_string($key)) {
-							$keys[] = '/'.$key.'/';
-					} else {
-							$keys[] = '/[?]/';
-					}
+				if (is_string($key)) {
+					$keys[] = '/'.$key.'/';
+				} else {
+					$keys[] = '/[?]/';
+				}
 
-					if (is_array($value))
-							$values[$key] = implode(',', $value);
+				if (is_array($value)) $values[$key] = implode(',', $value);
 
-					if (is_null($value))
-							$values[$key] = 'NULL';
+				if (is_null($value)) $values[$key] = 'NULL';
 			}
 			// Walk the array to see if we can add single-quotes to strings
 			array_walk($values, create_function('&$v, $k', 'if (!is_numeric($v) && $v!="NULL") $v = "\'".$v."\'";'));
@@ -1325,7 +1321,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		return ((!empty($this->query['limit'])) && ($this->query['limit'] == 1)) ? array($records) : $records;
 	}
 
-	 function delete($run = true) {
+	function delete($run = true) {
 		 if ($this->mode != "delete") $this->dirty();
 		 $this->mode = "delete";
 		  if ($run) return $this->execute();
@@ -1475,5 +1471,4 @@ class query implements IteratorAggregate, ArrayAccess {
 		if (!$this->result) return false;
 		unset($this->result[$offset]);
 	}
-
 }

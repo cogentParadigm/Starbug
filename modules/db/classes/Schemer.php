@@ -886,7 +886,7 @@ class Schemer {
 		return $count;
 	}
 
-	function create_menu_item($menu, $item, $update=false) {
+	function create_menu_item($menu, $item, $update = false) {
 		$children = empty($item['children']) ? array() : $item['children'];
 		unset($item['children']);
 		$item['menu'] = $menu;
@@ -921,7 +921,7 @@ class Schemer {
 		return $count;
 	}
 
-	function create_taxonomy_item($taxonomy, $item, $update=false) {
+	function create_taxonomy_item($taxonomy, $item, $update = false) {
 		$children = empty($item['children']) ? array() : $item['children'];
 		unset($item['children']);
 		$item['taxonomy'] = $taxonomy;

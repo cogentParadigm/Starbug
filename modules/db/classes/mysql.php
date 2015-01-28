@@ -23,38 +23,38 @@ class mysql extends db {
 	/**
 	 * @var PDO a PDO object
 	 */
-	var $pdo;
+	public $pdo;
 	/**
 	 * @var bool debug mode
 	 */
-	var $debug;
+	public $debug;
 	/**
 	 * @var int holds the number of records returned by last query
 	 */
-	var $record_count;
+	public $record_count;
 	/**
 	 * @var int holds the id of the last inserted record
 	 */
-	var $insert_id;
+	public $insert_id;
 	/**
 	 * @var string holds the active scope (usually 'global' or a model name)
 	 */
-	var $active_scope = "global";
+	public $active_scope = "global";
 	/**
 	 * @var string prefix
 	 */
-	var $prefix;
+	public $prefix;
 	/**
 	 * @var string database_name
 	 */
-	var $database_name;
+	public $database_name;
 	/**#@-*/
 	/**
 	 * @var array holds records waiting to be stored
 	 */
-	var $queue;
+	public $queue;
 
-	var $operators = array(
+	public $operators = array(
 		'=' => 1,
 		'>' => 1,
 		'<' => 1,
@@ -88,7 +88,7 @@ class mysql extends db {
 		else $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
 	}
 
-  public function exec($statement) {
+	public function exec($statement) {
 		return $this->pdo->exec($statement);
 	}
 
@@ -101,7 +101,7 @@ class mysql extends db {
 	 */
 	function get() {
 		$args = func_get_args();
-		$query = $conditions = $replacements = $arg = array();
+		$query = $conditions = $arg = array();
 
 		//loop through the input arguments
 		foreach ($args as $idx => $a) {
@@ -146,7 +146,7 @@ class mysql extends db {
 	 * @param bool $mine optional. if true, joining models will be checked for relationships and ON statements will be added
 	 * @return array record or records
 	 */
-	function query($froms, $args="", $replacements=array()) {
+	function query($froms, $args = "", $replacements = array()) {
 		$args = star($args);
 		if (!empty($args['params'])) $replacements = $args['params'];
 
@@ -172,7 +172,7 @@ class mysql extends db {
 	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
 	 * @return array validation errors
 	 */
-	function store($name, $fields=array(), $from="auto") {
+	function store($name, $fields = array(), $from = "auto") {
 		$this->queue($name, $fields, $from, true);
 		//$last = array_pop($this->to_store);
 		//$this->to_store = array_merge(array($last), $this->to_store);
@@ -186,7 +186,7 @@ class mysql extends db {
 	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
 	 * @return array validation errors
 	 */
-	function queue($name, $fields=array(), $from="auto", $unshift=false) {
+	function queue($name, $fields = array(), $from = "auto", $unshift = false) {
 		if (!is_array($fields)) $fields = star($fields);
 
 		$query = new query($name);
@@ -227,7 +227,7 @@ class mysql extends db {
 	}
 
 	public function __call($method, $args) {
-		if(method_exists($this->pdo, $method)) return call_user_func_array(array($this->pdo, $method), $args);
+		if (method_exists($this->pdo, $method)) return call_user_func_array(array($this->pdo, $method), $args);
 		throw new Exception ('Call to undefined method/class function: ' . $method);
 	}
 
