@@ -114,7 +114,7 @@ class Schemer {
 	}
 
 	function  clean() {
-		$this->tables = $this->table_drops = $this->column_drops = $this->uris = $this->blocks = $this->permits = $this->population = $this->triggers = $this->trigger_drops = $this->menus = $this->taxonomies = array();
+		$this->tables = $this->table_drops = $this->column_drops = $this->uris = $this->blocks = $this->permits = $this->population = $this->triggers = $this->trigger_drops = $this->menus = $this->taxonomies = $this->indexes = $this->index_drops = $this->entities = array();
 	}
 
 	function up($migration) {

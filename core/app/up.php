@@ -72,7 +72,7 @@ $this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"canonical  type:string  length:255  default:  list:false",
 	"breadcrumb  type:string  length:255  default:  list:false"
 );
-$this->table("entities",
+$this->table("entities  groups:false",
 	"base  type:string  default:",
 	"name  type:string  length:128",
 	"label  type:string  length:128",
