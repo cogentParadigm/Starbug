@@ -52,20 +52,20 @@
 			</div>
 		</div>
 		<script>
-			require(['starbug/store/Memory', 'starbug/form/Autocomplete'], function (Memory, Autocomplete) {
+			require(['dstore/Memory', 'starbug/form/Autocomplete'], function (Memory, Autocomplete) {
 				var data = [
 					{id:1, label:'First Item'},
 					{id:2, label:'Second Item'},
 					{id:3, label:'Third Item'}
 				];
 				var store1 = new Memory({data:data});
-				new Autocomplete({store:store1}, 'test1');
+				new Autocomplete({store:store1, filterAttrName:'label'}, 'test1');
 
 				var store2 = new Memory({data:data});
-				new Autocomplete({store:store2}, 'test2');
+				new Autocomplete({store:store2, filterAttrName:'label'}, 'test2');
 
 				var store3 = new Memory({data:data});
-				new Autocomplete({store:store3, placeholder:'Start typing..'}, 'test3');
+				new Autocomplete({store:store3, placeholder:'Start typing..', filterAttrName:'label'}, 'test3');
 			});
 		</script>
 	</body>

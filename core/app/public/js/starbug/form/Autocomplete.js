@@ -38,6 +38,7 @@ define([
 		hiddenInput:null,
 		widgetsInTemplate: true,
 		interval:null,
+		filterAttrName:'keywords',
 		postCreate:function() {
 			var self = this;
 
@@ -68,6 +69,7 @@ define([
 				collection: self.store.filter(self.query),
 				keepScrollPosition:true,
 				renderRow: function(object, options){
+					console.log(object);
 					var node = put('div.autocomplete-item',object.label);
 					on(node, 'click', function(e) {
 						self.domNode.value = object.label;
@@ -110,7 +112,7 @@ define([
 				*/
 			});
 			if (self.hiddenInput.value !== "") {
-				self.store.filter({id:self.hiddenInput.value}).fetch().then(function(results) {
+				self.store.filter({id:parseInt(self.hiddenInput.value)}).fetch().then(function(results) {
 					if (results.length) {
 						self.domNode.value = results[0].label;
 					}
@@ -124,10 +126,10 @@ define([
 			var self = this;
 			var city = self.domNode.value.replace(',','');
 			if(city.length >= self.limit) {
-				self.query.keywords = city;
+				self.query[self.filterAttrName] = city;
 				domclass.add(self.listNode,'show');
 			} else {
-				self.query.keywords = null;
+				self.query[self.filterAttrName] = null;
 				domclass.remove(self.listNode,'show');
 			}
 			self.list.set('collection', self.store.filter(self.query));

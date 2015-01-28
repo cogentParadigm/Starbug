@@ -23,7 +23,7 @@ define(['dojo/request/registry', 'dojo/when'], function (registry, when) {
                 } else if (model == "users") {
                   records.push({id:1,first_name:'Ali',last_name:'Gangji'});
                 }
-                return when(records);
+                return when(JSON.stringify(records));
             })
         );
     }

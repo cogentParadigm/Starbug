@@ -11,9 +11,10 @@ define(['dojo/_base/lang', 'sb/kernel', 'starbug', 'sb/store/Api'], function(lan
 				if (!query) query = {};
 				if (!action) action = 'admin';
 				return this.get(model, action).filter(query);
-			},
+			};
 			sb.store = function(model, fields, ops) {
-				return this.get(model).put(fields, ops).then(lang.hitch(this, function(data) {
+				var result = this.get(model).put(fields, ops);
+				result.then(lang.hitch(this, function(data) {
 					if (data.errors) {
 						if (typeof this.errors[model] == 'undefined') this.errors[model] = {};
 						for (var field in data.errors) {
@@ -22,6 +23,7 @@ define(['dojo/_base/lang', 'sb/kernel', 'starbug', 'sb/store/Api'], function(lan
 						}
 					}
 				}));
-			}
+				return result;
+			};
 			return sb;
 });
