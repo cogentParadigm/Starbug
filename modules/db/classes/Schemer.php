@@ -493,7 +493,7 @@ class Schemer {
 	function create_index($table, $name) {
 		$args = func_get_args();
 		$table = array_shift($args);
-		$sql = "CREATE INDEX ".P($table)."_".implode("_", $args)."_index ON ".P($table)." (".implode(", ", $args).")";
+		$sql = "CREATE INDEX ".P($table)."_".implode("_", $args)."_index ON `".P($table)."` (`".implode("`, `", $args)."`)";
 		$this->db->exec($sql);
 	}
 
