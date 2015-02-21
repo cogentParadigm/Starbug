@@ -39,9 +39,6 @@ function uri($path="", $flags="") {
 /**
  * request object access.
  * @ingroup routing
- * 		global $request;
- * is equivalent to:
- * 		$request = request();
  */
 function request() {
 	global $request;
@@ -57,7 +54,6 @@ function request() {
  * @return the file to be loaded
  */
 function locate_view($uri, $prefix="") {
-	//efault($prefix, request()->payload['prefix']);
 	if (!is_array($uri)) $uri = explode("/", $uri);
 	$current = (empty($uri)) ? "default" : array_shift($uri);
 	if (locate($prefix.$current, "views")) return locate_view($uri, $prefix.$current."/"); // directory found

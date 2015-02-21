@@ -16,51 +16,58 @@ class Request {
 	/**
 	 * @var array the row in the uris table of the requested path
 	 */
-	var $payload = array();
+	public $payload = array();
+	/**
+	* @var string the request host
+	*/
+	public $host = "";
+	/**
+	* @var string the request language
+	*/
+	public $language = "en";
 	/**
 	 * @var string the request path
 	 */
-	var $path = "";
+	public $path = "";
 	/**
 	 * @var array the request path split by segment
 	 */
-	var $uri = array();
+	public $uri = array();
 	/**
 	 * @var string the query string
 	 */
-	var $query = "";
+	public $query = "";
 	/**
 	 * @var string the template
 	 */
-	var $template = "";
+	public $template = "";
 	/**
 	 * @var string the requested format (xml, json, xhr)
 	 */
-	var $format = "html";
+	public $format = "html";
 	/**
 	 * @var string the stylesheet to use
 	 */
-	var $theme = "";
+	public $theme = "";
 	/**
 	 * @var string layout
 	 */
-	var $layout = "";
+	public $layout = "";
 	/**
 	 * @var string the file path of the view
 	 */
-	var $file = "";
+	public $file = "";
 	/**
 	 * @var array the tags applied to the requested URI
 	 */
-	var $tags;
+	public $tags;
 
 
 	/**
 	 * constructor. initiates tags and postback
 	 */
-	function __construct($request_path) {
+	function __construct() {
 		$this->tags = array(array("term" => "global", "slug" => "global"));
-		$this->set_path($request_path);
  	}
 
 	/**
@@ -74,7 +81,11 @@ class Request {
 	 * login
 	 * @param string $request_path the path
 	 */
- 	public function set_path($request_path) {
+ 	public function set_path($host, $request_path) {
+		$this->host = $host;
+		$parts = explode(".", $host);
+		if (count($parts) > 2 && strlen($parts[0]) == 2) $this->language = $parts[0];
+
 		//if the path includes the base_dir, we remove it. otherwise we just remove the the leading slash
 		$this->path = substr($request_path, strlen(Etc::WEBSITE_URL));
 
