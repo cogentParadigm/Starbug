@@ -107,10 +107,17 @@ module.exports = function(grunt) {
       }
     },
     intern: {
-      all: {
+      local: {
          options: {
            runType: 'runner',
-           reporters: ['pretty', 'cobertura'],
+           reporters: ['pretty'],
+           config: 'core/app/public/js/tests/intern'
+         }
+      },
+      ci: {
+         options: {
+           runType: 'runner',
+           reporters: ['cli', 'cobertura'],
            config: 'core/app/public/js/tests/intern'
          }
       }
@@ -131,8 +138,8 @@ module.exports = function(grunt) {
   grunt.registerTask('lint', ['phplint', 'jsvalidate', 'jshint:local', 'lesslint']);
   grunt.registerTask('lint-ci', ['phplint', 'jsvalidate', 'jshint:ci', 'lesslint']);
 
-  grunt.registerTask('local', ['lint', 'shell:phploc', 'phpmd:local', 'phpcs:local', 'shell:phpcpd', 'phpunit', 'intern']);
-  grunt.registerTask('ci', ['lint-ci', 'shell:phploc', 'phpmd:ci', 'phpcs:ci', 'shell:phpcpd', 'phpunit', 'intern']);
+  grunt.registerTask('local', ['lint', 'shell:phploc', 'phpmd:local', 'phpcs:local', 'shell:phpcpd', 'phpunit', 'intern:local']);
+  grunt.registerTask('ci', ['lint-ci', 'shell:phploc', 'phpmd:ci', 'phpcs:ci', 'shell:phpcpd', 'phpunit', 'intern:ci']);
 
   grunt.registerTask('default', ['local']);
 
