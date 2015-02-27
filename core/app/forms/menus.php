@@ -1,6 +1,6 @@
 <?php
 	$records = query("menus<uris")->select("menus.*,uris.title,uris.path,uris.breadcrumb")
-							->condition("menus.menu", $menu)->condition("menus.statuses.slug", "deleted", "!=")
+							->condition("menus.menu", $menu)->condition("menus.statuses.slug", "deleted", "!=", array("ornull" => true))
 							->sort("menus.menu_path")->sort("menus.position")->all();
 	$links = array();
 

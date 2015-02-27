@@ -22,15 +22,18 @@ class Menus {
 
 	function query_admin($query, &$ops) {
 		$query = parent::query_admin($query, $ops);
+		$query->undo("select");
 		$query->select("DISTINCT menu");
 		return $query;
 	}
 
 	function query_tree($query, &$ops) {
-		$query->select("menus.*,menus.uris_id.title,(SELECT COUNT(*) FROM ".P("menus")." as t WHERE t.parent=menus.id) as children");
-		$query->condition("menus.menu", $ops['menu']);
+		$query->select("menus.uris_id.title,(SELECT COUNT(*) FROM ".P("menus")." as t WHERE t.parent=menus.id) as children");
 		if (!empty($ops['parent'])) $query->condition("menus.parent", $ops['parent']);
-		else $query->condition("menus.parent", 0);
+		else {
+			$query->condition("menus.parent", 0);
+			$query->condition("menus.menu", $ops['menu']);
+		}
 		$query->sort("menus.menu_path ASC, menus.position ASC");
 		return $query;
 	}
