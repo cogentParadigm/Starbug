@@ -17,7 +17,7 @@ class Files {
 		}
 	}
 
-	function upload($record, $file) {
+	function upload($record, $file, $remote=false) {
 		if (!empty($file['name'])) {
 			if ($file["error"] > 0) error($file["error"], "filename");
 			$record['filename'] = str_replace(" ", "_", $file['name']);
@@ -27,7 +27,8 @@ class Files {
 			$this->store($record);
 			if ((!errors()) && (!empty($record['filename']))) {
 				$id = (empty($record['id'])) ? $this->insert_id : $record['id'];
-				if (move_uploaded_file($file["tmp_name"], "app/public/uploads/".$id."_".$record['filename'])) {
+				$move_function = $remote ? 'rename' : 'move_uploaded_file';
+				if ($move_function($file["tmp_name"], "app/public/uploads/".$id."_".$record['filename'])) {
 					if (reset(explode("/", $record['mime_type'])) == "image") image_thumb("app/public/uploads/".$id."_".$record['filename'], "w:100  h:100  a:1");
 					return true;
 				} else {
@@ -39,6 +40,7 @@ class Files {
 			$this->store($record);
 		}
 	}
+
 
 	function prepare() {
 		$this->create(array("caption" => "Pre Uploaded File"));
