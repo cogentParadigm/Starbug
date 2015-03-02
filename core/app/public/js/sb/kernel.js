@@ -79,7 +79,7 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", "dojo/ready", 'dojo/
 				if (rt.length > 0 || ed.length > 0) {
 					var script = dojo.global.document.createElement('script');
 					script.type = 'text/javascript';
-					script.src = '//tinymce.cachefly.net/4.0/tinymce.min.js';
+					script.src = '//tinymce.cachefly.net/4.1/tinymce.min.js';
 					var done = false;
 					script.onload = script.onreadystatechange = function() {
 						if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
@@ -105,12 +105,18 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", "dojo/ready", 'dojo/
 										"emoticons template paste save"
 								],
 								paste_auto_cleanup_on_paste : true,
-								relative_urls:false,
+								auto_cleanup_word: true,
+								convert_urls: false,
+								relative_urls: false,
 								toolbar1: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | print preview",
 								image_advtab: true,
+								formats: {
+									alignleft: {selector:'img', styles:{margin:'0 15px 15px 0', float:'left'}},
+									alignright: {selector:'img', styles:{margin:'0 0 15px 15px', float:'right'}}
+								},
 								file_browser_callback: tiny_mce_browser_callback
 							};
-							
+
 							if (rt.length > 0) {
 								tiny_options.selector = "textarea.rich-text";
 								dojo.global.tinymce.init(tiny_options);

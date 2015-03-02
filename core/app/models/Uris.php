@@ -33,7 +33,7 @@ class Uris {
 		//right
 		$display->add("statuses  label:Status  taxonomy:statuses  default:pending  input_type:category_select  pane:right");
 		$display->add("groups  taxonomy:groups  input_type:multiple_category_select  pane:right");
-		$display->add("categories  input_type:multiple_category_select  pane:right");
+		$display->add("categories  input_type:multiple_category_select  taxonomy:uris_categories  pane:right");
 		$display->add("tags  input_type:tag_select  pane:right");
 		//tabs
 		$display->add("path  label:URL path  info:Leave empty to generate automatically  pane:path");

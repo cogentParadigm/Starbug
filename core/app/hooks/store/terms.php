@@ -8,7 +8,7 @@ class hook_store_terms {
 		$tags = empty($category_column_info['table']) ? $name."_".$column : $category_column_info['table'];
 		$mentioned_tags = array();
 		$remove_unmentioned_tags = false;
-		if (!is_array($value)) $value = explode(",", $value);
+		if (!is_array($value)) $value = explode(",", preg_replace("/[,\s]+/", ",", $value));
 		foreach ($value as $tag) {
 			if ($tag === "-~") {
 				//remove all tags not mentioned

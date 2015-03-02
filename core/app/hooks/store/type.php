@@ -21,7 +21,7 @@ class hook_store_type {
 		$clean = false;
 
 		//loop through values
-		if (!is_array($value)) $value = explode(",", $value);
+		if (!is_array($value)) $value = explode(",", preg_replace("/[,\s]+/", ",", $value));
 		foreach ($value as $position => $type_id) {
 			$remove = false;
 			$value_type = ($type == $target) ? "id" : $column."_id";
@@ -67,7 +67,7 @@ class hook_store_type {
 		if ($clean) {
 			$query = query($target)->condition($model."_id", $model_id);
 			if (!empty($type_ids)) {
-				$query->condition($type."_id", $type_ids, "!=");
+				$query->condition($column."_id", $type_ids, "!=");
 			}
 			if (!empty($ids)) {
 				$query->condition("id", $ids, "!=");

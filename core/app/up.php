@@ -103,7 +103,6 @@ $this->table("menus",
 // CONTENT TYPES
 $this->table("views  base:uris  description:A basic view");
 $this->table("pages  base:uris  description:A basic page");
-$this->table("posts  base:pages  description:A blog post");
 // URIS
 //$this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
 $this->uri("api", "template:api  prefix:core/app/views/");
@@ -125,8 +124,7 @@ $this->menu("admin",
 		"content" => "Content",
 		"children" => array(
 			"href:admin/views  content:Views",
-			"href:admin/pages  content:Pages",
-			"href:admin/posts  content:Posts"
+			"href:admin/pages  content:Pages"
 		)
 	),
 	"href:admin/users  content:Users",
