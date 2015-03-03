@@ -159,15 +159,15 @@ class Display {
 		$this->query = entity_query($model);
 
 		//search
-		if (!empty($options['search'])) $query->search($options['search']);
+		if (!empty($options['search'])) $this->query->search($options['search']);
 
 		//limit
-		if (!empty($options['limit'])) $query->limit($options['limit']);
+		if (!empty($options['limit'])) $this->query->limit($options['limit']);
 
 		//pass to model
 		$action_name = "query_".$this->name;
-		$query = sb($model)->query_filters($this->name, $this->query, $options);
-		$query = sb($model)->$action_name($this->query, $options);
+		$this->query = sb($model)->query_filters($this->name, $this->query, $options);
+		$this->query = sb($model)->$action_name($this->query, $options);
 
 		//page
 		if (!empty($options['page'])) {
@@ -175,7 +175,7 @@ class Display {
 			$this->pager = $this->query->pager($options['page']);
 		}
 
-		$this->items = (property_exists($this->query, "data")) ? $query->data : $query->all();
+		$this->items = (property_exists($this->query, "data")) ? $this->query->data : $this->query->all();
 		foreach($this->items as $idx => $item) {
 			$this->items[$idx] = sb($this->model)->filter($item, $this->name);
 		}
