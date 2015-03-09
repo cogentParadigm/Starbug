@@ -1,14 +1,9 @@
-define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", "dojo/ready", 'dojo/_base/xhr'], function(dojo, config, Deferred, ready) {
-	if (!dojo.global['sb']) {
-		dojo.global['sb'] = {
-			severTime: config.serverTime,
-			notifier:config.notifier,
+define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, ready, put) {
+	if (!window.sb) {
+		window.sb = {
 			stores:{},
 			errors:{},
 			dialogs:{},
-			require: function(module) {
-				dojo['require']("starbug."+module);
-			},
 			star: function(str) {
 				var starr = {};
 				var pos = null;
@@ -19,23 +14,6 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", "dojo/ready", 'dojo/
 				}
 				return starr;
 			},
-			xhr : function(url, args) {
-				if (typeof url == "object") {
-					args = url;
-					url = window.location.href
-				}
-				if (url.substr(0, 4) != 'http') url = WEBSITE_URL+url;
-				args.url = url;
-				if (args.confirm && !confirm(args.confirm)) return;
-				var xhr_object = {
-					load: function(response, xhr) {
-						args.action(response, args, xhr);
-					}
-				}
-				dojo.mixin(xhr_object, args);
-				if (args.method == "post") dojo.xhrPost(xhr_object);
-				else dojo.xhrGet(xhr_object);
-			},
 			post: function(url, args, onsubmit) {
 				if (typeof url == "object") {
 					onsubmit = args;
@@ -43,10 +21,12 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", "dojo/ready", 'dojo/
 					url = window.location.href;
 				}
 				if (url.substr(0, 4) != 'http') url = WEBSITE_URL+url;
-				var form = dojo.create('form', {'method':'post', 'action':url, 'style': 'display:none'}, dojo.body());
-				if (onsubmit) dojo.attr(form, 'onsubmit', onsubmit);
-				for (var key in args) if (args.hasOwnProperty(key)) dojo.create('input', {'type':'hidden', 'name':key, 'value':args[key]}, form);
-				var button = dojo.create('button', {'type':'submit', 'innerHTML':'submit'}, form);
+				var form = put(window.document.body, 'form[method="post"]');
+				form.style.display = 'none';
+				form.setAttribute('action', url);
+				if (onsubmit) form.setAttribute('onsubmit', onsubmit);
+				for (var key in args) if (args.hasOwnProperty(key)) put(form, 'input[type=hidden]', {name:key, value:args[key]});
+				var button = put(form, 'button[type=submit]', 'submit');
 				button.click();
 			},
 			dialog: function(id, params, noshow) {
@@ -74,10 +54,10 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", "dojo/ready", 'dojo/
 			},
 			editable: function() {
 				var sb = this;
-				var rt = dojo.global.document.getElementsByClassName("rich-text");
-				var ed = dojo.global.document.getElementsByClassName("editable");
+				var rt = window.document.getElementsByClassName("rich-text");
+				var ed = window.document.getElementsByClassName("editable");
 				if (rt.length > 0 || ed.length > 0) {
-					var script = dojo.global.document.createElement('script');
+					var script = window.document.createElement('script');
 					script.type = 'text/javascript';
 					script.src = '//tinymce.cachefly.net/4.1/tinymce.min.js';
 					var done = false;
@@ -119,7 +99,7 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", "dojo/ready", 'dojo/
 
 							if (rt.length > 0) {
 								tiny_options.selector = "textarea.rich-text";
-								dojo.global.tinymce.init(tiny_options);
+								window.tinymce.init(tiny_options);
 							}
 							if (ed.length > 0) {
 								tiny_options.selector = "div.editable";
@@ -133,25 +113,20 @@ define(['dojo', 'dojo/_base/config', "dojo/_base/Deferred", "dojo/ready", 'dojo/
 										editor.bodyElement.blur();
 									});
 								};
-								dojo.global.tinymce.init(tiny_options);
+								window.tinymce.init(tiny_options);
 							}
 
 							// Handle memory leak in IE
 							script.onload = script.onreadystatechange = null;
 						}
 					};
-					dojo.global.document.head.appendChild(script);
+					window.document.head.appendChild(script);
 				}
 			}
 		};
-		/*
-		dojo.global.$_GET = [];
-		var parts = String(document.location).split('?');
-		if (parts[1]) dojo.global.$_GET = dojo.queryToObject(parts[1]);
-		*/
 	}
 	ready(function() {
-		dojo.global.sb.editable();
+		window.sb.editable();
 	});
-	return dojo.global.sb;
+	return window.sb;
 });
