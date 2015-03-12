@@ -1,5 +1,4 @@
 <?php
-$sb->provide("core/lib/DOM/Renderable");
 class Renderable {
 
 	var $tagName = 'div';
@@ -9,7 +8,7 @@ class Renderable {
 	var $textContent = "";
 	var $parentNode = null;
 	var $innerHTML = "";
-	
+
 	/**
 	 * @var array assigned variables
 	 */
@@ -21,12 +20,12 @@ class Renderable {
 		if (!is_array($selector)) $selector = $this->parse_selector($selector);
 		if (!empty($selector['tag'])) $this->tagName = $selector['tag'];
 		if (!empty($selector['attributes'])) $this->attributes = $selector['attributes'];
-		
+
 		//get content
 		if ($content instanceof Renderable) $content = (string) $content;
-		$this->textContent = $content; 
+		$this->textContent = $content;
 	}
-	
+
 	/**
 	 * assign a variable
 	 * @param string $key variable name
@@ -43,7 +42,7 @@ class Renderable {
 	/**
 	 * append a node
 	 * @param Renderable $node
-	 */	
+	 */
 	function appendChild($node) {
 		if ($node instanceof Renderable) $node->parentNode = $this;
 		$this->children[] = $node;
@@ -53,7 +52,7 @@ class Renderable {
 	 * insert a node before a reference node
 	 * @param Renderable $node the node to insert
 	 * @param Renderable $target the node that $node will be inserted before
-	 */		
+	 */
 	function insertBefore($node, $target) {
 		$position = array_search($target, $this->children);
 		if (false !== $position) {
@@ -66,7 +65,7 @@ class Renderable {
 	/**
 	 * set text content
 	 * @param string $text
-	 */	
+	 */
 	function setText($text) {
 		$this->textContent = $text;
 	}
@@ -74,7 +73,7 @@ class Renderable {
 	/**
 	 * add a class
 	 * @param string $class
-	 */	
+	 */
 	function addClass($class) {
 		$position = array_search($class, $this->attributes['class']);
 		if (false === $position) $this->attributes['class'][] = $class;
@@ -83,7 +82,7 @@ class Renderable {
 	/**
 	 * remove a class
 	 * @param string $class
-	 */	
+	 */
 	function removeClass($class) {
 		$position = array_search($class, $this->attributes['class']);
 		if (false !== $position) unset($this->attributes['class'][$position]);
@@ -92,7 +91,7 @@ class Renderable {
 	/**
 	 * check if a class is already applied
 	 * @param string $class
-	 */	
+	 */
 	function hasClass($class) {
 		$position = array_search($class, $this->attributes['class']);
 		return (false !== $position);
@@ -100,7 +99,7 @@ class Renderable {
 
 	/**
 	 * make this castable to string
-	 */	
+	 */
 	function __toString() {
 		//opening tag
 		$value = "<".$this->tagName;
@@ -115,14 +114,14 @@ class Renderable {
 			return $value;
 		}
 		$value .= ">";
-		
+
 		//content
 		if (!empty($this->textContent)) $value .= htmlspecialchars($this->textContent, ENT_QUOTES, 'UTF-8');
 		if (!empty($this->children)) {
 			foreach ($this->children as $child) $value .= (string) $child;
 		}
 		if (!empty($this->innerHTML)) $value .= $this->innerHTML;
-		
+
 		//closing tag
 		$value .= "</".$this->tagName.">";
 		return $value;

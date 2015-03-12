@@ -1,5 +1,4 @@
 <?php
-$sb->provide("core/lib/Display");
 class Display {
 
 	const HOOK_PHASE_BUILD = 0;

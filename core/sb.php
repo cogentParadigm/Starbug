@@ -53,7 +53,7 @@ class sb {
 	 * @var array holds function names of mixed in objects
 	 */
 	var $imported_functions = array();
-	
+
 	static $instance;
 
 
@@ -69,18 +69,17 @@ class sb {
 		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
 		$this->start_session();
 	}
-	
+
 	function set_database($db) {
 		$this->db = $db;
 		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
 		foreach ($this->listeners as $object) $object->set_database($db);
 	}
-	
+
 	/**
 	 * load the Session class and validate the current session if the user has a cookie
 	 */
 	function start_session() {
-		$this->import("core/lib/Session");
 		if (false !== ($session = Session::active())) {
 			if (!empty($session['v']) && is_numeric($session['v'])) {
 				$user = new query("users");
@@ -142,30 +141,28 @@ class sb {
 	function get($name) {
 		return $this->db->model($name);
 	}
-	
+
 	function add_listener($object) {
 		$this->listeners[] = $object;
 	}
-	
+
 	/**
 	 * exception handler
 	 */
 	public function handle_exception($exception) {
-		$this->import("core/lib/ErrorHandler");
 		ErrorHandler::handle_exception($exception);
 	}
-	
+
 	function handle_error($errno, $errstr, $errfile, $errline) {
-		$this->import("core/lib/ErrorHandler");
 		ErrorHandler::handle_error($errno, $errstr, $errfile, $errline);
 	}
-	
+
 	function handle_shutdown() {
 		if(is_null($e = error_get_last()) === false) {
 			ob_end_flush();
 		}
 	}
-	
+
 	/**
 	 * mixin an object to import its functions into this object
 	 * @param object $object the object to mixin
@@ -183,7 +180,7 @@ class sb {
 	 */
 	public function __call($method, $args) {
 		if(array_key_exists($method, $this->imported_functions)) {
-			$args[] = $this;  
+			$args[] = $this;
 			return call_user_func_array(array($this->imported_functions[$method], $method), $args);
 		}
 		throw new Exception ('Call to undefined method/class function: ' . $method);

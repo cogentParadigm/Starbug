@@ -19,8 +19,6 @@
 	* @param string $value the value to assign
 	*/
 function assign($key, $value) {
-	global $sb;
-	$sb->import("core/lib/Renderer");
 	global $renderer;
 	$renderer->assign($key, $value);
 }
@@ -31,8 +29,6 @@ function assign($key, $value) {
 	* @param string $scope a rendering scope. if this is empty we will use the active scope. If there is no active scope we will use 'global'
 	*/
 function render($path, $scope="", $prefix="") {
-	global $sb;
-	$sb->import("core/lib/Renderer");
 	global $renderer;
 	$renderer->render($path, $scope, $prefix);
 }
@@ -42,8 +38,6 @@ function render($path, $scope="", $prefix="") {
 	* @param string $path the path, relative to the request prefix and without the file extension
 	*/
 function capture($path, $scope="", $prefix="") {
-	global $sb;
-	$sb->import("core/lib/Renderer");
 	global $renderer;
 	return $renderer->capture($path, $scope, $prefix);
 }
@@ -208,7 +202,6 @@ function capture_display($type, $model=null, $name=null, $options=array()) {
 }
 
 function put($parent, $selector="", $content="") {
-	import("lib/DOM/Renderable", "core");
 	if (!($parent instanceof Renderable)) {
 		$content = $selector;
 		$selector = $parent;

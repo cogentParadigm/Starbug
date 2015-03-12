@@ -33,11 +33,11 @@ if (defined('Etc::TIME_ZONE')) date_default_timezone_set(Etc::TIME_ZONE);
 //set the appropriate level of error reporting
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERROR);
 
-// include the sb class
-include(BASE_DIR."/core/sb.php");
-
 // load global functions
 include(BASE_DIR."/core/global_functions.php");
+
+// autoload classes
+foreach (locate("autoload.php", "") as $global_include) include($global_include);
 
 /**
  * instantiate the database to be passed to sb
@@ -57,8 +57,6 @@ $sb->publish("init");
 
 if (defined('SB_CLI')) {
 	$sb->user = array("groups" => array("root"));
-	//import cli utils
-	$sb->import("util/cli");
 	//publish cli init hook
 	$sb->publish("cli.init");
 }

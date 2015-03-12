@@ -12,7 +12,6 @@
  * The starbug templating engine, see @link core/global/templates.php for global functions
  * @ingroup lib
  */
-$sb->provide("core/lib/Renderer");
 /**
  * Renderer class. assign/render style templating engine
  * @ingroup Renderer
@@ -28,7 +27,7 @@ class Renderer {
 	var $prefix = "";
 	/**
 	 * @var string relative path from the view directory without file extension
-	 */	
+	 */
 	var $path = "";
 	/**
 	 * @var array eval stack for error handling
@@ -79,7 +78,7 @@ class Renderer {
 			array_pop($this->stack);
 		} else die("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
 	}
-	
+
 	/**
 	 * capture a rendered template
 	 * @param string $path relative path to the template from the view directory without file extension
@@ -90,7 +89,7 @@ class Renderer {
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;
-	}	
+	}
 
 }
 /**

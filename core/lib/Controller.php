@@ -1,25 +1,24 @@
 <?php
-$sb->provide("core/lib/Controller");
 class Controller {
-	
+
 	var $template = "auto";
 	var $auto_render = true;
 
 	function __construct() {
 		$this->init();
 	}
-	
+
 	function init() {
-	
+
 	}
 
 	/**
 	 * Every controller has a default action, used when no action is specified.
 	 */
 	function default_action() {
-		
+
 	}
-	
+
 	/**
 	 * run a controller action
 	 * @param string $action - the action to run, an empty string will run default_action

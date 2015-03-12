@@ -8,7 +8,6 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
-$sb->provide("core/lib/ErrorHandler");
 /**
  * Error handler
  * @ingroup core

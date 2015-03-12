@@ -72,17 +72,16 @@ function get_module_index() {
  * @return the instantiated controller
  */
 function controller($name, $type="") {
-	import("lib/Controller", "core");
 
 	$class = ucwords($type).ucwords($name)."Controller";
 
 	$last = "Controller";
-	
+
 	//get extending controllers
 	$controllers = locate("$class.php", "controllers");
 	$count = count($controllers);
 	$search = "class $class {";
-	
+
 	//loop through found controllers
 	for ($i = 0; $i < $count; $i++) {
 		//get file contents
@@ -95,7 +94,7 @@ function controller($name, $type="") {
 		//set $last for the next round
 		$last = $class;
 	}
-	
+
 	//return the base model if no others
 	if ($count == 0) $class = $last;
 
@@ -113,22 +112,22 @@ function controller($name, $type="") {
 function get_module_class($path, $base="lib/Controller", $mid="core") {
 	static $classes;
 	efault($classes, array());
-	
+
 	$class_key = implode("/", array($mid, $base, $path));
-	
+
 	if (!isset($classes[$class_key])) {
 		import($base, $mid);
 
 		$parts = explode("/", $path);
 		$class = $parts[1];
-		
+
 		$last = end(explode("/", $base));;
-	
+
 		//get extending classes
 		$files = locate("$class.php", $parts[0]);
 		$count = count($files);
 		$search = "class $class {";
-	
+
 		//loop through found classes
 		for ($i = 0; $i < $count; $i++) {
 			//get file contents
@@ -141,10 +140,10 @@ function get_module_class($path, $base="lib/Controller", $mid="core") {
 			//set $last for the next round
 			$last = $class;
 		}
-		
+
 		//return the base class if no others
 		if ($count == 0) $class = $last;
-		
+
 		$classes[$class_key] = $class;
 	}
 
@@ -161,22 +160,21 @@ function get_module_class($path, $base="lib/Controller", $mid="core") {
 function build_hook($path, $base="lib/Hook", $mid="core") {
 	static $hooks;
 	efault($hooks, array());
-	
+
 	$hook_key = implode("/", array($mid, $base, $path));
-	
+
 	if (!isset($hooks[$hook_key])) {
-		import($base, $mid);
 
 		$class = "hook_".str_replace("/", "_", $path);
 
 		$parts = explode("/", $base);
 		$last = end($parts);
-		
+
 		//get extending hooks
 		$files = locate($path.".php", "hooks");
 		$count = count($files);
 		$search = "class $class {";
-		
+
 		//loop through found hooks
 		for ($i = 0; $i < $count; $i++) {
 			//get file contents
@@ -189,13 +187,13 @@ function build_hook($path, $base="lib/Hook", $mid="core") {
 			//set $last for the next round
 			$last = $class;
 		}
-		
+
 		//return the base model if no others
 		if ($count == 0) $class = $last;
-		
+
 		$hooks[$hook_key] = $class;
 	}
-	
+
 	$class = $hooks[$hook_key];
 
 	//instantiate save the object
