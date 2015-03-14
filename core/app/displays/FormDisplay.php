@@ -10,6 +10,8 @@ class FormDisplay {
 	var $errors = array();
 	var $layout;
 	var $submit_label = "Save";
+	private $vars = array();
+
 	function init($options) {
 		// set default options
 		if (empty($options['url'])) $options['url'] = empty($options['uri']) ? $_SERVER['REQUEST_URI'] : $options['uri'] ;
@@ -179,7 +181,11 @@ class FormDisplay {
 	}
 
 	function assign($key, $value=null) {
-		$this->context->assign($key, $value);
+		if (is_array($key)) {
+      foreach ($key as $k => $v) $this->assign($k, $v);
+    } else {
+      $this->vars[$key] = $value;
+    }
 	}
 
 	/**
@@ -192,6 +198,7 @@ class FormDisplay {
 	 * @param bool $self if true, will use a self closing tag. If false, will use an opening tag and a closing tag (default is false)
 	 */
 	function form_control($control, $field, $options=array()) {
+		$this->vars = array("display" => $this);
 		$this->fill_ops($field, $control);
 		//run filters
 		foreach (locate("form/".$control.".php", "filters") as $filter) include($filter);
@@ -199,14 +206,14 @@ class FormDisplay {
 		$capture = "field";
 		if (empty($field['field'])) $field['field'] = reset(explode("[", $field['name']));
 		$field['name'] = $this->get_name($field['name'], $field['model']);
-		foreach ($field as $k => $v) $this->context->assign($k, $v);
+		foreach ($field as $k => $v) $this->assign($k, $v);
 		if (isset($field['nofield'])) {
 			unset($field['nofield']);
 			$capture = $control;
 		}
-		$this->context->assign("attributes", $field);
-		$this->context->assign("control", $control);
-		return $this->context->capture(array($field['model']."/form/$field[field]-$capture", "form/$field[field]-$capture", $field['model']."/form/$capture", "form/$capture"), array("display" => $this));
+		$this->assign("attributes", $field);
+		$this->assign("control", $control);
+		return $this->context->capture(array($field['model']."/form/$field[field]-$capture", "form/$field[field]-$capture", $field['model']."/form/$capture", "form/$capture"), $this->vars);
 	}
 
 	function __call($name, $arguments) {
