@@ -1,34 +1,34 @@
-<? extract(schema($model)); echo '<?php'."\n"; ?>
+<?php extract(schema($model)); echo '<?php'."\n"; ?>
 /**
- * <?= $name; ?> model base
+ * <?php echo $name; ?> model base
  * @ingroup models
  */
-class <?= ucwords($name); ?>Model extends Table {
+class <?php echo ucwords($name); ?>Model extends Table {
 
-  var $base = "<? echo $base; ?>";
+  var $base = "<?php echo $base; ?>";
 
-	var $hooks = array(<? $count = 0; foreach ($fields as $column => $field) { if (!empty($field)) { $fcount = 0; if ($count > 0) echo ','; $count++; echo "\n"; ?>
-		"<?= $column; ?>" => array(<? foreach ($field as $k => $v) { ?><? if ($fcount > 0) echo ", "; $fcount++ ?>"<?= $k; ?>" => "<?= $v; ?>"<? } ?>)<? } } echo "\n"; ?>
+	var $hooks = array(<?php $count = 0; foreach ($fields as $column => $field) { if (!empty($field)) { $fcount = 0; if ($count > 0) echo ','; $count++; echo "\n"; ?>
+		"<?php echo $column; ?>" => array(<?php foreach ($field as $k => $v) { ?><?php if ($fcount > 0) echo ", "; $fcount++ ?>"<?php echo $k; ?>" => "<?php echo $v; ?>"<?php } ?>)<?php } } echo "\n"; ?>
 	);
 
-	function init() {<? foreach ($fields as $column => $field) { foreach ($field as $k => $v) { if ($k == "references") { $v = explode(" ", $v); echo "\n"; ?>
-	  $this->has_one("<?= $v[0]; ?>", "<?= $column; ?>");<? } } } ?><? foreach ($relations as $relation) { echo "\n"; ?>
-		$this->has_<?php echo $relation['type']; ?>("<?= $relation['model']; ?>", "<?= $relation['field']; ?>"<?php if ($relation['type'] == "one" && !empty($relation['ref_field'])) { ?>, "<?php echo $relation['ref_field']; ?>"<?php } ?><? if (!empty($relation['lookup'])) { ?>, "<?= $relation['lookup']; ?>", "<?= $relation['ref_field']; ?>"<? } ?>);<? } echo "\n"; ?>
+	function init() {<?php foreach ($fields as $column => $field) { foreach ($field as $k => $v) { if ($k == "references") { $v = explode(" ", $v); echo "\n"; ?>
+	  $this->has_one("<?php echo $v[0]; ?>", "<?php echo $column; ?>");<?php } } } ?><?php foreach ($relations as $relation) { echo "\n"; ?>
+		$this->has_<?php echo $relation['type']; ?>("<?php echo $relation['model']; ?>", "<?php echo $relation['field']; ?>"<?php if ($relation['type'] == "one" && !empty($relation['ref_field'])) { ?>, "<?php echo $relation['ref_field']; ?>"<?php } ?><?php if (!empty($relation['lookup'])) { ?>, "<?php echo $relation['lookup']; ?>", "<?php echo $relation['ref_field']; ?>"<?php } ?>);<?php } echo "\n"; ?>
 	}
 
-	function create($<?= $singular; ?>) {
+	function create($<?php echo $singular; ?>) {
     <?php if (!empty($base)) { ?>
-      entity_save("<?= $model; ?>", $<?= $singular; ?> + array("type" => $this->type));
+      entity_save("<?php echo $model; ?>", $<?php echo $singular; ?> + array("type" => $this->type));
     <?php } else { ?>
-		  $this->store($<?= $singular; ?>);
+		  $this->store($<?php echo $singular; ?>);
     <?php } ?>
 	}
 
-	function delete($<?= $singular; ?>) {
+	function delete($<?php echo $singular; ?>) {
     <?php if (!empty($base)) { ?>
-      entity_delete("<?= $model; ?>", $<?= $singular; ?>["id"]);
+      entity_delete("<?php echo $model; ?>", $<?php echo $singular; ?>["id"]);
     <?php } else { ?>
-      remove("<?= $model; ?>", array("id" => $<?= $singular; ?>["id"]));
+      remove("<?php echo $model; ?>", array("id" => $<?php echo $singular; ?>["id"]));
     <?php } ?>
 	}
 
@@ -59,8 +59,8 @@ class <?= ucwords($name); ?>Model extends Table {
 
 	function query_form($query, &$ops) {
 		if (empty($ops['action'])) $ops['action'] = "create";
-		$query->action($ops['action'], "<?= $model; ?>");
-		$query->condition("<?= $model; ?>.id", $ops['id']);
+		$query->action($ops['action'], "<?php echo $model; ?>");
+		$query->condition("<?php echo $model; ?>.id", $ops['id']);
 <?php
     if (!empty($base)) {
       unset($fields["id"]);
@@ -98,10 +98,10 @@ class <?= ucwords($name); ?>Model extends Table {
 		if (!empty($ops['id'])) {
 			$query->condition($query->model.".id", explode(",", $ops['id']));
 		} else {
-			$query->condition("<?= $name; ?>.statuses.slug", "deleted", "!=", array("ornull" => true));
+			$query->condition("<?php echo $name; ?>.statuses.slug", "deleted", "!=", array("ornull" => true));
 		}
-		$query->select("<?= $name; ?>.id");
-		$query->select("<?= efault($label_select, $name.".id"); ?> as label");
+		$query->select("<?php echo $name; ?>.id");
+		$query->select("<?php echo efault($label_select, $name.".id"); ?> as label");
 		return $query;
 	}
 
@@ -110,4 +110,4 @@ class <?= ucwords($name); ?>Model extends Table {
 	}
 
 }
-<?= '?>'; ?>
+<?php echo '?>'; ?>

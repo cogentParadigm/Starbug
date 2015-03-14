@@ -21,8 +21,7 @@ function image($src="", $flags="i") {
 	$ops = star($src);
 	$src = array_shift($ops);
 	$ops['src'] = uri($src, $flags);
-	assign("attributes", $ops);
-	render("image");
+	(new Template("image", array("attributes" => $ops)))->output();
 }
 /**
 	* render a link
@@ -61,6 +60,7 @@ function render_field($model, $row, $field, $options=array()) {
 		assign("field", $field);
 		assign("options", $options);
 		render("field/field");
+		(new Template("field/field", array("model" => $model, "row" => $row, "field" => $field, "options" => $options)))->output();
 }
 
 function put($parent, $selector="", $content="") {

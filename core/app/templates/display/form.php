@@ -8,17 +8,17 @@
 		<?php } ?>
 	<?php } ?>
 <?php if ($display->method == "post") { ?>
-	<input class="postback" name="postback" type="hidden" value="<?= $display->postback; ?>" />
-<? } ?>
-<? if (!empty($display->action)) { ?>
-	<input class="action" name="action[<?= $display->model; ?>]" type="hidden" value="<?= $display->action; ?>" />
-<? } ?>
+	<input class="postback" name="postback" type="hidden" value="<?php echo $display->postback; ?>" />
+<?php } ?>
+<?php if (!empty($display->action)) { ?>
+	<input class="action" name="action[<?php echo $display->model; ?>]" type="hidden" value="<?php echo $display->action; ?>" />
+<?php } ?>
 <?php if ($display->method == "post") { ?>
 	<input name="oid" type="hidden" value="<?php echo filter_string($_COOKIE['oid']); ?>"/>
 <?php } ?>
-<? $item_id = $display->get("id"); if (!empty($item_id)) { ?>
-	<input id="id" name="<?= $display->model; ?>[id]" type="hidden" value="<?= filter_string($display->get('id')); ?>" />
-<? } ?>
+<?php $item_id = $display->get("id"); if (!empty($item_id)) { ?>
+	<input id="id" name="<?php echo $display->model; ?>[id]" type="hidden" value="<?php echo filter_string($display->get('id')); ?>" />
+<?php } ?>
 <?php
 	if (!$display->layout->is_empty()) {
 		foreach ($display->fields as $name => $field) {
@@ -38,7 +38,7 @@
 				<?php button($display->submit_label, "class:btn-success  name:operation  value:save"); ?>
 				<?php //button("Save and add another", "class:btn-success  name:operation  value:save_add_another"); ?>
 				<?php if (!empty($display->options['cancel_url'])) { ?>
-					<button type="button" class="cancel btn btn-danger" onclick="window.location='<?= uri($display->options['cancel_url']); ?>'">Cancel</button>
+					<button type="button" class="cancel btn btn-danger" onclick="window.location='<?php echo uri($display->options['cancel_url']); ?>'">Cancel</button>
 				<?php } ?>
 			</div>
 		</div>

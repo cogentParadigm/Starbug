@@ -23,7 +23,7 @@
 
 ?>
 <?php if (success("terms", "create")) { ?>
-	<div class="alert alert-success">Term <?= (empty($_POST['terms']['id'])) ? "created" : "updated"; ?> successfully</div>
+	<div class="alert alert-success">Term <?php echo (empty($_POST['terms']['id'])) ? "created" : "updated"; ?> successfully</div>
 <?php } ?>
 	<?php
 		open_form("model:terms  action:create", "class:terms-form");
@@ -41,6 +41,6 @@
 	<?php text("term"); ?>
 	<?php textarea("description"); ?>
 	<br/>
-	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger" onclick="window.location='<?= uri("admin/taxonomies/taxonomy/".$taxonomy); ?>'">Cancel</button></div>
+	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger" onclick="window.location='<?php echo uri("admin/taxonomies/taxonomy/".$taxonomy); ?>'">Cancel</button></div>
 	<?php close_form(); ?>
 	<br class="clear"/>

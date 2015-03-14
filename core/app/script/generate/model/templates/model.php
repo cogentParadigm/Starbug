@@ -1,12 +1,12 @@
-<? extract(schema($model)); echo '<?php'."\n"; ?>
+<?php extract(schema($model)); echo '<?php'."\n"; ?>
 /**
- * <?= $name; ?> model
+ * <?php echo $name; ?> model
  * @ingroup models
  */
-class <?= ucwords($name); ?> {
+class <?php echo ucwords($name); ?> {
 
-	function create($<?= $singular; ?>) {
-		$this->store($<?= $singular; ?>);
+	function create($<?php echo $singular; ?>) {
+		$this->store($<?php echo $singular; ?>);
 	}
 
   /******************************************************************
@@ -36,4 +36,4 @@ class <?= ucwords($name); ?> {
 	}
 
 }
-<?= '?>'; ?>
+<?php echo '?>'; ?>

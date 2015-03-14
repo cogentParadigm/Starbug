@@ -6,8 +6,8 @@
 		<?php
 			if (is_string($field['display'])) {
 				$values = explode(",", $field['display']);
-				if (in_array($action, $values)) $field['display'] = true; 
-			}	
+				if (in_array($action, $values)) $field['display'] = true;
+			}
 		?>
 		<?php if ($field['display'] === true) { ?>
 				<?php
@@ -39,6 +39,6 @@
 				?>
 		<?php } ?>
 	<?php } ?>
-	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger"<?php if (!empty($cancel_url)) { ?> onclick="window.location='<?= $cancel_url; ?>'"<?php } ?>>Cancel</button></div>
+	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger"<?php if (!empty($cancel_url)) { ?> onclick="window.location='<?php echo $cancel_url; ?>'"<?php } ?>>Cancel</button></div>
 	<br class="clear"/>
 <?php close_form(); ?>

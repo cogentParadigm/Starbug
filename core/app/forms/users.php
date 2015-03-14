@@ -22,6 +22,6 @@
 			<?php multiple_category_select("groups  taxonomy:groups"); ?>
 		</div>
 	</div>
-	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger" onclick="window.location='<?= uri("admin/users"); ?>'">Cancel</button></div>
+	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger" onclick="window.location='<?php echo uri("admin/users"); ?>'">Cancel</button></div>
 	<?php close_form(); ?>
 	<br class="clear"/>

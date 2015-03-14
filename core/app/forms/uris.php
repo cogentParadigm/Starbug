@@ -11,17 +11,17 @@
 			closedir($handle);
 		}
 	}
-	
+
 	efault($_POST['uris']['type'], $type);
 	efault($_POST['uris']['prefix'], "app/views/");
 	$base_uri = ($type == "Post") ? uri("blog/", "f") : uri("", "f");
 ?>
 
-<? open_form("model:uris  action:$action  url:$submit_to", "class:pages_form"); ?>
+<?php open_form("model:uris  action:$action  url:$submit_to", "class:pages_form"); ?>
 	<input type="hidden" name="type" value="<?php echo $type; ?>"/>
 	<div class="row">
 		<div class="col-md-9">
-			<? text("title  class:title"); ?>
+			<?php text("title  class:title"); ?>
 			<?php
 			if ($action == "update") {
 				$count = query("blocks", "select:COUNT(*) as count  where:uris_id=? && !(status & 1)  limit:1", array($_POST['uris']['id']));
@@ -83,8 +83,8 @@
 		<div class="col-sm-12">
 			<div class="btn-group">
 				<?php button("Save", "class:btn-success"); ?>
-				<button type="button" class="cancel btn btn-danger" onclick="window.location='<?= uri("admin/pages"); ?>'">Cancel</button>
+				<button type="button" class="cancel btn btn-danger" onclick="window.location='<?php echo uri("admin/pages"); ?>'">Cancel</button>
 			</div>
 		</div>
-	</div>	
-<? close_form(); ?>
+	</div>
+<?php close_form(); ?>

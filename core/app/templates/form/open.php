@@ -11,13 +11,13 @@
  * $errors - errors if there are any
  */
 ?>
-<form <?= $attributes; ?>action="<?= $url; ?>" method="<?= $method; ?>" accept-charset="UTF-8">
-<? if ($method == "post") { ?>
-	<input class="postback" name="postback" type="hidden" value="<?= $postback; ?>" />
-<? } ?>
-<? if (!empty($action)) { ?>
-	<input class="action" name="action[<?= $model; ?>]" type="hidden" value="<?= $action; ?>" />
-<? } ?>
-<? if (!empty($fields['id'])) { ?>
-	<input id="id" name="<?= $model; ?>[id]" type="hidden" value="<?= $fields['id']; ?>" />
-<? } ?>
+<form <?php echo $attributes; ?>action="<?php echo $url; ?>" method="<?php echo $method; ?>" accept-charset="UTF-8">
+<?php if ($method == "post") { ?>
+	<input class="postback" name="postback" type="hidden" value="<?php echo $postback; ?>" />
+<?php } ?>
+<?php if (!empty($action)) { ?>
+	<input class="action" name="action[<?php echo $model; ?>]" type="hidden" value="<?php echo $action; ?>" />
+<?php } ?>
+<?php if (!empty($fields['id'])) { ?>
+	<input id="id" name="<?php echo $model; ?>[id]" type="hidden" value="<?php echo $fields['id']; ?>" />
+<?php } ?>

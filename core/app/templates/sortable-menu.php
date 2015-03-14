@@ -11,7 +11,7 @@
 					open_form("model:$model  action:delete", "class:delete_form  onsubmit:return confirm('Are you sure you want to delete this item?');");
 				?>
 				<button class="Delete" type="submit"><div class="sprite icon"></div></button>
-				<? close_form(); ?>
+				<?php close_form(); ?>
 				</div>
 				<a href="#" class="dojoDndHandle"></a>
 				<a href="<?php echo empty($link['href']) ? uri($link['path']) : ((0 === strpos($link['href'], 'http')) ? $link['href'] : uri($link['href'])); ?>"><?php echo empty($link['content']) ? $link['title'] : $link['content']; ?></a>

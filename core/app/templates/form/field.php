@@ -33,7 +33,7 @@
 		}
 		if ($control == "input" && ($type == "checkbox" || $type == "radio")) $this->render("form/label");
 	?>
-<? if ($control != "input" || ($type != "checkbox" && $type != "radio")) $this->render(array("$model/form/$field-$control", "form/$field-$control", "$model/form/$control", "form/$control")); ?>
+<?php if ($control != "input" || ($type != "checkbox" && $type != "radio")) $this->render(array("$model/form/$field-$control", "form/$field-$control", "$model/form/$control", "form/$control")); ?>
 <?php
 	if (!empty($after)) {
 		echo $after;

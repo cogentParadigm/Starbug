@@ -23,7 +23,7 @@
 
 ?>
 <?php if (success("menus", "create")) { ?>
-	<div class="success">Menu <?= (empty($_POST['menus']['id'])) ? "created" : "updated"; ?> successfully</div>
+	<div class="success">Menu <?php echo (empty($_POST['menus']['id'])) ? "created" : "updated"; ?> successfully</div>
 <?php } ?>
 	<?php
 		open_form("model:menus  action:create", "class:menu-form");
@@ -57,6 +57,6 @@
 			?>
 		</div>
 	</div>
-	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger" onclick="window.location='<?= uri("admin/menus/menu/".$menu); ?>'">Cancel</button></div>
+	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger" onclick="window.location='<?php echo uri("admin/menus/menu/".$menu); ?>'">Cancel</button></div>
 	<?php close_form(); ?>
 	<br class="clear"/>
