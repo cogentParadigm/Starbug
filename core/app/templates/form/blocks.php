@@ -8,8 +8,8 @@
 		$_POST[$block_id] = $container;
 		$attributes['id'] = "block-".$block_id;
 		$attributes['name'] = $display->get_name("blocks[".$block_id."]");
-		assign("attributes", $attributes);
-		assign("value", $container['content']);
-		render("form/textarea");
+		$this->assign("attributes", $attributes);
+		$this->assign("value", $container['content']);
+		$this->render("form/textarea");
 	?>
 <?php } ?>

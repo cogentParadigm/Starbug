@@ -9,8 +9,8 @@
 	}
 	foreach ($record as $k => $v) dfault($_POST["uris"][$k], $v);
 	if (!empty($_POST["uris"]['id'])) $id = $_POST["uris"]['id'];
-	assign("id", $id);
-	assign("action", "update");
-	assign("uri", "admin/uris");
-	render_form("uris");
-?>	
+	$this->assign("id", $id);
+	$this->assign("action", "update");
+	$this->assign("uri", "admin/uris");
+	$this->render_form("uris");
+?>

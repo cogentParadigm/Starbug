@@ -46,9 +46,11 @@ class ErrorHandler {
 		}
 		$error['traces'] = $traces;
 
-		assign("error", $error);
-		if (defined('SB_CLI')) render("exception-cli");
-		else render("exception");
+		$template = new Template("exception-html");
+		$template->assign("error", $error);
+		$template->output();
+		//if (defined('SB_CLI')) render("exception-cli");
+		//else render("exception");
 		exit(1);
 	}
 
@@ -104,9 +106,12 @@ class ErrorHandler {
 			$error['traces'] = $traces;
 
 			if(!headers_sent()) header("HTTP/1.0 500 PHP Error");
-			assign("error", $error);
-			if (defined('SB_CLI')) render("exception-cli");
-			else render("exception");
+			$template = new Template("exception-html");
+			$template->assign("error", $error);
+			$template->output();
+			//assign("error", $error);
+			//if (defined('SB_CLI')) render("exception-cli");
+			//else render("exception");
 			exit(1);
 	}
 

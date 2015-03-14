@@ -49,8 +49,8 @@
 		}
 		$optional = false;
 		if (isset($field['optional'])) $optional = $field['optional'];
-		assign("optional", $optional);
-		assign("value", $value);
-		assign("options", $options);
-		assign("mode", $mode);
+		$this->assign("optional", $optional);
+		$this->assign("value", $value);
+		$this->assign("options", $options);
+		$this->assign("mode", $mode);
 ?>

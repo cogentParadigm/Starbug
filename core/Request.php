@@ -171,7 +171,7 @@ class Request {
 		efault($this->payload['format'], $this->format);
 		foreach ($this->payload as $k => $v) if ($k != "path") $this->{$k} = $v;
 		efault($this->theme, settings("theme"));
-		efault($this->layout, $this->type);
+		if (empty($this->layout)) $this->layout = empty($this->type) ? "views" : $this->type;
 	}
 
 	/**
@@ -181,8 +181,10 @@ class Request {
 		ob_start();
 		$this->check_post();
 		$this->locate();
-		if (!empty($this->template)) render($this->template);
-		else render($this->format);
+		$target = empty($this->template) ? $this->format : $this->template;
+		$template = new Template($target);
+		$template->assign("request", $this);
+		$template->output();
 		ob_end_flush();
 	}
 

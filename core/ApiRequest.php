@@ -13,7 +13,7 @@
  $sb->provide("core/ApiRequest");
 class ApiRequest {
 
-	var $types = array(
+	public $types = array(
 		"xml" => "text/xml",
 		"json" => "application/json",
 		"jsonp" => "application/x-javascript",
@@ -25,6 +25,7 @@ class ApiRequest {
 	var $headers = true;
 	var $model;
 	var $action;
+  private $context;
 
 	/**
 	 * API Request constructor
@@ -32,7 +33,8 @@ class ApiRequest {
 	 * 										 where object is an API function or set of models to query, and format is the desired output format (json, jsonp, xml)
 	 * @param star $ops additional options, query paramaters if [object] is a model or group of models
 	 */
-	function __construct($what, $ops="", $headers=true) {
+	function __construct($context, $what, $ops="", $headers=true) {
+    $this->context = $context;
 		global $sb;
 		if (defined("ETC::API_WHITELIST")) {
 			if (in_array($_SERVER['REMOTE_ADDR'], explode(",", Etc::API_WHITELIST)) && !sb()->user) {
@@ -207,7 +209,7 @@ class ApiRequest {
  	protected function getCSV($data, $headers=true) {
  		if ($this->headers) header('Content-Disposition: attachment; filename="'.$this->model.'.csv"');
  		foreach ($data as $idx => $row) $data[$idx] = sb($this->model)->filter($row, $this->action);
-		$display = build_display("list", $this->model, $this->action, array("template" => "csv"));
+		$display = $this->context->build_display("list", $this->model, $this->action, array("template" => "csv"));
 		$display->items = $data;
 		return $display->capture(false);
 	}

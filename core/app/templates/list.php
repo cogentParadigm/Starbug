@@ -17,15 +17,15 @@
 	if ($dialog) {
 		efault($grid_attributes, array());
 		$grid_attributes['dialog'] = $model."_form";
-		assign("grid_attributes", $grid_attributes);
+		$this->assign("grid_attributes", $grid_attributes);
 	}
 ?>
 <div class="panel panel-default">
 	<div class="panel-heading"><strong> <span><?php echo $options['label']; ?></span></strong></div>
 	<div class="panel-body">
-	<?
-		render(array($model."/admin-toolbar", "admin-toolbar"));
-		render_display("grid", $model, $query, array("attributes" => $grid_attributes));
+	<?php
+		$this->render(array($model."/admin-toolbar", "admin-toolbar"));
+		$this->render_display("grid", $model, $query, array("attributes" => $grid_attributes));
 	?>
 	</div>
 </div>

@@ -86,8 +86,7 @@
 		<ul class="dropdown-menu" role="menu">
 			<?php
 				foreach ($link['children'] as $cid => $child) {
-					assign("link", $child);
-					render("menu-link");
+					$this->render("menu-link", array("link" => $child));
 				}
 			?>
 		</ul>
@@ -106,6 +105,6 @@
 				<?php
 			}
 			echo '</li>';
-		} else render($link['template']);
+		} else $this->render($link['template']);
 	?>
 <?php } ?>

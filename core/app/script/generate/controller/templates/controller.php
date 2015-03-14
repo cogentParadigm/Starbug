@@ -1,7 +1,7 @@
 <?= '<?php'."\n"; ?>
 class <?= ucwords($model); ?>Controller {
 	function init() {
-		assign("model", "<?= $model; ?>");
+		$this->assign("model", "<?= $model; ?>");
 	}
 	function default_action() {
 		$this->render("admin/list");
@@ -11,7 +11,7 @@ class <?= ucwords($model); ?>Controller {
 		else $this->render("admin/create");
 	}
 	function update($id=null) {
-		assign("id", $id);
+		$this->assign("id", $id);
 		$this->render("admin/update");
 	}
 }

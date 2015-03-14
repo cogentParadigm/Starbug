@@ -12,7 +12,7 @@
  * - $columns: (optional) an array of column overrides. set a column to false to hide it
  * - $attributes: (optional) attributes for the table
  * - $view: (optional) view name. only show fields within this view
- */	
+ */
 	$grid_class = $dnd ? "starbug/grid/DnDGrid" : "starbug/grid/Grid";
 	js($grid_class);
 	$attributes = star($grid_attributes);
@@ -31,7 +31,7 @@
 		$attributes['action'] = $query;
 		$params = array_merge($_GET, $params);
 	}
-	
+
 	//build data-dojo-props attribute
 	foreach ($attributes as $k => $v) {
 		if (!in_array($k, array("id", "class", "style", "data-dojo-type", "data-dojo-props", "data-dojo-id"))) {
@@ -41,13 +41,13 @@
 	}
 
 	$attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($attributes['data-dojo-props'])), '{}');
-	
+
 	if (!empty($params)) {
 		$attributes['data-dojo-props'] .= ', query: {';
 		foreach ($params as $k => $v) $attributes['data-dojo-props'] .= $k.":'".$v."', ";
 		$attributes['data-dojo-props'] = rtrim($attributes['data-dojo-props'], ', ').'}';
 	}
-	
+
 	//prepare columns
 	efault($columns, array());
 	$ordered_columns = array();
@@ -56,7 +56,7 @@
 		$merge = array();
 		$field['field'] = "'".$name."'";
 		$name = (empty($field['label'])) ? ucwords(str_replace('_',' ',$name)) : $field['label'];
-		
+
 		if ($options['list'] == "all") efault($field['list'], true);
 		else efault($field['list'], false);
 
@@ -64,7 +64,7 @@
 			$field_views = explode(",", $field['views']);
 			$field['list'] = (in_array($view, $field_views));
 		}
-		
+
 		if ($field['input_type'] == "select") {
 			$merge['plugin'] = "starbug.grid.columns.select";
 			if (!empty($field['filters']['references'])) $merge['from'] = "'".reset(explode(" ", $field['filters']['references']))."'";
@@ -72,7 +72,7 @@
 			$merge['plugin'] = "starbug.grid.columns.select";
 			$merge['options'] = "{1:'Yes', 0:'No'}";
 		}
-		
+
 		if ($field['list'] || isset($columns[$name])) {
 			if (false !== $columns[$name]) {
 				foreach (array('filters', 'display', $field['type'], $field['input_type'], 'type', 'input_type', 'list', "options", "null", "update", "delete", "auto_increment", "key", "index", "append", "prepend", "before", "after", "between", "unique") as $remove) unset($field[$remove]);
@@ -104,12 +104,12 @@
 	}
 
 	$final = array_merge($final, $columns);
-	
+
 	efault($final['Options'], "field:'id'  class:field-options  plugin:starbug.grid.columns.options");
-	
+
 	//add drag handle for dnd
 	if ($dnd) $final = array_merge(array('-' => "field:'id'  class:field-drag  plugin:starbug.grid.columns.handle"), $final);
-	
+
 	//build data-dgrid-column attributes
 	foreach ($final as $key => $value) {
 		$value = star($value);
@@ -136,10 +136,10 @@
 		}
 		$final[$key] = $value;
 	}
-	
+
 	//render table
-	assign("attributes", $attributes);
-	assign("columns", $final);
-	render("table");
-	
+	$this->assign("attributes", $attributes);
+	$this->assign("columns", $final);
+	$this->render("table");
+
 ?>

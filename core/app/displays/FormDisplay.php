@@ -36,7 +36,7 @@ class FormDisplay {
 		else if (failure($this->model, $this->action)) $this->attributes['class'][] = "errors";
 
 		//create layout display
-		$this->layout = build_display("layout", $this->model);
+		$this->layout = $this->context->build_display("layout", $this->model);
 
 		//run query
 		$this->query();
@@ -178,6 +178,10 @@ class FormDisplay {
 		if (!in_array($control, array("checkbox", "radio"))) $ops['class'] .= " form-control";
 	}
 
+	function assign($key, $value=null) {
+		$this->context->assign($key, $value);
+	}
+
 	/**
 	 * generate a form control (a tag with a name attribute such as input, select, textarea, file)
 	 * @param string $control the name of the form control, usually the tag (input, select, textarea, file)
@@ -195,14 +199,14 @@ class FormDisplay {
 		$capture = "field";
 		if (empty($field['field'])) $field['field'] = reset(explode("[", $field['name']));
 		$field['name'] = $this->get_name($field['name'], $field['model']);
-		foreach ($field as $k => $v) assign($k, $v);
+		foreach ($field as $k => $v) $this->context->assign($k, $v);
 		if (isset($field['nofield'])) {
 			unset($field['nofield']);
 			$capture = $control;
 		}
-		assign("attributes", $field);
-		assign("control", $control);
-		return capture(array($field['model']."/form/$field[field]-$capture", "form/$field[field]-$capture", $field['model']."/form/$capture", "form/$capture"));
+		$this->context->assign("attributes", $field);
+		$this->context->assign("control", $control);
+		return $this->context->capture(array($field['model']."/form/$field[field]-$capture", "form/$field[field]-$capture", $field['model']."/form/$capture", "form/$capture"), array("display" => $this));
 	}
 
 	function __call($name, $arguments) {

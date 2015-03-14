@@ -1,8 +1,8 @@
 <?php
 class AdminEmailsController {
 	function init() {
-		assign("model", "email_templates");
-		assign("cancel_url", "admin/emails");
+		$this->assign("model", "email_templates");
+		$this->assign("cancel_url", "admin/emails");
 		if (success("email_templates", "create")) redirect(uri("admin/emails", 'u'));
 	}
 	function default_action() {
@@ -12,7 +12,7 @@ class AdminEmailsController {
 		$this->render("admin/create");
 	}
 	function update($id=null) {
-		assign("id", $id);
+		$this->assign("id", $id);
 		$this->render("admin/update");
 	}
 }

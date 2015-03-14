@@ -117,9 +117,7 @@ function button($label, $ops="") {
 	$ops = star($ops);
 	efault($ops['type'], "submit");
 	$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ")."btn";
-	assign("label", $label);
-	assign("attributes", $ops);
-	render("form/button");
+	(new Template("form/button", array("label" => $label, "attributes" => $ops)))->output();
 }
 	/**
 	 * generates a file input
@@ -249,7 +247,6 @@ function autocomplete($ops) {
  * @ingroup forms
  */
 function close_form() {
-	$form = global_form();
-	render("form/close", $form->scope);
+	(new Template("form/close"))->output();
 }
 ?>

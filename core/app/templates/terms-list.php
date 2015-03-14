@@ -17,8 +17,8 @@
 				<span><?php echo $term['term']; ?></span>
 				<?php
 					if (!empty($children)) {
-						assign("terms", $children);
-						render("terms-list");
+						$this->assign("terms", $children);
+						$this->render("terms-list");
 					} else echo '<br class="clear"/>';
 				?>
 			</li>

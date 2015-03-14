@@ -7,8 +7,6 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup db
  */
-	// include Schemer
-	include(dirname(__FILE__)."/../classes/Schemer.php");
 
 	/**
 	 * global instance of the Schemer

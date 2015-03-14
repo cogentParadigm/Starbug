@@ -99,7 +99,7 @@ function controller($name, $type="") {
 	if ($count == 0) $class = $last;
 
 	//instantiate save the object
-	return new $class($name, $type);
+	return $class;
 }
 
 /**
@@ -116,7 +116,6 @@ function get_module_class($path, $base="lib/Controller", $mid="core") {
 	$class_key = implode("/", array($mid, $base, $path));
 
 	if (!isset($classes[$class_key])) {
-		import($base, $mid);
 
 		$parts = explode("/", $path);
 		$class = $parts[1];

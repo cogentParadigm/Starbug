@@ -1,8 +1,7 @@
-<?= '<?php'."\n"; ?>
+<?php echo '<?php'."\n"; ?>
 	$id = end($request->uri);
-	assign("model", "<?= $model; ?>");
-	assign("id", $id);
-	assign("uri", "<?= $prefix.$model; ?>");
-	render("update");
-<?= '?>'; ?>
-	
+	$this->assign("model", "<?= $model; ?>");
+	$this->assign("id", $id);
+	$this->assign("uri", "<?= $prefix.$model; ?>");
+	$this->render("update");
+<?php echo '?>'; ?>

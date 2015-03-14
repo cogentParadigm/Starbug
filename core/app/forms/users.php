@@ -1,5 +1,5 @@
 <?php
-	render_display("form", "users", "form", array("action" => "create"));
+	$this->render_display("form", "users", "form", array("action" => "create"));
 	efault($action, "create");
 ?>
 <?php if (success("users", $action)) { ?>
@@ -23,5 +23,5 @@
 		</div>
 	</div>
 	<div class="btn-group"><button class="submit btn btn-success" type="submit">Save</button><button type="button" class="cancel btn btn-danger" onclick="window.location='<?= uri("admin/users"); ?>'">Cancel</button></div>
-	<?php close_form(); ?>	
+	<?php close_form(); ?>
 	<br class="clear"/>

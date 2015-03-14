@@ -1,8 +1,8 @@
 <?php
 class AdminPagesController {
 	function init() {
-		assign("model", "pages");
-		assign("cancel_url", "admin/pages");
+		$this->assign("model", "pages");
+		$this->assign("cancel_url", "admin/pages");
 	}
 	function default_action() {
 		$this->render("admin/list");
@@ -12,7 +12,7 @@ class AdminPagesController {
 		else $this->render("admin/create");
 	}
 	function update($id=null) {
-		assign("id", $id);
+		$this->assign("id", $id);
 		if (success("pages", "create")) redirect(uri("admin/pages", 'u'));
 		else $this->render("admin/update");
 	}

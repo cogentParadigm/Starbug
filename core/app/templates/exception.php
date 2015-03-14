@@ -1,1 +1,1 @@
-<?php render(array("exception-".request()->format, "exception-html")); ?>
+<?php $this->render(array("exception-".request()->format, "exception-html")); ?>

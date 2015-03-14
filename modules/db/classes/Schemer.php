@@ -1062,17 +1062,15 @@ class Schemer {
 	}
 
 	function generate_model($table) {
-		import("lib/Renderer", "core");
 		$data = $this->get($table);
 		$this->toXML($data);
 		$this->toJSON($data);
 		$result = end(locate("generate/model/update.php", "script"));
 		$render_prefix = reset(explode("/model/", str_replace(BASE_DIR, "", $result)))."/model/";
 		$output_path = BASE_DIR."/var/models/".ucwords($table)."Model.php"; //output
-		assign("model", $table);
 		$base = "";
 		//if (!empty($this->options[$table]['base'])) $base = $this->options[$table]['base'];
-		$data = capture(array($base."/base", "base"), "", $render_prefix);
+		$data = (new Template(array($base."/base", "base"), array(), array("prefix" => $render_prefix)))->get(array("model" => $table));
 		file_put_contents($output_path, $data);
 	}
 

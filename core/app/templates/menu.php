@@ -6,17 +6,16 @@
 		$menu_type = "taxonomy";
 		$mpath = "term_path";
 	}
-	assign("menu_type", $menu_type);
 
 	efault($attributes, array());
 	$attributes['class'] = (empty($attributes['class']) ? "" : $attributes['class']." ")."nav";
-	
+
 	if ($sortable) $attributes['class'] .= " sortable";
-	
+
 	if ($menu_type == "taxonomy") $records = query("terms", "where:terms.taxonomy=?", array($taxonomy))->sort("terms.term_path ASC, terms.position ASC");
 	else $records = query("menus<uris", "select:menus.*,uris.title,uris.path,uris.breadcrumb  where:menus.menu=?", array($menu))->sort("menus.menu_path ASC, menus.position ASC");
 	$links = array();
-	
+
 	$forbidden = array();
 	foreach ($records as $link) {
 		if ($forbidden[$link['parent']] || (!empty($link['collective']) && !(userinfo("memberships") & $link['collective']))) {
@@ -36,8 +35,7 @@
 <ul<?php html_attributes($attributes); ?>>
 	<?php
 		foreach ($links as $link) {
-			assign("link", $link);
-			render("menu-link");
+			$this->render("menu-link", array("link" => $link, "menu_type" => $menu_type));
 		}
 	?>
 </ul>

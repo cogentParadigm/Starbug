@@ -62,9 +62,9 @@ The first matching template that is found will be loaded. While modules are migr
 You can load templates using the assign and render functions. To load a template named "article.php" and pass it the variables "title" and "body" you would do this:
 
 <pre><code><?
-	assign("title" "My Title");
-	assign("body" "My Article");
-	render("article");
+	$this->assign("title" "My Title");
+	$this->assign("body" "My Article");
+	$this->render("article");
 ?></code></pre>
 
 for more information on working with templates see core/global/templates.php

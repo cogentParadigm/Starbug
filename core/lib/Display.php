@@ -4,30 +4,31 @@ class Display {
 	const HOOK_PHASE_BUILD = 0;
 	const HOOK_PHASE_RENDER = 1;
 
-	var $model; //base model. eg. users
-	var $name; //display name. eg. admin
-	var $query; //database query object
-	var $options = array(); //global options
+	public $model; //base model. eg. users
+	public $name; //display name. eg. admin
+	public $options = array(); //global options
+	public $type = "default"; //display type
+	public $template = "default"; // display template
+	public $attributes = array("class" => array("display")); //attributes for top level node
+	public $paged = false; //pagination enabled indicator
+	public $pager; //pager object
 
-	var $type = "default"; //display type
-	var $template = "default"; // display template
-	var $attributes = array("class" => array("display")); //attributes for top level node
-	var $dirty = false; //dirty indicator
+	public $fields = array(); //fields to display (columns)
+	public $items = array(); //items to display (rows)
 
-	var $fields = array(); //fields to display (columns)
-	var $items = array(); //items to display (rows)
+	protected $hooks = array(); //active hooks
+	protected $query; //database query object
+	protected $dirty = false; //dirty indicator
+	protected $context;
 
-	var $hooks = array(); //active hooks
-
-	var $paged = false; //pagination enabled indicator
-	var $pager; //pager object
 
 	/**
 	 * constructor. sets display name and options
 	 * @param string $name the display name
 	 * @param array $options the display options
 	 */
-	function __construct($model=null, $name=null, $options=array()) {
+	function __construct($context, $model=null, $name=null, $options=array()) {
+		$this->context = $context;
 		$this->model = $model;
 		$this->name = $name;
 		$this->options = $options;
@@ -191,9 +192,7 @@ class Display {
 		if ($query) $this->query();
 		$this->before_render();
 		$this->attributes["class"] = implode(" ", $this->attributes["class"]);
-		assign("display", $this);
-		//assign("items", $items);
-		render("display/".$this->template);
+		$this->context->render("display/".$this->template, array("display" => $this));
 	}
 
 	/**
@@ -202,9 +201,7 @@ class Display {
 	function capture($query=true) {
 		if ($query) $this->query();
 		$this->before_render();
-		assign("display", $this);
-		//assign("items", $items);
-		return capture("display/".$this->template);
+		return $this->context->capture("display/".$this->template, array("display" => $this));
 	}
 
 }

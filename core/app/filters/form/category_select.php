@@ -21,6 +21,6 @@
 		$field['onchange'] = "if (dojo.attr(this, 'value') == -1) dojo.style(this.id+'_new_category', 'display', 'block'); else dojo.style(this.id+'_new_category', 'display', 'none');";
 	}
 	$field['value'] = $this->get($value_name);
-	assign("options", $options);
+	$this->assign("options", $options);
 	$field["terms"] = $terms;
 ?>

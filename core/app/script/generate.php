@@ -21,19 +21,18 @@ $model = array_shift($argv);
 if ($generator == "host") include(dirname(__FILE__)."/generate/host/host.php");
 
 // CLI VARS
-assign("model", $model);
-assign("generator", $generator);
+$params = array("model" => $model, "generator" => $generator);
 $args = array();
 foreach ($argv as $i => $arg) {
 	if (0 === strpos($arg, "-")) {
 		$arg = str_replace("-", "", $arg);
 		$parts = (false !== strpos($arg, "=")) ? explode("=", $arg, 2) : array($arg, true);
 		$args[$parts[0]] = $parts[1];
-		assign($parts[0], $parts[1]);
+		$params[$parts[0]] = $parts[1];
 	}
 }
 
-//SET VARS FOR GENERATOR 
+//SET VARS FOR GENERATOR
 $model_name = $model;
 $app_dir = "app/";
 if (!empty($args['module'])) $app_dir = "modules/".$args['module']."/";
@@ -60,7 +59,7 @@ foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) passthru("mkdir ".B
 foreach ($generate as $template => $output) {
 	if (isset($template_map[$template])) $template = $template_map[$template];
 	$o = BASE_DIR."/$output"; //output
-	$data = capture($template, "", $render_prefix);
+	$data = (new Template($template, array(), array("prefix" => $render_prefix)))->get($params);
 	file_put_contents($o, $data);
 }
 //COPY FILES

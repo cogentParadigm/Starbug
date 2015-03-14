@@ -8,8 +8,9 @@ include(BASE_DIR."/core/lib/Controller.php");
 include(BASE_DIR."/core/lib/Hook.php");
 include(BASE_DIR."/core/lib/Display.php");
 include(BASE_DIR."/core/lib/DisplayHook.php");
-include(BASE_DIR."/core/lib/Renderer.php");
+include(BASE_DIR."/core/lib/Template.php");
 include(BASE_DIR."/core/lib/DOM/Renderable.php");
+include(BASE_DIR."/core/Request.php");
 if (defined('SB_CLI')) {
   include(BASE_DIR."/util/cli.php");
 }

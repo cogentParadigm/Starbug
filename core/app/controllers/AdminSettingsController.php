@@ -1,7 +1,7 @@
 <?php
 class AdminSettingsController {
 	function init() {
-		assign("model", "settings");
+		$this->assign("model", "settings");
 	}
 	function default_action() {
 		$this->render("settings");

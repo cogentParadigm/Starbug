@@ -47,8 +47,7 @@ class Authnet {
 	 */
 	public function __call($api_call, $args) {
 		foreach ($args[0] as $key => $value) $this->{$key} = $value;
-		assign("authnet", $this);
-		$this->xml = capture("Authnet/$api_call");
+		$this->xml = (new Template("Authnet/$api_call", array("authnet" => $this)))->get();
 		$this->process();
 	}
 

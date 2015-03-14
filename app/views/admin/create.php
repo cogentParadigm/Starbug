@@ -1,4 +1,4 @@
 <?php
-	if (!empty($template)) render($template);
-	else render("create");
+	if (!empty($template)) $this->render($template);
+	else $this->render("create");
 ?>

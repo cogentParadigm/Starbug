@@ -1,5 +1,6 @@
-<?
+<?php
 	list($base, $controller, $action) = $request->uri;
 	$object = controller($controller, $base);
-	$object->action($action, array_slice($request->uri, 3));
+	$instance = new $object($this);
+	$instance->action($action, array_slice($request->uri, 3));
 ?>

@@ -7,6 +7,6 @@
         <div class="clearfix">
                 <p class="pull-right"><?php link_to("Add Menu Item <b class=\"fa fa-plus\"></b>", "admin/menus/create?menu=".$menu, "class:btn btn-default");?></p>
         </div>
-        <?php render_display("grid", "menus", "tree",  array("menu" => $menu, "dnd" => true, "attributes" => array("base_url" => "admin/menus"))); ?>
+        <?php $this->render_display("grid", "menus", "tree",  array("menu" => $menu, "dnd" => true, "attributes" => array("base_url" => "admin/menus"))); ?>
         </div>
 </div>

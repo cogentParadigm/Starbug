@@ -1,8 +1,7 @@
 <?php if(isset($attributes['multiple'])) $attributes['name'] .= '[]'; ?>
 <?php
 if ($mode == "display") {
-	render_display("list", $from, $query, array("attributes" => $attributes, "value" => $value, "template" => "select", "optional" => $optional));
-	assign("display", $display);
+	$this->render_display("list", $from, $query, array("attributes" => $attributes, "value" => $value, "template" => "select", "optional" => $optional));
 } else { ?>
 <select <? html_attributes($attributes); ?>>
 	<? foreach ($options as $caption => $val) { ?>

@@ -7,7 +7,7 @@
 			<p class="alert alert-danger"><?php echo $value; ?></p>
 		<?php } ?>
 	<?php } ?>
-<? if ($display->method == "post") { ?>
+<?php if ($display->method == "post") { ?>
 	<input class="postback" name="postback" type="hidden" value="<?= $display->postback; ?>" />
 <? } ?>
 <? if (!empty($display->action)) { ?>
@@ -22,13 +22,12 @@
 <?php
 	if (!$display->layout->is_empty()) {
 		foreach ($display->fields as $name => $field) {
-			assign("display", $display);
 			$display->layout->append($field['pane'], $display->form_control($field['input_type'], array_merge(array($name), $field)));
 		}
 		$display->layout->render();
 	} else {
 		foreach ($display->fields as $name => $field) {
-			assign("display", $display);
+			$this->assign("display", $display);
 			echo $display->form_control($field['input_type'], array_merge(array($name), $field));
 		}
 	}

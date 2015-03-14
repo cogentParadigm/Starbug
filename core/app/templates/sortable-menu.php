@@ -18,8 +18,8 @@
 				<?php
 					if (!empty($link['children'])) {
 						echo '<a class="menu-toggle" onclick="var m = document.getElementById(\'menu-'.$link['id'].'\'); if (m.className.indexOf(\'in\') == -1) m.className = \'menu_items collapse in\'; else m.className = \'menu_items collapse\';" href="javascript:;"><i class="icon-chevron-right"></i></a>';
-						assign("links", $link['children']);
-						render("sortable-menu");
+						$this->assign("links", $link['children']);
+						$this->render("sortable-menu");
 					} else echo '<br class="clear"/>';
 				?>
 			</li>

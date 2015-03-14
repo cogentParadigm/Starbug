@@ -14,5 +14,5 @@
 		if (empty($field['from'])) $field['from'] = $info['type'];
 		if (empty($field['query'])) $field['query'] = "select";
 	}
-	assign("value", $value);
+	$this->assign("value", $value);
 ?>

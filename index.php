@@ -11,9 +11,6 @@
 // include init file
 include("core/init.php");
 
-// include Request
-include("core/Request.php");
-
 /**
  * global instance of the Request class
  * @ingroup global

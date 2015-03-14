@@ -1,10 +1,12 @@
 <?php
 class Controller {
 
-	var $template = "auto";
-	var $auto_render = true;
+	public $template = "auto";
+	public $auto_render = true;
+	private $context;
 
-	function __construct() {
+	function __construct($context) {
+		$this->context = $context;
 		$this->init();
 	}
 
@@ -27,7 +29,9 @@ class Controller {
 	function action($action="", $arguments=array()) {
 		if (empty($action)) $action = "default_action";
 		call_user_func_array(array($this, $action), $arguments);
-		if ($this->auto_render) render(($this->template == "auto") ? request()->format : $this->template);
+		if ($this->auto_render) {
+			$this->context->render(($this->template == "auto") ? request()->format : $this->template);
+		}
 	}
 
 	/**
@@ -38,7 +42,13 @@ class Controller {
 	 */
 	function forward($controller, $action, $args=array()) {
 		$this->auto_render = false;
-		controller($controller)->action($action, $args);
+		$object = controller($controller);
+		$instance = new $object($this->context);
+		$instance->action($action, $args);
+	}
+
+	function assign($key, $value) {
+		$this->context->assign($key, $value);
 	}
 
 	/**

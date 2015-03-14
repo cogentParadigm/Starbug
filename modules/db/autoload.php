@@ -1,0 +1,9 @@
+<?php
+include(dirname(__FILE__)."/classes/db.php");
+include(dirname(__FILE__)."/classes/Table.php");
+include(dirname(__FILE__)."/classes/QueryHook.php");
+include(dirname(__FILE__)."/classes/query.php");
+include(dirname(__FILE__)."/classes/queue.php");
+include(dirname(__FILE__)."/classes/mysql.php");
+include(dirname(__FILE__)."/classes/Schemer.php");
+?>

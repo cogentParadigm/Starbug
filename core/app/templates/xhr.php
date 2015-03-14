@@ -1,1 +1,1 @@
-<?php render_view(); ?>
+<?php $this->render("view"); ?>

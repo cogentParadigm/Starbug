@@ -15,4 +15,4 @@
   </div>
 </div>
 <?php } ?>
-<? render_layout(); ?>
+<?php $this->render("layout"); ?>

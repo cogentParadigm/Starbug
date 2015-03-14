@@ -128,5 +128,4 @@
     </div>
   </div>
 </div>
-
-<?php render_content(); ?>
+<?php $this->render_content(); ?>

@@ -1,5 +1,5 @@
 <?= '<?php'."\n"; ?>
-	assign("model", "<?= $model; ?>");
-	assign("uri", "<?= $prefix.$model; ?>");
-	render("create");
+	$this->assign("model", "<?= $model; ?>");
+	$this->assign("uri", "<?= $prefix.$model; ?>");
+	$this->render("create");
 <?= '?>'; ?>

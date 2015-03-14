@@ -45,6 +45,7 @@ class form {
 
 	var $schema = array();
 	var $errors = array();
+	var $template;
 
 	/**
 	 * constructor. initializes properties
@@ -79,18 +80,19 @@ class form {
 		if (!empty($atts)) $atts = $atts." ";
 		if ($this->method == "post") $fields = (empty($this->model)) ? $_POST : $_POST[$this->model];
 		else $fields = (empty( $this->model)) ? $_GET : $_GET[$this->model];
-		assign("form", $this);
-		assign("attributes", $atts);
-		assign("model", $this->model);
-		assign("url", $this->url);
-		assign("method", $this->method);
-		assign("postback", $this->postback);
-		assign("action", $this->action);
-		assign("fields", $fields);
-		assign("errors", efault($this->errors, array()));
-		render("form/open");
+		$this->template = new Template("form/open");
+		$this->template->assign("form", $this);
+		$this->template->assign("attributes", $atts);
+		$this->template->assign("model", $this->model);
+		$this->template->assign("url", $this->url);
+		$this->template->assign("method", $this->method);
+		$this->template->assign("postback", $this->postback);
+		$this->template->assign("action", $this->action);
+		$this->template->assign("fields", $fields);
+		$this->template->assign("errors", efault($this->errors, array()));
+		$this->template->output();
 	}
-	
+
 	/**
 	 * get the full name attribute
 	 * eg. name becomes users[name]
@@ -119,7 +121,7 @@ class form {
 		if (is_array($var)) return $var;
 		else return stripslashes($var);
 	}
-	
+
 	/**
 	 * set the GET or POST value
 	 * @param string $name the relative name
@@ -171,20 +173,20 @@ class form {
 		$this->fill_ops($field, $control);
 		//run filters
 		foreach (locate("form/".$control.".php", "filters") as $filter) include($filter);
-		
+
 		$capture = "field";
 		$field['field'] = reset(explode("[", $field['name']));
 		$field['name'] = $this->get_name($field['name']);
-		foreach ($field as $k => $v) assign($k, $v);
+		foreach ($field as $k => $v) $this->template->assign($k, $v);
 		if (isset($field['nofield'])) {
 			unset($field['nofield']);
 			$capture = $control;
 		}
-		assign("attributes", $field);
-		assign("control", $control);
-		return capture(array($this->model."/form/$field[field]-$capture", "form/$field[field]-$capture", $this->model."/form/$capture", "form/$capture"));
+		$this->template->assign("attributes", $field);
+		$this->template->assign("control", $control);
+		return $this->template->capture(array($this->model."/form/$field[field]-$capture", "form/$field[field]-$capture", $this->model."/form/$capture", "form/$capture"));
 	}
-	
+
 	function __call($name, $arguments) {
 		efault($arguments[1], array());
 		return $this->form_control($name, $arguments[0], $arguments[1]);

@@ -7,7 +7,7 @@
 	<div class="panel-body">
 <?php
 	efault($action, "create");
-	render_display("form", $model, "form", array_merge($_GET, array("action" => $action, "cancel_url" => $cancel_url)));
+	$this->render_display("form", $model, "form", array_merge($_GET, array("action" => $action, "cancel_url" => $cancel_url)));
 ?>
 	</div>
 </div>

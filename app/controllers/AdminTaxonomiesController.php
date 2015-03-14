@@ -1,16 +1,16 @@
 <?php
 class AdminTaxonomiesController {
 	function init() {
-		assign("model", "terms");
-		assign("form", "terms");
-		assign("cancel_url", "admin/taxonomies");
-		if (!empty($_GET['taxonomy'])) assign("taxonomy", normalize($_GET['taxonomy']));
+		$this->assign("model", "terms");
+		$this->assign("form", "terms");
+		$this->assign("cancel_url", "admin/taxonomies");
+		if (!empty($_GET['taxonomy'])) $this->assign("taxonomy", normalize($_GET['taxonomy']));
 	}
 	function default_action() {
 		$this->render("admin/list");
 	}
 	function add() {
-		assign("form", "taxonomy");
+		$this->assign("form", "taxonomy");
 		$this->create();
 	}
 	function create() {
@@ -20,15 +20,15 @@ class AdminTaxonomiesController {
 		} else $this->render("admin/create");
 	}
 	function update($id=null) {
-		assign("id", $id);
+		$this->assign("id", $id);
 		$term = get("terms", $id);
-		assign("taxonomy", $term['taxonomy']);
+		$this->assign("taxonomy", $term['taxonomy']);
 		if (success("terms", "create")) {
 			redirect(uri("admin/taxonomies/taxonomy/".$term['taxonomy']));
 		} else $this->render("admin/update");
 	}
 	function taxonomy($taxonomy=null) {
-		assign("taxonomy", $taxonomy);
+		$this->assign("taxonomy", $taxonomy);
 		$this->render("admin/taxonomies/taxonomy");
 	}
 }
