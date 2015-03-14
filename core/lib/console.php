@@ -40,7 +40,7 @@ class console {
 	 * @see getLogs
 	 */
 	public function log($message, $type='info', $tags='global') {
-		$this->logs[] = array("tags" => array_merge(array($type), explode(",", $tags)), "time" => microtime(true)], "message" => $message);
+		$this->logs[] = array("tags" => array_merge(array($type), explode(",", $tags)), "time" => microtime(true), "message" => $message);
 		$this->count++;
 		if($this->max > 0 && $this->count>=$this->max) $this->clear();
 	}

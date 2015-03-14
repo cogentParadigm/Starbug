@@ -151,12 +151,13 @@ function get_module_class($path, $base="lib/Controller", $mid="core") {
 }
 
 /**
- * get a controller by name
- * @param string $name the name of the controller, such as 'users'
- * @param string $type a sub type such as 'admin'
- * @return the instantiated controller
+ * build a hook class
+ * @param string $path the sub-path to the hook such as 'store/ordered'
+ * @param string $base the module relative location of the base class such as 'classes/QueryHook'
+ * @param string $mid the module that contains the base class, such as 'db'
+ * @return the instantiated hook
  */
-function build_hook($path, $base="lib/Hook", $mid="core") {
+function build_hook($path, $base, $mid="core") {
 	static $hooks;
 	efault($hooks, array());
 

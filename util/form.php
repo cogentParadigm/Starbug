@@ -93,6 +93,10 @@ class form {
 		$this->template->output();
 	}
 
+	function assign($key, $value=null) {
+		$this->template->assign($key, $value);
+	}
+
 	/**
 	 * get the full name attribute
 	 * eg. name becomes users[name]
