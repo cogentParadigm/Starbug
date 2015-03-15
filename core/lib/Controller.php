@@ -47,7 +47,7 @@ class Controller {
 		$instance->action($action, $args);
 	}
 
-	function assign($key, $value) {
+	function assign($key, $value=null) {
 		$this->context->assign($key, $value);
 	}
 
