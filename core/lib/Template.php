@@ -23,7 +23,8 @@ class Template {
   public $options;
   public $defaults = array(
     "scope" => "templates",
-    "prefix" => false
+    "prefix" => false,
+    "all" => false
   );
 
   function __construct($paths=array(""), $vars=array(), $options=array()) {
@@ -43,8 +44,8 @@ class Template {
       } else $found = locate($path.".php", $scope);
       $path = next($paths);
     }
-    $this->path = end($found);
-    if (!file_exists($this->path)) {
+    $this->path = ($this->options['all']) ? $found : end($found);
+    if (!is_array($this->path) && !file_exists($this->path)) {
       throw new Exception("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
     }
   }
@@ -67,7 +68,11 @@ class Template {
    */
   function output($params=array()) {
     extract($params + $this->vars);
-    include($this->path);
+    if (is_array($this->path)) {
+      foreach ($this->path as $p) include($p);
+    } else {
+      include($this->path);
+    }
   }
 
   /**
@@ -89,7 +94,7 @@ class Template {
    * @param array $options additional options such as the scope or prefix
    */
   function render($paths=array(""), $params=array(), $options=array()) {
-    $template = new Template($paths, $params + $this->vars, $options + array("scope" => "templates") + $this->options);
+    $template = new Template($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
     $template->output();
   }
 
@@ -101,7 +106,7 @@ class Template {
    * @return string the output of the template
    */
   function capture($paths=array(""), $params=array(), $options=array()) {
-    $template = new Template($paths, $params + $this->vars, $options + array("scope" => "templates") + $this->options);
+    $template = new Template($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
     return $template->get();
   }
 
@@ -138,6 +143,17 @@ class Template {
   }
 
   /**
+   *
+   */
+  function publish($topic, $tags=array(), $params=array()) {
+    if (!is_array($tags)) $tags = array($tags);
+    array_unshift($tags, "global");
+    foreach ($tags as $tag) {
+      $this->render("hook/".$tag.".".$topic, $params, array("all" => true));
+    }
+  }
+
+  /**
    * build a display
    * @param string $type the display type (list, table, grid, csv, etc..)
    * @param array $model the model to get results from
@@ -154,7 +170,6 @@ class Template {
   }
   /**
    * build and render a display
-   * @ingroup templates
    * @param string $type the display type (list, table, grid, csv, etc..)
    * @param array $model the model to get results from
    * @param string $name the display/query name (admin, list, select, etc..).
@@ -169,7 +184,6 @@ class Template {
   }
   /**
    * build and capture a display
-   * @ingroup templates
    * @param string $type the display type (list, table, grid, csv, etc..)
    * @param array $model the model to get results from
    * @param string $name the display/query name (admin, list, select, etc..).
@@ -182,6 +196,15 @@ class Template {
     $display = $this->build_display($type, $model, $name, $options);
     return $display->capture();
   }
-
+  /**
+   * render a hook
+   * @param string $name the name of the hook
+   * @param array $params parameters to add to the template vars
+   * @param array $options options to add to the template options
+   */
+  function render_hook($name, $params=array(), $options=array()) {
+    $hook = build_hook("template/".$name, "lib/TemplateHook", "core");
+    $hook->render($this, $params + $this->vars, $options + $this->options);
+  }
 }
 ?>
