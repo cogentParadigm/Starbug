@@ -25,17 +25,35 @@ class hook_store_type {
 		foreach ($value as $position => $type_id) {
 			$remove = false;
 			$value_type = ($type == $target) ? "id" : $column."_id";
-			if (0 === strpos($type_id, "-")) {
-				$remove = true;
-				$type_id = substr($type_id, 1);
-			}
-			if (0 === strpos($type_id, "#")) {
-				$value_type = "id";
-				$type_id = substr($type_id, 1);
+			if (is_array($type_id)) {
+				$value_type = "object";
+			} else {
+				if (0 === strpos($type_id, "-")) {
+					$remove = true;
+					$type_id = substr($type_id, 1);
+				}
+				if (0 === strpos($type_id, "#")) {
+					$value_type = "id";
+					$type_id = substr($type_id, 1);
+				}
 			}
 
-			if ($remove && $type_id === "~") $clean = true;
-			else if ($value_type === "id") {
+			if ($remove && $type_id === "~") {
+				$clean = true;
+			} else if ($value_type === "object") {
+				if (isset($type_id['id'])) {
+					$entry = query($target)->condition("id", $type_id['id']);
+					$ids[] = $type_id['id'];
+				} else {
+					$entry = query($target)->conditions(array($model."_id" => $model_id, $column."_id" => $type_id[$column."_id"]));
+					$type_ids[] = $type_id[$column."_id"];
+				}
+				$entry->set($model."_id", $model_id);
+				$entry->fields($type_id);
+				$entry->set("position", intval($position)+1);
+				if (isset($type_id['id']) || $entry->one()) $entry->update();
+				else $entry->insert();
+			} else if ($value_type === "id") {
 				$entry = query($target)->condition("id", $type_id);
 				if ($remove) {
 					$entry->delete();

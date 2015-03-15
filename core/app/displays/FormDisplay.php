@@ -92,8 +92,8 @@ class FormDisplay {
 		// grab errors and update schema
 		$this->errors = array();
 		foreach ($this->fields as $name => $field) {
-			$this->schema[$name] = sb($field['model'])->hooks[$name];
-			$errors = errors($this->get_name($name), true);
+			$this->schema[$name] = column_info($field['model'], $name);
+			$errors = errors($this->get_name($name, $this->schema[$name]['entity']), true);
 			if (!empty($errors)) $this->errors[$name] = $errors;
 		}
 	}
