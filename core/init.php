@@ -52,13 +52,14 @@ $db = get_database(DEFAULT_DATABASE);
 global $sb;
 $sb = new sb($db);
 
-//publish init hooks
-$sb->publish("init");
+$context = new Template();
+$context->assign("sb", $sb);
 
 if (defined('SB_CLI')) {
 	$sb->user = array("groups" => array("root"));
-	//publish cli init hook
-	$sb->publish("cli.init");
+	$context->publish("init", "cli");
+} else {
+	$context->publish("init");
 }
 
 ?>

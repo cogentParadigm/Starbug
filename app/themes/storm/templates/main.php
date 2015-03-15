@@ -4,4 +4,4 @@
 			<li>Powered by <a href="http://www.starbugphp.com">Starbug PHP</a></li>
 		</ul>
 </div>
-<?php sb()->publish("footer"); ?>
+<?php $this->publish("footer"); ?>

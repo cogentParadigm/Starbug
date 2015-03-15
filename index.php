@@ -16,7 +16,7 @@ include("core/init.php");
  * @ingroup global
  */
 global $request;
-$request = new Request();
+$request = new Request($context);
 $request->set_path($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
 $request->execute();
 ?>

@@ -85,25 +85,6 @@ class sb {
 	}
 
 	/**
-	 * publish a topic to any subscribers or hooks
-	 * @param string $topic the topic name you would like to publish
-	 * @param mixed $args any additional parameters will be passed in an array to the subscriber
-	 */
-	function publish($topic, $args=null) {
-		$sb = self::$instance;
-		global $request;
-		$args = func_get_args(); $topic = array_shift($args);
-		if (false !== strpos($topic, ".")) {
-			list($tags, $topic) = explode(".", $topic);
-			$tags = array(array("slug" => $tags));
-		} else $tags = (isset($request->tags)) ? $request->tags : array(array("slug" => "global"));
-		foreach ($tags as $tag) {
-			foreach (locate("$tag[slug].$topic.php", "hooks") as $hook) if (file_exists($hook)) include($hook);
-		}
-		return $args;
-	}
-
-	/**
 	 * import function. only imports once when used with provide
 	 * @param string $loc path of file to import without '.php' at the end
 	 */

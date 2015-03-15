@@ -5,6 +5,6 @@
 	</head>
 	<body class="dbootstrap">
 		<?php $this->render("page"); ?>
-		<?php sb()->publish("footer"); ?>
+		<?php $this->publish("footer"); ?>
 	</body>
 </html>

@@ -62,11 +62,14 @@ class Request {
 	 */
 	public $tags;
 
+	public $context;
+
 
 	/**
 	 * constructor. initiates tags and postback
 	 */
-	function __construct() {
+	function __construct(Template $context) {
+		$this->context = $context;
 		$this->tags = array(array("term" => "global", "slug" => "global"));
  	}
 
@@ -182,9 +185,7 @@ class Request {
 		$this->check_post();
 		$this->locate();
 		$target = empty($this->template) ? $this->format : $this->template;
-		$template = new Template($target);
-		$template->assign("request", $this);
-		$template->output();
+		$this->context->render($target, array("request" => $this));
 		ob_end_flush();
 	}
 

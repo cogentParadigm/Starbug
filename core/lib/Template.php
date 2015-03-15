@@ -20,16 +20,17 @@ class Template {
 
   private $vars = array();
   public $path = "";
-  public $options;
+  public $options = array();
   public $defaults = array(
     "scope" => "templates",
     "prefix" => false,
     "all" => false
   );
 
-  function __construct($paths=array(""), $vars=array(), $options=array()) {
+  function __construct($paths=array(), $vars=array(), $options=array()) {
     $this->options = $options + $this->defaults;
     $this->vars = $vars;
+    if (empty($paths)) return;
 
     //resolve path
     $prefix = $this->options['prefix'];
