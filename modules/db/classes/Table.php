@@ -44,11 +44,6 @@ class Table {
 	/**
 	 * @var array The mixed-in objects which hold the imported functions
 	 */
-	public $imported;
-	/**
-	 * @var array A list of the imported functions
-	 */
-	public $imported_functions;
 
 	/**
 	 * Table constructor
@@ -59,10 +54,7 @@ class Table {
 		$this->db = $db;
 		$this->type = $type;
 		if (!isset($this->hooks)) $this->hooks = $hooks;
-		$this->imported = array();
-		$this->imported_functions = array();
 		$this->init();
-		if (!isset($this->statuses)) $this->statuses = config("statuses");
 	}
 
 	protected function init() {
@@ -143,21 +135,6 @@ class Table {
 		return $data;
 	}
 
-	protected function mixin($object) {
-		if (!class_exists($object)) include(BASE_DIR."/app/plugins/$object/$object.php");
-		$new_import = new $object();
-		$import_name = get_class($new_import);
-		$import_functions = get_class_methods($new_import);
-		array_push($this->imported, array($import_name, $new_import));
-		foreach ($import_functions as $key => $function_name) $this->imported_functions[$function_name] = &$new_import;
-	}
 
-	public function __call($method, $args=array()) {
-		if (array_key_exists($method, $this->imported_functions)) {
-			$args[] = $this;
-			return call_user_func_array(array($this->imported_functions[$method], $method), $args);
-		}
-		throw new Exception('Call to undefined method/class function: ' . $method);
-	}
 }
 ?>

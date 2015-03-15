@@ -1,5 +1,0 @@
-cd util
-wget "http://downloads.sourceforge.net/project/phpmailer/phpmailer%20for%20php5_6/PHPMailer%20v5.1/PHPMailer_v5.1.tar.gz?&use_mirror=voxel"
-tar -xzf PHPMailer_v5.1.tar.gz
-rm PHPMailer_v5.1.tar.gz
-mv PHPMailer_v5.1 phpmailer

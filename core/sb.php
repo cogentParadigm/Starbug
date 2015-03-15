@@ -45,15 +45,6 @@ class sb {
 	 */
 	var $listeners = array();
 	/**#@-*/
-	/**
-	 * @var array holds mixed in objects
-	 */
-	var $imported = array();
-	/**
-	 * @var array holds function names of mixed in objects
-	 */
-	var $imported_functions = array();
-
 	static $instance;
 
 
@@ -163,27 +154,5 @@ class sb {
 		}
 	}
 
-	/**
-	 * mixin an object to import its functions into this object
-	 * @param object $object the object to mixin
-	 */
-	protected function mixin($object) {
-		$new_import = new $object();
-		$import_name = get_class($new_import);
-		$import_functions = get_class_methods($new_import);
-		array_push($this->imported, array($import_name, $new_import));
-		foreach($import_functions as $key => $function_name) $this->imported_functions[$function_name] = &$new_import;
-	}
-
-	/**
-	 * Handler for calls to non-existant functions. Allows calling of mixed in functions.
-	 */
-	public function __call($method, $args) {
-		if(array_key_exists($method, $this->imported_functions)) {
-			$args[] = $this;
-			return call_user_func_array(array($this->imported_functions[$method], $method), $args);
-		}
-		throw new Exception ('Call to undefined method/class function: ' . $method);
-	}
 }
 ?>

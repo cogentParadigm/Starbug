@@ -1,9 +1,0 @@
-mkdir var/tmp/dp
-cd var/tmp/dp
-wget "http://www.frequency-decoder.com/demo/date-picker-v5/date-picker-v5.zip"
-unzip date-picker-v5.zip
-mv date-picker-v5/js ../../../app/public/js/datepicker
-mv date-picker-v5/media ../../../app/public/
-mv date-picker-v5/css/datepicker.css ../../../core/app/public/stylesheets/plugins/
-cd ../
-rm -rf dp
