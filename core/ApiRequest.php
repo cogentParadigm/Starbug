@@ -122,46 +122,6 @@ class ApiRequest {
 	}
 
 	/**
-	 * groups API function - outputs a list of groups
-	 * @param string $call function name passed by constructor
-	 * @param string $format the desired output format: json, jsonp or xml
-	 * @param star $ops additional options
-	 */
-	protected function groups($call, $format, $ops) {
-		$groups = config("groups");
-		$data = array();
-		foreach ($groups as $name => $number) $data[] = array("label" => $name, "id" => $number);
-		if (!empty($data)) {
-			switch ($format) {
-				case "xml": return $this->getXML("groups", $data); break;
-				case "json": return $this->getJSON("id", $data); break;
-				case "jsonp": return $this->getJSONP($ops['pad'], $data); break;
-				case "csv": return $this->getCSV($data); break;
-			}
-		}
-	}
-
-	/**
-	 * statuses API function - outputs a list of statuses
-	 * @param string $call function name passed by constructor
-	 * @param string $format the desired output format: json, jsonp or xml
-	 * @param star $ops additional options
-	 */
-	protected function statuses($call, $format, $ops) {
-		$statuses = config("statuses");
-		$data = array();
-		foreach ($statuses as $name => $number) $data[] = array("label" => $name, "id" => $number);
-		if (!empty($data)) {
-			switch ($format) {
-				case "xml": return $this->getXML("statuses", $data); break;
-				case "json": return $this->getJSON("id", $data); break;
-				case "jsonp": return $this->getJSONP($ops['pad'], $data); break;
-				case "csv": return $this->getCSV($data); break;
-			}
-		}
-	}
-
-	/**
 	 * get a json formatted recordset
 	 * @param array $data an array of data
 	 * @return string json output of records
