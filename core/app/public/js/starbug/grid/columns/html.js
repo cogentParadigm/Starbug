@@ -1,5 +1,7 @@
 define(["dojo", "sb", "put-selector/put"],
 function(dojo, sb, put){
+	dojo.global.starbug = dojo.global.starbug || {};
+	dojo.global.starbug.grid = dojo.global.starbug.grid || {};
 	dojo.global.starbug.grid.columns = dojo.global.starbug.grid.columns || {};
 	dojo.global.starbug.grid.columns.html = function(column){
 
