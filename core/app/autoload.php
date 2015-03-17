@@ -7,6 +7,7 @@ include(BASE_DIR."/core/lib/Session.php");
 include(BASE_DIR."/core/lib/Controller.php");
 include(BASE_DIR."/core/lib/Display.php");
 include(BASE_DIR."/core/lib/DisplayHook.php");
+include(BASE_DIR."/core/lib/TemplateInterface.php");
 include(BASE_DIR."/core/lib/Template.php");
 include(BASE_DIR."/core/lib/DOM/Renderable.php");
 include(BASE_DIR."/core/Request.php");

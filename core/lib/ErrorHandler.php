@@ -14,6 +14,17 @@
  */
 class ErrorHandler {
 
+	private $out;
+	private $exceptionTemplate;
+
+	function __construct(TemplateInterface $out, $exceptionTemplate="exception-html") {
+		$this->out = $out;
+		$this->exceptionTemplate = $exceptionTemplate;
+		set_exception_handler(array($this,'handle_exception'));
+		set_error_handler(array($this,'handle_error'), error_reporting());
+		register_shutdown_function(array($this, 'handle_shutdown'));
+	}
+
 	/**
 	 * exception handler
 	 */
@@ -46,9 +57,7 @@ class ErrorHandler {
 		}
 		$error['traces'] = $traces;
 
-		$template = new Template(defined('SB_CLI') ? "exception-cli" : "exception-html");
-		$template->assign("error", $error);
-		$template->output();
+		$this->out->render($this->exceptionTemplate, array("error" => $error));
 		exit(1);
 	}
 
@@ -104,10 +113,14 @@ class ErrorHandler {
 			$error['traces'] = $traces;
 
 			if(!headers_sent()) header("HTTP/1.0 500 PHP Error");
-			$template = new Template(defined('SB_CLI') ? "exception-cli" : "exception-html");
-			$template->assign("error", $error);
-			$template->output();
+			$this->out->render($this->exceptionTemplate, array("error" => $error));
 			exit(1);
+	}
+
+	function handle_shutdown() {
+		if(is_null($e = error_get_last()) === false) {
+			ob_end_flush();
+		}
 	}
 
 	/**

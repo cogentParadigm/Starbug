@@ -68,7 +68,7 @@ class Request {
 	/**
 	 * constructor. initiates tags and postback
 	 */
-	function __construct(Template $context) {
+	function __construct(TemplateInterface $context) {
 		$this->context = $context;
 		$this->tags = array(array("term" => "global", "slug" => "global"));
  	}

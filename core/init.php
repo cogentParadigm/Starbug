@@ -55,6 +55,8 @@ $sb = new sb($db);
 $context = new Template();
 $context->assign("sb", $sb);
 
+new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
+
 if (defined('SB_CLI')) {
 	$sb->user = array("groups" => array("root"));
 	$context->publish("init", "cli");

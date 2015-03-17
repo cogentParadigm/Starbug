@@ -53,9 +53,6 @@ class sb {
 	 */
 	function __construct($db) {
 		self::$instance = $this;
-		set_exception_handler(array($this,'handle_exception'));
-		set_error_handler(array($this,'handle_error'), error_reporting());
-		register_shutdown_function(array($this, 'handle_shutdown'));
 		$this->db = $db;
 		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
 		$this->start_session();
@@ -116,23 +113,6 @@ class sb {
 
 	function add_listener($object) {
 		$this->listeners[] = $object;
-	}
-
-	/**
-	 * exception handler
-	 */
-	public function handle_exception($exception) {
-		ErrorHandler::handle_exception($exception);
-	}
-
-	function handle_error($errno, $errstr, $errfile, $errline) {
-		ErrorHandler::handle_error($errno, $errstr, $errfile, $errline);
-	}
-
-	function handle_shutdown() {
-		if(is_null($e = error_get_last()) === false) {
-			ob_end_flush();
-		}
 	}
 
 }

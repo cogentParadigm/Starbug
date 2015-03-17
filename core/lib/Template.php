@@ -16,7 +16,7 @@
  * Renderer class. assign/render style templating engine
  * @ingroup Renderer
  */
-class Template {
+class Template implements TemplateInterface {
 
   private $vars = array();
   public $path = "";
@@ -52,9 +52,7 @@ class Template {
   }
 
   /**
-   * assign a variable
-   * @param string $key variable name
-   * @param string $value variable value
+   * @copydoc TemplateInterface::assign
    */
   function assign($key, $value="") {
     if (is_array($key)) {
@@ -64,8 +62,7 @@ class Template {
     }
   }
   /**
-   * render a template
-   * @param string $path relative path to the template from the view directory without file extension
+   * @copydoc TemplateInterface::output
    */
   function output($params=array()) {
     extract($params + $this->vars);
@@ -77,8 +74,7 @@ class Template {
   }
 
   /**
-   * capture a rendered template
-   * @param string $path relative path to the template from the view directory without file extension
+   * @copydoc TemplateInterface::get
    */
   function get($params=array()) {
     ob_start();
@@ -89,10 +85,7 @@ class Template {
   }
 
   /**
-   * render a child template
-   * @param mixed $paths a path or an array of paths to try
-   * @param array $params an array of variables to inject
-   * @param array $options additional options such as the scope or prefix
+   * @copydoc TemplateInterface::render
    */
   function render($paths=array(""), $params=array(), $options=array()) {
     $template = new Template($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
@@ -100,11 +93,7 @@ class Template {
   }
 
   /**
-   * capture a child template
-   * @param mixed $paths a path or an array of paths to try
-   * @param array $params an array of variables to inject
-   * @param array $options additional options such as the scope or prefix
-   * @return string the output of the template
+   * @copydoc TemplateInterface::capture
    */
   function capture($paths=array(""), $params=array(), $options=array()) {
     $template = new Template($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
@@ -112,39 +101,35 @@ class Template {
   }
 
   /**
-   * convenience method to render a template from the views directory
-   * @copydoc render
+   * @copydoc TemplateInterface::render_view
    */
   function render_view($paths=array(""), $params=array()) {
     $this->render($paths, $params, array("scope" => "views"));
   }
 
   /**
-   * convenience method to render a template from the layouts directory
-   * @copydoc render
+   * @copydoc TemplateInterface::render_layout
    */
   function render_layout($paths=array(""), $params=array()) {
     $this->render($paths, $params, array("scope" => "layouts"));
   }
 
   /**
-   * convenience method to render a template from the forms directory
-   * @copydoc render
+   * @copydoc TemplateInterface::render_form
    */
   function render_form($paths=array(""), $params=array()) {
     $this->render($paths, $params, array("scope" => "forms"));
   }
 
   /**
-   * render content blocks from the database for the specified region
-   * @param string $region the region to render content for
+   * @copydoc TemplateInterface::render_content
    */
   function render_content($region="content") {
     $this->render("blocks", array("region" => $region));
   }
 
   /**
-   *
+   * @copydoc TemplateInterface::publish
    */
   function publish($topic, $tags=array(), $params=array()) {
     if (!is_array($tags)) $tags = array($tags);
@@ -155,14 +140,7 @@ class Template {
   }
 
   /**
-   * build a display
-   * @param string $type the display type (list, table, grid, csv, etc..)
-   * @param array $model the model to get results from
-   * @param string $name the display/query name (admin, list, select, etc..).
-   * 										 For example, if you specify 'admin', then the the following model functions will be used:
-   * 										 query provider: query_admin
-   * 										 display provider: display_admin
-   * @param array $options parameters that will be passed to the display and query functions
+   * @copydoc TemplateInterface::build_display
    */
   function build_display($type, $model=null, $name=null, $options=array()) {
      $class = get_module_class("displays/".ucwords($type)."Display", "lib/Display", "core");
@@ -170,30 +148,16 @@ class Template {
     return $display;
   }
   /**
-   * build and render a display
-   * @param string $type the display type (list, table, grid, csv, etc..)
-   * @param array $model the model to get results from
-   * @param string $name the display/query name (admin, list, select, etc..).
-   * 										 For example, if you specify 'admin', then the the following model functions will be used:
-   * 										 query provider: query_admin
-   * 										 display provider: display_admin
-   * @param array $options parameters that will be passed to the display and query functions
+   * @copydoc TemplateInterface::render_display
    */
-  function render_display($type, $model=null, $name=null, $options=array()) {
+  public function render_display($type, $model=null, $name=null, $options=array()) {
     $display = $this->build_display($type, $model, $name, $options);
     $display->render();
   }
   /**
-   * build and capture a display
-   * @param string $type the display type (list, table, grid, csv, etc..)
-   * @param array $model the model to get results from
-   * @param string $name the display/query name (admin, list, select, etc..).
-   * 										 For example, if you specify 'admin', then the the following model functions will be used:
-   * 										 query provider: query_admin
-   * 										 display provider: display_admin
-   * @param array $options parameters that will be passed to the display and query functions
+   * @copydoc TemplateInterface::capture_display
    */
-  function capture_display($type, $model=null, $name=null, $options=array()) {
+  public function capture_display($type, $model=null, $name=null, $options=array()) {
     $display = $this->build_display($type, $model, $name, $options);
     return $display->capture();
   }
