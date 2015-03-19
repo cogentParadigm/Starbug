@@ -21,7 +21,7 @@ function image($src="", $flags="i") {
 	$ops = star($src);
 	$src = array_shift($ops);
 	$ops['src'] = uri($src, $flags);
-	(new Template("image", array("attributes" => $ops)))->output();
+	echo '<img '.html_attributes($ops, false).'/>';
 }
 /**
 	* render a link
@@ -34,7 +34,7 @@ function link_to($text, $url="", $attributes=array()) {
 	$attributes = star($attributes);
 	if (is_array($url)) $attributes = $url;
 	else if (!empty($url)) $attributes['href'] = uri($url);
-	(new Template("tag", array("tag" => "a", "attributes" => $attributes, "innerHTML" => $text)))->output();
+	echo '<a '.html_attributes($attributes, false).'>'.$text.'</a>';
 }
 /**
  * render a field
@@ -55,7 +55,8 @@ function render_field($model, $row, $field, $options=array()) {
 		}
 		if (empty($options['formatter'])) $options['formatter'] = sb($model)->hooks[$field]["type"];
 		if (empty($options['label'])) $column['label'] = (!empty(sb($model)->hooks[$field]["label"])) ? sb($model)->hooks[$field]["label"] : format_label($field);
-		(new Template("field/field", array("model" => $model, "row" => $row, "field" => $field, "options" => $options)))->output();
+		//BROKEN
+		//(new Template("field/field", array("model" => $model, "row" => $row, "field" => $field, "options" => $options)))->output();
 }
 
 function put($parent, $selector="", $content="") {

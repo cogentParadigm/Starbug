@@ -19,10 +19,16 @@ interface TemplateInterface {
   public function assign($key, $value=null);
 
   /**
+   * output a template
+   * @param string $path relative path to the template from the view directory without file extension
+   */
+  public function output($paths=array(""), $params=array(), $options=array());
+
+  /**
    * capture a rendered template
    * @param string $path relative path to the template from the view directory without file extension
    */
-  public function get($params=array());
+  public function get($paths=array(""), $params=array(), $options=array());
 
   /**
    * render a child template

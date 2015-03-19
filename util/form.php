@@ -77,10 +77,11 @@ class form {
 	 * @param string $atts attributes for the form tag
 	 */
 	function open($atts="") {
+		global $request;
 		if (!empty($atts)) $atts = $atts." ";
 		if ($this->method == "post") $fields = (empty($this->model)) ? $_POST : $_POST[$this->model];
 		else $fields = (empty( $this->model)) ? $_GET : $_GET[$this->model];
-		$this->template = new Template("form/open");
+		$this->template = $request->context;
 		$this->template->assign("form", $this);
 		$this->template->assign("attributes", $atts);
 		$this->template->assign("model", $this->model);
@@ -90,7 +91,7 @@ class form {
 		$this->template->assign("action", $this->action);
 		$this->template->assign("fields", $fields);
 		$this->template->assign("errors", efault($this->errors, array()));
-		$this->template->output();
+		$this->template->output("form/open");
 	}
 
 	function assign($key, $value=null) {

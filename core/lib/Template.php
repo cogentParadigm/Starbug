@@ -18,37 +18,18 @@
  */
 class Template implements TemplateInterface {
 
+  private $locator;
   private $vars = array();
   public $path = "";
   public $options = array();
   public $defaults = array(
     "scope" => "templates",
-    "prefix" => false,
     "all" => false
   );
 
-  function __construct($paths=array(), $vars=array(), $options=array()) {
+  function __construct(ResourceLocatorInterface $locator, $options=array()) {
     $this->options = $options + $this->defaults;
-    $this->vars = $vars;
-    if (empty($paths)) return;
-
-    //resolve path
-    $prefix = $this->options['prefix'];
-    $scope = $this->options['scope'];
-    if (!is_array($paths)) $paths = array($paths);
-    $path = reset($paths);
-    $found = array();
-    while(empty($found) && $path) {
-      if (!empty($prefix)) {
-        $prefix_path = BASE_DIR."/".$prefix.$scope."/".$path.".php";
-        if (file_exists($prefix_path)) $found[] = $prefix_path;
-      } else $found = locate($path.".php", $scope);
-      $path = next($paths);
-    }
-    $this->path = ($this->options['all']) ? $found : end($found);
-    if (!is_array($this->path) && !file_exists($this->path)) {
-      throw new Exception("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
-    }
+    $this->locator = $locator;
   }
 
   /**
@@ -64,8 +45,26 @@ class Template implements TemplateInterface {
   /**
    * @copydoc TemplateInterface::output
    */
-  function output($params=array()) {
-    extract($params + $this->vars);
+  function output($paths=array(), $params=array(), $options=array()) {
+    $this->options = $options + $this->options;
+    $this->vars = $params + $this->vars;
+    $prefix = $this->options['prefix'];
+    $scope = $this->options['scope'];
+    if (!is_array($paths)) $paths = array($paths);
+    $path = reset($paths);
+    $found = array();
+    while(empty($found) && $path) {
+      $found = $this->locator->locate($path.".php", $scope);
+      $path = next($paths);
+    }
+    $this->path = ($this->options['all']) ? $found : end($found);
+
+    if (!is_array($this->path) && !file_exists($this->path)) {
+      exit();
+      throw new Exception("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
+    }
+
+    extract($this->vars);
     if (is_array($this->path)) {
       foreach ($this->path as $p) include($p);
     } else {
@@ -76,9 +75,9 @@ class Template implements TemplateInterface {
   /**
    * @copydoc TemplateInterface::get
    */
-  function get($params=array()) {
+  function get($paths=array(), $params=array(), $options=array()) {
     ob_start();
-    $this->output($params);
+    $this->output($paths, $params, $options);
     $output = ob_get_contents();
     ob_end_clean();
     return $output;
@@ -88,16 +87,16 @@ class Template implements TemplateInterface {
    * @copydoc TemplateInterface::render
    */
   function render($paths=array(""), $params=array(), $options=array()) {
-    $template = new Template($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
-    $template->output();
+    $template = new Template($this->locator);
+    $template->output($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
   }
 
   /**
    * @copydoc TemplateInterface::capture
    */
   function capture($paths=array(""), $params=array(), $options=array()) {
-    $template = new Template($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
-    return $template->get();
+    $template = new Template($this->locator);
+    return $template->get($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
   }
 
   /**

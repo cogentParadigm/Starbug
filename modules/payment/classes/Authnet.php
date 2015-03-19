@@ -47,7 +47,8 @@ class Authnet {
 	 */
 	public function __call($api_call, $args) {
 		foreach ($args[0] as $key => $value) $this->{$key} = $value;
-		$this->xml = (new Template("Authnet/$api_call", array("authnet" => $this)))->get();
+		$locator = new ResourceLocator(BASE_DIR, array("modules/db/payment"));
+		$this->xml = (new Template($locator))->get("Authnet/$api_call", array("authnet" => $this));
 		$this->process();
 	}
 

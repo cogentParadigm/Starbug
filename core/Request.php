@@ -64,12 +64,15 @@ class Request {
 
 	public $context;
 
+	private $locator;
+
 
 	/**
 	 * constructor. initiates tags and postback
 	 */
-	function __construct(TemplateInterface $context) {
+	function __construct(TemplateInterface $context, ResourceLocatorInterface $locator) {
 		$this->context = $context;
+		$this->locator = $locator;
 		$this->tags = array(array("term" => "global", "slug" => "global"));
  	}
 
@@ -175,6 +178,7 @@ class Request {
 		foreach ($this->payload as $k => $v) if ($k != "path") $this->{$k} = $v;
 		efault($this->theme, settings("theme"));
 		if (empty($this->layout)) $this->layout = empty($this->type) ? "views" : $this->type;
+		$this->locator->set("theme", "app/themes/".$this->theme);
 	}
 
 	/**

@@ -33,11 +33,15 @@ if (defined('Etc::TIME_ZONE')) date_default_timezone_set(Etc::TIME_ZONE);
 //set the appropriate level of error reporting
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERROR);
 
-// load global functions
-include(BASE_DIR."/core/global_functions.php");
+include(BASE_DIR."/core/autoload.php");
+
+//create locator
+$locator = new ResourceLocator(BASE_DIR, $modules);
 
 // autoload classes
-foreach (locate("autoload.php", "") as $global_include) include($global_include);
+foreach ($locator->locate("autoload.php", "") as $global_include) include($global_include);
+
+//create config
 
 /**
  * instantiate the database to be passed to sb
@@ -52,7 +56,7 @@ $db = get_database(DEFAULT_DATABASE);
 global $sb;
 $sb = new sb($db);
 
-$context = new Template();
+$context = new Template($locator);
 $context->assign("sb", $sb);
 
 new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");

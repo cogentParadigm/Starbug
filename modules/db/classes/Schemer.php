@@ -1070,7 +1070,8 @@ class Schemer {
 		$output_path = BASE_DIR."/var/models/".ucwords($table)."Model.php"; //output
 		$base = "";
 		//if (!empty($this->options[$table]['base'])) $base = $this->options[$table]['base'];
-		$data = (new Template(array($base."/base", "base"), array(), array("prefix" => $render_prefix)))->get(array("model" => $table));
+		$locator = new ResourceLocator(BASE_DIR, array($render_prefix));
+		$data = (new Template($locator))->get(array($base."/base", "base"), array("model" => $table), array("prefix" => $render_prefix));
 		file_put_contents($output_path, $data);
 	}
 
