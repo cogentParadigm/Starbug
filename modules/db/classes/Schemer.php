@@ -102,11 +102,9 @@ class Schemer {
 	/**
 	 * constructor. loads migrations
 	 */
-	function __construct($data) {
+	function __construct($data, $migrations) {
 		$this->db = $data;
-		$this->migrations = config("modules");
-		foreach ($this->migrations as $i => $m) $this->migrations[$i] = "modules/".$m;
-		$this->migrations = array_merge(array("core/app"), $this->migrations, array("app"));
+		$this->migrations = $migrations;
 	}
 
 	function set_database($db) {
@@ -1029,20 +1027,6 @@ class Schemer {
 	}
 
 	/**
-	 * Permanently add migrations to the migration list
-	 * @param string $arg0-$argN the name of the migration
-	 */
-	function add_migrations($arg) {
-		$args = func_get_args();
-		foreach ($args as $i => $a) {
-			if (!in_array($a, $this->migrations)) {
-				$this->migrations[] = $a;
-				config("migrations", $this->migrations);
-			}
-		}
-	}
-
-	/**
 	 * Migrate from one state to another
 	 * @param int $to the migration to go to
 	 * @param int $from the migration to start from
@@ -1071,7 +1055,8 @@ class Schemer {
 		$base = "";
 		//if (!empty($this->options[$table]['base'])) $base = $this->options[$table]['base'];
 		$locator = new ResourceLocator(BASE_DIR, array($render_prefix));
-		$data = (new Template($locator))->get(array($base."/base", "base"), array("model" => $table), array("prefix" => $render_prefix));
+		$template = new Template($locator);
+		$data = $template->get(array($base."/base", "base"), array("model" => $table), array("prefix" => $render_prefix));
 		file_put_contents($output_path, $data);
 	}
 

@@ -25,7 +25,5 @@
 	include("core/global/images.php");
 	include("core/global/forms.php");
 
-	// include module global functions
-	foreach (locate("global_functions.php", "") as $global_include) include($global_include);
 
 ?>

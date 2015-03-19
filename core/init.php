@@ -38,8 +38,9 @@ include(BASE_DIR."/core/autoload.php");
 //create locator
 $locator = new ResourceLocator(BASE_DIR, $modules);
 
-// autoload classes
+// autoload classes and global functions
 foreach ($locator->locate("autoload.php", "") as $global_include) include($global_include);
+foreach ($locator->locate("global_functions.php", "") as $global_include) include($global_include);
 
 //create config
 
@@ -57,6 +58,7 @@ global $sb;
 $sb = new sb($db);
 
 $context = new Template($locator);
+$context->assign("modules", $modules);
 $context->assign("sb", $sb);
 
 new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");

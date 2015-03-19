@@ -62,15 +62,6 @@ function locate_view($uri, $prefix="") {
 	else return false;
 }
 /**
- * check to see if this the default path (the front page)
- * @ingroup routing
- * @return bool true if it is, false if it isn't
- */
-function is_default_path() {
-	global $request;
-	return ($request->path == settings("default_path"));
-}
-/**
  * redirect to another page
  * @ingroup routing
  * @param string $url the url to redirect to

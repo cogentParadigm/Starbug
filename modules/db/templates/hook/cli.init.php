@@ -13,7 +13,7 @@
 	 * @ingroup global
 	 */
 	global $schemer;
-	$schemer = new Schemer($sb->db);
+	$schemer = new Schemer($sb->db, $modules);
 	$sb->add_listener($schemer);
 	$schemer->fill();
 ?>

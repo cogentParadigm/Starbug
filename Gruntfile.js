@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     phplint: {
-      all: ['app/**/*.php', 'modules/**/*.php']
+      all: ['app/**/*.php', 'modules/**/*.php', 'core/**/*.php', 'util/*.php']
     },
     jsvalidate: {
       all: {
