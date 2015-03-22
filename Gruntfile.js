@@ -25,7 +25,8 @@ module.exports = function(grunt) {
         unused: true,
         eqnull: true,
         globals: {
-          jQuery: true,
+          define: true,
+          require: true,
           WEBSITE_URL:true
         }
       },

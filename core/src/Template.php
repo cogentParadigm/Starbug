@@ -48,7 +48,6 @@ class Template implements TemplateInterface {
   function output($paths=array(), $params=array(), $options=array()) {
     $this->options = $options + $this->options;
     $this->vars = $params + $this->vars;
-    $prefix = $this->options['prefix'];
     $scope = $this->options['scope'];
     if (!is_array($paths)) $paths = array($paths);
     $path = reset($paths);
@@ -60,7 +59,6 @@ class Template implements TemplateInterface {
     $this->path = ($this->options['all']) ? $found : end($found);
 
     if (!is_array($this->path) && !file_exists($this->path)) {
-      exit();
       throw new Exception("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
     }
 
