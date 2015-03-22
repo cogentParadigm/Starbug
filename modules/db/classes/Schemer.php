@@ -116,7 +116,7 @@ class Schemer {
 	}
 
 	function up($migration) {
-		if (is_numeric($migration)) $migration = $this->migrations[$migration];
+		$migration = $this->migrations[$migration];
 		$this->current = $migration;
 		$migration = BASE_DIR."/".$migration."/up.php";
 		if (file_exists($migration)) include($migration);
@@ -138,12 +138,8 @@ class Schemer {
 	}
 
 	function fill() {
-		$to = count($this->migrations);
-		//MOVE TO CURRENT MIGRATION
-		$current = 0;
-		while ($current < $to) {
-			$this->up($current);
-			$current++;
+		foreach ($this->migrations as $mid => $migration) {
+			$this->up($mid);
 		}
 	}
 
