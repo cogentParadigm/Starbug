@@ -136,7 +136,7 @@ class Display {
 
 	function invoke_hook($phase, $hook, $field, &$options, $column) {
 
-		if (!isset($this->hooks[$field."_".$hook])) $this->hooks[$field."_".$hook] = build_hook("display/".$hook, "lib/DisplayHook", "core");
+		if (!isset($this->hooks[$field."_".$hook])) $this->hooks[$field."_".$hook] = $this->context->locator->build_hook("display/".$hook, "lib/DisplayHook", "core");
 		$hook = $this->hooks[$field."_".$hook];
 
 		//hooks are invoked in 2 phases

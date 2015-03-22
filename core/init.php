@@ -48,7 +48,6 @@ $dispatcher = new EventDispatcher();
 
 global $sb;
 $sb = new sb($locator, $conf, $dispatcher);
-
 $db = $sb->set_database(DEFAULT_DATABASE);
 $settings = new Settings($db);
 $sb->config->provide("settings", $settings);
@@ -59,6 +58,8 @@ $context->assign("sb", $sb);
 $context->assign("dispatcher", $dispatcher);
 
 new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
+
+$sb->start_session();
 
 if (defined('SB_CLI')) {
 	$sb->user = array("groups" => array("root"));

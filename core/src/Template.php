@@ -18,7 +18,7 @@
  */
 class Template implements TemplateInterface {
 
-  private $locator;
+  public $locator;
   private $vars = array();
   public $path = "";
   public $options = array();
@@ -142,7 +142,7 @@ class Template implements TemplateInterface {
    * @copydoc TemplateInterface::build_display
    */
   function build_display($type, $model=null, $name=null, $options=array()) {
-     $class = get_module_class("displays/".ucwords($type)."Display", "lib/Display", "core");
+     $class = $this->locator->get_module_class("displays/".ucwords($type)."Display", "lib/Display", "core");
      $display = new $class($this, $model, $name, $options);
     return $display;
   }
@@ -159,16 +159,6 @@ class Template implements TemplateInterface {
   public function capture_display($type, $model=null, $name=null, $options=array()) {
     $display = $this->build_display($type, $model, $name, $options);
     return $display->capture();
-  }
-  /**
-   * render a hook
-   * @param string $name the name of the hook
-   * @param array $params parameters to add to the template vars
-   * @param array $options options to add to the template options
-   */
-  function render_hook($name, $params=array(), $options=array()) {
-    $hook = build_hook("template/".$name, "lib/TemplateHook", "core");
-    $hook->render($this, $params + $this->vars, $options + $this->options);
   }
 }
 ?>

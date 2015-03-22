@@ -1242,7 +1242,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		else if (isset($this->fields[$this->model.".".$column])) $key = $this->model.".".$column;
 		else if (isset($this->fields[$this->base_collection.".".$column])) $key = $this->base_collection.".".$column;
 
-		if (!isset($this->hooks[$column."_".$hook])) $this->hooks[$column."_".$hook] = build_hook("store/".$hook, "classes/QueryHook", "db");
+		if (!isset($this->hooks[$column."_".$hook])) $this->hooks[$column."_".$hook] = sb()->locator->build_hook("store/".$hook, "classes/QueryHook", "db");
 		$hook = $this->hooks[$column."_".$hook];
 
 		//hooks are invoked in 3 phases

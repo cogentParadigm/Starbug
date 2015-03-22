@@ -177,7 +177,7 @@ class form {
 	function form_control($control, $field, $options=array()) {
 		$this->fill_ops($field, $control);
 		//run filters
-		foreach (locate("form/".$control.".php", "filters") as $filter) include($filter);
+		foreach ($this->template->locator->locate("form/".$control.".php", "filters") as $filter) include($filter);
 
 		$capture = "field";
 		$field['field'] = reset(explode("[", $field['name']));

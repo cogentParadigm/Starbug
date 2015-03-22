@@ -42,7 +42,7 @@ class Controller {
 	 */
 	function forward($controller, $action, $args=array()) {
 		$this->auto_render = false;
-		$object = controller($controller);
+		$object = $this->context->locator->get_module_class("controllers/".ucwords($controller)."Controller", "lib/Controller", "core");
 		$instance = new $object($this->context);
 		$instance->action($action, $args);
 	}

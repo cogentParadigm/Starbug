@@ -201,7 +201,7 @@ class FormDisplay {
 		$this->vars = array("display" => $this);
 		$this->fill_ops($field, $control);
 		//run filters
-		foreach (locate("form/".$control.".php", "filters") as $filter) include($filter);
+		foreach ($this->context->locator->locate("form/".$control.".php", "filters") as $filter) include($filter);
 
 		$capture = "field";
 		if (empty($field['field'])) $field['field'] = reset(explode("[", $field['name']));

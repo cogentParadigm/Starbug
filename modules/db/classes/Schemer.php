@@ -897,7 +897,7 @@ class Schemer {
 		if (empty($record)) {
 			if ($update) fwrite(STDOUT, "Creating $menu menu item...\n");
 			store("menus", $item);
-			$id = sb("menus")->insert_id;
+			$id = $this->db->model("menus")->insert_id;
 			$count = 1;
 		} else $id = $record['id'];
 		foreach ($children as $child) {
@@ -927,7 +927,7 @@ class Schemer {
 		if (empty($record)) {
 			if ($update) fwrite(STDOUT, "Creating $taxonomy taxonomy term...\n");
 			store("terms", $item);
-			$id = sb("terms")->insert_id;
+			$id = $this->db->model("terms")->insert_id;
 			$count = 1;
 		} else $id = $record['id'];
 		foreach ($children as $child) {
@@ -1042,14 +1042,14 @@ class Schemer {
 		foreach ($this->tables as $table => $fields) $this->generate_model($table);
 		fwrite(STDOUT, "Generating CSS...\n");
 		fwrite(STDOUT, "Run 'sb generate css' to generate CSS manually.\n");
-		include(end(locate("generate/css/css.php", "script")));
+		include(BASE_DIR."/core/app/script/generate/css/css.php");
 	}
 
 	function generate_model($table) {
 		$data = $this->get($table);
 		$this->toXML($data);
 		$this->toJSON($data);
-		$result = end(locate("generate/model/update.php", "script"));
+		$result = BASE_DIR."/core/app/script/generate/model/update.php";
 		$render_prefix = reset(explode("/model/", str_replace(BASE_DIR, "", $result)))."/model/";
 		$output_path = BASE_DIR."/var/models/".ucwords($table)."Model.php"; //output
 		$base = "";
