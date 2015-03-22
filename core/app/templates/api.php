@@ -1,5 +1,4 @@
 <?php
-import("ApiRequest", "core");
 $continue = true;
 $time = time();
 while ($continue && ((time() - $time) < 30)) {

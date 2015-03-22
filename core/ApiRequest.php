@@ -10,7 +10,6 @@
  * ApiRequest
  * @ingroup core
  */
- $sb->provide("core/ApiRequest");
 class ApiRequest {
 
 	public $types = array(

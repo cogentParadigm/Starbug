@@ -1,7 +1,6 @@
 <?php
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
-import("lib/test/ModelTest", "core");
 class UsersTest extends ModelTest {
 
 	var $model = "users";

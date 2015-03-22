@@ -12,8 +12,6 @@
  * the base test class for models
  * @ingroup test
  */
-$sb->provide("core/lib/test/WebTest");
-$sb->import("core/lib/test/Harness");
 /**
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup Fixture

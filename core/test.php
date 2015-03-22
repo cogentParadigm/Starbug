@@ -17,4 +17,7 @@ if (!defined("SB_CLI")) define("SB_CLI", true);
 // initialize
 include(dirname(__FILE__)."/init.php");
 
+foreach ($locator->locate("autoload.php", "tests") as $global_include) include($global_include);
+foreach ($locator->locate("global_functions.php", "tests") as $global_include) include($global_include);
+
 ?>

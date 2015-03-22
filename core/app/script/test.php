@@ -8,7 +8,6 @@
  * @ingroup script
  */
 	$what = array_shift($argv);
-	$sb->import("core/lib/test/Harness");
 	global $harness;
 	$no_errors = true;
 	$up = true;
