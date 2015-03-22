@@ -15,7 +15,7 @@ include(BASE_DIR."/core/src/sb.php");
 include(BASE_DIR."/core/lib/Controller.php");
 include(BASE_DIR."/core/lib/Display.php");
 include(BASE_DIR."/core/lib/DisplayHook.php");
-include(BASE_DIR."/core/lib/DOM/Renderable.php");
+include(BASE_DIR."/core/src/Renderable.php");
 include(BASE_DIR."/core/src/Request.php");
 include(BASE_DIR."/core/src/ApiRequest.php");
 if (defined('SB_CLI')) {
