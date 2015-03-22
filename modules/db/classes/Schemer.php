@@ -1040,9 +1040,6 @@ class Schemer {
 		fwrite(STDOUT, "Generating Models...\n");
 		fwrite(STDOUT, "Run 'sb generate models' to generate models manually.\n");
 		foreach ($this->tables as $table => $fields) $this->generate_model($table);
-		fwrite(STDOUT, "Generating CSS...\n");
-		fwrite(STDOUT, "Run 'sb generate css' to generate CSS manually.\n");
-		include(BASE_DIR."/core/app/script/generate/css/css.php");
 	}
 
 	function generate_model($table) {
