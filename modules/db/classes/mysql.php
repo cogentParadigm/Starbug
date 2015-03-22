@@ -67,7 +67,8 @@ class mysql extends db {
 		'NOT RLIKE' => 1
 	);
 
-	public function __construct($params) {
+	public function __construct(ResourceLocatorInterface $locator, $params) {
+		$this->locator = $locator;
 		try {
 			$this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
 			$this->set_debug(false);

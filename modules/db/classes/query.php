@@ -851,7 +851,7 @@ class query implements IteratorAggregate, ArrayAccess {
 				$collection_segment = ("(" === substr($collection, 0, 1)) ? $collection : "`".P($collection)."`";
 				$segment = " ".$this->query['join'][$alias]." JOIN ".$collection_segment." AS `".$alias."`";
 				if (empty($this->query['on'][$alias])) {
-					$relations = db::model($collection)->relations;
+					$relations = $this->db->model($collection)->relations;
 					$relator = $last_alias;
 					$rel = array();
 					if (isset($relations[$last_collection])) {
@@ -1226,7 +1226,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	function validate($phase = query::PHASE_VALIDATION) {
 		$oldscope = error_scope();
 		error_scope($this->model);
-		foreach (db::model($this->model)->hooks as $column => $hooks) {
+		foreach ($this->db->model($this->model)->hooks as $column => $hooks) {
 			if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) $hooks['required'] = "";
 			foreach ($hooks as $hook => $argument) {
 				$this->invoke_hook($phase, $column, $hook, $argument);

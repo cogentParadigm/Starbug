@@ -21,9 +21,13 @@ class db {
 	/**
 	 * @var array holds instantiated models
 	 */
-	public static $objects = array();
+	protected static $objects = array();
 
  	public $prefix;
+
+	protected $locator;
+	protected $config;
+	protected $params;
 
 	/**
 	 * check if a model exists
@@ -39,14 +43,14 @@ class db {
 	 */
 	function model($name) {
 		$class = $model = ucwords($name);
-		if (!isset(self::$objects[$name])) {
+		if (!isset($this->objects[$name])) {
 			if (file_exists(BASE_DIR."/var/models/".$class."Model.php")) {
 				//include the base model
 				include(BASE_DIR."/var/models/".$class."Model.php");
 				$last = $class."Model";
 
 				//get additional models
-				$models = locate("$class.php", "models");
+				$models = $this->locator->locate("$class.php", "models");
 				$count = count($models);
 				$search = "class $class {";
 
@@ -69,11 +73,11 @@ class db {
 			} else $class = "Table"; //return the base table if the model does not exist
 
 			//instantiate save the object
-			self::$objects[$name] = new $class(sb()->db, $name);
+			$this->objects[$name] = new $class($this, $name);
 		}
 
 		//return the saved object
-		return self::$objects[$name];
+		return $this->objects[$name];
 	}
 }
 ?>

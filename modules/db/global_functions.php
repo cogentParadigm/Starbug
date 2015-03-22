@@ -13,25 +13,6 @@
  * @ingroup global
  */
 /**
- * get database
- * @ingroup data
- */
-function get_database($name) {
-	static $databases;
-	efault($databases, array());
-	if (!isset($databases[$name])) {
-		$config = config($name, null, "etc/db/");
-		if ($config['type'] == "mysql") {
-			$databases[$name] = new mysql($config);
-		}
-	}
-	return $databases[$name];
-}
-function select_database($name) {
-	$db = get_database($name);
-	sb()->set_database($db);
-}
-/**
  * @copydoc db::query
  * @ingroup data
  */

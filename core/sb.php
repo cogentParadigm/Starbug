@@ -19,15 +19,15 @@ class sb {
 	/**
 	 * @var db The db class is a PDO wrapper
 	 */
-	var $db;
+	public $db;
 	/**
 	 * @var array active user
 	 */
-	var $user = false;
+	public $user = false;
 	/**
 	 * @var string holds the active scope (usually 'global' or a model name)
 	 */
-	var $active_scope = "global";
+	public $active_scope = "global";
 	/**
 	 * @var array holds the utils that have been provided
 	 */
@@ -35,7 +35,7 @@ class sb {
 	/**
 	 * @var array holds validation errors
 	 */
-	var $errors = array();
+	public $errors = array();
 	/**
 	 * @var array holds alerts
 	 */
@@ -47,21 +47,36 @@ class sb {
 	/**#@-*/
 	static $instance;
 
+	public $locator;
+	public $config;
+	private $databases;
+	private $dispatcher;
 
 	/**
-	 * constructor. connects to db and starts the session
-	 */
-	function __construct($db) {
+	* constructor. connects to db and starts the session
+	*/
+	function __construct(ResourceLocatorInterface $locator, ConfigInterface $config, EventDispatcher $dispatcher) {
+		$this->locator = $locator;
+		$this->config = $config;
+		$this->dispatcher = $dispatcher;
+		$this->databases = array();
 		self::$instance = $this;
-		$this->db = $db;
-		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
-		$this->start_session();
 	}
 
-	function set_database($db) {
-		$this->db = $db;
-		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
-		foreach ($this->listeners as $object) $object->set_database($db);
+	public function get_database($name) {
+		if (!isset($this->databases[$name])) {
+			$config = $this->config->get("db/".$name);
+			$class = $config['type'];
+			$this->databases[$name] = new $class($this->locator, $config);
+			if (defined("Etc::DEBUG")) $this->databases[$name]->set_debug(Etc::DEBUG);
+		}
+		return $this->databases[$name];
+	}
+
+	public function set_database($name) {
+		$this->db = $this->get_database($name);
+		$this->dispatcher->publish('application.database', array($this->db));
+		return $this->db;
 	}
 
 	/**
@@ -109,10 +124,6 @@ class sb {
 	 */
 	function get($name) {
 		return $this->db->model($name);
-	}
-
-	function add_listener($object) {
-		$this->listeners[] = $object;
 	}
 
 }

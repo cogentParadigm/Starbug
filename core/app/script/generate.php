@@ -49,7 +49,7 @@ if ((!empty($model)) && (isset($schemer->tables[$model]))) {
 $template_map = array();
 //LOCATE GENERATOR
 $path = (isset($args['u'])) ? "generate/$generator/update.php" : "generate/$generator/$generator.php";
-if ($result = end(locate($path, "script"))) include($result);
+if ($result = end($sb->locator->locate($path, "script"))) include($result);
 else die("Could not find generator '$generator'");
 $render_prefix = reset(explode("/$generator/", str_replace(BASE_DIR, "", $result)))."/$generator/";
 $locator = new ResourceLocator(BASE_DIR, array($render_prefix));

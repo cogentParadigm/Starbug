@@ -42,24 +42,21 @@ $locator = new ResourceLocator(BASE_DIR, $modules);
 foreach ($locator->locate("autoload.php", "") as $global_include) include($global_include);
 foreach ($locator->locate("global_functions.php", "") as $global_include) include($global_include);
 
-//create config
+$conf = new Config($locator);
 
-/**
- * instantiate the database to be passed to sb
- * @ingroup global
- */
-$db = get_database(DEFAULT_DATABASE);
+$dispatcher = new EventDispatcher();
 
-/**
- * global instance of the sb class
- * @ingroup global
- */
 global $sb;
-$sb = new sb($db);
+$sb = new sb($locator, $conf, $dispatcher);
+
+$db = $sb->set_database(DEFAULT_DATABASE);
+$settings = new Settings($db);
+$sb->config->provide("settings", $settings);
 
 $context = new Template($locator);
 $context->assign("modules", $modules);
 $context->assign("sb", $sb);
+$context->assign("dispatcher", $dispatcher);
 
 new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
 

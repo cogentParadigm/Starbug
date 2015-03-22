@@ -1,13 +1,13 @@
 <?php
 	import("lib/CSSParser", "core");
-	$themes = config("themes");
+	$themes = $sb->config->get("themes");
 	foreach ($themes as $name) {
-		
-		$conf = theme("styles", $name);
+
+		$conf = $sb->config->get("info.styles", "themes/".$name);
 		efault($conf['less'], false);
-		
+
 		/******************SCREEN********************/
-		$screen = new CSSParser(BASE_DIR."/var/public/stylesheets/$name-screen.css");			
+		$screen = new CSSParser(BASE_DIR."/var/public/stylesheets/$name-screen.css");
 
 		//compile custom-screen.less
 		if ($conf['less'] && file_exists(BASE_DIR."/app/themes/".$name."/public/stylesheets/custom-screen.less")) {
@@ -20,7 +20,7 @@
 		//add plugins
 		if (!empty($conf['plugins'])) foreach ($conf['plugins'] as $plugin) $screen->add_plugin($plugin);
 		$screen->write();
-		
+
 		/******************PRINT********************/
 		$print = new CSSParser(BASE_DIR."/var/public/stylesheets/$name-print.css");
 

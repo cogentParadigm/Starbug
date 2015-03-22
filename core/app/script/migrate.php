@@ -29,7 +29,7 @@ $argv = $args;
 //select database
 $next = array_shift($argv);
 if ((!empty($next)) && (0 !== $next)) {
-	select_database($next);
+	$sb->set_database($next);
 }
 
 //test mode

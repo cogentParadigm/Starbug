@@ -594,7 +594,7 @@ class Schemer {
 				$additional[] = array("permits", $access_col);
 			}
 			//if (isset($this->tables[$col['type']])) {
-			if (db::has($col['type'])) {
+			if ($this->db->has($col['type'])) {
 				$ref_table_name = (empty($col['table'])) ? $table."_".$colname : $col['table'];
 				$ref_table_def = array($ref_table_name."  groups:false",
 					"owner  type:int  null:  references:users id  update:cascade  delete:cascade  optional:",

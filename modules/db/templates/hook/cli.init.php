@@ -14,6 +14,6 @@
 	 */
 	global $schemer;
 	$schemer = new Schemer($sb->db, $modules);
-	$sb->add_listener($schemer);
+	$dispatcher->subscribe("application.database", array($schemer, 'set_database'));
 	$schemer->fill();
 ?>

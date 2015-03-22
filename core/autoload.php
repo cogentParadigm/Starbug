@@ -1,10 +1,13 @@
 <?php
 include(BASE_DIR."/core/global_functions.php");
+include(BASE_DIR."/core/src/Application.php");
+include(BASE_DIR."/core/src/EventDispatcher.php");
 include(BASE_DIR."/core/sb.php");
 include(BASE_DIR."/core/lib/ResourceLocatorInterface.php");
 include(BASE_DIR."/core/lib/ResourceLocator.php");
 include(BASE_DIR."/core/lib/ConfigInterface.php");
 include(BASE_DIR."/core/lib/Config.php");
+include(BASE_DIR."/core/src/Settings.php");
 include(BASE_DIR."/core/lib/ErrorHandler.php");
 include(BASE_DIR."/core/lib/PasswordHash.php");
 include(BASE_DIR."/core/lib/Session.php");
