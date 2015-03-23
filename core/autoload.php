@@ -3,6 +3,7 @@ include(BASE_DIR."/core/global_functions.php");
 include(BASE_DIR."/core/src/interface/ResourceLocatorInterface.php");
 include(BASE_DIR."/core/src/interface/ConfigInterface.php");
 include(BASE_DIR."/core/src/interface/TemplateInterface.php");
+include(BASE_DIR."/core/src/interface/MacroInterface.php");
 include(BASE_DIR."/core/src/EventDispatcher.php");
 include(BASE_DIR."/core/src/ResourceLocator.php");
 include(BASE_DIR."/core/src/Template.php");
@@ -18,6 +19,7 @@ include(BASE_DIR."/core/lib/DisplayHook.php");
 include(BASE_DIR."/core/src/Renderable.php");
 include(BASE_DIR."/core/src/Request.php");
 include(BASE_DIR."/core/src/ApiRequest.php");
+include(BASE_DIR."/core/src/Macro.php");
 if (defined('SB_CLI')) {
   include(BASE_DIR."/util/cli.php");
 }
