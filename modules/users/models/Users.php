@@ -5,11 +5,6 @@
  */
 class Users {
 
-	var $statuses = array(
-		"disabled" => 1,
-		"enabled" => 4
-	);
-
 	/**
 	 * A function for an administrator to create and update users
 	 */
@@ -74,21 +69,18 @@ class Users {
 	 * resets a users password and emails it to them
 	 */
 	function reset_password($fields) {
-		global $sb;
 		$email_address = trim($fields['email']);
 		if (empty($email_address)) error("Please enter your email address.", "email");
 		else {
 			$user = $this->query("where:email='".$email_address."'  limit:1");
-			if(!empty($user)) {
+			if (!empty($user)) {
 				$id = $user['id'];
-				$first_name = $user['first_name'];
-				$last_name = $user['last_name'];
-				if(empty($id)) error("Sorry, the email address you entered was not found. Please retry.", "email");
+				if (empty($id)) error("Sorry, the email address you entered was not found. Please retry.", "email");
 				else {
-					$new_password = mt_rand(1000000,9999999);
+					$new_password = mt_rand(1000000, 9999999);
 					$this->store("id:$id  password:$new_password");
 					$result = exec("sb email password_reset $id $new_password");
-					if((int)$result != 1) error("Sorry, there was a problem emailing to your address. Please retry.", "email");
+					if ((int)$result != 1) error("Sorry, there was a problem emailing to your address. Please retry.", "email");
 				}
 			} else error("Sorry, the email address you entered was not found. Please retry.", "email");
 		}
@@ -130,6 +122,5 @@ class Users {
 		unset($row['password']);
 		return $row;
 	}
-
 }
 ?>

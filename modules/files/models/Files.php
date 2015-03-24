@@ -17,7 +17,7 @@ class Files {
 		}
 	}
 
-	function upload($record, $file, $remote=false) {
+	function upload($record, $file, $remote = false) {
 		if (!empty($file['name'])) {
 			if ($file["error"] > 0) error($file["error"], "filename");
 			$record['filename'] = str_replace(" ", "_", $file['name']);
@@ -53,8 +53,8 @@ class Files {
 	}
 
 	function get_mime($file_path) {
-    	$output = exec("file --mime-type -b {$file_path}");
-    	return $output;
+		$output = exec("file --mime-type -b {$file_path}");
+		return $output;
 		/*
 		BUG: below code doesn't always work. sometimes finfo is not able to locate the file
 		$mtype = '';
@@ -82,7 +82,5 @@ class Files {
 		if (reset(explode("/", $file['mime_type'])) == "image") image_thumb("app/public/uploads/".$file['id']."_".$file['filename'], "w:100  h:100  a:1");
 		return $file;
 	}
-
-
 }
 ?>

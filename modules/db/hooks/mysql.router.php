@@ -9,14 +9,14 @@
  *
  * This is run from core/Request.php
  * $this->path is set, you must use it to look up the route in the uris table
- * 
+ *
  * IF THE USER HAS ACCESS TO VIEW IT:
  * a router hook must set $this->payload, and $this->tags to the record/document and it's tags respectively
  * you must also set $this->tags
- * 
+ *
  * IF THE ROUTE EXIST, BUT THE USER DOES NOT HAVE PERMISSION TO VIEW IT:
  * call $this->forbidden()
- * 
+ *
  * IF THE ROUTE DOES NOT EXIST:
  * call $this->missing()
  */
@@ -24,7 +24,8 @@
 		$query = "select:uris.*  where:'".$this->path."' LIKE CONCAT(path, '%')";
 		//run the query, looking for read permits
 		$this->payload = query("uris", $query."  action:read")->sort("CHAR_LENGTH(path) DESC")->one();
-		if (empty($this->payload)) { //if we find nothing, query without looking for permits
+		if (empty($this->payload)) {
+			//if we find nothing, query without looking for permits
 			$row = query("uris", $query)->one();
 			if (!empty($row)) $this->forbidden(); //if we find something that means we don't have permission to see it, so show the forbidden page
 			else $this->missing(); //if we don't find anything, there is nothing there, so show the missing page

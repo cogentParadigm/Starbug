@@ -23,7 +23,7 @@ class db {
 	 */
 	protected static $objects = array();
 
- 	public $prefix;
+	public $prefix;
 
 	protected $locator;
 	protected $config;
@@ -34,7 +34,9 @@ class db {
 	 * @param string $name the name of the model
 	 * @return bool true if model exists, false otherwise
 	 */
-	function has($name) {return ((self::$objects[$name]) || (file_exists(BASE_DIR."/var/models/".ucwords($name)."Model.php")));}
+	function has($name) {
+		return ((self::$objects[$name]) || (file_exists(BASE_DIR."/var/models/".ucwords($name)."Model.php")));
+	}
 
 	/**
 	 * get a model by name
