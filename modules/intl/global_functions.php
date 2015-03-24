@@ -1,5 +1,5 @@
 <?php
-function t($name, $target_language="") {
+function t($name, $target_language = "") {
 	static $strings;
 	if (empty($target_language)) $target_language = request()->language;
 	if (!isset($strings[$target_language])) $strings[$target_language] = array();
