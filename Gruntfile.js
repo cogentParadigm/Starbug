@@ -53,7 +53,7 @@ module.exports = function(grunt) {
     },
     shell: {
       'phploc': {
-        command: 'phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml app core modules util'
+        command: 'phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml app core modules'
       },
       'phpcpd': {
         command: 'phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules || true'
@@ -80,7 +80,7 @@ module.exports = function(grunt) {
     },
     phpcs: {
       local: {
-        dir: ['app', 'modules'],
+        dir: ['core', 'app', 'modules'],
         options: {
           extensions: 'php',
           ignore: 'views,templates,layouts,hooks/global.head.php',

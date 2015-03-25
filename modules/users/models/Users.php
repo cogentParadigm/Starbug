@@ -17,7 +17,7 @@ class Users {
 			$uid = $this->insert_id;
 			$data = array("user" => get("users", $uid));
 			$data['user']['password'] = $user['password'];
-			send_email("template:Account Creation  to:".$user['email'], $data);
+			send_email(array("template" => "Account Creation", "to" => $user['email']), $data);
 		}
 	}
 
