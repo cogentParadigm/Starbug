@@ -22,9 +22,9 @@ class queue implements Countable, IteratorAggregate {
 	/**
 	 * array the queue of queries
 	 */
-	var $queue = array();
+	protected $queue = array();
 
-	var $active;
+	public $active;
 
 	/**
 	 * Push a query or queries onto the end of the queue

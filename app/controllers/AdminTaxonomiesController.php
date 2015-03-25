@@ -19,7 +19,7 @@ class AdminTaxonomiesController {
 			redirect(uri("admin/taxonomies/taxonomy/".$term['taxonomy']));
 		} else $this->render("admin/create");
 	}
-	function update($id=null) {
+	function update($id = null) {
 		$this->assign("id", $id);
 		$term = get("terms", $id);
 		$this->assign("taxonomy", $term['taxonomy']);
@@ -27,7 +27,7 @@ class AdminTaxonomiesController {
 			redirect(uri("admin/taxonomies/taxonomy/".$term['taxonomy']));
 		} else $this->render("admin/update");
 	}
-	function taxonomy($taxonomy=null) {
+	function taxonomy($taxonomy = null) {
 		$this->assign("taxonomy", $taxonomy);
 		$this->render("admin/taxonomies/taxonomy");
 	}
