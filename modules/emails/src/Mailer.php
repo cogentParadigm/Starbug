@@ -14,8 +14,10 @@ class Mailer extends PHPMailer implements MailerInterface {
 	private $password;
 	private $from_email;
 	private $from_name;
+	private $macro;
 
-	function __construct(ConfigInterface $config) {
+	function __construct(ConfigInterface $config, MacroInterface $macro) {
+		$this->macro = $macro;
 		$this->host = $config->get("email_host", "settings");
 		$this->username = $config->get("email_username", "settings");
 		$this->password = $config->get("email_password", "settings");
@@ -58,22 +60,22 @@ class Mailer extends PHPMailer implements MailerInterface {
 		}
 
 		//set mailer params
-		if (!empty($options['from'])) $this->From = token_replace($options['from'], $data);
-		if (!empty($options['from_name'])) $this->FromName = token_replace($options['from_name'], $data);
-		if (!empty($options['subject'])) $this->Subject = token_replace($options['subject'], $data);
-		if (!empty($options['body'])) $this->Body = token_replace($options['body'], $data);
+		if (!empty($options['from'])) $this->From = $this->macro->replace($options['from'], $data);
+		if (!empty($options['from_name'])) $this->FromName = $this->macro->replace($options['from_name'], $data);
+		if (!empty($options['subject'])) $this->Subject = $this->macro->replace($options['subject'], $data);
+		if (!empty($options['body'])) $this->Body = $this->macro->replace($options['body'], $data);
 		if (!empty($options['to'])) {
 			$to = $options['to'];
 			if (!is_array($to)) $to = explode(",", $to);
-			foreach ($to as $email) $this->AddAddress(token_replace(trim($email), $data));
+			foreach ($to as $email) $this->AddAddress($this->macro->replace(trim($email), $data));
 		}
 		if (!empty($options['cc'])) {
 			if (!is_array($options['cc'])) $options['cc'] = explode(',', $options['cc']);
-			foreach ($options['cc'] as $cc) $this->AddCC(token_replace($cc, $data));
+			foreach ($options['cc'] as $cc) $this->AddCC($this->macro->replace($cc, $data));
 		}
 		if (!empty($options['bcc'])) {
 			if (!is_array($options['bcc'])) $options['bcc'] = explode(',', $options['bcc']);
-			foreach ($options['bcc'] as $bcc) $this->AddBCC(token_replace($bcc, $data));
+			foreach ($options['bcc'] as $bcc) $this->AddBCC($this->macro->replace($bcc, $data));
 		}
 		if (!empty($options['attachments'])) {
 			$attachments = $options['attachments'];
