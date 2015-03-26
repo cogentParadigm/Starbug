@@ -12,7 +12,6 @@ $new_attrs = "class:btn btn-default";
 	?>
 </div>
 <?php
-	render_form(array($model."/search", "search"));
+	$this->render_form(array($model."/search", "search"));
 ?>
 <br/>
-

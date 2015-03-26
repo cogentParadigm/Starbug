@@ -1,13 +1,13 @@
 <?php
-function send_email($options=array(), $data=array()) {
+function send_email($options = array(), $data = array()) {
 	$options = star($options);
 	$data = star($data);
 	$data['url_flags'] = 'u';
-	
+
 	//initialize mailer
 	import("mailer");
 	$mailer = new mailer();
-	
+
 	//get template params
 	if (!empty($options['template'])) {
 		$template = query("email_templates")->condition(array(
@@ -16,7 +16,7 @@ function send_email($options=array(), $data=array()) {
 		))->one();
 		if (!empty($template)) $options = array_merge($template, $options);
 	}
-	
+
 	//set mailer params
 	if (!empty($options['from'])) $mailer->From = token_replace($options['from'], $data);
 	if (!empty($options['from_name'])) $mailer->FromName = token_replace($options['from_name'], $data);
@@ -42,7 +42,7 @@ function send_email($options=array(), $data=array()) {
 			else $mailer->AddAttachment($a);
 		}
 	}
-	
+
 	//send mail
 	$result = $mailer->Send();
 	return $result;

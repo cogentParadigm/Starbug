@@ -17,7 +17,7 @@
  * @ingroup users
  * @param string $group return true only if the user is in the specified group (optional)
  */
-function logged_in($group="") {
+function logged_in($group = "") {
 	return ((empty($group) && (sb()->user)) || (!empty($group) && is_array(sb()->user['groups']) && in_array($group, sb()->user['groups'])));
 }
 /**
@@ -25,7 +25,7 @@ function logged_in($group="") {
  * @ingroup users
  * @param string $field the name of the field
  */
-function userinfo($field="") {
+function userinfo($field = "") {
 	if (!sb()->user) return false;
 	return sb()->user[$field];
 }

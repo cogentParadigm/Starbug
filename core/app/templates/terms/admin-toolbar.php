@@ -7,5 +7,5 @@ $options = schema($model);
 			link_to("New Taxonomy <b class=\"fa fa-plus\"></b>", $request->path."/create?new=true", "class:btn btn-default");
 		?>
 </div>
-<?php render_form(array($model."/search", "search")); ?>
+<?php $this->render_form(array($model."/search", "search")); ?>
 <br/>

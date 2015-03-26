@@ -13,14 +13,14 @@ class AdminMenusController {
 			redirect(uri("admin/menus/menu/".$menu['menu']));
 		} else $this->render("admin/menus/create");
 	}
-	function update($id=null) {
+	function update($id = null) {
 		$this->assign("id", $id);
 		if (success("menus", "create")) {
 			$menu = get("menus", $id);
 			redirect(uri("admin/menus/menu/".$menu['menu']));
 		} else $this->render("admin/menus/update");
 	}
-	function menu($menu=null) {
+	function menu($menu = null) {
 		$this->assign("menu", $menu);
 		$this->render("admin/menus/menu");
 	}
