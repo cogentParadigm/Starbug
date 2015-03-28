@@ -53,7 +53,7 @@ if ($result = end($sb->locator->locate($path, "script"))) include($result);
 else die("Could not find generator '$generator'");
 $render_prefix = reset(explode("/$generator/", str_replace(BASE_DIR, "", $result)))."/$generator/";
 $locator = new ResourceLocator(BASE_DIR, array($render_prefix));
-$template = new Template($locator);
+$renderer = new Template($locator);
 
 //CREATE DIRECTORIES
 foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) passthru("mkdir ".BASE_DIR."/$dir");
@@ -61,7 +61,7 @@ foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) passthru("mkdir ".B
 foreach ($generate as $template => $output) {
 	if (isset($template_map[$template])) $template = $template_map[$template];
 	$o = BASE_DIR."/$output"; //output
-	$data = $template->capture($template, $params);
+	$data = $renderer->capture($template, $params);
 	file_put_contents($o, $data);
 }
 //COPY FILES
