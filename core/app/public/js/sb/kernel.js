@@ -91,8 +91,8 @@ define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, r
 								toolbar1: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | print preview",
 								image_advtab: true,
 								formats: {
-									alignleft: {selector:'img', styles:{margin:'0 15px 15px 0', float:'left'}},
-									alignright: {selector:'img', styles:{margin:'0 0 15px 15px', float:'right'}}
+									alignleft: {selector:'img', styles:{'margin':'0 15px 15px 0', 'float':'left'}},
+									alignright: {selector:'img', styles:{'margin':'0 0 15px 15px', 'float':'right'}}
 								},
 								file_browser_callback: tiny_mce_browser_callback
 							};
