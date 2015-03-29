@@ -102,9 +102,9 @@ class Schemer {
 	/**
 	 * constructor. loads migrations
 	 */
-	function __construct($data, $migrations) {
+	function __construct(db $data, $modules) {
 		$this->db = $data;
-		$this->migrations = $migrations;
+		$this->migrations = $modules;
 	}
 
 	function set_database($db) {

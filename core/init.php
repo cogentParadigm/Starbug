@@ -35,27 +35,30 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERRO
 
 include(BASE_DIR."/core/autoload.php");
 
+$container = new Container();
+$container->register('base_directory', BASE_DIR, true);
+$container->register('modules', $modules, true);
+
 //create locator
-$locator = new ResourceLocator(BASE_DIR, $modules);
+$locator = $container->get('ResourceLocatorInterface');
 
 // autoload classes and global functions
 foreach ($locator->locate("autoload.php", "") as $global_include) include($global_include);
 foreach ($locator->locate("global_functions.php", "") as $global_include) include($global_include);
 
-$conf = new Config($locator);
+$conf = $container->get("ConfigInterface");
 
-$dispatcher = new EventDispatcher();
+$dispatcher = $container->get("EventDispatcher");
 
 global $sb;
-$sb = new sb($locator, $conf, $dispatcher);
+$sb = $container->get("sb");
 $db = $sb->set_database(DEFAULT_DATABASE);
-$settings = new Settings($db);
-$sb->config->provide("settings", $settings);
+$container->register("db", $db, true);
+$sb->config->provide("settings", $container->get("Settings"));
 
-$context = new Template($locator);
-$context->assign("modules", $modules);
+$context = $container->get("TemplateInterface");
+$context->assign("container", $container);
 $context->assign("sb", $sb);
-$context->assign("dispatcher", $dispatcher);
 
 new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
 

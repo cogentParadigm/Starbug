@@ -9,11 +9,11 @@
 
 class ResourceLocator implements ResourceLocatorInterface {
 
-	private $base_path;
+	private $base_directory;
 	private $modules;
 
-	function __construct($base_path="", $modules=array()) {
-		$this->base_path = $base_path;
+	function __construct($base_directory="", $modules=array()) {
+		$this->base_directory = $base_directory;
 		$this->modules = $modules;
 	}
 
@@ -37,7 +37,7 @@ class ResourceLocator implements ResourceLocatorInterface {
 		$path = $scope.$name;
 		$paths = array();
 		foreach ($this->modules as $mid => $module_path) {
-			$target = $this->base_path."/".$module_path."/".$path;
+			$target = $this->base_directory."/".$module_path."/".$path;
 			if (file_exists($target)) $paths[] = $target;
 		}
 		return $paths;

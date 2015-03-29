@@ -13,7 +13,8 @@
 	 * @ingroup global
 	 */
 	global $schemer;
-	$schemer = new Schemer($sb->db, $modules);
+	$schemer = $container->get("Schemer");
+	$dispatcher = $container->get("EventDispatcher");
 	$dispatcher->subscribe("application.database", array($schemer, 'set_database'));
 	$schemer->fill();
 ?>
