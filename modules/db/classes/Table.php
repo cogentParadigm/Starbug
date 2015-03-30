@@ -50,10 +50,8 @@ class Table {
 	 * @param string $type the un-prefixed table name
 	 * @param array $filters the column filters
 	 */
-	function __construct($db, $type, $hooks = array()) {
+	function __construct(db $db) {
 		$this->db = $db;
-		$this->type = $type;
-		if (!isset($this->hooks)) $this->hooks = $hooks;
 		$this->init();
 	}
 
