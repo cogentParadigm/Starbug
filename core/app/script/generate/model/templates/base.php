@@ -1,5 +1,5 @@
 <?php
-  $factory = sb()->config->get("models.users", "factory");
+  $factory = sb()->config->get("models.".$name, "factory");
   extract(schema($model));
   echo '<?php'."\n";
 ?>
