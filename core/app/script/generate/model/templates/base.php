@@ -1,5 +1,6 @@
 <?php
-  $factory = sb()->config->get("models.".$name, "factory");
+  $factory = sb()->config->get("models", "factory");
+  $factory = isset($factory[$name]) ? $factory[$name] : array();
   extract(schema($model));
   echo '<?php'."\n";
 ?>
