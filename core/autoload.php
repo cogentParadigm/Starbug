@@ -5,6 +5,7 @@ include(BASE_DIR."/core/src/interface/ResourceLocatorInterface.php");
 include(BASE_DIR."/core/src/interface/ConfigInterface.php");
 include(BASE_DIR."/core/src/interface/TemplateInterface.php");
 include(BASE_DIR."/core/src/interface/MacroInterface.php");
+include(BASE_DIR."/core/src/interface/MailerInterface.php");
 include(BASE_DIR."/core/src/Container.php");
 include(BASE_DIR."/core/src/EventDispatcher.php");
 include(BASE_DIR."/core/src/ResourceLocator.php");

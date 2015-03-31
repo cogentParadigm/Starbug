@@ -1,4 +1,8 @@
-<?php extract(schema($model)); echo '<?php'."\n"; ?>
+<?php
+  $factory = sb()->config->get("models.users", "factory");
+  extract(schema($model));
+  echo '<?php'."\n";
+?>
 /**
  * <?php echo $name; ?> model base
  * @ingroup models
@@ -7,6 +11,12 @@ class <?php echo ucwords($name); ?>Model extends Table {
 
   public $type = "<?php echo $name; ?>";
   public $base = "<?php echo $base; ?>";
+
+  function __construct(db $db<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
+    $this->db = $db;<?php foreach ($factory as $n => $t) echo "\n\t\t\$this->".$n.' = $'.$n.';'; ?>
+
+    $this->init();
+  }
 
 	public $hooks = array(<?php $count = 0; foreach ($fields as $column => $field) { if (!empty($field)) { $fcount = 0; if ($count > 0) echo ','; $count++; echo "\n"; ?>
 		"<?php echo $column; ?>" => array(<?php foreach ($field as $k => $v) { ?><?php if ($fcount > 0) echo ", "; $fcount++ ?>"<?php echo $k; ?>" => "<?php echo $v; ?>"<?php } ?>)<?php } } echo "\n"; ?>
