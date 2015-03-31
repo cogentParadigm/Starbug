@@ -38,6 +38,8 @@ include(BASE_DIR."/core/autoload.php");
 $container = new Container();
 $container->register('base_directory', BASE_DIR, true);
 $container->register('modules', $modules, true);
+$container->register('database_name', DEFAULT_DATABASE, true);
+$container->register('db', 'mysql');
 
 //create locator
 $locator = $container->get('ResourceLocatorInterface');
@@ -46,14 +48,8 @@ $locator = $container->get('ResourceLocatorInterface');
 foreach ($locator->locate("autoload.php", "") as $global_include) include($global_include);
 foreach ($locator->locate("global_functions.php", "") as $global_include) include($global_include);
 
-$conf = $container->get("ConfigInterface");
-
-$dispatcher = $container->get("EventDispatcher");
-
 global $sb;
 $sb = $container->get("sb");
-$db = $sb->set_database(DEFAULT_DATABASE);
-$container->register("db", $db, true);
 $sb->config->provide("settings", $container->get("Settings"));
 
 $context = $container->get("TemplateInterface");
@@ -61,8 +57,6 @@ $context->assign("container", $container);
 $context->assign("sb", $sb);
 
 new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
-
-$sb->start_session();
 
 if (defined('SB_CLI')) {
 	$sb->user = array("groups" => array("root"));

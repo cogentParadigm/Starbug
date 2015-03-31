@@ -49,34 +49,17 @@ class sb {
 
 	public $locator;
 	public $config;
-	private $databases;
-	private $dispatcher;
 
 	/**
 	* constructor. connects to db and starts the session
 	*/
-	function __construct(ResourceLocatorInterface $locator, ConfigInterface $config, EventDispatcher $dispatcher) {
+	function __construct(db $db, ResourceLocatorInterface $locator, ConfigInterface $config) {
 		$this->locator = $locator;
 		$this->config = $config;
-		$this->dispatcher = $dispatcher;
-		$this->databases = array();
+		$this->db = $db;
+		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
 		self::$instance = $this;
-	}
-
-	public function get_database($name) {
-		if (!isset($this->databases[$name])) {
-			$config = $this->config->get("db/".$name);
-			$class = $config['type'];
-			$this->databases[$name] = new $class($this->locator, $config);
-			if (defined("Etc::DEBUG")) $this->databases[$name]->set_debug(Etc::DEBUG);
-		}
-		return $this->databases[$name];
-	}
-
-	public function set_database($name) {
-		$this->db = $this->get_database($name);
-		$this->dispatcher->publish('application.database', array($this->db));
-		return $this->db;
+		$this->start_session();
 	}
 
 	/**

@@ -17,11 +17,24 @@ interface ContainerInterface {
 	function get($name);
 
 	/**
-	* determine if an object is available to the container
-	* @param string $name the name of the object
-	* @return bool true if the object can be provided
-	*/
+	 * determine if an object is available to the container
+	 * @param string $name the name of the object
+	 * @return bool true if the object can be provided
+	 */
 	function has($name);
+
+	/**
+	 * update an object in the container
+	 * @param string $name the name of the object
+	 * @return mixed object from container
+	 */
+	function update($name);
+
+	/**
+	 * destroy an object in the container
+	 * @param string $name the name of the object
+	 */
+	function destroy($name);
 
 	/**
 	* register an item in the container

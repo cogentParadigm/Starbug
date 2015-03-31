@@ -29,7 +29,8 @@ $argv = $args;
 //select database
 $next = array_shift($argv);
 if ((!empty($next)) && (0 !== $next)) {
-	$sb->set_database($next);
+	$container->register("database_name", $next, true);
+	$schemer->set_database($container->update("db"));
 }
 
 //test mode

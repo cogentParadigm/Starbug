@@ -14,7 +14,5 @@
 	 */
 	global $schemer;
 	$schemer = $container->get("Schemer");
-	$dispatcher = $container->get("EventDispatcher");
-	$dispatcher->subscribe("application.database", array($schemer, 'set_database'));
 	$schemer->fill();
 ?>

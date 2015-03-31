@@ -13,6 +13,7 @@ class Container implements ContainerInterface {
 
 	function __construct() {
 		$this->map = array();
+		$this->register('ContainerInterface', $this, true);
 	}
 
 	/**
@@ -22,23 +23,37 @@ class Container implements ContainerInterface {
 	 */
 	function get($name) {
 		if (!isset($this->map[$name])) {
-			$this->map[$name] = array("value" => $name, "literal" => false);
+			$this->map[$name] = array("class" => $name);
 		}
-		if ($this->map[$name]['literal']) {
+		if (isset($this->map[$name]['value'])) {
 			return $this->map[$name]['value'];
 		} else {
-			$value = $this->map[$name]['value'];
+			$value = $this->map[$name]['class'];
 			if (interface_exists($value)) {
 				$value = str_replace("Interface", "", $value);
 			}
 			if (class_exists($value)) {
 				$this->map[$name]['value'] = $this->build($value);
-				$this->map[$name]['literal'] = true;
 				return $this->get($name);
 			} else {
 				throw new Exception("Dependency not found: ".$name);
 			}
 		}
+	}
+
+	/**
+	 *
+	 */
+	function update($name) {
+		$this->destroy($name);
+		return $this->get($name);
+	}
+
+	/**
+	 *
+	 */
+	function destroy($name) {
+		unset($this->map[$name]['value']);
 	}
 
 	/**
@@ -57,7 +72,7 @@ class Container implements ContainerInterface {
 	* @param bool $literal set true to provide the value directly without any object construction
 	*/
 	function register($name, $value, $literal=false) {
-		$this->map[$name] = array("value" => $value, "literal" => $literal);
+		$this->map[$name] = $literal ? array("value" => $value) : array("class" => $value);
 	}
 
 	private function build($name) {

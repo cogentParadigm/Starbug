@@ -28,6 +28,7 @@ class db {
 	protected $locator;
 	protected $config;
 	protected $params;
+	protected $container;
 
 	/**
 	 * check if a model exists
@@ -75,7 +76,7 @@ class db {
 			} else $class = "Table"; //return the base table if the model does not exist
 
 			//instantiate save the object
-			$this->objects[$name] = new $class($this, $name);
+			$this->objects[$name] = $this->container->get($class);
 		}
 
 		//return the saved object
