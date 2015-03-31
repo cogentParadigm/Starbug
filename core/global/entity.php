@@ -52,7 +52,7 @@ function entity_chain($entity) {
  */
 function column_info($entity, $column="") {
   $info = array();
-  if (!db::has($entity)) return $info;
+  if (!sb()->db->has($entity)) return $info;
   if (empty($column)) {
     while (!empty($entity)) {
       $hooks = sb($entity)->hooks;

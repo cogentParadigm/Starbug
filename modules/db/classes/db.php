@@ -21,7 +21,7 @@ class db {
 	/**
 	 * @var array holds instantiated models
 	 */
-	protected static $objects = array();
+	protected $objects = array();
 
 	public $prefix;
 
@@ -36,7 +36,7 @@ class db {
 	 * @return bool true if model exists, false otherwise
 	 */
 	function has($name) {
-		return ((self::$objects[$name]) || (file_exists(BASE_DIR."/var/models/".ucwords($name)."Model.php")));
+		return (($this->objects[$name]) || (file_exists(BASE_DIR."/var/models/".ucwords($name)."Model.php")));
 	}
 
 	/**
