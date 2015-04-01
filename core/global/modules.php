@@ -23,32 +23,6 @@ function import($util, $module="util") {
 	$sb->import($module."/".$util);
 }
 /**
- * get module path chain
- * @ingroup modules
- * @param string $file the filename
- * @param string $dir the directory within app/ core/app/ or module dir to look in. default is templates/
- * @TODO allow boolean return
- */
-function locate($file, $dir="templates") {
-	global $request;
-	if ($request) $theme = request("theme");
-	//efault($theme, settings("theme"));
-	if (!empty($dir)) $dir .= "/";
-	$path = $dir.$file;
-	$key = $theme.'_'.$path;
-	if (is_cached($key)) return cache($key);
-	else {
-		$paths = array();
-		$modules = config("modules");
-		if (file_exists(BASE_DIR."/core/app/$path")) $paths[] = BASE_DIR."/core/app/$path";
-		foreach ($modules as $module) if (file_exists(BASE_DIR."/modules/$module/$path")) $paths[] = BASE_DIR."/modules/$module/$path";
-		if (file_exists(BASE_DIR."/app/themes/$theme/$path")) $paths[] = BASE_DIR."/app/themes/$theme/$path";
-		if (file_exists(BASE_DIR."/app/$path")) $paths[] = BASE_DIR."/app/$path";
-		cache($key, $paths);
-		return $paths;
-	}
-}
-/**
  * get module index
  */
 function get_module_index() {

@@ -9,7 +9,12 @@
 	$command = array_shift($argv);
 	$script = array_shift($argv);
 	if (file_exists("script/$script.php")) include("script/$script.php");
-	else if ($status) $path = end(locate($script.".php", "script"));
-	else $path = "core/app/script/$script.php";
+	else if ($status) {
+		if (function_exists("locate")) {
+			$path = end(locate($script.".php", "script"));
+		} else {
+			$path = end($sb->locator->locate($script.".php", "script"));
+		}
+	} else $path = "core/app/script/$script.php";
 	if (file_exists($path)) include($path);
 ?>
