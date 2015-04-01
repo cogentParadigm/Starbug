@@ -22,7 +22,7 @@ interface DatabaseInterface {
 	 * @param mixed $id/$conditions the id or an array of conditions
 	 * @param string $column optional column name
 	 */
-	function get($collection, $conditions=array(), $options=array());
+	function get($collection, $conditions = array(), $options = array());
 
 	/**
 	 * query the database
@@ -66,6 +66,5 @@ interface DatabaseInterface {
 	public function set_debug($debug);
 
 	public function exec($statement);
-
 }
 ?>

@@ -10,10 +10,8 @@
 * an implementation of MacroInteface
 */
 class QueryBuilderFactory implements QueryBuilderFactoryInterface {
-
 	public function build(DatabaseInterface $db, $collection) {
 		return new QueryBuilder($db, $collection);
 	}
-
 }
 ?>

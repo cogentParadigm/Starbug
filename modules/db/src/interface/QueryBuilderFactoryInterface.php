@@ -10,8 +10,6 @@
 * query builder factory interface
 */
 interface QueryBuilderFactoryInterface {
-
 	public function build(DatabaseInterface $db, $collection);
-
 }
 ?>
