@@ -49,13 +49,15 @@ class sb {
 
 	public $locator;
 	public $config;
+	public $macro;
 
 	/**
 	* constructor. connects to db and starts the session
 	*/
-	function __construct(db $db, ResourceLocatorInterface $locator, ConfigInterface $config) {
+	function __construct(db $db, ResourceLocatorInterface $locator, ConfigInterface $config, MacroInterface $macro) {
 		$this->locator = $locator;
 		$this->config = $config;
+		$this->macro = $macro;
 		$this->db = $db;
 		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
 		self::$instance = $this;

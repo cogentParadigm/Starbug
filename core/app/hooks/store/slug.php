@@ -7,15 +7,15 @@ class hook_store_slug {
 	function validate(&$query, $key, $value, $column, $argument) {
 		if (empty($value) && isset($query->fields[$argument])) {
 			$value = $query->fields[$argument];
-		
+
 			$value = strtolower(str_replace(" ", "-", normalize($value)));
-			
+
 			if (!empty(sb($query->model)->hooks[$column]["pattern"])) {
 				$pattern = sb($query->model)->hooks[$column]["pattern"];
 				$data = array($query->model => array_merge($query->fields, array($column => $value)));
-				$value = token_replace($pattern, $data);
+				$value = sb()->macro->replace($pattern, $data);
 			}
-			
+
 			$base = $value;
 			$exists = $this->exists($query, $column, $value);
 			$count = 2;
@@ -27,7 +27,7 @@ class hook_store_slug {
 		}
 		return $value;
 	}
-	
+
 	function exists($query, $column, $value) {
 			$exists = query($query->model)->condition($query->model.".".$column, $value);
 			$id = 0; $record = false;
@@ -40,7 +40,7 @@ class hook_store_slug {
 				$parts = explode(" ", sb($query->model)->hooks[$column]["unique"]);
 				foreach ($parts as $c) if (!empty($c)) $exists->condition($c, $query->fields[$c]);
 			}
-			return $exists;				
+			return $exists;
 	}
 }
 ?>
