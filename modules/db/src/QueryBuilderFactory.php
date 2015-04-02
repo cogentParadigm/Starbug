@@ -10,8 +10,11 @@
 * an implementation of MacroInteface
 */
 class QueryBuilderFactory implements QueryBuilderFactoryInterface {
-	public function build(DatabaseInterface $db, $collection) {
-		return new QueryBuilder($db, $collection);
+	public function __construct(DatabaseInterface $db) {
+		$this->db = $db;
+	}
+	public function build($collection) {
+		return new QueryBuilder($this->db, $collection);
 	}
 }
 ?>

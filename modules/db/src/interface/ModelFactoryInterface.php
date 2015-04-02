@@ -3,13 +3,14 @@
 # Distributed under the terms of the GNU General Public License v3
 /**
 * This file is part of StarbugPHP
-* @file modules/db/src/interface/QueryBuilderFactoryInterface.php
+* @file modules/db/src/interface/ModelFactoryInterface.php
 * @author Ali Gangji <ali@neonrain.com>
 */
 /**
-* query builder factory interface
+* model factory interface
 */
-interface QueryBuilderFactoryInterface {
+interface ModelFactoryInterface {
+	public function has($collection);
 	public function build($collection);
 }
 ?>
