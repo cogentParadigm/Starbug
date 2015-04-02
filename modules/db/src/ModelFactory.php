@@ -57,7 +57,7 @@ class ModelFactory implements ModelFactoryInterface {
 		}
 
 		//return the saved object
-		return $this->objects[$name];
+		return $this->objects[$collection];
 	}
 }
 ?>
