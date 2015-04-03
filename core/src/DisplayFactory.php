@@ -12,23 +12,13 @@
 class DisplayFactory implements DisplayFactoryInterface {
 	private $inheritance;
 	private $container;
-	private $objects;
-	public function __construct(InheritanceBuilderInterface $inheritance, ContainerInterface $container, $base_directory) {
+	public function __construct(InheritanceBuilderInterface $inheritance, ContainerInterface $container) {
 		$this->inheritance = $inheritance;
 		$this->container = $container;
-		$this->base_directory = $base_directory;
-		$this->objects = array();
 	}
-	public function has($display) {
-		return (($this->objects[$display]) || (file_exists($this->base_directory."/var/displays/".ucwords($display)."Display.php")));
-	}
-	public function get($display) {
-		if (!isset($this->objects[$display])) {
-			$class = $this->inheritance->build("Display", "displays/".$display);
-			$this->objects[$display] = $this->container->get($class);
-		}
-		//return the saved object
-		return $this->objects[$display];
+	public function get($display, $model=null, $name=null, $options=array()) {
+		$class = $this->inheritance->build("Display", "displays/".ucwords($display)."Display");
+		return $this->container->build($class, array('model' => $model, 'name' => $name, 'options' => $options));
 	}
 }
 ?>

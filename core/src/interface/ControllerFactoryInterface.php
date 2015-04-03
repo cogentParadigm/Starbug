@@ -10,7 +10,6 @@
 * model factory interface
 */
 interface ControllerFactoryInterface {
-	public function has($controller);
 	public function get($controller);
 }
 ?>

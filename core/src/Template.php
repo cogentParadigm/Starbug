@@ -26,10 +26,12 @@ class Template implements TemplateInterface {
     "scope" => "templates",
     "all" => false
   );
+  protected $displays;
 
-  function __construct(ResourceLocatorInterface $locator, $options=array()) {
+  function __construct(ResourceLocatorInterface $locator, DisplayFactoryInterface $displays, $options=array()) {
     $this->options = $options + $this->defaults;
     $this->locator = $locator;
+    $this->displays = $displays;
   }
 
   /**
@@ -85,7 +87,7 @@ class Template implements TemplateInterface {
    * @copydoc TemplateInterface::render
    */
   function render($paths=array(""), $params=array(), $options=array()) {
-    $template = new Template($this->locator);
+    $template = new Template($this->locator, $this->displays);
     $template->output($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
   }
 
@@ -93,7 +95,7 @@ class Template implements TemplateInterface {
    * @copydoc TemplateInterface::capture
    */
   function capture($paths=array(""), $params=array(), $options=array()) {
-    $template = new Template($this->locator);
+    $template = new Template($this->locator, $this->displays);
     return $template->get($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
   }
 
@@ -140,8 +142,7 @@ class Template implements TemplateInterface {
    * @copydoc TemplateInterface::build_display
    */
   function build_display($type, $model=null, $name=null, $options=array()) {
-     $class = $this->locator->get_module_class("displays/".ucwords($type)."Display", "lib/Display", "core");
-     $display = new $class($this, $model, $name, $options);
+     $display = $this->displays->get($type, $model, $name, $options);
     return $display;
   }
   /**

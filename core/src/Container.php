@@ -75,7 +75,7 @@ class Container implements ContainerInterface {
 		$this->map[$name] = $literal ? array("value" => $value) : array("class" => $value);
 	}
 
-	private function build($name) {
+	function build($name, $options=array()) {
 		$class = new ReflectionClass($name);
 		$args = array();
 		$constructor = $class->getConstructor();
@@ -83,7 +83,9 @@ class Container implements ContainerInterface {
 			$params = $constructor->getParameters();
 			foreach ($params as $param) {
 				$type = $param->getClass();
-				if ($type) {
+				if (isset($options[$param->getName()])) {
+					$args[] = $options[$param->getName()];
+				} else if ($type) {
 					$args[] = $this->get($type->name);
 				} else if (!$this->has($param->getName()) && $param->isDefaultValueAvailable()) {
 					$args[] = $param->getDefaultValue();

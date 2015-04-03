@@ -10,7 +10,6 @@
 * model factory interface
 */
 interface DisplayFactoryInterface {
-	public function has($display);
 	public function get($display);
 }
 ?>

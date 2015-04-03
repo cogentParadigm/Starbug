@@ -12,23 +12,13 @@
 class ControllerFactory implements ControllerFactoryInterface {
 	private $inheritance;
 	private $container;
-	private $objects;
-	public function __construct(InheritanceBuilderInterface $inheritance, ContainerInterface $container, $base_directory) {
+	public function __construct(InheritanceBuilderInterface $inheritance, ContainerInterface $container) {
 		$this->inheritance = $inheritance;
 		$this->container = $container;
-		$this->base_directory = $base_directory;
-		$this->objects = array();
-	}
-	public function has($controller) {
-		return (($this->objects[$controller]) || (file_exists($this->base_directory."/var/controllers/".$controller."Controller.php")));
 	}
 	public function get($controller) {
-		if (!isset($this->objects[$controller])) {
-			$class = $this->inheritance->build("Controller", "controllers/".$controller);
-			$this->objects[$controller] = $this->container->get($class);
-		}
-		//return the saved object
-		return $this->objects[$controller];
+		$class = $this->inheritance->build("Controller", "controllers/".$controller);
+		return $this->container->get($class);
 	}
 }
 ?>

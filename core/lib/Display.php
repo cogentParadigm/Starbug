@@ -27,7 +27,7 @@ class Display {
 	 * @param string $name the display name
 	 * @param array $options the display options
 	 */
-	function __construct($context, $model=null, $name=null, $options=array()) {
+	function __construct(TemplateInterface $context, $model=null, $name=null, $options=array()) {
 		$this->context = $context;
 		$this->model = $model;
 		$this->name = $name;
