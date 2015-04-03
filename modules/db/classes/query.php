@@ -72,6 +72,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	public $raw = false;
 
 	public $store_on_errors = false;
+	protected $models;
 
 	/**
 	 * create a new query
@@ -80,6 +81,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 */
 	function __construct($collection, $params = array()) {
 		$this->db = sb()->db;
+		$this->models = sb()->models;
 		$params = star($params);
 		$this->from($collection);
 		foreach ($params as $key => $value) $this->{$key}($value);
@@ -269,7 +271,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			$type = "";
 			if (isset($schema['null'])) $type = "left";
 			$this->join($ref[0]." as ".$collection."_".$alias)->on($collection."_".$alias.".".$ref[1]."=".$collection.".".$field);
-		} else if ($this->db->has($schema['type'])) {
+		} else if ($this->models->has($schema['type'])) {
 			$type_schema = schema($schema['type']);
 			if (is_null($token)) $token = empty($type_schema['label_select']) ? $collection."_".$alias.".id" : str_replace($schema['type'], $collection."_".$alias, $type_schema['label_select']);
 			else $token = $collection."_".$alias.".".$token;
@@ -632,7 +634,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			//determine what relationships the object must bear - defined by object_access fields
 			foreach ($columns as $cname => $column) {
 				if (isset($column['object_access'])) {
-					if ($this->db->has($column['type'])) {
+					if ($this->models->has($column['type'])) {
 						//multiple reference
 						$object_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
 						$permit_field = "object_".$cname;
@@ -659,7 +661,7 @@ class query implements IteratorAggregate, ArrayAccess {
 				$permit_field = "user_".$cname;
 				if (!logged_in()) {
 					$this->where("permits.".$permit_field." is null");
-				}else if ($this->db->has($column['type'])) {
+				}else if ($this->models->has($column['type'])) {
 					//multiple reference
 					$user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
 					$ref = $cname."_id";
@@ -687,7 +689,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			//[user_access field] - requires users and objects to share the same terms for the given relationship
 			foreach ($user_columns as $cname => $column) {
 				if (isset($column['user_access']) && isset($columns[$cname])) {
-					if ($this->db->has($column['type'])) {
+					if ($this->models->has($column['type'])) {
 						//multiple reference
 						$user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
 						$object_table = empty($columns[$cname]['table']) ? $columns[$cname]['entity']."_".$cname : $columns[$cname]['table'];
@@ -851,7 +853,7 @@ class query implements IteratorAggregate, ArrayAccess {
 				$collection_segment = ("(" === substr($collection, 0, 1)) ? $collection : "`".P($collection)."`";
 				$segment = " ".$this->query['join'][$alias]." JOIN ".$collection_segment." AS `".$alias."`";
 				if (empty($this->query['on'][$alias])) {
-					$relations = $this->db->model($collection)->relations;
+					$relations = sb($collection)->relations;
 					$relator = $last_alias;
 					$rel = array();
 					if (isset($relations[$last_collection])) {
@@ -1056,7 +1058,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			//if it's a column, then we'll assume it's a column of our base collection
 			$collection = $this->base_collection;
 			//if it's a collection, we'll use it
-			if (!empty($this->query['from'][$parts[0]]) || $this->db->has($parts[0])) {
+			if (!empty($this->query['from'][$parts[0]]) || $this->models->has($parts[0])) {
 				$token = array_shift($parts); //remove from tokens
 				if (empty($this->query['from'][$token])) $this->join($token); //join if needed
 				$collection = $token;	//set the collection
@@ -1226,7 +1228,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	function validate($phase = query::PHASE_VALIDATION) {
 		$oldscope = error_scope();
 		error_scope($this->model);
-		foreach ($this->db->model($this->model)->hooks as $column => $hooks) {
+		foreach (sb($this->model)->hooks as $column => $hooks) {
 			if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) $hooks['required'] = "";
 			foreach ($hooks as $hook => $argument) {
 				$this->invoke_hook($phase, $column, $hook, $argument);
@@ -1302,7 +1304,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			$this->record_count = $records->rowCount();
 			if ($this->mode == "insert") {
 				$this->insert_id = $this->db->lastInsertId();
-				$this->db->model($this->model)->insert_id = $this->insert_id;
+				sb($this->model)->insert_id = $this->insert_id;
 			}
 			if (!$this->raw) {
 				if ($this->mode == "delete") $this->validate(query::PHASE_AFTER_DELETE);

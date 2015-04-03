@@ -1,9 +1,12 @@
 <?php
-include(dirname(__FILE__)."/classes/db.php");
-include(dirname(__FILE__)."/classes/Table.php");
-include(dirname(__FILE__)."/classes/QueryHook.php");
-include(dirname(__FILE__)."/classes/query.php");
-include(dirname(__FILE__)."/classes/queue.php");
-include(dirname(__FILE__)."/classes/mysql.php");
-include(dirname(__FILE__)."/classes/Schemer.php");
+$dir = dirname(__FILE__);
+include($dir."/src/interface/ModelFactoryInterface.php");
+include($dir."/src/ModelFactory.php");
+include($dir."/classes/db.php");
+include($dir."/classes/Table.php");
+include($dir."/classes/QueryHook.php");
+include($dir."/classes/query.php");
+include($dir."/classes/queue.php");
+include($dir."/classes/mysql.php");
+include($dir."/classes/Schemer.php");
 ?>

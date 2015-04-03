@@ -25,7 +25,7 @@ class FormDisplay {
 		$this->postback = $options['postback'];
 
 		// grab schema
-		if (!empty($this->model) && sb()->db->has($this->model)) {
+		if (!empty($this->model) && sb()->models->has($this->model)) {
 			$this->schema = sb($this->model)->hooks;
 		}
 

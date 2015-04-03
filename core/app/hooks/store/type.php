@@ -1,14 +1,14 @@
 <?php
 class hook_store_type {
 	function empty_validate(&$query, $column, $argument) {
-		if (sb()->db->has($argument)) $query->exclude($column);
+		if (sb()->models->has($argument)) $query->exclude($column);
 	}
 	function validate(&$query, $key, $value, $column, $argument) {;
-		if (sb()->db->has($argument)) $query->exclude($key);
+		if (sb()->models->has($argument)) $query->exclude($key);
 		return $value;
 	}
 	function after_store(&$query, $key, $value, $column, $argument) {
-		if ($argument == "terms" || $argument == "blocks" || !sb()->db->has($argument) || empty($value)) return;
+		if ($argument == "terms" || $argument == "blocks" || !sb()->models->has($argument) || empty($value)) return;
 
 		//vars
 		$model = $query->model;

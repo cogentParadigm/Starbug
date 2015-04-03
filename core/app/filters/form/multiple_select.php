@@ -10,7 +10,7 @@
 	}
 
 	$info = $this->schema[$field['name']];
-	if (sb()->db->has($info['type'])) {
+	if (sb()->models->has($info['type'])) {
 		if (empty($field['from'])) $field['from'] = $info['type'];
 		if (empty($field['query'])) $field['query'] = "select";
 	}

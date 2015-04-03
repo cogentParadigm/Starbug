@@ -9,12 +9,12 @@ function sb() {
   $count = count($args);
   if ($count == 0) return $sb;
   else if ($count == 1) {
-    if ($sb->db->has($args[0])) return $sb->db->model($args[0]);
+    if ($sb->models->has($args[0])) return $sb->models->get($args[0]);
     else return $sb->db->$args[0];
   } else if ($count == 2) {
-    return $sb->db->model($args[0])->$args[1];
+    return $sb->models->get($args[0])->$args[1];
   } else {
-    $model = $sb->db->model(array_shift($args));
+    $model = $sb->models->get(array_shift($args));
     $function = array_shift($args);
     return call_user_func_array(array($model, $function), $args);
   }
@@ -52,7 +52,7 @@ function entity_chain($entity) {
  */
 function column_info($entity, $column="") {
   $info = array();
-  if (!sb()->db->has($entity)) return $info;
+  if (!sb()->models->has($entity)) return $info;
   if (empty($column)) {
     while (!empty($entity)) {
       $hooks = sb($entity)->hooks;

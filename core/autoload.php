@@ -2,6 +2,8 @@
 include(BASE_DIR."/core/global_functions.php");
 include(BASE_DIR."/core/src/interface/ContainerInterface.php");
 include(BASE_DIR."/core/src/interface/ResourceLocatorInterface.php");
+include(BASE_DIR."/core/src/interface/InheritanceBuilderInterface.php");
+include(BASE_DIR."/core/src/interface/HookBuilderInterface.php");
 include(BASE_DIR."/core/src/interface/ConfigInterface.php");
 include(BASE_DIR."/core/src/interface/TemplateInterface.php");
 include(BASE_DIR."/core/src/interface/MacroInterface.php");
@@ -9,6 +11,8 @@ include(BASE_DIR."/core/src/interface/MailerInterface.php");
 include(BASE_DIR."/core/src/Container.php");
 include(BASE_DIR."/core/src/EventDispatcher.php");
 include(BASE_DIR."/core/src/ResourceLocator.php");
+include(BASE_DIR."/core/src/InheritanceBuilder.php");
+include(BASE_DIR."/core/src/HookBuilder.php");
 include(BASE_DIR."/core/src/Template.php");
 include(BASE_DIR."/core/src/ErrorHandler.php");
 include(BASE_DIR."/core/src/Config.php");

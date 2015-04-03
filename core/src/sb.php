@@ -50,15 +50,17 @@ class sb {
 	public $locator;
 	public $config;
 	public $macro;
+	public $models;
 
 	/**
 	* constructor. connects to db and starts the session
 	*/
-	function __construct(db $db, ResourceLocatorInterface $locator, ConfigInterface $config, MacroInterface $macro) {
+	function __construct(db $db, ResourceLocatorInterface $locator, ConfigInterface $config, MacroInterface $macro, ModelFactoryInterface $models) {
 		$this->locator = $locator;
 		$this->config = $config;
 		$this->macro = $macro;
 		$this->db = $db;
+		$this->models = $models;
 		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
 		self::$instance = $this;
 		$this->start_session();
@@ -108,7 +110,7 @@ class sb {
 	 * @return the instantiated model
 	 */
 	function get($name) {
-		return $this->db->model($name);
+		return $this->models->get($name);
 	}
 
 }

@@ -20,6 +20,7 @@ class Schemer {
 	 * @var db The db class is a PDO wrapper
 	 */
 	public $db;
+	protected $models;
 	/**
 	 * @var array Holds tables, columns and column options
 	 */
@@ -102,8 +103,9 @@ class Schemer {
 	/**
 	 * constructor. loads migrations
 	 */
-	function __construct(db $data, $modules) {
+	function __construct(db $data, ModelFactoryInterface $models, $modules) {
 		$this->db = $data;
+		$this->models = $models;
 		$this->migrations = $modules;
 	}
 
@@ -443,7 +445,6 @@ class Schemer {
 	 */
 	function drop_table($name) {
 		$this->db->exec("DROP TABLE IF EXISTS `".P($name)."`");
-		//$this->drop_model($name);
 	}
 
 	/**
@@ -590,7 +591,7 @@ class Schemer {
 				$additional[] = array("permits", $access_col);
 			}
 			//if (isset($this->tables[$col['type']])) {
-			if ($this->db->has($col['type'])) {
+			if ($this->models->has($col['type'])) {
 				$ref_table_name = (empty($col['table'])) ? $table."_".$colname : $col['table'];
 				$ref_table_def = array($ref_table_name."  groups:false",
 					"owner  type:int  null:  references:users id  update:cascade  delete:cascade  optional:",
@@ -893,7 +894,7 @@ class Schemer {
 		if (empty($record)) {
 			if ($update) fwrite(STDOUT, "Creating $menu menu item...\n");
 			store("menus", $item);
-			$id = $this->db->model("menus")->insert_id;
+			$id = $this->models->get("menus")->insert_id;
 			$count = 1;
 		} else $id = $record['id'];
 		foreach ($children as $child) {
@@ -923,7 +924,7 @@ class Schemer {
 		if (empty($record)) {
 			if ($update) fwrite(STDOUT, "Creating $taxonomy taxonomy term...\n");
 			store("terms", $item);
-			$id = $this->db->model("terms")->insert_id;
+			$id = $this->models->get("terms")->insert_id;
 			$count = 1;
 		} else $id = $record['id'];
 		foreach ($children as $child) {

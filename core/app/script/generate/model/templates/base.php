@@ -80,7 +80,7 @@ class <?php echo ucwords($name); ?>Model extends Table {
     }
 		$tabs = "\t\t";
 		foreach ($fields as $fieldname => $field) {
-				if (sb()->db->has($field['type']) || $field['type'] == "category") {
+				if (sb()->models->has($field['type']) || $field['type'] == "category") {
 					if (empty($field['column'])) $field['column'] = "id";
 					echo $tabs.'$query->select($query->model.".'.$fieldname.'.'.$field['column'].' as '.$fieldname.'");'."\n";
 				}

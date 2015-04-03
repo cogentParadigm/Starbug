@@ -11,6 +11,6 @@
 */
 interface ModelFactoryInterface {
 	public function has($collection);
-	public function build($collection);
+	public function get($collection);
 }
 ?>

@@ -10,11 +10,6 @@
 * query builder factory interface
 */
 interface DatabaseInterface {
-
-	function has($name);
-
-	function model($name);
-
 	/**
 	 * get records or columns
 	 * @ingroup data
