@@ -118,7 +118,7 @@ module.exports = function(grunt) {
       ci: {
          options: {
            runType: 'runner',
-           reporters: ['cli', 'cobertura'],
+           reporters: ['cobertura'],
            config: 'core/app/public/js/tests/intern'
          }
       }
