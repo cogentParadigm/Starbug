@@ -28,7 +28,7 @@ class Template implements TemplateInterface {
   );
   protected $displays;
 
-  function __construct(ResourceLocatorInterface $locator, DisplayFactoryInterface $displays, $options=array()) {
+  function __construct(ResourceLocatorInterface $locator, DisplayFactoryInterface $displays=null, $options=array()) {
     $this->options = $options + $this->defaults;
     $this->locator = $locator;
     $this->displays = $displays;
