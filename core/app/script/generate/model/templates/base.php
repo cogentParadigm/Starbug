@@ -13,7 +13,7 @@ class <?php echo ucwords($name); ?>Model extends Table {
   public $type = "<?php echo $name; ?>";
   public $base = "<?php echo $base; ?>";
 
-  function __construct(db $db<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
+  function __construct(DatabaseInterface $db<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
     $this->db = $db;<?php foreach ($factory as $n => $t) echo "\n\t\t\$this->".$n.' = $'.$n.';'; ?>
 
     $this->init();

@@ -39,7 +39,6 @@ $container = new Container();
 $container->register('base_directory', BASE_DIR, true);
 $container->register('modules', $modules, true);
 $container->register('database_name', DEFAULT_DATABASE, true);
-$container->register('db', 'mysql');
 
 //create locator
 $locator = $container->get('ResourceLocatorInterface');

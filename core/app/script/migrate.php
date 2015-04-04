@@ -30,7 +30,7 @@ $argv = $args;
 $next = array_shift($argv);
 if ((!empty($next)) && (0 !== $next)) {
 	$container->register("database_name", $next, true);
-	$db = $container->update("db");
+	$db = $container->update("DatabaseInterface");
 	$schemer->set_database($db);
 	sb()->db = $db;
 }

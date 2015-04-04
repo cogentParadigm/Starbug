@@ -55,7 +55,7 @@ class sb {
 	/**
 	* constructor. connects to db and starts the session
 	*/
-	function __construct(db $db, ResourceLocatorInterface $locator, ConfigInterface $config, MacroInterface $macro, ModelFactoryInterface $models) {
+	function __construct(DatabaseInterface $db, ResourceLocatorInterface $locator, ConfigInterface $config, MacroInterface $macro, ModelFactoryInterface $models) {
 		$this->locator = $locator;
 		$this->config = $config;
 		$this->macro = $macro;

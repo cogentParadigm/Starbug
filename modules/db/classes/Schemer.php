@@ -103,13 +103,13 @@ class Schemer {
 	/**
 	 * constructor. loads migrations
 	 */
-	function __construct(db $data, ModelFactoryInterface $models, $modules) {
+	function __construct(DatabaseInterface $data, ModelFactoryInterface $models, $modules) {
 		$this->db = $data;
 		$this->models = $models;
 		$this->migrations = $modules;
 	}
 
-	function set_database($db) {
+	function set_database(DatabaseInterface $db) {
 		$this->db = $db;
 	}
 

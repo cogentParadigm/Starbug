@@ -2,54 +2,47 @@
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
- * This file is part of StarbugPHP
- * @file modules/db/class/mysql.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup db
- */
+* This file is part of StarbugPHP
+* @file modules/db/src/Database.php
+* @author Ali Gangji <ali@neonrain.com>
+*/
 /**
- * @defgroup mysql
- * the db class
- * @ingroup db
- */
-/**
- * The mysql class. A simple PDO wrapper
- * @ingroup mysql
- */
-class mysql extends db {
+* DatabaseInterface cannonical implementation
+*/
+class Database implements DatabaseInterface {
 
 	/**
-	 * @var PDO a PDO object
-	 */
+	* @var PDO a PDO object
+	*/
 	public $pdo;
 	/**
-	 * @var bool debug mode
-	 */
+	* @var bool debug mode
+	*/
 	public $debug;
 	/**
-	 * @var int holds the number of records returned by last query
-	 */
+	* @var int holds the number of records returned by last query
+	*/
 	public $record_count;
 	/**
-	 * @var int holds the id of the last inserted record
-	 */
+	* @var int holds the id of the last inserted record
+	*/
 	public $insert_id;
 	/**
-	 * @var string holds the active scope (usually 'global' or a model name)
-	 */
+	* @var string holds the active scope (usually 'global' or a model name)
+	*/
 	public $active_scope = "global";
 	/**
-	 * @var string prefix
-	 */
+	* @var string prefix
+	*/
 	public $prefix;
 	/**
-	 * @var string database_name
-	 */
+	* @var string database_name
+	*/
 	public $database_name;
 	/**#@-*/
 	/**
-	 * @var array holds records waiting to be stored
-	 */
+	* @var array holds records waiting to be stored
+	*/
 	public $queue;
 
 	public $operators = array(
@@ -66,10 +59,11 @@ class mysql extends db {
 		'NOT LIKE' => 1,
 		'NOT RLIKE' => 1
 	);
+	protected $config;
+	protected $params;
 
-	public function __construct(ResourceLocatorInterface $locator, ConfigInterface $config, ContainerInterface $container, $database_name) {
-		$this->locator = $locator;
-		$this->container = $container;
+	public function __construct(ConfigInterface $config, $database_name) {
+		$this->config = $config;
 		$params = $config->get("db/".$database_name);
 		try {
 			$this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
@@ -94,13 +88,13 @@ class mysql extends db {
 	}
 
 	/**
-	 * get records or columns
-	 * @ingroup data
-	 * @param string $model the name of the model
-	 * @param mixed $id/$conditions the id or an array of conditions
-	 * @param string $column optional column name
-	 */
-	function get() {
+	* get records or columns
+	* @ingroup data
+	* @param string $model the name of the model
+	* @param mixed $id/$conditions the id or an array of conditions
+	* @param string $column optional column name
+	*/
+	function get($collection, $conditions = array(), $options = array()) {
 		$args = func_get_args();
 		$query = $conditions = $arg = array();
 
@@ -141,12 +135,12 @@ class mysql extends db {
 	}
 
 	/**
-	 * query the database
-	 * @param string $froms comma delimeted list of tables to join. 'users' or 'uris,system_tags'
-	 * @param string $args starbug query string for params: select, where, limit, and action/priv_type
-	 * @param bool $mine optional. if true, joining models will be checked for relationships and ON statements will be added
-	 * @return array record or records
-	 */
+	* query the database
+	* @param string $froms comma delimeted list of tables to join. 'users' or 'uris,system_tags'
+	* @param string $args starbug query string for params: select, where, limit, and action/priv_type
+	* @param bool $mine optional. if true, joining models will be checked for relationships and ON statements will be added
+	* @return array record or records
+	*/
 	function query($froms, $args = "", $replacements = array()) {
 		$args = star($args);
 		if (!empty($args['params'])) $replacements = $args['params'];
@@ -167,12 +161,12 @@ class mysql extends db {
 	}
 
 	/**
-	 * store data in the database
-	 * @param string $name the name of the table
-	 * @param string/array $fields keypairs of columns/values to be stored
-	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
-	 * @return array validation errors
-	 */
+	* store data in the database
+	* @param string $name the name of the table
+	* @param string/array $fields keypairs of columns/values to be stored
+	* @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
+	* @return array validation errors
+	*/
 	function store($name, $fields = array(), $from = "auto") {
 		$this->queue($name, $fields, $from, true);
 		//$last = array_pop($this->to_store);
@@ -181,12 +175,12 @@ class mysql extends db {
 	}
 
 	/**
-	 * queue data to be stored in the database pending validation of other data
-	 * @param string $name the name of the table
-	 * @param string/array $fields keypairs of columns/values to be stored
-	 * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
-	 * @return array validation errors
-	 */
+	* queue data to be stored in the database pending validation of other data
+	* @param string $name the name of the table
+	* @param string/array $fields keypairs of columns/values to be stored
+	* @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
+	* @return array validation errors
+	*/
 	function queue($name, $fields = array(), $from = "auto", $unshift = false) {
 		if (!is_array($fields)) $fields = star($fields);
 
@@ -208,17 +202,17 @@ class mysql extends db {
 	}
 
 	/**
-	 * proccess the queue of data for storage
-	 */
+	* proccess the queue of data for storage
+	*/
 	function store_queue() {
 		$this->queue->execute();
 	}
 
 	/**
-	 * remove from the database
-	 * @param string $from the name of the table
-	 * @param string $where the WHERE conditions on the DELETE
-	 */
+	* remove from the database
+	* @param string $from the name of the table
+	* @param string $where the WHERE conditions on the DELETE
+	*/
 	function remove($from, $where) {
 		if (!empty($where)) {
 			$del = new query($from);

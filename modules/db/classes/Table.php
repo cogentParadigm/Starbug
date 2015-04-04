@@ -50,7 +50,7 @@ class Table {
 	 * @param string $type the un-prefixed table name
 	 * @param array $filters the column filters
 	 */
-	function __construct(db $db) {
+	function __construct(DatabaseInterface $db) {
 		$this->db = $db;
 		$this->init();
 	}

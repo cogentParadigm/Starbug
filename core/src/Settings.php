@@ -14,7 +14,7 @@ class Settings implements ConfigInterface {
   private $db;
   private $settings;
 
-  public function __construct(db $db) {
+  public function __construct(DatabaseInterface $db) {
     $this->db = $db;
     $this->settings = array();
   }
