@@ -1228,7 +1228,8 @@ class query implements IteratorAggregate, ArrayAccess {
 	function validate($phase = query::PHASE_VALIDATION) {
 		$oldscope = error_scope();
 		error_scope($this->model);
-		foreach (sb($this->model)->hooks as $column => $hooks) {
+		$model = $this->models->get($this->model);
+		foreach ($model->hooks as $column => $hooks) {
 			if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) $hooks['required'] = "";
 			foreach ($hooks as $hook => $argument) {
 				$this->invoke_hook($phase, $column, $hook, $argument);

@@ -28,11 +28,11 @@ class Table {
 	/**
 	 * @var array The hooks that apply to each column
 	 */
-	public $hooks;
+	public $hooks = array();
 	/**
 	 * @var array The relationships to other tables
 	 */
-	public $relations;
+	public $relations = array();
 	/**
 	 * @var int The number of records returned by the last query
 	 */
