@@ -80,7 +80,7 @@ class Template implements TemplateInterface {
 	 * @copydoc TemplateInterface::render
 	 */
 	function render($paths=array(""), $params=array(), $options=array()) {
-		$template = new Template($this->locator, $this->displays);
+		$template = new static($this->locator, $this->displays);
 		$template->output($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
 	}
 
@@ -88,7 +88,7 @@ class Template implements TemplateInterface {
 	 * @copydoc TemplateInterface::capture
 	 */
 	function capture($paths=array(""), $params=array(), $options=array()) {
-		$template = new Template($this->locator, $this->displays);
+		$template = new static($this->locator, $this->displays);
 		return $template->get($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
 	}
 

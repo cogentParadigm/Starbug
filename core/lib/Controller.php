@@ -34,19 +34,6 @@ class Controller {
 		}
 	}
 
-	/**
-	 * forward the request to another controller
-	 * @param string $controller
-	 * @param string $action
-	 * @param array $args
-	 */
-	function forward($controller, $action, $args=array()) {
-		$this->auto_render = false;
-		$object = $this->context->locator->get_module_class("controllers/".ucwords($controller)."Controller", "lib/Controller", "core");
-		$instance = new $object($this->context);
-		$instance->action($action, $args);
-	}
-
 	function assign($key, $value=null) {
 		$this->context->assign($key, $value);
 	}

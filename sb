@@ -17,4 +17,9 @@
 		}
 	} else $path = "core/app/script/$script.php";
 	if (file_exists($path)) include($path);
+	$classname = ucwords($script)."Command";
+	if (class_exists($classname)) {
+		$command = $container->get($classname);
+		$command->run($argv);
+	}
 ?>
