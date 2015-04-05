@@ -83,16 +83,16 @@ module.exports = function(grunt) {
         dir: ['core', 'app', 'modules'],
         options: {
           extensions: 'php',
-          ignore: 'views,templates,layouts,hooks/global.head.php',
+          ignore: 'views,templates,layouts,forms',
           standard: 'etc/phpcs.xml',
           ignoreExitCode: true
         }
       },
       ci: {
-        dir: ['app', 'modules'],
+        dir: ['core', 'app', 'modules'],
         options: {
           extensions: 'php',
-          ignore: 'views,templates,layouts,hooks/global.head.php',
+          ignore: 'views,templates,layouts,forms',
           standard: 'etc/phpcs.xml',
           ignoreExitCode: true,
           report: 'checkstyle',
