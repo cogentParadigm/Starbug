@@ -20,5 +20,4 @@ interface MailerInterface {
 	 * get errors
 	 */
 	function errors();
-
 }

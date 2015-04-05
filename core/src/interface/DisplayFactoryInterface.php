@@ -12,4 +12,3 @@
 interface DisplayFactoryInterface {
 	public function get($display);
 }
-?>

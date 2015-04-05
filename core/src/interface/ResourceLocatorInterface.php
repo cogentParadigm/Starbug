@@ -15,6 +15,5 @@ interface ResourceLocatorInterface {
 	 * @param string $scope the type or scope of resource, such as 'templates' or 'views'
 	 * @TODO allow boolean return
 	 */
-	function locate($name, $scope="templates");
-
+	function locate($name, $scope = "templates");
 }

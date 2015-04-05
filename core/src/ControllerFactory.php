@@ -21,4 +21,3 @@ class ControllerFactory implements ControllerFactoryInterface {
 		return $this->container->get($class);
 	}
 }
-?>

@@ -12,4 +12,3 @@
 interface ControllerFactoryInterface {
 	public function get($controller);
 }
-?>

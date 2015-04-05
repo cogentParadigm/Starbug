@@ -42,11 +42,11 @@ interface ContainerInterface {
 	 * @param mixed $value the object
 	 * @param bool $literal set true to provide the value directly without any object construction
 	 */
-	function register($name, $value, $literal=false);
+	function register($name, $value, $literal = false);
 	/**
 	 * build an object
 	 * @param string $name the name of the object
 	 * @param array $options dependencies to override
 	 */
-	function build($name, $options=array());
+	function build($name, $options = array());
 }

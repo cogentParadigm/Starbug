@@ -21,7 +21,7 @@ class Template implements TemplateInterface {
 	);
 	protected $displays;
 
-	function __construct(ResourceLocatorInterface $locator, DisplayFactoryInterface $displays=null, $options=array()) {
+	function __construct(ResourceLocatorInterface $locator, DisplayFactoryInterface $displays = null, $options = array()) {
 		$this->options = $options + $this->defaults;
 		$this->locator = $locator;
 		$this->displays = $displays;
@@ -30,45 +30,45 @@ class Template implements TemplateInterface {
 	/**
 	 * @copydoc TemplateInterface::assign
 	 */
-	function assign($key, $value="") {
-		if (is_array($key)) {
-			foreach ($key as $k => $v) $this->assign($k, $v);
-		} else {
-			$this->vars[$key] = $value;
-		}
+	function assign($key, $value = "") {
+	 if (is_array($key)) {
+		 foreach ($key as $k => $v) $this->assign($k, $v);
+	 } else {
+		 $this->vars[$key] = $value;
+	 }
 	}
 	/**
 	 * @copydoc TemplateInterface::output
 	 */
-	function output($paths=array(), $params=array(), $options=array()) {
+	function output($paths = array(), $params = array(), $options = array()) {
 		$this->options = $options + $this->options;
 		$this->vars = $params + $this->vars;
 		$scope = $this->options['scope'];
 		if (!is_array($paths)) $paths = array($paths);
 		$path = reset($paths);
 		$found = array();
-		while(empty($found) && $path) {
-			$found = $this->locator->locate($path.".php", $scope);
-			$path = next($paths);
-		}
+	 while (empty($found) && $path) {
+		 $found = $this->locator->locate($path.".php", $scope);
+		 $path = next($paths);
+	 }
 		$this->path = ($this->options['all']) ? $found : end($found);
 
-		if (!is_array($this->path) && !file_exists($this->path)) {
-			throw new Exception("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
-		}
+	 if (!is_array($this->path) && !file_exists($this->path)) {
+		 throw new Exception("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
+	 }
 
 		extract($this->vars);
-		if (is_array($this->path)) {
-			foreach ($this->path as $p) include($p);
-		} else {
-			include($this->path);
-		}
+	 if (is_array($this->path)) {
+		 foreach ($this->path as $p) include($p);
+	 } else {
+		 include($this->path);
+	 }
 	}
 
 	/**
 	 * @copydoc TemplateInterface::get
 	 */
-	function get($paths=array(), $params=array(), $options=array()) {
+	function get($paths = array(), $params = array(), $options = array()) {
 		ob_start();
 		$this->output($paths, $params, $options);
 		$output = ob_get_contents();
@@ -79,7 +79,7 @@ class Template implements TemplateInterface {
 	/**
 	 * @copydoc TemplateInterface::render
 	 */
-	function render($paths=array(""), $params=array(), $options=array()) {
+	function render($paths = array(""), $params = array(), $options = array()) {
 		$template = new static($this->locator, $this->displays);
 		$template->output($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
 	}
@@ -87,7 +87,7 @@ class Template implements TemplateInterface {
 	/**
 	 * @copydoc TemplateInterface::capture
 	 */
-	function capture($paths=array(""), $params=array(), $options=array()) {
+	function capture($paths = array(""), $params = array(), $options = array()) {
 		$template = new static($this->locator, $this->displays);
 		return $template->get($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
 	}
@@ -95,62 +95,61 @@ class Template implements TemplateInterface {
 	/**
 	 * @copydoc TemplateInterface::render_view
 	 */
-	function render_view($paths=array(""), $params=array()) {
+	function render_view($paths = array(""), $params = array()) {
 		$this->render($paths, $params, array("scope" => "views"));
 	}
 
 	/**
 	 * @copydoc TemplateInterface::render_layout
 	 */
-	function render_layout($paths=array(""), $params=array()) {
+	function render_layout($paths = array(""), $params = array()) {
 		$this->render($paths, $params, array("scope" => "layouts"));
 	}
 
 	/**
 	 * @copydoc TemplateInterface::render_form
 	 */
-	function render_form($paths=array(""), $params=array()) {
+	function render_form($paths = array(""), $params = array()) {
 		$this->render($paths, $params, array("scope" => "forms"));
 	}
 
 	/**
 	 * @copydoc TemplateInterface::render_content
 	 */
-	function render_content($region="content") {
+	function render_content($region = "content") {
 		$this->render("blocks", array("region" => $region));
 	}
 
 	/**
 	 * @copydoc TemplateInterface::publish
 	 */
-	function publish($topic, $tags=array(), $params=array()) {
+	function publish($topic, $tags = array(), $params = array()) {
 		if (!is_array($tags)) $tags = array($tags);
 		array_unshift($tags, "global");
-		foreach ($tags as $tag) {
-			$this->render("hook/".$tag.".".$topic, $params, array("all" => true));
-		}
+	 foreach ($tags as $tag) {
+		 $this->render("hook/".$tag.".".$topic, $params, array("all" => true));
+	 }
 	}
 
 	/**
 	 * @copydoc TemplateInterface::build_display
 	 */
-	function build_display($type, $model=null, $name=null, $options=array()) {
+	function build_display($type, $model = null, $name = null, $options = array()) {
 		 $display = $this->displays->get($type, $model, $name, $options);
 		return $display;
 	}
 	/**
 	 * @copydoc TemplateInterface::render_display
 	 */
-	public function render_display($type, $model=null, $name=null, $options=array()) {
+	public function render_display($type, $model = null, $name = null, $options = array()) {
 		$display = $this->build_display($type, $model, $name, $options);
 		$display->render();
 	}
 	/**
 	 * @copydoc TemplateInterface::capture_display
 	 */
-	public function capture_display($type, $model=null, $name=null, $options=array()) {
+	public function capture_display($type, $model = null, $name = null, $options = array()) {
 		$display = $this->build_display($type, $model, $name, $options);
 		return $display->capture();
 	}
 }
-?>

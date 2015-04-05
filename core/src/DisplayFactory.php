@@ -16,9 +16,8 @@ class DisplayFactory implements DisplayFactoryInterface {
 		$this->inheritance = $inheritance;
 		$this->container = $container;
 	}
-	public function get($display, $model=null, $name=null, $options=array()) {
+	public function get($display, $model = null, $name = null, $options = array()) {
 		$class = $this->inheritance->build("Display", "displays/".ucwords($display)."Display");
 		return $this->container->build($class, array('model' => $model, 'name' => $name, 'options' => $options));
 	}
 }
-?>

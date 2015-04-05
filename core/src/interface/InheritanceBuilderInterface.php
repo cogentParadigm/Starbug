@@ -17,5 +17,5 @@ interface InheritanceBuilderInterface {
 	* build("Controller", "controllers/RegisterController")
 	* build("Display", "displays/GridDisplay");
 	*/
-	function build($name, $path, $root=false);
+	function build($name, $path, $root = false);
 }
