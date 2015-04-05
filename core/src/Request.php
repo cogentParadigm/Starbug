@@ -71,9 +71,9 @@ class Request {
 	 * constructor. initiates tags and postback
 	 */
  function __construct(TemplateInterface $context, ResourceLocatorInterface $locator) {
-	 $this->context = $context;
-	 $this->locator = $locator;
-	 $this->tags = array(array("term" => "global", "slug" => "global"));
+	$this->context = $context;
+	$this->locator = $locator;
+	$this->tags = array(array("term" => "global", "slug" => "global"));
  }
 
 	/**
@@ -100,10 +100,10 @@ class Request {
 
 		//if the path includes a format (such as .html, .json, .xml etc..) split it off and save it to $this->format
 		$file = end(explode("/", $this->path));
-  if (false !== strpos($file, ".")) {
+	if (false !== strpos($file, ".")) {
 	$this->format = end(explode(".", $file));
 	$this->path = substr($this->path, 0, -(strlen($this->format)+1));
-  }
+	}
 
 		//if we are left with an empty path, set it to the default path
 		if (empty($this->path)) $this->path = settings("default_path");

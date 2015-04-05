@@ -56,14 +56,14 @@ class sb {
 	* constructor. connects to db and starts the session
 	*/
  function __construct(DatabaseInterface $db, ResourceLocatorInterface $locator, ConfigInterface $config, MacroInterface $macro, ModelFactoryInterface $models) {
-	 $this->locator = $locator;
-	 $this->config = $config;
-	 $this->macro = $macro;
-	 $this->db = $db;
-	 $this->models = $models;
-	 if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
-	 self::$instance = $this;
-	 $this->start_session();
+	$this->locator = $locator;
+	$this->config = $config;
+	$this->macro = $macro;
+	$this->db = $db;
+	$this->models = $models;
+	if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
+	self::$instance = $this;
+	$this->start_session();
  }
 
 	/**
@@ -72,12 +72,12 @@ class sb {
  function start_session() {
 	if (false !== ($session = Session::active())) {
 	if (!empty($session['v']) && is_numeric($session['v'])) {
-	   $user = new query("users");
-	   $user = $user->select("users.*,users.groups as groups,users.statuses as statuses")->condition("users.id", $session['v'])->one();
+	 $user = new query("users");
+	 $user = $user->select("users.*,users.groups as groups,users.statuses as statuses")->condition("users.id", $session['v'])->one();
 	if (Session::validate($session, $user['password'], Etc::HMAC_KEY)) {
-		$user['groups'] = is_null($user['groups']) ? array() : explode(",", $user['groups']);
-		$user['statuses'] = is_null($user['statuses']) ? array() : explode(",", $user['statuses']);
-		$this->user = $user;
+	 $user['groups'] = is_null($user['groups']) ? array() : explode(",", $user['groups']);
+	 $user['statuses'] = is_null($user['statuses']) ? array() : explode(",", $user['statuses']);
+	 $this->user = $user;
 	}
 	}
 	}
@@ -88,13 +88,13 @@ class sb {
 	 * @param string $loc path of file to import without '.php' at the end
 	 */
  function import($loc) {
-	 $sb = self::$instance;
-	 $args = func_get_args();
+	$sb = self::$instance;
+	$args = func_get_args();
 	foreach ($args as $l) {
-	  $parts = explode("/", $l);
-	  if (!in_array($parts[0], array("app", "core", "util", "var")) && file_exists(BASE_DIR."/modules/".$parts[0])) $parts[0] = "modules/".$parts[0];
-	  $path = implode("/", $parts);
-	  if (!isset($this->provided[$l])) include(BASE_DIR."/".$path.".php");
+	$parts = explode("/", $l);
+	if (!in_array($parts[0], array("app", "core", "util", "var")) && file_exists(BASE_DIR."/modules/".$parts[0])) $parts[0] = "modules/".$parts[0];
+	$path = implode("/", $parts);
+	if (!isset($this->provided[$l])) include(BASE_DIR."/".$path.".php");
 	}
  }
 
@@ -103,7 +103,7 @@ class sb {
 	 * @param string $loc the imported location. if i were to use $sb->import("util/form"), util/form.php would have $sb->provide("util/form") at the top
 	 */
  function provide($loc) {
-  $this->provided[$loc] = true;
+	$this->provided[$loc] = true;
  }
 
 	/**

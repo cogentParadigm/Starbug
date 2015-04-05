@@ -12,8 +12,8 @@ class Container implements ContainerInterface {
 	private $map;
 
  function __construct() {
-	 $this->map = array();
-	 $this->register('ContainerInterface', $this, true);
+	$this->map = array();
+	$this->register('ContainerInterface', $this, true);
  }
 
 	/**
@@ -23,20 +23,20 @@ class Container implements ContainerInterface {
 	 */
  function get($name) {
 	if (!isset($this->map[$name])) {
-	  $this->map[$name] = array("class" => $name);
+	$this->map[$name] = array("class" => $name);
 	}
 	if (isset($this->map[$name]['value'])) {
-	  return $this->map[$name]['value'];
+	 return $this->map[$name]['value'];
 	} else {
-	  $value = $this->map[$name]['class'];
+	 $value = $this->map[$name]['class'];
 	 if (interface_exists($value)) {
-	   $value = str_replace("Interface", "", $value);
+	  $value = str_replace("Interface", "", $value);
 	 }
 	 if (class_exists($value)) {
-	   $this->map[$name]['value'] = $this->build($value);
-	   return $this->get($name);
+	  $this->map[$name]['value'] = $this->build($value);
+	  return $this->get($name);
 	 } else {
-	   throw new Exception("Dependency not found: ".$name);
+	  throw new Exception("Dependency not found: ".$name);
 	 }
 	}
  }
@@ -45,15 +45,15 @@ class Container implements ContainerInterface {
 	 *
 	 */
  function update($name) {
-	 $this->destroy($name);
-	 return $this->get($name);
+	$this->destroy($name);
+	return $this->get($name);
  }
 
 	/**
 	 *
 	 */
  function destroy($name) {
-	 unset($this->map[$name]['value']);
+	unset($this->map[$name]['value']);
  }
 
 	/**
@@ -62,7 +62,7 @@ class Container implements ContainerInterface {
 	* @return bool true if the object can be provided
 	*/
  function has($name) {
-	 return (isset($this->map[$name]) || class_exists($name));
+	return (isset($this->map[$name]) || class_exists($name));
  }
 
 	/**
@@ -72,7 +72,7 @@ class Container implements ContainerInterface {
 	* @param bool $literal set true to provide the value directly without any object construction
 	*/
  function register($name, $value, $literal = false) {
-	 $this->map[$name] = $literal ? array("value" => $value) : array("class" => $value);
+	$this->map[$name] = $literal ? array("value" => $value) : array("class" => $value);
  }
 
  function build($name, $options = array()) {
@@ -82,15 +82,15 @@ class Container implements ContainerInterface {
 	if ($constructor) {
 	$params = $constructor->getParameters();
 	foreach ($params as $param) {
-	   $type = $param->getClass();
+	 $type = $param->getClass();
 	if (isset($options[$param->getName()])) {
-		$args[] = $options[$param->getName()];
+	 $args[] = $options[$param->getName()];
 	} else if ($type) {
-		$args[] = $this->get($type->name);
+	 $args[] = $this->get($type->name);
 	} else if (!$this->has($param->getName()) && $param->isDefaultValueAvailable()) {
-		$args[] = $param->getDefaultValue();
+	 $args[] = $param->getDefaultValue();
 	} else {
-		$args[] = $this->get($param->getName());
+	 $args[] = $this->get($param->getName());
 	}
 	}
 	}

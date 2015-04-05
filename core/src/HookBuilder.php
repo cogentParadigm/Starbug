@@ -13,8 +13,8 @@ class HookBuilder implements HookBuilderInterface {
 	protected $hooks = array();
 
  function __construct(ResourceLocatorInterface $locator) {
-	 $this->locator = $locator;
-	 $this->hooks = array();
+	$this->locator = $locator;
+	$this->hooks = array();
  }
 
 	/**
@@ -27,32 +27,32 @@ class HookBuilder implements HookBuilderInterface {
 	* build("display/label");
 	*/
  function build($name) {
-	 if (!$root) $root = $name;
-	 $key = $name."/".$path;
+	if (!$root) $root = $name;
+	$key = $name."/".$path;
 
 	if (!isset($this->hooks[$name])) {
-	  $hooks = array();
-	  $parts = explode("/", $name);
-	  $class = "hook_".$parts[0]."_".$parts[1];
+	$hooks = array();
+	$parts = explode("/", $name);
+	$class = "hook_".$parts[0]."_".$parts[1];
 
-	  //get extending classes
-	  $files = $this->locate($name.".php", "hooks");
-	  $count = count($files);
-	  $search = "class $class ";
+	//get extending classes
+	$files = $this->locate($name.".php", "hooks");
+	$count = count($files);
+	$search = "class $class ";
 
-	  //loop through found classes
+	//loop through found classes
 	for ($i = 0; $i < $count; $i++) {
-	   //get file contents
-	   $contents = file_get_contents($files[$i]);
-	   $replace = "class ".$class.$i." ";
-	   //replace and eval
-	   eval('?>'.str_replace($search, $replace, $contents));
-	   $hooks[] = $class.$i;
+	 //get file contents
+	 $contents = file_get_contents($files[$i]);
+	 $replace = "class ".$class.$i." ";
+	 //replace and eval
+	 eval('?>'.str_replace($search, $replace, $contents));
+	 $hooks[] = $class.$i;
 	}
 
-	  $this->hooks[$name] = $hooks;
+	$this->hooks[$name] = $hooks;
 	}
 
-	 return $this->hooks[$name];
+	return $this->hooks[$name];
  }
 }

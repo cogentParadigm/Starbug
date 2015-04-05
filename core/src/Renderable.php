@@ -16,14 +16,14 @@ class Renderable {
 
 
  function __construct($selector, $children = array(), $content = "") {
-	 //get tag name and attributes
-	 if (!is_array($selector)) $selector = $this->parse_selector($selector);
-	 if (!empty($selector['tag'])) $this->tagName = $selector['tag'];
-	 if (!empty($selector['attributes'])) $this->attributes = $selector['attributes'];
+	//get tag name and attributes
+	if (!is_array($selector)) $selector = $this->parse_selector($selector);
+	if (!empty($selector['tag'])) $this->tagName = $selector['tag'];
+	if (!empty($selector['attributes'])) $this->attributes = $selector['attributes'];
 
-	 //get content
-	 if ($content instanceof Renderable) $content = (string) $content;
-	 $this->textContent = $content;
+	//get content
+	if ($content instanceof Renderable) $content = (string) $content;
+	$this->textContent = $content;
  }
 
 	/**
@@ -101,30 +101,30 @@ class Renderable {
 	 * make this castable to string
 	 */
  function __toString() {
-	//opening tag
+ //opening tag
 	$value = "<".$this->tagName;
 	foreach ($this->attributes as $k => $v) if (empty($v)) unset($this->attributes[$k]);
 	if (!empty($this->attributes)) {
 	foreach (array("class") as $attr) if (!empty($this->attributes[$attr])) $this->attributes[$attr] = implode(" ", $this->attributes[$attr]);
 	$value .= html_attributes($this->attributes, false);
 	}
-	 //self closing tags
+	//self closing tags
 	if ($this->selfClosing) {
-	  $value .= "/>";
-	  return $value;
-	}
-	 $value .= ">";
-
-	 //content
-	 if (!empty($this->textContent)) $value .= htmlspecialchars($this->textContent, ENT_QUOTES, 'UTF-8');
-	if (!empty($this->children)) {
-	  foreach ($this->children as $child) $value .= (string) $child;
-	}
-	 if (!empty($this->innerHTML)) $value .= $this->innerHTML;
-
-	 //closing tag
-	 $value .= "</".$this->tagName.">";
+	 $value .= "/>";
 	 return $value;
+	}
+	$value .= ">";
+
+	//content
+	if (!empty($this->textContent)) $value .= htmlspecialchars($this->textContent, ENT_QUOTES, 'UTF-8');
+	if (!empty($this->children)) {
+	 foreach ($this->children as $child) $value .= (string) $child;
+	}
+	if (!empty($this->innerHTML)) $value .= $this->innerHTML;
+
+	//closing tag
+	$value .= "</".$this->tagName.">";
+	return $value;
  }
 
 	/**
@@ -133,20 +133,20 @@ class Renderable {
 	 * @return string regex pattern
 	 */
  function parse_selector($selector) {
-			  $pattern = '/^(?P<type>[\*|\w|\-]+)?(?P<id>#[\w|\-]+)?(?P<classes>\.[\w|\-|\.]+)*(?P<data>\[.+\])*$/';
-			  preg_match($pattern, $selector, $matches);
-			  $tag = $matches['type'];
-			  $attributes = array("class" => array());
-			  if (!empty($matches['id'])) $attributes['id'] = substr($matches['id'], 1);
-			  if (!empty($matches['classes'])) $attributes['class'] = explode(".", substr($matches['classes'], 1));
+		   $pattern = '/^(?P<type>[\*|\w|\-]+)?(?P<id>#[\w|\-]+)?(?P<classes>\.[\w|\-|\.]+)*(?P<data>\[.+\])*$/';
+		   preg_match($pattern, $selector, $matches);
+		   $tag = $matches['type'];
+		   $attributes = array("class" => array());
+		   if (!empty($matches['id'])) $attributes['id'] = substr($matches['id'], 1);
+		   if (!empty($matches['classes'])) $attributes['class'] = explode(".", substr($matches['classes'], 1));
 	if (!empty($matches['data'])) {
-			   $parts = explode("][", trim($matches['data'], "[]"));
+		  $parts = explode("][", trim($matches['data'], "[]"));
 	foreach ($parts as $attr) {
-				   $attr = explode("=", $attr);
-				   $attributes[$attr[0]] = trim($attr[1], '"');
+			  $attr = explode("=", $attr);
+			  $attributes[$attr[0]] = trim($attr[1], '"');
 	}
 	}
-			  return array("tag" => $tag, "attributes" => $attributes);
+		   return array("tag" => $tag, "attributes" => $attributes);
  }
 }
 

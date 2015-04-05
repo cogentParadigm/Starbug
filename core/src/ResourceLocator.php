@@ -13,8 +13,8 @@ class ResourceLocator implements ResourceLocatorInterface {
 	private $modules;
 
  function __construct($base_directory = "", $modules = array()) {
-	 $this->base_directory = $base_directory;
-	 $this->modules = $modules;
+	$this->base_directory = $base_directory;
+	$this->modules = $modules;
  }
 
 	public function get($mid) {
