@@ -15,7 +15,7 @@ class Router implements RouterInterface {
 	    )?
 	\}~x
 REGEX;
-	const DEFAULT_DISPATCH_REGEX = '[^/]+';
+	const DEFAULT_DISPATCH_REGEX = '[^\/]+';
 	public function __construct(DatabaseInterface $db=null) {
 		$this->db = $db;
 	}
@@ -59,6 +59,11 @@ REGEX;
 		if (!preg_match($regex, $path, $matches)) {
 			return false;
 		}
+		$values = array();
+		foreach ($variables as $idx => $name) {
+			$values[$name] = $matches[$idx+1];
+		}
+		return $values;
 	}
 	protected function expand($path) {
 		$expanded = array();
@@ -74,14 +79,14 @@ REGEX;
 		$variables = array();
 		foreach ($routeData as $part) {
 			if (is_string($part)) {
-				$regex .= preg_quote($part, '~');
+				$regex .= str_replace('/', '\/', preg_quote($part, '~'));
 				continue;
 			}
 			list($varName, $regexPart) = $part;
 			$variables[$varName] = $varName;
 			$regex .= '(' . $regexPart . ')';
 		}
-		return array($regex, $variables);
+		return array('/'.$regex.'/', $variables);
 	}
 	public function parse($route) {
 		if (!preg_match_all(self::VARIABLE_REGEX, $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
