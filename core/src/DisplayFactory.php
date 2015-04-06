@@ -12,12 +12,12 @@
 class DisplayFactory implements DisplayFactoryInterface {
 	private $inheritance;
 	private $container;
-	public function __construct(InheritanceBuilderInterface $inheritance, ContainerInterface $container) {
-		$this->inheritance = $inheritance;
+	private $classes = array();
+	public function __construct(ContainerInterface $container) {
 		$this->container = $container;
 	}
 	public function get($display, $model = null, $name = null, $options = array()) {
-		$class = $this->inheritance->build("Display", "displays/".ucwords($display)."Display");
+		$class = ucwords($display)."Display";
 		return $this->container->build($class, array('model' => $model, 'name' => $name, 'options' => $options));
 	}
 }

@@ -31,6 +31,11 @@ include(BASE_DIR."/core/src/Renderable.php");
 include(BASE_DIR."/core/src/Request.php");
 include(BASE_DIR."/core/src/ApiRequest.php");
 include(BASE_DIR."/core/src/Macro.php");
+include(BASE_DIR."/core/app/displays/ListDisplay.php");
+include(BASE_DIR."/core/app/displays/TableDisplay.php");
+include(BASE_DIR."/core/app/displays/LayoutDisplay.php");
+include(BASE_DIR."/core/app/displays/GridDisplay.php");
+include(BASE_DIR."/core/app/displays/FormDisplay.php");
 if (defined('SB_CLI')) {
   include(BASE_DIR."/util/cli.php");
 }

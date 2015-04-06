@@ -1,5 +1,5 @@
 <?php
-class TableDisplay {
+class TableDisplay extends Display {
 	var $type = "table";
 	var $template = "table";
 	function init($options) {

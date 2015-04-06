@@ -1,5 +1,5 @@
 <?php
-class GridDisplay {
+class GridDisplay extends Display {
 	var $type = "grid";
 	var $template = "grid";
 	var $grid_class = "starbug/grid/PagedGrid";

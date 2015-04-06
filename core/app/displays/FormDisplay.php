@@ -1,5 +1,5 @@
 <?php
-class FormDisplay {
+class FormDisplay extends Display {
 	var $type = "form";
 	var $template = "form";
 
