@@ -26,12 +26,17 @@ class Application implements ApplicationInterface {
 	}
 
 	public function handle(Request $request) {
-		$response->assign("request", $request);
+		$this->response->assign("request", $request);
 		$route = $this->router->route($request);
 		$controller = $this->controllers->get($route['controller']);
+
+		if (isset($controller->validators[$route['action']])) {
+			$template = $controller->validators[$route['action']];
+		}
+
 		$controller->start($request, $response);
 		$controller->action($route['action'], $route['arguments']);
 		$this->response = $controller->finish();
-		return $response;
+		return $this->response;
 	}
 }

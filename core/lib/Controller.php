@@ -4,6 +4,8 @@ class Controller {
 	public $template = "auto";
 	public $auto_render = true;
 	private $context;
+	public $response;
+	public $validators = array();
 
 	function __construct($context) {
 		$this->context = $context;
@@ -57,6 +59,14 @@ class Controller {
 	 */
 	function missing() {
 		request()->missing();
+	}
+
+	function start(Response $response) {
+		$this->response = $response;
+	}
+
+	function finish() {
+		return $this->response;
 	}
 
 	/**

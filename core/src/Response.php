@@ -44,6 +44,7 @@ class Response {
 		$this->code = $status_code;
 		$this->headers = $headers;
 		$this->cookies = array();
+		$this->assign("response", $this);
 	}
 
 	public function assign($key, $value = "") {
@@ -67,7 +68,7 @@ class Response {
 	}
 
 	public function send_content() {
-		$this->output->render($this->template, array("response" => $this));
+		$this->output->render($this->template);
 	}
 
 	public function send() {
@@ -90,5 +91,12 @@ class Response {
 	*/
 	public function forbidden() {
 		$this->code = 403;
+	}
+
+	/**
+	 * capture a rendered view and save it as the response output
+	 */
+	public function capture($template, $params=array()) {
+		$this->content = $this->output->capture($template, $params, array("scope" => "views"));
 	}
 }
