@@ -35,7 +35,7 @@ class Response {
 
 	public $theme;
 	public $template = "html";
-	public $layout;
+	public $layout = "views";
 
 	protected $output;
 

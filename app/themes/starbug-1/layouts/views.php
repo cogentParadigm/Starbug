@@ -1,5 +1,5 @@
 <div class="container">
 	<div class="section">
-		<?php $this->render("view"); ?>
+		<?php echo $response->content; ?>
 	</div>
 </div>

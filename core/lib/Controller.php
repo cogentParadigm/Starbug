@@ -48,6 +48,7 @@ class Controller {
 	 */
 	function forbidden() {
 		$this->response->forbidden();
+		$this->render("forbidden");
 	}
 
 	/**
@@ -55,6 +56,7 @@ class Controller {
 	 */
 	function missing() {
 		$this->response->missing();
+		$this->render("missing");
 	}
 
 	function start(Request $request, Response $response) {
