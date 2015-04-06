@@ -104,12 +104,8 @@ $this->table("menus",
 $this->table("views  base:uris  description:A basic view");
 $this->table("pages  base:uris  description:A basic page");
 // URIS
-//$this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
 $this->uri("api", "template:api  prefix:core/app/views/");
-$this->uri("documentation", "template:documentation  prefix:core/app/views/  groups:root");
 $this->uri("profile", "template:controller");
-//Rogue IDE
-//$this->uri("rogue", "title:Rogue IDE  format:xhr  prefix:core/app/views/  groups:root");
 //Admin
 $this->uri("admin", "template:controller-group  groups:admin  theme:storm");
 //Uploader

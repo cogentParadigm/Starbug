@@ -19,9 +19,29 @@ class Router implements RouterInterface {
 	 *										- arguments: the arguments
 	 */
 	public function route(Request $request) {
+		$route = array("controller" => "main", "action" => "missing", "arguments" => array());
+
 		$paths = $this->expand($request->path);
 		$query = $this->db->query("uris")->condition("path", $paths);
 		$query->sort("FIELD('".implode("', '", $paths)."')");
+
+		foreach ($query as $result) {
+			$permitted = query("uris")->condition("id", $result['id'])->action("read")->one();
+			if ($permitted) {
+				$route = $result;
+				break;
+			} else {
+				$route = array("controller" => "main", "action" => "forbidden", "arguments" => array());
+			}
+		}
+
+		if (empty($route['controller']) && !empty($route['type'])) {
+			$route = array_replace(array('controller' => $route['type'], 'action' => 'show'), $route);
+			$route['controller'] = $route['type'];
+			if (empty($route['action'])) $route['action'] = 'show';
+		}
+
+		return $route;
 	}
 	protected function expand($path) {
 		$expanded = array();

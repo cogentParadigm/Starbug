@@ -77,4 +77,18 @@ class Response {
 		$this->send_content();
 		ob_end_flush();
 	}
+
+	/**
+	* sends a 404 and sets the payload, path, and uri
+	*/
+	public function missing() {
+		$this->code = 404;
+	}
+
+	/**
+	* sends a 403 and sets the payload, path, and uri
+	*/
+	public function forbidden() {
+		$this->code = 403;
+	}
 }
