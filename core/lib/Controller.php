@@ -3,12 +3,11 @@ class Controller {
 
 	public $template = "auto";
 	public $auto_render = true;
-	private $context;
+	public $request;
 	public $response;
 	public $validators = array();
 
-	function __construct($context) {
-		$this->context = $context;
+	function __construct() {
 		$this->init();
 	}
 
@@ -28,12 +27,9 @@ class Controller {
 	 * @param string $action - the action to run, an empty string will run default_action
 	 * @param string $arguments - arguments to pass to the action
 	 */
-	function action($action="", $arguments=array()) {
+	function action($action = "", $arguments = array()) {
 		if (empty($action)) $action = "default_action";
 		call_user_func_array(array($this, $action), $arguments);
-		if ($this->auto_render) {
-			$this->context->render(($this->template == "auto") ? request()->format : $this->template);
-		}
 	}
 
 	function assign($key, $value=null) {
@@ -43,25 +39,26 @@ class Controller {
 	/**
 	 * set the view to render for this request
 	 */
-	function render($path="") {
-		if (!empty($path)) request()->file = $path;
+	function render($path = "", $params = array(), $options = array("scope" => "views")) {
+		$this->response->capture($path, $params, $options);
 	}
 
 	/**
 	 * return a forbidden response
 	 */
 	function forbidden() {
-		request()->forbidden();
+		$this->response->forbidden();
 	}
 
 	/**
 	 * return a missing response
 	 */
 	function missing() {
-		request()->missing();
+		$this->response->missing();
 	}
 
-	function start(Response $response) {
+	function start(Request $request, Response $response) {
+		$this->request = $request;
 		$this->response = $response;
 	}
 

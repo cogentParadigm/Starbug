@@ -16,7 +16,17 @@ include("core/init.php");
  * @ingroup global
  */
 global $request;
-$request = $container->get("Request");
-$request->set_path($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
-$request->execute();
+$request = new Request($_SERVER['REQUEST_URI'], array(
+  'server' => $_SERVER,
+  'query' => $_GET,
+  'data' => $_POST,
+  'files' => $_FILES,
+  'cookies' => $_COOKIES
+));
+$container->register("Request", $request, true);
+$application = $container->get("ApplicationInterface");
+$response = $application->handle($request);
+$response->send();
+//$request->set_path($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
+//$request->execute();
 ?>

@@ -56,7 +56,7 @@ class Response {
 		if (isset($this->codes[$code])) $code .= " ".$this->codes[$code];
 		header("HTTP/1.1 ".$code);
 		header('Content-Type: '.$this->type.'; charset='.$this->charset);
-	 foreach ($headers as $name => $value) {
+	 foreach ($this->headers as $name => $value) {
 		 header($name.": ".$value);
 	 }
 	}
@@ -96,7 +96,8 @@ class Response {
 	/**
 	 * capture a rendered view and save it as the response output
 	 */
-	public function capture($template, $params=array()) {
-		$this->content = $this->output->capture($template, $params, array("scope" => "views"));
+	public function capture($template, $params=array(), $options = array()) {
+		$options = $options + array("scope" => "views");
+		$this->content = $this->output->capture($template, $params, $options);
 	}
 }
