@@ -82,6 +82,7 @@ class Application implements ApplicationInterface {
 			if ($permits) $object->$value($post);
 			else return false;
 			error_scope("global");
+			return true;
 		}
 	}
 
@@ -99,7 +100,8 @@ class Application implements ApplicationInterface {
 				}
 			}
 			//execute post actions
-			foreach ($post['action'] as $key => $val) return $this->post_action(normalize($key), normalize($val), $post[$key]['id']);
+			foreach ($post['action'] as $key => $val) return $this->post_action(normalize($key), normalize($val), $post[$key]);
 		}
+		return true;
 	}
 }

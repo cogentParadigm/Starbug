@@ -33,7 +33,7 @@ class Controller {
 	}
 
 	function assign($key, $value=null) {
-		$this->context->assign($key, $value);
+		$this->response->assign($key, $value);
 	}
 
 	/**

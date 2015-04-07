@@ -16,7 +16,6 @@ class FormDisplay extends Display {
 		// set default options
 		if (empty($options['url'])) $options['url'] = empty($options['uri']) ? $_SERVER['REQUEST_URI'] : $options['uri'] ;
 		if (empty($options['method'])) $options['method'] = 'post';
-		if (empty($options['postback'])) $options['postback'] = request()->path;
 
 		// assign options to properties
 		$this->action = $options['action'];

@@ -12,7 +12,7 @@
 		$link_attributes['href'] = uri($link["path"]);
 		$parts = explode("/", $link['path']);
 		$active = !empty($link['path']);
-		foreach ($parts as $idx => $part) if (request()->uri[$idx] !== $part) $active = false;
+		foreach ($parts as $idx => $part) if ($request->uri[$idx] !== $part) $active = false;
 		if ($active) $class[] = "active";
 	}
 
@@ -26,7 +26,7 @@
 		if (!$absolute) {
 			$parts = explode("/", $link['href']);
 			$active = true;
-			foreach ($parts as $idx => $part) if (request()->uri[$idx] !== $part) $active = false;
+			foreach ($parts as $idx => $part) if ($request->uri[$idx] !== $part) $active = false;
 			if ($active) $class[] = "active";
 		}
 	}
