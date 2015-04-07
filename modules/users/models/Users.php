@@ -43,7 +43,7 @@ class Users {
 	 * A function for logging in
 	 */
 	function login($login) {
-		$user = $this->query("select:users.*,users.groups as groups,users.statuses as statuses  where:email=?  limit:1", array($login['username']));
+		$user = $this->query("select:users.*,users.groups as groups,users.statuses as statuses  where:email=?  limit:1", array($login['email']));
 		if (Session::authenticate($user['password'], $login['password'], $user['id'], Etc::HMAC_KEY)) {
 			$user['groups'] = explode(",", $user['groups']);
 			$user['statuses'] = explode(",", $user['statuses']);
@@ -52,7 +52,7 @@ class Users {
 			$this->store(array("id" => $user['id'], "last_visit" => date("Y-m-d H:i:s")));
 			if (logged_in('admin') || logged_in('root')) redirect(uri('admin'));
 		} else {
-			error("That username and password combination was not found.", "username");
+			error("That email and password combination was not found.", "email");
 		}
 		unset($_POST['users']['password']);
 	}
@@ -114,6 +114,16 @@ class Users {
 		$display->add("password  pane:right");
 		$display->add("password_confirm  input_type:password  pane:right");
 		$display->add("groups  input_type:multiple_category_select  taxonomy:groups  pane:right");
+	}
+
+	function display_login($display, $ops) {
+		$display->add("email", "password");
+		$display->submit_label = "Login";
+	}
+
+	function display_reset_password($display, $ops) {
+		$display->add("email");
+		$display->submit_label = "Reset Password";
 	}
 
 	function filter($row) {

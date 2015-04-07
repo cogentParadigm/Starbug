@@ -59,18 +59,17 @@ $this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"template  type:string  length:64  default:  list:false",
 	"categories  type:terms  optional:",
 	"tags  type:terms  column:term",
-	"format  type:string  length:16  default:  list:false",
 	"parent  type:int  default:0  list:false",
-	"sort_order  type:int  default:0  list:false",
 	"type  type:string  default:  list:false",
-	"prefix  type:string  length:128  default:app/views/",
 	"theme  type:string  length:128  default:  list:false",
 	"layout  type:string  length:64  default:",
 	"description  type:string  length:255  input_type:textarea  default:  list:false",
 	"meta  type:text  default:  list:false",
 	"meta_keywords  type:string  length:255  input_type:textarea  default:  list:false",
 	"canonical  type:string  length:255  default:  list:false",
-	"breadcrumb  type:string  length:255  default:  list:false"
+	"breadcrumb  type:string  length:255  default:  list:false",
+	"controller  type:string  default:",
+	"action  type:string  default:"
 );
 $this->table("entities  groups:false",
 	"base  type:string  default:",
@@ -104,15 +103,15 @@ $this->table("menus",
 $this->table("views  base:uris  description:A basic view");
 $this->table("pages  base:uris  description:A basic page");
 // URIS
-$this->uri("api", "template:api  prefix:core/app/views/");
-$this->uri("profile", "template:controller");
+$this->uri("api", "controller:api  action:response");
+$this->uri("profile", "controller:profile");
 //Admin
-$this->uri("admin", "template:controller-group  groups:admin  theme:storm");
+$this->uri("admin", "controller:admin  groups:admin  theme:storm");
 //Uploader
-$this->uri("upload", "prefix:core/app/views/  format:xhr  groups:user");
+$this->uri("upload", "template:xhr  groups:user");
 //terms
-$this->uri("terms", "prefix:core/app/views/  format:xhr  groups:user");
-$this->uri("robots", "prefix:core/app/views/  format:txt");
+$this->uri("terms", "template:xhr  groups:user");
+$this->uri("robots", "template:txt");
 
 //Admin Menu
 $this->menu("admin",

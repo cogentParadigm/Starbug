@@ -10,6 +10,8 @@
 class Application implements ApplicationInterface {
 
 	protected $controllers;
+	protected $models;
+	protected $db;
 	protected $router;
 	protected $request;
 	protected $response;
@@ -19,8 +21,18 @@ class Application implements ApplicationInterface {
 	/**
 	 * constructor. connects to db and starts the session
 	 */
-	function __construct(ControllerFactoryInterface $controllers, RouterInterface $router, ConfigInterface $config, ResourceLocatorInterface $locator, Response $response) {
+	function __construct(
+		ControllerFactoryInterface $controllers,
+		ModelFactoryInterface $models,
+		DatabaseInterface $db,
+		RouterInterface $router,
+		ConfigInterface $config,
+		ResourceLocatorInterface $locator,
+		Response $response
+	) {
 		$this->controllers = $controllers;
+		$this->models = $models;
+		$this->db = $db;
 		$this->router = $router;
 		$this->config = $config;
 		$this->locator = $locator;
@@ -48,8 +60,46 @@ class Application implements ApplicationInterface {
 		if (empty($route['arguments'])) $route['arguments'] = array();
 
 		$controller->start($request, $this->response);
-		$controller->action($route['action'], $route['arguments']);
+		$permitted = $this->check_post($request->data, $request->cookies);
+		if ($permitted) $controller->action($route['action'], $route['arguments']);
+		else $controller->forbidden();
 		$this->response = $controller->finish();
 		return $this->response;
+	}
+	/**
+	* run a model action if permitted
+	* @param string $key the model name
+	* @param string $value the function name
+	*/
+	function post_action($key, $value, $post=null) {
+		if ($object = $this->models->get($key)) {
+			error_scope($key);
+			if (isset($post['id'])) {
+				$permits = $this->db->query($key)->action($value)->condition($key.".id", $post['id'])->one();
+			} else {
+				$permits = $this->db->query("permits")->action($value, $key)->one();
+			}
+			if ($permits) $object->$value($post);
+			else return false;
+			error_scope("global");
+		}
+	}
+
+	/**
+	* check $_POST['action'] for posted actions and run them through post_act
+	*/
+	function check_post($post, $cookies) {
+		if (!empty($post['action'])) {
+			//validate csrf token for authenticated requests
+			if (logged_in()) {
+				$validated = false;
+				if (!empty($cookies['oid']) && !empty($post['oid']) && $cookies['oid'] === $post['oid']) $validated = true;
+				if (true !== $validated) {
+					return false;
+				}
+			}
+			//execute post actions
+			foreach ($post['action'] as $key => $val) return $this->post_action(normalize($key), normalize($val), $post[$key]['id']);
+		}
 	}
 }
