@@ -20,7 +20,6 @@ class ControllerFactory implements ControllerFactoryInterface {
 		$controller = ucwords($controller)."Controller";
 		$class = $this->inheritance->build("Controller", "controllers/".$controller);
 		$object = $this->container->get($class);
-		echo $class;
 		return $object;
 	}
 }
