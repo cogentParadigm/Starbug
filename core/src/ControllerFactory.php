@@ -17,6 +17,7 @@ class ControllerFactory implements ControllerFactoryInterface {
 		$this->container = $container;
 	}
 	public function get($controller) {
+		$controller = ucwords($controller)."Controller";
 		$class = $this->inheritance->build("Controller", "controllers/".$controller);
 		return $this->container->get($class);
 	}

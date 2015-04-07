@@ -1,7 +1,7 @@
 <?php
 class ViewsController {
 	function show() {
-		$this->render("view");
+		$this->render($this->response->path);
 	}
 }
 ?>

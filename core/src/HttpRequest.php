@@ -25,7 +25,7 @@ class Request {
 	public $format = "html";
 	public $directory;
 
-	public function _construct($request_path, $options=array()) {
+	public function __construct($request_path, $options=array()) {
 		$options = array_replace(array(
 			'server' => array(),
 			'query' => array(),

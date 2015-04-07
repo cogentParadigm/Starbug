@@ -31,13 +31,13 @@ REGEX;
 		$route = array("controller" => "main", "action" => "missing", "arguments" => array());
 
 		$paths = $this->expand($request->path);
-		$query = $this->db->query("uris")->condition("path", $paths);
-		$query->sort("FIELD('".implode("', '", $paths)."')");
+		$query = $this->db->query("uris")->condition("path", $paths)->select("id");
+		$query->sort("FIELD(path, '".implode("', '", $paths)."')");
 
 		foreach ($query as $result) {
-			$permitted = query("uris")->condition("id", $result['id'])->action("read")->one();
+			$permitted = query("uris")->condition("uris.id", $result['id'])->action("read")->one();
 			if ($permitted) {
-				$route = $result;
+				$route = $permitted;
 				break;
 			} else {
 				$route = array("controller" => "main", "action" => "forbidden", "arguments" => array());
