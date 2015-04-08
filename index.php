@@ -21,7 +21,7 @@ $request = new Request($_SERVER['REQUEST_URI'], array(
 	'query' => $_GET,
 	'data' => $_POST,
 	'files' => $_FILES,
-	'cookies' => $_COOKIES
+	'cookies' => $_COOKIE
 ));
 $container->register("Request", $request, true);
 $application = $container->get("ApplicationInterface");

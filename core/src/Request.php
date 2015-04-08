@@ -39,7 +39,7 @@ class Request {
 		$this->server = $options['server'];
 		$this->parameters = $options['parameters'];
 		$this->data = $options['data'];
-		$this->files = $options['cookies'];
+		$this->cookies = $options['cookies'];
 		$this->files = $options['files'];
 
 		$this->host = empty($options['host']) ? $this->server['HTTP_HOST'] : $options['host'];

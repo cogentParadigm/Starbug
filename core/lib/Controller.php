@@ -5,7 +5,7 @@ class Controller {
 	public $auto_render = true;
 	public $request;
 	public $response;
-	public $validators = array();
+	public $routes = array();
 
 
 	function init() {

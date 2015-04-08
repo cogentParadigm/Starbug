@@ -21,7 +21,7 @@ class Application implements ApplicationInterface {
 	/**
 	 * constructor. connects to db and starts the session
 	 */
-	function __construct(
+	public function __construct(
 		ControllerFactoryInterface $controllers,
 		ModelFactoryInterface $models,
 		DatabaseInterface $db,
@@ -53,8 +53,8 @@ class Application implements ApplicationInterface {
 		}
 		$controller = $this->controllers->get($route['controller']);
 
-		if (isset($controller->validators[$route['action']])) {
-			$template = $controller->validators[$route['action']];
+		if (isset($controller->routes[$route['action']])) {
+			$template = $controller->routes[$route['action']];
 			if (false === ($values = $this->router->validate($request, $route, $template))) {
 				$route['action'] = 'missing';
 			} else if (is_array($values)) {
@@ -76,7 +76,7 @@ class Application implements ApplicationInterface {
 	* @param string $key the model name
 	* @param string $value the function name
 	*/
-	function post_action($key, $value, $post=null) {
+	protected function post_action($key, $value, $post=null) {
 		if ($object = $this->models->get($key)) {
 			error_scope($key);
 			if (isset($post['id'])) {
@@ -94,7 +94,7 @@ class Application implements ApplicationInterface {
 	/**
 	* check $_POST['action'] for posted actions and run them through post_act
 	*/
-	function check_post($post, $cookies) {
+	protected function check_post($post, $cookies) {
 		if (!empty($post['action'])) {
 			//validate csrf token for authenticated requests
 			if (logged_in()) {
