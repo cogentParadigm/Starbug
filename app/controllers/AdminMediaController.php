@@ -4,7 +4,7 @@ class AdminMediaController {
 		$this->assign("model", "files");
 	}
 	function default_action() {
-		$this->template = "media-browser";
+		$this->response->template = "media-browser";
 	}
 	function update($id=null) {
 		$this->assign("id", $id);
