@@ -133,6 +133,11 @@ class Table {
 		return $data;
 	}
 
+	function display_search($display, $ops) {
+		$display->attributes['class'][] = 'form-inline';
+		$display->submit_label = "Search";
+		$display->add("keywords  input_type:text  nolabel:");
+	}
 
 }
 ?>
