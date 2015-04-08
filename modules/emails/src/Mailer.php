@@ -16,15 +16,15 @@ class Mailer extends PHPMailer implements MailerInterface {
 	private $from_name;
 	private $macro;
 
-	function __construct(ConfigInterface $config, MacroInterface $macro) {
+	function __construct(SettingsInterface $settings, MacroInterface $macro) {
 		$this->macro = $macro;
-		$this->host = $config->get("email_host", "settings");
-		$this->username = $config->get("email_username", "settings");
-		$this->password = $config->get("email_password", "settings");
-		$this->from_email = $config->get("email_address", "settings");
-		$this->from_name = $config->get("site_name", "settings");
-		$port = $config->get("email_port", "settings");
-		$secure = $config->get("email_secure", "settings");
+		$this->host = $settings->get("email_host");
+		$this->username = $settings->get("email_username");
+		$this->password = $settings->get("email_password");
+		$this->from_email = $settings->get("email_address");
+		$this->from_name = $settings->get("site_name");
+		$port = $settings->get("email_port");
+		$secure = $settings->get("email_secure");
 		if ($this->host) {
 			$this->IsSMTP(); // send via SMTP
 			$this->Host     = $this->host;

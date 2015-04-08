@@ -9,6 +9,7 @@ include(BASE_DIR."/core/src/interface/HookBuilderInterface.php");
 include(BASE_DIR."/core/src/interface/ControllerFactoryInterface.php");
 include(BASE_DIR."/core/src/interface/DisplayFactoryInterface.php");
 include(BASE_DIR."/core/src/interface/ConfigInterface.php");
+include(BASE_DIR."/core/src/interface/SettingsInterface.php");
 include(BASE_DIR."/core/src/interface/TemplateInterface.php");
 include(BASE_DIR."/core/src/interface/MacroInterface.php");
 include(BASE_DIR."/core/src/interface/MailerInterface.php");

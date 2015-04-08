@@ -26,7 +26,7 @@ class Application implements ApplicationInterface {
 		ModelFactoryInterface $models,
 		DatabaseInterface $db,
 		RouterInterface $router,
-		ConfigInterface $config,
+		SettingsInterface $settings,
 		ResourceLocatorInterface $locator,
 		Response $response
 	) {
@@ -34,7 +34,7 @@ class Application implements ApplicationInterface {
 		$this->models = $models;
 		$this->db = $db;
 		$this->router = $router;
-		$this->config = $config;
+		$this->settings = $settings;
 		$this->locator = $locator;
 		$this->response = $response;
 	}
@@ -43,7 +43,7 @@ class Application implements ApplicationInterface {
 		$this->response->assign("request", $request);
 		$route = $this->router->route($request);
 
-		if (empty($route['theme'])) $route['theme'] = $this->config->get("theme", "settings");
+		if (empty($route['theme'])) $route['theme'] = $this->settings->get("theme");
 		if (empty($route['layout'])) $route['layout'] = empty($route['type']) ? "views" : $route['type'];
 		if (empty($route['template'])) $route['template'] = $request->format;
 		$this->locator->set("theme", "app/themes/".$route['theme']);

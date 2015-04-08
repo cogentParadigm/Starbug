@@ -49,7 +49,6 @@ foreach ($locator->locate("global_functions.php", "") as $global_include) includ
 
 global $sb;
 $sb = $container->get("sb");
-$sb->config->provide("settings", $container->get("Settings"));
 
 $context = $container->get("TemplateInterface");
 $context->assign("container", $container);

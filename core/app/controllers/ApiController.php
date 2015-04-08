@@ -1,5 +1,5 @@
 <?php
-class MainController {
+class ApiController {
 	public $validators = array(
 		'response' => '{model}/{action}.{format}'
 	);

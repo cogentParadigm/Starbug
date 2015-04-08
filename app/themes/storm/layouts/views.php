@@ -1,1 +1,1 @@
-<?php $this->render("content"); ?>
+<?php echo $response->content; ?>
