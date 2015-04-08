@@ -132,5 +132,11 @@ class Users {
 		unset($row['password']);
 		return $row;
 	}
+
+	function display_search($display, $ops) {
+		parent::display_search($display, $ops);
+		$display->add("group  input_type:category_select  taxonomy:groups  optional:Any Group  nolabel:");
+		$display->add("status  input_type:category_select  taxonomy:statuses  optional:Any Status  nolabel:");
+	}
 }
 ?>

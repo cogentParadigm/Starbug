@@ -1,16 +1,15 @@
 <?php
 class FormDisplay extends Display {
-	var $type = "form";
-	var $template = "form";
+	public $type = "form";
+	public $template = "form";
 
-	var $url;
-	var $action;
-	var $method;
-	var $postback;
-	var $errors = array();
-	var $layout;
-	var $submit_label = "Save";
-	private $vars = array();
+	public $url;
+	public $action;
+	public $method;
+	public $errors = array();
+	public $layout;
+	public $submit_label = "Save";
+	protected $vars = array();
 
 	function init($options) {
 		// set default options
@@ -21,7 +20,6 @@ class FormDisplay extends Display {
 		$this->action = $options['action'];
 		$this->url = $options['url'];
 		$this->method = strtolower($options['method']);
-		$this->postback = $options['postback'];
 
 		// grab schema
 		if (!empty($this->model) && sb()->models->has($this->model)) {
@@ -112,7 +110,7 @@ class FormDisplay extends Display {
 		if (empty($model)) {
 			$model = (empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
 		}
-		if (empty($model)) return $name;
+		if (empty($model) || $this->method == "get") return $name;
 		else if (false !== strpos($name, "[")) {
 			$parts = explode("[", $name, 2);
 			return $model."[".$parts[0]."][".$parts[1];
@@ -130,7 +128,7 @@ class FormDisplay extends Display {
 		}
 		$parts = explode("[", $name);
 		if ($this->method == "post") $var = (empty($model)) ? $_POST : $_POST[$model];
-		else $var = (empty($model)) ? $_GET : $_GET[$model];
+		else $var = $_GET;
 		foreach($parts as $p) $var = $var[rtrim($p, "]")];
 		if (is_array($var)) return $var;
 		else return stripslashes($var);

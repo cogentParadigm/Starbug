@@ -47,6 +47,20 @@ class Menus {
 		$display->add("content  label:Title  plugin:starbug.grid.columns.html  sortable:false", "position  sortable:false");
 	}
 
+	function display_form($display, $ops) {
+		$display->layout->add("top  tl:div.col-md-6  tr:div.col-md-6");
+		$display->layout->add("middle  ml:div.col-md-6  mr:div.col-md-6");
+		$display->layout->add("bottom  bl:div.col-md-6  br:div.col-md-6");
+		$display->add("menu  input_type:hidden  pane:tl  default:".$ops['menu']);
+		$display->add("parent  input_type:autocomplete  pane:tl  info:Leave empty to place the item at the top level.");
+		$display->add("position  pane:tr  info:Enter 1 for the first position, leave empty for the last.");
+		$display->add("uris_id  pane:ml  input_type:autocomplete  from:uris  label:Page  info:Select a page.");
+		$display->add("href  pane:mr  label:URL  info:Enter a URL manually.");
+		$display->add("content  pane:bl  info:Override the link text.");
+		$display->add("target  pane:br  input_type:checkbox  label:Open in new tab/window  value:_blank");
+		$display->add("template  pane:br  input_type:checkbox  label:Divider  value:divider");
+	}
+
 	function filter($item, $action) {
 		if ($action === "tree") {
 			if (empty($item['content']) && !empty($item['title'])) $item['content'] = $item['title'];
