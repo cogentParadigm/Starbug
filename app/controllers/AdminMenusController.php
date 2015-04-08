@@ -1,7 +1,7 @@
 <?php
 class AdminMenusController {
 	public $routes = array(
-		'menu' => 'menu/{menu}'
+		'menu' => '{menu}'
 	);
 	function init() {
 		$this->assign("model", "menus");

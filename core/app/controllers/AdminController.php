@@ -12,7 +12,7 @@ class AdminController {
 		$arguments = array();
 		if (isset($controller->routes[$action])) {
 			$template = $controller->routes[$action];
-			if (false === ($values = $this->router->validate($this->request, array('path' => 'admin/'.$name), $template))) {
+			if (false === ($values = $this->router->validate($this->request, array('path' => 'admin/'.$name.'/'.$action), $template))) {
 				$action = 'missing';
 			} else if (is_array($values)) {
 				$arguments = $values;
