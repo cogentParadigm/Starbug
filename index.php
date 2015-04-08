@@ -18,7 +18,7 @@ include("core/init.php");
 global $request;
 $request = new Request($_SERVER['REQUEST_URI'], array(
 	'server' => $_SERVER,
-	'query' => $_GET,
+	'parameters' => $_GET,
 	'data' => $_POST,
 	'files' => $_FILES,
 	'cookies' => $_COOKIE

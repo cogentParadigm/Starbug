@@ -117,9 +117,5 @@ class <?php echo ucwords($name); ?>Model extends Table {
 		return $query;
 	}
 
-	function query_filters($action, $query, &$ops) {
-		return $query;
-	}
-
 }
 <?php echo '?>'; ?>

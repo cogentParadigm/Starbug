@@ -72,7 +72,7 @@ class ApiRequest {
 		 $id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : sb($model)->insert_id;
 		 $query->condition($model.".id", $id);
 	 }
-		if (!empty($_GET['keywords'])) $query->search($_GET['keywords']);
+		//if (!empty($_GET['keywords'])) $query->search($_GET['keywords']);
 
 		//paging
 	 if (isset($_SERVER['HTTP_RANGE'])) {

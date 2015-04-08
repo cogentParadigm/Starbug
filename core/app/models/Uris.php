@@ -4,7 +4,6 @@ class Uris {
 	function query_admin($query, &$ops) {
 		$query->select($query->model.".statuses.term as statuses");
 		if (!logged_in("admin")) $query->action("read");
-		$query->condition($query->model.".prefix", "app/views/");
 		if (!empty($ops['type'])) {
 			$query->condition($query->model.".type", $ops['type']);
 		}
@@ -15,6 +14,10 @@ class Uris {
 		return $query;
 	}
 
+	function query_filters($action, $query, &$ops) {
+		if (!empty($ops['keywords'])) $query->search($ops['keywords'], $query->model.".title");
+	}
+
 	function display_admin($display, $options) {
 		$display->add("title", "statuses", "modified  label:Last Modified");
 	}
@@ -23,9 +26,9 @@ class Uris {
 		//layout
 		$display->layout->add("top  left:div.col-md-9  right:div.col-md-3", "bottom  tabs:div.col-sm-12");
 		$display->layout->put("tabs", 'div[data-dojo-type="dijit/layout/TabContainer"][data-dojo-props="doLayout:false, tabPosition:\'left-h\'"][style="width:100%;height:100%"]', '', 'tc');
-		$display->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="URL path"]'.((empty($_GET['tab'])) ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'path');
-		$display->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Meta tags"]'.(($_GET['tab'] === "meta") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'meta');
-		$display->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Breadcrumbs"]'.(($_GET['tab'] === "breadcrumbs") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'breadcrumbs');
+		$display->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="URL path"]'.((empty($ops['tab'])) ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'path');
+		$display->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Meta tags"]'.(($ops['tab'] === "meta") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'meta');
+		$display->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Breadcrumbs"]'.(($ops['tab'] === "breadcrumbs") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'breadcrumbs');
 		//left
 		$display->add("title  pane:left");
 		$display->add("blocks  input_type:blocks  pane:left");

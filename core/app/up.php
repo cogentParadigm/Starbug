@@ -101,7 +101,7 @@ $this->table("menus",
 );
 // CONTENT TYPES
 $this->table("views  base:uris  description:A basic view");
-$this->table("pages  base:uris  description:A basic page  search:pages.title");
+$this->table("pages  base:uris  description:A basic page");
 // URIS
 $this->uri("api", "controller:api  action:response");
 $this->uri("profile", "controller:profile");

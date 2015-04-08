@@ -140,5 +140,14 @@ class Table {
 		$display->add("keywords  input_type:text  nolabel:");
 	}
 
+	function query_filters($action, $query, &$ops) {
+		if (!empty($this->base)) {
+			sb($this->base)->query_filters($action, $query, $ops);
+		} else {
+			if (!empty($ops['keywords'])) $query->search($ops['keywords']);
+		}
+		return $query;
+	}
+
 }
 ?>
