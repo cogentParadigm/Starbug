@@ -7,9 +7,6 @@ class Controller {
 	public $response;
 	public $validators = array();
 
-	function __construct() {
-		$this->init();
-	}
 
 	function init() {
 
@@ -62,6 +59,7 @@ class Controller {
 	function start(Request $request, Response $response) {
 		$this->request = $request;
 		$this->response = $response;
+		$this->init();
 	}
 
 	function finish() {

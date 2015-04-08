@@ -32,7 +32,7 @@ include(BASE_DIR."/core/lib/Controller.php");
 include(BASE_DIR."/core/lib/Display.php");
 include(BASE_DIR."/core/lib/DisplayHook.php");
 include(BASE_DIR."/core/src/Renderable.php");
-include(BASE_DIR."/core/src/HttpRequest.php");
+include(BASE_DIR."/core/src/Request.php");
 include(BASE_DIR."/core/src/ApiRequest.php");
 include(BASE_DIR."/core/src/Macro.php");
 include(BASE_DIR."/core/src/Response.php");
