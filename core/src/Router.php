@@ -60,8 +60,10 @@ REGEX;
 			return false;
 		}
 		$values = array();
-		foreach ($variables as $idx => $name) {
-			$values[$name] = $matches[$idx+1];
+		$idx = 1;
+		foreach ($variables as $name) {
+			$values[$name] = $matches[$idx];
+			$idx ++;
 		}
 		return $values;
 	}

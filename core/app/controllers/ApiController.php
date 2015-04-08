@@ -1,11 +1,12 @@
 <?php
 class ApiController {
 	public $validators = array(
-		'response' => '{model}/{action}.{format}'
+		'response' => '{model}/{action}'
 	);
 	function response($model, $action) {
-		$request = new ApiRequest($model."/".$action.".".$this->request->format, $this->request->get);
-		$this->response->content = $request->execute();
+		$this->response->template = "xhr";
+		$request = new ApiRequest($model."/".$action.".".$this->request->format, $this->request->parameters);
+		$this->response->content = $request->result;
 	}
 }
 ?>

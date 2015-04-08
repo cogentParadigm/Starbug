@@ -55,6 +55,11 @@ class Application implements ApplicationInterface {
 
 		if (isset($controller->validators[$route['action']])) {
 			$template = $controller->validators[$route['action']];
+			if (false === ($values = $this->router->validate($request, $route, $template))) {
+				$route['action'] = 'missing';
+			} else if (is_array($values)) {
+				$route['arguments'] = $values;
+			}
 		}
 
 		if (empty($route['arguments'])) $route['arguments'] = array();
