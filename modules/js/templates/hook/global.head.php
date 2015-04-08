@@ -27,11 +27,11 @@
 			</script>
 	<?php } ?>
 	<?php
-		$scripts = theme("scripts", $request->theme);
+		$scripts = $sb->config->get("info.scripts", 'themes/'.$request->theme);
 		efault($scripts, array());
 	?>
 	<?php foreach ($scripts as $script) { ?>
-		<script type="text/javascript" src="<?php echo uri("app/themes/".$request->theme."/public/js/$script"); ?>"></script>	
+		<script type="text/javascript" src="<?php echo uri("app/themes/".$request->theme."/public/js/$script"); ?>"></script>
 	<?php } ?>
 	<script type="text/javascript">
 		var WEBSITE_URL = '<?php echo uri(); ?>';
