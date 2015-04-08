@@ -1,5 +1,8 @@
 <?php
 class AdminMenusController {
+	public $routes = array(
+		'menu' => 'menu/{menu}'
+	);
 	function init() {
 		$this->assign("model", "menus");
 	}
@@ -20,8 +23,8 @@ class AdminMenusController {
 			redirect(uri("admin/menus/menu/".$menu['menu']));
 		} else $this->render("admin/update");
 	}
-	function menu() {
-		$this->assign("menu", $this->request->uri[3]);
+	function menu($menu) {
+		$this->assign("menu", $menu);
 		$this->render("admin/menus/menu");
 	}
 }
