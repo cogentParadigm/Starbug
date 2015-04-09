@@ -1,5 +1,8 @@
 <?php
 class AdminUrisController {
+	public $routes = array(
+		'update' => '{id}'
+	);
 	function init() {
 		$this->assign("model", "uris");
 		$this->assign("form", "uris");
@@ -18,7 +21,7 @@ class AdminUrisController {
 	function create() {
 		$this->render("admin/create");
 	}
-	function update($id=null) {
+	function update($id) {
 		$this->assign("id", $id);
 		$this->assign("action", "update");
 		$this->render("admin/update");

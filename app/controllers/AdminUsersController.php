@@ -1,5 +1,8 @@
 <?php
 class AdminUsersController {
+	public $routes = array(
+		'update' => '{id}'
+	);
 	function init() {
 		$this->assign("model", "users");
 		$this->assign("cancel_url", "admin/users");
@@ -12,7 +15,7 @@ class AdminUsersController {
 		if (success("users", "create")) redirect(uri("admin/users", 'u'));
 		else $this->render("admin/create");
 	}
-	function update($id=null) {
+	function update($id) {
 		$this->assign("id", $id);
 		$this->assign("form", "users");
 		$this->render("admin/update");

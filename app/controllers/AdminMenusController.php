@@ -1,7 +1,8 @@
 <?php
 class AdminMenusController {
 	public $routes = array(
-		'menu' => '{menu}'
+		'menu' => '{menu}',
+		'update' => '{id}'
 	);
 	function init() {
 		$this->assign("model", "menus");
@@ -16,7 +17,7 @@ class AdminMenusController {
 			redirect(uri("admin/menus/menu/".$menu['menu']));
 		} else $this->render("admin/create");
 	}
-	function update($id = null) {
+	function update($id) {
 		$this->assign("id", $id);
 		if (success("menus", "create")) {
 			$menu = get("menus", $id);
