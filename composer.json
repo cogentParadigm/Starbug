@@ -1,0 +1,10 @@
+{
+	"require": {
+		"phpmailer/phpmailer": "dev-master",
+		"masterexploder/phpthumb": "dev-master",
+		"ezyang/htmlpurifier":"dev-master"
+	}
+	"autoload": {
+		"classmap": ["core/src/"]
+	}
+}
