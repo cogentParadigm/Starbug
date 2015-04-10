@@ -20,6 +20,7 @@ class Display {
 	protected $query; //database query object
 	protected $dirty = false; //dirty indicator
 	protected $context;
+	protected $hook_builder;
 
 
 	/**
@@ -27,8 +28,9 @@ class Display {
 	 * @param string $name the display name
 	 * @param array $options the display options
 	 */
-	function __construct(TemplateInterface $context, $model=null, $name=null, $options=array()) {
+	function __construct(TemplateInterface $context, HookFactoryInterface $hook_builder, $model=null, $name=null, $options=array()) {
 		$this->context = $context;
+		$this->hook_builder = $hook_builder;
 		$this->model = $model;
 		$this->name = $name;
 		$this->options = $options;
@@ -136,16 +138,17 @@ class Display {
 
 	function invoke_hook($phase, $hook, $field, &$options, $column) {
 
-		if (!isset($this->hooks[$field."_".$hook])) $this->hooks[$field."_".$hook] = $this->context->locator->build_hook("display/".$hook, "lib/DisplayHook", "core");
-		$hook = $this->hooks[$field."_".$hook];
+		if (!isset($this->hooks[$field."_".$hook])) $this->hooks[$field."_".$hook] = $this->hook_builder->get("display/".$hook);
 
-		//hooks are invoked in 2 phases
-		//0 = build
-		//1 = render
-		if ($phase == Display::HOOK_PHASE_BUILD) {
-			$hook->build($this, $field, $options, $column);
-		} else if ($phase == Display::HOOK_PHASE_RENDER) {
-			$hook->render($this, $field, $options, $column);
+		foreach ($this->hooks[$field."_".$hook] as $hook) {
+			//hooks are invoked in 2 phases
+			//0 = build
+			//1 = render
+			if ($phase == Display::HOOK_PHASE_BUILD) {
+				$hook->build($this, $field, $options, $column);
+			} else if ($phase == Display::HOOK_PHASE_RENDER) {
+				$hook->render($this, $field, $options, $column);
+			}	
 		}
 	}
 

@@ -61,8 +61,12 @@ class Database implements DatabaseInterface {
 	);
 	protected $config;
 	protected $params;
+	protected $models;
+	protected $hooks;
 
-	public function __construct(ConfigInterface $config, $database_name) {
+	public function __construct(ModelFactoryInterface $models, HookFactoryInterface $hooks, ConfigInterface $config, $database_name) {
+		$this->models = $models;
+		$this->hooks = $hooks;
 		$this->config = $config;
 		$params = $config->get("db/".$database_name);
 		try {
@@ -146,7 +150,7 @@ class Database implements DatabaseInterface {
 		if (!empty($args['params'])) $replacements = $args['params'];
 
 		//create query object
-		$query = new query($froms);
+		$query = new query($this, $this->models, $this->hooks, $froms);
 
 		//call functions
 		foreach ($args as $k => $v) {
@@ -184,7 +188,7 @@ class Database implements DatabaseInterface {
 	function queue($name, $fields = array(), $from = "auto", $unshift = false) {
 		if (!is_array($fields)) $fields = star($fields);
 
-		$query = new query($name);
+		$query = new query($this, $this->models, $this->hooks, $name);
 		foreach ($fields as $col => $value) $query->set($col, $value);
 
 		if ($from === "auto" && !empty($fields['id'])) $from = array("id" => $fields['id']);
@@ -215,7 +219,7 @@ class Database implements DatabaseInterface {
 	*/
 	function remove($from, $where) {
 		if (!empty($where)) {
-			$del = new query($from);
+			$del = new query($this, $this->models, $this->hooks, $from);
 			$this->record_count = $del->condition(star($where))->delete();
 			return $this->record_count;
 		}

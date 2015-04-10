@@ -73,15 +73,17 @@ class query implements IteratorAggregate, ArrayAccess {
 
 	public $store_on_errors = false;
 	protected $models;
+	protected $hook_builder;
 
 	/**
 	 * create a new query
 	 * @param string $collection the name of the primary table/collection to query
 	 * @param array $params parameters to merge into the query
 	 */
-	function __construct($collection, $params = array()) {
-		$this->db = sb()->db;
-		$this->models = sb()->models;
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, $collection, $params = array()) {
+		$this->db = $db;
+		$this->models = $models;
+		$this->hook_builder = $hook_builder;
 		$params = star($params);
 		$this->from($collection);
 		foreach ($params as $key => $value) $this->{$key}($value);

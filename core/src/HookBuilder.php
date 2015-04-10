@@ -19,27 +19,22 @@ class HookBuilder implements HookBuilderInterface {
 
 	/**
 	* get a controller by name
-	* @param string $name the name of the controller, such as 'users'
-	* @param string $type a sub type such as 'admin'
-	* @return the instantiated controller
-	* build("Model", "models/Users", "Table");
+	* @param string $name the name of the hook, such as 'store/ordered'
+	* @return an array of class names
 	* build("store/ordered")
 	* build("display/label");
 	*/
 	function build($name) {
-		if (!$root) $root = $name;
-		$key = $name."/".$path;
-
 		if (!isset($this->hooks[$name])) {
 			$hooks = array();
 			$parts = explode("/", $name);
 			$class = "hook_".$parts[0]."_".$parts[1];
 
 			//get extending classes
-			$files = $this->locate($name.".php", "hooks");
+			$files = $this->locator->locate($name.".php", "hooks");
 			$count = count($files);
 			$search = "class $class ";
-			
+
 			//loop through found classes
 			for ($i = 0; $i < $count; $i++) {
 				//get file contents

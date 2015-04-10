@@ -3,11 +3,15 @@
 # Distributed under the terms of the GNU General Public License v3
 class QueryTest extends PHPUnit_Framework_TestCase {
 
+	function setUp() {
+		$this->db = sb()->db;
+	}
+
 	/**
 	 * Test the IteratorAggregate interface
 	 */
 	function test_iteration() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		foreach ($query as $uri) {
 			$this->assertArrayHasKey("id", $uri);
 			$this->assertArrayHasKey("path", $uri);
@@ -19,7 +23,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test table aliases
 	 */
 	function test_alias() {
-		$query = new query("uris as pages");
+		$query = $this->db->query("uris as pages");
 
 		//expected output
 		$expected = "SELECT `pages`.* FROM `".P("uris")."` AS `pages`";
@@ -36,7 +40,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * > - right angle bracket for right join
 	 */
 	function test_inner_join() {
-		$query = new query("uris,users");
+		$query = $this->db->query("uris,users");
 
 		//expected output
 		$expected = "SELECT `uris`.* FROM `".P("uris")."` AS `uris` INNER JOIN `".P("users")."` AS `users` ON uris.owner=users.id";
@@ -47,7 +51,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_left_join() {
-		$query = new query("uris<users");
+		$query = $this->db->query("uris<users");
 
 		//expected output
 		$expected = "SELECT `uris`.* FROM `".P("uris")."` AS `uris` LEFT JOIN `".P("users")."` AS `users` ON uris.owner=users.id";
@@ -58,7 +62,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_right_join() {
-		$query = new query("uris>users");
+		$query = $this->db->query("uris>users");
 
 		//expected output
 		$expected = "SELECT `uris`.* FROM `".P("uris")."` AS `uris` RIGHT JOIN `".P("users")."` AS `users` ON uris.owner=users.id";
@@ -73,7 +77,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test ON clauses in query models
 	 */
 	function test_join_on() {
-		$query = new query("uris,users on uris.id=users.id");
+		$query = $this->db->query("uris,users on uris.id=users.id");
 
 		//expected output
 		$expected = "SELECT `uris`.* FROM `".P("uris")."` AS `uris` INNER JOIN `".P("users")."` AS `users` ON uris.id=users.id";
@@ -88,7 +92,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test aliases in query models
 	 */
 	function test_join_aliases() {
-		$query = new query("uris as pages,users as people");
+		$query = $this->db->query("uris as pages,users as people");
 
 		//expected output
 		$expected = "SELECT `pages`.* FROM `".P("uris")."` AS `pages` INNER JOIN `".P("users")."` AS `people` ON pages.owner=people.id";
@@ -102,7 +106,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test ON clauses and aliases together in query models
 	 */
 	function test_join_on_and_aliases() {
-		$query = new query("uris as pages,users as people on pages.id=people.id");
+		$query = $this->db->query("uris as pages,users as people on pages.id=people.id");
 
 		//expected output
 		$expected = "SELECT `pages`.* FROM `".P("uris")."` AS `pages` INNER JOIN `".P("users")."` AS `people` ON pages.id=people.id";
@@ -116,7 +120,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test ON clauses and aliases together using extended syntax
 	 */
 	function test_join_on_and_aliases_extended() {
-		$query = new query("uris as pages");
+		$query = $this->db->query("uris as pages");
 
 		$query->innerJoin("users as people")->on("pages.id=people.id");
 		//this is also valid
@@ -134,7 +138,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test select
 	 */
 	function test_select() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->select("CONCAT(id, ' ', path) as path");
 
 		// the code above should produce the query below
@@ -151,7 +155,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * SELECT uris.owner.first_name
 	 */
 	function test_select_expansion() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->select("CONCAT(owner.first_name, ' ', owner.last_name) as name");
 
 		// the code above should produce the query below
@@ -167,7 +171,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test where clauses
 	 */
 	function test_where() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->where("uris.path LIKE '%path%'");
 
 		//expected output
@@ -182,7 +186,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test parameterized conditions
 	 */
 	function test_condition() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->condition("uris.path", "%path%", "LIKE");
 
 		//expected output
@@ -198,7 +202,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in condition fields
 	 */
 	function test_condition_expansion() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->condition("uris.owner.email", "root");
 
 		//expected output
@@ -230,7 +234,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in condition fields
 	 */
 	function test_condition_expansion_many() {
-		$query = new query("terms");
+		$query = $this->db->query("terms");
 		$query->condition("images.mime_type", "image/png");
 
 		//expected output
@@ -247,7 +251,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * when not using =, !=, IN, or NOT IN the sub-query comparison does not work, and therefore the query should join to obtain the field for comparison
 	 */
 	function test_condition_expansion_many_join() {
-		$query = new query("terms");
+		$query = $this->db->query("terms");
 		$query->condition("images.mime_type", "image/%", "LIKE")->group("terms.id");
 
 		//expected output
@@ -263,7 +267,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in condition fields
 	 */
 	function test_condition_expansion_category() {
-		$query = new query("settings");
+		$query = $this->db->query("settings");
 		$query->condition("settings.category.slug", "general");
 
 		//expected output
@@ -279,7 +283,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in condition fields
 	 */
 	function test_condition_expansion_category_explicit() {
-		$query = new query("settings");
+		$query = $this->db->query("settings");
 		$query->condition("settings.category.term", "General");
 
 		//expected output
@@ -295,7 +299,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in condition fields
 	 */
 	function test_condition_expansion_terms() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->condition("uris.groups", "user", "!=");
 
 		//expected output
@@ -311,7 +315,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in condition fields and specify the comparator field explicitly
 	 */
 	function test_condition_expansion_terms_explicit_comparator() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->condition("uris.groups.term", "User", '!=');
 
 		//expected output
@@ -327,7 +331,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in where clauses
 	 */
 	function test_where_expansion_terms() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->where(":group NOT IN uris.groups")->param("group", "user");
 
 		//expected output
@@ -343,7 +347,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test grouping
 	 */
 	function test_grouping() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->select("COUNT(*) as count")->group("type");
 
 		//expected output
@@ -358,7 +362,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in GROUP BY clauses
 	 */
 	function test_grouping_expansion() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->select("COUNT(*) as count")->group("owner.first_name");
 
 		//expected output
@@ -373,7 +377,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in GROUP BY clauses
 	 */
 	function test_grouping_expansion_terms() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->select("COUNT(*) as count")->group("uris.groups");
 
 		//expected output
@@ -388,7 +392,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test having
 	 */
 	function test_having_condition() {
-		$query = new query("terms");
+		$query = $this->db->query("terms");
 		$query->group("terms.taxonomy")->select("terms.taxonomy,COUNT(*) as count")->havingCondition("count", "0", ">");
 
 		//expected output
@@ -404,7 +408,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test having
 	 */
 	function test_sorting() {
-		$query = new query("terms");
+		$query = $this->db->query("terms");
 		$query->sort("taxonomy")->sort("slug", 1)->sort("created", -1);
 
 		//expected output
@@ -419,7 +423,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test limit
 	 */
 	function test_limit() {
-		$query = new query("terms");
+		$query = $this->db->query("terms");
 		$query->limit(5)->skip(10);
 
 		//expected output
@@ -431,7 +435,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_or_condition() {
-		$query = new query("terms");
+		$query = $this->db->query("terms");
 		$query->condition("taxonomy", "uris_categories")->orCondition("taxonomy", "files_category");
 
 		//expected output
@@ -445,7 +449,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_or_where() {
-		$query = new query("terms");
+		$query = $this->db->query("terms");
 		$query->where("taxonomy = :tax1")->orWhere("taxonomy = :tax2")->params(array("tax1" => "uris_categories", "tax2" => "files_category"));
 
 		//expected output
@@ -459,7 +463,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_or_where_shorter() {
-		$query = new query("terms");
+		$query = $this->db->query("terms");
 		$query->where("taxonomy = :tax1 || taxonomy = :tax2")->params(array("tax1" => "uris_categories", "tax2" => "files_category"));
 
 		//expected output
@@ -473,7 +477,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_or_condition_set() {
-		$query = new query("terms");
+		$query = $this->db->query("terms");
 
 		$query->condition("taxonomy", "uris_categories");
 
@@ -493,7 +497,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_search_and() {
-		$query = new query("users");
+		$query = $this->db->query("users");
 		$query->search("ali gangji", "first_name,last_name");
 
 		//expected output
@@ -505,7 +509,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_search_or() {
-		$query = new query("users");
+		$query = $this->db->query("users");
 		$query->search("ali or gangji", "first_name,last_name");
 
 		//expected output
@@ -517,7 +521,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_search_fields() {
-		$query = new query("users");
+		$query = $this->db->query("users");
 		$query->search("ali", "first_name");
 		$query->search("gangji", "last_name");
 
@@ -530,7 +534,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_multivalue_term_expansion() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->condition("uris.groups", array("user", "admin"));
 		//expected output
 		$expected = "SELECT `uris`.* FROM `".P("uris")."` AS `uris` WHERE (:default0 IN (SELECT uris_groups.slug FROM ".P("uris_groups")." uris_groups_lookup INNER JOIN ".P("terms")." uris_groups ON uris_groups.id=uris_groups_lookup.groups_id WHERE uris_groups_lookup.uris_id=uris.id) || :default1 IN (SELECT uris_groups.slug FROM ".P("uris_groups")." uris_groups_lookup INNER JOIN ".P("terms")." uris_groups ON uris_groups.id=uris_groups_lookup.groups_id WHERE uris_groups_lookup.uris_id=uris.id))";
@@ -543,7 +547,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_action() {
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		sb()->user = array("id" => 2);
 		$query->action("read");
 
@@ -565,7 +569,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	function test_remove() {
 		//the delete method is normally an execution method
 		//passing false prevents the query from actually running
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->condition("path", "phpunit")->delete(false);
 
 		//expected output
@@ -580,7 +584,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	function test_insert() {
 		//the insert method is normally an execution method
 		//passing false prevents the query from actually running
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->set("path", "phpunit")->insert(false);
 
 		//expected output (actual output contains extra fields due to validation)
@@ -595,7 +599,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	function test_update() {
 		//the update method is normally an execution method
 		//passing false prevents the query from actually running
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->set("title", "PHPUnit");
 		$query->condition("path", "phpunit");
 		$query->update(false);
@@ -613,7 +617,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	function test_update_condition_expansion() {
 		//the update method is normally an execution method
 		//passing false prevents the query from actually running
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->set("uris.title", "PHPUnit");
 		$query->condition("owner.first_name", "phpunit");
 		$query->update(false);
@@ -631,7 +635,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	function test_update_set_expansion() {
 		//the update method is normally an execution method
 		//passing false prevents the query from actually running
-		$query = new query("uris");
+		$query = $this->db->query("uris");
 		$query->set("owner.first_name", "PHPUnit");
 		$query->condition("uris.title", "phpunit");
 		$query->update(false);

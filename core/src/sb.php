@@ -72,7 +72,7 @@ class sb {
 	function start_session() {
 		if (false !== ($session = Session::active())) {
 			if (!empty($session['v']) && is_numeric($session['v'])) {
-				$user = new query("users");
+				$user = $this->db->query("users");
 				$user = $user->select("users.*,users.groups as groups,users.statuses as statuses")->condition("users.id", $session['v'])->one();
 				if (Session::validate($session, $user['password'], Etc::HMAC_KEY)) {
 					$user['groups'] = is_null($user['groups']) ? array() : explode(",", $user['groups']);
