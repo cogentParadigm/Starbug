@@ -1,5 +1,5 @@
 <?php
-class hook_store_exclude {
+class hook_store_exclude extends QueryHook {
 	function insert(&$query, $key, $value, $column, $argument) {
 		if ($argument == "insert") $query->exclude($key);
 		return $value;

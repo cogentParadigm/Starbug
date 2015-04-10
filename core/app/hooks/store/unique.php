@@ -1,5 +1,5 @@
 <?php
-class hook_store_unique {
+class hook_store_unique extends QueryHook {
 	function validate(&$query, $key, $value, $column, $argument) {
 		$argument = explode(" ", $argument);
 		$existing = query($query->model)->select("id")->select($column)->condition($column, $value);

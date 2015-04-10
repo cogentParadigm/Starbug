@@ -1,5 +1,5 @@
 <?php
-class hook_store_type {
+class hook_store_type extends QueryHook {
 	function empty_validate(&$query, $column, $argument) {
 		if (sb()->models->has($argument)) $query->exclude($column);
 	}

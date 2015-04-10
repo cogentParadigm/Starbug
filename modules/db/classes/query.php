@@ -1246,36 +1246,35 @@ class query implements IteratorAggregate, ArrayAccess {
 		if (isset($this->fields[$column])) $key = $column;
 		else if (isset($this->fields[$this->model.".".$column])) $key = $this->model.".".$column;
 		else if (isset($this->fields[$this->base_collection.".".$column])) $key = $this->base_collection.".".$column;
-
-		if (!isset($this->hooks[$column."_".$hook])) $this->hooks[$column."_".$hook] = sb()->locator->build_hook("store/".$hook, "classes/QueryHook", "db");
-		$hook = $this->hooks[$column."_".$hook];
-
-		//hooks are invoked in 3 phases
-		//0 = validate (before)
-		//1 = store (during)
-		//2 = after
-		if ($phase == query::PHASE_VALIDATION) {
-			if ($key == false) {
-				if ($this->mode == "insert") $hook->empty_before_insert($this, $column, $argument);
-				else if ($this->mode == "update") $hook->empty_before_update($this, $column, $argument);
-				$hook->empty_validate($this, $column, $argument);
-			} else {
-				if ($this->mode == "insert") $this->fields[$key] = $hook->before_insert($this, $key, $this->fields[$key], $column, $argument);
-				else if ($this->mode == "update") $this->fields[$key] = $hook->before_update($this, $key, $this->fields[$key], $column, $argument);
-				$this->fields[$key] = $hook->validate($this, $key, $this->fields[$key], $column, $argument);
+		if (!isset($this->hooks[$column."_".$hook])) $this->hooks[$column."_".$hook] = $this->hook_builder->get("store/".$hook);
+		foreach ($this->hooks[$column."_".$hook] as $hook) {
+			//hooks are invoked in 3 phases
+			//0 = validate (before)
+			//1 = store (during)
+			//2 = after
+			if ($phase == query::PHASE_VALIDATION) {
+				if ($key == false) {
+					if ($this->mode == "insert") $hook->empty_before_insert($this, $column, $argument);
+					else if ($this->mode == "update") $hook->empty_before_update($this, $column, $argument);
+					$hook->empty_validate($this, $column, $argument);
+				} else {
+					if ($this->mode == "insert") $this->fields[$key] = $hook->before_insert($this, $key, $this->fields[$key], $column, $argument);
+					else if ($this->mode == "update") $this->fields[$key] = $hook->before_update($this, $key, $this->fields[$key], $column, $argument);
+					$this->fields[$key] = $hook->validate($this, $key, $this->fields[$key], $column, $argument);
+				}
+			} else if ($phase == query::PHASE_STORE && $key != false) {
+				if ($this->mode == "insert") $this->fields[$key] = $hook->insert($this, $key, $this->fields[$key], $column, $argument);
+				else if ($this->mode == "update") $this->fields[$key] = $hook->update($this, $key, $this->fields[$key], $column, $argument);
+				$this->fields[$key] = $hook->store($this, $key, $this->fields[$key], $column, $argument);
+			} else if ($phase == query::PHASE_AFTER_STORE && $key != false) {
+				if ($this->mode == "insert") $hook->after_insert($this, $key, $this->fields[$key], $column, $argument);
+				else if ($this->mode == "update") $hook->after_update($this, $key, $this->fields[$key], $column, $argument);
+				$hook->after_store($this, $key, $this->fields[$key], $column, $argument);
+			} else if ($phase == query::PHASE_BEFORE_DELETE) {
+				$hook->before_delete($this, $column, $argument);
+			} else if ($phase == query::PHASE_AFTER_DELETE) {
+				$hook->after_delete($this, $column, $argument);
 			}
-		} else if ($phase == query::PHASE_STORE && $key != false) {
-			if ($this->mode == "insert") $this->fields[$key] = $hook->insert($this, $key, $this->fields[$key], $column, $argument);
-			else if ($this->mode == "update") $this->fields[$key] = $hook->update($this, $key, $this->fields[$key], $column, $argument);
-			$this->fields[$key] = $hook->store($this, $key, $this->fields[$key], $column, $argument);
-		} else if ($phase == query::PHASE_AFTER_STORE && $key != false) {
-			if ($this->mode == "insert") $hook->after_insert($this, $key, $this->fields[$key], $column, $argument);
-			else if ($this->mode == "update") $hook->after_update($this, $key, $this->fields[$key], $column, $argument);
-			$hook->after_store($this, $key, $this->fields[$key], $column, $argument);
-		} else if ($phase == query::PHASE_BEFORE_DELETE) {
-			$hook->before_delete($this, $column, $argument);
-		} else if ($phase == query::PHASE_AFTER_DELETE) {
-			$hook->after_delete($this, $column, $argument);
 		}
 	}
 

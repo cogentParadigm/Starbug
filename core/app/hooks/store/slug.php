@@ -1,6 +1,6 @@
 <?php
 //stores a URL path slug
-class hook_store_slug {
+class hook_store_slug extends QueryHook {
 	function empty_before_insert(&$query, $column, $argument) {
 		$query->set($column, $this->validate($query, $column, "", $column, $argument));
 	}

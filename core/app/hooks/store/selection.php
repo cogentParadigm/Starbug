@@ -1,5 +1,5 @@
 <?php
-class hook_store_selection {
+class hook_store_selection extends QueryHook {
 	function after_store(&$query, $key, $value, $column, $argument) {
 		if (empty($value)) return;
 		$id = $query->getId();
@@ -7,7 +7,7 @@ class hook_store_selection {
 		if (!empty($argument)) {
 			$fields = explode(" ", $argument);
 			$row = query($query->model)->condition("id", $id)->one();
-			foreach($fields as $field) $conditions[$field] = $row[$field];	
+			foreach($fields as $field) $conditions[$field] = $row[$field];
 		}
 		query($query->model)->conditions($conditions)->condition("id", $id, "!=")->set($column, 0)->update();
 	}

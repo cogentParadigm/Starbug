@@ -1,5 +1,5 @@
 <?php
-class hook_store_references {
+class hook_store_references extends QueryHook {
 	var $replace = false;
 	function validate(&$query, $key, $value, $column, $argument) {
 		if (empty($value)) {

@@ -1,5 +1,5 @@
 <?php
-class hook_store_upload {
+class hook_store_upload extends QueryHook {
 	var $uploaded = false;
 	function empty_validate($query, $column, $argument) {
 		if (!empty($_FILES[$column]["name"])) $query->set($column, $this->store($query, $column, "", $column, $argument));

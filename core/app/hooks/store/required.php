@@ -1,5 +1,5 @@
 <?php
-class hook_store_required {
+class hook_store_required extends QueryHook {
 	function empty_before_insert(&$query, $column, $argument) {
 		if ($argument == "insert") error("This field is required.", $column);
 	}

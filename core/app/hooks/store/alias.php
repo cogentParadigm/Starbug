@@ -1,5 +1,5 @@
 <?php
-class hook_store_alias {
+class hook_store_alias extends QueryHook {
 	function validate(&$query, $key, $value, $column, $alias) {
 		if (!empty($value) && !is_numeric($value) && $value != "NULL") {
 			$referenced_model = explode(" ", schema($query->model.".fields.".$column.".references"));

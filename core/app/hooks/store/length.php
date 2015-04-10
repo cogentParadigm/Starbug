@@ -1,5 +1,5 @@
 <?php
-class hook_store_length {
+class hook_store_length extends QueryHook {
 	function validate(&$query, $key, $value, $column, $argument) {
 		$length = explode("-", $argument);
 		if (!next($length)) $length = array(0, $length[0]);

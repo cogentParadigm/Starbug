@@ -1,5 +1,5 @@
 <?php
-class hook_store_category {
+class hook_store_category extends QueryHook {
 	function validate($query, $key, $value, $column, $argument) {
 		if (!empty($value) && !is_numeric($value)) {
 			$field = sb($query->model)->hooks[$column];

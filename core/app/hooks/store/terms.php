@@ -1,5 +1,5 @@
 <?php
-class hook_store_terms {
+class hook_store_terms extends QueryHook {
 	function after_store(&$query, $key, $value, $column, $argument) {
 		$name = $query->model;
 		$id = $query->getId();
