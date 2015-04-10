@@ -108,7 +108,7 @@ $this->uri("profile", "controller:profile");
 //Admin
 $this->uri("admin", "controller:admin  groups:admin  theme:storm");
 //Uploader
-$this->uri("upload", "template:xhr  groups:user");
+$this->uri("upload", "controller:upload  template:xhr  groups:user");
 //terms
 $this->uri("terms", "template:xhr  groups:user");
 $this->uri("robots", "template:txt");
