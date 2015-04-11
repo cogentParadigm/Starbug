@@ -60,12 +60,6 @@ interface TemplateInterface {
 	public function render_layout($paths = array(""), $params = array());
 
 	/**
-	* convenience method to render a template from the forms directory
-	* @copydoc render
-	*/
-	public function render_form($paths = array(""), $params = array());
-
-	/**
 	* render content blocks from the database for the specified region
 	* @param string $region the region to render content for
 	*/

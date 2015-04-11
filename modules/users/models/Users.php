@@ -99,44 +99,11 @@ class Users {
 		return $query;
 	}
 
-	function display_admin($display, &$options) {
-		$display->add("first_name", "last_name", "email", "last_visit", "groups", "statuses  label:Status");
-	}
-
-	function display_form($display, &$options) {
-		//parent::display_form($display, $options);
-		$display->layout->add("top  left:div.col-md-6  right:div.col-md-6");
-		$display->layout->put('left', 'h2', 'User Information');
-		$display->layout->put('right', 'h2', 'Login Credentials');
-		$display->add("first_name  pane:left");
-		$display->add("last_name  pane:left");
-		$display->add("email  pane:right");
-		$display->add("password  pane:right");
-		$display->add("password_confirm  input_type:password  pane:right");
-		$display->add("groups  input_type:multiple_category_select  taxonomy:groups  pane:right");
-	}
-
-	function display_login($display, $ops) {
-		$display->add("email", "password");
-		$display->submit_label = "Login";
-	}
-
-	function display_reset_password($display, $ops) {
-		$display->add("email");
-		$display->submit_label = "Reset Password";
-	}
-
 	function filter($row) {
 		//even though it shouldn't be useful to attackers,
 		//we don't want the password hash to be returned in api calls
 		unset($row['password']);
 		return $row;
-	}
-
-	function display_search($display, $ops) {
-		parent::display_search($display, $ops);
-		$display->add("group  input_type:category_select  taxonomy:groups  optional:Any Group  nolabel:");
-		$display->add("status  input_type:category_select  taxonomy:statuses  optional:Any Status  nolabel:");
 	}
 }
 ?>

@@ -53,22 +53,6 @@ class <?php echo ucwords($name); ?>Model extends Table {
     return $query;
 	}
 
-	function display_admin($display, $ops) {
-		<?php if (!empty($base)) { ?>
-    sb($this->base)->display_admin($display, $ops);
-    <?php } else { ?>
-      $display->add("id");
-    <?php } ?>
-	}
-
-  function display_select($display, $ops) {
-    <?php if (!empty($base)) { ?>
-    sb($this->base)->display_select($display, $ops);
-    <?php } else { ?>
-      $display->add("id", "label");
-    <?php } ?>
-  }
-
 	function query_form($query, &$ops) {
 		if (empty($ops['action'])) $ops['action'] = "create";
 		$query->action($ops['action'], "<?php echo $model; ?>");
@@ -87,19 +71,6 @@ class <?php echo ucwords($name); ?>Model extends Table {
 		}
 		?>
 		return $query;
-	}
-
-	function display_form($display, &$ops) {
-<?php
-			$tabs = "\t\t";
-      if (!empty($base)) echo $tabs.'sb("'.$base.'")->display_form($display, $ops);'."\n";
-			foreach ($fields as $fieldname => $field) {
-				if ($field['display'] === true) {
-					echo $tabs.'$display->add("'.$fieldname.'");'."\n";
-					if (!empty($field['confirm'])) echo $tabs.'$display->add("'.$field['confirm'].'  input_type:'.$field['input_type'].'");'."\n";
-				}
-			}
-		?>
 	}
 
 	function query_get($query, &$ops) {

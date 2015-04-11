@@ -11,7 +11,7 @@
 		</div>
 		<div class="col-md-9">
 			<?php
-				$this->render_display("form", "settings", "form", array("action" => "update", "cancel_url" => "admin"));
+				$this->render_display("SettingsForm", array("operation" => "update"));
 			?>
 		</div>
 	</div>

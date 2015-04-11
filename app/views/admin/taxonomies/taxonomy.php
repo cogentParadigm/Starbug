@@ -7,6 +7,6 @@
 	<div class="clearfix">
 		<p class="pull-right"><?php link_to("Add Term <b class=\"fa fa-plus\"></b>", "admin/taxonomies/create?taxonomy=".$taxonomy, "class:btn btn-default"); ?></p>
 	</div>
-	<?php $this->render_display("grid", "terms", "tree",  array("taxonomy" => $taxonomy, "dnd" => true, "attributes" => array("base_url" => "admin/taxonomies"))); ?>
+	<?php $this->render_display("TermsTreeGrid",  array("taxonomy" => $taxonomy)); ?>
 	</div>
 </div>

@@ -1,5 +1,8 @@
 <?php
 class AdminEmailsController {
+	public $routes = array(
+		'update' => '{id}'
+	);
 	function init() {
 		$this->assign("model", "email_templates");
 		$this->assign("cancel_url", "admin/emails");
@@ -11,7 +14,7 @@ class AdminEmailsController {
 	function create() {
 		$this->render("admin/create");
 	}
-	function update($id=null) {
+	function update($id) {
 		$this->assign("id", $id);
 		$this->render("admin/update");
 	}

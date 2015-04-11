@@ -107,13 +107,6 @@ class Template implements TemplateInterface {
 	}
 
 	/**
-	 * @copydoc TemplateInterface::render_form
-	 */
-	function render_form($paths = array(""), $params = array()) {
-		$this->render($paths, $params, array("scope" => "forms"));
-	}
-
-	/**
 	 * @copydoc TemplateInterface::render_content
 	 */
 	function render_content($region = "content") {

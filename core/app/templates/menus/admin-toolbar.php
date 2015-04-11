@@ -7,5 +7,5 @@ $options = schema($model);
 			link_to("New Menu <b class=\"fa fa-plus\"></b>", $request->path."/create?new=true", "class:btn btn-default");
 		?>
 </div>
-<?php $this->render_display("form", $model, "search", array("method" => "get")); ?>
+<?php $this->render_display("SearchForm", array("model" => $model)); ?>
 <br/>
