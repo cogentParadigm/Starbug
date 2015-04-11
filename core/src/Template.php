@@ -134,22 +134,23 @@ class Template implements TemplateInterface {
 	/**
 	 * @copydoc TemplateInterface::build_display
 	 */
-	function build_display($type, $model = null, $name = null, $options = array()) {
-		 $display = $this->displays->get($type, $model, $name, $options);
+	function build_display($name, $options = array()) {
+		$display = $this->displays->get($name);
+		$display->build($options);
 		return $display;
 	}
 	/**
 	 * @copydoc TemplateInterface::render_display
 	 */
-	public function render_display($type, $model = null, $name = null, $options = array()) {
-		$display = $this->build_display($type, $model, $name, $options);
+	public function render_display($name, $options = array()) {
+		$display = $this->build_display($name, $options);
 		$display->render();
 	}
 	/**
 	 * @copydoc TemplateInterface::capture_display
 	 */
-	public function capture_display($type, $model = null, $name = null, $options = array()) {
-		$display = $this->build_display($type, $model, $name, $options);
+	public function capture_display($name, $options = array()) {
+		$display = $this->build_display($name, $options);
 		return $display->capture();
 	}
 }

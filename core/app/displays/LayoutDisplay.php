@@ -1,5 +1,5 @@
 <?php
-class LayoutDisplay extends Display {
+class LayoutDisplay extends ItemDisplay {
 	var $type = "layout";
 	var $template = "layout";
 

@@ -1,6 +1,9 @@
 <?php
 //stores a URL path slug
 class hook_store_slug extends QueryHook {
+	function __construct(MacroInterface $macro) {
+		$this->macro = $macro;
+	}
 	function empty_before_insert(&$query, $column, $argument) {
 		$query->set($column, $this->validate($query, $column, "", $column, $argument));
 	}
@@ -13,7 +16,7 @@ class hook_store_slug extends QueryHook {
 			if (!empty(sb($query->model)->hooks[$column]["pattern"])) {
 				$pattern = sb($query->model)->hooks[$column]["pattern"];
 				$data = array($query->model => array_merge($query->fields, array($column => $value)));
-				$value = sb()->macro->replace($pattern, $data);
+				$value = $this->macro->replace($pattern, $data);
 			}
 
 			$base = $value;

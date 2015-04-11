@@ -85,7 +85,7 @@ interface TemplateInterface {
 	* 										 display provider: display_admin
 	* @param array $options parameters that will be passed to the display and query functions
 	*/
-	public function build_display($type, $model = null, $name = null, $options = array());
+	public function build_display($name, $options = array());
 	/**
 	* build and render a display
 	* @param string $type the display type (list, table, grid, csv, etc..)
@@ -96,7 +96,7 @@ interface TemplateInterface {
 	* 										 display provider: display_admin
 	* @param array $options parameters that will be passed to the display and query functions
 	*/
-	public function render_display($type, $model = null, $name = null, $options = array());
+	public function render_display($name, $options = array());
 	/**
 	* build and capture a display
 	* @param string $type the display type (list, table, grid, csv, etc..)
@@ -107,5 +107,5 @@ interface TemplateInterface {
 	* 										 display provider: display_admin
 	* @param array $options parameters that will be passed to the display and query functions
 	*/
-	public function capture_display($type, $model = null, $name = null, $options = array());
+	public function capture_display($name, $options = array());
 }

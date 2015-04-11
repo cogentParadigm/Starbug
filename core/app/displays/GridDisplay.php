@@ -1,36 +1,23 @@
 <?php
-class GridDisplay extends Display {
-	var $type = "grid";
-	var $template = "grid";
-	var $grid_class = "starbug/grid/PagedGrid";
-	var $attributes = array();
-	var $fields = array(
+class GridDisplay extends ItemDisplay {
+	public $type = "grid";
+	public $template = "grid";
+	public $grid_class = "starbug/grid/PagedGrid";
+	public $dnd = false;
+	public $fields = array(
 		"row_options" => array("field" => "id", "label" => "Options", "class" => "field-options", "plugin" => "starbug.grid.columns.options")
 	);
 
-	function init($options) {
+	function build($options=array()) {
 		//set defaults
 		if ($options['attributes']) $this->attributes = star($options['attributes']);
-		$this->attributes['model'] = $this->model;
-		$this->attributes['class'][] = "dgrid-autoheight";
-		efault($this->attributes['id'], $this->model."_grid");
-		efault($this->attributes['data-dojo-id'], $this->attributes['id']);
-		$this->attributes['action'] = $this->name;
-
-		//build data-dojo-props attribute
-		foreach ($this->attributes as $k => $v) {
-			if (!in_array($k, array("id", "class", "style", "data-dojo-type", "data-dojo-props", "data-dojo-id"))) {
-				$this->attributes['data-dojo-props'][$k] = $v;
-			}
-		}
-
-		//dnd
+		$this->options = $options;
 		if ($options['dnd']) $this->dnd();
-
+		$this->build_display($options);
 	}
 
 	function dnd() {
-		$this->options['dnd'] = true;
+		$this->dnd = true;
 		$this->grid_class = "starbug/grid/DnDGrid";
 		$this->fields = array_merge(array('dnd' => array("field" => "id", "label" => "-", "class" => "field-drag",  "plugin" => "starbug.grid.columns.handle", "sortable" => false)), $this->fields);
 	}
@@ -83,6 +70,18 @@ class GridDisplay extends Display {
 	}
 
 	function before_render() {
+		$this->attributes['model'] = $this->model;
+		$this->attributes['class'][] = "dgrid-autoheight";
+		if (empty($this->attributes['id'])) $this->attributes['id'] = $this->model."_grid";
+		if (empty($this->attributes['data-dojo-id'])) $this->attributes['data-dojo-id'] = $this->attributes['id'];
+		$this->attributes['action'] = $this->action;
+
+		//build data-dojo-props attribute
+		foreach ($this->attributes as $k => $v) {
+			if (!in_array($k, array("id", "class", "style", "data-dojo-type", "data-dojo-props", "data-dojo-id"))) {
+				$this->attributes['data-dojo-props'][$k] = $v;
+			}
+		}
 		js($this->grid_class);
 		$this->attributes['data-dojo-type'] = $this->grid_class;
 		//convert from array to string

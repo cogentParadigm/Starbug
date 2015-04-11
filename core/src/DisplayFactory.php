@@ -10,14 +10,13 @@
 * an implementation of DisplayFactoryInterface
 */
 class DisplayFactory implements DisplayFactoryInterface {
-	private $inheritance;
-	private $container;
-	private $classes = array();
-	public function __construct(ContainerInterface $container) {
+	protected $locator;
+	protected $container;
+	public function __construct(ContainerInterface $container, ResourceLocatorInterface $locator) {
 		$this->container = $container;
+		$this->locator = $locator;
 	}
-	public function get($display, $model = null, $name = null, $options = array()) {
-		$class = ucwords($display)."Display";
-		return $this->container->build($class, array('model' => $model, 'name' => $name, 'options' => $options));
+	public function get($display) {
+		return $this->container->build($display);
 	}
 }

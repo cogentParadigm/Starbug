@@ -1,5 +1,5 @@
 <?php
-class ListDisplay extends Display {
+class ListDisplay extends ItemDisplay {
 	var $type = "list";
 	var $template = "ul";
 }

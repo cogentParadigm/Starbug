@@ -25,7 +25,7 @@
 	<div class="panel-body">
 	<?php
 		$this->render(array($model."/admin-toolbar", "admin-toolbar"));
-		$this->render_display("grid", $model, $query, array("attributes" => $grid_attributes));
+		$this->render_display(ucwords($model)."Grid", array("attributes" => $grid_attributes));
 	?>
 	</div>
 </div>

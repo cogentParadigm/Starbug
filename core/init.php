@@ -43,24 +43,29 @@ $container->register('database_name', DEFAULT_DATABASE, true);
 //create locator
 $locator = $container->get('ResourceLocatorInterface');
 
-// autoload classes and global functions
-foreach ($locator->locate("autoload.php", "") as $global_include) include($global_include);
+// global functions
 foreach ($locator->locate("global_functions.php", "") as $global_include) include($global_include);
 
-global $sb;
-$sb = $container->get("sb");
+if (file_exists(BASE_DIR."/var/autoload_classmap.php")) {
+	$loader = $container->get("AutoloaderInterface");
+	$loader->add(include(BASE_DIR."/var/autoload_classmap.php"));
+	$loader->register();
 
-$context = $container->get("TemplateInterface");
-$context->assign("container", $container);
-$context->assign("sb", $sb);
+	global $sb;
+	$sb = $container->get("sb");
 
-new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
+	$context = $container->get("TemplateInterface");
+	$context->assign("container", $container);
+	$context->assign("sb", $sb);
 
-if (defined('SB_CLI')) {
-	$sb->user = array("groups" => array("root"));
-	$context->publish("init", "cli");
-} else {
-	$context->publish("init");
+	new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
+
+	if (defined('SB_CLI')) {
+		$sb->user = array("groups" => array("root"));
+		$context->publish("init", "cli");
+	} else {
+		$context->publish("init");
+	}
 }
 
 ?>

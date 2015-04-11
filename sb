@@ -13,7 +13,7 @@
 		if (function_exists("locate")) {
 			$path = end(locate($script.".php", "script"));
 		} else {
-			$path = end($sb->locator->locate($script.".php", "script"));
+			$path = end($locator->locate($script.".php", "script"));
 		}
 	} else $path = "core/app/script/$script.php";
 	if (file_exists($path)) include($path);

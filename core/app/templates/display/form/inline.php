@@ -33,7 +33,7 @@
 	}
 ?>
 	<?php button($display->submit_label, "class:btn-default"); ?>
-	<?php if (!empty($display->options['cancel_url'])) { ?>
-		<button type="button" class="cancel btn btn-danger" onclick="window.location='<?php echo uri($display->options['cancel_url']); ?>'">Cancel</button>
+	<?php if (!empty($display->cancel_url)) { ?>
+		<button type="button" class="cancel btn btn-danger" onclick="window.location='<?php echo uri($display->cancel_url); ?>'">Cancel</button>
 	<?php } ?>
 </form>

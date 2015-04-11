@@ -1,44 +1,36 @@
 <?php
-class FormDisplay extends Display {
+class FormDisplay extends ItemDisplay {
 	public $type = "form";
 	public $template = "form";
+	public $action = "form";
 
 	public $url;
-	public $action;
-	public $method;
+	public $method = "post";
 	public $errors = array();
 	public $layout;
-	public $submit_label = "Save";
+	public $default_action = "save";
+	public $cancel_url = "";
+	public $actions;
 	protected $vars = array();
 
-	function init($options) {
-		// set default options
-		if (empty($options['url'])) $options['url'] = empty($options['uri']) ? $_SERVER['REQUEST_URI'] : $options['uri'] ;
-		if (empty($options['method'])) $options['method'] = 'post';
-
+	function build($options) {
+		$this->options = $options;
 		// assign options to properties
-		$this->action = $options['action'];
-		$this->url = $options['url'];
-		$this->method = strtolower($options['method']);
-
+		$this->operation = $options['operation'];
 		// grab schema
 		if (!empty($this->model) && sb()->models->has($this->model)) {
 			$this->schema = sb($this->model)->hooks;
 		}
 
-		// set form attributes
-		$this->attributes["action"] = $this->url;
-		$this->attributes["method"] = $this->method;
-		$this->attributes["accept-charset"] = "UTF-8";
-
-		if (success($this->model, $this->action)) $this->attributes['class'][] = "submitted";
-		else if (failure($this->model, $this->action)) $this->attributes['class'][] = "errors";
-
 		//create layout display
-		$this->layout = $this->context->build_display("layout", $this->model);
+		$this->layout = $this->output->build_display("LayoutDisplay");
+		//create actions display
+		$this->actions = $this->output->build_display("ItemDisplay");
+		$this->actions->add($this->default_action."  class:btn-success");
 
 		//run query
 		$this->query();
+		$this->build_display($options);
 	}
 
 	/**
@@ -86,6 +78,14 @@ class FormDisplay extends Display {
 	}
 
 	function before_render() {
+		// set form attributes
+		$this->attributes["action"] = $this->url;
+		$this->attributes["method"] = $this->method;
+		$this->attributes["accept-charset"] = "UTF-8";
+		if (!empty($this->model) && !empty($this->operation)) {
+			if (success($this->model, $this->operation)) $this->attributes['class'][] = "submitted";
+			else if (failure($this->model, $this->operation)) $this->attributes['class'][] = "errors";
+		}
 		// grab errors and update schema
 		$this->errors = array();
 		foreach ($this->fields as $name => $field) {
@@ -198,7 +198,7 @@ class FormDisplay extends Display {
 		$this->vars = array("display" => $this);
 		$this->fill_ops($field, $control);
 		//run filters
-		foreach ($this->context->locator->locate("form/".$control.".php", "filters") as $filter) include($filter);
+		foreach ($this->output->locator->locate("form/".$control.".php", "filters") as $filter) include($filter);
 
 		$capture = "field";
 		if (empty($field['field'])) $field['field'] = reset(explode("[", $field['name']));
@@ -210,7 +210,7 @@ class FormDisplay extends Display {
 		}
 		$this->assign("attributes", $field);
 		$this->assign("control", $control);
-		return $this->context->capture(array($field['model']."/form/$field[field]-$capture", "form/$field[field]-$capture", $field['model']."/form/$capture", "form/$capture"), $this->vars);
+		return $this->output->capture(array($field['model']."/form/$field[field]-$capture", "form/$field[field]-$capture", $field['model']."/form/$capture", "form/$capture"), $this->vars);
 	}
 
 	function __call($name, $arguments) {

@@ -16,6 +16,7 @@ class Uris {
 
 	function query_filters($action, $query, &$ops) {
 		if (!empty($ops['keywords'])) $query->search($ops['keywords'], $query->model.".title");
+		return $query;
 	}
 
 	function display_admin($display, $options) {

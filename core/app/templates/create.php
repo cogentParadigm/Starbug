@@ -7,7 +7,7 @@
 	<div class="panel-body">
 <?php
 	efault($action, "create");
-	$this->render_display("form", $model, "form", array_merge($_GET, array("action" => $action, "cancel_url" => $cancel_url)));
+	$this->render_display(ucwords($model)."Form", array_merge($_GET, array("action" => $action)));
 ?>
 	</div>
 </div>
