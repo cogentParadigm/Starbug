@@ -64,11 +64,21 @@ class <?php echo ucwords($name); ?>Model extends Table {
     }
 		$tabs = "\t\t";
 		foreach ($fields as $fieldname => $field) {
-				if (sb()->models->has($field['type']) || $field['type'] == "category") {
+				if (sb()->models->has($field['type'])) {
 					if (empty($field['column'])) $field['column'] = "id";
 					echo $tabs.'$query->select($query->model.".'.$fieldname.'.'.$field['column'].' as '.$fieldname.'");'."\n";
 				}
 		}
+    $parent = $base;
+    while (!empty($parent)) {
+      foreach (sb($parent)->hooks as $column => $field) {
+        if (sb()->models->has($field['type'])) {
+          if (empty($field['column'])) $field['column'] = "id";
+          echo $tabs.'$query->select($query->model.".'.$column.'.'.$field['column'].' as '.$column.'");'."\n";
+        }
+      }
+      $parent = sb($parent)->base;
+    }
 		?>
 		return $query;
 	}
