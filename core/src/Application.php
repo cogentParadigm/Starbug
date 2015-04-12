@@ -40,6 +40,8 @@ class Application implements ApplicationInterface {
 	}
 
 	public function handle(Request $request) {
+		if (empty($request->path)) $request->path = $this->settings->get("default_path");
+
 		$this->response->assign("request", $request);
 		$route = $this->router->route($request);
 
