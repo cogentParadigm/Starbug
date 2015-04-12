@@ -5,3 +5,4 @@
 		<base href="<?php echo uri(); ?>"/>
 		<?php if (!empty($response->canonical)) { ?><link rel="canonical" href="<?php echo $response->canonical; ?>"/><?php } ?>
 		<?php echo settings("meta"); ?>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
