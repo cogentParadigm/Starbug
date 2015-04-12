@@ -8,7 +8,8 @@ class FormDisplay extends ItemDisplay {
 	public $method = "post";
 	public $errors = array();
 	public $layout;
-	public $default_action = "save";
+	public $default_action = "create";
+	public $submit_label = "Save";
 	public $cancel_url = "";
 	public $actions;
 	protected $vars = array();
@@ -24,11 +25,16 @@ class FormDisplay extends ItemDisplay {
 		$this->layout = $this->output->build_display("LayoutDisplay");
 		//create actions display
 		$this->actions = $this->output->build_display("ItemDisplay");
-		$this->actions->add($this->default_action."  class:btn-success");
+		$this->actions->add($this->default_action."  label:".$this->submit_label."  class:btn-success");
 
 		//run query
+		$this->before_query($options);
 		$this->query();
 		$this->build_display($options);
+	}
+
+	protected function before_query($options) {
+
 	}
 
 	/**
@@ -66,7 +72,7 @@ class FormDisplay extends ItemDisplay {
 		if (is_null($options)) $options = $this->options;
 
 		if (empty($options['id'])) $this->items = array();
-		else parent::query($options);
+		else parent::query(array("action" => $this->default_action) + $options);
 
 		//load $_POST
 		if (!empty($this->items)) {
