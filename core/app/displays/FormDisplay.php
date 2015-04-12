@@ -33,8 +33,11 @@ class FormDisplay extends ItemDisplay {
 		$this->build_display($options);
 	}
 
+	/**
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
 	protected function before_query($options) {
-
+		//override this method if needed
 	}
 
 	/**
@@ -54,8 +57,8 @@ class FormDisplay extends ItemDisplay {
 			$default = isset($column['default']);
 			$optional = isset($column['optional']);
 			$nullable = isset($column['null']);
-			$not_optional_updating = (!isset($column['optional_update']) || empty($object_id));
-			if (!$default && !$optional && !$nullable && $not_optional_updating) {
+			$not_optional_update = (!isset($column['optional_update']) || empty($object_id));
+			if (!$default && !$optional && !$nullable && $not_optional_update) {
 					$options['required'] = true;
 			} else {
 				$options['required'] = false;
@@ -67,7 +70,7 @@ class FormDisplay extends ItemDisplay {
 	/**
 	 * override query function to only query with id
 	 */
-	function query($options=null) {
+	function query($options = null) {
 		//set options
 		if (is_null($options)) $options = $this->options;
 
@@ -76,7 +79,7 @@ class FormDisplay extends ItemDisplay {
 
 		//load $_POST
 		if (!empty($this->items)) {
-			if(empty($_POST[$this->model])) $_POST[$this->model] = array();
+			if (empty($_POST[$this->model])) $_POST[$this->model] = array();
 			foreach ($this->items[0] as $k => $v) if (!isset($_POST[$this->model][$k])) $_POST[$this->model][$k] = $v;
 		}
 	}
@@ -99,7 +102,7 @@ class FormDisplay extends ItemDisplay {
 		}
 	}
 
-	function render($query=false) {
+	function render($query = false) {
 		parent::render($query);
 	}
 
@@ -110,7 +113,7 @@ class FormDisplay extends ItemDisplay {
 	 * @param string $name the relative name
 	 * @return the full name
 	 */
-	function get_name($name, $model="") {
+	function get_name($name, $model = "") {
 		if (empty($model)) {
 			$model = (empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
 		}
@@ -126,14 +129,14 @@ class FormDisplay extends ItemDisplay {
 	 * @param string $name the relative name
 	 * @return string the GET or POST value
 	 */
-	function get($name, $model="") {
+	function get($name, $model = "") {
 		if (empty($model)) {
 			$model = (empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
 		}
 		$parts = explode("[", $name);
 		if ($this->method == "post") $var = (empty($model)) ? $_POST : $_POST[$model];
 		else $var = $_GET;
-		foreach($parts as $p) $var = $var[rtrim($p, "]")];
+		foreach ($parts as $p) $var = $var[rtrim($p, "]")];
 		if (is_array($var)) return $var;
 		else return stripslashes($var);
 	}
@@ -143,7 +146,7 @@ class FormDisplay extends ItemDisplay {
 	 * @param string $name the relative name
 	 * @param string $value the value
 	 */
-	function set($name, $value, $model="") {
+	function set($name, $value, $model = "") {
 		if (empty($model)) {
 			$model = (!empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
 		}
@@ -156,7 +159,7 @@ class FormDisplay extends ItemDisplay {
 			if ($this->method == "post") $var = &$_POST[$model];
 			else $var = &$_GET[$model];
 		}
-		foreach($parts as $p) {
+		foreach ($parts as $p) {
 			$var = &$var[rtrim($p, "]")];
 		}
 		$var[$key] = $value;
@@ -167,7 +170,7 @@ class FormDisplay extends ItemDisplay {
 	 * converts the option string given to form elements into an array and sets up default values
 	 * @param star $ops the option string
 	 */
-	function fill_ops(&$ops, $control="") {
+	function fill_ops(&$ops, $control = "") {
 		$ops = star($ops);
 		$name = array_shift($ops);
 		if (empty($ops['name'])) $ops['name'] = $name;
@@ -181,12 +184,12 @@ class FormDisplay extends ItemDisplay {
 		if (!in_array($control, array("checkbox", "radio"))) $ops['class'] .= " form-control";
 	}
 
-	function assign($key, $value=null) {
+	function assign($key, $value = null) {
 		if (is_array($key)) {
-      foreach ($key as $k => $v) $this->assign($k, $v);
-    } else {
-      $this->vars[$key] = $value;
-    }
+			foreach ($key as $k => $v) $this->assign($k, $v);
+		} else {
+			$this->vars[$key] = $value;
+		}
 	}
 
 	/**
@@ -195,10 +198,9 @@ class FormDisplay extends ItemDisplay {
 	 * @param star $field the attributes for the html tag - special ones below
 	 *									name: the relative name, eg. 'group[]' might become 'users[group][]'
 	 *									content: the inner HTML of the tag if it is not self closing
-	 * @param array $options an optional array that can be used to specify a data set eg. select options
 	 * @param bool $self if true, will use a self closing tag. If false, will use an opening tag and a closing tag (default is false)
 	 */
-	function form_control($control, $field, $options=array()) {
+	function form_control($control, $field) {
 		$this->vars = array("display" => $this);
 		$this->fill_ops($field, $control);
 		//run filters

@@ -1,11 +1,11 @@
 <?php
 class LayoutDisplay extends ItemDisplay {
-	var $type = "layout";
-	var $template = "layout";
+	public $type = "layout";
+	public $template = "layout";
 
-	var $cells = array();
+	public $cells = array();
 
-	var $default_cell = false;
+	public $default_cell = false;
 
 
 	/**
@@ -22,11 +22,11 @@ class LayoutDisplay extends ItemDisplay {
 		return $options;
 	}
 
-	function query($options=null) {
+	function query($options = null) {
 		//disable query
 	}
 
-	function put($parent, $selector, $content="", $key="") {
+	function put($parent, $selector, $content = "", $key = "") {
 		$node = put($this->cells[$parent], $selector, $content);
 		if (!empty($key)) $this->cells[$key] = $node;
 		return $node;
@@ -42,14 +42,14 @@ class LayoutDisplay extends ItemDisplay {
 		return empty($this->cells);
 	}
 
-	function output($match="") {
+	function output($match = "") {
 		foreach ($this->fields as $name => $field) {
-				if (!empty($match) && substr($name, 0, strlen($match)) != $match) continue;
-				$field['attributes']['class'] = implode(' ',$field['attributes']['class']);
-				$node = '<div '.html_attributes($field['attributes'], false).'>';
-				foreach ($field as $key => $value) if($key != 'attributes') $node .= (string) $this->cells[$key];
-				$node .= '</div>';
-				echo $node;
+			if (!empty($match) && substr($name, 0, strlen($match)) != $match) continue;
+			$field['attributes']['class'] = implode(' ', $field['attributes']['class']);
+			$node = '<div '.html_attributes($field['attributes'], false).'>';
+			foreach ($field as $key => $value) if ($key != 'attributes') $node .= (string) $this->cells[$key];
+			$node .= '</div>';
+			echo $node;
 		}
 	}
 }

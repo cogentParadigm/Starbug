@@ -16,11 +16,11 @@
  * @copydoc star
  * @ingroup strings
  */
-function star($str=array()) {
+function star($str = array()) {
 	if (is_array($str)) return $str;
 	$arr = array();
 	$keypairs = explode("  ", $str);
-	foreach($keypairs as $keypair) {
+	foreach ($keypairs as $keypair) {
 		if (false !== ($pos = strpos($keypair, ":"))) {
 			$key = substr($keypair, 0, $pos);
 			$value = substr($keypair, $pos+1);
@@ -48,7 +48,7 @@ function P($var) {
  * @param string $valid_chars valid characters. default is 'a-zA-Z0-9'
  * @return string the normalized version of $raw
  */
-function normalize($raw, $valid_chars='a-zA-Z0-9 \-_') {
+function normalize($raw, $valid_chars = 'a-zA-Z0-9 \-_') {
 	return preg_replace("/[^".$valid_chars."]/", "", $raw);
 }
 /**
@@ -74,7 +74,7 @@ function format_plural($singular) {
 		'/$/' => 's'
 	);
 	$plural = $singular;
-	foreach($rules as $pattern => $repl) {
+	foreach ($rules as $pattern => $repl) {
 		$plural = preg_replace($pattern, $repl, $singular);
 		if ($singular != $plural) break; // leave if plural found
 	}
@@ -84,7 +84,7 @@ function format_plural($singular) {
  * helper function to format a machine name into a label
  */
 function format_label($name) {
-	return ucwords(str_replace('_',' ',$name));
+	return ucwords(str_replace('_', ' ', $name));
 }
 /**
  * convert an array to an HTML attribute string
@@ -93,7 +93,7 @@ function format_label($name) {
  * @param bool $echo if true then echo out the attribute string (default is true)
  * @return string the HTML attribute string
  */
-function html_attributes($ops, $echo=true) {
+function html_attributes($ops, $echo = true) {
 	$valid = array("abbr", "accept-charset", "accept", "accesskey", "action", "align", "alink", "alt", "archive", "axis", "background", "bgcolor", "cellpadding", "cellspacing", "char", "charoff", "charset", "checked", "cite", "class", "classid", "clear", "code", "codebase", "codetype", "color", "cols", "colspan", "compact", "content", "contenteditable", "contextmenu", "coords", "datetime", "declare", "defer", "dir", "disabled", "draggable", "dropzone", "enctype", "face", "for", "frame", "frameborder", "headers", "height", "hidden", "href", "hreflang", "hspace", "http-equiv", "id", "ismap", "label", "lang", "language", "link", "longdesc", "marginheight", "marginwidth", "maxlength", "media", "method", "multiple", "name", "nohref", "noresize", "noshade", "nowrap", "object", "placeholder", "profile", "prompt", "readonly", "rel", "rev", "rows", "rowspan", "rules", "scheme", "scope", "scrolling", "selected", "shape", "size", "span", "spellcheck", "src", "standby", "start", "style", "summary", "tabindex", "target", "text", "title", "type", "usemap", "valign", "value", "valuetype", "version", "vlink", "vspace", "width");
 	$ops = star($ops);
 	$validate = true;//(empty($ops['dojoType']) && empty($ops['cellType']) && empty($ops['field']));
@@ -162,11 +162,11 @@ function filter_email($email) {
 function filter_plain($content) {
 	return htmlentities(preg_replace('/  +/', ' ', $content), ENT_QUOTES, 'UTF-8');
 }
-function filter_html($content, $allowed=array()) {
+function filter_html($content, $allowed = array()) {
 	$purifier = load_htmlpurifier($allowed);
 	return $purifier->purify($content);
 }
-function load_htmlpurifier($allowed=array()) {
+function load_htmlpurifier($allowed = array()) {
 	import("htmlpurifier");
 	if (empty($allowed)) {
 		$allowed = array(
@@ -205,11 +205,11 @@ function load_htmlpurifier($allowed=array()) {
 	if ($def = $config->maybeGetRawHTMLDefinition()) {
 		// http://developers.whatwg.org/sections.html
 		$def->addElement('section', 'Block', 'Flow', 'Common');
-		$def->addElement('nav',     'Block', 'Flow', 'Common');
+		$def->addElement('nav', 'Block', 'Flow', 'Common');
 		$def->addElement('article', 'Block', 'Flow', 'Common');
-		$def->addElement('aside',   'Block', 'Flow', 'Common');
-		$def->addElement('header',  'Block', 'Flow', 'Common');
-		$def->addElement('footer',  'Block', 'Flow', 'Common');
+		$def->addElement('aside', 'Block', 'Flow', 'Common');
+		$def->addElement('header', 'Block', 'Flow', 'Common');
+		$def->addElement('footer', 'Block', 'Flow', 'Common');
 
 		// Content model actually excludes several tags, not modelled here
 		$def->addElement('address', 'Block', 'Flow', 'Common');
@@ -235,12 +235,12 @@ function load_htmlpurifier($allowed=array()) {
 		));
 
 		// http://developers.whatwg.org/text-level-semantics.html
-		$def->addElement('s',    'Inline', 'Inline', 'Common');
-		$def->addElement('var',  'Inline', 'Inline', 'Common');
-		$def->addElement('sub',  'Inline', 'Inline', 'Common');
-		$def->addElement('sup',  'Inline', 'Inline', 'Common');
+		$def->addElement('s', 'Inline', 'Inline', 'Common');
+		$def->addElement('var', 'Inline', 'Inline', 'Common');
+		$def->addElement('sub', 'Inline', 'Inline', 'Common');
+		$def->addElement('sup', 'Inline', 'Inline', 'Common');
 		$def->addElement('mark', 'Inline', 'Inline', 'Common');
-		$def->addElement('wbr',  'Inline', 'Empty', 'Core');
+		$def->addElement('wbr', 'Inline', 'Empty', 'Core');
 
 		// http://developers.whatwg.org/edits.html
 		$def->addElement('ins', 'Block', 'Flow', 'Common', array('cite' => 'URI', 'datetime' => 'CDATA'));
