@@ -1,12 +1,12 @@
 <?php
-	if (!file_exists(BASE_DIR."/patch")) mkdir(BASE_DIR."/patch/app/migrations", 0, true);
+	if (!file_exists($this->base_directory."/patch")) mkdir($this->base_directory."/patch/app/migrations", 0, true);
 	$data = "<models>\n";
-	foreach ($schemer->tables as $name => $fields) {
+	foreach ($this->schemer->tables as $name => $fields) {
 		XMLBuilder::write_model($name, $fields);
-		$data .= file_get_contents(BASE_DIR."/var/xml/$name.xml")."\n";
+		$data .= file_get_contents($this->base_directory."/var/xml/$name.xml")."\n";
 	}
 	$data .= "</models>";
-	$file = fopen(BASE_DIR."/var/xml/all.xml", "wb");
+	$file = fopen($this->base_directory."/var/xml/all.xml", "wb");
 	fwrite($file, $data);
 	fclose($file);
 	$model = "all";

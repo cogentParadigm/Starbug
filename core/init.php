@@ -62,9 +62,6 @@ if (file_exists(BASE_DIR."/var/autoload_classmap.php")) {
 
 	if (defined('SB_CLI')) {
 		$sb->user = array("groups" => array("root"));
-		$context->publish("init", "cli");
-	} else {
-		$context->publish("init");
 	}
 }
 

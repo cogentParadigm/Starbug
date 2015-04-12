@@ -17,6 +17,7 @@ class GenerateCommand {
 		$this->container = $container;
 	}
 	public function run($argv) {
+		$this->schemer->fill();
 		$generator = array_shift($argv);
 		$model = array_shift($argv);
 		// CLI VARS

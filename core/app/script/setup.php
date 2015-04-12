@@ -18,6 +18,8 @@
 
 	if ($host) {
 		//INIT TABLES
+		$schemer = $container->get("Schemer");
+		$schemer->fill();
 		$schemer->migrate();
 
 		$root_user = query("users")->condition("email", "root")->one();
