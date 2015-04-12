@@ -15,8 +15,6 @@ class FormDisplay extends ItemDisplay {
 
 	function build($options) {
 		$this->options = $options;
-		// assign options to properties
-		$this->operation = $options['operation'];
 		// grab schema
 		if (!empty($this->model) && sb()->models->has($this->model)) {
 			$this->schema = sb($this->model)->hooks;
@@ -82,9 +80,9 @@ class FormDisplay extends ItemDisplay {
 		$this->attributes["action"] = $this->url;
 		$this->attributes["method"] = $this->method;
 		$this->attributes["accept-charset"] = "UTF-8";
-		if (!empty($this->model) && !empty($this->operation)) {
-			if (success($this->model, $this->operation)) $this->attributes['class'][] = "submitted";
-			else if (failure($this->model, $this->operation)) $this->attributes['class'][] = "errors";
+		if (!empty($this->model) && !empty($this->default_action)) {
+			if (success($this->model, $this->default_action)) $this->attributes['class'][] = "submitted";
+			else if (failure($this->model, $this->default_action)) $this->attributes['class'][] = "errors";
 		}
 		// grab errors and update schema
 		$this->errors = array();
