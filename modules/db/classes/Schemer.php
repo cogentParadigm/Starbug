@@ -690,7 +690,6 @@ class Schemer {
 		$args['path'] = $path;
 		efault($args['title'], ucwords(str_replace("-", " ", $path)));
 		efault($args['statuses'], "published");
-		if ($this->current != "core/app") efault($args['prefix'], $this->current."/views/");
 		$this->uris[$path] = $args;
 	}
 
