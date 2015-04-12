@@ -8,13 +8,7 @@
  * @ingroup CSSParser
  */
 /**
- * @defgroup CSSParser
- * CSS Parser
- * @ingroup lib
- */
-$sb->provide("core/lib/CSSParser");
-/**
- * Parses, omptimizes and combines CSS files. Used in conjuction with script/generate/css to replace the blueprint CSS build script.
+ * Parses, omptimizes and combines CSS files. Used in conjuction with script/generate/css to combine all CSS sources per theme.
  * @ingroup CSSParser
  */
 class CSSParser {

@@ -42,6 +42,7 @@ include(BASE_DIR."/core/src/Request.php");
 include(BASE_DIR."/core/src/ApiRequest.php");
 include(BASE_DIR."/core/src/Macro.php");
 include(BASE_DIR."/core/src/Response.php");
+include(BASE_DIR."/core/src/CSSParser.php");
 if (defined('SB_CLI')) {
   include(BASE_DIR."/util/cli.php");
 }
