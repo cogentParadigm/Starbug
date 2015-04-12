@@ -1,8 +1,8 @@
-define(["dojo", "sb", "put-selector/put", "dgrid/editor", "dijit/form/DateTextBox"],
-function(dojo, sb, put, editor, DateTextBox){
+define(["dojo", "sb", "put-selector/put", "dijit/form/DateTextBox"],
+function(dojo, sb, put, DateTextBox){
 	dojo.global.starbug.grid.columns = dojo.global.starbug.grid.columns || {};
 	dojo.global.starbug.grid.columns.date = function(column){
-		
+
 		column.options = column.options || {};
 
 		//populate the cell with the label or value
@@ -12,8 +12,9 @@ function(dojo, sb, put, editor, DateTextBox){
 			node.innerHTML = sb.strings.date(value);
 		};
 
-		column = editor(column, DateTextBox, "dblclick");
-				
+		column.editor = DateTextBox;
+		column.editOn = column.editOn || 'dblclick';
+
 		return column;
 	};
 });

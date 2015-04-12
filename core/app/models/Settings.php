@@ -6,7 +6,6 @@
 class Settings {
 
 	function update($settings) {
-		efault($settings['seo_hide'], 0);
 		foreach ($settings as $k => $v) $this->store(array("value" => $v), "name:$k");
 	}
 

@@ -1,5 +1,5 @@
 <?php
-class hook_store_materialized_path {
+class hook_store_materialized_path extends QueryHook {
 	function validate(&$query, $key, $value, $column, $argument) {
 		if (empty($value)) $query->set($argument, "");
 		else {

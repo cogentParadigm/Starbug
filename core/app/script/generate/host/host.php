@@ -16,7 +16,7 @@
 	}
 	file_put_contents(BASE_DIR."/etc/Host.php", $host);
 	foreach (array("default", "test") as $dbname) {
-		if (!file_exists(BASE_DIR."/etc/db/".$dbname.".json")) exec("cp ".BASE_DIR."/etc/db/sample.json ".BASE_DIR."/etc/db/".$dbname.".json");
+		if (!file_exists(BASE_DIR."/app/etc/db/".$dbname.".json")) exec("cp ".BASE_DIR."/app/etc/db/sample.json ".BASE_DIR."/app/etc/db/".$dbname.".json");
 	}
 	exit(0);
 ?>

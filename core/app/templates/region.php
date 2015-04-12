@@ -1,3 +1,3 @@
-<div id="<?= $region; ?>" class="region">
-	<? $route = $request->payload['path']; render(array($route."-".$region, $region)); ?>
+<div id="<?php echo $region; ?>" class="region">
+	<?php $route = $response->path; $this->render(array($route."-".$region, $region)); ?>
 </div>

@@ -1,63 +1,102 @@
-<? extract(schema($model)); echo '<?php'."\n"; ?>
+<?php
+  $factory = sb()->config->get("models", "factory");
+  $factory = isset($factory[$model]) ? $factory[$model] : array();
+  extract(schema($model));
+  echo '<?php'."\n";
+?>
 /**
- * <?= $name; ?> model base
+ * <?php echo $name; ?> model base
  * @ingroup models
  */
-class <?= ucwords($name); ?>Model extends Table {
+class <?php echo ucwords($name); ?>Model extends Table {
 
-	var $filters = array(<? $count = 0; foreach ($fields as $column => $field) { if (!empty($field)) { if ($count > 0) echo ','; echo "\n"; ?>
-		"<?= $column; ?>" => "<? foreach ($field as $k => $v) { ?><? if ($count > 0) echo "  "; $count++ ?><?= $k; ?>:<?= $v; ?><? } ?>"<? } } echo "\n"; ?>
+  public $type = "<?php echo $name; ?>";
+  public $base = "<?php echo $base; ?>";
+
+  function __construct(DatabaseInterface $db<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
+    $this->db = $db;<?php foreach ($factory as $n => $t) echo "\n\t\t\$this->".$n.' = $'.$n.';'; ?>
+
+    $this->init();
+  }
+
+	public $hooks = array(<?php $count = 0; foreach ($fields as $column => $field) { if (!empty($field)) { $fcount = 0; if ($count > 0) echo ','; $count++; echo "\n"; ?>
+		"<?php echo $column; ?>" => array(<?php foreach ($field as $k => $v) { ?><?php if ($fcount > 0) echo ", "; $fcount++ ?>"<?php echo $k; ?>" => "<?php echo $v; ?>"<?php } ?>)<?php } } echo "\n"; ?>
 	);
 
-	function init() {<? foreach ($fields as $column => $field) { foreach ($field as $k => $v) { if ($k == "references") { $v = explode(" ", $v); echo "\n"; ?>
-		$this->has_one("<?= $v[0]; ?>", "<?= $column; ?>");<? } } } ?><? foreach ($relations as $relation) { echo "\n"; ?>
-		$this->has_many("<?= $relation['model']; ?>", "<?= $relation['field']; ?>"<? if (!empty($relation['lookup'])) { ?>, "<?= $relation['lookup']; ?>", "<?= $relation['ref_field']; ?>"<? } ?>);<? } echo "\n"; ?>
-	}
-	
-	function create($<?= $singular; ?>) {
-		$this->store($<?= $singular; ?>);
+	function init() {<?php foreach ($fields as $column => $field) { foreach ($field as $k => $v) { if ($k == "references") { $v = explode(" ", $v); echo "\n"; ?>
+	  $this->has_one("<?php echo $v[0]; ?>", "<?php echo $column; ?>");<?php } } } ?><?php foreach ($relations as $relation) { echo "\n"; ?>
+		$this->has_<?php echo $relation['type']; ?>("<?php echo $relation['model']; ?>", "<?php echo $relation['field']; ?>"<?php if ($relation['type'] == "one" && !empty($relation['ref_field'])) { ?>, "<?php echo $relation['ref_field']; ?>"<?php } ?><?php if (!empty($relation['lookup'])) { ?>, "<?php echo $relation['lookup']; ?>", "<?php echo $relation['ref_field']; ?>"<?php } ?>);<?php } echo "\n"; ?>
 	}
 
-	function delete($<?= $singular; ?>) {
-		return $this->store(array('statuses' => "deleted",  'id' => $<?= $singular; ?>['id']));
+	function create($<?php echo $singular; ?>) {
+    <?php if (!empty($base)) { ?>
+      entity_save("<?php echo $model; ?>", $<?php echo $singular; ?> + array("type" => $this->type));
+    <?php } else { ?>
+		  $this->store($<?php echo $singular; ?>);
+    <?php } ?>
 	}
-	
+
+	function delete($<?php echo $singular; ?>) {
+    <?php if (!empty($base)) { ?>
+      entity_delete("<?php echo $model; ?>", $<?php echo $singular; ?>["id"]);
+    <?php } else { ?>
+      remove("<?php echo $model; ?>", array("id" => $<?php echo $singular; ?>["id"]));
+    <?php } ?>
+	}
+
 	function query_admin($query, &$ops) {
-		$query->condition("<?= $name; ?>.statuses", "deleted", "!=");
+    <?php if (!empty($base)) { ?>
+      $query = sb($this->base)->query_admin($query, $ops);
+    <?php } else { ?>
+      if (!logged_in("admin") && !logged_in("root")) $query->action("read");
+    <?php } ?>
+    return $query;
+	}
+
+	function query_form($query, &$ops) {
+		if (empty($ops['action'])) $ops['action'] = "create";
+		$query->action($ops['action'], "<?php echo $model; ?>");
+		$query->condition("<?php echo $model; ?>.id", $ops['id']);
+<?php
+    if (!empty($base)) {
+      unset($fields["id"]);
+      foreach(entity_chain($base) as $b) unset($fields[$b."_id"]);
+    }
+		$tabs = "\t\t";
+		foreach ($fields as $fieldname => $field) {
+				if (sb()->models->has($field['type'])) {
+					if (empty($field['column'])) $field['column'] = "id";
+					echo $tabs.'$query->select($query->model.".'.$fieldname.'.'.$field['column'].' as '.$fieldname.'");'."\n";
+				}
+		}
+    $parent = $base;
+    while (!empty($parent)) {
+      foreach (sb($parent)->hooks as $column => $field) {
+        if (sb()->models->has($field['type'])) {
+          if (empty($field['column'])) $field['column'] = "id";
+          echo $tabs.'$query->select($query->model.".'.$column.'.'.$field['column'].' as '.$column.'");'."\n";
+        }
+      }
+      $parent = sb($parent)->base;
+    }
+		?>
 		return $query;
 	}
-	
-	function display_admin($display, $ops) {
-		$display->add("id");
-	}
-	
+
 	function query_get($query, &$ops) {
 		return $query;
 	}
-	
+
 	function query_select($query, &$ops) {
-		$query->condition("<?= $name; ?>.statuses", "deleted", "!=");
-		$query->select("<?= $name; ?>.id");
-		$query->select("<?= efault($label_select, $name.".id"); ?> as label");
-		return $query;
-	}
-
-	function query_terms($query, &$ops) {
-		$query = query("terms");
-		$query->select("terms.id,terms.term as label");
-		if (!empty($ops['taxonomy'])) $query->condition("taxonomy", $ops['taxonomy']);
 		if (!empty($ops['id'])) {
-			$query->join("terms_index");
-			$query->condition("terms_index.type", "<?= $name; ?>");
-			$query->condition("terms_index.type_id", $ops['id']);
+			$query->condition($query->model.".id", explode(",", $ops['id']));
+		} else {
+			$query->condition("<?php echo $name; ?>.statuses.slug", "deleted", "!=", array("ornull" => true));
 		}
-		$query->sort("terms.parent ASC, terms.term ASC");
-		return $query;
-	}
-
-	function query_filters($action, $query, &$ops) {
+		$query->select("<?php echo $name; ?>.id");
+		$query->select("<?php echo efault($label_select, $name.".id"); ?> as label");
 		return $query;
 	}
 
 }
-<?= '?>'; ?>
+<?php echo '?>'; ?>

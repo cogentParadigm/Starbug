@@ -1,7 +1,6 @@
 <div class="container">
-	<a id="logo" href="./"><span><?php echo settings("site_name"); ?></span></a>
-	<span id="subhead"><?php echo settings("tagline"); ?></span>
-	<ul id="nav" class="right hnav">
+	<a id="logo" href="./"><img src="<?php echo uri("app/themes/starbug-1/public/images/logo.png"); ?>" title="<?php echo settings("site_name"); ?>"/></a>
+	<ul id="nav" class="pull-right hnav">
 		<li><a class="active" href="<?php echo uri(); ?>">Home</a></li>
 		<?php if (logged_in()) { ?>
 			<li><a href="<?php echo uri("logout"); ?>">Log Out</a></li>

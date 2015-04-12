@@ -1,5 +1,5 @@
 <?php
-class hook_store_addslashes {
+class hook_store_addslashes extends QueryHook {
 	function validate(&$query, $key, $value, $column, $argument) {
 		return addslashes($value);
 	}

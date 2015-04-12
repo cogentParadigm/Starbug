@@ -25,7 +25,7 @@ $this->table("users  label_select:CONCAT(first_name, ' ', last_name, ' (', email
 	"last_visit  type:datetime  default:0000-00-00 00:00:00  list:true  display:false"
 );
 //This will be stored immediately after the creation of the users table
-$this->store("users", "email:root", array(), true);
+$this->store("users", "email:root", "groups:root");
 $this->table("permits  list:all",
 	"role  type:string  length:30",
 	"who  type:int  default:0",
@@ -35,19 +35,13 @@ $this->table("permits  list:all",
 	"related_id  type:int  default:0"
 );
 $this->table("terms  label_select:terms.term",
-	"term  type:string  length:128  slug:slug",
-	"slug  type:string  length:128  unique:taxonomy parent  display:false",
+	"term  type:string  length:128",
+	"slug  type:string  length:128  unique:taxonomy parent  display:false  default:  slug:term",
 	"description  type:string  length:255  input_type:textarea  default:",
 	"taxonomy  type:string  views:taxonomies  input_type:hidden",
 	"parent  type:int  default:0  input_type:category_select  readonly:  materialized_path:term_path",
 	"position  type:int  ordered:taxonomy parent  display:false",
 	"term_path  type:string  length:255  default:  display:false"
-);
-$this->table("terms_index",
-	"type  type:string  length:64",
-	"type_id  type:int  index:",
-	"terms_id  type:int  references:terms id",
-	"rel  type:string  length:64"
 );
 $this->table("settings",
 	"name  type:string  length:255",
@@ -61,22 +55,30 @@ $this->table("settings",
 );
 $this->table("uris  label:Pages  singular_label:Page  label_select:title",
 	"title  type:string  length:128  list:true",
-	"path  type:string  length:64  unique:  list:true",
+	"path  type:string  length:64  unique:  list:true  slug:title  null:  pattern:[path:token]",
 	"template  type:string  length:64  default:  list:false",
-	"categories  type:terms",
-	"tags  type:terms",
-	"format  type:string  length:16  default:  list:false",
+	"categories  type:terms  optional:",
+	"tags  type:terms  column:term",
 	"parent  type:int  default:0  list:false",
-	"sort_order  type:int  default:0  list:false",
-	"type  type:string  default:View  list:false",
-	"prefix  type:string  length:128  default:app/views/",
+	"type  type:string  default:  list:false",
 	"theme  type:string  length:128  default:  list:false",
 	"layout  type:string  length:64  default:",
 	"description  type:string  length:255  input_type:textarea  default:  list:false",
 	"meta  type:text  default:  list:false",
 	"meta_keywords  type:string  length:255  input_type:textarea  default:  list:false",
 	"canonical  type:string  length:255  default:  list:false",
-	"breadcrumb  type:string  length:255  default:  list:false"
+	"breadcrumb  type:string  length:255  default:  list:false",
+	"controller  type:string  default:",
+	"action  type:string  default:"
+);
+$this->table("entities  groups:false",
+	"base  type:string  default:",
+	"name  type:string  length:128",
+	"label  type:string  length:128",
+	"singular  type:string  length:128",
+	"singular_label  type:string  length:128",
+	"url_pattern  type:string",
+	"description  type:string  length:255  default:"
 );
 $this->table("blocks  list:all",
 	"uris_id  type:int  references:uris id  alias:%path%",
@@ -85,6 +87,7 @@ $this->table("blocks  list:all",
 	"content  type:text  default:",
 	"position  type:int  ordered:uris_id"
 );
+$this->table("uris", "blocks  type:blocks  table:blocks");
 $this->table("menus",
 	"menu  type:string  length:32  list:true  display:false",
 	"parent  type:int  default:0  materialized_path:menu_path",
@@ -96,37 +99,40 @@ $this->table("menus",
 	"position  type:int  ordered:menu parent  default:0",
 	"menu_path  type:string  length:255  default:  display:false"
 );
+// CONTENT TYPES
+$this->table("views  base:uris  description:A basic view");
+$this->table("pages  base:uris  description:A basic page");
 // URIS
-$this->uri("sb-admin", "format:xhr  title:Bridge  prefix:core/app/views/  groups:root");
-$this->uri("api", "template:api  prefix:core/app/views/  type:Page");
-$this->uri("documentation", "template:documentation  prefix:core/app/views/  type:Page  groups:root");
-$this->uri("profile", "template:controller");
-//Rogue IDE
-$this->uri("rogue", "title:Rogue IDE  format:xhr  prefix:core/app/views/  groups:root");
+$this->uri("api", "controller:api  action:response");
+$this->uri("profile", "controller:profile");
 //Admin
-$this->uri("admin", "template:controller-group  groups:admin  theme:storm");
+$this->uri("admin", "controller:admin  groups:admin  theme:storm");
 //Uploader
-$this->uri("upload", "prefix:core/app/views/  format:xhr  groups:user");
+$this->uri("upload", "controller:upload  template:xhr  groups:user");
 //terms
-$this->uri("terms", "prefix:core/app/views/  format:xhr  groups:user");
-$this->uri("robots", "prefix:core/app/views/  format:txt");
+$this->uri("terms", "template:xhr  groups:user");
+$this->uri("robots", "template:txt");
 
 //Admin Menu
 $this->menu("admin",
 	array(
-		"content" => '<span class="fa fa-cog"></span>',
+		"content" => "Content",
 		"children" => array(
-			"href:admin/settings  content:Settings",
-			"template:divider",
-			"href:admin/menus  content:Menus",
-			"href:admin/taxonomies  content:Taxonomy",
-			"template:divider  groups:root",
-			"href:sb-admin  content:The Bridge  target:_blank  groups:root"
+			"href:admin/views  content:Views",
+			"href:admin/pages  content:Pages"
 		)
 	),
 	"href:admin/users  content:Users",
-	"href:admin/uris  content:Pages",
-	"href:admin/media  content:Media  target:_blank"
+	"href:admin/media  content:Media  target:_blank",
+	array(
+		"content" => "Configuration",
+		"children" => array(
+			"href:admin/taxonomies  content:Taxonomy",
+			"href:admin/menus  content:Menus",
+			"href:admin/emails  content:Email Templates",
+			"href:admin/settings  content:Settings"
+		)
+	)
 );
 //groups
 $this->taxonomy("groups",

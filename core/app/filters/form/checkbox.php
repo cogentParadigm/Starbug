@@ -1,5 +1,6 @@
 <?php
 		$field['type'] = 'checkbox';
-		if ($this->get($field['name']) == $field['value']) $field['checked'] = 'checked';
-		$control = "input";
+		$value = $this->get($field['name']);
+		if (($value === '' && $field['value'] == $field['default']) || $value == $field['value']) $field['checked'] = 'checked';
+		$control = 'input';
 ?>

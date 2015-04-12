@@ -5,6 +5,7 @@ define([
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
 	"sb",
+	"sb/store/Api",
 	"dojo/text!./templates/Browser.html",
 	"dgrid/OnDemandList",
 	"put-selector/put",
@@ -18,12 +19,13 @@ define([
 	"starbug/form/Uploader",
 	"starbug/grid/columns/options",
 	"starbug/grid/columns/filesize"
-], function (declare, lang, Widget, Templated, _WidgetsInTemplate, sb, template, List, put, on, query, domclass, Grid) {
+], function (declare, lang, Widget, Templated, _WidgetsInTemplate, sb, api, template, List, put, on, query, domclass, Grid) {
 	return declare([Widget, Templated, _WidgetsInTemplate], {
 		currentUser:0, //logged in user
 		editing:0, //id of the comment being edited (if a comment is being edited)
 		editingNode:null, //node of the comment being edited (if a comment is being edited)
 		readOnly:false,
+		collection:null,
 		query:{}, //parameters for the query
 		list:null, //the dgrid OnDemandList that holds the list of comments
 		clist:null, //the dgrid OnDemandList that holds the list of categories
@@ -37,22 +39,22 @@ define([
 		modal:false,
 		postCreate:function() {
 			var self = this;
+			this.collection = new api({model:'files', action:'list'});
 
 			//instantiate a dgrid on demand list
 			this.list = new List({
-        store: sb.get('files', 'list'),
-        query: this.query,
+        collection: this.collection.filter(this.query),
         keepScrollPosition:true,
         renderRow: function(object, options){
 					//the renderRow function will render our list item
 					//and attach events within the item.
 					//We can use the scope of this function to access
 					//the target objects and nodes from within the event handlers
-					
+
 					//first put in a root node
 					var node = put('div.media');
 
-					
+
 					if (object.mime_type.split('/')[0] == 'image') {
 						var anchorNode = put(
 							node,
@@ -64,14 +66,16 @@ define([
 						//lb.startup();
 					} else {
 						var anchorNode = put(
-							put(node, 'a[href="'+WEBSITE_URL+'app/public/uploads/'+object.id+'_'+object.filename+'"][target="_blank"]', put('span.caption', object.filename)),
-							'img.media-object[width="100"][src="'+WEBSITE_URL+'app/themes/storm/public/images/file.png"]'
+							node,
+							'a[href="javascript:;"][group="files"]',
+							put('div.fa.fa-file.fa-4x[style="line-height:100px;width:100px;text-align:center"]')
 						);
+						put(anchorNode, 'div.name', object.filename);
 					}
-					
+
 					on(anchorNode, 'click', function() {
 						if (self.modal) {
-							window.opener.SetUrl(WEBSITE_URL+'app/public/uploads/'+object.id+'_'+object.filename);
+							window.opener.SetUrl(WEBSITE_URL+'app/public/uploads/'+object.id+'_'+object.filename, object);
 							self.close();
 							return;
 						}
@@ -89,65 +93,64 @@ define([
 							/*
 							self.selection.innerHTML = '';
 							put(self.selection, 'h3', object.filename);
-							put(self.selection, 'img.media-object[src="'+WEBSITE_URL+'app/public/uploads/'+object.id+'_'+object.filename+'"]'); 
+							put(self.selection, 'img.media-object[src="'+WEBSITE_URL+'app/public/uploads/'+object.id+'_'+object.filename+'"]');
 							*/
 						}
 					});
-					
+
 					//delete
-					on(put(node, 'a.close-btn[href="javascript:;"]', put('div.icon-remove')), 'click', function() {
+					on(put(node, 'a.close-btn[href="javascript:;"]', put('div.fa.fa-times')), 'click', function() {
 						if (confirm('Are you sure you want to delete this image?')) {
-							self.list.store.remove(object.id).then(function() {
+							self.list.collection.remove(object.id).then(function() {
 								self.list.removeRow(node);
 								if (self.grid != null) self.grid.removeRow(node);
 							});
 						}
 					});
-					
+
 					//return the node
 					return node;
         }
 			}, this.listNode);
 			this.list.startup();
-			
+
 			//instantiate a dgrid on demand list
 			this.clist = new List({
-        store: sb.get('terms', 'list'),
-        query: {taxonomy:'files_category'},
+        collection: (new api({model:'terms', action:'list'})).filter({taxonomy:'files_category'}),
         keepScrollPosition:true,
         renderRow: function(object, options){
 					//the renderRow function will render our list item
 					//and attach events within the item.
 					//We can use the scope of this function to access
 					//the target objects and nodes from within the event handlers
-					
+
 					//first put in a root node
 					var node = put('div.category');
-					
+
 					on(put(node, 'a', object.term), 'click', function() {
 						self.select_category(object, node);
 					});
-					
+
 					if (object.selected || (self.category.length > 0 && self.category[0].id == object.id)) self.select_category(object, node);
-					
+
 					//return the node
 					return node;
         }
 			}, this.clistNode);
 			this.clist.on('dgrid-refresh-complete', function(evt) {
 				var empty_term = {id:0, term:"All Categories", slug:"all"};
-				if (self.category.length == 0 || self.category[0].id == 0) empty_term.selected = true; 
+				if (self.category.length == 0 || self.category[0].id == 0) empty_term.selected = true;
 				self.clist.renderArray([empty_term]);
 			});
 			this.clist.startup();
 
 			//initialize the uploader
-			this.uploader.url = WEBSITE_URL+'upload';	
+			this.uploader.url = WEBSITE_URL+'upload';
 			this.uploader.onBegin = lang.hitch(this, function() {
 				self.set_status('loading');
 			});
 			this.uploader.onComplete = lang.hitch(this, 'onUpload');
-			
+
 			//attach mode buttons
 			on(this.detailsMode, 'click', function() {
 				self.setMode('details');
@@ -155,15 +158,15 @@ define([
 			on(this.iconsMode, 'click', function() {
 				self.setMode('icons');
 			});
-			
+
 			//search
 			on(this.search, 'keyup', function(evt) {
 				if (evt.keyCode <= 31 && evt.keyCode != 8) return;
 				self.query['keywords'] = self.search.value;
 				if (self.mode == 'details') self.grid.set('query', self.query);
-				else self.list.set('query', self.query); 
+				else self.list.set('query', self.query);
 			});
-			
+
 			//query string params
 			var parts = window.location.search.substr(1).split('&');
 			for (var i in parts) {
@@ -173,8 +176,8 @@ define([
 					this.modal = true;
 					this.modalMenu.style.display = 'block';
 				}
-			}			
-			
+			}
+
 		},
 		setMode: function(mode) {
 			this.mode = mode;
@@ -195,11 +198,11 @@ define([
 				this.list.set('query', this.query);
 			}
 		},
-		delete: function() {
+		remove: function() {
 			var self = this;
 			if (confirm('Are you sure you want to delete this image?')) {
 				for (var id in self.files) {
-					self.list.store.remove(id).then(function() {
+					self.list.collection.remove(id).then(function() {
 						self.list.removeRow(self.files[id][1]);
 						delete self.files[id];
 						self.contextMenu.style.display = 'none';
@@ -233,8 +236,8 @@ define([
 			this.uploader.category = (term.id == 0) ? '' : 'files_category '+term.slug;
 			//update the query (filters the file list)
 			this.query.category = term.id;
-			if (this.mode == "icons") this.list.set('query', this.query);
-			else if (this.mode == "details") this.grid.set('query', this.query);
+			if (this.mode == "icons") this.list.set('collection', this.collection.filter(this.query));
+			else if (this.mode == "details") this.grid.set('collection', this.collection.filter(this.query));
 		},
 		new_category: function() {
 			/**

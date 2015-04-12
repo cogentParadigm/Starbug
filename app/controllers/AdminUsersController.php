@@ -1,19 +1,23 @@
 <?php
 class AdminUsersController {
+	public $routes = array(
+		'update' => '{id}'
+	);
 	function init() {
-		assign("model", "users");
+		$this->assign("model", "users");
+		$this->assign("cancel_url", "admin/users");
 	}
 	function default_action() {
 		$this->render("admin/list");
 	}
 	function create() {
-		assign("form", "users");
-		if (success("users", "create")) redirect(uri("admin/users/update", 'u'));
+		$this->assign("form", "users");
+		if (success("users", "create")) redirect(uri("admin/users", 'u'));
 		else $this->render("admin/create");
 	}
-	function update($id=null) {
-		assign("id", $id);
-		assign("form", "users");
+	function update($id) {
+		$this->assign("id", $id);
+		$this->assign("form", "users");
 		$this->render("admin/update");
 	}
 }

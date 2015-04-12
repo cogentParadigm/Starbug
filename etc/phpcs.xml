@@ -1,0 +1,33 @@
+<ruleset name="starbug-project-coding-standard">
+    <description>Starbug Project Coding Standard</description>
+
+    <rule ref="PSR2">
+      <exclude name="Generic.ControlStructures.InlineControlStructure"/>
+      <exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
+      <exclude name="Generic.Files.LineLength"/>
+      <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace"/>
+      <exclude name="PSR1.Methods.CamelCapsMethodName"/>
+      <exclude name="PSR2.Namespaces.NamespaceDeclaration"/>
+      <exclude name="PSR2.Namespaces.UseDeclaration"/>
+      <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine"/>
+      <exclude name="PSR2.Files.EndFileNewline"/>
+      <exclude name="PSR2.ControlStructures.ControlStructureSpacing"/>
+      <exclude name="PSR2.ControlStructures.ElseIfDeclaration"/>
+      <exclude name="PSR2.ControlStructures.SwitchDeclaration"/>
+      <exclude name="PSR2.Methods.FunctionCallSignature.Indent"/>
+      <exclude name="PSR2.Methods.FunctionCallSignature.ContentAfterOpenBracket"/>
+      <exclude name="Squiz.Scope.MethodScope"/>
+      <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
+      <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine"/>
+      <exclude name="Zend.Files.ClosingTag"/>
+    </rule>
+
+    <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
+    <rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
+    <rule ref="Generic.WhiteSpace.ScopeIndent">
+      <properties>
+        <property name="indent" value="1"/>
+      </properties>
+    </rule>
+
+</ruleset>

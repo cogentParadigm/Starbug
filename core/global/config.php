@@ -22,17 +22,17 @@ $config = array();
  */
 function &config($key, $value=null, $dir="etc/") {
 	global $config;
-	
+
 	//keys needed to walk the array
 	$parts = explode(".", $key);
-	
+
 	//file name
 	$key = array_shift($parts);
 	if (!file_exists(BASE_DIR."/$dir$key.json")) return array();
-	
+
 	//get text
 	$text = file_get_contents(BASE_DIR."/$dir$key.json");
-	
+
 	//strip comments and decode json
 	if (empty($config[$key])) {
 		$raw = explode("\n", $text);
@@ -42,7 +42,7 @@ function &config($key, $value=null, $dir="etc/") {
 		}
 		$config[$dir.$key] = json_decode(join("\n", $raw), true);
 	}
-	
+
 	//walk to the value, tracking our position as we go
 	//we'll end up with the position of the key to change or add to
 	$conf = &$config[$dir.$key];
@@ -74,7 +74,7 @@ function &config($key, $value=null, $dir="etc/") {
 				case '{':
 					$closer = '}';
 				default:
-					
+
 			}
 		} else if ($action == "add") {
 			switch ($matches[0][0]) {
@@ -123,28 +123,6 @@ function schema($model) {
 	if ($count == 1) return $value;
 	else if ($count == 2) return $value[$args[1]];
 	else return false;
-}
-/**
-	* get theme variables
-	* @ingroup config
-	* @param string $var the theme variable to get, if empty return the whole theme info object
-	*/
-function theme($var="", $name="") {
-	efault($name, request("theme"));
-	efault($name, settings("theme"));
-	if (!empty($var)) $var = ".".$var;
-	return config("info$var", null, "app/themes/$name/");
-}
-/**
-	* get module variables
-	* @ingroup config
-	* @param string $var the module variable to get, if empty return the whole module info object
-	*/
-function module($key) {
-	$key = explode(".", $key, 2);
-	$module = $key[0];
-	$var = (isset($key[1])) ? ".".$key[1] : "";
-	return config("info$var", null, "modules/$module/");
 }
 /**
 	* get/set site options

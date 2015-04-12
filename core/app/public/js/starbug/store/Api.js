@@ -1,6 +1,6 @@
 define([
-	"dojo", "dojo/_base/declare", "dojo/_base/lang", "dojo/store/util/QueryResults", "starbug/form/Dialog"
-], function(dojo, declare, lang, QueryResults, dialog) {
+	"dojo/io-query", "dojo/_base/declare", "dojo/_base/lang", "dojo/store/util/QueryResults", "starbug/form/Dialog", "dojo/request/registry", "dojo/cookie"
+], function(ioQuery, declare, lang, QueryResults, dialog, request, cookie) {
 return declare(null, {
 	// query: String
 	//		The API query string
@@ -33,18 +33,16 @@ return declare(null, {
 		//		The object in the store that matches the given id.
 		var args = sb.star(this.apiQuery);
 		var parts = [];
-		if (typeof args['where'] == 'undefined') args['where'] = this.model+'.id='+id;
-		else args['where'] += ' && '+this.model+'.id='+id;
-		var q = dojo.objectToQuery(args);
+		args.id = id;
+		var q = ioQuery.objectToQuery(args);
 		q = q ? "?" + q: "";
 		var headers = options || {};
 		headers.Accept = "application/javascript, application/json";
-		this.results = dojo.xhrGet({
-			url: WEBSITE_URL+'api/'+this.model+'/get.json'+(q || ''),
+		this.results = request.get(WEBSITE_URL+'api/'+this.model+'/'+this.action+'.json'+(q || ''), {
 			handleAs: "json",
-			headers: headers,
-			error: dojo.hitch(this, 'handleError')
+			headers: headers
 		});
+		this.results.then(function() {}, lang.hitch(this, 'handleError'));
 		return this.results;
 	},
 	getIdentity: function(object){
@@ -68,13 +66,9 @@ return declare(null, {
 		for (var k in object) data[this.model+'['+k+']'] = object[k];
 		options = options || {};
 		data['action['+this.model+']'] = this.post_action;
-		this.results = dojo.xhrPost({
-				url: WEBSITE_URL+'api/'+this.model+'/'+this.action+'.json',
-				content: data,
-				handleAs: "json",
-				failOk:true,
-				error: dojo.hitch(this, 'handleError')
-			});
+		data.oid = cookie('oid');
+		this.results = request.post(WEBSITE_URL+'api/'+this.model+'/'+this.action+'.json', {data: data, handleAs: "json"});
+		this.results.then(function(){}, lang.hitch(this, 'handleError'));
 		return this.results;
 	},
 	add: function(object, options){
@@ -98,12 +92,9 @@ return declare(null, {
 		var args = {};
 		args['action['+this.model+']'] = 'delete';
 		args[this.model+'[id]'] = id;
-		this.results = dojo.xhrPost({
-			url: WEBSITE_URL+'api/'+this.model+'/get.json',
-			content: args,
-			failOk:true,
-			error: dojo.hitch(this, 'handleError')
-		});
+		args['oid'] = cookie('oid');
+		this.results = request.post(WEBSITE_URL+'api/'+this.model+'/get.json', {data: args});
+		this.results.then(function(){}, lang.hitch(this, 'handleError'));
 		return this.results;
 	},
 	query: function(query, options){
@@ -125,7 +116,7 @@ return declare(null, {
 				(("count" in options && options.count != Infinity) ?
 					(options.count + (options.start || 0) - 1) : '');
 		}
-		query = dojo.objectToQuery(query);
+		query = ioQuery.objectToQuery(query);
 		query = query ? "?" + query: "";
 		if(options && options.sort){
 			query += (query ? "&" : "?") + "orderby=";
@@ -136,15 +127,10 @@ return declare(null, {
 		}
 		var query_url = WEBSITE_URL+'api/'+this.model+'/'+this.action+'.json' + (query || "");
 		this.last_query = query_url;
-		var results = dojo.xhrGet({
-			url: query_url,
-			handleAs: "json",
-			headers: headers,
-			failOk:true,
-			error: dojo.hitch(this, 'handleError')
-		});
-		results.total = results.then(function(){
-			var range = results.ioArgs.xhr.getResponseHeader("Content-Range");
+		var results = request.get(query_url, {handleAs: "json", headers: headers});
+		results.then(function(){}, lang.hitch(this, 'handleError'));
+		results.total = results.response.then(function(response){
+			var range = response.getHeader("Content-Range");
 			return range && (range=range.match(/\/(.*)/)) && +range[1];
 		});
 		this.results = QueryResults(results);
@@ -156,13 +142,13 @@ return declare(null, {
 	},
 	getChildren: function(object, options){
 		var old_result = this.results;
-		this.query({parent:object.id}, options);
+		this.query(lang.mixin({}, options && options.originalQuery || null, {parent:object.id}), options);
 		return this.results;
 		this.results = old_result;
 	},
-	handleError: function(error, ioargs) {
+	handleError: function(error) {
 		var self = this;
-		if (ioargs.xhr.status == 403) {
+		if (error.response.status == 403) {
 			var d = new dialog({url:WEBSITE_URL+'forbidden', crudSuffixes:false, callback:function() {
 				/*
 					var method = (typeof ioargs.args['content'] == "undefined") ? dojo.xhrGet : dojo.xhrPost;
@@ -172,11 +158,11 @@ return declare(null, {
 				*/
 			}});
 			d.show();
-		} else if (ioargs.xhr.status == 500 && error.responseText.substr(0, 1) == '{') {
-			var data = JSON.parse(error.responseText);
+		} else if (error.response.status == 500 && error.response.text.substr(0, 1) == '{') {
+			var data = JSON.parse(error.response.text);
 			var message = 'Message: '+data.message+'\n\nFile: '+data.file+'\n\nLine: '+data.line;
 			alert(message);
-		}	else {
+		}	else if (error.response.status > 0) {
 			alert('An unknown error occurred.');
 		}
 	}

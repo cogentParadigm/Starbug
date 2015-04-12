@@ -1,14 +1,17 @@
 <?php
 class AdminMediaController {
+	public $routes = array(
+		'update' => '{id}'
+	);
 	function init() {
-		assign("model", "files");
+		$this->assign("model", "files");
 	}
 	function default_action() {
-		$this->template = "media-browser";
+		$this->response->template = "media-browser";
 	}
-	function update($id=null) {
-		assign("id", $id);
-		assign("action", "update");
+	function update($id) {
+		$this->assign("id", $id);
+		$this->assign("action", "update");
 		$this->render("admin/update");
 	}
 }

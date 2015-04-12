@@ -1,6 +1,4 @@
-<?php if ($request->format == "xhr") { ?><div class="box"><div class="inside"><?php } ?>
 <?php
-	if (!empty($template)) render($template);
-	else render("create");
+	if (!empty($template)) $this->render($template);
+	else $this->render("create");
 ?>
-<?php if ($request->format == "xhr") { ?></div></div><?php } ?>

@@ -1,0 +1,18 @@
+<div class="form-group crud-select clearfix">
+	<input type="hidden" data-dojo-attach-point="input"/>
+	<div data-dojo-attach-point="gridNode" style="display:none">
+		<table data-dojo-attach-point="grid" class="dgrid-autoheight" data-dojo-type="starbug/grid/MemoryGrid" data-dojo-props="store:this.store">
+				<thead>
+						<tr>
+							<th data-dgrid-column="starbug.grid.columns.handle({field: 'id'})" class="field-drag">-</th>
+							<th data-dojo-attach-point="label" data-dgrid-column="starbug.grid.columns.html({field: 'label'})"></th>
+							<th data-dgrid-column="starbug.grid.columns.options({field:'id'})">Options</th>
+						</tr>
+				</thead>
+		</table>
+	</div>
+	<div style="margin-top:15px" data-dojo-attach-point="controls">
+		<div style="margin-left:10px" data-dojo-attach-point="statusNode"></div>
+		<a class="btn btn-default" href="javascript:;" data-dojo-attach-event="click:newItem"><span class="fa fa-plus"></span> New</a>
+	</div>
+</div>

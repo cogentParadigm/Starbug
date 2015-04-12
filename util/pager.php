@@ -29,7 +29,7 @@ class pager {
 		$this->count = $total;
 		$this->per = $items_per_page;
 		$this->range = $range;
-		empty_nan($current_pg, 1);
+		if (empty($current_pg) || !is_numeric($current_pg)) $current_pg = 1;
 		$this->current_page = $current_pg;
 		$this->last = ceil($total/$items_per_page);
 		$this->start = (($current_pg-1)*$items_per_page);

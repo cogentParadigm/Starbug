@@ -5,8 +5,9 @@
 	if ($arb == true) {
 		//PUBLISH ARB HOOKS
 		//$_POST will be populated and include x_subscription_id and x_respones_code (1=success)
-		$sb->publish("arb.transaction");
+		$this->publish("transaction", "arb");
+	} else {
+		//PUBLISH AIM HOOK
+		$this->publish("transaction", "aim");
 	}
-	//PUBLISH GLOBAL HOOK
-	$sb->publish("global.transaction");
 ?>

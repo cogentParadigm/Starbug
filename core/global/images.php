@@ -24,23 +24,23 @@
  *      'file_size': image's physical size (in bytes)
  */
 function image_info($file) {
-  if (!is_file($file)) return FALSE;
+	if (!is_file($file)) return FALSE;
 
-  $details = FALSE;
-  $data = @getimagesize($file);
-  $file_size = @filesize($file);
+	$details = FALSE;
+	$data = @getimagesize($file);
+	$file_size = @filesize($file);
 
-  if (isset($data) && is_array($data)) {
-    $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
-    $extension = array_key_exists($data[2], $extensions) ?  $extensions[$data[2]] : '';
-    $details = array('width'     => $data[0],
-                     'height'    => $data[1],
-                     'extension' => $extension,
-                     'file_size' => $file_size,
-                     'mime_type' => $data['mime']);
-  }
+	if (isset($data) && is_array($data)) {
+		$extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
+		$extension = array_key_exists($data[2], $extensions) ?  $extensions[$data[2]] : '';
+		$details = array('width'=> $data[0],
+										'height' 		=> $data[1],
+										'extension' => $extension,
+										'file_size' => $file_size,
+										'mime_type' => $data['mime']);
+	}
 
-  return $details;
+	return $details;
 }
 /**
  * Create a new image resource
@@ -51,18 +51,18 @@ function image_info($file) {
  */
 function image_create($width, $height) {
 	if (class_exists("Imagick")) {
-		$im = new Imagick();
-		$im->newImage($width, $height, "none");
-		return $im;
+		$image = new Imagick();
+		$image->newImage($width, $height, "none");
+		return $image;
 	} else {
-		$im = imagecreatetruecolor($width, $height);
+		$image = imagecreatetruecolor($width, $height);
 		// apply PNG 24-bit transparency to background
-		$transparency = imagecolorallocatealpha($im, 0, 0, 0, 127);
-		imagealphablending($im, FALSE);
-		imagefilledrectangle($im, 0, 0, $width, $height, $transparency);
-		imagealphablending($im, TRUE);
-		imagesavealpha($im, TRUE);
-		return $im;
+		$transparency = imagecolorallocatealpha($image, 0, 0, 0, 127);
+		imagealphablending($image, false);
+		imagefilledrectangle($image, 0, 0, $width, $height, $transparency);
+		imagealphablending($image, true);
+		imagesavealpha($image, true);
+		return $image;
 	}
 }
 /**
@@ -79,8 +79,8 @@ function image_open($path) {
 		if ($format == "auto") $format = end(explode(".", $path));
 		$format = str_replace('jpg', 'jpeg', $format);
 		$open_func = 'imageCreateFrom'. $format;
-		if (!function_exists($open_func)) return FALSE;
-		return $open_func($file);
+		if (!function_exists($open_func)) return false;
+		return $open_func($path);
 	}
 }
 /**
@@ -89,7 +89,7 @@ function image_open($path) {
  * @param mixed $image the image object or resource
  * @param string $path the file path
  */
-function image_save($image, $path, $format="auto") {
+function image_save($image, $path, $format = "auto") {
 	if ($format == "auto") $format = end(explode(".", $path));
 	$format = str_replace('jpg', 'jpeg', $format);
 	switch (gettype($image)) {
@@ -98,7 +98,7 @@ function image_save($image, $path, $format="auto") {
 			return $image->writeImage($path);
 		case "resource":
 			$close_func = 'image'. $format;
-			if (!function_exists($close_func)) return FALSE;
+			if (!function_exists($close_func)) return false;
 			if ($format == 'jpeg') return $close_func($image, $path, 100);
 			else return $close_func($image, $path);
 	}
@@ -110,10 +110,9 @@ function image_save($image, $path, $format="auto") {
  * @param star $dimensions the desired width or height (or both to constrain) in pixels
  * @return string an absolute URL to the thumbnail
  */
-function image_thumb($current_file, $dimensions, $options=array()) {
+function image_thumb($current_file, $dimensions, $flags = "") {
 	import("thumb");
 	$dimensions = array_merge(array('w' => 0, 'h' => 0, 'a' => false), star($dimensions));
-	$options = star($options);
 	$filename = basename($current_file);
 	$dir = "var/public/thumbnails/".$dimensions['w']."x".$dimensions['h']."a".$dimensions['a'];
 	$target = $dir."/".$filename;
@@ -124,7 +123,7 @@ function image_thumb($current_file, $dimensions, $options=array()) {
 		else $thumb->resize($dimensions['w'], $dimensions['h']);
 		$thumb->save(BASE_DIR."/".$target);
 	}
-	return uri($target);
+	return uri($target, $flags);
 }
 
 /**

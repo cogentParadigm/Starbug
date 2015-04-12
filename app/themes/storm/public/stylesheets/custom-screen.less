@@ -4,39 +4,71 @@
 /********************* dbootstrap ************************************/
 @import "../../../../../libraries/dojo/dbootstrap/theme/dbootstrap/index.less";
 
+/********************* variables ************************************/
+@link-color:#419BC0;
+@dropdown-bg:#000;
+@component-active-bg:#FFF;
+@nav-link-hover-bg:#FFF;
+
 /********************* structural elements *********************/
-body{background:url(../images/bg.png) repeat-x #FFF;color:#666}
-.page{position:relative;padding:5px 12px;text-align:left}
-#logo{font-size:18px;color:#FFF}
+body{background:url(../images/bg.png) repeat-x #FFF;color:#666;overflow-x:hidden}
+.page{position:relative;padding:4px 12px;text-align:left;transition:transform 0.5s}
+#logo{font-size:16px;color:#FFF;display:block;margin-bottom:4px}
 #top-right{float:right;color:#FFF}
+body h1, body.claro h1{margin:0 0 4px 0;font-weight:bold;font-size:140%;line-height:100%}
 #subhead{display:block;margin:0 0 10px 2px;color:#999;font-size:90%;height:16px}
 #tabs{width:auto;position:absolute;right:12px}
-#nav{height:50px;margin-bottom:0}
+#nav{height:50px;margin-bottom:0;margin-top:5px}
 #main{margin:0 0 10px;padding:9px 0;float:left;width:100%}
-#content{width:100%}
 
 /********************* headers *********************/
 h2{color:#419bc0;font-size:150%}
 
 /********************* nav *********************/
-#nav > li{float:left;background:url(../images/nav-col-border.png) top right no-repeat;height:50px}
+#nav > li{float:left;background:url(../images/nav-col-border.png) top right no-repeat;height:100%}
 #nav > li.last{background:transparent}
-#nav > li > a{padding:21px 20px 0px 15px;height:29px;line-height:14px;color:#FFF;font-weight:bold}
+#nav > li > a{padding:20px 12px 16px 12px;height:auto;line-height:14px;color:#FFF;font-weight:bold;font-size:12px}
 #nav .caret{border-top-color:#FFF;margin-left:8px}
 #nav > li > a:hover, #nav > li > a:focus{background:transparent;text-decoration:underline}
 #nav > li.first > a{padding-left:0}
 #nav li ul{#gradient > .vertical(@gray-darker, #000)}
 #nav .dropdown-menu li a{color:#FFF}
-.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {background:transparent;text-decoration:underline}
+#nav .dropdown-menu li a:hover{color:@gray-darker}
+//.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {background:transparent;text-decoration:underline}
+//#nav > li:first-child > a.dropdown-toggle{padding-left:0;padding-right:12px;background:transparent}
+//#nav > li:first-child > a.dropdown-toggle:hover{text-decoration:none}
+#nav .open > a, #nav .open > a:hover, #nav .open > a:focus{background:#FFF;color:#000}
 .dropdown-toggle{cursor:pointer}
 #tabs{border-bottom:none}
 #tabs > li + li{margin-left:5px}
 .blue.button{color:#FFF;background:#419BC0;border-radius:7px;padding:0 7px}
 .small.blue.button{font-size:9px;line-height:17px}
-#tabs .button, #tabs a.button{background:#282828;border-radius:0 0 7px 7px;padding:0 5px;color:#419bc0;border:none;margin:0;font-size:80%;font-weight:normal;text-transform:uppercase;display:block;height:21px}
+#tabs .button, #tabs a.button{background:#282828;border-radius:0 0 7px 7px;padding:0 5px;color:#419bc0;border:none;margin:0;font-size:80%;font-weight:normal;text-transform:uppercase;display:block;height:17px}
 #footer{margin-top:10px}
-#footer ul{padding:12px 0;margin:0}
+#footer ul{padding:0;margin:0}
 #footer ul li{list-style-type:none;float:left}
+#menu{width:200px;position:absolute;top:0;left:0;background:#000;z-index:999;height:100%;transition:transform 0.5s;transform:translateX(-200px);}
+#menu-checkbox{display:none}
+#menu-checkbox:checked ~ #menu{transform:translateX(0px)}
+#menu-checkbox:checked ~ .page{transform:translateX(200px)}
+#menu-checkbox:checked ~ .page #menu-toggle{background:#FFF}
+#menu a{color:#FFF}
+#menu .nav > li > a:hover, #menu .nav > li > a:focus, #menu .nav .open > a,
+#menu .dropdown-menu > .active > a, #menu .dropdown-menu > .active > a:hover, #menu .dropdown-menu > .active > a:focus,
+#menu .dropdown-menu > li > a:hover, #menu .dropdown-menu > li > a:focus{color:#222}
+#menu .dropdown-menu{width:100%}
+#menu .open > .dropdown-menu{position:static;background:transparent}
+.dropdown .chevron:before{content:@fa-var-chevron-down}
+.open.dropdown .chevron:before{content:@fa-var-chevron-up}
+#menu-toggle{display:none}
+
+@media (max-width:@screen-sm-max) {
+  #nav{display:none}
+  #menu-toggle{display:block;width:40px;cursor:pointer;margin-top:12px;margin-bottom:11px;padding:10px;border-radius:6px}
+  #menu-toggle:before{display:block;content:"";width:100%;border-top:7px double #FFF;padding-top:3px}
+  #menu-toggle:after{display:block;content:"";width:100%;border-bottom:2px solid #FFF}
+  #menu-checkbox:checked ~ .page #menu-toggle:before, #menu-checkbox:checked ~ .page #menu-toggle:after{border-color:#222}
+}
 
 /********************* classes *********************/
 .input .alert-error{display:block;width:auto;padding:5px;margin-bottom:8px}
@@ -50,7 +82,7 @@ h2{color:#419bc0;font-size:150%}
 .box .inside{padding:10px 20px 10px 10px;position:relative;.clearfix}
 
 /********************* links *********************/
-a{color:#419bc0;text-decoration:none}
+a{text-decoration:none}
 #top-right a, h1 a, h1 a:hover{color:#FFF}
 a:hover{text-decoration:underline}
 
@@ -60,12 +92,17 @@ textarea{width:309px;height:100px}
 #login_form input.text{width:221px;color:#419bc0}
 #login_form span.error{width:221px;position:absolute;top:330px}
 .left.field{margin-right:5px}
-.infield span.alert-error{width:auto}
 .input.left{margin-right:8px}
 div.mce-tinymce{margin-bottom:10px}
 
+div.autocomplete{position:relative}
+div.dgrid.dgrid-list.autocomplete-list{display:none;position:absolute;top:58px;z-index:10;background-color:#fff;border:1px solid #aaa;height:auto;width:100% !important}
+div.dgrid.dgrid-list.autocomplete-list .dgrid-scroller{margin-top:0;overflow:auto;max-height:216px}
+div.dgrid.dgrid-list.autocomplete-list .city{padding:1px 6px;cursor:default}
+div.dgrid.dgrid-list.autocomplete-list.show{display:block}
+
+
 /********************* dojo *********************/
-/*
 body.claro .dijitTabContainerTop-dijitContentPane, body.claro .dijitTabContainerLeft-dijitContentPane, body.claro .dijitTabContainerBottom-dijitContentPane, body.claro .dijitTabContainerRight-dijitContentPane, body.claro .dijitAccordionContainer-dijitContentPane{background-color:transparent;padding:0px;overflow:visible}
 body.claro div div.dijitTabPaneWrapper{background:transparent;overflow:visible}
 .dijitContentPane .box-top{margin-top:-6px;margin-left:-5px}
@@ -81,7 +118,6 @@ body.claro .dijitDialog{-webkit-box-shadow:none;background:none;border:none}
 body.claro .dijitDialogTitleBar{display:none}
 body.claro .dijitDialogPaneContent{background:none;border:none}
 .dijitTooltipContents{.clearfix}
-*/
 .attribute{float:left;width:135px}
 .attribute h4{font-size:12px;margin:10px 0px 5px;font-weight:bold}
 .attribute ul{margin:0;padding:0;list-style-type:none}
@@ -91,60 +127,18 @@ body.claro .dijitDialogPaneContent{background:none;border:none}
 .attribute ul li input{display:none}
 
 
-/********************* CMS Pages *********************/
-.pages_form input.title-field{width:99%;font-size:18px}
-#link-label{float:left;padding:6px 0;margin-right:5px}
-.link-span{display:block;float:left;padding:5px 0;font-size:12px}
-.link-span .editable{background:#FE9}
-.infield{float:right;border:1px solid #999;margin:10px 0;padding:10px;width:15%}
-.infield select{width:100%}
-.infield input.text{width:96%}
-.pages_form .big.button{font-size:36px;margin-top:10px;width:200px;line-height:normal;margin:0}
-.pages_form .infield .big.button{width:100%}
-.editable a{background:white;padding:0px 5px}
-
-#applied_tags{clear:both;list-style-type:none;font-size:10px;margin:0}
-#applied_tags li{float:left;margin-right:10px;margin-bottom:10px}
-#applied_tags a{border:1px solid #666;padding:0px 4px 1px}
-#applied_tags a:hover{background:#666;color:#FFF;text-decoration:none}
-.infield, #applied_tags a{border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px}
-
 /********************* CMS Menus *********************/
-.uris_list{clear:both;height:300px;width:300px;overflow-y:scroll;margin-bottom:15px}
-.uris_list li{list-style-type:none;clear:both;margin-bottom:5px;border-bottom:1px solid}
-.menu_items li{padding:5px 0;list-style-type:none;clear:both}
-.menu_items li input{width:25px;text-align:center}
-.menu_item{width:500px}
-.menu_items .menu-toggle{position:relative;top:5px}
-.menu_items .menu-toggle .caret{border-top-color:#555}
-body ol.menu_items button, body ol.menu_items button{margin:0 0 0 10px;padding:0px;background:transparent;border:none;position:relative;top:-3px}
-body ol.menu_items button img{width:14px;height:14px}
 div.dojoDndHandle{display:block;cursor:hand;cursor:grab;cursor:-moz-grab;cursor:-webkit-grab}
 .dgrid-scroller.dojoDndSourceMoved, .dgrid-scroller.dojoDndSourceMoved .dojoDndItemOver{cursor:grabbing;cursor:-moz-grabbing;cursor:-webkit-grabbing}
 .claro .dojoDndItemAfter{border-top:none;border-bottom:1px solid #769DC0}
-
-.sortable.nav .dropdown-menu{position:static;float:none;margin:0;border-radius:0}
-.sortable.nav .dropdown-menu > .active > a, .sortable.nav .dropdown-menu > .active > a:hover, .sortable.nav .dropdown-menu > .active > a:focus{color:inherit}
-.sortable.nav li a{cursor:move}
-.sortable.nav li.over > a{background:#EEE}
-.sortable.nav .dropdown-menu .divider{margin:0;padding:12px 1px}
-.sortable.nav li{position:relative}
-.sortable.nav li .btn-group.right{position:absolute;top:10px;right:5px}
-.sortable.nav li ul li .btn-group.right{top:3px}
-.sortable.nav li a.btn{cursor:pointer}
-#nav > li > a > .icon-cog{font-size:1.9em;margin-top:-3px}
-#nav > li > a.dropdown-toggle:hover{text-decoration:none}
 .menu-form .inline-fields .input{width:280px}
-
-/********************* icons *********************/
-.icon.sprite{width:16px;height:16px}
-.Edit .icon{background:url(../icons/file-edit.png) no-repeat}
-.Delete .icon{background:url(../icons/cross.png) no-repeat}
 
 /********************* dgrid *********************/
 .dgrid table{margin:0}
 .dgrid button, .dgrid a.button{margin:0}
 .dgrid .field-options{width:95px}
+.dgrid .field-drag{width:40px}
+.dgrid .dgrid-tree{width:40px}
 .dgrid .dijitDateTextBox{width:90px}
 .claro .dijitTextBox .dijitInputInner{margin-bottom:0}
 .dgrid-cell input{width:auto}
@@ -153,18 +147,10 @@ div.dojoDndHandle{display:block;cursor:hand;cursor:grab;cursor:-moz-grab;cursor:
 body.claro table.dojoDndAvatar{width:auto !important;background:transparent;border:none;box-shadow:none;pointer-events:none}
 body.claro.dojoDndMove .dojoDndAvatarHeader{display:none}
 body.claro.dojoDndMove .dojoDndAvatarItem{position:relative;display:block;top:-80px;left:-40px}
-.ui-widget.dgrid{height:auto}
-.dgrid .dgrid-scroller{position:relative;overflow:auto;max-height:600px}
 .dgrid-cell:focus{outline:none}
-/* auto-height code */
-/*
-.has-ie-6 .dgrid .dgrid-scroller{overflow-y:visible}
-.dgrid .dgrid-header-scroll{display:none}
-.dgrid .dgrid-header{right:0}
-*/
 
 .dijitTooltipContents{.clearfix}
- 
+
 .dgrid.dgrid-list{height:auto;border:none;background:transparent}
 .dgrid.dgrid-list .dgrid-scroller{position:relative;overflow:visible;outline:none}
 .dgrid.dgrid-list .dgrid-no-data{display:none}
@@ -191,3 +177,10 @@ body.claro.dojoDndMove .dojoDndAvatarItem{position:relative;display:block;top:-8
 /********************* email templates *********************/
 .email_templates-name.input,.email_templates-subject.input,.email_templates-from.input,.email_templates-from_name.input{float:left;clear:left;margin-right:10px}
 .email_templates-cc.input textarea,.email_templates-bcc.input textarea{height:85px}
+
+.tag-box .tags{margin-top:3px}
+.tag-box .tags .tag{background-color:#eeeeee;border:none;border-radius:10px;padding:5px 10px;margin-bottom:5px}
+.tag-box .tags .tag .term,.tag-box .tags .tag a{color:#555}
+
+.display-field{margin-bottom:15px}
+.display-field-label{font-weight:bold}

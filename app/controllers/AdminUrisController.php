@@ -1,20 +1,30 @@
 <?php
 class AdminUrisController {
+	public $routes = array(
+		'update' => '{id}'
+	);
 	function init() {
-		assign("model", "uris");
+		$this->assign("model", "uris");
+		$this->assign("form", "uris");
+		$this->assign("cancel_url", "admin/uris");
+		if (success("uris", "create") || success("uris", "update")) {
+			if ($_POST['operation'] == "save") redirect(uri("admin/uris", "u"));
+			else if ($_POST['operation'] == "save_add_another") $_POST = array();
+		}
 	}
 	function default_action() {
-		assign("columns", array(
-			"Statuses" => "field:'statuses'  plugin:starbug.grid.columns.terms  taxonomy:'statuses'"
-		));
 		$this->render("admin/list");
 	}
-	function create() {
-		//autoloads admin/views/uris/create.php
+	function add() {
+
 	}
-	function update($id=null) {
-		assign("id", $id);
-		//autoloads admin/views/uris/update.php
+	function create() {
+		$this->render("admin/create");
+	}
+	function update($id) {
+		$this->assign("id", $id);
+		$this->assign("action", "update");
+		$this->render("admin/update");
 	}
 }
 ?>

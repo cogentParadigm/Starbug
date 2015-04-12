@@ -1,13 +1,13 @@
 <?php
 class ProfileController {
 	function init() {
-		assign("model", "users");
+		$this->assign("model", "users");
 	}
 	function default_action() {
-		assign("id", userinfo("id"));
-		assign("form_header", "<h1>Update Profile</h1>");
-		assign("form", "users");
-		assign("action", "update_profile");
+		$this->assign("id", userinfo("id"));
+		$this->assign("form_header", "<h1>Update Profile</h1>");
+		$this->assign("form", "users");
+		$this->assign("action", "update_profile");
 		$this->render("admin/update");
 	}
 }

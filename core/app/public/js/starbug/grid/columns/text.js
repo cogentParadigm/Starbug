@@ -1,11 +1,11 @@
-define(["dojo", "dojo/on", "sb", "put-selector/put", "dgrid/editor", "sb/markdown"],
+define(["dojo", "dojo/on", "sb", "put-selector/put", "sb/markdown"],
 function(dojo, on, sb, put, editor, marked){
 	marked.setOptions({breaks:true, smartLists:true});
 	dojo.global.starbug.grid.columns = dojo.global.starbug.grid.columns || {};
 	dojo.global.starbug.grid.columns.text = function(column){
-		
+
 		column.dismissOnEnter = false;
-		
+
 		column.ctrlDown = false;
 		column.loaded = false;
 
@@ -33,8 +33,9 @@ function(dojo, on, sb, put, editor, marked){
 			cell.innerHTML = marked(value);//sb.strings.htmlentities(value);
 		};
 
-		column = editor(column, 'textarea', "dblclick");
-				
+		column.editor = 'textarea';
+		column.editOn = column.editOn || "dblclick";
+
 		return column;
 	};
 });

@@ -8,6 +8,6 @@
  * @ingroup script
  */
 $name = array_shift($argv);
-$records = raw_query("DESCRIBE `".P($name)."`")->fetchAll();
+$records = raw_query("DESCRIBE `".P($name)."`")->fetchAll(PDO::FETCH_ASSOC);
 cli::table($records);
 ?>

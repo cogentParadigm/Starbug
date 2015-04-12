@@ -33,33 +33,36 @@ if (defined('Etc::TIME_ZONE')) date_default_timezone_set(Etc::TIME_ZONE);
 //set the appropriate level of error reporting
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERROR);
 
-// include the sb class
-include(BASE_DIR."/core/sb.php");
+include(BASE_DIR."/core/autoload.php");
 
-// load global functions
-include(BASE_DIR."/core/global_functions.php");
+$container = new Container();
+$container->register('base_directory', BASE_DIR, true);
+$container->register('modules', $modules, true);
+$container->register('database_name', DEFAULT_DATABASE, true);
 
-/**
- * instantiate the database to be passed to sb
- * @ingroup global
- */
-$db = get_database(DEFAULT_DATABASE);
+//create locator
+$locator = $container->get('ResourceLocatorInterface');
 
-/**
- * global instance of the sb class
- * @ingroup global
- */
-global $sb;
-$sb = new sb($db);
+// global functions
+foreach ($locator->locate("global_functions.php", "") as $global_include) include($global_include);
 
-//publish init hooks
-$sb->publish("init");
+if (file_exists(BASE_DIR."/var/autoload_classmap.php")) {
+	$loader = $container->get("AutoloaderInterface");
+	$loader->add(include(BASE_DIR."/var/autoload_classmap.php"));
+	$loader->register();
 
-if (defined('SB_CLI')) {
-	//import cli utils
-	$sb->import("util/cli");
-	//publish cli init hook
-	$sb->publish("cli.init");
+	global $sb;
+	$sb = $container->get("sb");
+
+	$context = $container->get("TemplateInterface");
+	$context->assign("container", $container);
+	$context->assign("sb", $sb);
+
+	new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
+
+	if (defined('SB_CLI')) {
+		$sb->user = array("groups" => array("root"));
+	}
 }
 
 ?>

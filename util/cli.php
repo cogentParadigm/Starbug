@@ -12,7 +12,6 @@
  * cli output utility
  * @ingroup util
  */
-$sb->provide("util/cli");
 /**
  * query the database and output the results in a table formatted for cli output
  * @see sb::query

@@ -18,10 +18,12 @@
 
 	if ($host) {
 		//INIT TABLES
+		$schemer = $container->get("Schemer");
+		$schemer->fill();
 		$schemer->migrate();
-	
-		$root = query("users", "where:username='root'  limit:1");
-		if (empty($root['password']) || $root['modified'] == $root['created']) { // PASSWORD HAS NEVER BEEN UPDATED
+
+		$root_user = query("users")->condition("email", "root")->one();
+		if (empty($root_user['password']) || $root_user['modified'] === $root_user['created']) { // PASSWORD HAS NEVER BEEN UPDATED
 			//COLLECT USER INPUT
 			fwrite(STDOUT, "\nPlease choose a root password:");
 			$admin_pass = str_replace("\n", "", fgets(STDIN));

@@ -1,5 +1,5 @@
 <?php
-class hook_store_alias {
+class hook_store_alias extends QueryHook {
 	function validate(&$query, $key, $value, $column, $alias) {
 		if (!empty($value) && !is_numeric($value) && $value != "NULL") {
 			$referenced_model = explode(" ", schema($query->model.".fields.".$column.".references"));
@@ -19,7 +19,7 @@ class hook_store_alias {
 				$num++;
 			}
 			$row = query($referenced_model[0])->select($referenced_model[1])->condition($match, $value)->one();
-			$value = $row[$referenced_model[1]];
+			if (!empty($row)) $value = $row[$referenced_model[1]];
 		}
 		return $value;
 	}

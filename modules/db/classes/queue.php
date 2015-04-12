@@ -22,8 +22,10 @@ class queue implements Countable, IteratorAggregate {
 	/**
 	 * array the queue of queries
 	 */
-	var $queue = array();
-	
+	protected $queue = array();
+
+	public $active;
+
 	/**
 	 * Push a query or queries onto the end of the queue
 	 * @param query $query the query to push onto the queue
@@ -53,11 +55,12 @@ class queue implements Countable, IteratorAggregate {
 	 */
 	function execute() {
 		while (!empty($this->queue)) {
-			$query = array_shift($this->queue);
-			$query->execute();
+			$this->active = array_shift($this->queue);
+			$this->active->execute();
+
 		}
 	}
-	
+
 	/**
 	 * Clear the queue
 	 */
@@ -68,7 +71,7 @@ class queue implements Countable, IteratorAggregate {
 	/**************************************************************
 	 * interface functions
 	 **************************************************************/
-	
+
 	/**
 	 * Implements method from IteratorAggregate to allow iterating over this object directly
 	 */

@@ -7,19 +7,24 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
-session_start();
 
 // include init file
 include("core/init.php");
-
-// include Request
-include("core/Request.php");
 
 /**
  * global instance of the Request class
  * @ingroup global
  */
 global $request;
-$request = new Request($_SERVER['REQUEST_URI']);
-$request->execute();
+$request = new Request($_SERVER['REQUEST_URI'], array(
+	'server' => $_SERVER,
+	'parameters' => $_GET,
+	'data' => $_POST,
+	'files' => $_FILES,
+	'cookies' => $_COOKIE
+));
+$container->register("Request", $request, true);
+$application = $container->get("ApplicationInterface");
+$response = $application->handle($request);
+$response->send();
 ?>

@@ -1,1 +1,1 @@
-<p class="alert alert-danger"><?= $error; ?></p>
+<p class="alert alert-danger"><?php echo $error; ?></p>

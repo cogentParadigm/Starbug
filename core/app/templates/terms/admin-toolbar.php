@@ -1,10 +1,11 @@
 <?php
 $options = schema($model);
 ?>
-<div class="btn-toolbar">
+<div class="pull-right">
 		<?php
-			render_form(array($model."/search", "search"));
-			link_to("Export CSV", "", array("href" => "javascript:window.location.href = ".$model."_grid.store.last_query.replace('json', 'csv');", "class" => "btn"));
-			link_to("New Taxonomy <b class=\"icon-plus\"></b>", $request->path."/new", "class:btn");
+			link_to("Export CSV <b class=\"fa fa-file-text-o\"></b>", "", array("href" => "javascript:window.location.href = ".$model."_grid.store.last_query.replace('json', 'csv');", "class" => "btn btn-default"));
+			link_to("New Taxonomy <b class=\"fa fa-plus\"></b>", $request->path."/create?new=true", "class:btn btn-default");
 		?>
 </div>
+<?php $this->render_display("SearchForm", array("model" => $model)); ?>
+<br/>

@@ -6,8 +6,9 @@
 <ul id="tabs" class="nav nav-tabs">
 		<li><a class="button" href="<?php echo uri("profile"); ?>">Profile</a></li>
 </ul>
+<label for="menu-checkbox" id="menu-toggle"></label>
 <?php
-	assign("attributes", array("id" => "nav"));
-	assign("menu", "admin");
-	render("menu");
+	$this->assign("attributes", array("id" => "nav"));
+	$this->assign("menu", "admin");
+	$this->render("menu");
 ?>

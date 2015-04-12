@@ -1,5 +1,0 @@
-cd app/public/js
-wget http://codemirror.net/codemirror.zip
-unzip codemirror.zip
-mv CodeMirror* CodeMirror
-rm codemirror.zip

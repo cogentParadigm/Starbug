@@ -1,8 +1,8 @@
-define(["dojo", "dojo/when", "sb", "put-selector/put", "dgrid/editor", "dijit/form/Select"],
-function(dojo, when, sb, put, editor, Select){
+define(["dojo", "dojo/when", "sb", "put-selector/put", "dijit/form/Select"],
+function(dojo, when, sb, put, Select){
 	dojo.global.starbug.grid.columns = dojo.global.starbug.grid.columns || {};
 	dojo.global.starbug.grid.columns.statuses = function(column){
-		
+
 		var grid;
 
 
@@ -10,20 +10,20 @@ function(dojo, when, sb, put, editor, Select){
 			put(parent && parent.contents ? parent : cell, ".dgrid-statuses");
 			value = parseInt(value);
 			//get statuses and populate field
-			
-			when(column.editorInstance._queryRes, function(data) {
-				items = column.editorInstance.getOptions();
+
+			when(column.grid._editorInstances[column.id]._queryRes, function(data) {
+				items = column.grid._editorInstances[column.id].getOptions();
 				var list = [];
-				var node = put(cell, 'span.statuses') 
+				var node = put(cell, 'span.statuses');
 				for (var s in items) if (value & parseInt(items[s].value)) list.push('<span class="status '+items[s].label+'">'+items[s].label.replace('_', ' ')+'</span>');
 				node.innerHTML = list.join(', ');
 			});
 		};
-	
+
 	 column.init = function() {
 		 grid = column.grid;
 		 column.editorArgs.store = sb.get(column.grid.model, 'statuses');
-		 
+
 	 };
 
 		column.editorArgs = {style:'width:100%', labelAttr:'label', multiple:true};
@@ -32,8 +32,9 @@ function(dojo, when, sb, put, editor, Select){
  			this._loadChildren();
  		};
 
-		column = editor(column, Select, "dblclick");
-				
+		column.editor = Select;
+		column.editOn = column.editOn || "dblclick";
+
 		return column;
 	};
 });

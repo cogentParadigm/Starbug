@@ -11,10 +11,11 @@
  * @defgroup global
  * global functions
  */
- 
+
 	include("core/global/common.php");
 	include("core/global/config.php");
 	include("core/global/cache.php");
+  include("core/global/entity.php");
 	include("core/global/modules.php");
 	include("core/global/strings.php");
 	include("core/global/routing.php");
@@ -23,8 +24,6 @@
 	include("core/global/templates.php");
 	include("core/global/images.php");
 	include("core/global/forms.php");
-	
-	// include module global functions
-	foreach (locate("global_functions.php", "") as $global_include) include($global_include);
+
 
 ?>

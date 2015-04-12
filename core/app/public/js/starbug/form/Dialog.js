@@ -1,4 +1,4 @@
-define(["dojo/_base/declare", "dojo/_base/lang", "dojo/request/xhr", "dojo/query", "dojo/dom-class", "dojo/request/iframe", "dijit/Dialog"], function(declare, lang, xhr, query, domclass, iframe, Dialog) {
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/request/xhr", "dojo/query", "dojo/dom-class", "dojo/dom-style", "dojo/request/iframe", "dijit/Dialog", "dijit/registry"], function(declare, lang, array, xhr, query, domclass, domstyle, iframe, Dialog, registry) {
 	return declare([Dialog], {
 		dialog:null,
 		url:'',
@@ -6,10 +6,32 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/request/xhr", "dojo/query
 		form:null,
 		item_id: 0,
 		post_data:{},
+		get_data:{},
 		crudSuffixes:true,
+		format:"xhr",
+		doLayout:false,
+		layoutParams:{},
+		showTitle:false,
+		draggable:false,
 		postCreate: function() {
 			this.inherited(arguments);
+			var layoutDefaults = {width:'90%', height:'90%', position:'fixed', top:'0', left:'0', right:'0', bottom:'0', margin:'auto', overflow:'auto'};
+			for (var i in layoutDefaults) if (typeof this.layoutParams[i] == "undefined") this.layoutParams[i] = layoutDefaults[i];
+			domstyle.set(this.domNode, this.layoutParams);
+			if (this.showTitle == false) domstyle.set(this.titleBar, 'display', 'none');
 			this.set('content', '');
+			
+		},
+		_position: function() {},
+		resize: function(dim) {
+			/*
+			 * EXPERIMENTAL SCROLL BEHAVIOR - TO ENABLE, REMOVE overflow:auto FROM THE DIALOG
+			if (this.containerNode.clientHeight > this.domNode.clientHeight) {
+				var max = this.containerNode.clientHeight -this.domNode.clientHeight;
+				domstyle.set(this.containerNode, 'top', 0 - Math.min(window.scrollY, max) + 'px');
+			}
+			*/
+			this._layoutChildren();
 		},
 		_onSubmit: function(evt){
 			evt.preventDefault();
@@ -20,7 +42,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/request/xhr", "dojo/query
 			domclass.add(this.form, 'loading');
 			query('.loading', this.form).style('display','block');
 			iframe(
-			this.url+(this.crudSuffixes ? ((this.item_id) ? 'update/'+this.item_id : 'create') : '')+'.xhr',
+			this.url+(this.crudSuffixes ? ((this.item_id) ? 'update/'+this.item_id : 'create') : '')+((this.format != false) ? '.xhr' : ''),
 			{
 				form: this.form,
 				data: this.post_data,
@@ -50,10 +72,13 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/request/xhr", "dojo/query
 			this.inherited(arguments);
 			if (id) this.item_id = id;
 			else this.item_id = 0;
-			xhr(
-				this.url+(this.crudSuffixes ? ((id) ? 'update/'+id : 'create') : '')+'.xhr',
-				{data:this.post_data}
-			).then(lang.hitch(this, 'loadForm'));
+			var request_url = this.url+(this.crudSuffixes ? ((id) ? 'update/'+id : 'create') : '')+((this.format != false) ? '.xhr' : '');
+			var token = '?';
+			for (var i in this.get_data) {
+				request_url += token+i+'='+this.get_data[i];
+				token = '&';
+			}
+			xhr(request_url, {data:this.post_data}).then(lang.hitch(this, 'loadForm'));
 		},
 		hide: function(evt) {
 			if (evt) evt.preventDefault();
@@ -66,6 +91,9 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/request/xhr", "dojo/query
 			sb.post(args, 'return confirm(\'Are you sure you want to delete this item?\')');
 		},
 		loadForm: function(data) {
+			array.forEach(registry.findWidgets(this.domNode), function(w) {
+				w.destroyRecursive();
+			});
 			this.set('content', data);
 			this.form = query('form', this.domNode)[0];
 			query('form', this.domNode).on('submit', function(evt) {evt.preventDefault();});

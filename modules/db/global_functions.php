@@ -12,56 +12,11 @@
  * global functions
  * @ingroup global
  */
-// include the db class
-include(dirname(__FILE__)."/classes/db.php");
-// include the Table class
-include(dirname(__FILE__)."/classes/Table.php");
-// included driver class
-include(dirname(__FILE__)."/classes/mysql.php");
-/**
-	* getter/caller for model properties/functions
-	* @ingroup data
-	*/
-function sb() {
-	$sb = sb::$instance;
-	$args = func_get_args();
-	$count = count($args);
-	if ($count == 0) return $sb;
-	else if ($count == 1) {
-		if ($sb->db->has($args[0])) return $sb->db->model($args[0]);
-		else return $sb->db->$args[0];
-	} else if ($count == 2) {
-		return $sb->db->model($args[0])->$args[1];
-	} else {
-		$model = $sb->db->model(array_shift($args));
-		$function = array_shift($args);
-		return call_user_func_array(array($model, $function), $args);
-	}
-}
-/**
- * get database
- * @ingroup data
- */
-function get_database($name) {
-	static $databases;
-	efault($databases, array());
-	if (!isset($databases[$name])) {
-		$config = config($name, null, "etc/db/");
-		if ($config['type'] == "mysql") {
-			$databases[$name] = new mysql($config);
-		}
-	}
-	return $databases[$name];
-}
-function select_database($name) {
-	$db = get_database($name);
-	sb()->set_database($db);
-}
 /**
  * @copydoc db::query
  * @ingroup data
  */
-function query($froms, $args="", $replacements=array()) {
+function query($froms, $args="", $replacements = array()) {
 	global $sb;
 	return $sb->db->query($froms, $args, $replacements);
 }
@@ -91,7 +46,7 @@ function raw_query($query) {
  * @copydoc db::store
  * @ingroup data
  */
-function store($name, $fields=array(), $from="auto") {
+function store($name, $fields = array(), $from = "auto") {
 	global $sb;
 	return $sb->db->store($name, $fields, $from);
 }
@@ -99,7 +54,7 @@ function store($name, $fields=array(), $from="auto") {
  * @copydoc db::queue
  * @ingroup data
  */
-function queue($name, $fields, $from="auto") {
+function queue($name, $fields, $from = "auto") {
 	global $sb;
 	return $sb->db->queue($name, $fields, $from);
 }
@@ -116,7 +71,7 @@ function store_queue() {
  * @ingroup data
  * @copydoc db::store
  */
-function store_once($name, $fields, $from="auto") {
+function store_once($name, $fields, $from = "auto") {
 	if (!is_array($fields)) $fields = star($fields);
 	$where = "";
 	$values = array();

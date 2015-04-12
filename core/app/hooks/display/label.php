@@ -1,7 +1,7 @@
 <?php
-class hook_display_label {
+class hook_display_label extends DisplayHook {
 	function build($display, $field, &$options, $column) {
-		efault($options['label'], $column['label']);
+		if (empty($options['label'])) $options['label'] = $column['label'];
 	}
 }
 ?>

@@ -20,49 +20,39 @@ class Table {
 	/**
 	 * @var db the db object
 	 */
-	var $db;
+	public $db;
 	/**
 	 * @var string The unprefixed table name
 	 */
-	var $type;
+	public $type;
 	/**
-	 * @var array The filters to apply to each column before attempting to store
+	 * @var array The hooks that apply to each column
 	 */
-	var $filters;
+	public $hooks = array();
 	/**
 	 * @var array The relationships to other tables
 	 */
-	var $relations;
+	public $relations = array();
 	/**
 	 * @var int The number of records returned by the last query
 	 */
-	var $record_count;
+	public $record_count;
 	/**
 	 * @var int The id of the last record inserted
 	 */
-	var $insert_id;
+	public $insert_id;
 	/**
 	 * @var array The mixed-in objects which hold the imported functions
 	 */
-	var $imported;
-	/**
-	 * @var array A list of the imported functions
-	 */
-	var $imported_functions;
 
 	/**
 	 * Table constructor
 	 * @param string $type the un-prefixed table name
 	 * @param array $filters the column filters
 	 */
-	function __construct($db, $type, $filters=array()) {
+	function __construct(DatabaseInterface $db) {
 		$this->db = $db;
-		$this->type = $type;
-		if (!isset($this->filters)) $this->filters = $filters;
-		$this->imported = array();
-		$this->imported_functions = array();
 		$this->init();
-		if (!isset($this->statuses)) $this->statuses = config("statuses");
 	}
 
 	protected function init() {
@@ -74,13 +64,10 @@ class Table {
 	 * @param string $lookup optional lookup table (table that contains the id). default is this table
 	 * @param string $ref_field the column that contains the id of the related record
 	 */
-	protected function has_one($name, $lookup, $ref_field="") {
-		if (empty($ref_field)) {
-			$ref_field = $lookup;
-			$lookup = $this->type;
-		}
+	protected function has_one($name, $ref_field, $hook = "id") {
+		$lookup = $this->type;
 		if (!isset($this->relations[$name])) $this->relations[$name] = array();
-		$this->relations[$name] = array_merge_recursive($this->relations[$name], array($lookup => array($ref_field => array("id" => array("type" => "one", "lookup" => $lookup, "ref" => $ref_field)))));
+		$this->relations[$name] = array_merge_recursive($this->relations[$name], array($lookup => array($ref_field => array("id" => array("type" => "one", "lookup" => $lookup, "ref" => $ref_field, "hook" => $hook)))));
 	}
 
 	/**
@@ -90,7 +77,7 @@ class Table {
 	 * @param string $lookup optional lookup table. default is the related table
 	 * @param string $ref_field optional the column that contains the id of the related record (used with lookup)
 	 */
-	protected function has_many($name, $hook, $lookup="", $ref_field="") {
+	protected function has_many($name, $hook, $lookup = "", $ref_field = "") {
 		efault($lookup, $name);
 		$key = ($ref_field) ? $ref_field : "id";
 		$merge = array($lookup => array($key => array($hook => array("type" => "many", "hook" => $hook))));
@@ -106,7 +93,7 @@ class Table {
 	 * store a record to the db
 	 * @see db::store
 	 */
-	protected function store($record, $from="auto") {
+	protected function store($record, $from = "auto") {
 		$this->db->store($this->type, $record, $from);
 	}
 
@@ -132,7 +119,7 @@ class Table {
 	 * get records from the db
 	 * @see db::query
 	 */
-	function query($args="", $froms="", $replacements=array()) {
+	function query($args = "", $froms = "", $replacements = array()) {
 		if (is_array($froms)) {
 			$replacements = $froms;
 			$froms = "";
@@ -146,21 +133,20 @@ class Table {
 		return $data;
 	}
 
-	protected function mixin($object) {
-		if (!class_exists($object)) include(BASE_DIR."/app/plugins/$object/$object.php");
-		$new_import = new $object();
-		$import_name = get_class($new_import);
-		$import_functions = get_class_methods($new_import);
-		array_push($this->imported, array($import_name, $new_import));
-		foreach($import_functions as $key => $function_name) $this->imported_functions[$function_name] = &$new_import;
+	function display_search($display, $ops) {
+		$display->template = "form/inline";
+		$display->attributes['class'][] = 'form-inline';
+		$display->submit_label = "Search";
+		$display->add("keywords  input_type:text  nolabel:");
 	}
 
-	public function __call($method, $args=array()) {
-		if(array_key_exists($method, $this->imported_functions)) {
-			$args[] = $this;
-			return call_user_func_array(array($this->imported_functions[$method], $method), $args);
+	function query_filters($action, $query, &$ops) {
+		if (!empty($this->base)) {
+			sb($this->base)->query_filters($action, $query, $ops);
+		} else {
+			if (!empty($ops['keywords'])) $query->search($ops['keywords']);
 		}
-		throw new Exception ('Call to undefined method/class function: ' . $method);
+		return $query;
 	}
 
 }

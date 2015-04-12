@@ -39,9 +39,6 @@ function uri($path="", $flags="") {
 /**
  * request object access.
  * @ingroup routing
- * 		global $request;
- * is equivalent to:
- * 		$request = request();
  */
 function request() {
 	global $request;
@@ -51,28 +48,6 @@ function request() {
 	if ($count == 0) return $request;
 	else if (($count == 1) && property_exists($request, $args[0])) return $request->$args[0];
 	else return false;
-}
-/**
- * checks the path to see if a matching file exists
- * @return the file to be loaded
- */
-function locate_view($uri, $prefix="") {
-	//efault($prefix, request()->payload['prefix']);
-	if (!is_array($uri)) $uri = explode("/", $uri);
-	$current = (empty($uri)) ? "default" : array_shift($uri);
-	if (locate($prefix.$current, "views")) return locate_view($uri, $prefix.$current."/"); // directory found
-	else if (locate($prefix.$current.".php", "views")) return $prefix.$current; // file found
-	else if (locate($prefix."default.php", "views")) return $prefix."default";
-	else return false;
-}
-/**
- * check to see if this the default path (the front page)
- * @ingroup routing
- * @return bool true if it is, false if it isn't
- */
-function is_default_path() {
-	global $request;
-	return ($request->path == settings("default_path"));
 }
 /**
  * redirect to another page

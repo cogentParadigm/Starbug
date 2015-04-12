@@ -1,9 +1,7 @@
-<? render_layout(); ?>
-<div class="navbar" id="footer">
-	<div class="navbar-inner">
+<?php $this->render("layout"); ?>
+<div class="well clearfix" id="footer">
 		<ul>
 			<li>Powered by <a href="http://www.starbugphp.com">Starbug PHP</a></li>
 		</ul>
-	</div>
 </div>
-<?php $sb->publish("footer"); ?>
+<?php $this->publish("footer"); ?>
