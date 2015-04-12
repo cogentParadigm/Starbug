@@ -13,9 +13,11 @@ class ItemDisplay extends Display {
 	protected $hooks = array(); //active hooks
 	protected $query; //database query object
 	protected $hook_builder;
+	protected $response;
 
-	function __construct(TemplateInterface $output, HookFactoryInterface $hook_builder) {
+	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hook_builder) {
 		$this->output = $output;
+		$this->response = $response;
 		$this->hook_builder = $hook_builder;
 	}
 

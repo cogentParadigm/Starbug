@@ -58,7 +58,7 @@ class GridDisplay extends ItemDisplay {
 		}
 		$options['data-dgrid-column'] = '{'.implode(', ', $options['data-dgrid-column']).'}';
 		if (isset($options['plugin']) && !isset($options['readonly'])) {
-			js(str_replace(".", "/", $options['plugin']));
+			$this->response->js(str_replace(".", "/", $options['plugin']));
 			$options['data-dgrid-column'] = $options['plugin']."(".$options['data-dgrid-column'].")";
 		}
 
@@ -82,7 +82,7 @@ class GridDisplay extends ItemDisplay {
 				$this->attributes['data-dojo-props'][$k] = $v;
 			}
 		}
-		js($this->grid_class);
+		$this->response->js($this->grid_class);
 		$this->attributes['data-dojo-type'] = $this->grid_class;
 		//convert from array to string
 		$this->attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($this->attributes['data-dojo-props'])), '{}');

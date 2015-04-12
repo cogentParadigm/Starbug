@@ -36,6 +36,8 @@ class Response {
 	public $theme;
 	public $template = "html";
 	public $layout = "views";
+	public $styles = array();
+	public $scripts = array();
 
 	protected $output;
 
@@ -99,5 +101,9 @@ class Response {
 	public function capture($template, $params=array(), $options = array()) {
 		$options = $options + array("scope" => "views");
 		$this->content = $this->output->capture($template, $params, $options);
+	}
+
+	public function js($mid) {
+		$this->scripts[] = $mid;
 	}
 }
