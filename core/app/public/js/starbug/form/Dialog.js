@@ -1,4 +1,16 @@
-define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/request/xhr", "dojo/query", "dojo/dom-class", "dojo/dom-style", "dojo/request/iframe", "dijit/Dialog", "dijit/registry"], function(declare, lang, array, xhr, query, domclass, domstyle, iframe, Dialog, registry) {
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/request/xhr",
+	"dojo/query",
+	"dojo/dom-class",
+	"dojo/dom-style",
+	"dojo/request/iframe",
+	"dijit/Dialog",
+	"dijit/registry",
+	"dojo/dom-form"
+], function(declare, lang, array, xhr, query, domclass, domstyle, iframe, Dialog, registry, domForm) {
 	return declare([Dialog], {
 		dialog:null,
 		url:'',
@@ -20,7 +32,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/reque
 			domstyle.set(this.domNode, this.layoutParams);
 			if (this.showTitle == false) domstyle.set(this.titleBar, 'display', 'none');
 			this.set('content', '');
-			
+
 		},
 		_position: function() {},
 		resize: function(dim) {
@@ -35,17 +47,18 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/reque
 		},
 		_onSubmit: function(evt){
 			evt.preventDefault();
+			this.post_data[evt.target.getAttribute('name')] = evt.target.getAttribute('value');
 			this.execute();
 			return false;
 		},
 		execute: function() {
 			domclass.add(this.form, 'loading');
 			query('.loading', this.form).style('display','block');
+			var data = lang.delegate(domForm.toObject(this.form), this.post_data);
 			iframe(
 			this.url+(this.crudSuffixes ? ((this.item_id) ? 'update/'+this.item_id : 'create') : '')+((this.format != false) ? '.xhr' : ''),
 			{
-				form: this.form,
-				data: this.post_data,
+				data: data,
 				handleAs:'html'
 			}).then(lang.hitch(this, 'load'));
 		},
