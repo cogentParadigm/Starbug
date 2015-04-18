@@ -7,5 +7,5 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
-	passthru("cd core/app/public/js/dojo/util/buildscripts; ./build.sh action=release optimize=shrinksafe layerOptimize=shrinksafe stripConsole=all copyTests=false profile=../../../../../../../etc/dojo.profile.js cssOptimize=comments");
+	passthru("cd libraries/dojo/util/buildscripts; ./build.sh action=release optimize=shrinksafe layerOptimize=shrinksafe stripConsole=all copyTests=false profile=../../../../etc/dojo.profile.js cssOptimize=comments");
 ?>
