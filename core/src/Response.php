@@ -16,7 +16,7 @@ class Response {
 	public $headers;
 	public $cookies;
 	public $code;
-	public $type = "text/html";
+	public $content_type = "text/html";
 	public $charset = "UTF-8";
 
 	public $codes = array(
@@ -57,10 +57,11 @@ class Response {
 		$code = $this->code;
 		if (isset($this->codes[$code])) $code .= " ".$this->codes[$code];
 		header("HTTP/1.1 ".$code);
-		header('Content-Type: '.$this->type.'; charset='.$this->charset);
-	 foreach ($this->headers as $name => $value) {
-		 header($name.": ".$value);
-	 }
+		header('Content-Type: '.$this->content_type.'; charset='.$this->charset);
+		header('Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0');
+		foreach ($this->headers as $name => $value) {
+			header($name.": ".$value);
+		}
 	}
 
 	public function send_cookies() {

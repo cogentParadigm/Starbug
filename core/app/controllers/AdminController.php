@@ -5,6 +5,9 @@ class AdminController {
 		$this->router = $router;
 	}
 	function default_action() {
+		if (count($this->request->uri) == 1) {
+			return $this->render("admin");
+		}
 		$name = $this->request->uri[1];
 		$controller = $this->controllers->get("Admin".ucwords($name));
 		$controller->start($this->request, $this->response);
