@@ -50,6 +50,14 @@ REGEX;
 			if (empty($route['action'])) $route['action'] = 'show';
 		}
 
+		if (!empty($route['controller']) && empty($route['action'])) {
+			$path = substr($request->path, strlen($route['path']) + 1);
+			if (!empty($path)) {
+				$parts = explode("/", $path);
+				$route['action'] = $parts[0];
+			}
+		}
+
 		return $route;
 	}
 	public function validate(Request $request, $route, $template) {
