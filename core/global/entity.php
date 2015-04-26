@@ -111,19 +111,22 @@ function entity_query($entity) {
 */
 function entity_load($name, $id, $reset = false) {
 	static $entities = array();
+	$key = $name;
 	if (is_array($id)) {
 		$conditions = $id;
 		$id = false;
+	} else {
+		$key .= '-'.$id;
 	}
-	if ($reset || !$id || !isset($entities[$id])) {
-		if ($id) $entities[$id] = entity_query($name)->condition($name.".id", $id)->one();
+	if ($reset || !$id || !isset($entities[$key])) {
+		if ($id) $entities[$key] = entity_query($name)->condition($name.".id", $id)->one();
 		else if ($conditions) {
 			$entity = entity_query($name)->conditions($conditions)->one();
 			$id = $entity["id"];
-			$entities[$id] = $entity;
+			$entities[$name."-".$id] = $entity;
 		}
 	}
-	return $entities[$id];
+	return $entities[$name."-".$id];
 }
 
 /**
