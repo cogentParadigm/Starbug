@@ -134,11 +134,9 @@ class Table {
 		return $data;
 	}
 
-	function display_search($display, $ops) {
-		$display->template = "form/inline";
-		$display->attributes['class'][] = 'form-inline';
-		$display->submit_label = "Search";
-		$display->add("keywords  input_type:text  nolabel:");
+
+	function build_display($display) {
+		$display->add("id");
 	}
 
 	function query_filters($action, $query, &$ops) {
