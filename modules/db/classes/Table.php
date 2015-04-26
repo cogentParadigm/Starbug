@@ -44,6 +44,7 @@ class Table {
 	/**
 	 * @var array The mixed-in objects which hold the imported functions
 	 */
+	public $store_on_errors = false;
 
 	/**
 	 * Table constructor

@@ -201,6 +201,8 @@ class Database implements DatabaseInterface {
 			$query->mode("insert");
 		}
 
+		if (sb($name)->store_on_errors) $query->store_on_errors = true;
+
 		if ($unshift) $this->queue->unshift($query);
 		else $this->queue->push($query);
 	}
