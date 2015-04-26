@@ -106,7 +106,7 @@ $this->table("pages  base:uris  description:A basic page");
 $this->uri("api", "controller:api  action:response");
 $this->uri("profile", "controller:profile");
 //Admin
-$this->uri("admin", "controller:admin  groups:admin  theme:storm");
+$this->uri("admin", "controller:admin  action:default_action  groups:admin  theme:storm");
 //Uploader
 $this->uri("upload", "controller:upload  template:xhr  groups:user");
 //terms

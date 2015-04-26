@@ -47,7 +47,7 @@ class FormDisplay extends ItemDisplay {
 		if (empty($options['input_type'])) $options['input_type'] = $column['input_type'];
 		if ($options['input_type'] == "password") $options['class'] .= ((empty($options['class'])) ? "" : " ")."text";
 		else if ($column['type'] == "bool") $options['value'] = 1;
-		else if ($column['type'] == "datetime") $options['data-dojo-type'] = "starbug/form/DateTextBox";
+		else if ($options['input_type'] == "datetime") $options['data-dojo-type'] = "starbug/form/DateTextBox";
 		else if ($options['input_type'] == "crud") {
 			if (empty($options['table'])) $options['table'] = (empty($column['table'])) ? $options['model']."_".$field : $column['table'];
 		} else if ($options['input_type'] == "category_select") {
