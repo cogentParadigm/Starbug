@@ -51,7 +51,7 @@ class ApiRequest {
 		$ops = array_merge(array("action" => "read", "where" => array(), "params" => array()), star($ops));
 		if (!is_array($ops['where'])) $ops['where'] = array($ops['where']);
 	 if ($this->headers) {
-		 //header("Content-Type: ".$this->types[$format]);
+		 header("Content-Type: ".$this->types[$format]);
 		 header("Cache-Control: no-store, no-cache");
 	 }
 		$this->action = $action;
@@ -178,7 +178,7 @@ return $this->getCSV($data, $ops['headers']);
 		 * @return string json output of records
 		 */
 		protected function getCSV($data, $headers = true) {
-			//if ($this->headers) header('Content-Disposition: attachment; filename="'.$this->model.'.csv"');
+			if ($this->headers) header('Content-Disposition: attachment; filename="'.$this->model.'.csv"');
 			foreach ($data as $idx => $row) $data[$idx] = sb($this->model)->filter($row, $this->action);
 			$this->data = $data;
 		//$display = $this->context->build_display("list", $this->model, $this->action, array("template" => "csv"));
