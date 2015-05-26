@@ -38,6 +38,7 @@ include(BASE_DIR."/core/src/sb.php");
 include(BASE_DIR."/core/src/Controller.php");
 include(BASE_DIR."/core/src/DisplayHook.php");
 include(BASE_DIR."/core/src/FormHook.php");
+include(BASE_DIR."/core/src/MacroHook.php");
 include(BASE_DIR."/core/src/Renderable.php");
 include(BASE_DIR."/core/src/Request.php");
 include(BASE_DIR."/core/src/ApiRequest.php");
