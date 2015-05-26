@@ -204,7 +204,10 @@ class FormDisplay extends ItemDisplay {
 		$this->vars = array("display" => $this);
 		$this->fill_ops($field, $control);
 		//run filters
-		foreach ($this->output->locator->locate("form/".$control.".php", "filters") as $filter) include($filter);
+		$hooks = $this->hook_builder->get("form/".$control);
+		foreach ($hooks as $hook) {
+			$hook->build($this, $control, $field);
+		}
 
 		$capture = "field";
 		if (empty($field['field'])) $field['field'] = reset(explode("[", $field['name']));

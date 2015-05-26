@@ -1,14 +1,16 @@
 <?php
+class hook_form_select extends FormHook {
+	function build($form, &$control, &$field) {
 		$name = $field['name'];
-		$value = $this->get($field['name']);
+		$value = $form->get($field['name']);
 		if ((empty($value)) && (!empty($field['default']))) {
-			$this->set($field['name'], $field['default']);
+			$form->set($field['name'], $field['default']);
 			$value = $field['default'];
 			unset($field['default']);
 		}
 		if (isset($field['multiple'])) {
 			$field['multiple'] = "multiple";
-			efault($field['size'], 5);
+			if (empty($field['size'])) $field['size'] = 5;
 			if (!is_array($value)) $value = explode(',', $value);
 		}
 		if (!empty($field['range'])) {
@@ -38,7 +40,7 @@
 			unset($field['options']);
 			unset($field['values']);
 		} else {
-			$info = $this->schema[$field['name']];
+			$info = $form->schema[$field['name']];
 			if (!empty($info['references'])) {
 				if (empty($field['from'])) $field['from'] = reset(explode(" ", $info['references']));
 				if (empty($field['query'])) $field['query'] = "select";
@@ -49,8 +51,10 @@
 		}
 		$optional = false;
 		if (isset($field['optional'])) $optional = $field['optional'];
-		$this->assign("optional", $optional);
-		$this->assign("value", $value);
-		$this->assign("options", $options);
-		$this->assign("mode", $mode);
+		$form->assign("optional", $optional);
+		$form->assign("value", $value);
+		$form->assign("options", $options);
+		$form->assign("mode", $mode);
+	}
+}
 ?>

@@ -1,4 +1,6 @@
 <?php
+class hook_form_autocomplete extends FormHook {
+	function build($form, &$control, &$field) {
 		$field['type'] = 'text';
 		$field['autocomplete'] = "off";
 		$field['data-dojo-type'] = "starbug/form/Autocomplete";
@@ -13,11 +15,13 @@
 		}
 		$field['div'] = (empty($field['div']) ? "" : $field['div']." ")."autocomplete";
 		//POSTed or default value
-		$var = $this->get($field['name']);
+		$var = $form->get($field['name']);
 		if (!empty($var)) $field['value'] = htmlentities($var, ENT_QUOTES, "UTF-8");
 		else if (!empty($field['default'])) {
 			$field['value'] = $field['default'];
 			unset($field['default']);
 		}
 		$control = "input";
+	}
+}
 ?>

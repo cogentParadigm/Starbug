@@ -1,6 +1,7 @@
 <?php
-		//POSTed or default value
-		$var = $this->get($field['name']);
+class hook_form_crud extends FormHook {
+	function build($form, &$control, &$field) {
+		$var = $form->get($field['name']);
 		if (!empty($var)) {
 			if (is_array($var)) {
 				foreach ($var as $idx => $v) if (substr($v, 0, 1) !== "-") $var[$idx] = htmlentities($v, ENT_QUOTES, "UTF-8");
@@ -13,4 +14,6 @@
 			$field['value'] = $field['default'];
 			unset($field['default']);
 		}
+	}
+}
 ?>

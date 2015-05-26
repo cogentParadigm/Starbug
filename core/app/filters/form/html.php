@@ -1,3 +1,0 @@
-<?php
-	$field['nofield'] = true;
-?>
