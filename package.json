@@ -2,12 +2,14 @@
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-jshint": "^0.11.0",
+    "grunt-deployments": "^0.2.0",
     "grunt-jsvalidate": "^0.2.2",
     "grunt-lesslint": "^1.1.14",
     "grunt-phpcs": "^0.2.3",
     "grunt-phplint": "0.0.5",
     "grunt-phpmd": "^0.1.1",
     "grunt-phpunit": "^0.3.6",
+    "grunt-rsync": "^0.6.2",
     "grunt-shell": "^1.1.1",
     "intern": "^2.2.2"
   }
