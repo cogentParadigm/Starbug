@@ -188,7 +188,7 @@ class Database implements DatabaseInterface {
 	function queue($name, $fields = array(), $from = "auto", $unshift = false) {
 		if (!is_array($fields)) $fields = star($fields);
 
-		$query = new query($this, $this->models, $this->hooks, $name);
+		$query = new query($this, $this->config, $this->models, $this->hooks, $name);
 		foreach ($fields as $col => $value) $query->set($col, $value);
 
 		if ($from === "auto" && !empty($fields['id'])) $from = array("id" => $fields['id']);
