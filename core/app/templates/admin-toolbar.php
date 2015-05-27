@@ -1,6 +1,5 @@
 <?php
-$options = schema($model);
-$new_label = "New $options[singular_label] <b class=\"fa fa-plus\"></b>";
+$new_label = "New ".$sb->models->get($model)->singular_label." <b class=\"fa fa-plus\"></b>";
 $new_attrs = "class:btn btn-default";
 ?>
 

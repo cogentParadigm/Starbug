@@ -150,7 +150,7 @@ class Database implements DatabaseInterface {
 		if (!empty($args['params'])) $replacements = $args['params'];
 
 		//create query object
-		$query = new query($this, $this->models, $this->hooks, $froms);
+		$query = new query($this, $this->config, $this->models, $this->hooks, $froms);
 
 		//call functions
 		foreach ($args as $k => $v) {

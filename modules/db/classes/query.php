@@ -74,14 +74,16 @@ class query implements IteratorAggregate, ArrayAccess {
 	public $store_on_errors = false;
 	protected $models;
 	protected $hook_builder;
+	protected $config;
 
 	/**
 	 * create a new query
 	 * @param string $collection the name of the primary table/collection to query
 	 * @param array $params parameters to merge into the query
 	 */
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, $collection, $params = array()) {
+	function __construct(DatabaseInterface $db, ConfigInterface $config, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, $collection, $params = array()) {
 		$this->db = $db;
+		$this->config = $config;
 		$this->models = $models;
 		$this->hook_builder = $hook_builder;
 		$params = star($params);
@@ -237,7 +239,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param string $collection the name of the table or collection
 	 */
 	function on($expr, $collection = "") {
-		efault($collection, $this->last_collection);
+		if (empty($collection)) $collection = $this->last_collection;
 		$this->query['on'][$collection] = $expr;
 		$this->dirty();
 		return $this;
@@ -254,7 +256,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		$return = false;
 		$parsed = $this->parse_collection($field);
 		list($field, $alias) = array($parsed['collection'], $parsed['alias']);
-		efault($collection, $this->last_collection);
+		if (empty($collection)) $collection = $this->last_collection;
 		$table = $this->query['from'][$collection];
 		$schema = column_info($table, $field);
 		if ($schema['entity'] !== $table) {
@@ -274,7 +276,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			if (isset($schema['null'])) $type = "left";
 			$this->join($ref[0]." as ".$collection."_".$alias)->on($collection."_".$alias.".".$ref[1]."=".$collection.".".$field);
 		} else if ($this->models->has($schema['type'])) {
-			$type_schema = schema($schema['type']);
+			$type_schema = $this->config->get($schema['type'], 'json');
 			if (is_null($token)) $token = empty($type_schema['label_select']) ? $collection."_".$alias.".id" : str_replace($schema['type'], $collection."_".$alias, $type_schema['label_select']);
 			else $token = $collection."_".$alias.".".$token;
 			if (empty($schema['table'])) $schema['table'] = $table."_".$field;
@@ -595,7 +597,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		if (empty($fields)) {
 			$fieldsets = array();
 			foreach ($this->query['from'] as $alias => $model) {
-				$schema = schema($model);
+				$schema = $this->config->get($model, 'json');
 				if (!empty($schema['search']) && !isset($fieldsets[$model])) $fieldsets[$model] = $schema['search'];
 			}
 			$fields = implode(",", $fieldsets);
@@ -614,7 +616,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	}
 
 	function action($action, $collection = "") {
-		efault($collection, $this->last_collection);
+		if (empty($collection)) $collection = $this->last_collection;
 		if ($this->has($collection)) {
 			$type = $this->query['from'][$collection];
 			$base_type = entity_base($type);
@@ -851,7 +853,7 @@ class query implements IteratorAggregate, ArrayAccess {
 				$from = "`".P($collection)."`";
 				if ($this->mode != "insert" && $this->mode != "truncate") $from .= " AS `".$alias."`";
 			} else {
-				efault($this->query['join'][$alias], "LEFT");
+				if (empty($this->query['join'][$alias])) $this->query['join'][$alias] = "LEFT";
 				$collection_segment = ("(" === substr($collection, 0, 1)) ? $collection : "`".P($collection)."`";
 				$segment = " ".$this->query['join'][$alias]." JOIN ".$collection_segment." AS `".$alias."`";
 				if (empty($this->query['on'][$alias])) {
@@ -1077,7 +1079,7 @@ class query implements IteratorAggregate, ArrayAccess {
 					//in a select query, the token may be '*'
 					if ($token == "*") {
 						//WHICH WE LEAVE AS IS FOR NOW
-						//$schema = schema($table.".fields");
+						//$schema = oldschemafunction($table.".fields");
 						//foreach ($schema as $n => $f) {
 							//if ($f['type'] == "terms" || $f['type'] == "category") $this->select($collection.".".$n);
 						//}

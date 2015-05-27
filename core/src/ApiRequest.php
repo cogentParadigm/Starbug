@@ -35,7 +35,6 @@ class ApiRequest {
 	 * @param star $ops additional options, query paramaters if [object] is a model or group of models
 	 */
 	function __construct($what, $ops = "", $headers = true) {
-		global $sb;
 	 if (defined("ETC::API_WHITELIST")) {
 	  if (in_array($_SERVER['REMOTE_ADDR'], explode(",", Etc::API_WHITELIST)) && !sb()->user) {
 		  $this->whitelisting = true;
@@ -65,11 +64,10 @@ class ApiRequest {
 	 * @param star $ops additional options
 	 */
 	function __call($model, $args) {
-		global $sb;
 		list($action, $format, $ops) = $args;
 		$this->model = $model;
 		$query = entity_query($model);
-		if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) {
+		if ((!empty($_POST['action'][$model])) && (empty(sb()->errors[$model]))) {
 			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : sb($model)->insert_id;
 			$query->condition($model.".id", $id);
 		}
@@ -97,39 +95,39 @@ class ApiRequest {
 			$pager = $query->pager($ops['page']);
 		}
 
-	$this->options = $ops;
+		$this->options = $ops;
 
 		$data = (is_array($query) && isset($query['data'])) ? $query['data'] : $query->all();
 		$this->data = $data;
 		$f = strtoupper($format);
 		$error = $f."errors";
-	 if (empty($sb->errors[$model])) {
-	  if (!empty($data)) {
-		  $add = (isset($pager) && $pager->start > 0) ? 1 : 0;
-		  if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
-	   else {
-		   $count = count($data);
-		   header("Content-Range: items 0-$count/$count");
-	   }
-		  if (!isset($ops['headers'])) $ops['headers'] = true;
-	   switch ($format) {
-		case "xml":
-return $this->getXML($model, $data);
-		   break;
-		case "json":
-return $this->getJSON("id", $data);
-		   break;
-		case "jsonp":
-return $this->getJSONP($ops['pad'], $data);
-		   break;
-		case "csv":
-return $this->getCSV($data, $ops['headers']);
-		   break;
-	   }
-	  } else {
-		  if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
-	  }
-	 } else return $this->$error($model);
+		if (empty(sb()->errors[$model])) {
+			if (!empty($data)) {
+				$add = (isset($pager) && $pager->start > 0) ? 1 : 0;
+				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
+				else {
+					$count = count($data);
+					header("Content-Range: items 0-$count/$count");
+				}
+				if (!isset($ops['headers'])) $ops['headers'] = true;
+				switch ($format) {
+					case "xml":
+						return $this->getXML($model, $data);
+						break;
+					case "json":
+						return $this->getJSON("id", $data);
+						break;
+					case "jsonp":
+						return $this->getJSONP($ops['pad'], $data);
+						break;
+					case "csv":
+						return $this->getCSV($data, $ops['headers']);
+						break;
+				}
+			} else {
+				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
+			}
+		} else return $this->$error($model);
 	}
 
 	/**
@@ -211,11 +209,10 @@ return $this->getCSV($data, $ops['headers']);
 	 * @return string json output of errors
 	 */
 		protected function JSONerrors($model) {
-			global $sb;
-			$schema = schema($model.".fields");
+			$schema = sb($model)->hooks;
 			if (empty($schema)) $schema = array();
 			$json = '{ "errors" : [';
-		 foreach ($sb->errors[$model] as $k => $v) {
+		 foreach (sb()->errors[$model] as $k => $v) {
 			 if (!empty($schema[$k]) && !empty($schema[$k]['label'])) $k = $schema[$k]['label'];
 			 $json .= '{ "field":"'.$k.'", "errors": [ ';
 			 foreach ($v as $e) $json .= '"'.$e.'", ';

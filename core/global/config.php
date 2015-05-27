@@ -104,27 +104,6 @@ function &config($key, $value=null, $dir="etc/") {
 	return $conf;
 }
 /**
- * get schema data for a model
- * @ingroup config
- * @param $model the model/table
- * @return array schematic data for the model
- */
-function schema($model) {
-	$args = func_get_args();
-	$count = count($args);
-	$value = config($args[0], null, "var/json/");
-	$value_name = end(explode(".", $args[0]));
-	if (is_array($value)) {
-		efault($value['label'], ucwords(str_replace(array("-", "_"), array(" ", " "), $value_name)));
-		efault($value['singular'], rtrim($value_name, 's'));
-		efault($value['singular_label'], ucwords(str_replace(array("-", "_"), array(" ", " "), $value['singular'])));
-		efault($value['list'], "only");
-	}
-	if ($count == 1) return $value;
-	else if ($count == 2) return $value[$args[1]];
-	else return false;
-}
-/**
 	* get/set site options
 	* @ingroup config
 	* @param string $name the option name

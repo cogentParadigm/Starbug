@@ -1,6 +1,3 @@
-<?php
-$options = schema($model);
-?>
 <div class="pull-right">
 		<?php
 			link_to("Export CSV <b class=\"fa fa-file-text-o\"></b>", "", array("href" => "javascript:window.location.href = ".$model."_grid.store.last_query.replace('json', 'csv');", "class" => "btn btn-default"));

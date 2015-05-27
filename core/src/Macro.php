@@ -13,7 +13,7 @@ class Macro implements MacroInterface {
 
 	private $hook_builder;
 
-	public function __construct(HookFactoryIntterface $hooks) {
+	public function __construct(HookFactoryInterface $hooks) {
 		$this->hook_builder = $hooks;
 	}
 

@@ -1,4 +1,4 @@
-<?php extract(schema($model)); echo '<?php'."\n"; ?>
+<?php extract($config->get($model, "json")); echo '<?php'."\n"; ?>
 /**
  * <?php echo $name; ?> model
  * @ingroup models
