@@ -23,5 +23,13 @@
 			<property name="exceptions" value="id,evt,db,sb,e,pdo,idx,js,up,to,x,y"/>
 		</properties>
 	</rule>
-	<rule ref="rulesets/unusedcode.xml"/>
+	<rule ref="rulesets/unusedcode.xml">
+		<exclude name="UnusedFormalParameter"/>
+		<exclude name="UnusedLocalVariable"/>
+	</rule>
+	<rule ref="rulesets/unusedcode.xml/UnusedLocalVariable">
+		<properties>
+			<property name="allow-unused-foreach-variables" value="true"/>
+		</properties>
+	</rule>
 </ruleset>
