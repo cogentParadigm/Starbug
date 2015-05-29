@@ -1,7 +1,7 @@
 <?php
 class UsersFixture extends Fixture {
-	var $type = "users";
-	var $records = array(
+	public $type = "users";
+	public $records = array(
 			"omar" => array(
 				"first_name" => "Omar",
 				"last_name" => "Admin",
