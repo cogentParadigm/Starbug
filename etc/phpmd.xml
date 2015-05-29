@@ -7,7 +7,6 @@
 	<description>Starbug PMD Coding Standard</description>
 	<rule ref="rulesets/codesize.xml"/>
 	<rule ref="rulesets/controversial.xml/Superglobals"/>
-	<rule ref="rulesets/controversial.xml/CamelCaseClassName"/>
 	<rule ref="rulesets/design.xml"/>
 	<rule ref="rulesets/naming.xml">
 		<exclude name="ShortVariable"/>
