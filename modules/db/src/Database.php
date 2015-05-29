@@ -221,7 +221,7 @@ class Database implements DatabaseInterface {
 	*/
 	function remove($from, $where) {
 		if (!empty($where)) {
-			$del = new query($this, $this->models, $this->hooks, $from);
+			$del = new query($this, $this->config, $this->models, $this->hooks, $from);
 			$this->record_count = $del->condition(star($where))->delete();
 			return $this->record_count;
 		}

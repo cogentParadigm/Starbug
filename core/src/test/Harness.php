@@ -33,7 +33,7 @@ class Harness {
 	 * constructor. loads layers
 	 */
 	function __construct() {
-		$this->layers = config("fixtures");
+		$this->layers = json_decode(file_get_contents("etc/fixtures.json"), true);
 	}
 
 	function  clean() {
@@ -49,7 +49,7 @@ class Harness {
 			else if (file_exists(BASE_DIR."/app/fixtures/".ucwords($dep)."Fixture.php")) $this->fixture($dep, $up);
 		}
 	}
-	
+
 	function fixture($fixture, $up=true) {
 		if (empty($this->fixtures[$fixture])) {
 			$classname = ucwords($fixture)."Fixture";

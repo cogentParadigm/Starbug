@@ -103,9 +103,10 @@ class Schemer {
 	/**
 	 * constructor. loads migrations
 	 */
-	function __construct(DatabaseInterface $data, ModelFactoryInterface $models, $modules) {
+	function __construct(DatabaseInterface $data, ModelFactoryInterface $models, ConfigInterface $config, $modules) {
 		$this->db = $data;
 		$this->models = $models;
+		$this->config = $config;
 		$this->migrations = $modules;
 	}
 
@@ -1049,7 +1050,7 @@ class Schemer {
 		//if (!empty($this->options[$table]['base'])) $base = $this->options[$table]['base'];
 		$locator = new ResourceLocator(BASE_DIR, array($render_prefix));
 		$template = new Template($locator);
-		$data = $template->get(array($base."/base", "base"), array("model" => $table), array("prefix" => $render_prefix));
+		$data = $template->get(array($base."/base", "base"), array("model" => $table, "config" => $this->config), array("prefix" => $render_prefix));
 		file_put_contents($output_path, $data);
 	}
 

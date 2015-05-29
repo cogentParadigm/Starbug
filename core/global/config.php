@@ -103,25 +103,4 @@ function &config($key, $value=null, $dir="etc/") {
 	}
 	return $conf;
 }
-/**
-	* get/set site options
-	* @ingroup config
-	* @param string $name the option name
-	* @param mixed $value (optional) value to set
-	* @param bool $update pass true to force update the value
-	*/
-function settings($name, $value=null, $update=false) {
-	if ($value == null) {
-		if (!$update && is_cached("settings-".$name)) return cache($name);
-		else {
-			$value = query("settings", "where:name='$name'  limit:1");
-			cache("settings-".$name, $value['value']);
-			return $value['value'];
-		}
-	} else {
-		store("settings", "value:$value", "name:$name");
-		cache("settings-".$name, $value);
-		return $value;
-	}
-}
 ?>
