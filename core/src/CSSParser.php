@@ -12,21 +12,23 @@
  * @ingroup CSSParser
  */
 class CSSParser {
-	var $path;
-	var $css;
-	var $fonts;
-	function __construct($filename, $output_path="") {
+	public $path;
+	public $css;
+	public $fonts;
+	function __construct($filename, $output_path = "") {
 		$this->css = $this->fonts = array();
 		$args = func_get_args();
 		$count = count($args);
-		if ($count == 1) { //IF THERE IS ONLY ONE PARAM, USE IT AS THE OUTPUT PATH
+		if ($count == 1) {
+			//IF THERE IS ONLY ONE PARAM, USE IT AS THE OUTPUT PATH
 			$this->path = $args[0];
-		} else { //IF THERE ARE MORE PARAMS, USE THE LAST ONE AS THE OUTPUT PATH
+		} else {
+			//IF THERE ARE MORE PARAMS, USE THE LAST ONE AS THE OUTPUT PATH
 			$this->path = array_pop($args);
 			foreach ($args as $a) $this->add_file($a);
 		}
 	}
-	function add_file($filename, $desc="") {
+	function add_file($filename, $desc = "") {
 		efault($desc, end(explode("/", $filename)));
 		$replacement = str_replace(BASE_DIR, "", realpath(dirname($filename)."/../"))."/"; //translates ../ into ../../../app/public/
 		$sheet = str_replace("url(../", "url(../../..$replacement", $this->optimize(file_get_contents($filename), dirname($filename)));
