@@ -5,5 +5,5 @@
 	<?php } ?>
 	<h2>Log In</h2>
 	<p>Please log in to continue.</p>
-	<?php $this->render_display("LoginForm"); ?>
+	<?php $this->displays->render("LoginForm"); ?>
 </div>

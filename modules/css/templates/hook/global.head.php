@@ -5,7 +5,7 @@
 	<?php } else { ?>
 
 		<?php
-			$styles = $sb->config->get("info.styles", 'themes/'.$response->theme);
+			$styles = $this->config->get("info.styles", 'themes/'.$response->theme);
 			efault($styles['screen'], array());
 			efault($styles['print'], array());
 			efault($styles['ie'], array());

@@ -6,7 +6,7 @@ if (!empty($_GET['to'])) $_GET['to'] = uri($_GET['to']);
 	if (logged_in()) redirect(uri());
 	else {
 		$this->assign("url", $_GET['to']);
-		$this->render_display("LoginForm");
+		$this->displays->render("LoginForm");
 	}
 ?>
 </div>

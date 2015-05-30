@@ -4,5 +4,5 @@
 			link_to("New Taxonomy <b class=\"fa fa-plus\"></b>", $request->path."/create?new=true", "class:btn btn-default");
 		?>
 </div>
-<?php $this->render_display("SearchForm", array("model" => $model)); ?>
+<?php $this->displays->render("SearchForm", array("model" => $model)); ?>
 <br/>

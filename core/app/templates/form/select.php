@@ -1,7 +1,7 @@
 <?php if(isset($attributes['multiple'])) $attributes['name'] .= '[]'; ?>
 <?php
 if ($mode == "display") {
-	$this->render_display("DropdownDisplay", array("value" => $value, "attributes" => $attributes, "model" => $from, "action" => $query, "optional" => $optional));
+	$this->displays->render("DropdownDisplay", array("value" => $value, "attributes" => $attributes, "model" => $from, "action" => $query, "optional" => $optional));
 } else { ?>
 <select <?php html_attributes($attributes); ?>>
 	<?php foreach ($options as $caption => $val) { ?>

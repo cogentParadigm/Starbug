@@ -7,6 +7,6 @@
         <div class="clearfix">
                 <p class="pull-right"><?php link_to("Add Menu Item <b class=\"fa fa-plus\"></b>", "admin/menus/create?menu=".$menu, "class:btn btn-default");?></p>
         </div>
-        <?php $this->render_display("MenusTreeGrid",  array("menu" => $menu)); ?>
+        <?php $this->displays->render("MenusTreeGrid",  array("menu" => $menu)); ?>
         </div>
 </div>

@@ -5,6 +5,6 @@
 ?>
 	<h2>Forgot Password</h2>
 	<P>Unable to login or forgot your password?<br />Enter your email address below and we'll reset<br />your password and email it to you.</p>
-	<?php $this->render_display("form", "users", "reset_password", array("action" => "reset_password")); ?>
+	<?php $this->displays->render("form", "users", "reset_password", array("action" => "reset_password")); ?>
 <?php } ?>
 </div>

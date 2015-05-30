@@ -13,7 +13,7 @@
  * - $attributes: (optional) attributes for the table
  * - $view: (optional) view name. only show fields within this view
  */
-	$label = $sb->models->get($model)->label;
+	$label = $this->models->get($model)->label;
 	if ($dialog) {
 		if (empty($grid_attributes)) $grid_attributes = array();
 		$grid_attributes['dialog'] = $model."_form";
@@ -25,7 +25,7 @@
 	<div class="panel-body">
 	<?php
 		$this->render(array($model."/admin-toolbar", "admin-toolbar"));
-		$this->render_display(ucwords($model)."Grid", array("attributes" => $grid_attributes));
+		$this->displays->render(ucwords($model)."Grid", array("attributes" => $grid_attributes));
 	?>
 	</div>
 </div>

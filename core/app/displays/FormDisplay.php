@@ -22,9 +22,9 @@ class FormDisplay extends ItemDisplay {
 		}
 
 		//create layout display
-		$this->layout = $this->output->build_display("LayoutDisplay");
+		$this->layout = $this->output->displays->build("LayoutDisplay");
 		//create actions display
-		$this->actions = $this->output->build_display("ItemDisplay");
+		$this->actions = $this->output->displays->build("ItemDisplay");
 		$this->actions->add($this->default_action."  label:".$this->submit_label."  class:btn-success");
 
 		//run query

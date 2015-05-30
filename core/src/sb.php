@@ -55,10 +55,8 @@ class sb {
 	/**
 	* constructor. connects to db and starts the session
 	*/
-	function __construct(DatabaseInterface $db, ResourceLocatorInterface $locator, ConfigInterface $config, SettingsInterface $settings, ModelFactoryInterface $models) {
+	function __construct(DatabaseInterface $db, ResourceLocatorInterface $locator, ModelFactoryInterface $models) {
 		$this->locator = $locator;
-		$this->config = $config;
-		$this->settings = $settings;
 		$this->db = $db;
 		$this->models = $models;
 		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);

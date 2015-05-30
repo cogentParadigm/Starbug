@@ -1,5 +1,5 @@
 <?php
-$new_label = "New ".$sb->models->get($model)->singular_label." <b class=\"fa fa-plus\"></b>";
+$new_label = "New ".$this->models->get($model)->singular_label." <b class=\"fa fa-plus\"></b>";
 $new_attrs = "class:btn btn-default";
 ?>
 
@@ -11,6 +11,6 @@ $new_attrs = "class:btn btn-default";
 	?>
 </div>
 <?php
-	$this->render_display("SearchForm", array("model" => $model));
+	$this->displays->render("SearchForm", array("model" => $model));
 ?>
 <br/>
