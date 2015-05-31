@@ -8,7 +8,7 @@ class AdminTaxonomiesController {
 		$this->assign("model", "terms");
 		$this->assign("form", "terms");
 		$this->assign("cancel_url", "admin/taxonomies");
-		if (!empty($_GET['taxonomy'])) $this->assign("taxonomy", normalize($_GET['taxonomy']));
+		if (!empty($this->request->parameters['taxonomy'])) $this->assign("taxonomy", normalize($this->request->parameters['taxonomy']));
 	}
 	function default_action() {
 		$this->render("admin/list");

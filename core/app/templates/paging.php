@@ -7,12 +7,12 @@
  * @ingroup templates
  * renders links for paging
  */
-	$vars = $_GET;
+	$vars = $this->request->parameters;
 	unset($vars['page']);
 	$prefix = uri($request->path)."?";
-	if (!empty($_GET)) $prefix .= http_build_query($vars).'&';
+	if (!empty($this->request->parameters)) $prefix .= http_build_query($vars).'&';
 	$prefix .= "page=";
-	
+
 	$half = floor($request->pager->range/2);
 	//set $from to $current_page minus half of $range OR 1
 	$from = ($request->pager->current_page > $half) ? $request->pager->current_page-$half : 1;
@@ -25,7 +25,7 @@
 	}
 	//if there are not enough pages, bring up $from to 1
 	if ($from < 1) $from = 1;
-	
+
 	if ($request->pager->count > $request->pager->per) { ?>
 		<ul class="pages hnav">
 			<?php if ($request->pager->current_page > 1) { ?>

@@ -8,8 +8,8 @@ class AdminUrisController {
 		$this->assign("form", "uris");
 		$this->assign("cancel_url", "admin/uris");
 		if (success("uris", "create") || success("uris", "update")) {
-			if ($_POST['operation'] == "save") redirect(uri("admin/uris", "u"));
-			else if ($_POST['operation'] == "save_add_another") $_POST = array();
+			if ($this->request->data['operation'] == "save") redirect(uri("admin/uris", "u"));
+			else if ($this->request->data['operation'] == "save_add_another") $this->request->data = array();
 		}
 	}
 	function default_action() {

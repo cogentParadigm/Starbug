@@ -14,6 +14,14 @@ class FormDisplay extends ItemDisplay {
 	public $actions;
 	protected $vars = array();
 
+	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, Request $request) {
+		$this->output = $output;
+		$this->response = $response;
+		$this->hook_builder = $hooks;
+		$this->displays = $displays;
+		$this->request = $request;
+	}
+
 	function build($options) {
 		$this->options = $options;
 		// grab schema
@@ -77,10 +85,10 @@ class FormDisplay extends ItemDisplay {
 		if (empty($options['id'])) $this->items = array();
 		else parent::query(array("action" => $this->default_action) + $options);
 
-		//load $_POST
+		//load POST data
 		if (!empty($this->items)) {
-			if (empty($_POST[$this->model])) $_POST[$this->model] = array();
-			foreach ($this->items[0] as $k => $v) if (!isset($_POST[$this->model][$k])) $_POST[$this->model][$k] = $v;
+			if (empty($this->request->data[$this->model])) $this->request->data[$this->model] = array();
+			foreach ($this->items[0] as $k => $v) if (!isset($this->request->data[$this->model][$k])) $this->request->data[$this->model][$k] = $v;
 		}
 	}
 
@@ -134,8 +142,8 @@ class FormDisplay extends ItemDisplay {
 			$model = (empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
 		}
 		$parts = explode("[", $name);
-		if ($this->method == "post") $var = (empty($model)) ? $_POST : $_POST[$model];
-		else $var = $_GET;
+		if ($this->method == "post") $var = (empty($model)) ? $this->request->data : $this->request->data[$model];
+		else $var = $this->request->parameters;
 		foreach ($parts as $p) $var = $var[rtrim($p, "]")];
 		if (is_array($var)) return $var;
 		else return stripslashes($var);
@@ -153,11 +161,11 @@ class FormDisplay extends ItemDisplay {
 		$parts = explode("[", $name);
 		$key = array_pop($parts);
 		if (empty($model)) {
-			if ($this->method == "post") $var = &$_POST;
-			else $var = &$_GET;
+			if ($this->method == "post") $var = &$this->request->data;
+			else $var = &$this->request->parameters;
 		} else {
-			if ($this->method == "post") $var = &$_POST[$model];
-			else $var = &$_GET[$model];
+			if ($this->method == "post") $var = &$this->request->data[$model];
+			else $var = &$this->request->parameters[$model];
 		}
 		foreach ($parts as $p) {
 			$var = &$var[rtrim($p, "]")];

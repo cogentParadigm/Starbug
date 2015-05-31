@@ -44,7 +44,7 @@ class Files {
 
 	function prepare() {
 		$this->create(array("caption" => "Pre Uploaded File"));
-		if (!errors()) $_POST['files']['id'] = $this->insert_id;
+		if (!errors()) $this->request->data['files']['id'] = $this->insert_id;
 	}
 
 	function delete($file) {
