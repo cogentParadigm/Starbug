@@ -17,8 +17,9 @@ class <?php echo ucwords($name); ?>Model extends Table {
   public $singular_label = "<?php echo ucwords(str_replace(array("-", "_"), array(" ", " "), $singular)); ?>";
 
 
-  function __construct(DatabaseInterface $db<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
-    $this->db = $db;<?php foreach ($factory as $n => $t) echo "\n\t\t\$this->".$n.' = $'.$n.';'; ?>
+  function __construct(DatabaseInterface $db, ModelFactoryInterface $models<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
+    $this->db = $db;
+    $this->models = $models;<?php foreach ($factory as $n => $t) echo "\n\t\t\$this->".$n.' = $'.$n.';'; ?>
 
     $this->init();
   }

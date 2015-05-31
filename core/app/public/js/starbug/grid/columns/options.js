@@ -33,6 +33,9 @@ function(dojo, strings, put, on){
 				});
 			}
 
+			//copy button
+			var copy = put(div, 'a.Copy.btn.btn-default[title=Copy][href='+base_url+'/create?copy='+row.id+']', put('div.fa.fa-files-o'));
+
 			//delete button
 			var remove = 'javascript:;';
 			remove = put(div, 'a.Delete.btn.btn-default[title=Delete][href='+remove+']', put('div.fa.fa-times'));

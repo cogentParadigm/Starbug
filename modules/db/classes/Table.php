@@ -46,13 +46,16 @@ class Table {
 	 */
 	public $store_on_errors = false;
 
+	protected $models;
+
 	/**
 	 * Table constructor
 	 * @param string $type the un-prefixed table name
 	 * @param array $filters the column filters
 	 */
-	function __construct(DatabaseInterface $db) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
 		$this->db = $db;
+		$this->models = $models;
 		$this->init();
 	}
 
@@ -130,7 +133,10 @@ class Table {
 		return $records;
 	}
 
-	function filter($data) {
+	function filter($data, $action="") {
+		if (!empty($this->base)) {
+			$data = $this->models->get($this->base)->filter($data, $action);
+		}
 		return $data;
 	}
 

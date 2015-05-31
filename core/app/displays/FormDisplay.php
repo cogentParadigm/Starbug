@@ -13,13 +13,15 @@ class FormDisplay extends ItemDisplay {
 	public $cancel_url = "";
 	public $actions;
 	protected $vars = array();
+	protected $models;
 
-	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, Request $request) {
+	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, Request $request, ModelFactoryInterface $models) {
 		$this->output = $output;
 		$this->response = $response;
 		$this->hook_builder = $hooks;
 		$this->displays = $displays;
 		$this->request = $request;
+		$this->models = $models;
 	}
 
 	function build($options) {
@@ -84,6 +86,15 @@ class FormDisplay extends ItemDisplay {
 
 		if (empty($options['id'])) $this->items = array();
 		else parent::query(array("action" => $this->default_action) + $options);
+
+		if (!empty($this->request->parameters['copy']) && is_numeric($this->request->parameters['copy']) && empty($this->items)) {
+			$options['id'] = $this->request->parameters['copy'];
+			parent::query(array("action" => $this->default_action) + $options);
+			if (!empty($this->items)) {
+				$this->items[0] = $this->models->get($this->model)->filter($this->items[0], 'copy');
+				unset($this->items[0]['id']);
+			}
+		}
 
 		//load POST data
 		if (!empty($this->items)) {
