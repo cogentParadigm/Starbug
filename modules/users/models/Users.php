@@ -54,7 +54,6 @@ class Users {
 		} else {
 			error("That email and password combination was not found.", "email");
 		}
-		unset($this->request->data['users']['password']);
 	}
 
 	/**
