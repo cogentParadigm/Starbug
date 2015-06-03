@@ -99,6 +99,13 @@ $this->table("menus",
 	"position  type:int  ordered:menu parent  default:0",
 	"menu_path  type:string  length:255  default:  display:false"
 );
+$this->table("queues",
+	"queue  type:string",
+	"task  type:string",
+	"data  type:text  default:",
+	"position  type:int  ordered:queue  default:0",
+	"status  type:string  default:"
+);
 // CONTENT TYPES
 $this->table("views  base:uris  description:A basic view");
 $this->table("pages  base:uris  description:A basic page");

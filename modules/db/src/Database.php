@@ -78,7 +78,7 @@ class Database implements DatabaseInterface {
 		} catch (PDOException $e) {
 			die("PDO CONNECTION ERROR: " . $e->getMessage() . "\n");
 		}
-		$this->queue = new queue();
+		$this->queue = new QueryQueue();
 	}
 
 	public function set_debug($debug) {
