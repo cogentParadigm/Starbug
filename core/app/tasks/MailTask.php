@@ -5,7 +5,7 @@ class MailTask implements TaskInterface {
 	}
 	public function process($item, $queue) {
 		try {
-			$this->mailer->send_email($item['data']);
+			$this->mailer->send($item['data']);
 			$queue->success($item);
 		} catch (Exception $e) {
 			$queue->error($item, $e->getMessage());
