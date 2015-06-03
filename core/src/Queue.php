@@ -24,7 +24,7 @@ class Queue implements QueueInterface {
 		$this->db->store("queues", $item);
 	}
 	function get() {
-		$item = $this->db->query("queues")->condition("queue", $this->name)->condition("status", "pending")->sort("position")->one();
+		return $this->db->query("queues")->condition("queue", $this->name)->condition("status", "pending")->sort("position")->one();
 	}
 	function pop($item, $status = "completed") {
 		$this->db->query("queues")->condition("id", $item['id'])->set("status", $status)->update();
@@ -39,7 +39,7 @@ class Queue implements QueueInterface {
 		$this->items = $this->db->query("queues")->condition("queue", $this->name)->sort("position")->all();
 	}
 	function clear() {
-		$this->db->query("queues")->condition("queue", $name)->delete();
+		$this->db->query("queues")->condition("queue", $this->name)->delete();
 		$this->items = array();
 	}
 	function count() {
