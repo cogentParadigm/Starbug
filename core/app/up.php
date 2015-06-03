@@ -101,10 +101,10 @@ $this->table("menus",
 );
 $this->table("queues",
 	"queue  type:string",
-	"task  type:string",
 	"data  type:text  default:",
 	"position  type:int  ordered:queue  default:0",
-	"status  type:string  default:"
+	"status  type:string  default:",
+	"message  type:text  default:"
 );
 // CONTENT TYPES
 $this->table("views  base:uris  description:A basic view");

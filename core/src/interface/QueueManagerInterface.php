@@ -15,7 +15,7 @@ interface QueueManagerInterface {
 	 * @param string $queue the name of the queue
 	 * @param array $job the job data
 	 */
-	function put($queue, $task, $data = array(), $status = "pending");
+	function put($queue, $data = array(), $status = "pending");
 	/**
 	 * process jobs in a queue
 	 * @param string $queue the name of the queue

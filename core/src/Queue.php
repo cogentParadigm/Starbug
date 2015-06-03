@@ -24,16 +24,21 @@ class Queue implements QueueInterface {
 		$this->db->store("queues", $item);
 	}
 	function get() {
-		return $this->db->query("queues")->condition("queue", $this->name)->condition("status", "pending")->sort("position")->one();
-	}
-	function pop($item, $status = "completed") {
-		$this->db->query("queues")->condition("id", $item['id'])->set("status", $status)->update();
+		$item = $this->db->query("queues")->condition("queue", $this->name)->condition("status", "pending")->sort("position")->one();
+		$item['data'] = json_decode($item['data'], true);
+		return $item;
 	}
 	function release($item) {
 		$this->db->query("queues")->condition("id", $item['id'])->set("status", "pending")->update();
 	}
 	function remove($item) {
 		$this->db->query("queues")->condition("id", $item['id'])->delete();
+	}
+	function success($item, $status = "completed") {
+		$this->db->query("queues")->condition("id", $item['id'])->set("status", $status)->update();
+	}
+	function failure($item, $message="", $status = "failed") {
+		$this->db->query("queues")->condition("id", $item['id'])->set("message", $message)->set("status", $status)->update();
 	}
 	function load() {
 		$this->items = $this->db->query("queues")->condition("queue", $this->name)->sort("position")->all();

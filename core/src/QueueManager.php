@@ -23,15 +23,15 @@ class QueueManager implements QueueManagerInterface {
 		}
 		return $this->queues[$name];
 	}
-	function put($queue, $task, $data = array(), $status = "pending") {
-		$job = array("task" => $task, "data" => $data, "status" => $status);
+	function put($queue, $data = array(), $status = "pending") {
+		$job = array("data" => $data, "status" => $status);
 		$this->queue($queue)->put($job);
 	}
 	function process($queue, $duration = 600) {
 		$queue = $this->queue($queue);
 		$end = time() + $duration;
 		while (time() < $end && ($item = $queue->get())) {
-			$this->tasks->get($item['task'])->process($item, $queue);
+			$this->tasks->get($item['queue'])->process($item, $queue);
 		}
 	}
 }
