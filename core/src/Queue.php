@@ -37,7 +37,7 @@ class Queue implements QueueInterface {
 	function success($item, $status = "completed") {
 		$this->db->query("queues")->condition("id", $item['id'])->set("status", $status)->update();
 	}
-	function failure($item, $message="", $status = "failed") {
+	function failure($item, $message = "", $status = "failed") {
 		$this->db->query("queues")->condition("id", $item['id'])->set("message", $message)->set("status", $status)->update();
 	}
 	function load() {

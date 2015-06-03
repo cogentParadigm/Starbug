@@ -62,10 +62,7 @@ class Mailer implements MailerInterface {
 
 		//get template params
 		if (!empty($options['template'])) {
-			$template = query("email_templates")->condition(array(
-				"name" => $options['template'],
-				"email_templates.statuses" => "published"
-			))->one();
+			$template = query("email_templates")->condition("name", $options['template'])->one();
 			if (!empty($template)) $options = array_merge($template, $options);
 		}
 
