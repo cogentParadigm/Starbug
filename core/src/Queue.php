@@ -14,7 +14,7 @@ class Queue implements QueueInterface {
 	protected $items = array();
 	protected $db;
 	function __construct(DatabaseInterface $db, $name) {
-		$this->db = db;
+		$this->db = $db;
 		$this->name = $name;
 	}
 	function put($item) {
@@ -25,7 +25,7 @@ class Queue implements QueueInterface {
 	}
 	function get() {
 		$item = $this->db->query("queues")->condition("queue", $this->name)->condition("status", "pending")->sort("position")->one();
-		$item['data'] = json_decode($item['data'], true);
+		if ($item && $item['data']) $item['data'] = json_decode($item['data'], true);
 		return $item;
 	}
 	function release($item) {

@@ -14,7 +14,7 @@ class QueueManager implements QueueManagerInterface {
 	protected $db;
 	protected $tasks;
 	function __construct(DatabaseInterface $db, TaskFactoryInterface $tasks) {
-		$this->db = db;
+		$this->db = $db;
 		$this->tasks = $tasks;
 	}
 	function queue($name) {
