@@ -195,7 +195,16 @@ $this->table("errors",
 	"field  type:string  length:64",
 	"message  type:text  length:512"
 );
+$this->table("logs",
+	"type  type:string",
+	"severity  type:string",
+	"location  type:text  default:",
+	"referrer  type:text  default:",
+	"message  type:text  default:",
+	"data  type:text  default:"
+);
 //SQL TRANSACTION LOG
+/*
 	$this->table("log",
 		"table_name  type:string  length:100",
 		"object_id  type:int  default:0",
@@ -204,4 +213,5 @@ $this->table("errors",
 		"old_value  type:text",
 		"new_value  type:text"
 	);
+*/
 ?>
