@@ -47,6 +47,7 @@ class Table {
 	public $store_on_errors = false;
 
 	protected $models;
+	protected $validation;
 
 	/**
 	 * Table constructor
@@ -57,6 +58,27 @@ class Table {
 		$this->db = $db;
 		$this->models = $models;
 		$this->init();
+	}
+
+	public function set_validation(ValidationInterface $validation) {
+		$this->validation = $validation;
+	}
+
+	public function errors($key = "", $values = false) {
+		return $this->validation->errors($this->type.$key, $values);
+	}
+
+	public function error($error, $field = "global", $model = "") {
+		if (empty($model)) $model = $this->type;
+		$this->validation->error($error, $field, $model);
+	}
+
+	public function success($action) {
+		return $this->validation->success($this->type, $action);
+	}
+
+	public function failure($action) {
+		return $this->validation->failure($this->type, $action);
 	}
 
 	protected function init() {

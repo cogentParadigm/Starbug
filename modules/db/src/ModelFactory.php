@@ -13,7 +13,7 @@ class ModelFactory implements ModelFactoryInterface {
 	private $inheritance;
 	private $container;
 	private $objects;
-	public function __construct(InheritanceBuilderInterface $inheritance, ContainerInterface $container, $base_directory) {
+	public function __construct(InheritanceBuilderInterface $inheritance, ContainerInterface $container, ValidationInterface $validation, $base_directory) {
 		$this->inheritance = $inheritance;
 		$this->container = $container;
 		$this->base_directory = $base_directory;
@@ -26,6 +26,7 @@ class ModelFactory implements ModelFactoryInterface {
 		if (!isset($this->objects[$collection])) {
 			$class = $this->inheritance->build("Model", "models/".ucwords($collection), "Table");
 			$this->objects[$collection] = $this->container->get($class);
+			$this->objects[$collection]->set_validation($this->validation);
 		}
 		//return the saved object
 		return $this->objects[$collection];
