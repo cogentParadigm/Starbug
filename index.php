@@ -26,6 +26,7 @@ $request = new Request($_SERVER['REQUEST_URI'], array(
 ));
 $container->register("Request", $request, true);
 $application = $container->get("ApplicationInterface");
+$sb->start_session();
 $response = $application->handle($request);
 $response->send();
 ?>

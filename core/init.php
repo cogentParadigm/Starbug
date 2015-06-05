@@ -51,11 +51,11 @@ if (file_exists(BASE_DIR."/var/autoload_classmap.php")) {
 	$loader->add(include(BASE_DIR."/var/autoload_classmap.php"));
 	$loader->register();
 
-	global $sb;
-	$sb = $container->get("sb");
-
 	$context = $container->get("TemplateInterface");
 	$context->assign("container", $container);
+
+	global $sb;
+	$sb = $container->get("sb");
 	$context->assign("sb", $sb);
 
 	new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");

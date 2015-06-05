@@ -61,7 +61,6 @@ class sb {
 		$this->models = $models;
 		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
 		self::$instance = $this;
-		$this->start_session();
 	}
 
 	/**
