@@ -12,9 +12,16 @@
 class Logger implements LoggerInterface {
 	protected $db;
 	protected $request;
+	protected $type;
 	public function __construct(DatabaseInterface $db, Request $request) {
 		$this->db;
 		$this->request = $request;
+	}
+	public function get_type() {
+		return $this->type;
+	}
+	public function set_type($type) {
+		$this->type = $type;
 	}
 	/**
 	 * @copydoc LoggerInterface::emergency
@@ -69,9 +76,9 @@ class Logger implements LoggerInterface {
 	 */
 	public function log($level, $message, array $context = array()) {
 		$message = $this->interpolate($message, $context);
-		$location = $url = "http" . (($this->request->server['HTTPS'] == "on") ? "s://" : "://") . $this->request->server['HTTP_HOST'] . $this->request->server['REQUEST_URI'];
+		$location = "http" . (($this->request->server['HTTPS'] == "on") ? "s://" : "://") . $this->request->server['HTTP_HOST'] . $this->request->server['REQUEST_URI'];
 		$referrer = $this->request->server['HTTP_REFERRER'];
-		$this->db->store("logs", array("severity" => $level, "message" => $message, "location" => $location, "referrer" => $referrer));
+		$this->db->store("logs", array("severity" => $level, "type" => $this->type, "message" => $message, "location" => $location, "referrer" => $referrer));
 	}
 	/**
 	* Interpolates context values into the message placeholders.

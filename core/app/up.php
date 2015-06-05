@@ -99,7 +99,7 @@ $this->table("menus",
 	"position  type:int  ordered:menu parent  default:0",
 	"menu_path  type:string  length:255  default:  display:false"
 );
-$this->table("queues",
+$this->table("queues  groups:false",
 	"queue  type:string",
 	"data  type:text  default:",
 	"position  type:int  ordered:queue  default:0",
@@ -189,13 +189,13 @@ $this->store("settings", "name:email_secure", "category:settings_category email 
 
 //LOGGING TABLES
 //ERROR LOG
-$this->table("errors",
+$this->table("errors  groups:false",
 	"type  type:string  length:64",
 	"action  type:string  length:64  default:",
 	"field  type:string  length:64",
 	"message  type:text  length:512"
 );
-$this->table("logs",
+$this->table("logs  groups:false",
 	"type  type:string",
 	"severity  type:string",
 	"location  type:text  default:",

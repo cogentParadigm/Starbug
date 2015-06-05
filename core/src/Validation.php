@@ -14,10 +14,9 @@ class Validation implements ValidationInterface {
 	public $scope = "global";
 	protected $logger;
 	protected $request;
-	function __construct(LoggerInterface $logger, RequestInterface $request) {
-		$this->logger = $logger;
+	function __construct(LoggerFactoryInterface $loggers, RequestInterface $request) {
+		$this->logger = $loggers->get(get_class($this));
 		$this->request = $request;
-		$this->logger->type = "validation";
 	}
 	/**
 	 * @copydoc ValidationInterface::errors
