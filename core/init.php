@@ -55,6 +55,9 @@ if (file_exists(BASE_DIR."/var/autoload_classmap.php")) {
 	$context->assign("container", $container);
 
 	new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
+} else {
+	return false;
 }
+return true;
 
 ?>

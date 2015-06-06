@@ -47,7 +47,8 @@ class Table {
 	public $store_on_errors = false;
 
 	protected $models;
-	protected $validation;
+	public $errors = array();
+	public $action = false;
 
 	/**
 	 * Table constructor
@@ -57,28 +58,54 @@ class Table {
 	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
 		$this->db = $db;
 		$this->models = $models;
+		//$this->logger = $loggers->get(get_class($this));
 		$this->init();
 	}
 
-	public function set_validation(ValidationInterface $validation) {
-		$this->validation = $validation;
-	}
-
 	public function errors($key = "", $values = false) {
-		return $this->validation->errors($this->type.$key, $values);
+		if (is_bool($key)) {
+			$values = $key;
+			$key = "";
+		}
+		$parts = explode(".", $key);
+		$errors = $this->errors;
+		if (!empty($key)) foreach ($parts as $p) $errors = $errors[$p];
+		if ($values) return $errors;
+		else return (!empty($errors));
 	}
 
-	public function error($error, $field = "global", $model = "") {
-		if (empty($model)) $model = $this->type;
-		$this->validation->error($error, $field, $model);
+	public function error($error, $field = "global") {
+		$this->errors[$field][] = $error;
+		//$this->logger->info("{model}::{action} - {field}:{message}", array("model" => $model, "action" => $this->request->data['action'][$model], "field" => $field, "message" => $error));
 	}
 
 	public function success($action) {
-		return $this->validation->success($this->type, $action);
+		return (($this->action == $action) && (empty($this->errors)));
 	}
 
 	public function failure($action) {
-		return $this->validation->failure($this->type, $action);
+		return (($this->action == $action) && (!empty($this->errors)));
+	}
+
+	/**
+	* run a model action if permitted
+	* @param string $key the model name
+	* @param string $value the function name
+	*/
+	protected function post($action, $data=array()) {
+		$this->action = $action;
+		if (isset($data['id'])) {
+			$permits = $this->db->query($this->type)->action($action)->condition($this->type.".id", $data['id'])->one();
+		} else {
+			$permits = $this->db->query("permits")->action($action, $this->type)->one();
+		}
+		if ($permits) {
+			$this->$action($data);
+			return true;
+		} else {
+			$this->error("Access Denied");
+			return false;
+		}
 	}
 
 	protected function init() {

@@ -8,7 +8,8 @@
  * @ingroup core
  */
 	if (!defined("SB_CLI")) define("SB_CLI", true);
-	include("init.php");
+
+$result = include("init.php");
 
 global $request;
 $request = new Request("/", array(
@@ -16,8 +17,10 @@ $request = new Request("/", array(
 	'directory' => Etc::WEBSITE_URL
 ));
 $container->register("Request", $request, true);
-global $sb;
-$sb = $container->get("sb");
-$context->assign("sb", $sb);
-$sb->user = array("groups" => array("root"));
+if ($result) {
+	global $sb;
+	$sb = $container->get("sb");
+	$context->assign("sb", $sb);
+	$sb->user = array("groups" => array("root"));
+}
 ?>
