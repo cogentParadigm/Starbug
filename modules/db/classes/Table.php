@@ -92,7 +92,7 @@ class Table {
 	* @param string $key the model name
 	* @param string $value the function name
 	*/
-	protected function post($action, $data=array()) {
+	protected function post($action, $data = array()) {
 		$this->action = $action;
 		if (isset($data['id'])) {
 			$permits = $this->db->query($this->type)->action($action)->condition($this->type.".id", $data['id'])->one();
@@ -182,7 +182,7 @@ class Table {
 		return $records;
 	}
 
-	function filter($data, $action="") {
+	function filter($data, $action = "") {
 		if (!empty($this->base)) {
 			$data = $this->models->get($this->base)->filter($data, $action);
 		}
@@ -202,6 +202,5 @@ class Table {
 		}
 		return $query;
 	}
-
 }
 ?>

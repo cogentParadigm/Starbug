@@ -17,7 +17,6 @@ class ModelFactory implements ModelFactoryInterface {
 	public function __construct(InheritanceBuilderInterface $inheritance, ContainerInterface $container, $base_directory) {
 		$this->inheritance = $inheritance;
 		$this->container = $container;
-		$this->validation = $validation;
 		$this->base_directory = $base_directory;
 		$this->objects = array();
 	}
