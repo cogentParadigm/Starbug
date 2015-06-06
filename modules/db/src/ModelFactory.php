@@ -10,12 +10,14 @@
 * an implementation of ModelFactoryInterface
 */
 class ModelFactory implements ModelFactoryInterface {
-	private $inheritance;
-	private $container;
-	private $objects;
+	protected $inheritance;
+	protected $container;
+	protected $objects;
+	protected $validation;
 	public function __construct(InheritanceBuilderInterface $inheritance, ContainerInterface $container, ValidationInterface $validation, $base_directory) {
 		$this->inheritance = $inheritance;
 		$this->container = $container;
+		$this->validation = $validation;
 		$this->base_directory = $base_directory;
 		$this->objects = array();
 	}

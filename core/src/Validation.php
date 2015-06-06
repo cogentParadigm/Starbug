@@ -14,8 +14,8 @@ class Validation implements ValidationInterface {
 	public $scope = "global";
 	protected $logger;
 	protected $request;
-	function __construct(LoggerFactoryInterface $loggers, RequestInterface $request) {
-		$this->logger = $loggers->get(get_class($this));
+	function __construct(Request $request) {
+		//$this->logger = $loggers->get(get_class($this));
 		$this->request = $request;
 	}
 	/**
@@ -38,7 +38,7 @@ class Validation implements ValidationInterface {
 	function error($error, $field = "global", $model = "") {
 		if (empty($model)) $model = $this->scope;
 		$this->errors[$model][$field][] = $error;
-		$this->logger->info("{model}::{action} - {field}:{message}", array("model" => $model, "action" => $this->request->data['action'][$model], "field" => $field, "message" => $error));
+		//$this->logger->info("{model}::{action} - {field}:{message}", array("model" => $model, "action" => $this->request->data['action'][$model], "field" => $field, "message" => $error));
 	}
 	/**
 	 * @copydoc ValidationInterface::error_scope

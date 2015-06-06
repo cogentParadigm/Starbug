@@ -17,7 +17,7 @@ class LoggerFactory implements LoggerFactoryInterface {
 	}
 	public function get($logger) {
 		if (!isset($this->loggers[$logger])) {
-			$this->loggers[$logger] = $this->container->build("LoggerInterface");
+			$this->loggers[$logger] = $this->container->build("Logger");
 			$this->loggers[$logger]->set_type($logger);
 		}
 		return $this->loggers[$logger];
