@@ -48,41 +48,52 @@ class Mailer implements MailerInterface {
 		return $mailer;
 	}
 
-	/**
-	 * send an email email
-	 * @param array $options
-	 * @param array $data
-	 */
-	function send($options = array(), $data = array()) {
-		$mailer = $this->create();
-
-		$options = $options;
-		$data = $data;
+	function render($options = array(), $data = array()) {
 		$data['url_flags'] = 'u';
-
 		//get template params
 		if (!empty($options['template'])) {
 			$template = query("email_templates")->condition("name", $options['template'])->one();
 			if (!empty($template)) $options = array_merge($template, $options);
 		}
-
 		//set mailer params
-		if (!empty($options['from'])) $mailer->From = $this->macro->replace($options['from'], $data);
-		if (!empty($options['from_name'])) $mailer->FromName = $this->macro->replace($options['from_name'], $data);
-		if (!empty($options['subject'])) $mailer->Subject = $this->macro->replace($options['subject'], $data);
-		if (!empty($options['body'])) $mailer->Body = $this->macro->replace($options['body'], $data);
+		$arr = array("to", "cc", "bcc");
+		$replace = array("from", "from_name", "subject", "body", "to", "cc", "bcc");
+		foreach ($replace as $key) {
+			if (!empty($options[$key])) {
+				if (in_array($key, $arr) && !is_array($options[$key])) {
+					$options[$key] = explode(",", $options[$key]);
+				}
+				if (is_array($options[$key])) {
+					foreach ($options[$key] as $idx => $value) $options[$key][$idx] = $this->macro->replace(trim($value), $data);
+				} else {
+					$options[$key] = $this->macro->replace($options[$key], $data);
+				}
+			}
+		}
+		return $options;
+	}
+
+	/**
+	 * send an email email
+	 * @param array $options
+	 * @param array $data
+	 */
+	function send($options = array(), $data = array(), $rendered=false) {
+		$mailer = $this->create();
+		if (!$rendered) $options = $this->render($options, $data);
+		//set mailer params
+		if (!empty($options['from'])) $mailer->From = $options['from'];
+		if (!empty($options['from_name'])) $mailer->FromName = $options['from_name'];
+		if (!empty($options['subject'])) $mailer->Subject = $options['subject'];
+		if (!empty($options['body'])) $mailer->Body = $options['body'];
 		if (!empty($options['to'])) {
-			$to = $options['to'];
-			if (!is_array($to)) $to = explode(",", $to);
-			foreach ($to as $email) $mailer->AddAddress($this->macro->replace(trim($email), $data));
+			foreach ($options['to'] as $email) $mailer->AddAddress($email);
 		}
 		if (!empty($options['cc'])) {
-			if (!is_array($options['cc'])) $options['cc'] = explode(',', $options['cc']);
-			foreach ($options['cc'] as $cc) $mailer->AddCC($this->macro->replace($cc, $data));
+			foreach ($options['cc'] as $cc) $mailer->AddCC($cc);
 		}
 		if (!empty($options['bcc'])) {
-			if (!is_array($options['bcc'])) $options['bcc'] = explode(',', $options['bcc']);
-			foreach ($options['bcc'] as $bcc) $mailer->AddBCC($this->macro->replace($bcc, $data));
+			foreach ($options['bcc'] as $bcc) $mailer->AddBCC($bcc);
 		}
 		if (!empty($options['attachments'])) {
 			$attachments = $options['attachments'];
@@ -91,7 +102,6 @@ class Mailer implements MailerInterface {
 				else $mailer->AddAttachment($a);
 			}
 		}
-
 		//send mail
 		$result = $mailer->Send();
 		return $result;
