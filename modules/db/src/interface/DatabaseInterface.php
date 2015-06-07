@@ -55,7 +55,7 @@ interface DatabaseInterface {
 	public function set_debug($debug);
 	public function exec($statement);
 	public function errors($key = "", $values = false);
-	public function error($error, $field = "global", $scope="global");
+	public function error($error, $field = "global", $scope = "global");
 	public function success($model, $action);
 	public function failure($model, $action);
 }

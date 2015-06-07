@@ -10,7 +10,7 @@
  * a simple interface for accessing taxonomy trees, and applying categories and tags
  */
 interface TaxonomyInterface {
-	function terms($taxonomy, $parent=0, $depth=0);
+	function terms($taxonomy, $parent = 0, $depth = 0);
 	/**
 	 * apply tags
 	 * @ingroup taxonomy
@@ -19,7 +19,7 @@ interface TaxonomyInterface {
 	 * @param string $tag the tag
 	 * @return bool returns true on success, false otherwise.
 	 */
-	function tag($table, $object_id, $field, $tag="");
+	function tag($table, $object_id, $field, $tag = "");
 	/**
 	 * remove tags
 	 * @ingroup taxonomy
@@ -28,5 +28,5 @@ interface TaxonomyInterface {
 	 * @param int $object_id the id of the object to apply the tag to
 	 * @param string $tag the tag
 	 */
-	function untag($table, $object_id, $field, $tag="");
+	function untag($table, $object_id, $field, $tag = "");
 }

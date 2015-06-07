@@ -16,7 +16,7 @@ class Taxonomy implements TaxonomyInterface {
 		$this->db = $db;
 		$this->models = $models;
 	}
-	function terms($taxonomy, $parent=0, $depth=0) {
+	function terms($taxonomy, $parent = 0, $depth = 0) {
 		$terms = array();
 		$parents = $this->db->query("terms")->condition("taxonomy", $taxonomy)->condition("parent", $parent)->sort("position");
 		if ($taxonomy == "groups" && !logged_in("root")) $parents->condition("slug", "root", "!=");
@@ -35,7 +35,7 @@ class Taxonomy implements TaxonomyInterface {
 	 * @param string $tag the tag
 	 * @return bool returns true on success, false otherwise.
 	 */
-	function tag($table, $object_id, $field, $tag="") {
+	function tag($table, $object_id, $field, $tag = "") {
 		$column_info = column_info($table, $field);
 		if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
 		$taxonomy = $column_info['taxonomy'];
@@ -67,10 +67,9 @@ class Taxonomy implements TaxonomyInterface {
 	 * @param int $object_id the id of the object to apply the tag to
 	 * @param string $tag the tag
 	 */
-	function untag($table, $object_id, $field, $tag="") {
+	function untag($table, $object_id, $field, $tag = "") {
 		$column_info = column_info($table, $field);
 		if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
-		$taxonomy = $column_info['taxonomy'];
 		$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
 		$this->db->query($tags)->condition($tags.".".$table."_id", $object_id)->open("terms")->condition($field."_id.id", $tag)->orCondition($field."_id.slug", $tag)->orCondition($field."_id.term", $tag)->close()->delete();
 	}

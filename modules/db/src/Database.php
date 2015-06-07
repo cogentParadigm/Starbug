@@ -71,15 +71,11 @@ class Database implements DatabaseInterface {
 		$this->hooks = $hooks;
 		$this->config = $config;
 		$params = $config->get("db/".$database_name);
-		try {
-			$this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
-			$this->set_debug(false);
-			$this->prefix = $params['prefix'];
-			$this->database_name = $params['db'];
-			if (defined('Etc::TIME_ZONE')) $this->exec("SET time_zone='".Etc::TIME_ZONE."'");
-		} catch (PDOException $e) {
-			die("PDO CONNECTION ERROR: " . $e->getMessage() . "\n");
-		}
+		$this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
+		$this->set_debug(false);
+		$this->prefix = $params['prefix'];
+		$this->database_name = $params['db'];
+		if (defined('Etc::TIME_ZONE')) $this->exec("SET time_zone='".Etc::TIME_ZONE."'");
 		$this->queue = new QueryQueue();
 	}
 
@@ -106,12 +102,12 @@ class Database implements DatabaseInterface {
 
 		//loop through the input arguments
 		foreach ($args as $idx => $a) {
-				if ($idx == 0) $collection = $a; //first argument is the collection
-				else if ($idx == 1) $conditions = star($a); //second argument are the conditions
-				else {
-					$arg = star($a);
-					if (!empty($arg['orderby'])) $arg['sort'] = $arg['orderby']; //DEPRECATED: use sort
-				}
+			if ($idx == 0) $collection = $a; //first argument is the collection
+			else if ($idx == 1) $conditions = star($a); //second argument are the conditions
+			else {
+				$arg = star($a);
+				if (!empty($arg['orderby'])) $arg['sort'] = $arg['orderby']; //DEPRECATED: use sort
+			}
 		}
 		$args = $arg;
 
@@ -241,7 +237,7 @@ class Database implements DatabaseInterface {
 		else return (!empty($errors));
 	}
 
-	public function error($error, $field = "global", $scope="global") {
+	public function error($error, $field = "global", $scope = "global") {
 		$this->errors[$scope][$field][] = $error;
 		//$this->logger->info("{model}::{action} - {field}:{message}", array("model" => $model, "action" => $this->request->data['action'][$model], "field" => $field, "message" => $error));
 	}
@@ -256,7 +252,7 @@ class Database implements DatabaseInterface {
 
 	public function __call($method, $args) {
 		if (method_exists($this->pdo, $method)) return call_user_func_array(array($this->pdo, $method), $args);
-		throw new Exception ('Call to undefined method/class function: ' . $method);
+		throw new Exception('Call to undefined method/class function: ' . $method);
 	}
 }
 ?>
