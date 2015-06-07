@@ -3,6 +3,9 @@ class AdminUsersController {
 	public $routes = array(
 		'update' => '{id}'
 	);
+	function __construct(DatabaseInterface $db) {
+		$this->db = $db;
+	}
 	function init() {
 		$this->assign("model", "users");
 		$this->assign("cancel_url", "admin/users");
@@ -12,7 +15,7 @@ class AdminUsersController {
 	}
 	function create() {
 		$this->assign("form", "users");
-		if (success("users", "create")) redirect(uri("admin/users", 'u'));
+		if ($this->db->success("users", "create")) redirect(uri("admin/users", 'u'));
 		else $this->render("admin/create");
 	}
 	function update($id) {

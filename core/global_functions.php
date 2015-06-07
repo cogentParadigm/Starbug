@@ -18,8 +18,6 @@
 	include("core/global/modules.php");
 	include("core/global/strings.php");
 	include("core/global/routing.php");
-	include("core/global/errors.php");
-	include("core/global/taxonomy.php");
 	include("core/global/templates.php");
 	include("core/global/images.php");
 	include("core/global/forms.php");

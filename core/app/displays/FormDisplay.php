@@ -27,14 +27,14 @@ class FormDisplay extends ItemDisplay {
 	function build($options) {
 		$this->options = $options;
 		// grab schema
-		if (!empty($this->model) && sb()->models->has($this->model)) {
-			$this->schema = sb($this->model)->hooks;
+		if (!empty($this->model) && $this->models->has($this->model)) {
+			$this->schema = $this->models->get($this->model)->hooks;
 		}
 
 		//create layout display
-		$this->layout = $this->output->displays->build("LayoutDisplay");
+		$this->layout = $this->displays->get("LayoutDisplay");
 		//create actions display
-		$this->actions = $this->output->displays->build("ItemDisplay");
+		$this->actions = $this->displays->get("ItemDisplay");
 		$this->actions->add($this->default_action."  label:".$this->submit_label."  class:btn-success");
 
 		//run query
@@ -109,20 +109,43 @@ class FormDisplay extends ItemDisplay {
 		$this->attributes["method"] = $this->method;
 		$this->attributes["accept-charset"] = "UTF-8";
 		if (!empty($this->model) && !empty($this->default_action)) {
-			if (success($this->model, $this->default_action)) $this->attributes['class'][] = "submitted";
-			else if (failure($this->model, $this->default_action)) $this->attributes['class'][] = "errors";
+			if ($this->success($this->default_action)) $this->attributes['class'][] = "submitted";
+			else if ($this->failure($this->default_action)) $this->attributes['class'][] = "errors";
 		}
 		// grab errors and update schema
 		$this->errors = array();
 		foreach ($this->fields as $name => $field) {
 			$this->schema[$name] = column_info($field['model'], $name);
-			$errors = errors($this->get_name($name, $this->schema[$name]['entity']), true);
+			$error_key = str_replace(array("][", "[", "]"), array(".", ".", ""), $name);
+			$errors = $this->models->get($this->schema[$name]['entity'])->errors($error_key, true);
 			if (!empty($errors)) $this->errors[$name] = $errors;
 		}
 	}
 
 	function render($query = false) {
 		parent::render($query);
+	}
+
+	public function errors($key = "", $values = false) {
+		$key = (empty($key)) ? $this->model : $this->model.".".$key;
+		return $this->models->get($this->model)->errors($key, $values);
+	}
+
+	public function error($error, $field = "global", $model="") {
+		if (empty($model)) $model = $this->model;
+		$this->models->get($this->model)->error($error, $field);
+	}
+
+	public function success($action) {
+		$args = func_get_args();
+		if (count($args) == 1) $args = array($this->model, $args[0]);
+		return $this->models->get($args[0])->success($args[1]);
+	}
+
+	public function failure($action) {
+		$args = func_get_args();
+		if (count($args) == 1) $args = array($this->model, $args[0]);
+		return $this->models->get($args[0])->failure($args[1]);
 	}
 
 	/**

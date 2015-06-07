@@ -3,11 +3,14 @@ class AdminUrisController {
 	public $routes = array(
 		'update' => '{id}'
 	);
+	function __construct(DatabaseInterface $db) {
+		$this->db = $db;
+	}
 	function init() {
 		$this->assign("model", "uris");
 		$this->assign("form", "uris");
 		$this->assign("cancel_url", "admin/uris");
-		if (success("uris", "create") || success("uris", "update")) {
+		if ($this->db->success("uris", "create") || $this->db->success("uris", "update")) {
 			if ($this->request->data['operation'] == "save") redirect(uri("admin/uris", "u"));
 			else if ($this->request->data['operation'] == "save_add_another") $this->request->data = array();
 		}

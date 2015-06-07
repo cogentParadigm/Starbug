@@ -4,6 +4,10 @@ class AdminMenusController {
 		'menu' => '{menu}',
 		'update' => '{id}'
 	);
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+		$this->db = $db;
+		$this->menus = $models->get("menus");
+	}
 	function init() {
 		$this->assign("model", "menus");
 	}
@@ -12,15 +16,15 @@ class AdminMenusController {
 	}
 	function create() {
 		$this->assign("menu", $this->request->parameters['menu']);
-		if (success("menus", "create")) {
-			$menu = get("menus", sb("menus")->insert_id);
+		if ($this->db->success("menus", "create")) {
+			$menu = $this->db->get("menus", $this->menus->insert_id);
 			redirect(uri("admin/menus/menu/".$menu['menu']));
 		} else $this->render("admin/create");
 	}
 	function update($id) {
 		$this->assign("id", $id);
-		if (success("menus", "create")) {
-			$menu = get("menus", $id);
+		if ($this->db->success("menus", "create")) {
+			$menu = $this->db->get("menus", $id);
 			redirect(uri("admin/menus/menu/".$menu['menu']));
 		} else $this->render("admin/update");
 	}

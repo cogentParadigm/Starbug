@@ -1,5 +1,9 @@
 <?php
 class hook_store_terms extends QueryHook {
+	protected $taxonomy;
+	function __construct(TaxonomyInterface $taxonomy) {
+		$this->taxonomy = $taxonomy;
+	}
 	function after_store(&$query, $key, $value, $column, $argument) {
 		$name = $query->model;
 		$id = $query->getId();
@@ -15,12 +19,12 @@ class hook_store_terms extends QueryHook {
 				$remove_unmentioned_tags = true;
 			} else if (0 === strpos($tag, "-")) {
 				//remove tag
-				untag($name, $id, $column, substr($tag, 1));
+				$this->taxonomy->untag($name, $id, $column, substr($tag, 1));
 				$mentioned_tags[] = substr($tag, 1);
 			} else {
 				//add tag
 				//echo "tag('".$name."', ".$id.", '".$column."', '".$tag."')";
-				tag($name, $id, $column, $tag);
+				$this->taxonomy->tag($name, $id, $column, $tag);
 				$mentioned_tags[] = $tag;
 			}
 		}

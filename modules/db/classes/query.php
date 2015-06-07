@@ -750,9 +750,9 @@ class query implements IteratorAggregate, ArrayAccess {
 		$query = $this->build_query();
 
 		if ($this->mode === "query") {
-			if (empty($query['SELECT'])) error("Missing SELECT clause for query.", "global");
+			if (empty($query['SELECT'])) $this->error("Missing SELECT clause for query.", "global");
 		} else if ($this->mode === "update") {
-			if (empty($query['SET'])) error("Missing SET clause for update query.", "global");
+			if (empty($query['SET'])) $this->error("Missing SET clause for update query.", "global");
 		}
 
 		foreach ($query as $key => $clause) $sql[$key] = $key." ".$clause;
@@ -1230,8 +1230,6 @@ class query implements IteratorAggregate, ArrayAccess {
 	}
 
 	function validate($phase = query::PHASE_VALIDATION) {
-		$oldscope = error_scope();
-		error_scope($this->model);
 		$model = $this->models->get($this->model);
 		foreach ($model->hooks as $column => $hooks) {
 			if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) $hooks['required'] = "";
@@ -1239,7 +1237,6 @@ class query implements IteratorAggregate, ArrayAccess {
 				$this->invoke_hook($phase, $column, $hook, $argument);
 			}
 		}
-		error_scope($oldscope);
 		if ($phase == query::PHASE_VALIDATION) $this->validated = true;
 	}
 
@@ -1280,6 +1277,27 @@ class query implements IteratorAggregate, ArrayAccess {
 		}
 	}
 
+	public function errors($key = "", $values = false) {
+		return $this->db->errors($key, $values);
+	}
+
+	public function error($error, $field = "global", $model="") {
+		if (empty($model)) $model = $this->model;
+		$this->db->error($error, $field, $model);
+	}
+
+	public function success($action) {
+		$args = func_get_args();
+		if (count($args) == 1) $args = array($this->model, $args[0]);
+		return $this->db->success($args[0], $args[1]);
+	}
+
+	public function failure($action) {
+		$args = func_get_args();
+		if (count($args) == 1) $args = array($this->model, $args[0]);
+		return $this->db->failure($args[0], $args[1]);
+	}
+
 	/**************************************************************
 	 * query execution
 	 **************************************************************/
@@ -1290,7 +1308,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 */
 	function execute($params = array(), $debug = false) {
 		$this->build();
-		if (errors() && $this->mode != "query" && false === $this->store_on_errors) return false;
+		if ($this->errors() && $this->mode != "query" && false === $this->store_on_errors) return false;
 		if (empty($params)) $params = $this->parameters;
 		if ($debug) {
 			echo $this->interpolate();
@@ -1366,7 +1384,7 @@ class query implements IteratorAggregate, ArrayAccess {
 
 	function count($params = array()) {
 		$this->build();
-		if (errors()) return false;
+		if ($this->errors()) return false;
 		if (empty($params)) $params = $this->parameters;
 		$records = $this->db->prepare($this->count_sql);
 		$records->execute($params);

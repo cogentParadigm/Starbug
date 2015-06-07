@@ -75,12 +75,9 @@ class Application implements ApplicationInterface {
 	* @param string $key the model name
 	* @param string $value the function name
 	*/
-	protected function post_action($key, $value, $post=null) {
+	protected function post_action($key, $value, $post = array()) {
 		if ($object = $this->models->get($key)) {
-			error_scope($key);
-			$permitted = $object->post($value, $post);
-			error_scope("global");
-			return $permitted;
+			return $object->post($value, $post);
 		}
 	}
 

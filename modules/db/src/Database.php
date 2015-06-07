@@ -45,6 +45,8 @@ class Database implements DatabaseInterface {
 	*/
 	public $queue;
 
+	public $errors = array();
+
 	public $operators = array(
 		'=' => 1,
 		'>' => 1,
@@ -225,6 +227,31 @@ class Database implements DatabaseInterface {
 			$this->record_count = $del->condition(star($where))->delete();
 			return $this->record_count;
 		}
+	}
+
+	public function errors($key = "", $values = false) {
+		if (is_bool($key)) {
+			$values = $key;
+			$key = "";
+		}
+		$parts = explode(".", $key);
+		$errors = $this->errors;
+		if (!empty($key)) foreach ($parts as $p) $errors = $errors[$p];
+		if ($values) return $errors;
+		else return (!empty($errors));
+	}
+
+	public function error($error, $field = "global", $scope="global") {
+		$this->errors[$scope][$field][] = $error;
+		//$this->logger->info("{model}::{action} - {field}:{message}", array("model" => $model, "action" => $this->request->data['action'][$model], "field" => $field, "message" => $error));
+	}
+
+	public function success($model, $action) {
+		return (($this->models->get($model)->action == $action) && (empty($this->errors)));
+	}
+
+	public function failure($model, $action) {
+		return (($this->models->get($model)->action == $action) && (!empty($this->errors)));
 	}
 
 	public function __call($method, $args) {

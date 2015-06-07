@@ -1,9 +1,9 @@
 <form <?php html_attributes($display->attributes); ?>>
-	<?php if (!empty($display->model) && !empty($display->default_action) && success($display->model, $display->default_action)) { ?>
+	<?php if (!empty($display->model) && !empty($display->default_action) && $display->success($display->default_action)) { ?>
 		<p class="alert alert-success">Saved</p>
 	<?php } ?>
-	<?php if (errors($display->model."[global]")) { ?>
-		<?php foreach (sb()->errors[$display->model]["global"] as $key => $value) { ?>
+	<?php if ($display->errors("global")) { ?>
+		<?php foreach ($display->errors("global", true) as $key => $value) { ?>
 			<p class="alert alert-danger"><?php echo $value; ?></p>
 		<?php } ?>
 	<?php } ?>

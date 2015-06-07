@@ -3,6 +3,9 @@ class AdminViewsController {
 	public $routes = array(
 		'update' => '{id}'
 	);
+	function __construct(DatabaseInterface $db) {
+		$this->db = $db;
+	}
 	function init() {
 		$this->assign("model", "views");
 		$this->assign("cancel_url", "admin/views");
@@ -11,12 +14,12 @@ class AdminViewsController {
 		$this->render("admin/list");
 	}
 	function create() {
-		if (success("views", "create")) redirect(uri("admin/views", 'u'));
+		if ($this->db->success("views", "create")) redirect(uri("admin/views", 'u'));
 		else $this->render("admin/create");
 	}
 	function update($id) {
 		$this->assign("id", $id);
-		if (success("views", "create")) redirect(uri("admin/views", 'u'));
+		if ($this->db->success("views", "create")) redirect(uri("admin/views", 'u'));
 		else $this->render("admin/update");
 	}
 }

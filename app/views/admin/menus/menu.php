@@ -1,4 +1,4 @@
-<?php if (success("menus", "create")) { ?>
+<?php if ($this->db->success("menus", "create")) { ?>
         <div class="success">Menu <?php echo (empty($this->request->data['menus']['id'])) ? "created" : "updated"; ?> successfully</div>
 <?php } ?>
 <div class="panel panel-default">

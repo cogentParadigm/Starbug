@@ -1,14 +1,18 @@
 <?php
 class hook_form_multiple_category_select extends FormHook {
+	protected $taxonomy;
+	function __construct(TaxonomyInterface $taxonomy) {
+		$this->taxonomy = $taxonomy;
+	}
 	function build($form, &$control, &$field) {
 		$value = $form->get($field['name']);
 		if ((empty($value)) && (!empty($field['default']))) {
 			$form->set($field['name'], $field['default']);
 			unset($field['default']);
 		}
-		efault($field['taxonomy'], ((empty($form->model)) ? "" : $form->model."_").$field['name']);
-		efault($field['parent'], 0);
-		$terms = terms($field['taxonomy'], $field['parent']);
+		if (empty($field['taxonomy'])) $field['taxonomy'] = ((empty($form->model)) ? "" : $form->model."_").$field['name'];
+		if (empty($field['parent'])) $field['parent'] = 0;
+		$terms = $this->taxonomy->terms($field['taxonomy'], $field['parent']);
 		$value = $form->get($field['name']);
 		if(!is_array($value)) $value = explode(",",$value);
 		foreach ($value as $idx => $v) {

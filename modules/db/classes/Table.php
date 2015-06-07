@@ -47,7 +47,6 @@ class Table {
 	public $store_on_errors = false;
 
 	protected $models;
-	public $errors = array();
 	public $action = false;
 
 	/**
@@ -63,28 +62,25 @@ class Table {
 	}
 
 	public function errors($key = "", $values = false) {
-		if (is_bool($key)) {
-			$values = $key;
-			$key = "";
-		}
-		$parts = explode(".", $key);
-		$errors = $this->errors;
-		if (!empty($key)) foreach ($parts as $p) $errors = $errors[$p];
-		if ($values) return $errors;
-		else return (!empty($errors));
+		$key = (empty($key)) ? $this->type : $this->type.".".$key;
+		return $this->db->errors($key, $values);
 	}
 
-	public function error($error, $field = "global") {
-		$this->errors[$field][] = $error;
-		//$this->logger->info("{model}::{action} - {field}:{message}", array("model" => $model, "action" => $this->request->data['action'][$model], "field" => $field, "message" => $error));
+	public function error($error, $field = "global", $model="") {
+		if (empty($model)) $model = $this->type;
+		$this->db->error($error, $field, $model);
 	}
 
 	public function success($action) {
-		return (($this->action == $action) && (empty($this->errors)));
+		$args = func_get_args();
+		if (count($args) == 1) $args = array($this->type, $args[0]);
+		return $this->db->success($args[0], $args[1]);
 	}
 
 	public function failure($action) {
-		return (($this->action == $action) && (!empty($this->errors)));
+		$args = func_get_args();
+		if (count($args) == 1) $args = array($this->type, $args[0]);
+		return $this->db->failure($args[0], $args[1]);
 	}
 
 	/**
@@ -92,7 +88,7 @@ class Table {
 	* @param string $key the model name
 	* @param string $value the function name
 	*/
-	protected function post($action, $data = array()) {
+	public function post($action, $data = array()) {
 		$this->action = $action;
 		if (isset($data['id'])) {
 			$permits = $this->db->query($this->type)->action($action)->condition($this->type.".id", $data['id'])->one();

@@ -15,6 +15,13 @@ class storeTest extends UnitTest {
 
 	var $fixtures = array("users");
 
+	protected static $db;
+
+	public static function setUpBeforeClass() {
+		global $container;
+		self::$db = $container->get("DatabaseInterface");
+	}
+
 	/**
 	 * hook_store_addslashes
 	 */
@@ -114,19 +121,19 @@ class storeTest extends UnitTest {
 	 */
 	function test_confirm() {
 		//try to store with values that don't match
-		store("hook_store_confirm", "value:one  value_confirm:two");
+		self::$db->store("hook_store_confirm", "value:one  value_confirm:two");
 
 		//verify the error exists
-		$this->assertSame("Your value fields do not match", sb()->errors["hook_store_confirm"]["value"][0]);
+		$this->assertSame("Your value fields do not match", self::$db->errors["hook_store_confirm"]["value"][0]);
 
 		//clear errors
-		sb()->errors = array();
+		self::$db->errors = array();
 
 		//store with matching values
-		store("hook_store_confirm", "value:one  value_confirm:one");
+		self::$db->store("hook_store_confirm", "value:one  value_confirm:one");
 
 		//assert the lack of errors
-		$this->assertFalse(errors());
+		$this->assertFalse(self::$db->errors());
 
 		//truncate the table
 		query("hook_store_confirm")->unsafe_truncate();
@@ -182,16 +189,16 @@ class storeTest extends UnitTest {
 		store("hook_store_length", array("value" => $over));
 
 		//verify the error exists
-		$this->assertSame("This field must be between 0 and 128 characters long.", sb()->errors["hook_store_length"]["value"][0]);
+		$this->assertSame("This field must be between 0 and 128 characters long.", self::$db->errors["hook_store_length"]["value"][0]);
 
 		//clear errors
-		sb()->errors = array();
+		self::$db->errors = array();
 
 		//store with matching values
 		store("hook_store_length", array("value" => $under));
 
 		//assert the lack of errors
-		$this->assertFalse(errors());
+		$this->assertFalse(self::$db->errors());
 
 		//truncate the table
 		query("hook_store_length")->unsafe_truncate();
@@ -418,10 +425,10 @@ class storeTest extends UnitTest {
 		store("hook_store_required");
 
 		//verify the error exists
-		$this->assertSame("This field is required.", sb()->errors["hook_store_required"]["value"][0]);
+		$this->assertSame("This field is required.", self::$db->errors["hook_store_required"]["value"][0]);
 
 		//clear errors
-		sb()->errors = array();
+		self::$db->errors = array();
 
 		//store a record
 		store("hook_store_required", "value:value");
@@ -437,10 +444,10 @@ class storeTest extends UnitTest {
 		store("hook_store_required", array("id" => $id));
 
 		//verify the error exists
-		$this->assertSame("This field is required.", sb()->errors["hook_store_required"]["value"][0]);
+		$this->assertSame("This field is required.", self::$db->errors["hook_store_required"]["value"][0]);
 
 		//clear errors
-		sb()->errors = array();
+		self::$db->errors = array();
 
 		//do a successful update
 		$record['value'] = "changed";
@@ -565,16 +572,16 @@ class storeTest extends UnitTest {
 		store("hook_store_unique", "value:one");
 
 		//assert that there are no errors
-		$this->assertFalse(errors());
+		$this->assertFalse(self::$db->errors());
 
 		//try it again
 		store("hook_store_unique", "value:one");
 
 		//verify the error exists
-		$this->assertSame("That value already exists.", sb()->errors["hook_store_unique"]["value"][0]);
+		$this->assertSame("That value already exists.", self::$db->errors["hook_store_unique"]["value"][0]);
 
 		//clear errors
-		sb()->errors = array();
+		self::$db->errors = array();
 
 		//truncate the table
 		query("hook_store_unique")->unsafe_truncate();
