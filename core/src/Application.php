@@ -85,7 +85,7 @@ class Application implements ApplicationInterface {
 	* check $_POST['action'] for posted actions and run them through post_act
 	*/
 	protected function check_post($post, $cookies) {
-		if (!empty($post['action'])) {
+		if (!empty($post['action']) && is_array($post['action'])) {
 			//validate csrf token for authenticated requests
 			if (logged_in()) {
 				$validated = false;
