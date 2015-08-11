@@ -34,7 +34,9 @@ function(dojo, strings, put, on){
 			}
 
 			//copy button
-			var copy = put(div, 'a.Copy.btn.btn-default[title=Copy][href='+base_url+'/create?copy='+row.id+']', put('div.fa.fa-files-o'));
+			var chref = base_url + '/create?copy='+row.id;
+			if (typeof grid.dialog == 'string') chref = 'javascript:'+grid.dialog+'.show(false, {copy:'+row.id+'})';
+			var copy = put(div, 'a.Copy.btn.btn-default[title=Copy][href='+chref+']', put('div.fa.fa-files-o'));
 
 			//delete button
 			var remove = 'javascript:;';

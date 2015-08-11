@@ -9,8 +9,9 @@ define([
 	"dojo/request/iframe",
 	"dijit/Dialog",
 	"dijit/registry",
-	"dojo/dom-form"
-], function(declare, lang, array, xhr, query, domclass, domstyle, iframe, Dialog, registry, domForm) {
+	"dojo/dom-form",
+	"dojo/behavior"
+], function(declare, lang, array, xhr, query, domclass, domstyle, iframe, Dialog, registry, domForm, behavior) {
 	return declare([Dialog], {
 		dialog:null,
 		url:'',
@@ -81,7 +82,8 @@ define([
 				query('[name="'+i+'"]').attr('value', args[i]);
 			}
 		},
-		show: function(id) {
+		show: function(id, params) {
+			params = params || {};
 			this.inherited(arguments);
 			if (id) this.item_id = id;
 			else this.item_id = 0;
@@ -89,6 +91,10 @@ define([
 			var token = '?';
 			for (var i in this.get_data) {
 				request_url += token+i+'='+this.get_data[i];
+				token = '&';
+			}
+			for (var x in params) {
+				request_url += token+x+'='+params[x];
 				token = '&';
 			}
 			xhr(request_url, {data:this.post_data}).then(lang.hitch(this, 'loadForm'));
@@ -113,6 +119,7 @@ define([
 			query('.submit, [type=\"submit\"]', this.form).attr('onclick', '').on('click', lang.hitch(this, '_onSubmit'));
 			query('.cancel', this.form).attr('onclick', '').on('click', lang.hitch(this, 'hide'));
 			query('input[type="file"]', this.form).on('change', lang.hitch(this, 'upload'));
+			behavior.apply();
 		}
 	});
 });
