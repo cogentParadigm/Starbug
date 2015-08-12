@@ -56,6 +56,9 @@ define([
 			domclass.add(this.form, 'loading');
 			query('.loading', this.form).style('display','block');
 			var data = lang.delegate(domForm.toObject(this.form), this.post_data);
+			query('.rich-text', this.form).forEach(function(node) {
+				data[node.name] = window.tinyMCE.get(node.id).getContent();
+			});
 			iframe(
 			this.url+(this.crudSuffixes ? ((this.item_id) ? 'update/'+this.item_id : 'create') : '')+((this.format != false) ? '.xhr' : ''),
 			{
