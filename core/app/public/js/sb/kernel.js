@@ -59,7 +59,7 @@ define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, r
 				if (rt.length > 0 || ed.length > 0) {
 					var script = window.document.createElement('script');
 					script.type = 'text/javascript';
-					script.src = '//tinymce.cachefly.net/4.1/tinymce.min.js';
+					script.src = '//tinymce.cachefly.net/4.2/tinymce.min.js';
 					var done = false;
 					script.onload = script.onreadystatechange = function() {
 						if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
