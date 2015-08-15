@@ -51,10 +51,12 @@ class hook_form_select extends FormHook {
 		}
 		$optional = false;
 		if (isset($field['optional'])) $optional = $field['optional'];
+		$other_option = empty($field['other_option']) ? false : $field['other_option'];
 		$form->assign("optional", $optional);
 		$form->assign("value", $value);
 		$form->assign("options", $options);
 		$form->assign("mode", $mode);
+		$form->assign("other_option", $other_option);
 	}
 }
 ?>
