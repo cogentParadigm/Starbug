@@ -1,5 +1,5 @@
 <?php
-class hook_form_multiple_select extends FormHook {
+class hook_form_radio_select extends FormHook {
 	function __construct(ModelFactoryInterface $models) {
 		$this->models = $models;
 	}
@@ -8,10 +8,6 @@ class hook_form_multiple_select extends FormHook {
 		if ((empty($value)) && (!empty($field['default']))) {
 			$form->set($field['name'], $field['default']);
 			unset($field['default']);
-		}
-		if (!is_array($value)) $value = explode(",", $value);
-		foreach ($value as $idx => $v) {
-			if (empty($v) || substr($v, 0, 1) == "-") unset($value[$idx]);
 		}
 
 		$info = $form->schema[$field['name']];
