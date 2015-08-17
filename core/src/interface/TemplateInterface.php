@@ -69,37 +69,4 @@ interface TemplateInterface {
 	* render all variants of {$tag}.{$topic} for each tag passed, plus 'global'
 	*/
 	public function publish($topic, $tags = array(), $params = array());
-	/**
-	* build a display
-	* @param string $type the display type (list, table, grid, csv, etc..)
-	* @param array $model the model to get results from
-	* @param string $name the display/query name (admin, list, select, etc..).
-	* 										 For example, if you specify 'admin', then the the following model functions will be used:
-	* 										 query provider: query_admin
-	* 										 display provider: display_admin
-	* @param array $options parameters that will be passed to the display and query functions
-	*/
-	public function build_display($name, $options = array());
-	/**
-	* build and render a display
-	* @param string $type the display type (list, table, grid, csv, etc..)
-	* @param array $model the model to get results from
-	* @param string $name the display/query name (admin, list, select, etc..).
-	* 										 For example, if you specify 'admin', then the the following model functions will be used:
-	* 										 query provider: query_admin
-	* 										 display provider: display_admin
-	* @param array $options parameters that will be passed to the display and query functions
-	*/
-	public function render_display($name, $options = array());
-	/**
-	* build and capture a display
-	* @param string $type the display type (list, table, grid, csv, etc..)
-	* @param array $model the model to get results from
-	* @param string $name the display/query name (admin, list, select, etc..).
-	* 										 For example, if you specify 'admin', then the the following model functions will be used:
-	* 										 query provider: query_admin
-	* 										 display provider: display_admin
-	* @param array $options parameters that will be passed to the display and query functions
-	*/
-	public function capture_display($name, $options = array());
 }

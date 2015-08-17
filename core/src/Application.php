@@ -11,7 +11,6 @@ class Application implements ApplicationInterface {
 
 	protected $controllers;
 	protected $models;
-	protected $db;
 	protected $router;
 	protected $request;
 	protected $response;
@@ -19,12 +18,11 @@ class Application implements ApplicationInterface {
 	protected $locator;
 
 	/**
-	 * constructor. connects to db and starts the session
+	 * constructor.
 	 */
 	public function __construct(
 		ControllerFactoryInterface $controllers,
 		ModelFactoryInterface $models,
-		DatabaseInterface $db,
 		RouterInterface $router,
 		SettingsInterface $settings,
 		ResourceLocatorInterface $locator,
@@ -32,7 +30,6 @@ class Application implements ApplicationInterface {
 	) {
 		$this->controllers = $controllers;
 		$this->models = $models;
-		$this->db = $db;
 		$this->router = $router;
 		$this->settings = $settings;
 		$this->locator = $locator;
@@ -78,18 +75,9 @@ class Application implements ApplicationInterface {
 	* @param string $key the model name
 	* @param string $value the function name
 	*/
-	protected function post_action($key, $value, $post=null) {
+	protected function post_action($key, $value, $post = array()) {
 		if ($object = $this->models->get($key)) {
-			error_scope($key);
-			if (isset($post['id'])) {
-				$permits = $this->db->query($key)->action($value)->condition($key.".id", $post['id'])->one();
-			} else {
-				$permits = $this->db->query("permits")->action($value, $key)->one();
-			}
-			if ($permits) $object->$value($post);
-			else return false;
-			error_scope("global");
-			return true;
+			return $object->post($value, $post);
 		}
 	}
 
@@ -97,7 +85,7 @@ class Application implements ApplicationInterface {
 	* check $_POST['action'] for posted actions and run them through post_act
 	*/
 	protected function check_post($post, $cookies) {
-		if (!empty($post['action'])) {
+		if (!empty($post['action']) && is_array($post['action'])) {
 			//validate csrf token for authenticated requests
 			if (logged_in()) {
 				$validated = false;

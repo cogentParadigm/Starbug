@@ -13,19 +13,19 @@
  * - $attributes: (optional) attributes for the table
  * - $view: (optional) view name. only show fields within this view
  */
-	$options = schema($model);
+	$label = $this->models->get($model)->label;
 	if ($dialog) {
-		efault($grid_attributes, array());
+		if (empty($grid_attributes)) $grid_attributes = array();
 		$grid_attributes['dialog'] = $model."_form";
 		$this->assign("grid_attributes", $grid_attributes);
 	}
 ?>
 <div class="panel panel-default">
-	<div class="panel-heading"><strong> <span><?php echo $options['label']; ?></span></strong></div>
+	<div class="panel-heading"><strong><span><?php echo $label; ?></span></strong></div>
 	<div class="panel-body">
 	<?php
 		$this->render(array($model."/admin-toolbar", "admin-toolbar"));
-		$this->render_display(ucwords($model)."Grid", array("attributes" => $grid_attributes));
+		$this->displays->render(ucwords($model)."Grid", array("attributes" => $grid_attributes));
 	?>
 	</div>
 </div>

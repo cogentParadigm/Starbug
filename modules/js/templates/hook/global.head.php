@@ -27,7 +27,7 @@
 			</script>
 	<?php } ?>
 	<?php
-		$scripts = $sb->config->get("info.scripts", 'themes/'.$request->theme);
+		$scripts = $this->config->get("info.scripts", 'themes/'.$request->theme);
 		efault($scripts, array());
 	?>
 	<?php foreach ($scripts as $script) { ?>

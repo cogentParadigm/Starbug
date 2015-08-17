@@ -74,14 +74,16 @@ class query implements IteratorAggregate, ArrayAccess {
 	public $store_on_errors = false;
 	protected $models;
 	protected $hook_builder;
+	protected $config;
 
 	/**
 	 * create a new query
 	 * @param string $collection the name of the primary table/collection to query
 	 * @param array $params parameters to merge into the query
 	 */
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, $collection, $params = array()) {
+	function __construct(DatabaseInterface $db, ConfigInterface $config, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, $collection, $params = array()) {
 		$this->db = $db;
+		$this->config = $config;
 		$this->models = $models;
 		$this->hook_builder = $hook_builder;
 		$params = star($params);
@@ -237,7 +239,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @param string $collection the name of the table or collection
 	 */
 	function on($expr, $collection = "") {
-		efault($collection, $this->last_collection);
+		if (empty($collection)) $collection = $this->last_collection;
 		$this->query['on'][$collection] = $expr;
 		$this->dirty();
 		return $this;
@@ -254,7 +256,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		$return = false;
 		$parsed = $this->parse_collection($field);
 		list($field, $alias) = array($parsed['collection'], $parsed['alias']);
-		efault($collection, $this->last_collection);
+		if (empty($collection)) $collection = $this->last_collection;
 		$table = $this->query['from'][$collection];
 		$schema = column_info($table, $field);
 		if ($schema['entity'] !== $table) {
@@ -274,7 +276,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			if (isset($schema['null'])) $type = "left";
 			$this->join($ref[0]." as ".$collection."_".$alias)->on($collection."_".$alias.".".$ref[1]."=".$collection.".".$field);
 		} else if ($this->models->has($schema['type'])) {
-			$type_schema = schema($schema['type']);
+			$type_schema = $this->config->get($schema['type'], 'json');
 			if (is_null($token)) $token = empty($type_schema['label_select']) ? $collection."_".$alias.".id" : str_replace($schema['type'], $collection."_".$alias, $type_schema['label_select']);
 			else $token = $collection."_".$alias.".".$token;
 			if (empty($schema['table'])) $schema['table'] = $table."_".$field;
@@ -595,7 +597,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		if (empty($fields)) {
 			$fieldsets = array();
 			foreach ($this->query['from'] as $alias => $model) {
-				$schema = schema($model);
+				$schema = $this->config->get($model, 'json');
 				if (!empty($schema['search']) && !isset($fieldsets[$model])) $fieldsets[$model] = $schema['search'];
 			}
 			$fields = implode(",", $fieldsets);
@@ -614,7 +616,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	}
 
 	function action($action, $collection = "") {
-		efault($collection, $this->last_collection);
+		if (empty($collection)) $collection = $this->last_collection;
 		if ($this->has($collection)) {
 			$type = $this->query['from'][$collection];
 			$base_type = entity_base($type);
@@ -748,9 +750,9 @@ class query implements IteratorAggregate, ArrayAccess {
 		$query = $this->build_query();
 
 		if ($this->mode === "query") {
-			if (empty($query['SELECT'])) error("Missing SELECT clause for query.", "global");
+			if (empty($query['SELECT'])) $this->error("Missing SELECT clause for query.", "global");
 		} else if ($this->mode === "update") {
-			if (empty($query['SET'])) error("Missing SET clause for update query.", "global");
+			if (empty($query['SET'])) $this->error("Missing SET clause for update query.", "global");
 		}
 
 		foreach ($query as $key => $clause) $sql[$key] = $key." ".$clause;
@@ -851,7 +853,7 @@ class query implements IteratorAggregate, ArrayAccess {
 				$from = "`".P($collection)."`";
 				if ($this->mode != "insert" && $this->mode != "truncate") $from .= " AS `".$alias."`";
 			} else {
-				efault($this->query['join'][$alias], "LEFT");
+				if (empty($this->query['join'][$alias])) $this->query['join'][$alias] = "LEFT";
 				$collection_segment = ("(" === substr($collection, 0, 1)) ? $collection : "`".P($collection)."`";
 				$segment = " ".$this->query['join'][$alias]." JOIN ".$collection_segment." AS `".$alias."`";
 				if (empty($this->query['on'][$alias])) {
@@ -1077,7 +1079,7 @@ class query implements IteratorAggregate, ArrayAccess {
 					//in a select query, the token may be '*'
 					if ($token == "*") {
 						//WHICH WE LEAVE AS IS FOR NOW
-						//$schema = schema($table.".fields");
+						//$schema = oldschemafunction($table.".fields");
 						//foreach ($schema as $n => $f) {
 							//if ($f['type'] == "terms" || $f['type'] == "category") $this->select($collection.".".$n);
 						//}
@@ -1228,8 +1230,6 @@ class query implements IteratorAggregate, ArrayAccess {
 	}
 
 	function validate($phase = query::PHASE_VALIDATION) {
-		$oldscope = error_scope();
-		error_scope($this->model);
 		$model = $this->models->get($this->model);
 		foreach ($model->hooks as $column => $hooks) {
 			if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) $hooks['required'] = "";
@@ -1237,7 +1237,6 @@ class query implements IteratorAggregate, ArrayAccess {
 				$this->invoke_hook($phase, $column, $hook, $argument);
 			}
 		}
-		error_scope($oldscope);
 		if ($phase == query::PHASE_VALIDATION) $this->validated = true;
 	}
 
@@ -1278,6 +1277,27 @@ class query implements IteratorAggregate, ArrayAccess {
 		}
 	}
 
+	public function errors($key = "", $values = false) {
+		return $this->db->errors($key, $values);
+	}
+
+	public function error($error, $field = "global", $model="") {
+		if (empty($model)) $model = $this->model;
+		$this->db->error($error, $field, $model);
+	}
+
+	public function success($action) {
+		$args = func_get_args();
+		if (count($args) == 1) $args = array($this->model, $args[0]);
+		return $this->db->success($args[0], $args[1]);
+	}
+
+	public function failure($action) {
+		$args = func_get_args();
+		if (count($args) == 1) $args = array($this->model, $args[0]);
+		return $this->db->failure($args[0], $args[1]);
+	}
+
 	/**************************************************************
 	 * query execution
 	 **************************************************************/
@@ -1288,7 +1308,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 */
 	function execute($params = array(), $debug = false) {
 		$this->build();
-		if (errors() && $this->mode != "query" && false === $this->store_on_errors) return false;
+		if ($this->errors() && $this->mode != "query" && false === $this->store_on_errors) return false;
 		if (empty($params)) $params = $this->parameters;
 		if ($debug) {
 			echo $this->interpolate();
@@ -1364,7 +1384,7 @@ class query implements IteratorAggregate, ArrayAccess {
 
 	function count($params = array()) {
 		$this->build();
-		if (errors()) return false;
+		if ($this->errors()) return false;
 		if (empty($params)) $params = $this->parameters;
 		$records = $this->db->prepare($this->count_sql);
 		$records->execute($params);

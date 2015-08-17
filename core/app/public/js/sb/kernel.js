@@ -59,19 +59,19 @@ define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, r
 				if (rt.length > 0 || ed.length > 0) {
 					var script = window.document.createElement('script');
 					script.type = 'text/javascript';
-					script.src = '//tinymce.cachefly.net/4.1/tinymce.min.js';
+					script.src = '//tinymce.cachefly.net/4.2/tinymce.min.js';
 					var done = false;
 					script.onload = script.onreadystatechange = function() {
 						if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
 							done = true;
 							var tiny_mce_browser_callback = function(field_name, url, type, win){
 								window.SetUrl=function(url,width,height,caption){
-								 var input_field = win.document.getElementById(field_name);
-								 input_field.setAttribute('value', url);
-								 if(caption){
+									var input_field = win.document.getElementById(field_name);
+									input_field.value = url;
+									if(caption){
 										input_field.setAttribute('alt', caption);
-								 }
-								}
+									}
+								};
 								window.open(WEBSITE_URL+'admin/media?modal=true','media','modal,width=1020,height=600');
 							};
 
@@ -92,8 +92,27 @@ define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, r
 								image_advtab: true,
 								formats: {
 									alignleft: {selector:'img', styles:{'margin':'0 15px 15px 0', 'float':'left'}},
-									alignright: {selector:'img', styles:{'margin':'0 0 15px 15px', 'float':'right'}}
+									alignright: {selector:'img', styles:{'margin':'0 0 15px 15px', 'float':'right'}},
+									btndefault: {inline:'a', classes:'btn btn-default', attributes:{href:'[uri:home]'}},
+									btnprimary: {inline:'a', classes:'btn btn-primary', attributes:{href:'[uri:home]'}},
+									btnsuccess: {inline:'a', classes:'btn btn-success', attributes:{href:'[uri:home]'}},
+									btninfo: {inline:'a', classes:'btn btn-info', attributes:{href:'[uri:home]'}},
+									btnwarning: {inline:'a', classes:'btn btn-warning', attributes:{href:'[uri:home]'}},
+									btndanger: {inline:'a', classes:'btn btn-danger', attributes:{href:'[uri:home]'}}
 								},
+								style_formats_merge:true,
+								style_formats: [
+									{
+										title:"Buttons", items: [
+											{title:"Default Button", format:"btndefault"},
+											{title:"Primary Button", format:"btnprimary"},
+											{title:"Success Button", format:"btnsuccess"},
+											{title:"Info Button", format:"btninfo"},
+											{title:"Warning Button", format:"btnwarning"},
+											{title:"Danger Button", format:"btndanger"}
+										]
+									}
+								],
 								file_browser_callback: tiny_mce_browser_callback
 							};
 

@@ -33,6 +33,11 @@ function(dojo, strings, put, on){
 				});
 			}
 
+			//copy button
+			var chref = base_url + '/create?copy='+row.id;
+			if (typeof grid.dialog == 'string') chref = 'javascript:'+grid.dialog+'.show(false, {copy:'+row.id+'})';
+			var copy = put(div, 'a.Copy.btn.btn-default[title=Copy][href='+chref+']', put('div.fa.fa-files-o'));
+
 			//delete button
 			var remove = 'javascript:;';
 			remove = put(div, 'a.Delete.btn.btn-default[title=Delete][href='+remove+']', put('div.fa.fa-times'));

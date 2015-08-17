@@ -9,5 +9,6 @@ $modules = array(
 	"css" => "modules/css",
 	"js" => "modules/js",
 	"theme" => "app/themes/starbug-1",
+	"var" => "var",
 	"app" => "app"
 );

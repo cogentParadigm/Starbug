@@ -1,7 +1,7 @@
 <?php
-  $factory = sb()->config->get("models", "factory");
+  $factory = $config->get("models", "factory");
   $factory = isset($factory[$model]) ? $factory[$model] : array();
-  extract(schema($model));
+  extract($config->get($model, "json"));
   echo '<?php'."\n";
 ?>
 /**
@@ -12,9 +12,14 @@ class <?php echo ucwords($name); ?>Model extends Table {
 
   public $type = "<?php echo $name; ?>";
   public $base = "<?php echo $base; ?>";
+  public $label = "<?php echo $label; ?>";
+  public $singular = "<?php echo $singular; ?>";
+  public $singular_label = "<?php echo ucwords(str_replace(array("-", "_"), array(" ", " "), $singular)); ?>";
 
-  function __construct(DatabaseInterface $db<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
-    $this->db = $db;<?php foreach ($factory as $n => $t) echo "\n\t\t\$this->".$n.' = $'.$n.';'; ?>
+
+  function __construct(DatabaseInterface $db, ModelFactoryInterface $models<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
+    $this->db = $db;
+    $this->models = $models;<?php foreach ($factory as $n => $t) echo "\n\t\t\$this->".$n.' = $'.$n.';'; ?>
 
     $this->init();
   }

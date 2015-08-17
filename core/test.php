@@ -12,10 +12,8 @@ if (!defined("DEFAULT_DATABASE")) define("DEFAULT_DATABASE", "test");
 
 define("SB_TEST_MODE", true);
 
-if (!defined("SB_CLI")) define("SB_CLI", true);
-
 // initialize
-include(dirname(__FILE__)."/init.php");
+include(dirname(__FILE__)."/cli.php");
 
 foreach ($locator->locate("autoload.php", "tests") as $global_include) include($global_include);
 foreach ($locator->locate("global_functions.php", "tests") as $global_include) include($global_include);

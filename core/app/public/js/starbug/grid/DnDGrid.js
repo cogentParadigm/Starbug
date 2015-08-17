@@ -3,11 +3,12 @@ define(["dojo/_base/Deferred", "starbug/grid/Grid", "dgrid/extensions/DnD", "dgr
 		orderColumn:'position',
 		dndParams:{
 			withHandles:true,
+			allowNested:true,
 			onDropInternal: function(nodes, copy, targetItem) {
 
 				var store = this.grid.collection, grid = this.grid, targetRow, targetPosition;
 
-				if (!this._targetAnchor) return
+				if (!this._targetAnchor) return;
 
 				targetRow = grid.row(this._targetAnchor);
 				targetPosition = parseInt(targetRow.data[grid.orderColumn]);

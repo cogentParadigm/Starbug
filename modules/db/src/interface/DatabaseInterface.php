@@ -18,7 +18,6 @@ interface DatabaseInterface {
 	 * @param string $column optional column name
 	 */
 	function get($collection, $conditions = array(), $options = array());
-
 	/**
 	 * query the database
 	 * @param string $froms comma delimeted list of tables to join. 'users' or 'uris,system_tags'
@@ -27,7 +26,6 @@ interface DatabaseInterface {
 	 * @return array record or records
 	 */
 	function query($collection);
-
 	/**
 	 * store data in the database
 	 * @param string $name the name of the table
@@ -36,7 +34,6 @@ interface DatabaseInterface {
 	 * @return array validation errors
 	 */
 	function store($name, $fields = array(), $from = "auto");
-
 	/**
 	 * queue data to be stored in the database pending validation of other data
 	 * @param string $name the name of the table
@@ -45,21 +42,21 @@ interface DatabaseInterface {
 	 * @return array validation errors
 	 */
 	function queue($name, $fields = array(), $from = "auto", $unshift = false);
-
 	/**
 	 * proccess the queue of data for storage
 	 */
 	function store_queue();
-
 	/**
 	 * remove from the database
 	 * @param string $from the name of the table
 	 * @param string $where the WHERE conditions on the DELETE
 	 */
 	function remove($from, $where);
-
 	public function set_debug($debug);
-
 	public function exec($statement);
+	public function errors($key = "", $values = false);
+	public function error($error, $field = "global", $scope = "global");
+	public function success($model, $action);
+	public function failure($model, $action);
 }
 ?>

@@ -44,15 +44,64 @@ class Table {
 	/**
 	 * @var array The mixed-in objects which hold the imported functions
 	 */
+	public $store_on_errors = false;
+
+	protected $models;
+	public $action = false;
 
 	/**
 	 * Table constructor
 	 * @param string $type the un-prefixed table name
 	 * @param array $filters the column filters
 	 */
-	function __construct(DatabaseInterface $db) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
 		$this->db = $db;
+		$this->models = $models;
+		//$this->logger = $loggers->get(get_class($this));
 		$this->init();
+	}
+
+	public function errors($key = "", $values = false) {
+		$key = (empty($key)) ? $this->type : $this->type.".".$key;
+		return $this->db->errors($key, $values);
+	}
+
+	public function error($error, $field = "global", $model="") {
+		if (empty($model)) $model = $this->type;
+		$this->db->error($error, $field, $model);
+	}
+
+	public function success($action) {
+		$args = func_get_args();
+		if (count($args) == 1) $args = array($this->type, $args[0]);
+		return $this->db->success($args[0], $args[1]);
+	}
+
+	public function failure($action) {
+		$args = func_get_args();
+		if (count($args) == 1) $args = array($this->type, $args[0]);
+		return $this->db->failure($args[0], $args[1]);
+	}
+
+	/**
+	* run a model action if permitted
+	* @param string $key the model name
+	* @param string $value the function name
+	*/
+	public function post($action, $data = array()) {
+		$this->action = $action;
+		if (isset($data['id'])) {
+			$permits = $this->db->query($this->type)->action($action)->condition($this->type.".id", $data['id'])->one();
+		} else {
+			$permits = $this->db->query("permits")->action($action, $this->type)->one();
+		}
+		if ($permits) {
+			$this->$action($data);
+			return true;
+		} else {
+			$this->error("Access Denied");
+			return false;
+		}
 	}
 
 	protected function init() {
@@ -129,15 +178,16 @@ class Table {
 		return $records;
 	}
 
-	function filter($data) {
+	function filter($data, $action = "") {
+		if (!empty($this->base)) {
+			$data = $this->models->get($this->base)->filter($data, $action);
+		}
 		return $data;
 	}
 
-	function display_search($display, $ops) {
-		$display->template = "form/inline";
-		$display->attributes['class'][] = 'form-inline';
-		$display->submit_label = "Search";
-		$display->add("keywords  input_type:text  nolabel:");
+
+	function build_display($display) {
+		$display->add("id");
 	}
 
 	function query_filters($action, $query, &$ops) {
@@ -148,6 +198,5 @@ class Table {
 		}
 		return $query;
 	}
-
 }
 ?>

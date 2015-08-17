@@ -1,8 +1,11 @@
 <?php
 class hook_store_alias extends QueryHook {
+	function __construct(ModelFactoryInterface $models) {
+		$this->models = $models;
+	}
 	function validate(&$query, $key, $value, $column, $alias) {
 		if (!empty($value) && !is_numeric($value) && $value != "NULL") {
-			$referenced_model = explode(" ", schema($query->model.".fields.".$column.".references"));
+			$referenced_model = explode(" ", $this->models->get($query->model)->hooks[$column]["references"]);
 			// $alias might be '%first_name% %last_name%'
 			$alias = explode("%", $alias);
 			$match = '';

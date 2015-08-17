@@ -7,37 +7,70 @@
  * @author Ali Gangji <ali@neonrain.com>
  */
 
-class Mailer extends PHPMailer implements MailerInterface {
+class Mailer implements MailerInterface {
 
 	private $host;
 	private $username;
 	private $password;
 	private $from_email;
 	private $from_name;
+	private $port;
+	private $secure;
 	private $macro;
 
 	function __construct(SettingsInterface $settings, MacroInterface $macro) {
+		$this->settings = $settings;
 		$this->macro = $macro;
 		$this->host = $settings->get("email_host");
 		$this->username = $settings->get("email_username");
 		$this->password = $settings->get("email_password");
 		$this->from_email = $settings->get("email_address");
 		$this->from_name = $settings->get("site_name");
-		$port = $settings->get("email_port");
-		$secure = $settings->get("email_secure");
+		$this->port = $settings->get("email_port");
+		$this->secure = $settings->get("email_secure");
+	}
+
+	function create() {
+		$mailer = new PHPMailer(true);
 		if ($this->host) {
-			$this->IsSMTP(); // send via SMTP
-			$this->Host     = $this->host;
-			$this->SMTPAuth = true;  // turn on SMTP authentication
-			$this->Username = $this->username;    // SMTP username
-			$this->Password = $this->password;    // SMTP password
+			$mailer->IsSMTP(); // send via SMTP
+			$mailer->Host     = $this->host;
+			$mailer->SMTPAuth = true;  // turn on SMTP authentication
+			$mailer->Username = $this->username;    // SMTP username
+			$mailer->Password = $this->password;    // SMTP password
 		}
-		if ($this->from_email) $this->From = $this->from_email;
-		if ($this->from_name) $this->FromName = $this->from_name;
-		if (!empty($port)) $this->Port = $port;
-		if (!empty($secure)) $this->SMTPSecure = $secure;
-		$this->WordWrap = 50;
-		$this->IsHTML(true);
+		if ($this->from_email) $mailer->From = $this->from_email;
+		if ($this->from_name) $mailer->FromName = $this->from_name;
+		if (!empty($this->port)) $mailer->Port = $this->port;
+		if (!empty($this->secure)) $mailer->SMTPSecure = $this->secure;
+		$mailer->WordWrap = 50;
+		$mailer->IsHTML(true);
+		return $mailer;
+	}
+
+	function render($options = array(), $data = array()) {
+		$data['url_flags'] = 'u';
+		//get template params
+		if (!empty($options['template'])) {
+			$template = query("email_templates")->condition("name", $options['template'])->one();
+			if (!empty($template)) $options = array_merge($template, $options);
+		}
+		//set mailer params
+		$arr = array("to", "cc", "bcc");
+		$replace = array("from", "from_name", "subject", "body", "to", "cc", "bcc");
+		foreach ($replace as $key) {
+			if (!empty($options[$key])) {
+				if (in_array($key, $arr) && !is_array($options[$key])) {
+					$options[$key] = explode(",", $options[$key]);
+				}
+				if (is_array($options[$key])) {
+					foreach ($options[$key] as $idx => $value) $options[$key][$idx] = $this->macro->replace(trim($value), $data);
+				} else {
+					$options[$key] = $this->macro->replace($options[$key], $data);
+				}
+			}
+		}
+		return $options;
 	}
 
 	/**
@@ -45,55 +78,32 @@ class Mailer extends PHPMailer implements MailerInterface {
 	 * @param array $options
 	 * @param array $data
 	 */
-	function send_email($options = array(), $data = array()) {
-		$options = $options;
-		$data = $data;
-		$data['url_flags'] = 'u';
-
-		//get template params
-		if (!empty($options['template'])) {
-			$template = query("email_templates")->condition(array(
-				"name" => $options['template'],
-				"email_templates.statuses" => "published"
-			))->one();
-			if (!empty($template)) $options = array_merge($template, $options);
-		}
-
+	function send($options = array(), $data = array(), $rendered=false) {
+		$mailer = $this->create();
+		if (!$rendered) $options = $this->render($options, $data);
 		//set mailer params
-		if (!empty($options['from'])) $this->From = $this->macro->replace($options['from'], $data);
-		if (!empty($options['from_name'])) $this->FromName = $this->macro->replace($options['from_name'], $data);
-		if (!empty($options['subject'])) $this->Subject = $this->macro->replace($options['subject'], $data);
-		if (!empty($options['body'])) $this->Body = $this->macro->replace($options['body'], $data);
+		if (!empty($options['from'])) $mailer->From = $options['from'];
+		if (!empty($options['from_name'])) $mailer->FromName = $options['from_name'];
+		if (!empty($options['subject'])) $mailer->Subject = $options['subject'];
+		if (!empty($options['body'])) $mailer->Body = $options['body'];
 		if (!empty($options['to'])) {
-			$to = $options['to'];
-			if (!is_array($to)) $to = explode(",", $to);
-			foreach ($to as $email) $this->AddAddress($this->macro->replace(trim($email), $data));
+			foreach ($options['to'] as $email) $mailer->AddAddress($email);
 		}
 		if (!empty($options['cc'])) {
-			if (!is_array($options['cc'])) $options['cc'] = explode(',', $options['cc']);
-			foreach ($options['cc'] as $cc) $this->AddCC($this->macro->replace($cc, $data));
+			foreach ($options['cc'] as $cc) $mailer->AddCC($cc);
 		}
 		if (!empty($options['bcc'])) {
-			if (!is_array($options['bcc'])) $options['bcc'] = explode(',', $options['bcc']);
-			foreach ($options['bcc'] as $bcc) $this->AddBCC($this->macro->replace($bcc, $data));
+			foreach ($options['bcc'] as $bcc) $mailer->AddBCC($bcc);
 		}
 		if (!empty($options['attachments'])) {
 			$attachments = $options['attachments'];
 			foreach ($attachment as $a) {
-				if (is_array($a)) $this->AddAttachment($a[0], $a[1]);
-				else $this->AddAttachment($a);
+				if (is_array($a)) $mailer->AddAttachment($a[0], $a[1]);
+				else $mailer->AddAttachment($a);
 			}
 		}
-
 		//send mail
-		$result = $this->Send();
+		$result = $mailer->Send();
 		return $result;
-	}
-
-	/**
-	 * get errors
-	 */
-	function errors() {
-		return $this->ErrorInfo;
 	}
 }

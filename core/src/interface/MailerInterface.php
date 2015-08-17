@@ -14,10 +14,5 @@ interface MailerInterface {
 	 * @param array $options
 	 * @param array $data
 	 */
-	function send_email($options = array(), $data = array());
-
-	/**
-	 * get errors
-	 */
-	function errors();
+	function send($options = array(), $data = array(), $rendered=false);
 }

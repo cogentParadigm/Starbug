@@ -145,7 +145,7 @@ class ItemDisplay extends Display {
 	 * render the display with the specified items
 	 */
 	function render($query=true) {
-		if ($query) $this->query();
+		if ($query && !empty($this->model)) $this->query();
 		parent::render();
 	}
 

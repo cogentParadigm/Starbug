@@ -11,10 +11,10 @@
  */
 class Macro implements MacroInterface {
 
-	private $locator;
+	private $hook_builder;
 
-	public function __construct(ResourceLocatorInterface $locator) {
-		$this->locator = $locator;
+	public function __construct(HookFactoryInterface $hooks) {
+		$this->hook_builder = $hooks;
 	}
 
 	/**
@@ -83,7 +83,14 @@ class Macro implements MacroInterface {
 	private function replacements($type, $tokens, $data = array()) {
 		$replacements = array();
 		//gather replacements
-		foreach ($this->locator->locate($type.".tokens.php", "hooks") as $f) include($f);
+		if (!isset($this->hooks[$type])) {
+			$this->hooks[$type] = $this->hook_builder->get("macro/".$type);
+		}
+		foreach ($this->hooks[$type] as $hook) {
+			foreach ($tokens as $name => $token) {
+				$replacements[$token] = $hook->replace($this, $name, $token, $data);
+			}
+		}
 		//populate overrides from data
 	 if (!empty($data[$type]) && is_array($data[$type])) {
 	  foreach ($tokens as $index => $token) {

@@ -19,12 +19,12 @@ class Template implements TemplateInterface {
 		"scope" => "templates",
 		"all" => false
 	);
-	protected $displays;
+	protected $helpers;
 
-	function __construct(ResourceLocatorInterface $locator, DisplayFactoryInterface $displays = null, $options = array()) {
+	function __construct(ResourceLocatorInterface $locator, HelperFactoryInterface $helpers = null, $options = array()) {
 		$this->options = $options + $this->defaults;
 		$this->locator = $locator;
-		$this->displays = $displays;
+		$this->helpers = $helpers;
 	}
 
 	/**
@@ -80,7 +80,7 @@ class Template implements TemplateInterface {
 	 * @copydoc TemplateInterface::render
 	 */
 	function render($paths = array(""), $params = array(), $options = array()) {
-		$template = new static($this->locator, $this->displays);
+		$template = new static($this->locator, $this->helpers);
 		$template->output($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
 	}
 
@@ -88,7 +88,7 @@ class Template implements TemplateInterface {
 	 * @copydoc TemplateInterface::capture
 	 */
 	function capture($paths = array(""), $params = array(), $options = array()) {
-		$template = new static($this->locator, $this->displays);
+		$template = new static($this->locator, $this->helpers);
 		return $template->get($paths, $params + $this->vars, $options + array("scope" => "templates", "all" => false) + $this->options);
 	}
 
@@ -124,26 +124,7 @@ class Template implements TemplateInterface {
 	 }
 	}
 
-	/**
-	 * @copydoc TemplateInterface::build_display
-	 */
-	function build_display($name, $options = array()) {
-		$display = $this->displays->get($name);
-		$display->build($options);
-		return $display;
-	}
-	/**
-	 * @copydoc TemplateInterface::render_display
-	 */
-	public function render_display($name, $options = array()) {
-		$display = $this->build_display($name, $options);
-		$display->render();
-	}
-	/**
-	 * @copydoc TemplateInterface::capture_display
-	 */
-	public function capture_display($name, $options = array()) {
-		$display = $this->build_display($name, $options);
-		return $display->capture();
+	public function __get($name) {
+		return $this->helpers->get(ucwords($name)."Helper")->helper();
 	}
 }

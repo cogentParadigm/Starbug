@@ -45,6 +45,8 @@ class Database implements DatabaseInterface {
 	*/
 	public $queue;
 
+	public $errors = array();
+
 	public $operators = array(
 		'=' => 1,
 		'>' => 1,
@@ -69,16 +71,12 @@ class Database implements DatabaseInterface {
 		$this->hooks = $hooks;
 		$this->config = $config;
 		$params = $config->get("db/".$database_name);
-		try {
-			$this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
-			$this->set_debug(false);
-			$this->prefix = $params['prefix'];
-			$this->database_name = $params['db'];
-			if (defined('Etc::TIME_ZONE')) $this->exec("SET time_zone='".Etc::TIME_ZONE."'");
-		} catch (PDOException $e) {
-			die("PDO CONNECTION ERROR: " . $e->getMessage() . "\n");
-		}
-		$this->queue = new queue();
+		$this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
+		$this->set_debug(false);
+		$this->prefix = $params['prefix'];
+		$this->database_name = $params['db'];
+		if (defined('Etc::TIME_ZONE')) $this->exec("SET time_zone='".Etc::TIME_ZONE."'");
+		$this->queue = new QueryQueue();
 	}
 
 	public function set_debug($debug) {
@@ -104,12 +102,12 @@ class Database implements DatabaseInterface {
 
 		//loop through the input arguments
 		foreach ($args as $idx => $a) {
-				if ($idx == 0) $collection = $a; //first argument is the collection
-				else if ($idx == 1) $conditions = star($a); //second argument are the conditions
-				else {
-					$arg = star($a);
-					if (!empty($arg['orderby'])) $arg['sort'] = $arg['orderby']; //DEPRECATED: use sort
-				}
+			if ($idx == 0) $collection = $a; //first argument is the collection
+			else if ($idx == 1) $conditions = star($a); //second argument are the conditions
+			else {
+				$arg = star($a);
+				if (!empty($arg['orderby'])) $arg['sort'] = $arg['orderby']; //DEPRECATED: use sort
+			}
 		}
 		$args = $arg;
 
@@ -150,7 +148,7 @@ class Database implements DatabaseInterface {
 		if (!empty($args['params'])) $replacements = $args['params'];
 
 		//create query object
-		$query = new query($this, $this->models, $this->hooks, $froms);
+		$query = new query($this, $this->config, $this->models, $this->hooks, $froms);
 
 		//call functions
 		foreach ($args as $k => $v) {
@@ -188,7 +186,7 @@ class Database implements DatabaseInterface {
 	function queue($name, $fields = array(), $from = "auto", $unshift = false) {
 		if (!is_array($fields)) $fields = star($fields);
 
-		$query = new query($this, $this->models, $this->hooks, $name);
+		$query = new query($this, $this->config, $this->models, $this->hooks, $name);
 		foreach ($fields as $col => $value) $query->set($col, $value);
 
 		if ($from === "auto" && !empty($fields['id'])) $from = array("id" => $fields['id']);
@@ -200,6 +198,8 @@ class Database implements DatabaseInterface {
 		} else {
 			$query->mode("insert");
 		}
+
+		if (sb($name)->store_on_errors) $query->store_on_errors = true;
 
 		if ($unshift) $this->queue->unshift($query);
 		else $this->queue->push($query);
@@ -219,15 +219,40 @@ class Database implements DatabaseInterface {
 	*/
 	function remove($from, $where) {
 		if (!empty($where)) {
-			$del = new query($this, $this->models, $this->hooks, $from);
+			$del = new query($this, $this->config, $this->models, $this->hooks, $from);
 			$this->record_count = $del->condition(star($where))->delete();
 			return $this->record_count;
 		}
 	}
 
+	public function errors($key = "", $values = false) {
+		if (is_bool($key)) {
+			$values = $key;
+			$key = "";
+		}
+		$parts = explode(".", $key);
+		$errors = $this->errors;
+		if (!empty($key)) foreach ($parts as $p) $errors = $errors[$p];
+		if ($values) return $errors;
+		else return (!empty($errors));
+	}
+
+	public function error($error, $field = "global", $scope = "global") {
+		$this->errors[$scope][$field][] = $error;
+		//$this->logger->info("{model}::{action} - {field}:{message}", array("model" => $model, "action" => $this->request->data['action'][$model], "field" => $field, "message" => $error));
+	}
+
+	public function success($model, $action) {
+		return (($this->models->get($model)->action == $action) && (empty($this->errors)));
+	}
+
+	public function failure($model, $action) {
+		return (($this->models->get($model)->action == $action) && (!empty($this->errors)));
+	}
+
 	public function __call($method, $args) {
 		if (method_exists($this->pdo, $method)) return call_user_func_array(array($this->pdo, $method), $args);
-		throw new Exception ('Call to undefined method/class function: ' . $method);
+		throw new Exception('Call to undefined method/class function: ' . $method);
 	}
 }
 ?>

@@ -23,25 +23,25 @@ class Harness {
 	/**
 	 * @var array fixture layers from etc/fixtures.json
 	 */
-	var $layers = array();
+	public $layers = array();
 	/**
 	 * @var array loaded fixtures
 	 */
-	var $fixtures = array();
+	public $fixtures = array();
 
 	/**
 	 * constructor. loads layers
 	 */
 	function __construct() {
-		$this->layers = config("fixtures");
+		$this->layers = json_decode(file_get_contents("etc/fixtures.json"), true);
 	}
 
-	function  clean() {
+	function clean() {
 		foreach ($this->fixtures as $fixture) $fixture->_tearDown();
 		$this->fixtures = array();
 	}
 
-	function layer($layer, $up=true) {
+	function layer($layer, $up = true) {
 		$dependencies = $this->layers[$layer];
 		if (!$up) $dependencies = array_reverse($dependencies);
 		foreach ($dependencies as $dep) {
@@ -49,8 +49,8 @@ class Harness {
 			else if (file_exists(BASE_DIR."/app/fixtures/".ucwords($dep)."Fixture.php")) $this->fixture($dep, $up);
 		}
 	}
-	
-	function fixture($fixture, $up=true) {
+
+	function fixture($fixture, $up = true) {
 		if (empty($this->fixtures[$fixture])) {
 			$classname = ucwords($fixture)."Fixture";
 			include(BASE_DIR."/app/fixtures/".$classname.".php");
@@ -59,7 +59,6 @@ class Harness {
 		if ($up) $this->fixtures[$fixture]->_setUp();
 		else $this->fixtures[$fixture]->_tearDown();
 	}
-
 }
 /**
  * testing harness

@@ -1,18 +1,18 @@
 <?php
 class Renderable {
 
-	var $tagName = 'div';
-	var $selfClosing = false;
-	var $attributes = array();
-	var $childNodes = array();
-	var $textContent = "";
-	var $parentNode = null;
-	var $innerHTML = "";
+	public $tagName = 'div';
+	public $selfClosing = false;
+	public $attributes = array();
+	public $childNodes = array();
+	public $textContent = "";
+	public $parentNode = null;
+	public $innerHTML = "";
 
 	/**
 	* @var array assigned variables
 	*/
-	var $vars = array();
+	public $vars = array();
 
 
 	function __construct($selector, $children = array(), $content = "") {

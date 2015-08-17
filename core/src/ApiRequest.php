@@ -18,13 +18,15 @@ class ApiRequest {
 		"jsonp" => "application/x-javascript",
 		"csv" => "text/csv"
 	);
-	var $result = "";
-	var $whitelisting = false;
-	var $query = true;
-	var $headers = true;
-	var $model;
-	var $action;
-	private $context;
+	public $result = "";
+	public $whitelisting = false;
+	public $query = true;
+	public $headers = true;
+	public $model;
+	public $action;
+	public $template = false;
+	public $data = array();
+	public $options = array();
 
 	/**
 	 * API Request constructor
@@ -33,8 +35,6 @@ class ApiRequest {
 	 * @param star $ops additional options, query paramaters if [object] is a model or group of models
 	 */
 	function __construct($what, $ops = "", $headers = true) {
-	 //$this->context = $context;
-		global $sb;
 	 if (defined("ETC::API_WHITELIST")) {
 	  if (in_array($_SERVER['REMOTE_ADDR'], explode(",", Etc::API_WHITELIST)) && !sb()->user) {
 		  $this->whitelisting = true;
@@ -64,68 +64,70 @@ class ApiRequest {
 	 * @param star $ops additional options
 	 */
 	function __call($model, $args) {
-		global $sb;
 		list($action, $format, $ops) = $args;
 		$this->model = $model;
 		$query = entity_query($model);
-	 if ((!empty($_POST['action'][$model])) && (empty($sb->errors[$model]))) {
-		 $id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : sb($model)->insert_id;
-		 $query->condition($model.".id", $id);
-	 }
+		if ((!empty($_POST['action'][$model])) && (empty(sb()->errors[$model]))) {
+			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : sb($model)->insert_id;
+			$query->condition($model.".id", $id);
+		}
 		//if (!empty($_GET['keywords'])) $query->search($_GET['keywords']);
 
 		//paging
-	 if (isset($_SERVER['HTTP_RANGE'])) {
-		 list($start, $finish) = explode("-", end(explode("=", $_SERVER['HTTP_RANGE'])));
-		 //$start = max((int) $start, 1);
-		 $ops['paged'] = true;
-		 $ops['limit'] = 1 + (int) $finish - (int) $start;
-		 $ops['page'] = 1 + (int) $start/$ops['limit'];
-	 }
+		if (isset($_SERVER['HTTP_RANGE'])) {
+			list($start, $finish) = explode("-", end(explode("=", $_SERVER['HTTP_RANGE'])));
+			//$start = max((int) $start, 1);
+			$ops['paged'] = true;
+			$ops['limit'] = 1 + (int) $finish - (int) $start;
+			$ops['page'] = 1 + (int) $start/$ops['limit'];
+		}
 		$action_name = "query_".$action;
 		$query = sb($model)->query_filters($action, $query, $ops);
 		$query = sb($model)->$action_name($query, $ops);
 
-	 if ($ops['paged'] && $ops['limit']) {
-		 $query->limit($ops['limit']);
-		 $pager = $query->pager($ops['page']);
-	 } else if ($ops['limit']) {
-	  $ops['paged'] = true;
-	  $ops['page'] = $ops['skip'] ? intval($ops['skip'])/intval($ops['limit']) : 1;
-	  $query->limit($ops['limit']);
-	  $pager = $query->pager($ops['page']);
-	 }
+		if ($ops['paged'] && $ops['limit']) {
+			$query->limit($ops['limit']);
+			$pager = $query->pager($ops['page']);
+		} else if ($ops['limit']) {
+			$ops['paged'] = true;
+			$ops['page'] = $ops['skip'] ? intval($ops['skip'])/intval($ops['limit']) : 1;
+			$query->limit($ops['limit']);
+			$pager = $query->pager($ops['page']);
+		}
+
+		$this->options = $ops;
 
 		$data = (is_array($query) && isset($query['data'])) ? $query['data'] : $query->all();
+		$this->data = $data;
 		$f = strtoupper($format);
 		$error = $f."errors";
-	 if (empty($sb->errors[$model])) {
-	  if (!empty($data)) {
-		  $add = (isset($pager) && $pager->start > 0) ? 1 : 0;
-		  if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
-	   else {
-		   $count = count($data);
-		   header("Content-Range: items 0-$count/$count");
-	   }
-		  if (!isset($ops['headers'])) $ops['headers'] = true;
-	   switch ($format) {
-		case "xml":
-return $this->getXML($model, $data);
-		   break;
-		case "json":
-return $this->getJSON("id", $data);
-		   break;
-		case "jsonp":
-return $this->getJSONP($ops['pad'], $data);
-		   break;
-		case "csv":
-return $this->getCSV($data, $ops['headers']);
-		   break;
-	   }
-	  } else {
-		  if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
-	  }
-	 } else return $this->$error($model);
+		if (empty(sb()->errors[$model])) {
+			if (!empty($data)) {
+				$add = (isset($pager) && $pager->start > 0) ? 1 : 0;
+				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
+				else {
+					$count = count($data);
+					header("Content-Range: items 0-$count/$count");
+				}
+				if (!isset($ops['headers'])) $ops['headers'] = true;
+				switch ($format) {
+					case "xml":
+						return $this->getXML($model, $data);
+						break;
+					case "json":
+						return $this->getJSON("id", $data);
+						break;
+					case "jsonp":
+						return $this->getJSONP($ops['pad'], $data);
+						break;
+					case "csv":
+						return $this->getCSV($data, $ops['headers']);
+						break;
+				}
+			} else {
+				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
+			}
+		} else return $this->$error($model);
 	}
 
 	/**
@@ -176,9 +178,12 @@ return $this->getCSV($data, $ops['headers']);
 		protected function getCSV($data, $headers = true) {
 			if ($this->headers) header('Content-Disposition: attachment; filename="'.$this->model.'.csv"');
 			foreach ($data as $idx => $row) $data[$idx] = sb($this->model)->filter($row, $this->action);
-		$display = $this->context->build_display("list", $this->model, $this->action, array("template" => "csv"));
-		$display->items = $data;
-		return $display->capture(false);
+			$this->data = $data;
+		//$display = $this->context->build_display("list", $this->model, $this->action, array("template" => "csv"));
+			//$display->items = $data;
+			//return $display->capture(false);
+			$this->template = "api/csv";
+			return "";
 		}
 
 	/**
@@ -204,11 +209,10 @@ return $this->getCSV($data, $ops['headers']);
 	 * @return string json output of errors
 	 */
 		protected function JSONerrors($model) {
-			global $sb;
-			$schema = schema($model.".fields");
+			$schema = sb($model)->hooks;
 			if (empty($schema)) $schema = array();
 			$json = '{ "errors" : [';
-		 foreach ($sb->errors[$model] as $k => $v) {
+		 foreach (sb()->errors[$model] as $k => $v) {
 			 if (!empty($schema[$k]) && !empty($schema[$k]['label'])) $k = $schema[$k]['label'];
 			 $json .= '{ "field":"'.$k.'", "errors": [ ';
 			 foreach ($v as $e) $json .= '"'.$e.'", ';

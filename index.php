@@ -21,10 +21,15 @@ $request = new Request($_SERVER['REQUEST_URI'], array(
 	'parameters' => $_GET,
 	'data' => $_POST,
 	'files' => $_FILES,
-	'cookies' => $_COOKIE
+	'cookies' => $_COOKIE,
+	'directory' => Etc::WEBSITE_URL
 ));
 $container->register("Request", $request, true);
+global $sb;
+$sb = $container->get("sb");
+$context->assign("sb", $sb);
 $application = $container->get("ApplicationInterface");
+$sb->start_session();
 $response = $application->handle($request);
 $response->send();
 ?>

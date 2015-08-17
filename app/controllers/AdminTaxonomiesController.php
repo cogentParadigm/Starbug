@@ -4,11 +4,15 @@ class AdminTaxonomiesController {
 		'update' => '{id}',
 		'taxonomy' => '{taxonomy}'
 	);
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+		$this->db = $db;
+		$this->terms = $models->get("terms");
+	}
 	function init() {
 		$this->assign("model", "terms");
 		$this->assign("form", "terms");
 		$this->assign("cancel_url", "admin/taxonomies");
-		if (!empty($_GET['taxonomy'])) $this->assign("taxonomy", normalize($_GET['taxonomy']));
+		if (!empty($this->request->parameters['taxonomy'])) $this->assign("taxonomy", normalize($this->request->parameters['taxonomy']));
 	}
 	function default_action() {
 		$this->render("admin/list");
@@ -18,8 +22,8 @@ class AdminTaxonomiesController {
 		$this->create();
 	}
 	function create() {
-		if (success("terms", "create") && request()->format != "xhr") {
-			$term = get("terms", sb("terms")->insert_id);
+		if ($this->db->success("terms", "create") && $this->request->format != "xhr") {
+			$term = $this->dbget("terms", $this->terms->insert_id);
 			redirect(uri("admin/taxonomies/taxonomy/".$term['taxonomy']));
 		} else $this->render("admin/create");
 	}
@@ -27,7 +31,7 @@ class AdminTaxonomiesController {
 		$this->assign("id", $id);
 		$term = get("terms", $id);
 		$this->assign("taxonomy", $term['taxonomy']);
-		if (success("terms", "create")) {
+		if ($this->db->success("terms", "create")) {
 			redirect(uri("admin/taxonomies/taxonomy/".$term['taxonomy']));
 		} else $this->render("admin/update");
 	}

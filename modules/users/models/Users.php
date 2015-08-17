@@ -13,11 +13,11 @@ class Users {
 			foreach ($user as $k => $v) if (empty($v) && $k != "email") unset($user[$k]);
 		}
 		$this->store($user);
-		if ((!errors()) && (empty($user['id']))) {
+		if ((!$this->errors()) && (empty($user['id']))) {
 			$uid = $this->insert_id;
 			$data = array("user" => get("users", $uid));
 			$data['user']['password'] = $user['password'];
-			$this->mailer->send_email(array("template" => "Account Creation", "to" => $user['email']), $data);
+			//$this->mailer->send(array("template" => "Account Creation", "to" => $user['email']), $data);
 		}
 	}
 
@@ -52,9 +52,8 @@ class Users {
 			$this->store(array("id" => $user['id'], "last_visit" => date("Y-m-d H:i:s")));
 			if (logged_in('admin') || logged_in('root')) redirect(uri('admin'));
 		} else {
-			error("That email and password combination was not found.", "email");
+			$this->error("That email and password combination was not found.", "email");
 		}
-		unset($_POST['users']['password']);
 	}
 
 	/**
@@ -70,19 +69,19 @@ class Users {
 	 */
 	function reset_password($fields) {
 		$email_address = trim($fields['email']);
-		if (empty($email_address)) error("Please enter your email address.", "email");
+		if (empty($email_address)) $this->error("Please enter your email address.", "email");
 		else {
 			$user = $this->query("where:email='".$email_address."'  limit:1");
 			if (!empty($user)) {
 				$id = $user['id'];
-				if (empty($id)) error("Sorry, the email address you entered was not found. Please retry.", "email");
+				if (empty($id)) $this->error("Sorry, the email address you entered was not found. Please retry.", "email");
 				else {
 					$new_password = mt_rand(1000000, 9999999);
 					$this->store("id:$id  password:$new_password");
 					$result = exec("sb email password_reset $id $new_password");
-					if ((int)$result != 1) error("Sorry, there was a problem emailing to your address. Please retry.", "email");
+					if ((int)$result != 1) $this->error("Sorry, there was a problem emailing to your address. Please retry.", "email");
 				}
-			} else error("Sorry, the email address you entered was not found. Please retry.", "email");
+			} else $this->error("Sorry, the email address you entered was not found. Please retry.", "email");
 		}
 	}
 

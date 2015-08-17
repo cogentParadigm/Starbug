@@ -1,19 +1,22 @@
 <?php
 class hook_store_type extends QueryHook {
+	public function __construct(ModelFactoryInterface $models) {
+		$this->models = $models;
+	}
 	function empty_validate(&$query, $column, $argument) {
-		if (sb()->models->has($argument)) $query->exclude($column);
+		if ($this->models->has($argument)) $query->exclude($column);
 	}
 	function validate(&$query, $key, $value, $column, $argument) {;
-		if (sb()->models->has($argument)) $query->exclude($key);
+		if ($this->models->has($argument)) $query->exclude($key);
 		return $value;
 	}
 	function after_store(&$query, $key, $value, $column, $argument) {
-		if ($argument == "terms" || $argument == "blocks" || !sb()->models->has($argument) || empty($value)) return;
+		if ($argument == "terms" || $argument == "blocks" || !$this->models->has($argument) || empty($value)) return;
 
 		//vars
 		$model = $query->model;
 		$model_id = $query->getId();
-		$hooks = sb($model)->hooks[$column];
+		$hooks = $this->models->get($model)->hooks[$column];
 		$target = (empty($hooks['table'])) ? $model."_".$column : $hooks['table'];
 		$type = $argument;
 		$type_ids = array();

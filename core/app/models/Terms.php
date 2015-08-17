@@ -12,7 +12,7 @@ class Terms {
 		}
 		if(empty($term['id'])) efault($term['position'], '');
 		$this->store($term);
-		if (errors('terms[slug]') && !empty($term['term'])) foreach (errors("terms[slug]", true) as $e) error(str_replace("slug", "term", $e), "term");
+		if ($this->errors('slug') && !empty($term['term'])) foreach ($this->errors("slug", true) as $e) $this->error(str_replace("slug", "term", $e), "term");
 	}
 
 	function delete($term) {
@@ -22,7 +22,7 @@ class Terms {
 
 		}
 		$term = query("terms")->condition("id", $term['id'])->one();
-		if ($term) error("This term must be detached from all entities before it can be deleted.", "global");
+		if ($term) $this->error("This term must be detached from all entities before it can be deleted.", "global");
 	}
 
 	function delete_taxonomy($term) {

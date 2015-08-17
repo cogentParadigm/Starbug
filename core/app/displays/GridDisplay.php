@@ -7,6 +7,14 @@ class GridDisplay extends ItemDisplay {
 	public $fields = array(
 		"row_options" => array("field" => "id", "label" => "Options", "class" => "field-options", "plugin" => "starbug.grid.columns.options")
 	);
+	protected $request;
+
+	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hook_builder, Request $request) {
+		$this->output = $output;
+		$this->response = $response;
+		$this->hook_builder = $hook_builder;
+		$this->request = $request;
+	}
 
 	function build($options=array()) {
 		//set defaults
@@ -87,7 +95,7 @@ class GridDisplay extends ItemDisplay {
 		//convert from array to string
 		$this->attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($this->attributes['data-dojo-props'])), '{}');
 		//add query params
-		$params = array_merge($_GET, $this->options);
+		$params = array_merge($this->request->parameters, $this->options);
 		foreach ($params as $key => $value) if (is_array($value)) unset($params[$key]);
 		if (!empty($params)) {
 			$this->attributes['data-dojo-props'] .= ', query: {';

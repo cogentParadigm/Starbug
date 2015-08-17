@@ -13,18 +13,28 @@ class FormDisplay extends ItemDisplay {
 	public $cancel_url = "";
 	public $actions;
 	protected $vars = array();
+	protected $models;
+
+	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, Request $request, ModelFactoryInterface $models) {
+		$this->output = $output;
+		$this->response = $response;
+		$this->hook_builder = $hooks;
+		$this->displays = $displays;
+		$this->request = $request;
+		$this->models = $models;
+	}
 
 	function build($options) {
 		$this->options = $options;
 		// grab schema
-		if (!empty($this->model) && sb()->models->has($this->model)) {
-			$this->schema = sb($this->model)->hooks;
+		if (!empty($this->model) && $this->models->has($this->model)) {
+			$this->schema = $this->models->get($this->model)->hooks;
 		}
 
 		//create layout display
-		$this->layout = $this->output->build_display("LayoutDisplay");
+		$this->layout = $this->displays->get("LayoutDisplay");
 		//create actions display
-		$this->actions = $this->output->build_display("ItemDisplay");
+		$this->actions = $this->displays->get("ItemDisplay");
 		$this->actions->add($this->default_action."  label:".$this->submit_label."  class:btn-success");
 
 		//run query
@@ -47,7 +57,7 @@ class FormDisplay extends ItemDisplay {
 		if (empty($options['input_type'])) $options['input_type'] = $column['input_type'];
 		if ($options['input_type'] == "password") $options['class'] .= ((empty($options['class'])) ? "" : " ")."text";
 		else if ($column['type'] == "bool") $options['value'] = 1;
-		else if ($column['type'] == "datetime") $options['data-dojo-type'] = "starbug/form/DateTextBox";
+		else if ($options['input_type'] == "datetime") $options['data-dojo-type'] = "starbug/form/DateTextBox";
 		else if ($options['input_type'] == "crud") {
 			if (empty($options['table'])) $options['table'] = (empty($column['table'])) ? $options['model']."_".$field : $column['table'];
 		} else if ($options['input_type'] == "category_select") {
@@ -77,10 +87,19 @@ class FormDisplay extends ItemDisplay {
 		if (empty($options['id'])) $this->items = array();
 		else parent::query(array("action" => $this->default_action) + $options);
 
-		//load $_POST
+		if (!empty($this->request->parameters['copy']) && is_numeric($this->request->parameters['copy']) && empty($this->items)) {
+			$options['id'] = $this->request->parameters['copy'];
+			parent::query(array("action" => $this->default_action) + $options);
+			if (!empty($this->items)) {
+				$this->items[0] = $this->models->get($this->model)->filter($this->items[0], 'copy');
+				unset($this->items[0]['id']);
+			}
+		}
+
+		//load POST data
 		if (!empty($this->items)) {
-			if (empty($_POST[$this->model])) $_POST[$this->model] = array();
-			foreach ($this->items[0] as $k => $v) if (!isset($_POST[$this->model][$k])) $_POST[$this->model][$k] = $v;
+			if (empty($this->request->data[$this->model])) $this->request->data[$this->model] = array();
+			foreach ($this->items[0] as $k => $v) if (!isset($this->request->data[$this->model][$k])) $this->request->data[$this->model][$k] = $v;
 		}
 	}
 
@@ -90,20 +109,43 @@ class FormDisplay extends ItemDisplay {
 		$this->attributes["method"] = $this->method;
 		$this->attributes["accept-charset"] = "UTF-8";
 		if (!empty($this->model) && !empty($this->default_action)) {
-			if (success($this->model, $this->default_action)) $this->attributes['class'][] = "submitted";
-			else if (failure($this->model, $this->default_action)) $this->attributes['class'][] = "errors";
+			if ($this->success($this->default_action)) $this->attributes['class'][] = "submitted";
+			else if ($this->failure($this->default_action)) $this->attributes['class'][] = "errors";
 		}
 		// grab errors and update schema
 		$this->errors = array();
 		foreach ($this->fields as $name => $field) {
 			$this->schema[$name] = column_info($field['model'], $name);
-			$errors = errors($this->get_name($name, $this->schema[$name]['entity']), true);
+			$error_key = str_replace(array("][", "[", "]"), array(".", ".", ""), $name);
+			$errors = $this->models->get($this->schema[$name]['entity'])->errors($error_key, true);
 			if (!empty($errors)) $this->errors[$name] = $errors;
 		}
 	}
 
 	function render($query = false) {
 		parent::render($query);
+	}
+
+	public function errors($key = "", $values = false) {
+		$key = (empty($key)) ? $this->model : $this->model.".".$key;
+		return $this->models->get($this->model)->errors($key, $values);
+	}
+
+	public function error($error, $field = "global", $model="") {
+		if (empty($model)) $model = $this->model;
+		$this->models->get($this->model)->error($error, $field);
+	}
+
+	public function success($action) {
+		$args = func_get_args();
+		if (count($args) == 1) $args = array($this->model, $args[0]);
+		return $this->models->get($args[0])->success($args[1]);
+	}
+
+	public function failure($action) {
+		$args = func_get_args();
+		if (count($args) == 1) $args = array($this->model, $args[0]);
+		return $this->models->get($args[0])->failure($args[1]);
 	}
 
 	/**
@@ -134,8 +176,8 @@ class FormDisplay extends ItemDisplay {
 			$model = (empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
 		}
 		$parts = explode("[", $name);
-		if ($this->method == "post") $var = (empty($model)) ? $_POST : $_POST[$model];
-		else $var = $_GET;
+		if ($this->method == "post") $var = (empty($model)) ? $this->request->data : $this->request->data[$model];
+		else $var = $this->request->parameters;
 		foreach ($parts as $p) $var = $var[rtrim($p, "]")];
 		if (is_array($var)) return $var;
 		else return stripslashes($var);
@@ -153,11 +195,11 @@ class FormDisplay extends ItemDisplay {
 		$parts = explode("[", $name);
 		$key = array_pop($parts);
 		if (empty($model)) {
-			if ($this->method == "post") $var = &$_POST;
-			else $var = &$_GET;
+			if ($this->method == "post") $var = &$this->request->data;
+			else $var = &$this->request->parameters;
 		} else {
-			if ($this->method == "post") $var = &$_POST[$model];
-			else $var = &$_GET[$model];
+			if ($this->method == "post") $var = &$this->request->data[$model];
+			else $var = &$this->request->parameters[$model];
 		}
 		foreach ($parts as $p) {
 			$var = &$var[rtrim($p, "]")];
@@ -204,7 +246,10 @@ class FormDisplay extends ItemDisplay {
 		$this->vars = array("display" => $this);
 		$this->fill_ops($field, $control);
 		//run filters
-		foreach ($this->output->locator->locate("form/".$control.".php", "filters") as $filter) include($filter);
+		$hooks = $this->hook_builder->get("form/".$control);
+		foreach ($hooks as $hook) {
+			$hook->build($this, $control, $field);
+		}
 
 		$capture = "field";
 		if (empty($field['field'])) $field['field'] = reset(explode("[", $field['name']));

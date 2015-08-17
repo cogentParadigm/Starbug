@@ -10,9 +10,10 @@
 // IF GENERATING HOST, SKIP RIGHT TO IT AND EXIT
 if ($argv[0] == "host") include(dirname(__FILE__)."/generate/host/host.php");
 class GenerateCommand {
-	public function __construct(Schemer $schemer, ResourceLocatorInterface $locator, ContainerInterface $container, $base_directory) {
+	public function __construct(Schemer $schemer, ResourceLocatorInterface $locator, ConfigInterface $config, ContainerInterface $container, $base_directory) {
 		$this->schemer = $schemer;
 		$this->locator = $locator;
+		$this->config = $config;
 		$this->base_directory = $base_directory;
 		$this->container = $container;
 	}
