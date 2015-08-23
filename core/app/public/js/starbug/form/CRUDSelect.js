@@ -29,10 +29,12 @@ define([
 		size:0,
 		store:null,
 		dialog:null,
+		get_data:{},
+		post_data:{},
 		postCreate:function() {
 			var self = this;
 			this.store = new Memory({data: []});
-			this.dialog = new Dialog({url:"admin/"+self.model+"/", callback:function(data) {
+			this.dialog = new Dialog({url:"admin/"+self.model+"/", get_data:self.get_data, post_data:self.post_data, callback:function(data) {
 				var object_id = query('input[name="'+self.model+'[id]"]').attr('value')[0];
 				sb.get(self.model, 'select').filter({'id':object_id}).fetch().then(function(data) {
 					self.add(data);
@@ -71,7 +73,7 @@ define([
 			}
 			this.set_status();
 			var self = this;
-			for (var i in items) {
+			for (var i = 0;i<items.length;i++) {
 				this.store.put(items[i]);
 			}
 			if (items.length > 0) {
@@ -93,7 +95,7 @@ define([
 			this.grid.set('collection', this.store);
 			var ids = [];
 			var items = this.store.data;
-			for (var i in items) ids.push('#' + this.store.getIdentity(items[i]));
+			for (var i = 0;i<items.length;i++) ids.push('#' + this.store.getIdentity(items[i]));
 			ids.push("-~");
 			this.input.value = ids.join(',');
 			this.grid.refresh();

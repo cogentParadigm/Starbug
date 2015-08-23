@@ -59,8 +59,14 @@ define([
 			query('.rich-text', this.form).forEach(function(node) {
 				data[node.name] = window.tinyMCE.get(node.id).getContent();
 			});
+			var request_url = this.url+(this.crudSuffixes ? ((this.item_id) ? 'update/'+this.item_id : 'create') : '')+((this.format != false) ? '.xhr' : '');
+			var token = '?';
+			for (var i in this.get_data) {
+				request_url += token+i+'='+this.get_data[i];
+				token = '&';
+			}
 			iframe(
-			this.url+(this.crudSuffixes ? ((this.item_id) ? 'update/'+this.item_id : 'create') : '')+((this.format != false) ? '.xhr' : ''),
+			request_url,
 			{
 				data: data,
 				handleAs:'html'

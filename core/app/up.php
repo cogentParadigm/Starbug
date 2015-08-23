@@ -214,4 +214,15 @@ $this->table("logs  groups:false",
 		"new_value  type:text"
 	);
 */
+$this->table("imports_fields  groups:false",
+	"source  type:string",
+	"destination  type:string",
+	"update_key  type:bool  default:0"
+);
+$this->table("imports  groups:false",
+	"name  type:string  length:128",
+	"model  type:string  length:128",
+	"source  type:int  references:files id",
+	"fields  type:imports_fields  table:imports_fields"
+);
 ?>

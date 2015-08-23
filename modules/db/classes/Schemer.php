@@ -596,7 +596,7 @@ class Schemer {
 				$ref_table_name = (empty($col['table'])) ? $table."_".$colname : $col['table'];
 				$ref_table_def = array($ref_table_name."  groups:false",
 					"owner  type:int  null:  references:users id  update:cascade  delete:cascade  optional:",
-					$table."_id  type:int  default:0  references:$table id  null:  update:cascade  delete:cascade",
+					$table."_id  type:int  default:NULL  references:$table id  null:  update:cascade  delete:cascade",
 					"position  type:int  ordered:".$table."_id  optional:"
 				);
 				if ($ref_table_name != $col['type']) {
