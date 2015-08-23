@@ -91,6 +91,9 @@ define([
 			this.store.remove(item_id);
 			this.refresh();
 		},
+		copy:function(item_id) {
+			this.dialog.show(false, {copy:item_id});
+		},
 		refresh: function() {
 			this.grid.set('collection', this.store);
 			var ids = [];

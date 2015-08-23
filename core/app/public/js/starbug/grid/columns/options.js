@@ -19,7 +19,7 @@ function(dojo, strings, put, on){
 			//edit button
 			var href = "javascript:;";
 			if (typeof grid['dialog'] == 'string') href = 'javascript:'+grid['dialog']+'.show('+row.id+')';
-			else if (typeof grid['dialog'] == 'undefined') var href = base_url+'/update/'+row.id+dojo.global.location.search;
+			else if (typeof grid['dialog'] == 'undefined') href = base_url+'/update/'+row.id+dojo.global.location.search;
 			var edit = put(div, 'a.Edit.btn.btn-default[title=Edit][href='+href+']', put('div.fa.fa-edit'));
 			if (typeof grid['dialog'] == "object") {
 				on(edit, 'click', function(evt) {
@@ -37,6 +37,17 @@ function(dojo, strings, put, on){
 			var chref = base_url + '/create?copy='+row.id;
 			if (typeof grid.dialog == 'string') chref = 'javascript:'+grid.dialog+'.show(false, {copy:'+row.id+'})';
 			var copy = put(div, 'a.Copy.btn.btn-default[title=Copy][href='+chref+']', put('div.fa.fa-files-o'));
+			if (typeof grid.dialog == "object") {
+				on(copy, 'click', function(e) {
+					e.preventDefault();
+					grid.dialog.show(false, {copy:row.id});
+				});
+			} else if (typeof grid.editor != "undefined") {
+				on(copy, 'click', function(e) {
+					e.preventDefault();
+					grid.editor.copy(row.id);
+				});
+			}
 
 			//delete button
 			var remove = 'javascript:;';
