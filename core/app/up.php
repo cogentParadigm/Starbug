@@ -222,6 +222,7 @@ $this->table("imports_fields  groups:false",
 $this->table("imports  groups:false",
 	"name  type:string  length:128",
 	"model  type:string  length:128",
+	"action  type:string  length:128  default:",
 	"source  type:int  references:files id",
 	"fields  type:imports_fields  table:imports_fields"
 );
