@@ -223,7 +223,7 @@ class FormDisplay extends ItemDisplay {
 		$ops['nolabel'] = (isset($ops['nolabel'])) ? true : false;
 		if (empty($ops['label'])) $ops['label'] = ucwords(str_replace("_", " ", $ops['name']));
 		$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ").$ops['name']."-field";
-		if (!in_array($control, array("checkbox", "radio"))) $ops['class'] .= " form-control";
+		if (in_array($control, array("autocomplete", "category_select", "file_select", "select", "tag_select", "textarea", "file", "input", "password", "text"))) $ops['class'] .= " form-control";
 	}
 
 	function assign($key, $value = null) {

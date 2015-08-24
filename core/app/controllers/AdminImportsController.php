@@ -1,7 +1,8 @@
 <?php
 class AdminImportsController {
 	public $routes = array(
-		'update' => '{id}'
+		'update' => '{id}',
+		'run' => '{id}'
 	);
 	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
 		$this->db = $db;
@@ -22,6 +23,10 @@ class AdminImportsController {
 		$this->assign("id", $id);
 		if ($this->db->success("imports", "create")) redirect(uri("admin/imports", 'u'));
 		else $this->render("admin/update");
+	}
+	function run($id) {
+		$this->assign("id", $id);
+		$this->render("admin/update", array("form_header" => "Run Import", "action" => "run"));
 	}
 }
 ?>

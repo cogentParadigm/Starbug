@@ -19,9 +19,8 @@ h2. Project Info
 
 h2. Dependencies
 
-You will need the following to use this toolkit:
-
-* "PDO extension for PHP":http://php.net/manual/en/book.pdo.php
+* PHP 5.3+
+* MySQL 5.1.6+
 
 Optional dependencies are listed in the links section.
 
@@ -49,12 +48,13 @@ Starbug integrates several 3rd party tools you may want to check out:
 
 * "Git":http://www.git-scm.com
 * "Dojo":http://www.dojotoolkit.org
-* "Blueprint CSS":http://blueprintcss.org
+* "Bootstrap":http://getbootstrap.com
+* "Font-Awesome":https://fortawesome.github.io/Font-Awesome
 * "TinyMCE":http://www.tinymce.com
 * "PHPThumb":http://phpthumb.sourceforge.net
-* "Doxygen":http://www.doxygen.org
 * "PHPUnit":http://www.phpunit.de/manual/current/en/index.html
-* "CodeMirror":http://codemirror.net
+* "PHPMailer":https://github.com/PHPMailer/PHPMailer
+* "HTMLPurifier":http://htmlpurifier.org
 
 h2. License
 
