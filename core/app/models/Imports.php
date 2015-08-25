@@ -59,7 +59,7 @@ class Imports {
 	function query_admin($query, &$ops) {
 		$query = parent::query_admin($query, $ops);
 		if (!empty($ops['model'])) {
-			$query->condition("imports.model", $ops['model']);
+			$query->condition($query->model.".model", $ops['model']);
 		}
     return $query;
   }
