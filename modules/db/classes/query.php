@@ -293,9 +293,9 @@ class query implements IteratorAggregate, ArrayAccess {
 			} else {
 				//use lookup table
 				if ($mode == "select") {
-					$return = "(SELECT GROUP_CONCAT(".$collection."_".$alias.".".$token.") FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
+					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
 				} else if ($mode == "where" || $mode == "condition") {
-					$return = "(SELECT ".$collection."_".$alias.".".$token." FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
+					$return = "(SELECT ".$token." FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
 				} else if ($mode == "group" || $mode == "set") {
 					$this->join($schema['table']." as ".$collection."_".$alias."_lookup")
 								->on($collection."_".$alias."_lookup.".$table."_id=".$collection.".id")
