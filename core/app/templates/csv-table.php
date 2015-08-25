@@ -53,7 +53,7 @@
 	//if there are not enough pages, bring up $from to 1
 	if ($from < 1) $from = 1;
 ?>
-<? if ($lines > $size) { ?>
+<?php if ($lines > $size) { ?>
 	<ul class="pagination">
 		<?php if ($pager->current_page > 1) { ?>
 			<li class="back"><a href="<?php echo $prefix.($pager->current_page-1).$suffix; ?>">Back</a></li>
