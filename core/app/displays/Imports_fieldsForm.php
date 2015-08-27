@@ -10,7 +10,14 @@ class Imports_fieldsForm extends FormDisplay {
 		}
 		$this->parse_source($options['source']);
 		$this->add(array("source", "input_type" => "select", "options" => $this->source_values));
-		$this->add(array("destination", "input_type" => "select", "options" => array_keys(column_info($options['model']))));
+		$model = $this->models->get($options['model']);
+		$dest_ops = array("destination", "input_type" => "select");
+		if (method_exists($model, "import_fields")) {
+			$dest_ops = array_merge($dest_ops, $model->import_fields($options));
+		} else {
+			$dest_ops['options'] = array_keys(column_info($options['model']));
+		}
+		$this->add($dest_ops);
 		$this->add("update_key  input_type:checkbox  label:Use this field as a key to update records");
 	}
 	function parse_source($id) {

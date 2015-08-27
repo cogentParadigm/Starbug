@@ -34,7 +34,8 @@ class hook_form_select extends FormHook {
 			$options = $list; unset($field['caption']); unset($field['value']);
 		} else if (!empty($field['options'])) {
 			$keys = is_array($field['options']) ? $field['options'] : explode(",", $field['options']);
-			$values = (!empty($field['values'])) ? explode(",", $field['values']) : $keys;
+			$values = (!empty($field['values'])) ? $field['values'] : $keys;
+			$values = (is_array($values)) ? $values : explode(",", $field['values']);
 			$options = array();
 			foreach ($keys as $i => $k) $options[$k] = $values[$i];
 			unset($field['options']);
