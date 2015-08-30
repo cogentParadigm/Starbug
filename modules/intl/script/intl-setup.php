@@ -19,17 +19,16 @@ class IntlSetupCommand {
 		//populate countries
 		$countries = $this->config->get("countries");
 		foreach($countries as $c) {
-			$exists = query("countries")->condition("code", $c['code']);
-			if (!$exists->one()) {
-				$data = json_decode(file_get_contents($address_data.$c['code']), true);
-				$record = array("name" => $c['name'], "code" => $c['code']);
-				if (is_array($record)) {
-					foreach ($address_map as $k => $v) {
-						if (isset($data[$k])) $record[$v] = $data[$k];
-					}
+			$exists = query("countries")->condition("code", $c['code'])->one();
+			$data = json_decode(file_get_contents($address_data.$c['code']), true);
+			$record = array("name" => $c['name'], "code" => $c['code']);
+			if ($exists) $record["id"] = $exists["id"];
+			if (is_array($record)) {
+				foreach ($address_map as $k => $v) {
+					if (isset($data[$k])) $record[$v] = $data[$k];
 				}
-				store("countries", $record);
 			}
+			store("countries", $record);
 		}
 
 		//populate regions
