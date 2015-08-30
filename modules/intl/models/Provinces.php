@@ -32,7 +32,6 @@ class Provinces {
 	}
 
   function query_filters($action, $query, $ops) {
-      if (!logged_in("root") && !logged_in("admin") && $action != "select") $query->action("read");
       return $query;
   }
 
