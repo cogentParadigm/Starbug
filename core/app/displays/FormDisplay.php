@@ -126,14 +126,14 @@ class FormDisplay extends ItemDisplay {
 		parent::render($query);
 	}
 
-	public function errors($key = "", $values = false) {
-		$key = (empty($key)) ? $this->model : $this->model.".".$key;
-		return $this->models->get($this->model)->errors($key, $values);
+	public function errors($key = "", $values = false, $model="") {
+		if (empty($model)) $model = $this->model;
+		return $this->models->get($model)->errors($key, $values);
 	}
 
 	public function error($error, $field = "global", $model="") {
 		if (empty($model)) $model = $this->model;
-		$this->models->get($this->model)->error($error, $field);
+		$this->models->get($model)->error($error, $field);
 	}
 
 	public function success($action) {
