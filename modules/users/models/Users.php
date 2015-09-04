@@ -80,7 +80,7 @@ class Users {
 					$this->store("id:$id  password:$new_password");
 					$data = array("user" => $user);
 					$data['user']['password'] = $new_password;
-					$result = send_email("template:Password Reset  to:".$user['email'], $data);
+					$result = $this->mailer->send(array("template" => "Password Reset", "to" => $user['email']), $data);
 					if ((int)$result != 1) $this->error("Sorry, there was a problem emailing to your address. Please retry.", "email");
 				}
 			} else $this->error("Sorry, the email address you entered was not found. Please retry.", "email");
