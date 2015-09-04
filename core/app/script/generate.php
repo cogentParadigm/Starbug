@@ -59,6 +59,7 @@ class GenerateCommand {
 		if (class_exists($class)) {
 			$command = $this->container->get($class);
 			$command->run($params);
+			$params['generator'] = $command;
 			$dirs = $command->dirs;
 			$generate = $command->generate;
 			$copy = $command->copy;
