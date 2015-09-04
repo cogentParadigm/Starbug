@@ -27,7 +27,7 @@ class Countries {
 			$query->condition($query->model.".id", explode(",", $ops['id']));
 		}
 
-		$query->select("countries.name as id");
+		$query->select("countries.id");
 		$query->select("countries.name as label");
 		$query->sort("countries.name");
 		return $query;
