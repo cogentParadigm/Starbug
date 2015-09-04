@@ -178,7 +178,7 @@ class FormDisplay extends ItemDisplay {
 		$parts = explode("[", $name);
 		if ($this->method == "post") $var = (empty($model)) ? $this->request->data : $this->request->data[$model];
 		else $var = $this->request->parameters;
-		foreach ($parts as $p) $var = $var[rtrim($p, "]")];
+		foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")];
 		if (is_array($var)) return $var;
 		else return stripslashes($var);
 	}
