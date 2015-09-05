@@ -215,8 +215,8 @@ $this->table("logs  groups:false",
 	);
 */
 $this->table("imports_fields  groups:false",
-	"source  type:string",
-	"destination  type:string",
+	"source  type:text",
+	"destination  type:text",
 	"update_key  type:bool  default:0"
 );
 $this->table("imports  groups:false",
