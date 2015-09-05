@@ -28,21 +28,33 @@ class Users {
 	/**
 	 * A function for new users to register themselves
 	 */
-	function register() {
-
+	function register($user, $redirect=true) {
+		$this->store(array("email" => $user['email'], "password" => $user['password'], "password_confirm" => $user['password_confirm'], "groups" => "user"));
+		if (!$this->errors()) {
+			$this->login(array("email" => $user['email'], "password" => $user['password']), $redirect);
+		}
 	}
 
 	/**
 	 * A function for current users to update their profile
 	 */
-	function update_profile($user) {
-		return $this->store($user);
+	function update_profile($profile) {
+		$user = $this->query()->condition("id", $profile['id'])->one();
+		if (Session::authenticate($user['password'], $profile['current_password'], $user['id'], Etc::HMAC_KEY)) {
+			$this->store(array("id" => $user['id'], "email" => $profile['email'], "password" => $profile['password'], "password_confirm" => $profile['password_confirm']));
+			if (!$this->errors() && !empty($profile['password'])) {
+				$user = $this->query()->condition("id", $profile['id'])->one();
+				Session::authenticate($user['password'], $profile['password'], $user['id'], Etc::HMAC_KEY);
+			}
+		} else {
+			$this->error("Your credentials could not be authenticated.", "current_password");
+		}
 	}
 
 	/**
 	 * A function for logging in
 	 */
-	function login($login) {
+	function login($login, $redirect=true) {
 		$user = $this->query("select:users.*,users.groups as groups,users.statuses as statuses  where:email=?  limit:1", array($login['email']));
 		if (Session::authenticate($user['password'], $login['password'], $user['id'], Etc::HMAC_KEY)) {
 			$user['groups'] = explode(",", $user['groups']);
@@ -50,7 +62,9 @@ class Users {
 			sb()->user = $user;
 			unset($user['password']);
 			$this->store(array("id" => $user['id'], "last_visit" => date("Y-m-d H:i:s")));
-			if (logged_in('admin') || logged_in('root')) redirect(uri('admin'));
+			if ($redirect) {
+				if (logged_in('admin') || logged_in('root')) redirect(uri('admin'));
+			}
 		} else {
 			$this->error("That email and password combination was not found.", "email");
 		}
