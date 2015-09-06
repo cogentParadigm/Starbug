@@ -82,6 +82,7 @@ function entity_query($entity) {
 		$chain[] = $base;
 		$base = sb($base)->base;
 	}
+	$root = count($chain)-1;
 
 	//build query
 	foreach ($chain as $idx => $name) {
@@ -89,6 +90,8 @@ function entity_query($entity) {
 		if ($idx === 0) $query = query($name." as ".$collection);
 		else {
 			$query->join($name." as ".$collection, "INNER");
+			if ($idx == $root) $query->on($collection.".id=".$entity.".".$name."_id");
+			else $query->on($collection.".".$chain[$root]."_id=".$entity.".".$chain[$root]."_id");
 		}
 	}
 

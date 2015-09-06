@@ -29,10 +29,5 @@ class <?php echo ucwords($name); ?>Model extends Table {
 		"<?php echo $column; ?>" => array(<?php foreach ($field as $k => $v) { ?><?php if ($fcount > 0) echo ", "; $fcount++ ?>"<?php echo $k; ?>" => "<?php echo $v; ?>"<?php } ?>)<?php } } echo "\n"; ?>
 	);
 
-	function init() {<?php foreach ($fields as $column => $field) { foreach ($field as $k => $v) { if ($k == "references") { $v = explode(" ", $v); echo "\n"; ?>
-	  $this->has_one("<?php echo $v[0]; ?>", "<?php echo $column; ?>");<?php } } } ?><?php foreach ($relations as $relation) { echo "\n"; ?>
-		$this->has_<?php echo $relation['type']; ?>("<?php echo $relation['model']; ?>", "<?php echo $relation['field']; ?>"<?php if ($relation['type'] == "one" && !empty($relation['ref_field'])) { ?>, "<?php echo $relation['ref_field']; ?>"<?php } ?><?php if (!empty($relation['lookup'])) { ?>, "<?php echo $relation['lookup']; ?>", "<?php echo $relation['ref_field']; ?>"<?php } ?>);<?php } echo "\n"; ?>
-	}
-
 }
 <?php echo '?>'; ?>

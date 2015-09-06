@@ -890,8 +890,10 @@ class query implements IteratorAggregate, ArrayAccess {
 						}
 					}
 				}
-				$segment .= " ON ".$this->query['on'][$alias];
-				if (isset($this->query['where']["on_".$alias])) $segment .= " && ".$this->build_condition_set("on_".$alias);
+				if (!empty($this->query['on'][$alias])) {
+					$segment .= " ON ".$this->query['on'][$alias];
+					if (isset($this->query['where']["on_".$alias])) $segment .= " && ".$this->build_condition_set("on_".$alias);
+				}
 				$from .= $segment;
 			}
 			$last_collection = $collection;

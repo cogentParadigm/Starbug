@@ -43,7 +43,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query = $this->db->query("uris,users");
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".P("uris")."` AS `uris` INNER JOIN `".P("users")."` AS `users` ON uris.owner=users.id";
+		$expected = "SELECT `uris`.* FROM `".P("uris")."` AS `uris` INNER JOIN `".P("users")."` AS `users`";
 
 		//compare
 		$actual = $query->build();
@@ -54,7 +54,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query = $this->db->query("uris<users");
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".P("uris")."` AS `uris` LEFT JOIN `".P("users")."` AS `users` ON uris.owner=users.id";
+		$expected = "SELECT `uris`.* FROM `".P("uris")."` AS `uris` LEFT JOIN `".P("users")."` AS `users`";
 
 		//compare
 		$actual = $query->build();
@@ -65,7 +65,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query = $this->db->query("uris>users");
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".P("uris")."` AS `uris` RIGHT JOIN `".P("users")."` AS `users` ON uris.owner=users.id";
+		$expected = "SELECT `uris`.* FROM `".P("uris")."` AS `uris` RIGHT JOIN `".P("users")."` AS `users`";
 
 		//compare
 		$actual = $query->build();
@@ -95,7 +95,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$query = $this->db->query("uris as pages,users as people");
 
 		//expected output
-		$expected = "SELECT `pages`.* FROM `".P("uris")."` AS `pages` INNER JOIN `".P("users")."` AS `people` ON pages.owner=people.id";
+		$expected = "SELECT `pages`.* FROM `".P("uris")."` AS `pages` INNER JOIN `".P("users")."` AS `people`";
 
 		//compare
 		$actual = $query->build();
