@@ -127,7 +127,7 @@ class Table {
 	 * @param string $ref_field optional the column that contains the id of the related record (used with lookup)
 	 */
 	protected function has_many($name, $hook, $lookup = "", $ref_field = "") {
-		efault($lookup, $name);
+		if (empty($lookup)) $lookup = $name;
 		$key = ($ref_field) ? $ref_field : "id";
 		$merge = array($lookup => array($key => array($hook => array("type" => "many", "hook" => $hook))));
 		if ($lookup && $ref_field) {

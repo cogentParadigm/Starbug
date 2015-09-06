@@ -51,8 +51,8 @@ class GridDisplay extends ItemDisplay {
 		if (empty($options["field"])) $options["field"] = $field;
 		$options['data-dgrid-column'] = array();
 		if (empty($options['plugin']) && !isset($options['readonly'])) {
-			efault($options['editor'], "'text'");
-			efault($options['editOn'], "'dblclick'");
+			if (empty($options['editor'])) $options['editor'] = "'text'";
+			if (empty($options['editOn'])) $options['editOn'] = "'dblclick'";
 		}
 		foreach ($options as $k => $v) {
 			if (!in_array($k, array("id", "class", "style", "label", "data-dgrid-column", "plugin")) && $v !== "") {

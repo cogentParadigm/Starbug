@@ -1,6 +1,6 @@
 <?php
-	efault($query, "admin");
-	efault($template, "list");
+	if (empty($query)) $query = "admin";
+	if (empty($template)) $template = "list";
 	$this->assign("query", $query);
 	$this->render($template);
 ?>

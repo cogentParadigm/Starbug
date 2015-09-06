@@ -3,7 +3,7 @@
 	$uri = uri("rogue");
 	$mydir = getcwd();
 	$browse = $_REQUEST['browse'];
-	efault($browse, ".");
+	if (empty($browse)) $browse = ".";
 	if($browse == ".") {
 		$ignores[] = "/^\.\.$/";
 	}
@@ -36,7 +36,7 @@
 				else $dirs[] = $file;
 			}
 		}
-		
+
 		sort($files); sort($dirs);
 		$files = array_merge($dirs, $files);
 		closedir($handle);
@@ -59,7 +59,7 @@
 					else if ($size < 10240) echo "<td class='fileinfo'> ".number_format($size/1024, 2)." KiB </td>" ;
 					else echo "<td class='fileinfo'> ".number_format($size/1024)." KiB </td>" ;
 					$numfiles+=1;
-				}	
+				}
 				echo "</tr>";
 			}
 			echo "</table>";
@@ -93,30 +93,30 @@ function BuildBreadcrumb($path) {
 
 function FindFileType($path) {
 	// $types["ext"] = "type";
-	$types["c"] = "cpp"; 
-	$types["cpp"] = "cpp"; 
-	$types["cs"] = "csharp"; 
-	$types["css"] = "css"; 
+	$types["c"] = "cpp";
+	$types["cpp"] = "cpp";
+	$types["cs"] = "csharp";
+	$types["css"] = "css";
 	$types["html"] = "html";
 	$types["htm"] = "html";
-	$types["java"] = "java"; 
-	$types["js"] = "javascript"; 
-	$types["pl"] = "perl"; 
-	$types["rb"] = "ruby";	
-	$types["php"] = "php"; 
-	$types["txt"] = "plain"; 
+	$types["java"] = "java";
+	$types["js"] = "javascript";
+	$types["pl"] = "perl";
+	$types["rb"] = "ruby";
+	$types["php"] = "php";
+	$types["txt"] = "plain";
 	$types["sql"] = "sql";
 	$types["vb"] = "vb";
 	$types["xml"] = "xml";
-	
+
 	$path = strtolower($path) ;
 	$ext = split("[/\\.]", $path) ;
 	$n = count($ext)-1;
 	$ext = $ext[$n];
-	
-	$ext = $types[$ext];	
+
+	$ext = $types[$ext];
 	if(!$ext)$ext = "plain";
-	
+
 	return $ext;
 }
 ?>

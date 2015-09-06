@@ -29,7 +29,7 @@ class CSSParser {
 		}
 	}
 	function add_file($filename, $desc = "") {
-		efault($desc, end(explode("/", $filename)));
+		if (empty($desc)) $desc = end(explode("/", $filename));
 		$replacement = str_replace(BASE_DIR, "", realpath(dirname($filename)."/../"))."/"; //translates ../ into ../../../app/public/
 		$sheet = str_replace("url(../", "url(../../..$replacement", $this->optimize(file_get_contents($filename), dirname($filename)));
 		$base = $desc;

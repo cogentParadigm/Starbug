@@ -265,7 +265,7 @@ class FormDisplay extends ItemDisplay {
 	}
 
 	function __call($name, $arguments) {
-		efault($arguments[1], array());
+		if (empty($arguments[1])) $arguments[1] = array();
 		return $this->form_control($name, $arguments[0], $arguments[1]);
 	}
 }

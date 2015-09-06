@@ -1,5 +1,5 @@
 <div class="multiple_category_select">
-	<?php efault($value, array()); foreach ($terms as $term) { ?>
+	<?php if (empty($value)) $value = array(); foreach ($terms as $term) { ?>
 		<div class="form-group checkbox" style="padding-left:<?php echo $term['depth']*15; ?>px">
 			<label><input <?php html_attributes("type:checkbox  class:left checkbox  name:".$name."[]  value:$term[id]".((in_array($term['id'], $value)) ? "  checked:checked" : "")); ?>/><?php echo $term['term']; ?></label>
 		</div>

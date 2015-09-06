@@ -7,7 +7,7 @@
 		$mpath = "term_path";
 	}
 
-	efault($attributes, array());
+	if (empty($attributes)) $attributes = array();
 	$attributes['class'] = (empty($attributes['class']) ? "" : $attributes['class']." ")."nav";
 
 	if ($sortable) $attributes['class'] .= " sortable";

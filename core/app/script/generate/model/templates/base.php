@@ -99,7 +99,7 @@ class <?php echo ucwords($name); ?>Model extends Table {
 			$query->condition("<?php echo $name; ?>.statuses.slug", "deleted", "!=", array("ornull" => true));
 		}
 		$query->select("<?php echo $name; ?>.id");
-		$query->select("<?php echo efault($label_select, $name.".id"); ?> as label");
+		$query->select("<?php echo empty($label_select) ? $name.".id" : $label_select; ?> as label");
 		return $query;
 	}
 

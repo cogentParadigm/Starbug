@@ -1,6 +1,6 @@
 <?php open_form("model:$model  action:$action".(empty($url) ? "" : "  url:$url"), $form_attributes); ?>
 	<?php
-		efault($cancel_url, $url);
+		if (empty($cancel_url)) $cancel_url = $url;
 	?>
 	<?php foreach ($fields as $name => $field) { ?>
 		<?php

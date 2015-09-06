@@ -9,7 +9,7 @@ class Uris {
 		}
 		if (!empty($ops['status'])) $query->condition($query->model.".statuses.id", $ops['status']);
 		else $query->condition($query->model.".statuses.slug", "deleted", "!=");
-		efault($ops['orderby'], "modified DESC, created DESC, title DESC");
+		if (empty($ops['orderby'])) $ops['orderby'] = "modified DESC, created DESC, title DESC";
 		$query->sort($ops['orderby']);
 		return $query;
 	}

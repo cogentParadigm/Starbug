@@ -11,7 +11,7 @@ class CssGenerateCommand {
 		$themes = $this->config->get("themes");
 		foreach ($themes as $name) {
 			$conf = $this->config->get("info.styles", "themes/".$name);
-			efault($conf['less'], false);
+			if (empty($conf['less'])) $conf['less'] = false;
 
 			/******************SCREEN********************/
 			$screen = new CSSParser($this->base_directory."/var/public/stylesheets/$name-screen.css");

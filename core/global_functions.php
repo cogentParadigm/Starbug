@@ -12,7 +12,6 @@
  * global functions
  */
 
-	include("core/global/common.php");
 	include("core/global/cache.php");
 	include("core/global/entity.php");
 	include("core/global/modules.php");

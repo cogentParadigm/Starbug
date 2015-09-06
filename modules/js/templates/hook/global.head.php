@@ -28,7 +28,7 @@
 	<?php } ?>
 	<?php
 		$scripts = $this->config->get("info.scripts", 'themes/'.$request->theme);
-		efault($scripts, array());
+		if (empty($scripts)) $scripts = array();
 	?>
 	<?php foreach ($scripts as $script) { ?>
 		<script type="text/javascript" src="<?php echo uri("app/themes/".$request->theme."/public/js/$script"); ?>"></script>
