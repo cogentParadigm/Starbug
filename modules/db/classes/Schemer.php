@@ -566,7 +566,7 @@ class Schemer {
 			list($table, $ops) = explode("  ", $table, 2);
 			$ops = star($ops);
 		} else $ops = array();
-		efault($this->tables[$table], array());
+		if (empty($this->tables[$table])) $this->tables[$table] = array();
 		$additional = array();
 		foreach ($args as $col) {
 			$col = star($col);
@@ -609,7 +609,7 @@ class Schemer {
 		}
 		$search_cols = array_keys($this->tables[$table]);
 		foreach ($search_cols as $colname_index => $colname_value) if (isset($this->tables[$this->tables[$table][$colname_value]['type']])) unset($search_cols[$colname_index]);
-		efault($this->options[$table], array("select" => "$table.*", "search" => $table.'.'.implode(",$table.", $search_cols)));
+		if (empty($this->options[$table])) $this->options[$table] = array("select" => "$table.*", "search" => $table.'.'.implode(",$table.", $search_cols));
 		foreach ($ops as $k => $v) $this->options[$table][$k] = ($v === "false") ? false : (($v === "true") ? true : $v);
 		if (isset($ops['base']) && $ops['base'] !== $table) {
 			//find the root
@@ -689,8 +689,8 @@ class Schemer {
 	function uri($path, $args = array(), $groups = array()) {
 		$args = star($args);
 		$args['path'] = $path;
-		efault($args['title'], ucwords(str_replace("-", " ", $path)));
-		efault($args['statuses'], "published");
+		if(empty($args['title'])) $args['title'] = ucwords(str_replace("-", " ", $path));
+		if (empty($args['statuses'])) $args['statuses'] = "published";
 		$this->uris[$path] = $args;
 	}
 
@@ -731,7 +731,7 @@ class Schemer {
 	function block($path, $content, $ops = array()) {
 		$ops = star($ops);
 		$ops["content"] = $content;
-		efault($this->blocks[$path], array());
+		if (empty($this->blocks[$path])) $this->blocks[$path] = array();
 		$this->blocks[$path][] = $ops;
 	}
 
@@ -744,8 +744,8 @@ class Schemer {
 		$args = func_get_args();
 		$on = array_shift($args);
 		$on = explode("::", $on);
-		efault($this->permits[$on[0]], array());
-		efault($this->permits[$on[0]][$on[1]], array());
+		if (empty($this->permits[$on[0]])) $this->permits[$on[0]] = array();
+		if (empty($this->permits[$on[0]][$on[1]])) $this->permits[$on[0]][$on[1]] = array();
 		foreach ($args as $row) {
 			$row = star($row);
 			$role = array_shift($row);
@@ -811,7 +811,7 @@ class Schemer {
 	function menu($menu, $item) {
 		$args = func_get_args();
 		$menu = array_shift($args);
-		efault($this->menus[$menu], array());
+		if (empty($this->menus[$menu])) $this->menus[$menu] = array();
 		foreach ($args as $item) $this->menus[$menu][] = star($item);
 	}
 
@@ -823,7 +823,7 @@ class Schemer {
 	function taxonomy($taxonomy, $item) {
 		$args = func_get_args();
 		$taxonomy = array_shift($args);
-		efault($this->taxonomies[$taxonomy], array());
+		if (empty($this->taxonomies[$taxonomy])) $this->taxonomies[$taxonomy] = array();
 		foreach ($args as $item) $this->taxonomies[$taxonomy][] = star($item);
 	}
 
@@ -855,14 +855,14 @@ class Schemer {
 	 * @param array $block
 	 */
 	function create_block($uri, $block) {
-		efault($block['region'], "content");
+		if (empty($block['region'])) $block['region'] = "content";
 		$block['uris_id'] = $uri['id'];
 		$content = $block['content'];
 		unset($block['content']);
 		$results = get("blocks", $block);
 		if (empty($results)) {
 			fwrite(STDOUT, "Creating block for /".$uri['path']."...\n");
-			efault($block['position'], "");
+			if (empty($block['position'])) $block['position'] = "";
 			$block['content'] = $content;
 			store("blocks", $block);
 			return 1;
@@ -965,7 +965,7 @@ class Schemer {
 	 */
 	function before($name, $trig, $each = true) {
 		$parts = explode("::", $name);
-		efault($this->triggers[$name], array());
+		if (empty($this->triggers[$name])) $this->triggers[$name] = array();
 		$trigger = array("table" => $parts[0], "action" => $parts[1], "type" => "before", "each" => $each, "trigger" => $trig);
 		$this->triggers[$name]["before"] = $trigger;
 	}
@@ -977,7 +977,7 @@ class Schemer {
 	 */
 	function after($name, $trig, $each = true) {
 		$parts = explode("::", $name);
-		efault($this->triggers[$name], array());
+		if (empty($this->triggers[$name])) $this->triggers[$name] = array();
 		$trigger = array("table" => $parts[0], "action" => $parts[1], "type" => "after", "each" => $each, "trigger" => $trig);
 		$this->triggers[$name]["after"] = $trigger;
 	}
@@ -988,7 +988,7 @@ class Schemer {
 	 * @param string $event before or after
 	 */
 	function drop_trigger($name, $event) {
-		efault($this->trigger_drops[$name], array());
+		if (empty($this->trigger_drops[$name])) $this->trigger_drops[$name] = array();
 		$this->trigger_drops[$name][$event] = "";
 	}
 
@@ -1138,8 +1138,8 @@ class Schemer {
 				else $field['input_type'] = "text";
 			}
 			$field[$field['type']] = "";
-			efault($field[$field['input_type']], "");
-			efault($field["label"], format_label($name));
+			if (empty($field[$field['input_type']])) $field[$field['input_type']] = "";
+			if (empty($field["label"])) $field["label"] = format_label($name);
 			foreach ($field as $k => $v) {
 				$data["fields"][$name][$k] = $v;
 			}
