@@ -7,21 +7,11 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
-// define SB_START_TIME to record application start time
-defined('SB_START_TIME') or define('SB_START_TIME',microtime(true));
 
-//define test mode as false
-if (!defined('SB_TEST_MODE')) define('SB_TEST_MODE', false);
-
-// define directory paths and set the include path
+// define base directory
 if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("/core", "", dirname(__FILE__)));
-set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);
 
-// define STDOUT and STDIN if they are not defined
-if (!defined('STDOUT')) define("STDOUT", fopen("php://stdout", "wb"));
-if (!defined('STDIN')) define("STDIN", fopen("php://stdin", "r"));
-
-// load configuration
+// load host configuration
 include(BASE_DIR."/etc/Etc.php");
 
 //define default database
