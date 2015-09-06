@@ -50,6 +50,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	public $statements = array();
 	public $parameters = array();
 	public $fields = array();
+	public $unvalidated = array();
 	public $exclusions = array();
 	public $result = false;
 	public $pager = null;
@@ -1230,6 +1231,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	}
 
 	function validate($phase = query::PHASE_VALIDATION) {
+		if ($phase == query::PHASE_VALIDATION && !$this->validated) $this->unvalidated = $this->fields;
 		$model = $this->models->get($this->model);
 		foreach ($model->hooks as $column => $hooks) {
 			if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) $hooks['required'] = "";

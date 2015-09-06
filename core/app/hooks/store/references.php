@@ -1,16 +1,18 @@
 <?php
 class hook_store_references extends QueryHook {
-	var $replace = false;
+	protected $replace = false;
+	function __construct(ModelFactoryInterface $models) {
+		$this->models = $models;
+	}
 	function validate(&$query, $key, $value, $column, $argument) {
-		if (empty($value)) {
+		if ($query->unvalidated[$key] === "") {
 			$this->replace = true;
-			$value = "";
 		}
 		return $value;
 	}
 	function store(&$query, $key, $value, $column, $argument) {
 		$model = reset(explode(" ", $argument));
-		return ($value === "" && !is_null(sb($model)->insert_id)) ? sb($model)->insert_id : $value;
+		return ($this->replace && !is_null($this->models->get($model)->insert_id)) ? $this->models->get($model)->insert_id : $value;
 	}
 }
 ?>
