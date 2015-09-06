@@ -15,6 +15,7 @@ class <?php echo ucwords($name); ?>Model extends Table {
   public $label = "<?php echo $label; ?>";
   public $singular = "<?php echo $singular; ?>";
   public $singular_label = "<?php echo ucwords(str_replace(array("-", "_"), array(" ", " "), $singular)); ?>";
+  public $label_select = "<?php echo empty($label_select) ? $name.".id" : $label_select; ?>";
 
 
   function __construct(DatabaseInterface $db, ModelFactoryInterface $models<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
@@ -31,76 +32,6 @@ class <?php echo ucwords($name); ?>Model extends Table {
 	function init() {<?php foreach ($fields as $column => $field) { foreach ($field as $k => $v) { if ($k == "references") { $v = explode(" ", $v); echo "\n"; ?>
 	  $this->has_one("<?php echo $v[0]; ?>", "<?php echo $column; ?>");<?php } } } ?><?php foreach ($relations as $relation) { echo "\n"; ?>
 		$this->has_<?php echo $relation['type']; ?>("<?php echo $relation['model']; ?>", "<?php echo $relation['field']; ?>"<?php if ($relation['type'] == "one" && !empty($relation['ref_field'])) { ?>, "<?php echo $relation['ref_field']; ?>"<?php } ?><?php if (!empty($relation['lookup'])) { ?>, "<?php echo $relation['lookup']; ?>", "<?php echo $relation['ref_field']; ?>"<?php } ?>);<?php } echo "\n"; ?>
-	}
-
-	function create($<?php echo $singular; ?>) {
-    <?php if (!empty($base)) { ?>
-      entity_save("<?php echo $model; ?>", $<?php echo $singular; ?> + array("type" => $this->type));
-    <?php } else { ?>
-		  $this->store($<?php echo $singular; ?>);
-    <?php } ?>
-	}
-
-	function delete($<?php echo $singular; ?>) {
-    <?php if (!empty($base)) { ?>
-      entity_delete("<?php echo $model; ?>", $<?php echo $singular; ?>["id"]);
-    <?php } else { ?>
-      remove("<?php echo $model; ?>", array("id" => $<?php echo $singular; ?>["id"]));
-    <?php } ?>
-	}
-
-	function query_admin($query, &$ops) {
-    <?php if (!empty($base)) { ?>
-      $query = sb($this->base)->query_admin($query, $ops);
-    <?php } else { ?>
-      if (!logged_in("admin") && !logged_in("root")) $query->action("read");
-    <?php } ?>
-    return $query;
-	}
-
-	function query_form($query, &$ops) {
-		if (empty($ops['action'])) $ops['action'] = "create";
-		$query->action($ops['action'], "<?php echo $model; ?>");
-		$query->condition("<?php echo $model; ?>.id", $ops['id']);
-<?php
-    if (!empty($base)) {
-      unset($fields["id"]);
-      foreach(entity_chain($base) as $b) unset($fields[$b."_id"]);
-    }
-		$tabs = "\t\t";
-		foreach ($fields as $fieldname => $field) {
-				if (sb()->models->has($field['type'])) {
-					if (empty($field['column'])) $field['column'] = "id";
-					echo $tabs.'$query->select($query->model.".'.$fieldname.'.'.$field['column'].' as '.$fieldname.'");'."\n";
-				}
-		}
-    $parent = $base;
-    while (!empty($parent)) {
-      foreach (sb($parent)->hooks as $column => $field) {
-        if (sb()->models->has($field['type'])) {
-          if (empty($field['column'])) $field['column'] = "id";
-          echo $tabs.'$query->select($query->model.".'.$column.'.'.$field['column'].' as '.$column.'");'."\n";
-        }
-      }
-      $parent = sb($parent)->base;
-    }
-		?>
-		return $query;
-	}
-
-	function query_get($query, &$ops) {
-		return $query;
-	}
-
-	function query_select($query, &$ops) {
-		if (!empty($ops['id'])) {
-			$query->condition($query->model.".id", explode(",", $ops['id']));
-		} else {
-			$query->condition("<?php echo $name; ?>.statuses.slug", "deleted", "!=", array("ornull" => true));
-		}
-		$query->select("<?php echo $name; ?>.id");
-		$query->select("<?php echo empty($label_select) ? $name.".id" : $label_select; ?> as label");
-		return $query;
 	}
 
 }

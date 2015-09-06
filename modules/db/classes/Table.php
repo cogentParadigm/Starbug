@@ -61,6 +61,22 @@ class Table {
 		$this->init();
 	}
 
+	function create($data) {
+    if (!empty($this->base)) {
+      entity_save($this->type, $data + array("type" => $this->type));
+    } else {
+		  $this->store($data);
+    }
+	}
+
+	function delete($data) {
+    if (!empty($this->base)) {
+      entity_delete($this->type, $data["id"]);
+    } else {
+      remove($this->type, array("id" => $data["id"]));
+    }
+	}
+
 	public function errors($key = "", $values = false) {
 		$key = (empty($key)) ? $this->type : $this->type.".".$key;
 		return $this->db->errors($key, $values);
@@ -192,9 +208,61 @@ class Table {
 
 	function query_filters($action, $query, &$ops) {
 		if (!empty($this->base)) {
-			sb($this->base)->query_filters($action, $query, $ops);
+			$this->models->get($this->base)->query_filters($action, $query, $ops);
 		} else {
 			if (!empty($ops['keywords'])) $query->search($ops['keywords']);
+		}
+		return $query;
+	}
+
+	function query_get($query, &$ops) {
+		return $query;
+	}
+
+	function query_admin($query, &$ops) {
+		if (!empty($this->base)) {
+			$query = $this->models->get($this->base)->query_admin($query, $ops);
+		} else {
+			if (!logged_in("admin") && !logged_in("root")) $query->action("read");
+		}
+		return $query;
+	}
+
+	function query_select($query, &$ops) {
+		if (!empty($ops['id'])) {
+			$query->condition($query->model.".id", explode(",", $ops['id']));
+		} else {
+			$query->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true));
+		}
+		$query->select($query->model.".id");
+		$query->select($this->label_select." as label");
+		return $query;
+	}
+
+	function query_form($query, &$ops) {
+		if (empty($ops['action'])) $ops['action'] = "create";
+		$query->action($ops['action'], $query->model);
+		$query->condition($query->model.".id", $ops['id']);
+		$fields = $this->hooks;
+		if (!empty($this->base)) {
+			unset($fields["id"]);
+			foreach(entity_chain($this->base) as $b) unset($fields[$b."_id"]);
+		}
+		foreach ($fields as $fieldname => $field) {
+			if ($this->models->has($field['type'])) {
+				if (empty($field['column'])) $field['column'] = "id";
+				$query->select($query->model.'.'.$fieldname.'.'.$field['column'].' as '.$fieldname);
+			}
+		}
+		$parent = $this->base;
+		while (!empty($parent)) {
+			foreach ($this->models->get($parent)->hooks as $column => $field) {
+				if ($this->models->has($field['type'])) {
+					if (empty($field['column'])) $field['column'] = "id";
+					$query->select($query->model.'.'.$column.'.'.$field['column'].' as '.$column);
+				}
+			}
+			$parent = $this->models->get($parent)->base;
 		}
 		return $query;
 	}
