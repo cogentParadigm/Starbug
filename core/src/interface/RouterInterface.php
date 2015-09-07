@@ -6,6 +6,7 @@
  * @file core/src/interface/RouterInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 interface RouterInterface {
 	/**
 	 * a router must identify a controller from a Request

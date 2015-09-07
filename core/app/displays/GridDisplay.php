@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class GridDisplay extends ItemDisplay {
 	public $type = "grid";
 	public $template = "grid";

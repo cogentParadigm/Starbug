@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class UsersForm extends FormDisplay {
 	public $model = "users";
 	public $cancel_url = "admin/users";

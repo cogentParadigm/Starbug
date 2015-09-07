@@ -6,6 +6,7 @@
 * @file core/src/interface/DisplayFactoryInterface.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
 /**
 * hook factory interface
 */

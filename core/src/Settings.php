@@ -6,6 +6,7 @@
  * @file core/lib/Config.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 /**
  * An implementation of the ConfigInterface which reads name/value pairs from a database table
  */

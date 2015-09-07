@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_form_file extends FormHook {
 	function build($form, &$control, &$field) {
 		$field['type'] = 'file';

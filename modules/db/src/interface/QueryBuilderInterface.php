@@ -6,6 +6,10 @@
 * @file modules/db/src/interface/QueryBuilderFactoryInterface.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
+
+use \IteratorAggregate;
+use \ArrayAccess;
 /**
 * query builder factory interface
 */

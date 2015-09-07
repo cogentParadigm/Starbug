@@ -1,4 +1,6 @@
 <?php
+namespace Starbug\Intl;
+use Starbug\Core\ConfigInterface;
 class IntlSetupCommand {
 	public function __construct(ConfigInterface $config) {
 		$this->config = $config;

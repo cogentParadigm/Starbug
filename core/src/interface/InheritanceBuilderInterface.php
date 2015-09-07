@@ -6,7 +6,7 @@
  * @file core/src/interface/InheritanceBuilderInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
-
+namespace Starbug\Core;
 interface InheritanceBuilderInterface {
 	/**
 	* build an inheritance chain

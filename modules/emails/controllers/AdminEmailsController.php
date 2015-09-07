@@ -1,5 +1,8 @@
 <?php
-class AdminEmailsController {
+namespace Starbug\Emails;
+use Starbug\Core\Controller;
+use Starbug\Core\DatabaseInterface;
+class AdminEmailsController extends Controller {
 	public $routes = array(
 		'update' => '{id}'
 	);

@@ -1,5 +1,8 @@
 <?php
-class AdminPostsController {
+namespace Starbug\App;
+use Starbug\Core\Controller;
+use Starbug\Core\DatabaseInterface;
+class AdminPostsController extends Controller {
 	public $routes = array(
 		'update' => '{id}'
 	);

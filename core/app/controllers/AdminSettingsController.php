@@ -1,5 +1,6 @@
 <?php
-class AdminSettingsController {
+namespace Starbug\Core;
+class AdminSettingsController extends Controller {
 	function init() {
 		$this->assign("model", "settings");
 	}

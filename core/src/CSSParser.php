@@ -7,6 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup CSSParser
  */
+namespace Starbug\Core;
 /**
  * Parses, omptimizes and combines CSS files. Used in conjuction with script/generate/css to combine all CSS sources per theme.
  * @ingroup CSSParser

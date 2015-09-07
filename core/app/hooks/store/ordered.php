@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_store_ordered extends QueryHook {
 	var $conditions = false;
 	var $value = false;

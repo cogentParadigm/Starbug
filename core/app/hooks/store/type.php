@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_store_type extends QueryHook {
 	public function __construct(ModelFactoryInterface $models) {
 		$this->models = $models;

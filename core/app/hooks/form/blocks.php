@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_form_blocks extends FormHook {
 	function __construct(Request $request) {
 		$this->request = $request;

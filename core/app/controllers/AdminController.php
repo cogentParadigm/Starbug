@@ -1,5 +1,6 @@
 <?php
-class AdminController {
+namespace Starbug\Core;
+class AdminController extends Controller {
 	function __construct(ControllerFactoryInterface $controllers, RouterInterface $router) {
 		$this->controllers = $controllers;
 		$this->router = $router;

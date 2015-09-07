@@ -6,6 +6,7 @@
 * @file core/src/interface/TaskFactoryInterface.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
 /**
 * task factory interface
 */

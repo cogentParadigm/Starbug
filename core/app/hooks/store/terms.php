@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_store_terms extends QueryHook {
 	protected $taxonomy;
 	function __construct(TaxonomyInterface $taxonomy) {

@@ -1,0 +1,16 @@
+{
+	"require": {
+		"phpmailer/phpmailer": "dev-master",
+		"masterexploder/phpthumb": "dev-master",
+		"ezyang/htmlpurifier":"dev-master"
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/cogentParadigm/phpthumb"
+		}
+	],
+	"autoload": {
+		"classmap":["core", "app", "modules", "var", "util"]
+	}
+}

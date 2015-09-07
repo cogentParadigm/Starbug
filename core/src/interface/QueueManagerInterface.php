@@ -6,6 +6,7 @@
  * @file core/src/interface/QueueManagerInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 /**
  * a simple interface for a queue
  */

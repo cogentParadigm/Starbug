@@ -7,6 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
+namespace Starbug\Core;
 // IF GENERATING HOST, SKIP RIGHT TO IT AND EXIT
 if ($argv[0] == "host") include(dirname(__FILE__)."/generate/host/host.php");
 class GenerateCommand {
@@ -51,13 +52,14 @@ class GenerateCommand {
 		$path = (isset($args['u'])) ? "generate/$generator/update.php" : "generate/$generator/$generator.php";
 		if ($result = end($this->locator->locate($path, "script"))) include($result);
 		else throw new Exception("Could not find generator '$generator'");
+		$namespace = end($this->locator->locate_namespaces($path, "script"));
 		$render_prefix = reset(explode("/$generator/", str_replace($this->base_directory, "", $result)))."/$generator/";
 		$locator = new ResourceLocator($this->base_directory, array($render_prefix));
 		$renderer = new Template($locator);
 
 		$class = str_replace(' ', '', ucwords(str_replace("-", " ", $generator))).'GenerateCommand';
-		if (class_exists($class)) {
-			$command = $this->container->get($class);
+		if (class_exists($namespace.$class)) {
+			$command = $this->container->get($namespace.$class);
 			$command->run($params);
 			$params['generator'] = $command;
 			$dirs = $command->dirs;

@@ -3,7 +3,8 @@
  * imports model
  * @ingroup models
  */
-class Imports {
+namespace Starbug\Core;
+class Imports extends ImportsModel {
 
 	function create($import) {
 		$this->store($import);

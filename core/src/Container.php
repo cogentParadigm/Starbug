@@ -6,14 +6,14 @@
  * @file core/src/interface/ContainerInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
-
+namespace Starbug\Core;
 class Container implements ContainerInterface {
 
 	private $map;
 
 	function __construct() {
 	$this->map = array();
-	$this->register('ContainerInterface', $this, true);
+	$this->register('Starbug\Core\ContainerInterface', $this, true);
 	}
 
 	/**
@@ -36,7 +36,7 @@ class Container implements ContainerInterface {
 				$this->map[$name]['value'] = $this->build($value);
 				return $this->get($name);
 			} else {
-				throw new Exception("Dependency not found: ".$name);
+				throw new \Exception("Dependency not found: ".$name);
 			}
 		}
 	}
@@ -76,7 +76,7 @@ class Container implements ContainerInterface {
 	}
 
 	function build($name, $options = array()) {
-		$class = new ReflectionClass($name);
+		$class = new \ReflectionClass($name);
 		$args = array();
 		$constructor = $class->getConstructor();
 		if ($constructor) {

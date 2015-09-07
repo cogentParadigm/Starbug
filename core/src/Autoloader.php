@@ -6,7 +6,7 @@
  * @file core/src/interface/AutoloaderInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
-
+namespace Starbug\Core;
 class Autoloader implements AutoloaderInterface {
 	protected $map = array();
 	protected $loaded = array();

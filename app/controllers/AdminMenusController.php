@@ -1,5 +1,9 @@
 <?php
-class AdminMenusController {
+namespace Starbug\App;
+use Starbug\Core\Controller;
+use Starbug\Core\DatabaseInterface;
+use Starbug\Core\ModelFactoryInterface;
+class AdminMenusController extends Controller {
 	public $routes = array(
 		'menu' => '{menu}',
 		'update' => '{id}'

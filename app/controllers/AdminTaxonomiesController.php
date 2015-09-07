@@ -1,5 +1,9 @@
 <?php
-class AdminTaxonomiesController {
+namespace Starbug\App;
+use Starbug\Core\Controller;
+use Starbug\Core\DatabaseInterface;
+use Starbug\Core\ModelFactoryInterface;
+class AdminTaxonomiesController extends Controller {
 	public $routes = array(
 		'update' => '{id}',
 		'taxonomy' => '{taxonomy}'

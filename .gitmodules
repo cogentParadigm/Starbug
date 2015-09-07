@@ -22,12 +22,6 @@
 [submodule "libraries/dojo/bootstrap"]
 	path = libraries/dojo/bootstrap
 	url = https://github.com/xsokev/Dojo-Bootstrap.git
-[submodule "util/phpthumb"]
-	path = util/phpthumb
-	url = git://github.com/masterexploder/PHPThumb.git
-[submodule "util/phpmailer"]
-	path = util/phpmailer
-	url = git://github.com/PHPMailer/PHPMailer.git
 [submodule "libraries/dojo/dbootstrap"]
 	path = libraries/dojo/dbootstrap
 	url = https://github.com/cogentParadigm/dbootstrap.git
@@ -37,9 +31,6 @@
 [submodule "libraries/font-awesome"]
 	path = libraries/font-awesome
 	url = https://github.com/FortAwesome/Font-Awesome.git
-[submodule "util/htmlpurifier"]
-	path = util/htmlpurifier
-	url = https://github.com/ezyang/htmlpurifier.git
 [submodule "libraries/dojo/dstore"]
 	path = libraries/dojo/dstore
 	url = https://github.com/SitePen/dstore.git

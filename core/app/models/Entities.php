@@ -3,7 +3,8 @@
  * entities model
  * @ingroup models
  */
-class Entities {
+namespace Starbug\Core;
+class Entities extends EntitiesModel {
 
 	function create($entitie) {
 		$this->store($entitie);

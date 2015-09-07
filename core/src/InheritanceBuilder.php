@@ -6,7 +6,7 @@
  * @file core/src/InheritanceBuilder.php
  * @author Ali Gangji <ali@neonrain.com>
  */
-
+namespace Starbug\Core;
 class InheritanceBuilder implements InheritanceBuilderInterface {
 
 	protected $locator;

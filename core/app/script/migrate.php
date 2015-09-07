@@ -7,6 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
+namespace Starbug\Core;
 class MigrateCommand {
 	function __construct(Schemer $schemer, ContainerInterface $container) {
 		$this->schemer = $schemer;
@@ -38,7 +39,7 @@ class MigrateCommand {
 			//TODO: add support for changing databases to Database
 			//			and remove the dependency on the container from this file
 			$this->container->register("database_name", $next, true);
-			$db = $this->container->update("DatabaseInterface");
+			$db = $this->container->update("Starbug\Core\DatabaseInterface");
 			$this->schemer->set_database($db);
 			sb()->db = $db;
 		}

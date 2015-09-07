@@ -7,6 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
+namespace Starbug\Core;
 class TaskCommand {
 	function __construct(QueueManagerInterface $queues) {
 		$this->queues = $queues;

@@ -3,6 +3,7 @@
  * languages model
  * @ingroup models
  */
+namespace Starbug\Intl;
 class Languages {
 
 	/******************************************************************

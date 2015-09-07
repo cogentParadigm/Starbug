@@ -6,6 +6,7 @@
  * @file core/src/Template.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 /**
  * Template class. assign/render style templating system
  */
@@ -119,9 +120,9 @@ class Template implements TemplateInterface {
 	function publish($topic, $tags = array(), $params = array()) {
 		if (!is_array($tags)) $tags = array($tags);
 		array_unshift($tags, "global");
-	 foreach ($tags as $tag) {
-		 $this->render("hook/".$tag.".".$topic, $params, array("all" => true));
-	 }
+		foreach ($tags as $tag) {
+			$this->render("hook/".$tag.".".$topic, $params, array("all" => true));
+		}
 	}
 
 	public function __get($name) {

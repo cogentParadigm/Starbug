@@ -6,6 +6,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
+namespace Starbug\Core;
 /**
  * ApiRequest
  * @ingroup core
@@ -101,7 +102,7 @@ class ApiRequest {
 		$this->data = $data;
 		$f = strtoupper($format);
 		$error = $f."errors";
-		if (empty(sb()->errors[$model])) {
+		if (empty(sb()->db->errors[$model])) {
 			if (!empty($data)) {
 				$add = (isset($pager) && $pager->start > 0) ? 1 : 0;
 				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);

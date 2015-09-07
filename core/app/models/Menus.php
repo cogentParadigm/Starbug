@@ -3,7 +3,8 @@
  * menus model
  * @ingroup models
  */
-class Menus {
+namespace Starbug\Core;
+class Menus extends MenusModel {
 
 	function create($menu) {
 		if (!isset($menu['position'])) $menu['position'] = "";

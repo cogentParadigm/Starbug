@@ -6,7 +6,7 @@
  * @file modules/emails/src/Mailer.php
  * @author Ali Gangji <ali@neonrain.com>
  */
-
+namespace Starbug\Core;
 class Mailer implements MailerInterface {
 
 	private $host;

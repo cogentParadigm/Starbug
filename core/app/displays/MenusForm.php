@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class MenusForm extends FormDisplay {
 	public $model = "menus";
 	public $cancel_url = "admin/menus";

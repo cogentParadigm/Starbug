@@ -12,14 +12,14 @@
 $result = include("init.php");
 
 global $request;
-$request = new Request("/", array(
+$request = new Starbug\Core\Request("/", array(
 	'server' => $_SERVER,
 	'directory' => Etc::WEBSITE_URL
 ));
-$container->register("Request", $request, true);
+$container->register("Starbug\Core\Request", $request, true);
 if ($result) {
 	global $sb;
-	$sb = $container->get("sb");
+	$sb = $container->get("Starbug\Core\sb");
 	$context->assign("sb", $sb);
 	$sb->user = array("groups" => array("root"));
 }

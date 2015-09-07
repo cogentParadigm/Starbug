@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_form_select extends FormHook {
 	function build($form, &$control, &$field) {
 		$name = $field['name'];

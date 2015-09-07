@@ -1,5 +1,6 @@
 <?php
-class AdminImports_fieldsController {
+namespace Starbug\Core;
+class AdminImports_fieldsController extends Controller {
 	public $routes = array(
 		'update' => '{id}'
 	);

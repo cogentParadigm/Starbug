@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class CsvDisplay extends ItemDisplay {
 	public $template = "csv";
 	function build_display($options) {

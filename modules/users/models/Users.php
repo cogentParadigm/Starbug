@@ -3,7 +3,11 @@
  * Users model
  * @ingroup models
  */
-class Users {
+namespace Starbug\Users;
+use Starbug\Core\UsersModel;
+use Starbug\Core\Session;
+use \Etc;
+class Users extends UsersModel {
 
 	/**
 	 * A function for an administrator to create and update users
@@ -17,7 +21,7 @@ class Users {
 			$uid = $this->insert_id;
 			$data = array("user" => get("users", $uid));
 			$data['user']['password'] = $user['password'];
-			//$this->mailer->send(array("template" => "Account Creation", "to" => $user['email']), $data);
+			$this->mailer->send(array("template" => "Account Creation", "to" => $user['email']), $data);
 		}
 	}
 

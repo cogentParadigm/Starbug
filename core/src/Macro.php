@@ -6,6 +6,7 @@
  * @file core/src/Macro.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 /**
  * an implementation of MacroInteface
  */

@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class DropdownDisplay extends ItemDisplay {
 	var $type = "list";
 	var $template = "select";

@@ -11,7 +11,7 @@ Stack Trace
 		echo ': ';
 		if(!empty($trace['class'])) echo "{$trace['class']}{$trace['type']}";
 		echo "{$trace['function']}(";
-		if(!empty($trace['args'])) echo ErrorHandler::argumentsToString($trace['args']);
+		if(!empty($trace['args'])) echo Starbug\Core\ErrorHandler::argumentsToString($trace['args']);
 		echo ')';
 		echo "\n";
 	}

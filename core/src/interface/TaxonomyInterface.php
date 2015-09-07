@@ -6,6 +6,7 @@
  * @file core/src/interface/TaxonomyInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 /**
  * a simple interface for accessing taxonomy trees, and applying categories and tags
  */

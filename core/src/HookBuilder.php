@@ -6,7 +6,7 @@
  * @file core/src/HookBuilder.php
  * @author Ali Gangji <ali@neonrain.com>
  */
-
+namespace Starbug\Core;
 class HookBuilder implements HookBuilderInterface {
 
 	protected $locator;
@@ -31,18 +31,11 @@ class HookBuilder implements HookBuilderInterface {
 			$class = "hook_".$parts[0]."_".$parts[1];
 
 			//get extending classes
-			$files = $this->locator->locate($name.".php", "hooks");
-			$count = count($files);
-			$search = "class $class ";
+			$namespaces = $this->locator->locate_namespaces($name.".php", "hooks");
 
 			//loop through found classes
-			for ($i = 0; $i < $count; $i++) {
-				//get file contents
-				$contents = file_get_contents($files[$i]);
-				$replace = "class ".$class.$i." ";
-				//replace and eval
-				eval('?>'.str_replace($search, $replace, $contents));
-				$hooks[] = $class.$i;
+			foreach ($namespaces as $namespace) {
+				$hooks[] = $namespace.$class;
 			}
 
 			$this->hooks[$name] = $hooks;

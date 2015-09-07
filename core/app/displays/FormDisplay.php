@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class FormDisplay extends ItemDisplay {
 	public $type = "form";
 	public $template = "form";
@@ -26,6 +27,7 @@ class FormDisplay extends ItemDisplay {
 
 	function build($options) {
 		$this->options = $options;
+		if (empty($this->model) && !empty(($this->options['model']))) $this->model = $this->options['model'];
 		// grab schema
 		if (!empty($this->model) && $this->models->has($this->model)) {
 			$this->schema = $this->models->get($this->model)->hooks;
@@ -117,8 +119,10 @@ class FormDisplay extends ItemDisplay {
 		foreach ($this->fields as $name => $field) {
 			$this->schema[$name] = column_info($field['model'], $name);
 			$error_key = str_replace(array("][", "[", "]"), array(".", ".", ""), $name);
-			$errors = $this->models->get($this->schema[$name]['entity'])->errors($error_key, true);
-			if (!empty($errors)) $this->errors[$name] = $errors;
+			if (!empty($this->schema[$name]['entity'])) {
+				$errors = $this->models->get($this->schema[$name]['entity'])->errors($error_key, true);
+				if (!empty($errors)) $this->errors[$name] = $errors;
+			}
 		}
 	}
 

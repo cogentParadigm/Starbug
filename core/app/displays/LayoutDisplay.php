@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class LayoutDisplay extends ItemDisplay {
 	public $type = "layout";
 	public $template = "layout";

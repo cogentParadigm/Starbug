@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_form_crud extends FormHook {
 	function build($form, &$control, &$field) {
 		$var = $form->get($field['name']);

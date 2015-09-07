@@ -25,29 +25,22 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERRO
 
 include(BASE_DIR."/core/autoload.php");
 
-$container = new Container();
+$container = new Starbug\Core\Container();
 $container->register('base_directory', BASE_DIR, true);
 $container->register('modules', $modules, true);
 $container->register('database_name', DEFAULT_DATABASE, true);
 
 //create locator
-$locator = $container->get('ResourceLocatorInterface');
+$locator = $container->get('Starbug\Core\ResourceLocatorInterface');
 
 // global functions
 foreach ($locator->locate("global_functions.php", "") as $global_include) include($global_include);
 
-if (file_exists(BASE_DIR."/var/autoload_classmap.php")) {
-	$loader = $container->get("AutoloaderInterface");
-	$loader->add(include(BASE_DIR."/var/autoload_classmap.php"));
-	$loader->register();
+$context = $container->get("Starbug\Core\TemplateInterface");
+$context->assign("container", $container);
 
-	$context = $container->get("TemplateInterface");
-	$context->assign("container", $container);
+new Starbug\Core\ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
 
-	new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
-} else {
-	return false;
-}
 return true;
 
 ?>

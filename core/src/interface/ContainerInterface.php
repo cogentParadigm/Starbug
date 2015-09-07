@@ -6,7 +6,7 @@
  * @file core/src/interface/ContainerInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
-
+namespace Starbug\Core;
 interface ContainerInterface {
 
 	/**

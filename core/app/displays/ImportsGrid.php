@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class ImportsGrid extends GridDisplay {
 	public $model = "imports";
 	public $action = "admin";

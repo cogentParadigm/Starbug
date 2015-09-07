@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_macro_path extends MacroHook {
 	function replace($macro, $name, $token, $data) {
 		if ($name == "token") {

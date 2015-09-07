@@ -6,6 +6,7 @@
 * @file core/src/interface/ControllerFactoryInterface.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
 /**
 * model factory interface
 */

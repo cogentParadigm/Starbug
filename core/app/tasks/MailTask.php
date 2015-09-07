@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class MailTask implements TaskInterface {
 	public function __construct(MailerInterface $mailer) {
 		$this->mailer = $mailer;

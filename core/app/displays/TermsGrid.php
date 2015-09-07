@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class TermsGrid extends GridDisplay {
 	public $model = "terms";
 	public $action = "admin";

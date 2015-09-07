@@ -8,6 +8,8 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
+namespace Starbug\Core;
+use \Etc;
 /**
  * The sb class. Provides data, errors, import/provide, pub/sub, and load to the rest of the application. The core component of StarbugPHP.
  * @ingroup core

@@ -6,15 +6,19 @@
 * @file core/src/HelperFactory.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
 /**
 * an implementation of HelperFactoryInterface
 */
 class HelperFactory implements HelperFactoryInterface {
+	protected $locator;
 	protected $container;
-	public function __construct(ContainerInterface $container) {
+	public function __construct(ResourceLocatorInterface $locator, ContainerInterface $container) {
 		$this->container = $container;
+		$this->locator = $locator;
 	}
 	public function get($helper) {
-		return $this->container->build($helper);
+		$namespace = end($this->locator->locate_namespaces($helper.".php", "helpers"));
+		return $this->container->build($namespace.$helper);
 	}
 }

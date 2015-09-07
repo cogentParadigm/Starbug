@@ -3,6 +3,7 @@
  * countries model
  * @ingroup models
  */
+namespace Starbug\Intl;
 class Countries {
 
 	function create($country) {

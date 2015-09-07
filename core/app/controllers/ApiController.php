@@ -1,5 +1,6 @@
 <?php
-class ApiController {
+namespace Starbug\Core;
+class ApiController extends Controller {
 	public $routes = array(
 		'response' => '{model}/{action}'
 	);

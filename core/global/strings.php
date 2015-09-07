@@ -167,7 +167,6 @@ function filter_html($content, $allowed = array()) {
 	return $purifier->purify($content);
 }
 function load_htmlpurifier($allowed = array()) {
-	import("htmlpurifier");
 	if (empty($allowed)) {
 		$allowed = array(
 			'img[src|alt|title|width|height|style|data-mce-src|data-mce-json]',

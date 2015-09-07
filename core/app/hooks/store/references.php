@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_store_references extends QueryHook {
 	protected $replace = false;
 	function __construct(ModelFactoryInterface $models) {

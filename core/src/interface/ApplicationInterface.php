@@ -6,6 +6,7 @@
  * @file core/src/interface/ApplicationInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 interface ApplicationInterface {
 	/**
 	 * an application must simply handle requests by returning a response object

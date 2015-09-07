@@ -16,7 +16,9 @@
  * $queue->execute();
  * @ingroup db
  */
-
+namespace Starbug\Core;
+use \Countable;
+use \IteratorAggregate;
 class queue implements Countable, IteratorAggregate {
 
 	/**

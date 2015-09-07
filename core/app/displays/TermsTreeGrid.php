@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class TermsTreeGrid extends GridDisplay {
 	public $model = "terms";
 	public $action = "tree";

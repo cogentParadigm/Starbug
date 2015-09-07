@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class ProfileForm extends FormDisplay {
 	public $model = "users";
 	public $default_action = "update_profile";
