@@ -7,6 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  */
 namespace Starbug\Core;
+use \PHPMailer;
 class Mailer implements MailerInterface {
 
 	private $host;

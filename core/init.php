@@ -29,6 +29,7 @@ $container = new Starbug\Core\Container();
 $container->register('base_directory', BASE_DIR, true);
 $container->register('modules', $modules, true);
 $container->register('database_name', DEFAULT_DATABASE, true);
+$container->register('Starbug\Core\SettingsInterface', 'Starbug\Core\DatabaseSettings');
 
 //create locator
 $locator = $container->get('Starbug\Core\ResourceLocatorInterface');

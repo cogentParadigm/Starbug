@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class GridGenerateCommand {
 	public $dirs = array();
 	public $generate = array();

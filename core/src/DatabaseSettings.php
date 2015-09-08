@@ -10,7 +10,7 @@ namespace Starbug\Core;
 /**
  * An implementation of the ConfigInterface which reads name/value pairs from a database table
  */
-class Settings implements SettingsInterface {
+class DatabaseSettings implements SettingsInterface {
 
 	private $db;
 	private $settings;
