@@ -38,7 +38,6 @@ $locator = $container->get('Starbug\Core\ResourceLocatorInterface');
 foreach ($locator->locate("global_functions.php", "") as $global_include) include($global_include);
 
 $context = $container->get("Starbug\Core\TemplateInterface");
-$context->assign("container", $container);
 
 new Starbug\Core\ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
 

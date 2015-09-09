@@ -55,7 +55,7 @@ class Template implements TemplateInterface {
 		$this->path = ($this->options['all']) ? $found : end($found);
 
 	 if (!is_array($this->path) && !file_exists($this->path)) {
-		 throw new Exception("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
+		 throw new \Exception("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
 	 }
 
 		extract($this->vars);

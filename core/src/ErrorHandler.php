@@ -9,6 +9,7 @@
  * @ingroup core
  */
 namespace Starbug\Core;
+use \PDOException;
 /**
  * Error handler
  * @ingroup core
