@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class ModelsHelper {
 	public function __construct(ModelFactoryInterface $models) {
 		$this->target = $models;

@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_store_selection extends QueryHook {
 	function after_store(&$query, $key, $value, $column, $argument) {
 		if (empty($value)) return;

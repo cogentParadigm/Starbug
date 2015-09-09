@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class RegisterForm extends FormDisplay {
 	public $model = "users";
 	public $default_action = "register";

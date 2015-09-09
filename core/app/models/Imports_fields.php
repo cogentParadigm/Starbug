@@ -3,7 +3,8 @@
  * imports_fields model
  * @ingroup models
  */
-class Imports_fields {
+namespace Starbug\Core;
+class Imports_fields extends Imports_fieldsModel {
 
 	function create($imports_field) {
 		$this->store($imports_field);

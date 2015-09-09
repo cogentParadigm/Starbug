@@ -3,7 +3,8 @@
  * terms model
  * @ingroup models
  */
-class Terms {
+namespace Starbug\Core;
+class Terms extends TermsModel {
 
 	function create($term) {
 		if (!empty($term['term'])) {

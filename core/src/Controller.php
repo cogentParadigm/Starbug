@@ -1,4 +1,6 @@
 <?php
+namespace Starbug\Core;
+use \ReflectionMethod;
 class Controller {
 
 	public $template = "auto";

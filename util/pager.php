@@ -7,12 +7,12 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup pager
  */
+namespace Starbug\Core;
 /**
  * @defgroup pager
  * pager utility
  * @ingroup util
  */
-$sb->provide("util/pager");
 /**
  * pagination class
  * @ingroup pager
@@ -25,7 +25,7 @@ class pager {
 	var $finish; // showing $start to $finish of $count items
 	var $current_page; //current page
 	var $range; //number of page links to show
-	function pager($total, $items_per_page, $current_pg=1, $range=6) {
+	function __construct($total, $items_per_page, $current_pg=1, $range=6) {
 		$this->count = $total;
 		$this->per = $items_per_page;
 		$this->range = $range;

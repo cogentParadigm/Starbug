@@ -7,6 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup test
  */
+use Starbug\Core\Session;
 /**
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup test
@@ -19,7 +20,7 @@ class storeTest extends UnitTest {
 
 	public static function setUpBeforeClass() {
 		global $container;
-		self::$db = $container->get("DatabaseInterface");
+		self::$db = $container->get("Starbug\Core\DatabaseInterface");
 	}
 
 	/**

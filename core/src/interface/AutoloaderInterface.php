@@ -6,7 +6,7 @@
  * @file core/src/interface/AutoloaderInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
-
+namespace Starbug\Core;
 interface AutoloaderInterface {
 	/**
 	 * autoload a class

@@ -1,5 +1,8 @@
 <?php
-class AdminUrisController {
+namespace Starbug\App;
+use Starbug\Core\Controller;
+use Starbug\Core\DatabaseInterface;
+class AdminUrisController extends Controller {
 	public $routes = array(
 		'update' => '{id}'
 	);

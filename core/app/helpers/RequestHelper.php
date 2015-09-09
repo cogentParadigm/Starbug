@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class RequestHelper {
 	public function __construct(Request $request) {
 		$this->target = $request;

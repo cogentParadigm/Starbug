@@ -6,20 +6,25 @@
 * @file core/src/ControllerFactory.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
 /**
 * an implementation of ControllerFactoryInterface
 */
 class ControllerFactory implements ControllerFactoryInterface {
-	private $inheritance;
+	private $locator;
 	private $container;
-	public function __construct(InheritanceBuilderInterface $inheritance, ContainerInterface $container) {
-		$this->inheritance = $inheritance;
+	public function __construct(ResourceLocatorInterface $locator, ContainerInterface $container) {
+		$this->locator = $locator;
 		$this->container = $container;
 	}
 	public function get($controller) {
 		$controller = ucwords($controller)."Controller";
-		$class = $this->inheritance->build("Controller", "controllers/".$controller);
-		$object = $this->container->get($class);
+		$namespace = end($this->locator->locate_namespaces($controller.".php", "controllers"));
+		if (empty($namespace)) {
+			$namespace = "Starbug\Core\\";
+			$controller = "Controller";
+		}
+		$object = $this->container->get($namespace.$controller);
 		return $object;
 	}
 }

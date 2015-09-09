@@ -1,4 +1,6 @@
 <?php
+namespace Starbug\Intl;
+use Starbug\Core\FormDisplay;
 class CountriesForm extends FormDisplay {
 	public $model = "countries";
 	public $cancel_url = "admin/countries";

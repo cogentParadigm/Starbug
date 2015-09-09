@@ -4,6 +4,7 @@
   extract($config->get($model, "json"));
   echo '<?php'."\n";
 ?>
+namespace Starbug\Core;
 /**
  * <?php echo $name; ?> model base
  * @ingroup models

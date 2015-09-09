@@ -3,6 +3,7 @@
  * PSR-3 LoggerInterface
  * @file core/src/interface/LoggerInterface.php
  */
+namespace Starbug\Core;
 interface LoggerInterface {
 	/**
 	 * System is unusable.

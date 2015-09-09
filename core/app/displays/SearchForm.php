@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class SearchForm extends FormDisplay {
 	public $method = "get";
 	public $default_action = "search";

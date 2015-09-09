@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_store_blocks extends QueryHook {
 	function validate($query, $key, $value, $column, $argument) {
 		$query->exclude($key);

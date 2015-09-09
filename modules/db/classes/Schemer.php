@@ -11,6 +11,7 @@
  * the db class
  * @ingroup db
  */
+namespace Starbug\Core;
 /**
  * The Schemer class. Manages a schema of the database using migrations and handles synching a database with the schema
  * @ingroup Schemer
@@ -1158,7 +1159,7 @@ class Schemer {
 	 * convert table schema to XML
 	 */
 	function toXML($model) {
-		$xmlDoc = new DOMDocument();
+		$xmlDoc = new \DOMDocument();
 		$root = $xmlDoc->appendChild($xmlDoc->createElement("model"));
 		$xmlDoc->formatOutput = true;
 		foreach ($model as $key => $value) {

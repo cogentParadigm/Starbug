@@ -6,6 +6,7 @@
  * @file core/lib/TemplateInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 /**
  * A simple interface for template rendering
  */

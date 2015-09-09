@@ -6,6 +6,9 @@
  * @file core/src/interface/QueueInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
+
+use \Countable;
 /**
  * a simple interface for a queue
  */

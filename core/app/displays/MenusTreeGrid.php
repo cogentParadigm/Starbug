@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class MenusTreeGrid extends GridDisplay {
 	public $model = "menus";
 	public $action = "tree";

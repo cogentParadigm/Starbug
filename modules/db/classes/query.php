@@ -15,7 +15,11 @@
  * 			 ->sort('last_name')->limit(10)->skip(20);
  * @ingroup db
  */
-
+namespace Starbug\Core;
+use \IteratorAggregate;
+use \ArrayAccess;
+use \ArrayIterator;
+use \PDO;
 class query implements IteratorAggregate, ArrayAccess {
 
 	const PHASE_VALIDATION = 0;
@@ -1426,7 +1430,6 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @return pager
 	 */
 	function pager($page, $force = false) {
-		import("pager");
 		if ($force || is_null($this->pager)) {
 			$this->pager = new pager($this->count(), $this->query['limit'], $page);
 			$this->skip($this->pager->start);

@@ -1,5 +1,8 @@
 <?php
-class AdminUsersController {
+namespace Starbug\App;
+use Starbug\Core\Controller;
+use Starbug\Core\DatabaseInterface;
+class AdminUsersController extends Controller {
 	public $routes = array(
 		'update' => '{id}'
 	);

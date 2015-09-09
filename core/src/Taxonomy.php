@@ -6,6 +6,7 @@
  * @file core/src/Taxonomy.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 /**
  * implementation of TaxonomyInterface
  */

@@ -1,4 +1,4 @@
 <?php
-	Session::destroy();
+	Starbug\Core\Session::destroy();
 	redirect(uri());
 ?>

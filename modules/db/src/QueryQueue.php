@@ -7,6 +7,9 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup db
  */
+namespace Starbug\Core;
+
+use \SplQueue;
 /**
  * usage:
  * $queue = new QueryQueue();

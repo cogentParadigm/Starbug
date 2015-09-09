@@ -6,6 +6,7 @@
 * @file modules/db/src/interface/QueryBuilderFactoryInterface.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
 /**
 * query builder factory interface
 */

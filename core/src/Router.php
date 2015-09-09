@@ -6,6 +6,7 @@
  * @file core/src/interface/RouterInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 class Router implements RouterInterface {
 	const VARIABLE_REGEX = <<<'REGEX'
 	~\{

@@ -6,6 +6,7 @@
  * @file core/src/Logger.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 /**
  * logger
  */

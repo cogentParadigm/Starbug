@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_store_category extends QueryHook {
 	protected $models;
 	protected $db;

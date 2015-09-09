@@ -6,6 +6,7 @@
 * @file core/src/interface/HelperFactoryInterface.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
 /**
 * helper factory interface
 */

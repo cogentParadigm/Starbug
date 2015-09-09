@@ -6,6 +6,7 @@
 * @file core/src/LoggerFactory.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
 /**
 * an implementation of LoggerFactoryInterface
 */

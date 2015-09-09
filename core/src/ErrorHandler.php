@@ -8,6 +8,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
+namespace Starbug\Core;
 /**
  * Error handler
  * @ingroup core

@@ -1,5 +1,6 @@
 <?php
-class Uris {
+namespace Starbug\Core;
+class Uris extends UrisModel {
 
 	function query_admin($query, &$ops) {
 		$query->select($query->model.".statuses.term as statuses");

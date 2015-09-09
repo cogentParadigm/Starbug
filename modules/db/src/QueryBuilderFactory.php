@@ -6,6 +6,7 @@
 * @file modules/db/src/QueryBuilderFactory.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
 /**
 * an implementation of MacroInteface
 */

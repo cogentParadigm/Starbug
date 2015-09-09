@@ -1,5 +1,7 @@
 <?php
-class Files {
+namespace Starbug\Files;
+use Starbug\Core\FilesModel;
+class Files extends FilesModel {
 
 	function create($record) {
 		$this->upload($record, $_FILES['file']);

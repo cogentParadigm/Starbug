@@ -161,7 +161,7 @@ pre span.error-ln {
 
 	<div class="source">
 		<p class="file"><?php echo htmlspecialchars($error['file'], ENT_QUOTES)."(".$error['line'].")"?></p>
-		<?php echo ErrorHandler::render_source($error['file'], $error['line'], 10); ?>
+		<?php echo Starbug\Core\ErrorHandler::render_source($error['file'], $error['line'], 10); ?>
 	</div>
 
 	<div class="traces">
@@ -193,13 +193,13 @@ pre span.error-ln {
 							echo ': ';
 							if(!empty($trace['class'])) echo "<strong>{$trace['class']}</strong>{$trace['type']}";
 							echo "<strong>{$trace['function']}</strong>(";
-							if(!empty($trace['args'])) echo htmlspecialchars(ErrorHandler::argumentsToString($trace['args']));
+							if(!empty($trace['args'])) echo htmlspecialchars(Starbug\Core\ErrorHandler::argumentsToString($trace['args']));
 							echo ')';
 						}
 					?>
 				</div>
 
-				<?php if($hasCode) echo ErrorHandler::render_source($trace['file'], $trace['line'], 10); ?>
+				<?php if($hasCode) echo Starbug\Core\ErrorHandler::render_source($trace['file'], $trace['line'], 10); ?>
 			</td>
 		</tr>
 		<?php } ?>
@@ -229,6 +229,6 @@ pre span.error-ln {
 		}
 	/*]]>*/
 	</script>
-	
+
 </body>
 </html>

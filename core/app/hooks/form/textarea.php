@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_form_textarea extends FormHook {
 	function build($form, &$control, &$field) {
 		if (empty($field['cols'])) $field['cols'] = "35";

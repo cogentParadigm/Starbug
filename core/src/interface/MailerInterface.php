@@ -6,7 +6,7 @@
  * @file core/src/interface/MailerInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
-
+namespace Starbug\Core;
 interface MailerInterface {
 
 	/**

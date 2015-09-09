@@ -9,6 +9,7 @@
 /**
  * An implementation of the ConfigInterface which reads json files from the filesystem
  */
+namespace Starbug\Core;
 class Config implements ConfigInterface {
 
 	private $locator;

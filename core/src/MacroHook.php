@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class MacroHook {
 	/**
 	 * set options when adding/updating fields fields

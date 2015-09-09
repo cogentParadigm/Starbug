@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 //stores a URL path slug
 class hook_store_slug extends QueryHook {
 	function __construct(MacroInterface $macro) {

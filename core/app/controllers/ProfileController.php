@@ -1,5 +1,6 @@
 <?php
-class ProfileController {
+namespace Starbug\Core;
+class ProfileController extends Controller {
 	function init() {
 		$this->assign("model", "users");
 	}

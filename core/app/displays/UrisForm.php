@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class UrisForm extends FormDisplay {
 	public $model = "uris";
 	public $cancel_url = "admin/uris";

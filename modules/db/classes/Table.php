@@ -12,6 +12,7 @@
  * the db class
  * @ingroup db
  */
+namespace Starbug\Core;
 /**
  * This class wraps a databse table, it is the base class for database models
  * @ingroup Table

@@ -7,6 +7,7 @@
 * @author Ali Gangji <ali@neonrain.com>
 * @ingroup core
 */
+namespace Starbug\Core;
 /**
 * Request class. interprets the request (URI, $_GET, and $_POST) and serves the appropriate content
 * @ingroup core

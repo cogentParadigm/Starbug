@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class CssGenerateCommand {
 	public $dirs = array();
 	public $generate = array();

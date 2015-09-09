@@ -6,6 +6,10 @@
 * @file modules/db/src/Database.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
+
+use \PDO;
+use \Etc;
 /**
 * DatabaseInterface cannonical implementation
 */

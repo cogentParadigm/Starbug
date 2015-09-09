@@ -7,6 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup Session
  */
+namespace Starbug\Core;
 /**
  * @defgroup Session
  * stateless session manager based on methodology outlined in this paper by Steven J. Murdoch

@@ -4,7 +4,7 @@
 * @ingroup entity
 */
 function sb() {
-	$sb = sb::$instance;
+	$sb = Starbug\Core\sb::$instance;
 	$args = func_get_args();
 	$count = count($args);
 	if ($count == 0) return $sb;

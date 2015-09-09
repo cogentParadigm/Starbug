@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class UsersGrid extends GridDisplay {
 	public $model = "users";
 	public $action = "admin";

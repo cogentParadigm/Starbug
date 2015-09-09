@@ -3,6 +3,7 @@
  * provinces model
  * @ingroup models
  */
+namespace Starbug\Intl;
 class Provinces {
 
 	function create($province) {

@@ -6,6 +6,7 @@
  * @file core/src/interface/MacroInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 /**
  * a simple interface for parsing and replacing macro tokens
  */

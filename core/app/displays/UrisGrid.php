@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class UrisGrid extends GridDisplay {
 	public $model = "uris";
 	public $action = "admin";

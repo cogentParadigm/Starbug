@@ -1,4 +1,5 @@
 <?php
-class MainController {
+namespace Starbug\Core;
+class MainController extends Controller {
 }
 ?>

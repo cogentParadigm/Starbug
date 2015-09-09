@@ -1,4 +1,6 @@
 <?php
+namespace Starbug\Intl;
+use Starbug\Core\DatabaseInterface;
 class AdminProvincesController {
 	public $routes = array(
 		'update' => '{id}'
