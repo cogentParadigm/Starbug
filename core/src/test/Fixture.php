@@ -12,6 +12,7 @@
  * the Fixture class
  * @ingroup db
  */
+namespace Starbug\Core;
 /**
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup Fixture
@@ -82,7 +83,7 @@ class Fixture {
 	public function __call($method, $args) {
 		global $harness;
 		if (method_exists($harness, $method)) return call_user_func_array(array($harness, $method), $args);
-		throw new Exception('Call to undefined method/class function: ' . $method);
+		throw new \Exception('Call to undefined method/class function: ' . $method);
 	}
 }
 ?>

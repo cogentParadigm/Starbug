@@ -12,22 +12,23 @@
  * the base test class for models
  * @ingroup test
  */
+namespace Starbug\Core;
 /**
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup Fixture
  */
-class UnitTest extends PHPUnit_Framework_TestCase {
+class UnitTest extends \PHPUnit_Framework_TestCase {
 
 	var $fixtures = array();
 	var $layers = array();
-	
+
 	var $harness;
-	
+
 	function __construct() {
 		global $harness;
 		$this->harness = $harness;
 	}
-	
+
 	function setUp() {
 		foreach ($this->layers as $layer) {
 			$this->harness->layer($layer);
@@ -36,7 +37,7 @@ class UnitTest extends PHPUnit_Framework_TestCase {
 			$this->harness->fixture($fixture);
 		}
 	}
-	
+
 	function tearDown() {
 		foreach ($this->layers as $layer) {
 			$this->harness->layer($layer, false);
@@ -45,6 +46,6 @@ class UnitTest extends PHPUnit_Framework_TestCase {
 			$this->harness->fixture($fixture, false);
 		}
 	}
-	
+
 }
 ?>

@@ -15,6 +15,7 @@
  * Testing Harness
  * @ingroup test
  */
+namespace Starbug\Core;
 /**
  * The Harness class. Handles fixtures and test execution
  * @ingroup Harness

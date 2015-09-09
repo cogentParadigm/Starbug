@@ -1,4 +1,5 @@
 <?php
+use Starbug\Core\Fixture;
 class UsersFixture extends Fixture {
 	public $type = "users";
 	public $records = array(

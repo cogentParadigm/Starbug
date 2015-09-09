@@ -7,6 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup ModelTest
  */
+namespace Starbug\Core;
 /**
  * @defgroup ModelTest
  * the base test class for models
@@ -19,7 +20,7 @@
 class ModelTest extends UnitTest {
 
 	var $model;
-	
+
 	function get() {
 		$args = array_merge(array($this->model), func_get_args());
 		return call_user_func_array("get", $args);
@@ -29,16 +30,16 @@ class ModelTest extends UnitTest {
 		$args = array_merge(array($this->model), func_get_args());
 		return call_user_func_array("query", $args);
 	}
-	
+
 	function action() {
 		$args = func_get_args();
 		$method = array_shift($args);
 		return call_user_func_array(array(sb($this->model), $method), $args);
 	}
-	
+
 	function __get($name) {
 		return sb($this->model)->$name;
 	}
-	
+
 }
 ?>
