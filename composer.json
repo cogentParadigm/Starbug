@@ -6,6 +6,7 @@
 		"ezyang/htmlpurifier":"dev-master"
 	},
 	"require-dev": {
+		"sebastian/phpcpd": "*",
 		"phploc/phploc": "*"
 	},
 	"autoload": {

@@ -28,12 +28,8 @@ define({
 
 	// Maximum number of simultaneous integration tests that should be executed on the remote WebDriver service
 	maxConcurrency: 3,
-
-	useSauceConnect:false,
-	webdriver:{
-		host:'localhost',
-		port:4444
-	},
+	useSauceConnect: false,
+	tunnel:'SauceLabsTunnel',
 
 
 	// Configuration options for the module loader; any AMD configuration options supported by the specified AMD loader

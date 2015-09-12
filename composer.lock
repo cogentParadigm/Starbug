@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "396e84cf5174fbc6139b0bf70ff4e668",
+    "hash": "1ecc471add037ef080ebc0699104cbfe",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -377,6 +377,47 @@
             "time": "2015-08-04 07:41:00"
         },
         {
+            "name": "phpunit/php-timer",
+            "version": "1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/php-timer.git",
+                "reference": "3e82f4e9fc92665fafd9157568e4dcb01d014e5b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/3e82f4e9fc92665fafd9157568e4dcb01d014e5b",
+                "reference": "3e82f4e9fc92665fafd9157568e4dcb01d014e5b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sb@sebastian-bergmann.de",
+                    "role": "lead"
+                }
+            ],
+            "description": "Utility class for timing",
+            "homepage": "https://github.com/sebastianbergmann/php-timer/",
+            "keywords": [
+                "timer"
+            ],
+            "time": "2015-06-21 08:01:12"
+        },
+        {
             "name": "sebastian/finder-facade",
             "version": "1.2.0",
             "source": {
@@ -459,6 +500,57 @@
                 "git"
             ],
             "time": "2015-04-06 16:23:43"
+        },
+        {
+            "name": "sebastian/phpcpd",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/phpcpd.git",
+                "reference": "d3ad100fdf15805495f6ff19f473f4314c99390c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpcpd/zipball/d3ad100fdf15805495f6ff19f473f4314c99390c",
+                "reference": "d3ad100fdf15805495f6ff19f473f4314c99390c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "phpunit/php-timer": "~1.0",
+                "sebastian/finder-facade": "~1.1",
+                "sebastian/version": "~1.0",
+                "symfony/console": "~2.2",
+                "theseer/fdomdocument": "~1.4"
+            },
+            "bin": [
+                "phpcpd"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sebastian@phpunit.de",
+                    "role": "lead"
+                }
+            ],
+            "description": "Copy/Paste Detector (CPD) for PHP code.",
+            "homepage": "https://github.com/sebastianbergmann/phpcpd",
+            "time": "2015-03-26 14:47:38"
         },
         {
             "name": "sebastian/version",

@@ -75,7 +75,7 @@ module.exports = function(grunt) {
 		},
 		shell: {
 			'phpcpd': {
-				command: 'phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules || true'
+				command: 'vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules util || true'
 			}
 		},
 		phpmd: {
@@ -130,9 +130,8 @@ module.exports = function(grunt) {
 		intern: {
 			local: {
 				 options: {
-					 runType: 'runner',
-					 reporters: ['pretty'],
-					 config: 'core/app/public/js/tests/intern'
+					runType: 'runner',
+					config: 'core/app/public/js/tests/intern'
 				 }
 			},
 			ci: {
