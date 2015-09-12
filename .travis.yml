@@ -1,0 +1,34 @@
+language: php
+
+php:
+	- 5.3
+	- 5.4
+	- 5.5
+	- 5.6
+	- hhvm
+
+mysql:
+	database: starbug_ci
+	username: root
+	encoding: utf8
+
+before_install:
+	- sudo apt-get update > /dev/null
+	- pear channel-discover pear.phpmd.org
+	- pear config-set auto_discover 1
+
+install:
+	- sudo apt-get install -y --force-yes php5-cgi php5-mysql
+	- pear install PHP_CodeSniffer
+	- pear install phpmd/PHP_MD
+	- pear install pear.phpunit.de/phpcpd
+	- pear install pear.phpunit.de/phploc
+	- git submodule init
+	- git submodule update
+	- composer install
+	- npm install
+
+before_script:
+	- mysql -e 'create database starbug_ci'
+
+script: grunt ci
