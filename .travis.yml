@@ -38,4 +38,4 @@ before_script:
   - composer dump-autoload
   - ./sb migrate -t test
 
-script: grunt ci
+script: grunt
