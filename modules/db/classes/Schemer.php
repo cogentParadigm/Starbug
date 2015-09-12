@@ -198,6 +198,7 @@ class Schemer {
 				// NEW TABLE																																													// NEW TABLE
 				fwrite(STDOUT, "Creating table ".P($table)."...\n");
 				$this->create($table);
+				$this->generate_model($table);
 				$ts++;
 			}
 		}

@@ -31,7 +31,7 @@
 			fwrite(STDOUT, "\nusername: root");
 			fwrite(STDOUT, "\npassword: $admin_pass\n\n");
 			//UPDATE PASSWORD
-			$errors = store("users", "password:$admin_pass", "username:root");
+			$errors = store("users", "password:$admin_pass", "email:root");
 		}
 	} else {
 		fwrite(STDOUT, "\nHost file not found. Run 'sb generate host' to generate one.\n\n");
