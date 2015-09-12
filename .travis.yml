@@ -36,5 +36,6 @@ before_script:
   - echo 'root' | ./sb setup
   - composer dump-autoload
   - ./sb migrate -t test
+  - composer dump-autoload
 
 script: grunt
