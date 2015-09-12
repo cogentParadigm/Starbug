@@ -35,6 +35,7 @@ before_script:
   - cat app/etc/db/default.json
   - cat app/etc/db/test.json
   - ./sb setup
+  - composer dump-autoload
   - ./sb migrate -t test
 
 script: grunt ci

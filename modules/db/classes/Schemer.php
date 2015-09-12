@@ -1053,6 +1053,7 @@ class Schemer {
 		$template = new Template($locator);
 		$data = $template->get(array($base."/base", "base"), array("model" => $table, "config" => $this->config), array("prefix" => $render_prefix));
 		file_put_contents($output_path, $data);
+		if (!class_exists("Starbug\Core\\".ucwords($table)."Model")) include($output_path);
 	}
 
 	/**
