@@ -192,16 +192,21 @@ class Schemer {
 		$xd = 0; //dropped indexes
 
 		//CREATE TABLES FIRST
-		foreach ($this->tables as $table => $fields) {
-			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
-			if (false === ($row = $records->fetch())) {
-				// NEW TABLE																																													// NEW TABLE
-				fwrite(STDOUT, "Creating table ".P($table)."...\n");
-				$this->create($table);
-				$this->generate_model($table);
-				$ts++;
+		do {
+			$previous_count = $ts;
+			$this->clean();
+			$this->fill();
+			foreach ($this->tables as $table => $fields) {
+				$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
+				if (false === ($row = $records->fetch())) {
+					// NEW TABLE																																													// NEW TABLE
+					fwrite(STDOUT, "Creating table ".P($table)."...\n");
+					$this->create($table);
+					$this->generate_model($table);
+					$ts++;
+				}
 			}
-		}
+		} while ($ts > $previous_count);
 		//UPDATE TABLES WITH COLUMN ALTERATIONS AND FOREIGN KEYS
 		foreach ($this->tables as $table => $fields) {
 			$table_info = $this->get($table);
@@ -219,7 +224,7 @@ class Schemer {
 					} else {
 						// OLD COLUMN																																												// OLD COLUMN
 						$type = explode(" ", $this->get_sql_type($field));
-						if (($row['Type'] != $type[0]) || ((isset($field['default'])) && ($row['Default'] != $field['default'])) || (isset($field['null']) && ($row['Null'] == "NO")) || (!isset($field['null']) && ($row['Null'] == "YES"))) {
+						if (($row['Type'] != $type[0]) || ((isset($field['default'])) && ($row['Default'] != $field['default']) && (!isset($field['null']) || $field['default'] !== "NULL" || !empty($row['Default']))) || (isset($field['null']) && ($row['Null'] == "NO")) || (!isset($field['null']) && ($row['Null'] == "YES"))) {
 							fwrite(STDOUT, "Altering column $name...\n");
 							$this->modify($table, $name);
 							$ms++;
@@ -527,7 +532,7 @@ class Schemer {
 	 * @param array $field the column options from the schema
 	 */
 	function get_sql_type($field) {
-		$type = "varchar(".(isset($field['length'])?$field['length']:"64").")";
+		$type = false;
 		if ($field['type'] == 'string') $type = "varchar(".(isset($field['length'])?$field['length']:"64").")";
 		else if ($field['type'] == 'password') $type = "varchar(100)";
 		else if (($field['type'] == 'text') || ($field['type'] == 'longtext')) $type = $field["type"];
@@ -536,7 +541,6 @@ class Schemer {
 		else if ($field['type'] == 'double') $type = "double(".$field['length'].")";
 		else if ($field['type'] == 'bool') $type = "tinyint(1)";
 		else if (($field['type'] == 'datetime') || ($field['type'] == 'timestamp')) $type = "datetime";
-		else if (!empty($field['type'])) $type = $field['type'].(isset($field['length'])?'('.$field['length'].')':"");
 		$type .= ((isset($field['null'])) ? " NULL" : " NOT NULL")
 						.((isset($field['unsigned'])) ? " UNSIGNED" : "")
 						.((isset($field['zerofill'])) ? " ZEROFILL" : "")
@@ -593,8 +597,7 @@ class Schemer {
 				foreach ($newcol as $nk => $nv) $access_col .= "  ".$nk.":".$nv;
 				$additional[] = array("permits", $access_col);
 			}
-			//if (isset($this->tables[$col['type']])) {
-			if ($this->models->has($col['type'])) {
+			if (isset($this->tables[$col['type']]) || $this->models->has($col['type'])) {
 				$ref_table_name = (empty($col['table'])) ? $table."_".$colname : $col['table'];
 				$ref_table_def = array($ref_table_name."  groups:false",
 					"owner  type:int  null:  references:users id  update:cascade  delete:cascade  optional:",
