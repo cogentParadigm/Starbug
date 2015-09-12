@@ -18,7 +18,7 @@
 
 	if ($host) {
 		//INIT TABLES
-		$schemer = $container->get("Schemer");
+		$schemer = $container->get("Starbug\Core\Schemer");
 		$schemer->fill();
 		$schemer->migrate();
 

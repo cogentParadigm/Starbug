@@ -7,6 +7,7 @@
 * @author Ali Gangji <ali@neonrain.com>
 */
 namespace Starbug\Core;
+use \Interop\Container\ContainerInterface;
 /**
 * an implementation of HelperFactoryInterface
 */
@@ -19,6 +20,6 @@ class HelperFactory implements HelperFactoryInterface {
 	}
 	public function get($helper) {
 		$namespace = end($this->locator->locate_namespaces($helper.".php", "helpers"));
-		return $this->container->build($namespace.$helper);
+		return $this->container->get($namespace.$helper);
 	}
 }

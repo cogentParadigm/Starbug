@@ -17,7 +17,7 @@ class Router implements RouterInterface {
 	\}~x
 REGEX;
 	const DEFAULT_DISPATCH_REGEX = '[^\/]+';
-	public function __construct(DatabaseInterface $db=null) {
+	public function __construct(DatabaseInterface $db) {
 		$this->db = $db;
 	}
 	/**

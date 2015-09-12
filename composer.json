@@ -2,7 +2,8 @@
 	"require": {
 		"phpmailer/phpmailer": "dev-master",
 		"masterexploder/phpthumb": "dev-master",
-		"ezyang/htmlpurifier":"dev-master"
+		"ezyang/htmlpurifier":"dev-master",
+		"php-di/php-di": "^5.1"
 	},
 	"repositories": [
 		{

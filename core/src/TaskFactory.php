@@ -7,6 +7,7 @@
 * @author Ali Gangji <ali@neonrain.com>
 */
 namespace Starbug\Core;
+use \Interop\Container\ContainerInterface;
 /**
 * an implementation of TaskFactoryInterface
 */

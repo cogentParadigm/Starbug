@@ -25,8 +25,8 @@ class UnitTest extends \PHPUnit_Framework_TestCase {
 	var $harness;
 
 	function __construct() {
-		global $harness;
-		$this->harness = $harness;
+		parent::__construct();
+		$this->harness = new Harness();
 	}
 
 	function setUp() {

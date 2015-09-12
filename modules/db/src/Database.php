@@ -70,17 +70,25 @@ class Database implements DatabaseInterface {
 	protected $models;
 	protected $hooks;
 
-	public function __construct(ModelFactoryInterface $models, HookFactoryInterface $hooks, ConfigInterface $config, $database_name) {
+	public function __construct(PDO $pdo, ModelFactoryInterface $models, HookFactoryInterface $hooks, ConfigInterface $config, $database_name) {
 		$this->models = $models;
 		$this->hooks = $hooks;
 		$this->config = $config;
 		$params = $config->get("db/".$database_name);
-		$this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
+		$this->pdo = $pdo;
 		$this->set_debug(false);
 		$this->prefix = $params['prefix'];
 		$this->database_name = $params['db'];
 		if (defined('Etc::TIME_ZONE')) $this->exec("SET time_zone='".Etc::TIME_ZONE."'");
 		$this->queue = new QueryQueue();
+	}
+
+	public function setDatabase($name, PDO $connection) {
+		$this->pdo = $connection;
+		$params = $this->config->get("db/".$name);
+		$this->database_name = $params['db'];
+		$this->prefix = $params['prefix'];
+		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
 	public function set_debug($debug) {

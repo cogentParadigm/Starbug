@@ -22,6 +22,9 @@ class ErrorHandler {
 	function __construct(TemplateInterface $out, $exceptionTemplate = "exception-html") {
 		$this->out = $out;
 		$this->exceptionTemplate = $exceptionTemplate;
+	}
+
+	public function register() {
 		set_exception_handler(array($this,'handle_exception'));
 		set_error_handler(array($this,'handle_error'), error_reporting());
 		register_shutdown_function(array($this, 'handle_shutdown'));

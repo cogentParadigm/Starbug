@@ -54,17 +54,10 @@ class Harness {
 	function fixture($fixture, $up = true) {
 		if (empty($this->fixtures[$fixture])) {
 			$classname = ucwords($fixture)."Fixture";
-			include(BASE_DIR."/app/fixtures/".$classname.".php");
 			$this->fixtures[$fixture] = new $classname();
 		}
 		if ($up) $this->fixtures[$fixture]->_setUp();
 		else $this->fixtures[$fixture]->_tearDown();
 	}
 }
-/**
- * testing harness
- * @ingroup global
- */
-global $harness;
-$harness = new Harness();
 ?>

@@ -7,6 +7,7 @@
 * @author Ali Gangji <ali@neonrain.com>
 */
 namespace Starbug\Core;
+use \Interop\Container\ContainerInterface;
 /**
 * an implementation of DisplayFactoryInterface
 */
@@ -20,6 +21,6 @@ class DisplayFactory implements DisplayFactoryInterface {
 	public function get($display) {
 		$namespace = end($this->locator->locate_namespaces($display.".php", "displays"));
 		if (empty($namespace)) $namespace = "Starbug\Core\\";
-		return $this->container->build($namespace.$display);
+		return $this->container->make($namespace.$display);
 	}
 }

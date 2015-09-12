@@ -25,11 +25,10 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERRO
 
 include(BASE_DIR."/core/autoload.php");
 
-$container = new Starbug\Core\Container();
-$container->register('base_directory', BASE_DIR, true);
-$container->register('modules', $modules, true);
-$container->register('database_name', DEFAULT_DATABASE, true);
-$container->register('Starbug\Core\SettingsInterface', 'Starbug\Core\DatabaseSettings');
+$builder = new DI\ContainerBuilder();
+$builder->addDefinitions(BASE_DIR."/etc/di.php");
+$container = $builder->build();
+$container->set('Interop\Container\ContainerInterface', $container);
 
 //create locator
 $locator = $container->get('Starbug\Core\ResourceLocatorInterface');
@@ -37,10 +36,6 @@ $locator = $container->get('Starbug\Core\ResourceLocatorInterface');
 // global functions
 foreach ($locator->locate("global_functions.php", "") as $global_include) include($global_include);
 
-$context = $container->get("Starbug\Core\TemplateInterface");
-
-new Starbug\Core\ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
-
-return true;
+$container->get("Starbug\Core\ErrorHandler")->register();
 
 ?>

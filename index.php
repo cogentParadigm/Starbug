@@ -24,10 +24,9 @@ $request = new Starbug\Core\Request($_SERVER['REQUEST_URI'], array(
 	'cookies' => $_COOKIE,
 	'directory' => Etc::WEBSITE_URL
 ));
-$container->register("Starbug\Core\Request", $request, true);
+$container->set("Starbug\Core\Request", $request);
 global $sb;
 $sb = $container->get("Starbug\Core\sb");
-$context->assign("sb", $sb);
 $application = $container->get("Starbug\Core\ApplicationInterface");
 $sb->start_session();
 $response = $application->handle($request);

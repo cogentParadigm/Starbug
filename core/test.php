@@ -15,7 +15,6 @@ define("SB_TEST_MODE", true);
 // initialize
 include(dirname(__FILE__)."/cli.php");
 
-foreach ($locator->locate("autoload.php", "tests") as $global_include) include($global_include);
 foreach ($locator->locate("global_functions.php", "tests") as $global_include) include($global_include);
 
 ?>
