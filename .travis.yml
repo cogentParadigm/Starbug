@@ -6,10 +6,8 @@ php:
   - 5.6
   - hhvm
 
-mysql:
-  database: starbug_ci
-  username: root
-  encoding: utf8
+addons:
+  mariadb: "10.0"
 
 before_install:
   - sudo apt-get update > /dev/null
@@ -22,6 +20,7 @@ install:
   - composer global require phpmd/phpmd
   - composer global require sebastian/phpcpd
   - composer global require phploc/phploc
+  - phpenv rehash
   - git submodule init
   - git submodule update
   - composer install
@@ -29,7 +28,12 @@ install:
 
 before_script:
   - mysql -e 'create database starbug_ci'
+  - mysql -e 'create database starbug_ci_test'
   - ./sb generate host
+  - sed -i 's/"password":"test"/"password":""/' app/etc/db/default.json
+  - sed -i 's/"db":"test"/"test":"starbug_ci"/' app/etc/db/default.json
+  - sed -i 's/"password":"test"/"password":""/' app/etc/db/test.json
+  - sed -i 's/"db":"test"/"test":"starbug_ci_test"/' app/etc/db/test.json
   - ./sb setup
   - ./sb migrate -t test
 
