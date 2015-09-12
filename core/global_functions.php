@@ -14,7 +14,6 @@
 
 	include("core/global/cache.php");
 	include("core/global/entity.php");
-	include("core/global/modules.php");
 	include("core/global/strings.php");
 	include("core/global/routing.php");
 	include("core/global/templates.php");

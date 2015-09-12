@@ -31,10 +31,6 @@ class sb {
 	*/
 	public $active_scope = "global";
 	/**
-	* @var array holds the utils that have been provided
-	*/
-	var $provided = array();
-	/**
 	* @var array holds validation errors
 	*/
 	public $errors = array();
@@ -80,29 +76,6 @@ class sb {
 				}
 			}
 		}
-	}
-
-	/**
-	* import function. only imports once when used with provide
-	* @param string $loc path of file to import without '.php' at the end
-	*/
-	function import($loc) {
-		$sb = self::$instance;
-		$args = func_get_args();
-		foreach ($args as $l) {
-			$parts = explode("/", $l);
-			if (!in_array($parts[0], array("app", "core", "util", "var")) && file_exists(BASE_DIR."/modules/".$parts[0])) $parts[0] = "modules/".$parts[0];
-			$path = implode("/", $parts);
-			if (!isset($this->provided[$l])) include(BASE_DIR."/".$path.".php");
-		}
-	}
-
-	/**
-	* when imported use provide to prevent further imports from attempting to include it again
-	* @param string $loc the imported location. if i were to use $sb->import("util/form"), util/form.php would have $sb->provide("util/form") at the top
-	*/
-	function provide($loc) {
-		$this->provided[$loc] = true;
 	}
 
 	/**

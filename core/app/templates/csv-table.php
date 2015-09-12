@@ -1,5 +1,4 @@
 <?php
-	import("pager");
 	$file = query("files")->condition("id", $csv)->one();
 	$$lines = 0;
 	if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) {
@@ -10,7 +9,7 @@
 	fclose($handle);
 	$lines--;
 	$size = 20;
-	$pager = new pager($lines, $size, intval($this->request->parameters['pg']));
+	$pager = new \Starbug\Core\pager($lines, $size, intval($this->request->parameters['pg']));
 	$line = 0;
 ?>
 <?php if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) { $head = fgetcsv($handle); ?>
