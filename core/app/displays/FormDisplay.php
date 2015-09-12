@@ -27,7 +27,7 @@ class FormDisplay extends ItemDisplay {
 
 	function build($options) {
 		$this->options = $options;
-		if (empty($this->model) && !empty(($this->options['model']))) $this->model = $this->options['model'];
+		if (empty($this->model) && !empty($this->options['model'])) $this->model = $this->options['model'];
 		// grab schema
 		if (!empty($this->model) && $this->models->has($this->model)) {
 			$this->schema = $this->models->get($this->model)->hooks;
