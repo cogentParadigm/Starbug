@@ -2,15 +2,11 @@
 	"require": {
 		"phpmailer/phpmailer": "dev-master",
 		"masterexploder/phpthumb": "dev-master",
-		"ezyang/htmlpurifier":"dev-master",
-		"php-di/php-di": "^5.1"
+		"ezyang/htmlpurifier":"dev-master"
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/cogentParadigm/phpthumb"
-		}
-	],
+	"require-dev": {
+		"phploc/phploc": "*"
+	},
 	"autoload": {
 		"classmap":["core", "app", "modules", "var", "util"]
 	}

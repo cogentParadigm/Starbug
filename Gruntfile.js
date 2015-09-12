@@ -65,6 +65,7 @@ module.exports = function(grunt) {
 				dir: 'app core modules'
 			},
 			options: {
+				bin: 'vendor/bin/phploc',
 				countTests: true,
 				reportFileCSV: 'build/logs/phploc.csv',
 				reportFileXML: 'build/logs/phploc.xml',
