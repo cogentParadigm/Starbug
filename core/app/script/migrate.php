@@ -42,8 +42,6 @@ class MigrateCommand {
 			//			and remove the dependency on the container from this file
 			$this->container->set("database_name", $next);
 			$this->db->setDatabase($next, $this->container->get("databases.".$next));
-			//$this->schemer->set_database($db);
-			//sb()->db = $db;
 		}
 
 		//test mode
