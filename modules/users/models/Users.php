@@ -13,7 +13,7 @@ class Users extends UsersModel {
 	 * A function for an administrator to create and update users
 	 */
 	function create($user) {
-		if (logged_in("root") || logged_in("admin")) {
+		if ($this->user->loggedIn("root") || $this->user->loggedIn("admin")) {
 			foreach ($user as $k => $v) if (empty($v) && $k != "email") unset($user[$k]);
 		}
 		$this->store($user);
@@ -26,7 +26,7 @@ class Users extends UsersModel {
 	}
 
 	function delete($user) {
-		store("users", array("id" => $user['id'], "statuses" => "deleted"));
+		$this->store(array("id" => $user['id'], "statuses" => "deleted"));
 	}
 
 	/**
@@ -61,13 +61,10 @@ class Users extends UsersModel {
 	function login($login, $redirect=true) {
 		$user = $this->query("select:users.*,users.groups as groups,users.statuses as statuses  where:email=?  limit:1", array($login['email']));
 		if (Session::authenticate($user['password'], $login['password'], $user['id'], Etc::HMAC_KEY)) {
-			$user['groups'] = explode(",", $user['groups']);
-			$user['statuses'] = explode(",", $user['statuses']);
-			sb()->user = $user;
-			unset($user['password']);
+			$this->user->setUser($user);
 			$this->store(array("id" => $user['id'], "last_visit" => date("Y-m-d H:i:s")));
 			if ($redirect) {
-				if (logged_in('admin') || logged_in('root')) redirect(uri('admin'));
+				if ($this->user->loggedIn('admin') || $this->user->loggedIn('root')) redirect(uri('admin'));
 			}
 		} else {
 			$this->error("That email and password combination was not found.", "email");

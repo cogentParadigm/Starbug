@@ -36,13 +36,6 @@ class ApiRequest {
 	 * @param star $ops additional options, query paramaters if [object] is a model or group of models
 	 */
 	function __construct($what, $ops = "", $headers = true) {
-	 if (defined("ETC::API_WHITELIST")) {
-	  if (in_array($_SERVER['REMOTE_ADDR'], explode(",", Etc::API_WHITELIST)) && !sb()->user) {
-		  $this->whitelisting = true;
-		  //UN-COMMENT THIS LINE TO ALLOW WHITE LISTING, ENABLE IT AT YOUR OWN RISK
-		  //sb()->user = array("id" => 1, "memberships" => 1);
-	  }
-	 }
 		$this->headers = $headers;
 		$format = end(explode(".", $what));
 		$parts = explode("/", str_replace(".$format", "", $what));

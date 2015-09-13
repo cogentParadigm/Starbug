@@ -59,5 +59,8 @@ interface DatabaseInterface {
 	public function error($error, $field = "global", $scope = "global");
 	public function success($model, $action);
 	public function failure($model, $action);
+	public function getUser();
+	public function setUser($user);
+	public function hasUser();
 }
 ?>

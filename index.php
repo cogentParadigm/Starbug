@@ -28,7 +28,6 @@ $container->set("Starbug\Core\Request", $request);
 global $sb;
 $sb = $container->get("Starbug\Core\sb");
 $application = $container->get("Starbug\Core\ApplicationInterface");
-$sb->start_session();
 $response = $application->handle($request);
 $response->send();
 ?>

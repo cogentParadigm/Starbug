@@ -19,9 +19,10 @@ class <?php echo ucwords($name); ?>Model extends Table {
   public $label_select = "<?php echo empty($label_select) ? $name.".id" : $label_select; ?>";
 
 
-  function __construct(DatabaseInterface $db, ModelFactoryInterface $models<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
+  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, UserInterface $user<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
     $this->db = $db;
-    $this->models = $models;<?php foreach ($factory as $n => $t) echo "\n\t\t\$this->".$n.' = $'.$n.';'; ?>
+    $this->models = $models;
+    $this->user = $user;<?php foreach ($factory as $n => $t) echo "\n\t\t\$this->".$n.' = $'.$n.';'; ?>
 
     $this->init();
   }

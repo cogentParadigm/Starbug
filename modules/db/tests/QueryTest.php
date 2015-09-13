@@ -4,7 +4,9 @@
 class QueryTest extends PHPUnit_Framework_TestCase {
 
 	function setUp() {
-		$this->db = sb()->db;
+		global $container;
+		$this->db = $container->get("Starbug\Core\DatabaseInterface");
+		$this->user = $container->get("Starbug\Core\UserInterface");
 	}
 
 	/**
@@ -548,7 +550,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 
 	function test_action() {
 		$query = $this->db->query("uris");
-		sb()->user = array("id" => 2);
+		$this->user->setUser(array("id" => 2));
 		$query->action("read");
 
 		//expected output

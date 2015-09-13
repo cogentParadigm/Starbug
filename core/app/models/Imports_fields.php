@@ -20,7 +20,7 @@ class Imports_fields extends Imports_fieldsModel {
   }
 
 	function query_filters($action, $query, $ops) {
-		if (!logged_in("root") && !logged_in("admin")) $query->action("read");
+		if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
 		return $query;
 	}
 

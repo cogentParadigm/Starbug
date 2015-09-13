@@ -48,6 +48,7 @@ class Table {
 	public $store_on_errors = false;
 
 	protected $models;
+	protected $user;
 	public $action = false;
 
 	/**
@@ -55,9 +56,10 @@ class Table {
 	 * @param string $type the un-prefixed table name
 	 * @param array $filters the column filters
 	 */
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, UserInterface $user) {
 		$this->db = $db;
 		$this->models = $models;
+		$this->user = $user;
 		//$this->logger = $loggers->get(get_class($this));
 		$this->init();
 	}
@@ -224,7 +226,7 @@ class Table {
 		if (!empty($this->base)) {
 			$query = $this->models->get($this->base)->query_admin($query, $ops);
 		} else {
-			if (!logged_in("admin") && !logged_in("root")) $query->action("read");
+			if (!$this->user->loggedIn("admin") && !$this->user->loggedIn("root")) $query->action("read");
 		}
 		return $query;
 	}

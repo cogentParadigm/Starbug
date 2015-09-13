@@ -18,10 +18,12 @@ class storeTest extends UnitTest {
 	var $fixtures = array("users");
 
 	protected static $db;
+	protected static $user;
 
 	public static function setUpBeforeClass() {
 		global $container;
 		self::$db = $container->get("Starbug\Core\DatabaseInterface");
+		self::$user = $container->get("Starbug\Core\UserInterface");
 	}
 
 	/**
@@ -358,7 +360,7 @@ class storeTest extends UnitTest {
 		$this->assertSame(null, $record['value']);
 
 		//become root
-		sb()->user = array("id" => 1, "groups" => array("admin", "root"));
+		$this->user->setUser(array("id" => 1, "groups" => array("admin", "root")));
 
 		//store the record
 		store("hook_store_owner", array());
@@ -370,7 +372,7 @@ class storeTest extends UnitTest {
 		//assert that the owner was stored
 		$this->assertSame("1", $record['value']);
 
-		sb()->user = array();
+		$this->user->clearUser();
 
 		//truncate the table
 		query("hook_store_owner")->unsafe_truncate();

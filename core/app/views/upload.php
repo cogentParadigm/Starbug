@@ -28,7 +28,7 @@
 		$_post['size'] = filesize($_post['file']);
 		$_post['image'] = $image;
 		$_post['statuses'] = "published";
-		$_post['owner'] = userinfo("id");
+		$_post['owner'] = $this->user->userinfo("id");
 		$htmldata[] = $_post;
 	} else {
 		$htmldata[] = array("ERROR" => "File could not be moved: ".$file['name']);

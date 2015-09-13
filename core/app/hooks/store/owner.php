@@ -1,11 +1,14 @@
 <?php
 namespace Starbug\Core;
 class hook_store_owner extends QueryHook {
+	public function __construct(UserInterface $user) {
+		$this->user = $user;
+	}
 	function empty_before_insert(&$query, $column, $argument) {
-		$query->set($column, (logged_in() ? sb()->user['id'] : "NULL"));
+		$query->set($column, ($this->user->loggedIn() ? $this->user->userinfo("id") : "NULL"));
 	}
 	function validate(&$query, $key, $value, $column, $argument) {
-		return logged_in() ? sb()->user['id'] : "NULL";
+		return $this->user->loggedIn() ? $this->user->userinfo("id") : "NULL";
 	}
 }
 ?>

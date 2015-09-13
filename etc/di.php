@@ -37,7 +37,7 @@ return array(
 															->constructorParameter('database_name', DI\get('database_name'))
 															->constructorParameter('pdo', DI\get('databases.default')),
 	'Starbug\Core\Template' => DI\object()->constructorParameter('helpers', DI\get('Starbug\Core\HelperFactoryInterface')),
-	'Starbug\Core\Schemer' => DI\object()->constructorParameter('modules', DI\get('modules'))
-
+	'Starbug\Core\Schemer' => DI\object()->constructorParameter('modules', DI\get('modules')),
+	'Starbug\Core\GenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory'))
 );
 ?>

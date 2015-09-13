@@ -4,7 +4,7 @@ class Uris extends UrisModel {
 
 	function query_admin($query, &$ops) {
 		$query->select($query->model.".statuses.term as statuses");
-		if (!logged_in("admin")) $query->action("read");
+		if (!$this->user->loggedIn("admin")) $query->action("read");
 		if (!empty($ops['type'])) {
 			$query->condition($query->model.".type", $ops['type']);
 		}

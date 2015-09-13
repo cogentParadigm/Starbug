@@ -18,7 +18,7 @@
 
 	$forbidden = array();
 	foreach ($records as $link) {
-		if ($forbidden[$link['parent']] || (!empty($link['collective']) && !(userinfo("memberships") & $link['collective']))) {
+		if ($forbidden[$link['parent']]) {
 			$forbidden[$link['id']] = true;
 			continue;
 		}

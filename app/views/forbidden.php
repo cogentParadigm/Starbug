@@ -1,5 +1,5 @@
 <div id="content">
-	<?php if (logged_in()) { ?>
+	<?php if ($this->user->loggedIn()) { ?>
 		<h2>Sorry!</h2>
 		<p>You do not have sufficient permission to access this page.</p>
 	<?php } ?>

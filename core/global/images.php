@@ -117,7 +117,7 @@ function image_thumb($current_file, $dimensions, $flags = "") {
 	$target = $dir."/".$filename;
 	if (!file_exists(BASE_DIR."/".$target) || $dimensions['f']) {
 		if (!file_exists(BASE_DIR."/".$dir)) mkdir(BASE_DIR."/".$dir);
-		$thumb = PhpThumbFactory::create(BASE_DIR."/".$current_file);
+		$thumb = new \PHPThumb\GD(BASE_DIR."/".$current_file);
 		if ($dimensions['a']) $thumb->adaptiveResize($dimensions['w'], $dimensions['h']);
 		else $thumb->resize($dimensions['w'], $dimensions['h']);
 		$thumb->save(BASE_DIR."/".$target);

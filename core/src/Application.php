@@ -16,6 +16,7 @@ class Application implements ApplicationInterface {
 	protected $request;
 	protected $response;
 	protected $config;
+	protected $user;
 	protected $locator;
 
 	/**
@@ -27,6 +28,7 @@ class Application implements ApplicationInterface {
 		RouterInterface $router,
 		SettingsInterface $settings,
 		ResourceLocatorInterface $locator,
+		UserInterface $user,
 		Response $response
 	) {
 		$this->controllers = $controllers;
@@ -34,10 +36,12 @@ class Application implements ApplicationInterface {
 		$this->router = $router;
 		$this->settings = $settings;
 		$this->locator = $locator;
+		$this->user = $user;
 		$this->response = $response;
 	}
 
 	public function handle(Request $request) {
+		$this->user->startSession();
 		if (empty($request->path)) $request->path = $this->settings->get("default_path");
 
 		$this->response->assign("request", $request);
@@ -88,7 +92,7 @@ class Application implements ApplicationInterface {
 	protected function check_post($post, $cookies) {
 		if (!empty($post['action']) && is_array($post['action'])) {
 			//validate csrf token for authenticated requests
-			if (logged_in()) {
+			if ($this->user->loggedIn()) {
 				$validated = false;
 				if (!empty($cookies['oid']) && !empty($post['oid']) && $cookies['oid'] === $post['oid']) $validated = true;
 				if (true !== $validated) {

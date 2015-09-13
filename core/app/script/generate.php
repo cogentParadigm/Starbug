@@ -8,6 +8,7 @@
  * @ingroup script
  */
 namespace Starbug\Core;
+use Interop\Container\ContainerInterface;
 // IF GENERATING HOST, SKIP RIGHT TO IT AND EXIT
 if ($argv[0] == "host") include(dirname(__FILE__)."/generate/host/host.php");
 class GenerateCommand {

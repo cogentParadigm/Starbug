@@ -13,14 +13,16 @@ namespace Starbug\Core;
 class Taxonomy implements TaxonomyInterface {
 	protected $db;
 	protected $models;
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+	protected $user;
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, UserInterface $user) {
 		$this->db = $db;
 		$this->models = $models;
+		$this->user = $user;
 	}
 	function terms($taxonomy, $parent = 0, $depth = 0) {
 		$terms = array();
 		$parents = $this->db->query("terms")->condition("taxonomy", $taxonomy)->condition("parent", $parent)->sort("position");
-		if ($taxonomy == "groups" && !logged_in("root")) $parents->condition("slug", "root", "!=");
+		if ($taxonomy == "groups" && !$this->user->loggedIn("root")) $parents->condition("slug", "root", "!=");
 		foreach ($parents as $idx => $term) {
 			$term['depth'] = $depth;
 			$terms[] = $term;
@@ -52,7 +54,7 @@ class Taxonomy implements TaxonomyInterface {
 		//IF THE TERM DOESN'T EXIST, ADD IT
 		$term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->params(array("tag" => $tag, "tax" => $taxonomy))->one();
 		if (empty($term)) $this->db->store("terms", "term:$tag  slug:$slug  taxonomy:$taxonomy  parent:0  position:");
-		else if ($term['taxonomy'] == "groups" && !logged_in("root") && in_array($term['slug'], array("root"))) return false;
+		else if ($term['taxonomy'] == "groups" && !$this->user->loggedIn("root") && in_array($term['slug'], array("root"))) return false;
 		if ($this->db->errors()) return false;
 
 		//APPLY TAG

@@ -15,67 +15,18 @@ use \Etc;
  * @ingroup core
  */
 class sb {
-	/**#@+
-	* @access public
-	*/
-	/**
-	* @var db The db class is a PDO wrapper
-	*/
 	public $db;
-	/**
-	* @var array active user
-	*/
-	public $user = false;
-	/**
-	* @var string holds the active scope (usually 'global' or a model name)
-	*/
-	public $active_scope = "global";
-	/**
-	* @var array holds validation errors
-	*/
-	public $errors = array();
-	/**
-	* @var array holds alerts
-	*/
-	var $alerts = array();
-	/**
-	* @var array holds $db change listeners
-	*/
-	var $listeners = array();
-	/**#@-*/
 	static $instance;
-
-	public $locator;
-	public $config;
-	public $settings;
 	public $models;
 
 	/**
 	* constructor. connects to db and starts the session
 	*/
-	function __construct(DatabaseInterface $db, ResourceLocatorInterface $locator, ModelFactoryInterface $models) {
-		$this->locator = $locator;
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
 		$this->db = $db;
 		$this->models = $models;
 		if (defined("Etc::DEBUG")) $this->db->set_debug(Etc::DEBUG);
 		self::$instance = $this;
-	}
-
-	/**
-	* load the Session class and validate the current session if the user has a cookie
-	*/
-	function start_session() {
-		if (false !== ($session = Session::active())) {
-			if (!empty($session['v']) && is_numeric($session['v'])) {
-				$user = $this->db->query("users");
-				$user = $user->select("users.*,users.groups as groups,users.statuses as statuses")->condition("users.id", $session['v'])->one();
-				if (Session::validate($session, $user['password'], Etc::HMAC_KEY)) {
-					$user['groups'] = is_null($user['groups']) ? array() : explode(",", $user['groups']);
-					$user['statuses'] = is_null($user['statuses']) ? array() : explode(",", $user['statuses']);
-					$this->user = $user;
-				}
-			}
-		}
 	}
 
 	/**
