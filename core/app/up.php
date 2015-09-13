@@ -199,7 +199,7 @@ $this->table("logs  groups:false",
 	"channel  type:string",
 	"level  type:int",
 	"message  type:text  default:",
-	"time  type:int  unsigned:"
+	"time  type:int"
 );
 //SQL TRANSACTION LOG
 /*
