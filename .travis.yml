@@ -21,12 +21,6 @@ before_install:
   - mkdir var
 
 install:
-  - sudo apt-get install -y --force-yes php5-cgi php5-mysql
-  - composer global require squizlabs/php_codesniffer
-  - composer global require phpmd/phpmd
-  - phpenv rehash
-  - git submodule init
-  - git submodule update
   - composer install
   - npm install
 

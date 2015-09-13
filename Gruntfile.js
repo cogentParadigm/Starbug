@@ -82,6 +82,7 @@ module.exports = function(grunt) {
 			local: {
 				dir: '.',
 				options: {
+					bin: 'vendor/bin/phpmd',
 					reportFormat: 'text',
 					exclude:'libraries,var,node_modules,vendor',
 					rulesets:'etc/phpmd.xml'
@@ -101,6 +102,7 @@ module.exports = function(grunt) {
 			local: {
 				dir: ['core', 'app', 'modules'],
 				options: {
+					bin: 'vendor/bin/phpcs',
 					extensions: 'php',
 					ignore: 'views,templates,layouts,forms',
 					standard: 'etc/phpcs.xml',
