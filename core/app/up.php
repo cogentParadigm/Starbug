@@ -196,12 +196,10 @@ $this->table("errors  groups:false",
 	"message  type:text  length:512"
 );
 $this->table("logs  groups:false",
-	"type  type:string",
-	"severity  type:string",
-	"location  type:text  default:",
-	"referrer  type:text  default:",
+	"channel  type:string",
+	"level  type:int",
 	"message  type:text  default:",
-	"data  type:text  default:"
+	"time  type:int  unsigned:"
 );
 //SQL TRANSACTION LOG
 /*

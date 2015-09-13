@@ -264,7 +264,8 @@ class Database implements DatabaseInterface {
 
 	public function error($error, $field = "global", $scope = "global") {
 		$this->errors[$scope][$field][] = $error;
-		//$this->logger->info("{model}::{action} - {field}:{message}", array("model" => $model, "action" => $this->request->data['action'][$model], "field" => $field, "message" => $error));
+		$statement = $this->prepare("INSERT INTO ".$this->prefix."errors (type, field, message, action, created, modified) VALUES (?, ?, ?, ?, NOW(), NOW())");
+		$statement->execute(array($scope, $field, $error, $this->models->get($scope)->action));
 	}
 
 	public function success($model, $action) {
