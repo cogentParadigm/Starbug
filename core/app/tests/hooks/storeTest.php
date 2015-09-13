@@ -349,6 +349,8 @@ class storeTest extends UnitTest {
 	 * hook_store_owner
 	 */
 	function test_owner() {
+		//become nobody
+		self::$user->clearUser();
 		//store the record
 		store("hook_store_owner", array());
 
@@ -360,7 +362,7 @@ class storeTest extends UnitTest {
 		$this->assertSame(null, $record['value']);
 
 		//become root
-		$this->user->setUser(array("id" => 1, "groups" => array("admin", "root")));
+		self::$user->setUser(array("id" => 1, "groups" => array("admin", "root")));
 
 		//store the record
 		store("hook_store_owner", array());
@@ -372,7 +374,8 @@ class storeTest extends UnitTest {
 		//assert that the owner was stored
 		$this->assertSame("1", $record['value']);
 
-		$this->user->clearUser();
+		//restore anonymous root
+		self::$user->setUser(array("id" => "NULL", "groups" => array("root")));
 
 		//truncate the table
 		query("hook_store_owner")->unsafe_truncate();

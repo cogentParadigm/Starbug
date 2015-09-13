@@ -20,5 +20,5 @@ $container->set("Starbug\Core\Request", $request);
 global $sb;
 $sb = $container->get("Starbug\Core\sb");
 $user = $container->get("Starbug\Core\UserInterface");
-$user->setUser(array("id" => 1, "groups" => array("root")));
+$user->setUser(array("id" => "NULL", "groups" => array("root")));
 ?>
