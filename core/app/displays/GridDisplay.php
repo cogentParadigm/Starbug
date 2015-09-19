@@ -10,9 +10,10 @@ class GridDisplay extends ItemDisplay {
 	);
 	protected $request;
 
-	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hook_builder, Request $request) {
+	function __construct(TemplateInterface $output, Response $response, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, Request $request) {
 		$this->output = $output;
 		$this->response = $response;
+		$this->models = $models;
 		$this->hook_builder = $hook_builder;
 		$this->request = $request;
 	}

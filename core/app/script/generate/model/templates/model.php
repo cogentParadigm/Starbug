@@ -29,7 +29,7 @@ class <?php echo ucwords($name); ?> {
 
 	function display_admin($display, $ops) {
 	<?php if (!empty($base)) { ?>
-    sb($this->base)->display_admin($display, $ops);
+    $this->models->get($this->base)->display_admin($display, $ops);
   <?php } else { ?>
     $display->add("id");
   <?php } ?>

@@ -860,7 +860,7 @@ class query implements IteratorAggregate, ArrayAccess {
 				$collection_segment = ("(" === substr($collection, 0, 1)) ? $collection : "`".$this->db->prefix($collection)."`";
 				$segment = " ".$this->query['join'][$alias]." JOIN ".$collection_segment." AS `".$alias."`";
 				if (empty($this->query['on'][$alias])) {
-					$relations = sb($collection)->relations;
+					$relations = $this->models->get($collection)->relations;
 					$relator = $last_alias;
 					$rel = array();
 					if (isset($relations[$last_collection])) {
@@ -1332,7 +1332,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			$this->record_count = $records->rowCount();
 			if ($this->mode == "insert") {
 				$this->insert_id = $this->db->lastInsertId();
-				sb($this->model)->insert_id = $this->insert_id;
+				$this->models->get($this->model)->insert_id = $this->insert_id;
 			}
 			if (!$this->raw) {
 				if ($this->mode == "delete") $this->validate(query::PHASE_AFTER_DELETE);

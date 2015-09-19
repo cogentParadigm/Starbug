@@ -15,9 +15,11 @@ class ItemDisplay extends Display {
 	protected $query; //database query object
 	protected $hook_builder;
 	protected $response;
+	protected $models;
 
-	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hook_builder) {
+	function __construct(TemplateInterface $output, Response $response, ModelFactoryInterface $models, HookFactoryInterface $hook_builder) {
 		$this->output = $output;
+		$this->models = $models;
 		$this->response = $response;
 		$this->hook_builder = $hook_builder;
 	}
@@ -44,10 +46,10 @@ class ItemDisplay extends Display {
 			$column = array();
 			if (!empty($options['model'])) {
 				$base = $options['model'];
-				while (!isset(sb($base)->hooks[$target]) && !empty(sb($base)->base)) {
-					$base = sb($base)->base;
+				while (!isset($this->models->get($base)->hooks[$target]) && !empty($this->models->get($base)->base)) {
+					$base = $this->models->get($base)->base;
 				}
-				if (!empty(sb($base)->hooks[$target])) $column = sb($base)->hooks[$target];
+				if (!empty($this->models->get($base)->hooks[$target])) $column = $this->models->get($base)->hooks[$target];
 			}
 			if (empty($column['label'])) $column['label'] = ucwords(str_replace('_', ' ', $field));
 			if (empty($this->fields[$field])) $options = $this->filter($field, $options, $column);
@@ -120,8 +122,8 @@ class ItemDisplay extends Display {
 		$this->query = $this->build_query($this->query, $options);
 		if (!empty($model)) {
 			$action_name = "query_".$this->action;
-			$this->query = sb($model)->query_filters($this->action, $this->query, $options);
-			$this->query = sb($model)->$action_name($this->query, $options);
+			$this->query = $this->models->get($model)->query_filters($this->action, $this->query, $options);
+			$this->query = $this->models->get($model)->$action_name($this->query, $options);
 		}
 
 		//page
@@ -133,7 +135,7 @@ class ItemDisplay extends Display {
 		$this->items = (property_exists($this->query, "data")) ? $this->query->data : $this->query->all();
 		if (!empty($model)) {
 			foreach($this->items as $idx => $item) {
-				$this->items[$idx] = sb($model)->filter($item, $this->action);
+				$this->items[$idx] = $this->models->get($model)->filter($item, $this->action);
 			}
 		}
 	}
