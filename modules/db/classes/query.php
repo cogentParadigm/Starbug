@@ -79,16 +79,14 @@ class query implements IteratorAggregate, ArrayAccess {
 	public $store_on_errors = false;
 	protected $models;
 	protected $hook_builder;
-	protected $config;
 
 	/**
 	 * create a new query
 	 * @param string $collection the name of the primary table/collection to query
 	 * @param array $params parameters to merge into the query
 	 */
-	function __construct(DatabaseInterface $db, ConfigInterface $config, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, $collection, $params = array()) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, $collection, $params = array()) {
 		$this->db = $db;
-		$this->config = $config;
 		$this->models = $models;
 		$this->hook_builder = $hook_builder;
 		$params = star($params);
@@ -281,16 +279,16 @@ class query implements IteratorAggregate, ArrayAccess {
 			if (isset($schema['null'])) $type = "left";
 			$this->join($ref[0]." as ".$collection."_".$alias)->on($collection."_".$alias.".".$ref[1]."=".$collection.".".$field);
 		} else if ($this->models->has($schema['type'])) {
-			$type_schema = $this->config->get($schema['type'], 'json');
-			if (is_null($token)) $token = empty($type_schema['label_select']) ? $collection."_".$alias.".id" : str_replace($schema['type'], $collection."_".$alias, $type_schema['label_select']);
+			$label_select = $this->models->get($schema['type'])->label_select;
+			if (is_null($token)) $token = empty($label_select) ? $collection."_".$alias.".id" : str_replace($schema['type'], $collection."_".$alias, $label_select);
 			else $token = $collection."_".$alias.".".$token;
 			if (empty($schema['table'])) $schema['table'] = $table."_".$field;
 			if ($schema['table'] == $schema['type']) {
 				//no lookup required
 				if ($mode == "select") {
-					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".P($schema['type'])." ".$collection."_".$alias." WHERE ".$collection."_".$alias.".".$table."_id=".$collection.".id)";
+					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".$this->db->prefix($schema['type'])." ".$collection."_".$alias." WHERE ".$collection."_".$alias.".".$table."_id=".$collection.".id)";
 				} else if ($mode == "where" || $mode == "condition") {
-					$return = "(SELECT ".$token." FROM ".P($schema['type'])." ".$collection."_".$alias." WHERE ".$collection."_".$alias.".".$table."_id=".$collection.".id)";
+					$return = "(SELECT ".$token." FROM ".$this->db->prefix($schema['type'])." ".$collection."_".$alias." WHERE ".$collection."_".$alias.".".$table."_id=".$collection.".id)";
 				} else if ($mode == "group" || $mode == "set") {
 					$this->join($schema['type']." as ".$collection."_".$alias)
 								->on($collection."_".$alias.".".$table."_id=".$collection.".id");
@@ -298,9 +296,9 @@ class query implements IteratorAggregate, ArrayAccess {
 			} else {
 				//use lookup table
 				if ($mode == "select") {
-					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
+					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".$this->db->prefix($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".$this->db->prefix($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
 				} else if ($mode == "where" || $mode == "condition") {
-					$return = "(SELECT ".$token." FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
+					$return = "(SELECT ".$token." FROM ".$this->db->prefix($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".$this->db->prefix($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
 				} else if ($mode == "group" || $mode == "set") {
 					$this->join($schema['table']." as ".$collection."_".$alias."_lookup")
 								->on($collection."_".$alias."_lookup.".$table."_id=".$collection.".id")
@@ -602,8 +600,8 @@ class query implements IteratorAggregate, ArrayAccess {
 		if (empty($fields)) {
 			$fieldsets = array();
 			foreach ($this->query['from'] as $alias => $model) {
-				$schema = $this->config->get($model, 'json');
-				if (!empty($schema['search']) && !isset($fieldsets[$model])) $fieldsets[$model] = $schema['search'];
+				$search_fields = $this->models->get($model)->search_fields;
+				if (!empty($search_fields) && !isset($fieldsets[$model])) $fieldsets[$model] = $search_fields;
 			}
 			$fields = implode(",", $fieldsets);
 		}
@@ -649,7 +647,7 @@ class query implements IteratorAggregate, ArrayAccess {
 						$permit_field = "object_".$cname;
 						$ref = $cname."_id";
 						$target = ($type == $column['entity']) ? "id" : $column['entity']."_id";
-						$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$column['entity']."_id=".$collection.".".$target."))");
+						$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$column['entity']."_id=".$collection.".".$target."))");
 					} else {
 						//single reference
 						$object_field = $cname;
@@ -674,11 +672,11 @@ class query implements IteratorAggregate, ArrayAccess {
 					//multiple reference
 					$user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
 					$ref = $cname."_id";
-					$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$ref." FROM ".P($user_table)." u WHERE u.users_id=".$this->db->getUser()."))");
+					$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$ref." FROM ".$this->db->prefix($user_table)." u WHERE u.users_id=".$this->db->getUser()."))");
 				} else {
 					//single reference
 					$user_field = $cname;
-					$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$user_field." FROM ".P("users")." u WHERE u.id=".$this->db->getUser()."))");
+					$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$user_field." FROM ".$this->db->prefix("users")." u WHERE u.id=".$this->db->getUser()."))");
 				}
 			}
 		}
@@ -706,18 +704,18 @@ class query implements IteratorAggregate, ArrayAccess {
 						$target = ($type == $columns[$cname]['entity']) ? "id" : $columns[$cname]['entity']."_id";
 						if ($this->db->hasUser()) {
 							$this->orWhere("permits.role='".$cname."' && (EXISTS (".
-									"SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target." && o.".$ref." IN (".
-										"SELECT ".$ref." FROM ".P($user_table)." u WHERE u.users_id=".$this->db->getUser().
+									"SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target." && o.".$ref." IN (".
+										"SELECT ".$ref." FROM ".$this->db->prefix($user_table)." u WHERE u.users_id=".$this->db->getUser().
 									")".
-								") || NOT EXISTS (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target."))"
+								") || NOT EXISTS (SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target."))"
 							);
 						} else {
-							$this->orWhere("permits.role='".$cname."' && NOT EXISTS (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target.")");
+							$this->orWhere("permits.role='".$cname."' && NOT EXISTS (SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target.")");
 						}
 					} else {
 						//single reference
 						if ($this->db->hasUser()) {
-							$this->orWhere("permits.role='".$cname."' && (".$collection.".".$cname." is null || ".$collection.".".$cname." IN (SELECT ".$cname." FROM ".P("users")." id=".$this->db->getUser()."))");
+							$this->orWhere("permits.role='".$cname."' && (".$collection.".".$cname." is null || ".$collection.".".$cname." IN (SELECT ".$cname." FROM ".$this->db->prefix("users")." id=".$this->db->getUser()."))");
 						} else {
 							$this->orWhere("permits.role='".$cname."' && ".$collection.".".$cname." is null");
 						}
@@ -855,11 +853,11 @@ class query implements IteratorAggregate, ArrayAccess {
 		$from = $last_collection = $last_alias = "";
 		foreach ($this->query['from'] as $alias => $collection) {
 			if (empty($from)) {
-				$from = "`".P($collection)."`";
+				$from = "`".$this->db->prefix($collection)."`";
 				if ($this->mode != "insert" && $this->mode != "truncate") $from .= " AS `".$alias."`";
 			} else {
 				if (empty($this->query['join'][$alias])) $this->query['join'][$alias] = "LEFT";
-				$collection_segment = ("(" === substr($collection, 0, 1)) ? $collection : "`".P($collection)."`";
+				$collection_segment = ("(" === substr($collection, 0, 1)) ? $collection : "`".$this->db->prefix($collection)."`";
 				$segment = " ".$this->query['join'][$alias]." JOIN ".$collection_segment." AS `".$alias."`";
 				if (empty($this->query['on'][$alias])) {
 					$relations = sb($collection)->relations;
@@ -885,7 +883,7 @@ class query implements IteratorAggregate, ArrayAccess {
 									$this->query['from'][$rel['lookup']] = $rel['lookup'];
 									$this->query['join'][$rel['lookup']] = $this->query['join'][$alias];
 									$this->query['on'][$rel['lookup']] = $relator.".id=$rel[lookup].$rel[ref]";
-									$segment = " ".$this->query['join'][$rel['lookup']]." JOIN ".P($rel['lookup'])." AS $rel[lookup] ON ".$this->query['on'][$rel['lookup']].$segment;
+									$segment = " ".$this->query['join'][$rel['lookup']]." JOIN ".$this->db->prefix($rel['lookup'])." AS $rel[lookup] ON ".$this->query['on'][$rel['lookup']].$segment;
 								}
 								$this->query['on'][$alias] = "$rel[lookup].$rel[hook]=$alias.id";
 							} else {
@@ -1452,7 +1450,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		else if ($this->mode == "update") {
 			if (isset($this->fields["id"])) return $this->fields["id"];
 			else {
-				$record = query($this->model)->conditions($this)->one();
+				$record = $this->db->query($this->model)->conditions($this)->one();
 				return $record['id'];
 			}
 		} else if ($this->mode == "delete") {

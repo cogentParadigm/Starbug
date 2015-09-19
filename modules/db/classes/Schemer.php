@@ -197,10 +197,10 @@ class Schemer {
 			$this->clean();
 			$this->fill();
 			foreach ($this->tables as $table => $fields) {
-				$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
+				$records = $this->db->pdo->query("SHOW TABLES LIKE '".$this->db->prefix($table)."'");
 				if (false === ($row = $records->fetch())) {
 					// NEW TABLE																																													// NEW TABLE
-					fwrite(STDOUT, "Creating table ".P($table)."...\n");
+					fwrite(STDOUT, "Creating table ".$this->db->prefix($table)."...\n");
 					$this->create($table);
 					$this->generate_model($table);
 					$ts++;
@@ -215,7 +215,7 @@ class Schemer {
 			foreach ($fields as $name => $field) {
 				if (!isset($this->tables[$field['type']])) {
 					// REAL COLUMN
-					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
+					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".$this->db->prefix($table)." WHERE Field='".$name."'");
 					if (false === ($row = $records->fetch())) {
 						// NEW COLUMN																																												// NEW COLUMN
 						fwrite(STDOUT, "Adding column $name...\n");
@@ -230,16 +230,16 @@ class Schemer {
 							$ms++;
 						}
 						if (isset($row['index'])) {
-							$index = $this->db->pdo->query("SHOW INDEXES FROM ".P($table)." WHERE key_name='".$name."'");
+							$index = $this->db->pdo->query("SHOW INDEXES FROM ".$this->db->prefix($table)." WHERE key_name='".$name."'");
 							if (empty($index)) $this->create_index($table, $name);
 						}
 					}
 				}
 				if (isset($field['references']) && ($field['constraint'] !== false)) {
-					$fks = $this->db->pdo->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".$this->db->database_name."'");
+					$fks = $this->db->pdo->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".$this->db->prefix($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".$this->db->database_name."'");
 					if (false === ($row = $fks->fetch())) {
 						// ADD CONSTRAINT																																									// CONSTRAINT
-						fwrite(STDOUT, "Adding foreign key ".P($table)."_".$name."_fk...\n");
+						fwrite(STDOUT, "Adding foreign key ".$this->db->prefix($table)."_".$name."_fk...\n");
 						$this->add_foreign_key($table, $name);
 						$ms++;
 					}
@@ -275,8 +275,8 @@ class Schemer {
 		}
 		foreach ($this->indexes as $idx => $index) {
 			$table = reset($index);
-			$name = P("").implode("_", $index)."_index";
-			$exists = $this->db->pdo->query("SHOW INDEXES FROM ".P($table)." WHERE key_name='".$name."'")->fetch();
+			$name = $this->db->prefix("").implode("_", $index)."_index";
+			$exists = $this->db->pdo->query("SHOW INDEXES FROM ".$this->db->prefix($table)." WHERE key_name='".$name."'")->fetch();
 			if (empty($exists)) {
 				fwrite(STDOUT, "Creating index '$name'...\n");
 				call_user_method_array("create_index", $this, $index);
@@ -284,8 +284,8 @@ class Schemer {
 		}
 		foreach ($this->index_drops as $idx => $index) {
 			$table = reset($index);
-			$name = P("").implode("_", $index)."_index";
-			$exists = $this->db->pdo->query("SHOW INDEXES FROM ".P($table)." WHERE key_name='".$name."'")->fetch();
+			$name = $this->db->prefix("").implode("_", $index)."_index";
+			$exists = $this->db->pdo->query("SHOW INDEXES FROM ".$this->db->prefix($table)." WHERE key_name='".$name."'")->fetch();
 			if (!empty($exists)) {
 				fwrite(STDOUT, "Dropping index '$name'...\n");
 				call_user_method_array("drop_index", $this, $index);
@@ -293,15 +293,15 @@ class Schemer {
 		}
 		foreach ($this->triggers as $name => $triggers) {
 			foreach ($triggers as $event => $trigger) {
-				$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($trigger['table']."_".$event."_".$trigger['action'])."'")->fetch();
+				$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".$this->db->prefix($trigger['table']."_".$event."_".$trigger['action'])."'")->fetch();
 				if (empty($record)) {
 					// ADD TRIGGER																																											// ADD TRIGGER
-					fwrite(STDOUT, "Creating trigger ".P($trigger['table'])."_".$event."_$trigger[action]...\n");
+					fwrite(STDOUT, "Creating trigger ".$this->db->prefix($trigger['table'])."_".$event."_$trigger[action]...\n");
 					$this->add_trigger($name, $event);
 					$gs++;
 				} else if ($record['ACTION_STATEMENT'] != $trigger['trigger']) {
 					// UPDATE TRIGGER																																										// UPDATE TRIGGER
-					fwrite(STDOUT, "Updating trigger ".P($trigger['table'])."_".$event."_$trigger[action]...\n");
+					fwrite(STDOUT, "Updating trigger ".$this->db->prefix($trigger['table'])."_".$event."_$trigger[action]...\n");
 					$this->remove_trigger($name, $event);
 					$this->add_trigger($name, $event);
 					$gu++;
@@ -380,22 +380,22 @@ class Schemer {
 		}
 		foreach ($this->tables as $table => $fields) $is += $this->populate($table, false);
 		foreach ($this->table_drops as $table) {
-			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
+			$records = $this->db->pdo->query("SHOW TABLES LIKE '".$this->db->prefix($table)."'");
 			if ($row = $records->fetch()) {
 				// DROP TABLE																																													// DROP TABLE
-				fwrite(STDOUT, "Dropping table ".P($table)."...\n");
+				fwrite(STDOUT, "Dropping table ".$this->db->prefix($table)."...\n");
 				$this->drop_table($table);
 				$td++;
 			}
 		}
 		foreach ($this->column_drops as $table => $cols) {
-			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
+			$records = $this->db->pdo->query("SHOW TABLES LIKE '".$this->db->prefix($table)."'");
 			if ($row = $records->fetch()) {
 				foreach ($cols as $col) {
-					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".P($table)." WHERE field='".$col."'");
+					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".$this->db->prefix($table)." WHERE field='".$col."'");
 					if ($row = $records->fetch()) {
 						// DROP COLUMN																																										// DROP COLUMN
-						fwrite(STDOUT, "Dropping column ".P($table).".$col...\n");
+						fwrite(STDOUT, "Dropping column ".$this->db->prefix($table).".$col...\n");
 						$this->remove($table, $col);
 						$cd++;
 					}
@@ -405,9 +405,9 @@ class Schemer {
 		foreach ($this->trigger_drops as $name => $event) {
 			// DROP TRIGGER																																													// DROP TRIGGER
 			$parts = explode("::", $name);
-			$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($parts[0]."_".$event."_".$parts[1])."'")->fetch();
+			$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".$this->db->prefix($parts[0]."_".$event."_".$parts[1])."'")->fetch();
 			if (false !== $record) {
-				fwrite(STDOUT, "Dropping trigger ".P($parts[0])."_".$event."_$parts[1]...\n");
+				fwrite(STDOUT, "Dropping trigger ".$this->db->prefix($parts[0])."_".$event."_$parts[1]...\n");
 				$this->remove_trigger($name, $event);
 				$gd++;
 			}
@@ -426,7 +426,7 @@ class Schemer {
 	function create($name, $backup = false, $write = true) {
 		$fields = $this->get_table($name);
 		$this->drop_table($name);
-		$sql = "CREATE TABLE `".P($name)."` (";
+		$sql = "CREATE TABLE `".$this->db->prefix($name)."` (";
 		$primary = array();
 		$index = array();
 		$sql_fields = "";
@@ -452,7 +452,7 @@ class Schemer {
 	 * @param string $name the name of the table from tables array
 	 */
 	function drop_table($name) {
-		$this->db->exec("DROP TABLE IF EXISTS `".P($name)."`");
+		$this->db->exec("DROP TABLE IF EXISTS `".$this->db->prefix($name)."`");
 	}
 
 	/**
@@ -464,7 +464,7 @@ class Schemer {
 		$fields = $this->get_table($table);
 		$field = $fields[$name];
 		$sql = "`".$name."` ".$this->get_sql_type($field);
-		$this->db->exec("ALTER TABLE `".P($table)."` ADD ".$sql);
+		$this->db->exec("ALTER TABLE `".$this->db->prefix($table)."` ADD ".$sql);
 	}
 
 	/**
@@ -473,7 +473,7 @@ class Schemer {
 	 * @param string $name the name of column
 	 */
 	function remove($table, $name) {
-		$this->db->exec("ALTER TABLE `".P($table)."` DROP COLUMN `".$name."`");
+		$this->db->exec("ALTER TABLE `".$this->db->prefix($table)."` DROP COLUMN `".$name."`");
 	}
 
 	/**
@@ -485,7 +485,7 @@ class Schemer {
 		$fields = $this->get_table($table);
 		$field = $fields[$name];
 		$sql = "`".$name."` `".$name."` ".$this->get_sql_type($field);
-		$this->db->exec("ALTER TABLE `".P($table)."` CHANGE ".$sql);
+		$this->db->exec("ALTER TABLE `".$this->db->prefix($table)."` CHANGE ".$sql);
 	}
 
 	/**
@@ -496,7 +496,7 @@ class Schemer {
 	function create_index($table, $name) {
 		$args = func_get_args();
 		$table = array_shift($args);
-		$sql = "CREATE INDEX ".P($table)."_".implode("_", $args)."_index ON `".P($table)."` (`".implode("`, `", $args)."`)";
+		$sql = "CREATE INDEX ".$this->db->prefix($table)."_".implode("_", $args)."_index ON `".$this->db->prefix($table)."` (`".implode("`, `", $args)."`)";
 		$this->db->exec($sql);
 	}
 
@@ -508,7 +508,7 @@ class Schemer {
 	function drop_index($table, $name) {
 		$args = func_get_args();
 		$table = array_shift($args);
-		$sql = "ALTER TABLE ".P($table)." DROP INDEX ".P($table)."_".implode("_", $args)."_index";
+		$sql = "ALTER TABLE ".$this->db->prefix($table)." DROP INDEX ".$this->db->prefix($table)."_".implode("_", $args)."_index";
 		$this->db->exec($sql);
 	}
 
@@ -524,7 +524,7 @@ class Schemer {
 		$append = "";
 		if ($field['update']) $append .= " ON UPDATE ".$field['update'];
 		if ($field['delete']) $append .= " ON DELETE ".$field['delete'];
-		$this->db->exec("ALTER TABLE `".P($table)."` ADD CONSTRAINT `".P($table)."_".$name."_fk` FOREIGN KEY (`$name`) REFERENCES `".P($ref[0])."` (`".$ref[1]."`)".$append);
+		$this->db->exec("ALTER TABLE `".$this->db->prefix($table)."` ADD CONSTRAINT `".$this->db->prefix($table)."_".$name."_fk` FOREIGN KEY (`$name`) REFERENCES `".$this->db->prefix($ref[0])."` (`".$ref[1]."`)".$append);
 	}
 
 	/**
@@ -1004,7 +1004,7 @@ class Schemer {
 	 */
 	function add_trigger($name, $type) {
 		$trigger = $this->triggers[$name][$type];
-		$sql = "CREATE TRIGGER `".P($trigger['table']."_".$type."_".$trigger['action'])."` $type $trigger[action] ON ".P($trigger['table']).(($trigger['each']) ? " FOR EACH ROW" : "")." ".$trigger['trigger'].";";
+		$sql = "CREATE TRIGGER `".$this->db->prefix($trigger['table']."_".$type."_".$trigger['action'])."` $type $trigger[action] ON ".$this->db->prefix($trigger['table']).(($trigger['each']) ? " FOR EACH ROW" : "")." ".$trigger['trigger'].";";
 		$this->db->exec($sql);
 	}
 
@@ -1015,7 +1015,7 @@ class Schemer {
 	 */
 	function remove_trigger($name, $type) {
 		$parts = explode("::", $name);
-		$sql = "DROP TRIGGER `".P($parts[0]."_".$type."_".$parts[1])."`;";
+		$sql = "DROP TRIGGER `".$this->db->prefix($parts[0]."_".$type."_".$parts[1])."`;";
 		$this->db->exec($sql);
 	}
 
@@ -1091,7 +1091,7 @@ class Schemer {
 	function get_logging_trigger($table, $type) {
 		if ($type == "insert") {
 			$trigger = "BEGIN
-				INSERT INTO ".P("log")." (table_name, object_id, action, created, modified) VALUES ('$table', NEW.id, 'INSERT', NOW(), NOW());
+				INSERT INTO ".$this->db->prefix("log")." (table_name, object_id, action, created, modified) VALUES ('$table', NEW.id, 'INSERT', NOW(), NOW());
 			END";
 		} else if ($type == "update") {
 			$trigger = "BEGIN";
@@ -1100,14 +1100,14 @@ class Schemer {
 			foreach ($fields as $name => $ops) {
 				$trigger .= "
 				IF OLD.$name != NEW.$name THEN
-					INSERT INTO ".P("log")." (table_name, object_id, action, column_name, old_value, new_value, created, modified) VALUES ('$table', NEW.id, 'UPDATE', '$name', OLD.$name, NEW.$name, NOW(), NOW());
+					INSERT INTO ".$this->db->prefix("log")." (table_name, object_id, action, column_name, old_value, new_value, created, modified) VALUES ('$table', NEW.id, 'UPDATE', '$name', OLD.$name, NEW.$name, NOW(), NOW());
 				END IF;";
 			}
 			$trigger .= "
 			END";
 		} else if ($type == "delete") {
 			$trigger = "BEGIN
-				INSERT INTO ".P("log")." (table_name, object_id, action, created, modified) VALUES ('$table', OLD.id, 'DELETE', NOW(), NOW());
+				INSERT INTO ".$this->db->prefix("log")." (table_name, object_id, action, created, modified) VALUES ('$table', OLD.id, 'DELETE', NOW(), NOW());
 			END";
 		}
 		return $trigger;

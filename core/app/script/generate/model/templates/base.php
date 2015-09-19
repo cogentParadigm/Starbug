@@ -17,6 +17,7 @@ class <?php echo ucwords($name); ?>Model extends Table {
   public $singular = "<?php echo $singular; ?>";
   public $singular_label = "<?php echo ucwords(str_replace(array("-", "_"), array(" ", " "), $singular)); ?>";
   public $label_select = "<?php echo empty($label_select) ? $name.".id" : $label_select; ?>";
+  public $search_fields = "<?php echo $search; ?>";
 
 
   function __construct(DatabaseInterface $db, ModelFactoryInterface $models, UserInterface $user<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {

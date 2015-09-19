@@ -53,6 +53,7 @@ interface DatabaseInterface {
 	 * @param string $where the WHERE conditions on the DELETE
 	 */
 	function remove($from, $where);
+	function prefix($table);
 	public function set_debug($debug);
 	public function exec($statement);
 	public function errors($key = "", $values = false);

@@ -29,7 +29,7 @@ class Menus extends MenusModel {
 	}
 
 	function query_tree($query, &$ops) {
-		$query->select("menus.uris_id.title,(SELECT COUNT(*) FROM ".P("menus")." as t WHERE t.parent=menus.id) as children");
+		$query->select("menus.uris_id.title,(SELECT COUNT(*) FROM ".$this->db->prefix("menus")." as t WHERE t.parent=menus.id) as children");
 		if (!empty($ops['parent'])) $query->condition("menus.parent", $ops['parent']);
 		else {
 			$query->condition("menus.parent", 0);

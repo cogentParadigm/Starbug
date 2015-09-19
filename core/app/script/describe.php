@@ -7,7 +7,15 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
-$name = array_shift($argv);
-$records = raw_query("DESCRIBE `".P($name)."`")->fetchAll(PDO::FETCH_ASSOC);
-cli::table($records);
+namespace Starbug\Core;
+class DescribeCommand {
+  public function __construct(DatabaseInterface $db) {
+    $this->db = $db;
+  }
+  public function run($argv) {
+    $name = array_shift($argv);
+    $records = $this->db->pdo->query("DESCRIBE `".$this->db->prefix($name)."`")->fetchAll(\PDO::FETCH_ASSOC);
+    \cli::table($records);
+  }
+}
 ?>

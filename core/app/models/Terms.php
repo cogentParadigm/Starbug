@@ -52,7 +52,7 @@ class Terms extends TermsModel {
 	}
 
 	function query_tree($query, &$ops) {
-		$query->select("terms.*,(SELECT COUNT(*) FROM ".P("terms")." as t WHERE t.parent=terms.id) as children");
+		$query->select("terms.*,(SELECT COUNT(*) FROM ".$this->db->prefix("terms")." as t WHERE t.parent=terms.id) as children");
 		if (!empty($ops['parent'])) $query->condition("parent", $ops['parent']);
 		else $query->condition("terms.parent", 0);
 		$query->sort("terms.position");
