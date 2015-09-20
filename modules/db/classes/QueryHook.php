@@ -4,6 +4,12 @@ class QueryHook {
 	/**
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 */
+	function query(&$query, $args=array()) {
+		//this hook is invoked when called as a function on a query.
+	}
+	/**
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
 	function empty_before_insert(&$query, $column, $argument) {
 		//this hook is invoked when inserting and the field has not been specified
 	}

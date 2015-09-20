@@ -42,10 +42,8 @@ class User implements UserInterface {
 		if (!is_array($user['groups'])) $user['groups'] = is_null($user['groups']) ? array() : explode(",", $user['groups']);
 		if (!is_array($user['statuses'])) $user['statuses'] = is_null($user['statuses']) ? array() : explode(",", $user['statuses']);
 		$this->user = $user;
-		$this->db->setUser($user['id']);
 	}
 	public function clearUser() {
 		$this->user = array();
-		$this->db->setUser(false);
 	}
 }

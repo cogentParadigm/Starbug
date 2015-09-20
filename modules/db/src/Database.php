@@ -69,7 +69,6 @@ class Database implements DatabaseInterface {
 	protected $params;
 	protected $models;
 	protected $hooks;
-	protected $user = false;
 
 	public function __construct(PDO $pdo, ModelFactoryInterface $models, HookFactoryInterface $hooks, ConfigInterface $config, $database_name) {
 		$this->models = $models;
@@ -100,18 +99,6 @@ class Database implements DatabaseInterface {
 
 	public function exec($statement) {
 		return $this->pdo->exec($statement);
-	}
-
-	public function getUser() {
-		return $this->user;
-	}
-
-	public function setUser($user){
-		$this->user = $user;
-	}
-
-	public function hasUser() {
-		return (!empty($this->user));
 	}
 
 	/**

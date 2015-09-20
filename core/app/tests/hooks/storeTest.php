@@ -17,7 +17,8 @@ class storeTest extends UnitTest {
 
 	var $fixtures = array("users");
 
-	public static function setUp() {
+	public function setUp() {
+		parent::setUp();
 		global $container;
 		$this->db = $container->get("Starbug\Core\DatabaseInterface");
 		$this->models = $container->get("Starbug\Core\ModelFactoryInterface");

@@ -618,115 +618,6 @@ class query implements IteratorAggregate, ArrayAccess {
 		return $this;
 	}
 
-	function action($action, $collection = "") {
-		if (empty($collection)) $collection = $this->last_collection;
-		if ($this->has($collection)) {
-			$type = $this->query['from'][$collection];
-			$base_type = entity_base($type);
-			$join = true;
-		} else {
-			$type = $collection;
-			$join = false;
-		}
-
-		$columns = column_info($type);
-		$user_columns = column_info("users");
-
-		if ($join) {
-			//join permits - match table and action
-			if (!$this->has("permits")) $this->innerJoin("permits")->on("'".$type."' LIKE permits.related_table && '".$action."' LIKE permits.action");
-			//global or object permit
-			$this->where("('global' LIKE permits.priv_type || (permits.priv_type='object' && permits.related_id=".$collection.".id))");
-
-			//determine what relationships the object must bear - defined by object_access fields
-			foreach ($columns as $cname => $column) {
-				if (isset($column['object_access'])) {
-					if ($this->models->has($column['type'])) {
-						//multiple reference
-						$object_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
-						$permit_field = "object_".$cname;
-						$ref = $cname."_id";
-						$target = ($type == $column['entity']) ? "id" : $column['entity']."_id";
-						$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$column['entity']."_id=".$collection.".".$target."))");
-					} else {
-						//single reference
-						$object_field = $cname;
-						$permit_field = "object_".$cname;
-						$this->where("(permits.".$permit_field." is null || permits.".$permit_field."=".$collection.".".$object_field.")");
-					}
-				}
-			}
-
-		} else {
-			//table permit
-			$this->where("'table' LIKE permits.priv_type && '".$type."' LIKE permits.related_table && '".$action."' LIKE permits.action");
-		}
-
-		//determine what relationships the user must bear - defined by user_access fields
-		foreach ($user_columns as $cname => $column) {
-			if (isset($column['user_access'])) {
-				$permit_field = "user_".$cname;
-				if (!$this->db->hasUser()) {
-					$this->where("permits.".$permit_field." is null");
-				}else if ($this->models->has($column['type'])) {
-					//multiple reference
-					$user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
-					$ref = $cname."_id";
-					$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$ref." FROM ".$this->db->prefix($user_table)." u WHERE u.users_id=".$this->db->getUser()."))");
-				} else {
-					//single reference
-					$user_field = $cname;
-					$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$user_field." FROM ".$this->db->prefix("users")." u WHERE u.id=".$this->db->getUser()."))");
-				}
-			}
-		}
-
-		//generate a condition for each role a permit can have. One of these must be satisfied
-		$this->open("roles");
-		//everyone - no restriction
-		$this->where("permits.role='everyone'");
-		//user - a specific user
-		$this->orWhere("permits.role='user' && permits.who='".$this->db->getUser()."'");
-
-		if ($join) {
-			//self - permit for user actions
-			if ($type == "users") $this->orWhere("permits.role='self' && ".$collection.".id='".$this->db->getUser()."'");
-			//owner - grant access to owner of object
-			$this->orWhere("permits.role='owner' && ".$collection.".owner='".$this->db->getUser()."'");
-			//[user_access field] - requires users and objects to share the same terms for the given relationship
-			foreach ($user_columns as $cname => $column) {
-				if (isset($column['user_access']) && isset($columns[$cname])) {
-					if ($this->models->has($column['type'])) {
-						//multiple reference
-						$user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
-						$object_table = empty($columns[$cname]['table']) ? $columns[$cname]['entity']."_".$cname : $columns[$cname]['table'];
-						$ref = $cname."_id";
-						$target = ($type == $columns[$cname]['entity']) ? "id" : $columns[$cname]['entity']."_id";
-						if ($this->db->hasUser()) {
-							$this->orWhere("permits.role='".$cname."' && (EXISTS (".
-									"SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target." && o.".$ref." IN (".
-										"SELECT ".$ref." FROM ".$this->db->prefix($user_table)." u WHERE u.users_id=".$this->db->getUser().
-									")".
-								") || NOT EXISTS (SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target."))"
-							);
-						} else {
-							$this->orWhere("permits.role='".$cname."' && NOT EXISTS (SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target.")");
-						}
-					} else {
-						//single reference
-						if ($this->db->hasUser()) {
-							$this->orWhere("permits.role='".$cname."' && (".$collection.".".$cname." is null || ".$collection.".".$cname." IN (SELECT ".$cname." FROM ".$this->db->prefix("users")." id=".$this->db->getUser()."))");
-						} else {
-							$this->orWhere("permits.role='".$cname."' && ".$collection.".".$cname." is null");
-						}
-					}
-				}
-			}
-		}
-		$this->close();
-		return $this;
-	}
-
 	/**************************************************************
 	 * query compiling functions
 	 **************************************************************/
@@ -1251,8 +1142,8 @@ class query implements IteratorAggregate, ArrayAccess {
 		if (isset($this->fields[$column])) $key = $column;
 		else if (isset($this->fields[$this->model.".".$column])) $key = $this->model.".".$column;
 		else if (isset($this->fields[$this->base_collection.".".$column])) $key = $this->base_collection.".".$column;
-		if (!isset($this->hooks[$column."_".$hook])) $this->hooks[$column."_".$hook] = $this->hook_builder->get("store/".$hook);
-		foreach ($this->hooks[$column."_".$hook] as $hook) {
+		if (!isset($this->hooks["store_".$column."_".$hook])) $this->hooks["store_".$column."_".$hook] = $this->hook_builder->get("store/".$hook);
+		foreach ($this->hooks["store_".$column."_".$hook] as $hook) {
 			//hooks are invoked in 3 phases
 			//0 = validate (before)
 			//1 = store (during)
@@ -1499,5 +1390,13 @@ class query implements IteratorAggregate, ArrayAccess {
 		if (!$this->executed) $this->execute();
 		if (!$this->result) return false;
 		unset($this->result[$offset]);
+	}
+
+	public function __call($name, $arguments) {
+		if (!isset($this->hooks["query_".$name])) $this->hooks["query_".$name] = $this->hook_builder->get("query/".$name);
+		foreach ($this->hooks["query_".$name] as $hook) {
+			call_user_func_array(array($hook, "query"), array(&$this, $arguments));
+		}
+		return $this;
 	}
 }
