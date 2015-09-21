@@ -19,6 +19,8 @@ class Application implements ApplicationInterface {
 	protected $user;
 	protected $locator;
 
+	use \Psr\Log\LoggerAwareTrait;
+
 	/**
 	 * constructor.
 	 */
@@ -42,7 +44,13 @@ class Application implements ApplicationInterface {
 
 	public function handle(Request $request) {
 		$this->user->startSession();
-		if (empty($request->path)) $request->path = $this->settings->get("default_path");
+
+		if (empty($request->path)) {
+			$request->path = $this->settings->get("default_path");
+			$this->logger->addInfo("Request path is empty. Routing to default path: ".$request->path);
+		} else {
+			$this->logger->addInfo("Request path - ".$request->path);
+		}
 
 		$this->response->assign("request", $request);
 		$route = $this->router->route($request);
@@ -55,6 +63,7 @@ class Application implements ApplicationInterface {
 		foreach ($route as $k => $v) {
 			$this->response->{$k} = $v;
 		}
+		$this->logger->addInfo("Loading ".$route['controller'].' -> '.$route['action']);
 		$controller = $this->controllers->get($route['controller']);
 
 		if (isset($controller->routes[$route['action']])) {
@@ -81,6 +90,7 @@ class Application implements ApplicationInterface {
 	* @param string $value the function name
 	*/
 	protected function post_action($key, $value, $post = array()) {
+		$this->logger->addInfo("Attempting action ".$key.' -> '.$value);
 		if ($object = $this->models->get($key)) {
 			return $object->post($value, $post);
 		}

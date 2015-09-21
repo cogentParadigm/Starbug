@@ -3,7 +3,10 @@
 		"php-di/php-di": "^5.1",
 		"phpmailer/phpmailer": "dev-master",
 		"masterexploder/phpthumb": "dev-master",
-		"ezyang/htmlpurifier":"dev-master"
+		"ezyang/htmlpurifier":"dev-master",
+		"psr/log": "^1.0",
+		"monolog/monolog": "^1.17",
+		"php-console/php-console": "^3.1"
 	},
 	"require-dev": {
 		"sebastian/phpcpd": "*",
