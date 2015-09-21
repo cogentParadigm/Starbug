@@ -14,5 +14,15 @@ echo "query $name $params\n";
 $params = star($params);
 if (!empty($params['limit']) && $params['limit'] == 1) $records = array($records);
 else $records = $records->execute();
-cli::table($records);
+
+if (empty($records)) {
+  echo "..no results\n";
+} else {
+  $result = array();
+  foreach ($records as $record) $result[] = array_values($record);
+  $table = new cli\Table();
+  $table->setHeaders(array_keys($records[0]));
+  $table->setRows($result);
+  $table->display();
+}
 ?>

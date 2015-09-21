@@ -15,7 +15,14 @@ class DescribeCommand {
   public function run($argv) {
     $name = array_shift($argv);
     $records = $this->db->pdo->query("DESCRIBE `".$this->db->prefix($name)."`")->fetchAll(\PDO::FETCH_ASSOC);
-    \cli::table($records);
+    if (!empty($records)) {
+      $result = array();
+      foreach ($records as $record) $result[] = array_values($record);
+      $table = new \cli\Table();
+      $table->setHeaders(array_keys($records[0]));
+      $table->setRows($result);
+      $table->display();
+    }
   }
 }
 ?>

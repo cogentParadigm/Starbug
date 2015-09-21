@@ -12,7 +12,7 @@
 	$host = (file_exists(BASE_DIR."/etc/Host.php"));
 
 	//CREATE FOLDERS & SET FILE PERMISSIONS
-	$dirs = array("var", "var/xml", "var/json", "var/models", "var/tmp", "var/public", "var/public/stylesheets", "var/public/thumbnails", "app/hooks", "app/templates", "app/forms", "app/public/js", "app/public/uploads");
+	$dirs = array("var", "var/xml", "var/json", "var/models", "var/tmp", "var/public", "var/log", "var/public/stylesheets", "var/public/thumbnails", "app/hooks", "app/templates", "app/forms", "app/public/js", "app/public/uploads");
 	foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) exec("mkdir ".BASE_DIR."/".$dir);
 	exec("chmod -R a+w ".BASE_DIR."/var ".BASE_DIR."/app/public/uploads");
 
