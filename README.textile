@@ -1,15 +1,24 @@
 h1. Starbug PHP Web Development Framework
 
-Starbug PHP is an open source framework for PHP. Starbug is a fast and exstensible toolkit that employs a loose MVC design pattern. Here are some of the core features provided:
+Starbug PHP is an open source framework for PHP that employs an MVC design pattern. Here are some of the core features provided:
 
-* Flexible routing and content model with built-in CMS
-* Simple templating engine (using PHP for templates)
-* Code generation made easy, built on the templating system
+* Controller based routing
 * Role-based access control (RBAC)
-* Database abstraction layer includes schema management and a flexible validation and filtering system
-* many command line utilities, and you can easily add your own
+* Model layer includes:
+	- schema management/migration
+	- robust validation and hook system
+	- query builder with fluent API
+	- built-in REST API
+* Modular architecture
+* extensible command line interface
+* Code generation
 * Utilities for data grids, form building, pagination, thumbnailing and more..
-* support for modules
+* Integration with dojo toolkit providing:
+	- dstore implementation for REST API
+	- bootstrap theme for dijit
+	- media browser
+	- form control widgets include file selection, autocomplete, tag input, and more..
+	- dgrid column plugins including dnd and tree expansion
 
 h2. Project Info
 
@@ -19,7 +28,7 @@ h2. Project Info
 
 h2. Dependencies
 
-* PHP 5.3+
+* PHP 5.4+
 * MySQL 5.1.6+
 
 Optional dependencies are listed in the links section.
@@ -41,20 +50,6 @@ We recommend you take following additional steps:
 
 # Copy the sb command to your path:<pre><code>cp sb /usr/bin/sb</code></pre>
 # Copy the bash completion file to take advantage of auto-completion when running sb commands:<pre><code>cp core/lib/bash_completion/sb /etc/bash_completion.d/</code></pre>
-
-h2. Links
-
-Starbug integrates several 3rd party tools you may want to check out:
-
-* "Git":http://www.git-scm.com
-* "Dojo":http://www.dojotoolkit.org
-* "Bootstrap":http://getbootstrap.com
-* "Font-Awesome":https://fortawesome.github.io/Font-Awesome
-* "TinyMCE":http://www.tinymce.com
-* "PHPThumb":http://phpthumb.sourceforge.net
-* "PHPUnit":http://www.phpunit.de/manual/current/en/index.html
-* "PHPMailer":https://github.com/PHPMailer/PHPMailer
-* "HTMLPurifier":http://htmlpurifier.org
 
 h2. License
 
