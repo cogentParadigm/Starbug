@@ -97,7 +97,7 @@ class ErrorHandler {
 		$error['traces'] = $trace;
 
 		if (!headers_sent()) header("HTTP/1.0 500 PHP Error");
-		if (!in_array($errno, $this->$fatalErrors, true)) {
+		if (!in_array($errno, $this->fatalErrors, true)) {
 			$level = isset($this->map[$errno]) ? $this->map[$errno] : LogLevel::CRITICAL;
 			$this->logger->log($level, $error['message'], $error);
 		}
@@ -107,7 +107,7 @@ class ErrorHandler {
 
 	function handle_shutdown() {
 		if (is_null($lastError = error_get_last()) === false) {
-			if (in_array($lastError['type'], $this->$fatalErrors, true)) {
+			if (in_array($lastError['type'], $this->fatalErrors, true)) {
 				$this->logger->alert(
 					'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
 					array('code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'])

@@ -29,12 +29,14 @@ class Controller {
 	function action($action = "", $arguments = array()) {
 		if (empty($action)) $action = "default_action";
 		$args = array();
-		$reflection = new ReflectionMethod($this, $action);
-		$parameters = $reflection->getParameters();
-		foreach ($parameters as $parameter) {
-			$name = $parameter->getName();
-			if (isset($arguments[$name])) $args[] = $arguments[$name];
-			else if ($parameter->isDefaultValueAvailable()) $args[] = $parameter->getDefaultValue();
+		if (method_exists($this, $action)) {
+			$reflection = new ReflectionMethod($this, $action);
+			$parameters = $reflection->getParameters();
+			foreach ($parameters as $parameter) {
+				$name = $parameter->getName();
+				if (isset($arguments[$name])) $args[] = $arguments[$name];
+				else if ($parameter->isDefaultValueAvailable()) $args[] = $parameter->getDefaultValue();
+			}
 		}
 		call_user_func_array(array($this, $action), $args);
 	}
