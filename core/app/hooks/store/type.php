@@ -1,7 +1,8 @@
 <?php
 namespace Starbug\Core;
 class hook_store_type extends QueryHook {
-	public function __construct(ModelFactoryInterface $models) {
+	public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+		$this->db = $db;
 		$this->models = $models;
 	}
 	function empty_validate(&$query, $column, $argument) {
@@ -46,10 +47,10 @@ class hook_store_type extends QueryHook {
 				$clean = true;
 			} else if ($value_type === "object") {
 				if (isset($type_id['id'])) {
-					$entry = query($target)->condition("id", $type_id['id']);
+					$entry = $this->db->query($target)->condition("id", $type_id['id']);
 					$ids[] = $type_id['id'];
 				} else {
-					$entry = query($target)->conditions(array($model."_id" => $model_id, $column."_id" => $type_id[$column."_id"]));
+					$entry = $this->db->query($target)->conditions(array($model."_id" => $model_id, $column."_id" => $type_id[$column."_id"]));
 					$type_ids[] = $type_id[$column."_id"];
 				}
 				$entry->set($model."_id", $model_id);
@@ -58,7 +59,7 @@ class hook_store_type extends QueryHook {
 				if (isset($type_id['id']) || $entry->one()) $entry->update();
 				else $entry->insert();
 			} else if ($value_type === "id") {
-				$entry = query($target)->condition("id", $type_id);
+				$entry = $this->db->query($target)->condition("id", $type_id);
 				if ($remove) {
 					$entry->delete();
 				} else {
@@ -69,7 +70,7 @@ class hook_store_type extends QueryHook {
 					$ids[] = $type_id;
 				}
 			} else {
-				$entry = query($target)->conditions(array($model."_id" => $model_id, $column."_id" => $type_id));
+				$entry = $this->db->query($target)->conditions(array($model."_id" => $model_id, $column."_id" => $type_id));
 				if ($remove) {
 					//remove
 					$entry->delete();
@@ -87,7 +88,7 @@ class hook_store_type extends QueryHook {
 
 		//clean
 		if ($clean) {
-			$query = query($target)->condition($model."_id", $model_id);
+			$query = $this->db->query($target)->condition($model."_id", $model_id);
 			if (!empty($type_ids)) {
 				$query->condition($column."_id", $type_ids, "!=");
 			}

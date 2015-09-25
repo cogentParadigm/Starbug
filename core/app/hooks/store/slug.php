@@ -2,7 +2,8 @@
 namespace Starbug\Core;
 //stores a URL path slug
 class hook_store_slug extends QueryHook {
-	function __construct(ModelFactoryInterface $models, MacroInterface $macro) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, MacroInterface $macro) {
+		$this->db = $db;
 		$this->macro = $macro;
 		$this->models = $models;
 	}
@@ -34,11 +35,10 @@ class hook_store_slug extends QueryHook {
 	}
 
 	function exists($query, $column, $value) {
-			$exists = query($query->model)->condition($query->model.".".$column, $value);
-			$id = 0; $record = false;
+			$exists = $this->db->query($query->model)->condition($query->model.".".$column, $value);
+			$id = 0;
 			if ($query->mode == "update") {
 				$id = $query->getId();
-				//$record = query($query->model)->condition("id", $id)->one();
 				$exists->condition($query->model.".id", $id, "!=");
 			}
 			if (!empty($this->models->get($query->model)->hooks[$column]["unique"])) {

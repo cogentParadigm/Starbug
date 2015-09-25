@@ -1,7 +1,8 @@
 <?php
 namespace Starbug\Core;
 class hook_store_alias extends QueryHook {
-	function __construct(ModelFactoryInterface $models) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+		$this->db = $db;
 		$this->models = $models;
 	}
 	function validate(&$query, $key, $value, $column, $alias) {
@@ -22,7 +23,7 @@ class hook_store_alias extends QueryHook {
 				}
 				$num++;
 			}
-			$row = query($referenced_model[0])->select($referenced_model[1])->condition($match, $value)->one();
+			$row = $this->db->query($referenced_model[0])->select($referenced_model[1])->condition($match, $value)->one();
 			if (!empty($row)) $value = $row[$referenced_model[1]];
 		}
 		return $value;
