@@ -598,11 +598,8 @@ class query implements IteratorAggregate, ArrayAccess {
 		$search_fields = preg_split('~(?<!\\\)' . preg_quote(",", '~') . '~', $fields);
 		//unescape those commas
 		foreach ($search_fields as $sfk => $sfv) $search_fields[$sfk] = str_replace("\,", ",", $sfv);
-
-
 		//generate the conditions
 		$this->where($this->search_clause($keywords, $search_fields));
-
 		return $this;
 	}
 
