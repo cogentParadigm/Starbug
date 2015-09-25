@@ -13,12 +13,6 @@ dependencies = {
 				'bootstrap/Dropdown',
 				'bootstrap/Carousel'
 			]
-		},
-		{
-			name: "../starbug/ide.js",
-			dependencies: [
-				'starbug.IDE.IDE'
-			]
 		}
 	],
 

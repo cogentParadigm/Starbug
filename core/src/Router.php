@@ -36,7 +36,7 @@ REGEX;
 		$query->sort("FIELD(path, '".implode("', '", $paths)."')");
 
 		foreach ($query as $result) {
-			$permitted = query("uris")->condition("uris.id", $result['id'])->action("read")->one();
+			$permitted = $this->db->query("uris")->condition("uris.id", $result['id'])->action("read")->one();
 			if ($permitted) {
 				$route = $permitted;
 				break;
