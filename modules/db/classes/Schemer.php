@@ -246,7 +246,7 @@ class Schemer {
 				}
 			}
 			//entity type definition
-			$rows = query("entities")->condition("name", $table)->one();
+			$rows = $this->db->query("entities")->condition("name", $table)->one();
 			unset($table_info['fields']);
 			unset($table_info['relations']);
 			unset($table_info['select']);
@@ -260,7 +260,7 @@ class Schemer {
 				store("entities", $table_info);
 				$is++;
 			} else {
-				$query = query("entities");
+				$query = $this->db->query("entities");
 				foreach ($table_info as $k => $v) $query->condition("entities.".$k, $v);
 				$rows = $query->all();
 				if (empty($rows)) {
@@ -309,7 +309,7 @@ class Schemer {
 			}
 		}
 		foreach ($this->taxonomies as $taxonomy => $items) {
-			$records = query("terms", "select:count(*) as count  where:taxonomy=?  limit:1", array($taxonomy));
+			$records = $this->db->query("terms", "select:count(*) as count  where:taxonomy=?  limit:1", array($taxonomy));
 			if ($records['count'] == 0) {
 				//CREATE TAXONOMY                                                                                     //CREATE TAXONOMY
 				fwrite(STDOUT, "Creating taxonomy ".$taxonomy."...\n");
@@ -317,14 +317,14 @@ class Schemer {
 			} else $is += $this->create_taxonomy($taxonomy, true);
 		}
 		foreach ($this->uris as $path => $uri) {
-			$rows = query("uris")->condition("path", $path)->one();
+			$rows = $this->db->query("uris")->condition("path", $path)->one();
 			if (empty($rows)) {
 				// ADD URI																																														// ADD URI
 				fwrite(STDOUT, "Adding URI '$path'...\n");
 				$this->add_uri($path);
 				$us++;
 			} else {
-				$query = query("uris")->select("uris.*,uris.groups.slug as groups");
+				$query = $this->db->query("uris")->select("uris.*,uris.groups.slug as groups");
 				$extra_terms = false;
 				foreach ($uri as $k => $v) {
 					if ($k == "groups" || $k == "statuses") $query->condition("uris.".$k.".slug", $v);
@@ -332,7 +332,7 @@ class Schemer {
 				}
 				$rows = $query->all();
 				if (!empty($rows) && !empty($rows[0]['groups'])) {
-					$g = query("uris")->select("uris.*,groups.slug")->condition("uris.id", $rows[0]['id']);
+					$g = $this->db->query("uris")->select("uris.*,groups.slug")->condition("uris.id", $rows[0]['id']);
 					if (!empty($uri['groups'])) $g->condition("groups.slug", $uri['groups'], "!=");
 					$g = $g->execute();
 					if (!empty($g)) {
@@ -355,7 +355,7 @@ class Schemer {
 					$permit['related_table'] = $model;
 					$permit['action'] = $action;
 					if (empty($permit['priv_type'])) $permit['priv_type'] = "*";
-					$query = query("permits");
+					$query = $this->db->query("permits");
 					foreach ($permit as $k => $v) {
 						if (0 === strpos($k, "user_") || 0 === strpos($k, "object_")) $query->condition($k.".slug", $v);
 						else $query->condition($k, $v);
@@ -371,7 +371,7 @@ class Schemer {
 			}
 		}
 		foreach ($this->menus as $menu => $items) {
-			$records = query("menus", "select:count(*) as count  where:menu=?  limit:1", array($menu));
+			$records = $this->db->query("menus", "select:count(*) as count  where:menu=?  limit:1", array($menu));
 			if ($records['count'] == 0) {
 				//CREATE MENU                                                                                          //CREATE MENU
 				fwrite(STDOUT, "Creating menu ".$menu."...\n");
@@ -895,7 +895,7 @@ class Schemer {
 			if ($k == "groups" || $k == "statuses") $k = "menus.".$k;
 			$match[$k] = $v;
 		}
-		$record = query("menus")->conditions($match)->one();
+		$record = $this->db->query("menus")->conditions($match)->one();
 		if (empty($record)) {
 			if ($update) fwrite(STDOUT, "Creating $menu menu item...\n");
 			store("menus", $item);
@@ -925,7 +925,7 @@ class Schemer {
 		$children = empty($item['children']) ? array() : $item['children'];
 		unset($item['children']);
 		$item['taxonomy'] = $taxonomy;
-		$record = query("terms")->conditions($item)->one();
+		$record = $this->db->query("terms")->conditions($item)->one();
 		if (empty($record)) {
 			if ($update) fwrite(STDOUT, "Creating $taxonomy taxonomy term...\n");
 			store("terms", $item);
@@ -950,7 +950,7 @@ class Schemer {
 		if (!empty($pop)) {
 			foreach ($pop as $record) {
 				if ($record['immediate'] == $immediate) {
-					$match = query($table)->conditions($record['match'])->one();
+					$match = $this->db->query($table)->conditions($record['match'])->one();
 					if (empty($match)) {
 						$store = array_merge($record['match'], $record['others']);
 						fwrite(STDOUT, "Inserting $table record...\n");

@@ -220,7 +220,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in condition fields
 	 */
 	function test_condition_expansion_select() {
-		$query = query("uris")->select("uris.owner.email")->condition("uris.owner.email", "root");
+		$query = $this->db->query("uris")->select("uris.owner.email")->condition("uris.owner.email", "root");
 
 
 		//expected output
