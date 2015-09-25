@@ -253,8 +253,6 @@ interface QueryBuilderInterface extends IteratorAggregate, ArrayAccess {
 	 */
 	function search($keywords = "", $fields = "");
 
-	function action($action, $collection = "");
-
 	/**************************************************************
 	 * query compiling functions
 	 **************************************************************/

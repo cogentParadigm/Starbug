@@ -10,7 +10,7 @@
 /**
  * The query class. provides a generic query representation
  * usage:
- * $query = new query("users");
+ * $query = $db->query("users");
  * $query->select("first_name, last_name")->condition(array("id" => array(1, 2, 3), "users.groups" => "admin"))
  * 			 ->sort('last_name')->limit(10)->skip(20);
  * @ingroup db
@@ -279,8 +279,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			if (isset($schema['null'])) $type = "left";
 			$this->join($ref[0]." as ".$collection."_".$alias)->on($collection."_".$alias.".".$ref[1]."=".$collection.".".$field);
 		} else if ($this->models->has($schema['type'])) {
-			$label_select = $this->models->get($schema['type'])->label_select;
-			if (is_null($token)) $token = empty($label_select) ? $collection."_".$alias.".id" : str_replace($schema['type'], $collection."_".$alias, $label_select);
+			if (is_null($token)) $token = $collection."_".$alias.".id";
 			else $token = $collection."_".$alias.".".$token;
 			if (empty($schema['table'])) $schema['table'] = $table."_".$field;
 			if ($schema['table'] == $schema['type']) {
