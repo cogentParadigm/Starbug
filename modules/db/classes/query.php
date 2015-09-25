@@ -591,20 +591,9 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * fields: 'name,description'
 	 * conditions: ((name LIKE '%beef%' OR description LIKE '%beef%') and (name LIKE '%broccoli%' OR description LIKE '%broccoli%'))
 	 */
-	function search($keywords = "", $fields = "") {
-		//if there are no search terms, there's nothing to do
-		if (empty($keywords)) return $this;
-
-		//if no fields are passed, search the default fields of all tables in the query
-		if (empty($fields)) {
-			$fieldsets = array();
-			foreach ($this->query['from'] as $alias => $model) {
-				$search_fields = $this->models->get($model)->search_fields;
-				if (!empty($search_fields) && !isset($fieldsets[$model])) $fieldsets[$model] = $search_fields;
-			}
-			$fields = implode(",", $fieldsets);
-		}
-
+	function search($keywords, $fields) {
+		//if there are no search terms or fields to search, there's nothing to do
+		if (empty($keywords) || empty($fields)) return $this;
 		//split tokens (allowing escaped commas)
 		$search_fields = preg_split('~(?<!\\\)' . preg_quote(",", '~') . '~', $fields);
 		//unescape those commas

@@ -213,7 +213,7 @@ class Table {
 		if (!empty($this->base)) {
 			$this->models->get($this->base)->query_filters($action, $query, $ops);
 		} else {
-			if (!empty($ops['keywords'])) $query->search($ops['keywords']);
+			if (!empty($ops['keywords'])) $query->search($ops['keywords'], $this->search_fields);
 		}
 		return $query;
 	}
