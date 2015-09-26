@@ -17,8 +17,6 @@ $request = new Starbug\Core\Request("/", array(
 	'directory' => Etc::WEBSITE_URL
 ));
 $container->set("Starbug\Core\Request", $request);
-global $sb;
-$sb = $container->get("Starbug\Core\sb");
 $user = $container->get("Starbug\Core\UserInterface");
 $user->setUser(array("id" => "NULL", "groups" => array("root")));
 ?>

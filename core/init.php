@@ -30,12 +30,6 @@ $builder->addDefinitions(BASE_DIR."/etc/di.php");
 $container = $builder->build();
 $container->set('Interop\Container\ContainerInterface', $container);
 
-//create locator
-$locator = $container->get('Starbug\Core\ResourceLocatorInterface');
-
-// global functions
-foreach ($locator->locate("global_functions.php", "") as $global_include) include($global_include);
-
 $container->get("Starbug\Core\ErrorHandler")->register();
 
 ?>

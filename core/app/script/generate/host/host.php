@@ -9,7 +9,11 @@
 				$replace = "\n\t/* ".$value[1]." */\n";
 				$value = $value[0];
 			}
-			$replace .= "\tconst ".$name." = \"".$value."\";\n}";
+			if ($value == "true" || $value == "false" || is_numeric($value)) {
+				$replace .= "\tconst ".$name." = ".$value.";\n}";
+			} else {
+				$replace .= "\tconst ".$name." = \"".$value."\";\n}";
+			}
 			$pos = strrpos($host, "}");
 			$host = substr_replace($host, $replace, $pos, 1); 
 		}

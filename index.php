@@ -25,8 +25,6 @@ $request = new Starbug\Core\Request($_SERVER['REQUEST_URI'], array(
 	'directory' => Etc::WEBSITE_URL
 ));
 $container->set("Starbug\Core\Request", $request);
-global $sb;
-$sb = $container->get("Starbug\Core\sb");
 $application = $container->get("Starbug\Core\ApplicationInterface");
 $response = $application->handle($request);
 $response->send();

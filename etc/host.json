@@ -7,5 +7,7 @@
 	
 	"TIME_ZONE" : ["America/Vancouver", "Time Zone"],
 	
-	"ENABLE_ERROR_LOG" : ["true", "Log errors"]
+	"ENABLE_ERROR_LOG" : ["true", "Log errors"],
+
+	"DEBUG" : ["true", "Set false to silence SQL exceptions"]
 }
