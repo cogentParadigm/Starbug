@@ -8,7 +8,7 @@ class ViewsTest extends ModelTest {
 
 	function test_create() {
 		$this->action("create", array("path" => "phpunit", "blocks" => array("content-1" => "test")));
-		$object = query($this->model)->condition("views.id", $this->insert_id)->select("views.path")->one();
+		$object = $this->db->query($this->model)->condition("views.id", $this->insert_id)->select("views.path")->one();
 		//lets verify the explicit values were set
 		$this->assertEquals("phpunit", $object['path']);
 	}
