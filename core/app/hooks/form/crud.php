@@ -1,6 +1,9 @@
 <?php
 namespace Starbug\Core;
 class hook_form_crud extends FormHook {
+	public function __construct(DatabaseInterface $db) {
+		$this->db = $db;
+	}
 	function build($form, &$control, &$field) {
 		$var = $form->get($field['name']);
 		if (!empty($var)) {
@@ -26,7 +29,7 @@ class hook_form_crud extends FormHook {
 		if (!empty($field['size'])) $field['data-dojo-props']['size'] = $field['size'];
 		 if (!empty($field['value'])) {
 			$value = is_array($field['value']) ? $field['value'] : explode(",", preg_replace("/[,\s]+/", ",", $field['value']));
-			$records = query($field['table'])->condition("id", $value)->select("GROUP_CONCAT(id ORDER BY FIELD(id, '".implode("','", $value)."')) as id")->one();
+			$records = $this->db->query($field['table'])->condition("id", $value)->select("GROUP_CONCAT(id ORDER BY FIELD(id, '".implode("','", $value)."')) as id")->one();
 			$field['data-dojo-props']['value'] = '['.$records['id'].']';
 		}
 		$props = array();

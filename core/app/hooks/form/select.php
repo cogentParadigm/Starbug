@@ -1,6 +1,9 @@
 <?php
 namespace Starbug\Core;
 class hook_form_select extends FormHook {
+	public function __construct(DatabaseInterface $db) {
+		$this->db = $db;
+	}
 	function build($form, &$control, &$field) {
 		$name = $field['name'];
 		$value = $form->get($field['name']);
@@ -23,7 +26,7 @@ class hook_form_select extends FormHook {
 		if (!empty($field['caption'])) {
 			if (!empty($field['from'])) {
 				$list = $options;
-				$options = query($field['from'], $field)->all();
+				$options = $this->db->query($field['from'], $field)->all();
 			} else $list = array();
 			$keys = array();
 			if (!empty($options)) foreach ($options[0] as $k => $v) if (false !== strpos($field['caption'], "%$k%")) $keys[] = $k;

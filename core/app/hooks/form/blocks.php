@@ -1,14 +1,15 @@
 <?php
 namespace Starbug\Core;
 class hook_form_blocks extends FormHook {
-	function __construct(Request $request) {
+	function __construct(DatabaseInterface $db, Request $request) {
+		$this->db = $db;
 		$this->request = $request;
 	}
 	function build($form, &$control, &$field) {
 		$containers = array(array("region" => "content", "position" => 1, "content" => "", "type" => "text"));
 		$item_id = $form->get("id");
 		if (!empty($item_id)) {
-			$containers = query("blocks")->condition("uris_id", $form->get("uris_id"))->sort("position")->all();
+			$containers = $this->db->query("blocks")->condition("uris_id", $form->get("uris_id"))->sort("position")->all();
 		} else if (!empty($this->request->data[$form->model]['blocks'])) {
 			$containers = array();
 			foreach ($this->request->data[$form->model]['blocks'] as $key => $content) {
