@@ -261,11 +261,11 @@ class query implements IteratorAggregate, ArrayAccess {
 		list($field, $alias) = array($parsed['collection'], $parsed['alias']);
 		if (empty($collection)) $collection = $this->last_collection;
 		$table = $this->query['from'][$collection];
-		$schema = column_info($table, $field);
+		$schema = $this->models->get($table)->column_info($field);
 		if ($schema['entity'] !== $table) {
 			$entity_collection = $collection."_".$schema['entity'];
 			if (!isset($this->query['from'][$entity_collection])) {
-				$base_entity = entity_base($table);
+				$base_entity = $this->models->get($table)->root();
 				$this->join($schema['entity']." as ".$entity_collection);
 				if ($schema['entity'] === $base_entity) $this->on($entity_collection.".id=".$collection.".".$base_entity."_id");
 				else $this->on($entity_collection.".".$base_entity."_id=".$collection.".".$base_entity."_id");
@@ -966,12 +966,12 @@ class query implements IteratorAggregate, ArrayAccess {
 						//}
 					} else {
 						//otherwise we look at the field schema
-						$schema = column_info($table, $token);
+						$schema = $this->models->get($table)->column_info($token);
 						if (!empty($schema)) {
 							if ($schema['entity'] !== $table) {
 								$entity_collection = $collection."_".$schema['entity'];
 								if (!isset($this->query['from'][$entity_collection])) {
-									$base_entity = entity_base($table);
+									$base_entity = $this->models->get($table)->root();
 									$this->join($schema['entity']." as ".$entity_collection);
 									if ($schema['entity'] === $base_entity) $this->on($entity_collection.".id=".$collection.".".$base_entity."_id");
 									else $this->on($entity_collection.".".$base_entity."_id=".$collection.".".$base_entity."_id");
@@ -997,7 +997,7 @@ class query implements IteratorAggregate, ArrayAccess {
 						$invert = true;
 					}
 					//if the loop continues, the current token becomes the next collection
-					$column_info = column_info($this->query['from'][$collection], $token);
+					$column_info = $this->models->get($this->query['from'][$collection])->column_info($token);
 					if (!empty($column_info) && $column_info['entity'] !== $this->query['from'][$collection]) {
 						$table = $column_info['entity'];
 						$collection = $collection."_".$column_info['entity'];

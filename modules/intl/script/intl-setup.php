@@ -32,7 +32,7 @@ class IntlSetupCommand {
 					if (isset($data[$k])) $record[$v] = $data[$k];
 				}
 			}
-			store("countries", $record);
+			$this->db->store("countries", $record);
 		}
 
 		//populate regions
@@ -42,7 +42,7 @@ class IntlSetupCommand {
 			$exists = $this->db->query("provinces")->conditions(array("countries_id" => $country['id'], "code" => $r['code']));
 			if (!$exists->one()) {
 				$r['countries_id'] = $country['id'];
-				store("provinces", $r);
+				$this->db->store("provinces", $r);
 			}
 		}
 		$country = $this->db->query("countries")->condition("code", "US")->one();

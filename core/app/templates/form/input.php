@@ -1,7 +1,7 @@
 <?php if ($type == "file") { ?>
 	<?php
 		$files = "[]";
-		$column_info = column_info($display->model, $field);
+		$column_info = $this->models->get($display->model)->column_info($field);
 		$records = array();
 		if (!empty($value)) {
 			if (!is_array($value)) $value = explode(",", preg_replace("/[,\s]+/", ",", $value));

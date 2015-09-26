@@ -39,7 +39,7 @@ class Taxonomy implements TaxonomyInterface {
 	 * @return bool returns true on success, false otherwise.
 	 */
 	function tag($table, $object_id, $field, $tag = "") {
-		$column_info = column_info($table, $field);
+		$column_info = $this->models->get($table)->column_info($field);
 		if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
 		$taxonomy = $column_info['taxonomy'];
 		$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
@@ -71,7 +71,7 @@ class Taxonomy implements TaxonomyInterface {
 	 * @param string $tag the tag
 	 */
 	function untag($table, $object_id, $field, $tag = "") {
-		$column_info = column_info($table, $field);
+		$column_info = $this->models->get($table)->column_info($field);
 		if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
 		$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
 		$this->db->query($tags)->condition($tags.".".$table."_id", $object_id)->open("terms")->condition($field."_id.id", $tag)->orCondition($field."_id.slug", $tag)->orCondition($field."_id.term", $tag)->close()->delete();

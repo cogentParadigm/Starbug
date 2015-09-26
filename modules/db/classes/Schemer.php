@@ -673,7 +673,7 @@ class Schemer {
 	function add_uri($path) {
 		$uri = $this->uris[$path];
 		$entity = (empty($uri['type'])) ? "uris" : $uri['type'];
-		entity_save($entity, $uri);
+		$this->models->get($entity)->store($uri);
 	}
 
 	/**
@@ -683,7 +683,7 @@ class Schemer {
 	function update_uri($path, $uri = array()) {
 		if (empty($uri)) $uri = $this->uris[$path];
 		$entity = (empty($uri['type'])) ? "uris" : $uri['type'];
-		entity_save($entity, $uri, array("path" => $path));
+		$this->models->get($entity)->store($uri, array("path" => $path));
 	}
 
 	/**

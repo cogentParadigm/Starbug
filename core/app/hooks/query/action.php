@@ -12,15 +12,17 @@ class hook_query_action extends QueryHook {
 		if (empty($collection)) $collection = $query->last_collection;
 		if ($query->has($collection)) {
 			$type = $query->query['from'][$collection];
-			$base_type = entity_base($type);
 			$join = true;
 		} else {
 			$type = $collection;
 			$join = false;
 		}
 
-		$columns = column_info($type);
-		$user_columns = column_info("users");
+		$users = $this->models->get("users");
+		$instance = $this->models->get($type);
+		$base_type = $instance->root();
+		$columns = $instance->column_info();
+		$user_columns = $users->column_info();
 
 		if ($join) {
 			//join permits - match table and action

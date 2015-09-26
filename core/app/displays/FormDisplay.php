@@ -117,7 +117,7 @@ class FormDisplay extends ItemDisplay {
 		// grab errors and update schema
 		$this->errors = array();
 		foreach ($this->fields as $name => $field) {
-			$this->schema[$name] = column_info($field['model'], $name);
+			$this->schema[$name] = $this->models->get($field['model'])->column_info($name);
 			$error_key = str_replace(array("][", "[", "]"), array(".", ".", ""), $name);
 			if (!empty($this->schema[$name]['entity'])) {
 				$errors = $this->models->get($this->schema[$name]['entity'])->errors($error_key, true);

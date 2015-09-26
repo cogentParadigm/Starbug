@@ -168,7 +168,7 @@ class Table {
 	 * @param string $entity the entity
 	 * @return string the base model
 	 */
-	function root($entity="") {
+	function root($entity = "") {
 		if (empty($entity)) $entity = $this->type;
 		$base = $entity;
 		while (!empty($this->models->get($base)->base)) $base = $this->models->get($base)->base;
@@ -195,7 +195,7 @@ class Table {
 	 * @param string $entity entity name
 	 * @param string $column column name
 	 */
-	function column_info($column = "", $entity="") {
+	function column_info($column = "", $entity = "") {
 		if (empty($entity)) $entity = $this->type;
 		$info = array();
 		if (!$this->models->has($entity)) return $info;
