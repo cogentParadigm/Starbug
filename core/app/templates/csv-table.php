@@ -1,5 +1,5 @@
 <?php
-	$file = query("files")->condition("id", $csv)->one();
+	$file = $this->db->query("files")->condition("id", $csv)->one();
 	$$lines = 0;
 	if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) {
 		while (!feof($handle)) {

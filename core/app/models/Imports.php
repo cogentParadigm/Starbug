@@ -13,10 +13,10 @@ class Imports extends ImportsModel {
 	function run($import) {
 		$index = $created = $updated = 0;
 		$errors = array();
-		$import = query("imports")->condition("id", $import['id'])->one();
+		$import = $this->db->query("imports")->condition("id", $import['id'])->one();
 		if (empty($import['action'])) $import['action'] = "create";
-		$file = query("files")->condition("id", $import['source'])->one();
-		$fields = query("imports_fields")->condition("imports_id", $import['id'])->sort("position")->all();
+		$file = $this->db->query("files")->condition("id", $import['source'])->one();
+		$fields = $this->db->query("imports_fields")->condition("imports_id", $import['id'])->sort("position")->all();
 		$keys = $head = array();
 		foreach ($fields as $field) {
 			if ($field['update_key']) $keys[] = $field['destination'];
@@ -32,7 +32,7 @@ class Imports extends ImportsModel {
 					$record[$field['destination']] = $row[$head[$field['source']]];
 				}
 				if (!empty($keys)) {
-					$query = query($import['model']);
+					$query = $this->db->query($import['model']);
 					foreach ($keys as $key) $query->condition($import['model'].".".$key, $record[$key]);
 					$exists = $query->one();
 					if ($exists) {

@@ -18,11 +18,11 @@ class Terms extends TermsModel {
 
 	function delete($term) {
 		try {
-			query("terms")->condition("id", $term['id'])->delete();
+			$this->db->query("terms")->condition("id", $term['id'])->delete();
 		} catch (Exception $e) {
-
+			//TODO: handle this if it's a foreign key constraint
 		}
-		$term = query("terms")->condition("id", $term['id'])->one();
+		$term = $this->db->query("terms")->condition("id", $term['id'])->one();
 		if ($term) $this->error("This term must be detached from all entities before it can be deleted.", "global");
 	}
 

@@ -18,7 +18,7 @@ class Menus extends MenusModel {
 	}
 
 	function delete_menu($menu) {
-		query("menus")->condition("menu", $menu['menu'])->delete();
+		$this->db->query("menus")->condition("menu", $menu['menu'])->delete();
 	}
 
 	function query_admin($query, &$ops) {

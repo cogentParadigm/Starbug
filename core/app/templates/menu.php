@@ -12,8 +12,8 @@
 
 	if ($sortable) $attributes['class'] .= " sortable";
 
-	if ($menu_type == "taxonomy") $records = query("terms", "where:terms.taxonomy=?", array($taxonomy))->sort("terms.term_path ASC, terms.position ASC");
-	else $records = query("menus", "select:menus.*,menus.uris_id.title,menus.uris_id.path,menus.uris_id.breadcrumb  where:menus.menu=?", array($menu))->sort("menus.menu_path ASC, menus.position ASC");
+	if ($menu_type == "taxonomy") $records = $this->db->query("terms", "where:terms.taxonomy=?", array($taxonomy))->sort("terms.term_path ASC, terms.position ASC");
+	else $records = $this->db->query("menus", "select:menus.*,menus.uris_id.title,menus.uris_id.path,menus.uris_id.breadcrumb  where:menus.menu=?", array($menu))->sort("menus.menu_path ASC, menus.position ASC");
 	$links = array();
 
 	$forbidden = array();
