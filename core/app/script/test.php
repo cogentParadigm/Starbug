@@ -25,6 +25,7 @@
 		$next = array_shift($argv);
 		$harness->layer($next);
 	} else if ($what == "-f") { //load fixture
+		$harness = new Starbug\Core\Harness();
 		$unit = false;
 		$next = array_shift($argv);
 		$harness->fixture($next);

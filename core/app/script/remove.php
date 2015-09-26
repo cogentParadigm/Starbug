@@ -7,7 +7,15 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
-$name = array_shift($argv);
-$params = implode("  ", $argv);
-remove($name, $params);
+namespace Starbug\Core;
+class RemoveCommand {
+	public function __construct(ModelFactoryInterface $models) {
+		$this->models = $models;
+	}
+	public function run($argv) {
+		$name = array_shift($argv);
+		$id = array_shift($argv);
+		$this->models->get($name)->remove($id);
+	}
+}
 ?>

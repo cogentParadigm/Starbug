@@ -17,14 +17,13 @@ namespace Starbug\Core;
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup Fixture
  */
-class ModelTest extends UnitTest {
+class ModelTest extends \PHPUnit_Framework_TestCase {
 
 	public $model;
 	protected $db;
 	protected $models;
 
 	function setUp() {
-		parent::setUp();
 		global $container;
 		$this->db = $container->get("Starbug\Core\DatabaseInterface");
 		$this->models = $container->get("Starbug\Core\ModelFactoryInterface");

@@ -7,22 +7,29 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
-$name = array_shift($argv);
-$params = join("  ", $argv);
-$records = query($name, $params);
-echo "query $name $params\n";
-$params = star($params);
-if (!empty($params['limit']) && $params['limit'] == 1) $records = array($records);
-else $records = $records->execute();
-
-if (empty($records)) {
-  echo "..no results\n";
-} else {
-  $result = array();
-  foreach ($records as $record) $result[] = array_values($record);
-  $table = new cli\Table();
-  $table->setHeaders(array_keys($records[0]));
-  $table->setRows($result);
-  $table->display();
+namespace Starbug\Core;
+class QueryCommand {
+  public function __construct(DatabaseInterface $db) {
+    $this->db = $db;
+  }
+  public function run($argv) {
+    $name = array_shift($argv);
+    $params = join("  ", $argv);
+    $records = $this->db->query($name, $params);
+    echo "query $name $params\n";
+    $params = star($params);
+    if (!empty($params['limit']) && $params['limit'] == 1) $records = array($records);
+    else $records = $records->execute();
+    if (empty($records)) {
+      echo "..no results\n";
+    } else {
+      $result = array();
+      foreach ($records as $record) $result[] = array_values($record);
+      $table = new \cli\Table();
+      $table->setHeaders(array_keys($records[0]));
+      $table->setRows($result);
+      $table->display();
+    }
+  }
 }
 ?>

@@ -11,7 +11,7 @@ class Settings extends SettingsModel {
 	}
 
 	function delete($setting) {
-		return $this->remove('id:'.$setting['id']);
+		$this->remove($setting['id']);
 	}
 
 }

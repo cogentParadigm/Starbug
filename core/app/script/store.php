@@ -7,19 +7,39 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
-$name = array_shift($argv);
-$params = join("  ", $argv);
-$params = star($params);
-$errors = store($name, $params);
-if (empty($errors)) {
-	$id = (empty($params['id'])) ? sb("insert_id") : $params['id'];
-	$argv = array($name, "where:id='$id'");
-	include(BASE_DIR."/core/app/script/query.php");
-} else {
-	foreach($errors as $col => $arr) {
-		echo $col.":\n";
-		foreach($arr as $e => $m) {
-			echo "\t".$m."\n";
+namespace Starbug\Core;
+class StoreCommand {
+	public function __construct(ModelFactoryInterface $models) {
+		$this->models = $models;
+	}
+	public function run($argv) {
+		$name = array_shift($argv);
+		$params = join("  ", $argv);
+		$params = star($params);
+		$instance = $this->models->get($name);
+		$instance->store($params);
+		if (!$instance->errors()) {
+			$id = (empty($params['id'])) ? $instance->insert_id : $params['id'];
+			$records = $instance->query()->condition($name.".id", $id)->all();
+			$result = array();
+  		foreach ($records as $record) $result[] = array_values($record);
+  		$table = new \cli\Table();
+  		$table->setHeaders(array_keys($records[0]));
+  		$table->setRows($result);
+  		$table->display();
+		} else {
+			$errors = $instance->errors("", true);
+			$result = array();
+  		foreach ($records as $record) $result[] = array_values($record);
+			foreach($errors as $col => $arr) {
+				foreach($arr as $e => $m) {
+					$result[] = array($col, $m);
+				}
+			}
+			$table = new \cli\Table();
+  		$table->setHeaders(array("field", "message"));
+  		$table->setRows($result);
+  		$table->display();
 		}
 	}
 }

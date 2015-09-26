@@ -14,7 +14,7 @@ class ViewsTest extends ModelTest {
 	}
 
 	function test_update() {
-		$object = entity_load("views", array("path" => "phpunit"));
+		$object = $this->models->get("views")->load(array("path" => "phpunit"));
 
 		//test setting a normal field
 		$object['title'] = "Test Title";
@@ -22,21 +22,21 @@ class ViewsTest extends ModelTest {
 		$object['blocks']['content-1'] = "Test Content";
 		$this->action("create", $object);
 		//re fetch and test for updates
-		$object = entity_load("views", array("path" => "phpunit"), true);
+		$object = $this->models->get("views")->load(array("path" => "phpunit"), true);
 
-		$block = get("blocks", array("uris_id" => $object["uris_id"]), "limit:1");
+		$block = $this->db->get("blocks", array("uris_id" => $object["uris_id"]), "limit:1");
 		$this->assertEquals("Test Title", $object['title']);
 		$this->assertEquals("Test Content", $block['content']);
 	}
 
 	function test_delete() {
 		//first assert that the record exists
-		$object = entity_load("views", array("path" => "phpunit"));
+		$object = $this->models->get("views")->load(array("path" => "phpunit"));
 		$this->assertEquals(empty($object), false);
 
 		//remove it and assert that the record is gone
 		$this->action("delete", $object);
-		$object = entity_load("views", array("path" => "phpunit"), true);
+		$object = $this->models->get("views")->load(array("path" => "phpunit"), true);
 		$this->assertEquals(empty($object), true);
 	}
 

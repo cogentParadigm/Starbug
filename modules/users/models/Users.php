@@ -59,7 +59,7 @@ class Users extends UsersModel {
 	 * A function for logging in
 	 */
 	function login($login, $redirect=true) {
-		$user = $this->query("select:users.*,users.groups as groups,users.statuses as statuses  where:email=?  limit:1", array($login['email']));
+		$user = $this->db->query("users")->select("users.*,users.groups as groups,users.statuses as statuses")->condition("users.email", $login['email'])->one();
 		if (Session::authenticate($user['password'], $login['password'], $user['id'], Etc::HMAC_KEY)) {
 			$this->user->setUser($user);
 			$this->store(array("id" => $user['id'], "last_visit" => date("Y-m-d H:i:s")));
@@ -86,7 +86,7 @@ class Users extends UsersModel {
 		$email_address = trim($fields['email']);
 		if (empty($email_address)) $this->error("Please enter your email address.", "email");
 		else {
-			$user = $this->query("where:email='".$email_address."'  limit:1");
+			$user = $this->query()->condition("email", $email_address)->one();
 			if (!empty($user)) {
 				$id = $user['id'];
 				if (empty($id)) $this->error("Sorry, the email address you entered was not found. Please retry.", "email");

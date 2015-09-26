@@ -13,9 +13,11 @@ use \Etc;
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup test
  */
-class storeTest extends UnitTest {
+class storeTest extends DatabaseTestCase {
 
-	var $fixtures = array("users");
+	public function getDataSet() {
+		return $this->createMySQLXMLDataSet(dirname(__FILE__).'/../fixture.xml');
+	}
 
 	public function setUp() {
 		parent::setUp();
@@ -72,9 +74,6 @@ class storeTest extends UnitTest {
 		//verify that the values were converted properly
 		$this->assertSame($admin['id'], $record["by_email"]);
 		$this->assertSame($abdul['id'], $record["by_name"]);
-
-		//truncate the table
-		$this->db->query("hook_store_alias")->unsafe_truncate();
 	}
 
 	/**
@@ -114,9 +113,6 @@ class storeTest extends UnitTest {
 
 		//verify the term id was updated
 		$this->assertSame($del['id'], $record["value"]);
-
-		//truncate the table
-		$this->db->query("hook_store_category")->unsafe_truncate();
 	}
 
 	/**
@@ -137,9 +133,6 @@ class storeTest extends UnitTest {
 
 		//assert the lack of errors
 		$this->assertFalse($this->db->errors());
-
-		//truncate the table
-		$this->db->query("hook_store_confirm")->unsafe_truncate();
 	}
 
 	/**
@@ -156,9 +149,6 @@ class storeTest extends UnitTest {
 
 		//assert that it has the correct value
 		$this->assertSame("1988-02-12 00:00:00", $record["value"]);
-
-		//truncate the table
-		$this->db->query("hook_store_datetime")->unsafe_truncate();
 	}
 
 	/**
@@ -175,9 +165,6 @@ class storeTest extends UnitTest {
 		//assert that the default values have been stored
 		$this->assertSame("test", $record['value']);
 		$this->assertSame("", $record['value2']);
-
-		//truncate the table
-		$this->db->query("hook_store_default")->unsafe_truncate();
 	}
 
 	/**
@@ -202,9 +189,6 @@ class storeTest extends UnitTest {
 
 		//assert the lack of errors
 		$this->assertFalse($this->db->errors());
-
-		//truncate the table
-		$this->db->query("hook_store_length")->unsafe_truncate();
 	}
 
 	/**
@@ -260,9 +244,6 @@ class storeTest extends UnitTest {
 
 		//the materialized path field should show the correct ancestry
 		$this->assertSame("-".$l1."-".$l2."-".$l3."-".$l4."-", $l5_record["value_field"]);
-
-		//truncate the table
-		$this->db->query("hook_store_materialized_path")->unsafe_truncate();
 	}
 
 	/**
@@ -280,9 +261,6 @@ class storeTest extends UnitTest {
 
 		//ensure the value has been md5 encoded
 		$this->assertSame(md5($str), $record["value"]);
-
-		//truncate the table
-		$this->db->query("hook_store_md5")->unsafe_truncate();
 	}
 
 	/**
@@ -307,9 +285,6 @@ class storeTest extends UnitTest {
 
 		//assert that the initial value was not changed
 		$this->assertSame("starbug", $record['value']);
-
-		//truncate the table
-		$this->db->query("hook_store_optional_update")->unsafe_truncate();
 	}
 
 	/**
@@ -339,9 +314,6 @@ class storeTest extends UnitTest {
 		$this->assertSame("3", $r3['value']);
 		$this->assertSame("4", $r4['value']);
 		$this->assertSame("5", $r5['value']);
-
-		//truncate the table
-		$this->db->query("hook_store_ordered")->unsafe_truncate();
 	}
 
 	/**
@@ -375,9 +347,6 @@ class storeTest extends UnitTest {
 
 		//restore anonymous root
 		$this->user->setUser(array("id" => "NULL", "groups" => array("root")));
-
-		//truncate the table
-		$this->db->query("hook_store_owner")->unsafe_truncate();
 	}
 
 	/**
@@ -395,9 +364,6 @@ class storeTest extends UnitTest {
 
 		//assert that the hashed password was stored
 		$this->assertTrue(Session::authenticate($record['value'], $pass, "0", Etc::HMAC_KEY));
-
-		//truncate table
-		$this->db->query("hook_store_password")->unsafe_truncate();
 	}
 
 	/**
@@ -464,9 +430,6 @@ class storeTest extends UnitTest {
 
 		//assert that the value is what we stored
 		$this->assertSame("changed", $record['value']);
-
-		//empty the table
-		$this->db->query("hook_store_required")->unsafe_truncate();
 	}
 
 	/**
@@ -482,9 +445,6 @@ class storeTest extends UnitTest {
 
 		//assert that the slug is stored correctly
 		$this->assertSame("abduls-house-of-rugs", $record['slug_field']);
-
-		//empty the table
-		$this->db->query("hook_store_slug")->unsafe_truncate();
 	}
 
 	/**
@@ -523,10 +483,6 @@ class storeTest extends UnitTest {
 
 		//verify the records are what we expect
 		$this->assertSame("deleted", $terms[0]["slug"]);
-
-		//truncate the table
-		$this->db->query("hook_store_terms_value")->unsafe_truncate();
-		$this->db->query("hook_store_terms")->unsafe_truncate();
 	}
 
 	/**
@@ -540,7 +496,7 @@ class storeTest extends UnitTest {
 
 		//retrieve the record
 		$id = $this->models->get("hook_store_time")->insert_id;
-		$record = get("hook_store_time", $id);
+		$record = $this->db->get("hook_store_time", $id);
 
 		//verify that 2 time stamps were stored
 		$create = strtotime($record['creation_stamp']);
@@ -565,9 +521,6 @@ class storeTest extends UnitTest {
 		$this->assertTrue(($create >= $before && $create <= $after));
 		$this->assertFalse(($update >= $before && $update <= $after));
 		$this->assertTrue(($update >= $before_update && $update <= $after_update));
-
-		//truncate the table
-		$this->db->query("hook_store_time")->unsafe_truncate();
 	}
 
 	/**
@@ -588,9 +541,6 @@ class storeTest extends UnitTest {
 
 		//clear errors
 		$this->db->errors = array();
-
-		//truncate the table
-		$this->db->query("hook_store_unique")->unsafe_truncate();
 	}
 
 }

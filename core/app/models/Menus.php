@@ -14,7 +14,7 @@ class Menus extends MenusModel {
 	}
 
 	function delete($menu) {
-		return $this->remove('id:'.$menu['id']);
+		$this->remove($menu['id']);
 	}
 
 	function delete_menu($menu) {

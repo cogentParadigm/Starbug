@@ -18,11 +18,12 @@
 
 	if ($host) {
 		//INIT TABLES
+		$db = $container->get("Starbug\Core\DatabaseInterface");
 		$schemer = $container->get("Starbug\Core\Schemer");
 		$schemer->fill();
 		$schemer->migrate();
 
-		$root_user = query("users")->condition("email", "root")->one();
+		$root_user = $db->query("users")->condition("email", "root")->one();
 		if (empty($root_user['password']) || $root_user['modified'] === $root_user['created']) { // PASSWORD HAS NEVER BEEN UPDATED
 			//COLLECT USER INPUT
 			fwrite(STDOUT, "\nPlease choose a root password:");
@@ -31,7 +32,7 @@
 			fwrite(STDOUT, "\nusername: root");
 			fwrite(STDOUT, "\npassword: $admin_pass\n\n");
 			//UPDATE PASSWORD
-			$errors = store("users", array("password" => $admin_pass, "email" => "root"));
+			$errors = $db->store("users", array("password" => $admin_pass, "email" => "root"));
 		}
 	} else {
 		fwrite(STDOUT, "\nHost file not found. Run 'sb generate host' to generate one.\n\n");

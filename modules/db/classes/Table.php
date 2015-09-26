@@ -65,19 +65,15 @@ class Table {
 	}
 
 	function create($data) {
-    if (!empty($this->base)) {
-      entity_save($this->type, $data + array("type" => $this->type));
-    } else {
-		  $this->store($data);
-    }
+		if (!empty($this->base)) {
+			$this->store($data + array("type" => $this->type));
+		} else {
+			$this->store($data);
+		}
 	}
 
 	function delete($data) {
-    if (!empty($this->base)) {
-      entity_delete($this->type, $data["id"]);
-    } else {
-      remove($this->type, array("id" => $data["id"]));
-    }
+		$this->remove($data["id"]);
 	}
 
 	public function errors($key = "", $values = false) {
@@ -158,22 +154,6 @@ class Table {
 	}
 
 	/**
-	 * store a record to the db
-	 * @see db::store
-	 */
-	protected function store($record, $from = "auto") {
-		$this->db->store($this->type, $record, $from);
-	}
-
-	/**
-	 * remove a record from the db
-	 * @see db::remove
-	 */
-	protected function remove($where) {
-		return $this->db->remove($this->type, $where);
-	}
-
-	/**
 	 * get records from the db
 	 * @see db::get
 	 */
@@ -184,17 +164,212 @@ class Table {
 	}
 
 	/**
-	 * get records from the db
-	 * @see db::query
+	 * get the root model of an entity
+	 * @param string $entity the entity
+	 * @return string the base model
 	 */
-	function query($args = "", $froms = "", $replacements = array()) {
-		if (is_array($froms)) {
-			$replacements = $froms;
-			$froms = "";
+	function root($entity="") {
+		if (empty($entity)) $entity = $this->type;
+		$base = $entity;
+		while (!empty($this->models->get($base)->base)) $base = $this->models->get($base)->base;
+		return $base;
+	}
+
+	/**
+	 * get an array representing the chain of inheritance for an entity
+	 * @param string $entity the name of the entity
+	 * @return array the inheritance chain. the first member will be $entity
+	 */
+	function chain($entity="") {
+		if (empty($entity)) $entity = $this->type;
+		$chain = array();
+		while (!empty($entity)) {
+			$chain[] = $entity;
+			$entity = $this->models->get($entity)->base;
 		}
-		$records = $this->db->query($this->type.((empty($froms)) ? "" : ",".$froms), $args, $replacements);
-		$this->record_count = $this->db->record_count;
-		return $records;
+		return $chain;
+	}
+
+	/**
+	 * get entity or column info
+	 * @param string $entity entity name
+	 * @param string $column column name
+	 */
+	function column_info($column = "", $entity="") {
+		if (empty($entity)) $entity = $this->type;
+		$info = array();
+		if (!$this->models->has($entity)) return $info;
+		if (empty($column)) {
+			while (!empty($entity)) {
+				$hooks = $this->models->get($entity)->hooks;
+				foreach ($hooks as $col => $hook) $hooks[$col]["entity"] = $entity;
+				$info = array_merge($hooks, $info);
+				$entity = $this->models->get($entity)->base;
+			}
+		} else {
+			while (!isset($this->models->get($entity)->hooks[$column]) && !empty($this->models->get($entity)->base)) $entity = $this->models->get($entity)->base;
+			if (isset($this->models->get($entity)->hooks[$column])) $info = $this->models->get($entity)->hooks[$column];
+			$info["entity"] = $entity;
+		}
+		return $info;
+	}
+
+
+	/**
+	 * Query helper to provide a query with all tables joined and columns selected
+	 * @param string $entity the name of the entity
+	 */
+	function query($entity="") {
+		if (empty($entity)) $entity = $this->type;
+		$chain = array();
+		$base = $entity;
+
+		//build entity chain
+		while (!empty($base)) {
+			$chain[] = $base;
+			$base = $this->models->get($base)->base;
+		}
+		$root = count($chain)-1;
+
+		//build query
+		foreach ($chain as $idx => $name) {
+			$collection = ($name === $entity) ? $entity : $entity."_".$name;
+			if ($idx === 0) $query = $this->db->query($name." as ".$collection);
+			else {
+				$query->join($name." as ".$collection, "INNER");
+				if ($idx == $root) $query->on($collection.".id=".$entity.".".$name."_id");
+				else $query->on($collection.".".$chain[$root]."_id=".$entity.".".$chain[$root]."_id");
+			}
+		}
+
+		//add selection
+		$reverse = array_reverse($chain);
+		foreach ($reverse as $idx => $name) {
+			$collection = ($name === $entity) ? $entity : $entity."_".$name;
+			$query->select("*", $collection);
+		}
+
+		return $query;
+	}
+
+	/**
+	 * load an entity by id
+	 * @ingroup entity
+	 * @param int $id the id of the entity to load
+	 * @param boolean $reset set to true if you don't want to load from cache
+	 * @param string $name the name of the entity
+	 */
+	function load($id, $reset = false, $name="") {
+		if (empty($name)) $name = $this->type;
+		static $entities = array();
+		$key = $name;
+		if (is_array($id)) {
+			$conditions = $id;
+			$id = false;
+		} else {
+			$key .= '-'.$id;
+		}
+		if ($reset || !$id || !isset($entities[$key])) {
+			if ($id) $entities[$key] = $this->query($name)->condition($name.".id", $id)->one();
+			else if ($conditions) {
+				$entity = $this->query($name)->conditions($conditions)->one();
+				$id = $entity["id"];
+				$entities[$name."-".$id] = $entity;
+			}
+		}
+		return $entities[$name."-".$id];
+	}
+
+	/**
+	 * save an entity
+	 * @ingroup entity
+	 * @param array $fields the properties to save
+	 * @param array $from the conditions to match on instead of an ID. must map to a single entity
+	 * @param string $name the name of the entity
+	 */
+	function store($fields, $from = array(), $name="") {
+		if (empty($name)) $name = $this->type;
+		$chain = array();
+		$base = $name;
+		$original = $update = false;
+
+		if (!empty($fields["id"])) {
+			$update = true;
+			$original = $this->load($fields["id"], true, $name);
+		} else if (!empty($from)) {
+			$original = $this->load($from, true, $name);
+			if ($original) {
+				$update = true;
+				$fields["id"] = $original["id"];
+			}
+		}
+
+		//build entity chain
+		while (!empty($base)) {
+			$chain[] = $base;
+			$base = $this->models->get($base)->base;
+		}
+
+		$last = count($chain)-1;
+
+		foreach ($chain as $idx => $name) {
+			if ($idx < $last) {
+				$record = array();
+				foreach ($this->models->get($name)->hooks as $column => $hooks) {
+					if ($column !== "id" && $column !== $chain[$last]."_id" && isset($fields[$column])) {
+						$record[$column] = $fields[$column];
+						unset($fields[$column]);
+					}
+				}
+				if ($update) {
+					if (!empty($record)) $this->db->queue($name, $record, array($chain[$last]."_id" => $original[$chain[$last]."_id"]));
+				} else {
+					$record[$chain[$last]."_id"] = "";
+					$this->db->queue($name, $record);
+				}
+			} else {
+				if ($last > 0) {
+					unset($fields[$chain[$last]."_id"]);
+					if ($update) $fields["id"] = $original[$chain[$last]."_id"];
+				}
+				$this->db->store($name, $fields);
+			}
+		}
+	}
+
+	/**
+	 * delete an entity by id
+	 * @ingroup entity
+	 * @param int $id the id of the item to delete
+	 * @param string $name the entity name
+	 */
+	function remove($id, $name="") {
+		if (empty($name)) $name = $this->type;
+		$chain = array();
+		$base = $name;
+		$original = $this->load($id, $name);
+		if (!$original) return;
+
+		if (empty($this->models->get($base)->base)) {
+			$this->db->remove($name, array("id" => $id));
+			return;
+		}
+
+		//build entity chain
+		while (!empty($base)) {
+			$chain[] = $base;
+			$base = $this->models->get($base)->base;
+		}
+
+		$last = count($chain)-1;
+
+		foreach ($chain as $idx => $name) {
+			if ($idx < $last) {
+				$this->db->remove($name, array($chain[$last]."_id" => $original[$chain[$last]."_id"]));
+			} else {
+				$this->db->remove($name, array("id" => $original[$name."_id"]));
+			}
+		}
 	}
 
 	function filter($data, $action = "") {
@@ -249,7 +424,7 @@ class Table {
 		$fields = $this->hooks;
 		if (!empty($this->base)) {
 			unset($fields["id"]);
-			foreach(entity_chain($this->base) as $b) unset($fields[$b."_id"]);
+			foreach($this->chain($this->base) as $b) unset($fields[$b."_id"]);
 		}
 		foreach ($fields as $fieldname => $field) {
 			if ($this->models->has($field['type'])) {

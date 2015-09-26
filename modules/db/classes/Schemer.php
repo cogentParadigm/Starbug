@@ -257,7 +257,7 @@ class Schemer {
 			if (empty($rows)) {
 				// ADD CONTENT TYPE																																														// ADD CONTENT TYPE
 				fwrite(STDOUT, "Adding Entity '$table'...\n");
-				store("entities", $table_info);
+				$this->db->store("entities", $table_info);
 				$is++;
 			} else {
 				$query = $this->db->query("entities");
@@ -266,7 +266,7 @@ class Schemer {
 				if (empty($rows)) {
 					// UPDATE CONTENT TYPE																																												// UPDATE CONTENT TYPE
 					fwrite(STDOUT, "Updating Entity '$table'...\n");
-					store("entities", $table_info, array("name" => $table));
+					$this->db->store("entities", $table_info, array("name" => $table));
 					$as++;
 				}
 			}
@@ -364,7 +364,7 @@ class Schemer {
 					if (empty($row)) {
 						// ADD PERMIT																																										// ADD PERMIT
 						fwrite(STDOUT, "Adding $permit[priv_type] permit on $model::$action for ".$permit['role']."...\n");
-						store("permits", $permit);
+						$this->db->store("permits", $permit);
 						$ps++;
 					}
 				}
@@ -705,7 +705,7 @@ class Schemer {
 	 */
 	function add_entity($name) {
 		$record = $this->entities[$name];
-		store("entities", $record);
+		$this->db->store("entities", $record);
 	}
 
 	/**
@@ -714,7 +714,7 @@ class Schemer {
 	 */
 	function update_entity($name, $record = array()) {
 		if (empty($record)) $record = $this->entities[$name];
-		store("entities", $record, array("name" => $name));
+		$this->db->store("entities", $record, array("name" => $name));
 	}
 
 	/**
@@ -849,7 +849,7 @@ class Schemer {
 	 */
 	function create_blocks($path, $blocks = array()) {
 		$count = 0;
-		$uri = get("uris", "path:$path", "limit:1");
+		$uri = $this->db->get("uris", "path:$path", "limit:1");
 		if (!empty($blocks)) foreach ($blocks as $block) $count += $this->create_block($uri, $block);
 		return $count;
 	}
@@ -864,12 +864,12 @@ class Schemer {
 		$block['uris_id'] = $uri['id'];
 		$content = $block['content'];
 		unset($block['content']);
-		$results = get("blocks", $block);
+		$results = $this->db->get("blocks", $block);
 		if (empty($results)) {
 			fwrite(STDOUT, "Creating block for /".$uri['path']."...\n");
 			if (empty($block['position'])) $block['position'] = "";
 			$block['content'] = $content;
-			store("blocks", $block);
+			$this->db->store("blocks", $block);
 			return 1;
 		}
 		return 0;
@@ -898,7 +898,7 @@ class Schemer {
 		$record = $this->db->query("menus")->conditions($match)->one();
 		if (empty($record)) {
 			if ($update) fwrite(STDOUT, "Creating $menu menu item...\n");
-			store("menus", $item);
+			$this->db->store("menus", $item);
 			$id = $this->models->get("menus")->insert_id;
 			$count = 1;
 		} else $id = $record['id'];
@@ -928,7 +928,7 @@ class Schemer {
 		$record = $this->db->query("terms")->conditions($item)->one();
 		if (empty($record)) {
 			if ($update) fwrite(STDOUT, "Creating $taxonomy taxonomy term...\n");
-			store("terms", $item);
+			$this->db->store("terms", $item);
 			$id = $this->models->get("terms")->insert_id;
 			$count = 1;
 		} else $id = $record['id'];
@@ -954,7 +954,7 @@ class Schemer {
 					if (empty($match)) {
 						$store = array_merge($record['match'], $record['others']);
 						fwrite(STDOUT, "Inserting $table record...\n");
-						store($table, $store);
+						$this->db->store($table, $store);
 						$count++;
 					}
 				}

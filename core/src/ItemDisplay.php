@@ -111,7 +111,7 @@ class ItemDisplay extends Display {
 		if (is_null($options)) $options = $this->options;
 
 		//init query
-		$this->query = entity_query($model);
+		$this->query = $this->models->get($model)->query();
 
 		//search
 		if (!empty($options['search'])) $this->query->search($options['search']);
