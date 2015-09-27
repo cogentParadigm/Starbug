@@ -20,12 +20,14 @@ class ControllerFactory implements ControllerFactoryInterface {
 	}
 	public function get($controller) {
 		$controller = ucwords($controller)."Controller";
-		$namespace = end($this->locator->locate_namespaces($controller.".php", "controllers"));
+		$locations = $this->locator->locate($controller.".php", "controllers");
+		end($locations);
+		$namespace = key($locations);
 		if (empty($namespace)) {
-			$namespace = "Starbug\Core\\";
+			$namespace = "Starbug\Core";
 			$controller = "Controller";
 		}
-		$object = $this->container->get($namespace.$controller);
+		$object = $this->container->get($namespace."\\".$controller);
 		return $object;
 	}
 }

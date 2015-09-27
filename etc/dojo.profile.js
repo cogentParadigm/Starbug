@@ -10,6 +10,7 @@ dependencies = {
 				'sb',
 				'dojo/selector/acme',
 				'dojo/query',
+				'dojo/parser',
 				'bootstrap/Dropdown',
 				'bootstrap/Carousel'
 			]

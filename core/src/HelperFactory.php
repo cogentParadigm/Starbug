@@ -19,7 +19,9 @@ class HelperFactory implements HelperFactoryInterface {
 		$this->locator = $locator;
 	}
 	public function get($helper) {
-		$namespace = end($this->locator->locate_namespaces($helper.".php", "helpers"));
-		return $this->container->get($namespace.$helper);
+		$locations = $this->locator->locate($helper.".php", "helpers");
+		end($locations);
+		$namespace = key($locations);
+		return $this->container->get($namespace."\\".$helper);
 	}
 }

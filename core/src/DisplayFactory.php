@@ -19,8 +19,10 @@ class DisplayFactory implements DisplayFactoryInterface {
 		$this->locator = $locator;
 	}
 	public function get($display) {
-		$namespace = end($this->locator->locate_namespaces($display.".php", "displays"));
-		if (empty($namespace)) $namespace = "Starbug\Core\\";
-		return $this->container->make($namespace.$display);
+		$locations = $this->locator->locate($display.".php", "displays");
+		end($locations);
+		$namespace = key($locations);
+		if (empty($namespace)) $namespace = "Starbug\Core";
+		return $this->container->make($namespace."\\".$display);
 	}
 }

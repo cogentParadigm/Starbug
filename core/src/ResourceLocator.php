@@ -38,7 +38,7 @@ class ResourceLocator implements ResourceLocatorInterface {
 		$paths = array();
 		foreach ($this->modules as $mid => $module_path) {
 			$target = $this->base_directory."/".$module_path."/".$path;
-			if (file_exists($target)) $paths[] = $target;
+			if (file_exists($target)) $paths[$mid] = $target;
 		}
 		return $paths;
 	}

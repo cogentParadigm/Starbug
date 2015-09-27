@@ -31,11 +31,11 @@ class HookBuilder implements HookBuilderInterface {
 			$class = "hook_".$parts[0]."_".$parts[1];
 
 			//get extending classes
-			$namespaces = $this->locator->locate_namespaces($name.".php", "hooks");
+			$namespaces = $this->locator->locate($name.".php", "hooks");
 
 			//loop through found classes
-			foreach ($namespaces as $namespace) {
-				$hooks[] = $namespace.$class;
+			foreach ($namespaces as $namespace => $path) {
+				$hooks[] = $namespace."\\".$class;
 			}
 
 			$this->hooks[$name] = $hooks;

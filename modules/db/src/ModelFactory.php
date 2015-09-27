@@ -27,16 +27,18 @@ class ModelFactory implements ModelFactoryInterface {
 	public function get($collection) {
 		if (!isset($this->objects[$collection])) {
 			$class = ucwords($collection);
-			$namespace = end($this->locator->locate_namespaces($class.".php", "models"));
+			$locations = $this->locator->locate($class.".php", "models");
+			end($locations);
+			$namespace = key($locations);
 			if (empty($namespace)) {
-				$namespace = "Starbug\Core\\";
+				$namespace = "Starbug\Core";
 				if ($this->has($collection)) {
 					$class .= "Model";
 				} else {
 					$class = "Table";
 				}
 			}
-			$this->objects[$collection] = $this->container->get($namespace.$class);
+			$this->objects[$collection] = $this->container->get($namespace."\\".$class);
 		}
 		//return the saved object
 		return $this->objects[$collection];
