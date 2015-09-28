@@ -18,7 +18,7 @@ class ResourceLocator implements ResourceLocatorInterface {
 	}
 
 	public function get($mid) {
-		return $mid;
+		return $this->modules[$mid];
 	}
 
 	public function set($mid, $path) {
@@ -39,24 +39,6 @@ class ResourceLocator implements ResourceLocatorInterface {
 		foreach ($this->modules as $mid => $module_path) {
 			$target = $this->base_directory."/".$module_path."/".$path;
 			if (file_exists($target)) $paths[$mid] = $target;
-		}
-		return $paths;
-	}
-
-	/**
-	* get module path chain
-	* @ingroup modules
-	* @param string $name the filename
-	* @param string $dir the directory within app/ core/app/ or module dir to look in. default is templates/
-	* @TODO allow boolean return
-	*/
-	function locate_namespaces($name, $scope = "templates") {
-		if (!empty($scope)) $scope .= "/";
-		$path = $scope.$name;
-		$paths = array();
-		foreach ($this->modules as $mid => $module_path) {
-			$target = $this->base_directory."/".$module_path."/".$path;
-			if (file_exists($target)) $paths[] = "Starbug\\".ucwords($mid)."\\";
 		}
 		return $paths;
 	}

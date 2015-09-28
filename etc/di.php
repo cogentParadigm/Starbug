@@ -4,7 +4,6 @@ use \Monolog\Handler\StreamHandler;
 use \Monolog\Handler\PHPConsoleHandler;
 use \Etc;
 return array(
-	'environment' => Etc::ENVIRONMENT,
 	'base_directory' => BASE_DIR,
 	'modules' => array(
 		"Starbug\Core" => "core/app",
@@ -19,7 +18,6 @@ return array(
 		"Starbug\Var" => "var",
 		"Starbug\App" => "app"
 	),
-	'database_name' => DEFAULT_DATABASE,
 	'log.handlers.development' => [
 		DI\get('Monolog\Handler\StreamHandler'),
 		DI\get('Monolog\Handler\PHPConsoleHandler')

@@ -3,6 +3,8 @@ use \Interop\Container\ContainerInterface;
 use \Monolog\Logger;
 use \Etc;
 return array(
+	'environment' => Etc::ENVIRONMENT,
+	'database_name' => DEFAULT_DATABASE,
 	'Starbug\Core\SettingsInterface' => DI\object('Starbug\Core\DatabaseSettings'),
 	'Starbug\Core\*Interface' => DI\object('Starbug\Core\*'),
 	'Starbug\Core\ResourceLocator' => DI\object()->constructor(DI\get('base_directory'), DI\get('modules')),
