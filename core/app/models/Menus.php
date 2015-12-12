@@ -3,7 +3,8 @@
  * menus model
  * @ingroup models
  */
-class Menus {
+namespace Starbug\Core;
+class Menus extends MenusModel {
 
 	function create($menu) {
 		if (!isset($menu['position'])) $menu['position'] = "";
@@ -13,11 +14,11 @@ class Menus {
 	}
 
 	function delete($menu) {
-		return $this->remove('id:'.$menu['id']);
+		$this->remove($menu['id']);
 	}
 
 	function delete_menu($menu) {
-		query("menus")->condition("menu", $menu['menu'])->delete();
+		$this->db->query("menus")->condition("menu", $menu['menu'])->delete();
 	}
 
 	function query_admin($query, &$ops) {
@@ -28,7 +29,7 @@ class Menus {
 	}
 
 	function query_tree($query, &$ops) {
-		$query->select("menus.uris_id.title,(SELECT COUNT(*) FROM ".P("menus")." as t WHERE t.parent=menus.id) as children");
+		$query->select("menus.uris_id.title,(SELECT COUNT(*) FROM ".$this->db->prefix("menus")." as t WHERE t.parent=menus.id) as children");
 		if (!empty($ops['parent'])) $query->condition("menus.parent", $ops['parent']);
 		else {
 			$query->condition("menus.parent", 0);

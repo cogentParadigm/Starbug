@@ -3,14 +3,15 @@
  * options model
  * @ingroup models
  */
-class Settings {
+namespace Starbug\Core;
+class Settings extends SettingsModel {
 
 	function update($settings) {
 		foreach ($settings as $k => $v) $this->store(array("value" => $v), "name:$k");
 	}
 
 	function delete($setting) {
-		return $this->remove('id:'.$setting['id']);
+		$this->remove($setting['id']);
 	}
 
 }

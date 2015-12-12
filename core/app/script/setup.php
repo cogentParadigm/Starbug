@@ -12,17 +12,18 @@
 	$host = (file_exists(BASE_DIR."/etc/Host.php"));
 
 	//CREATE FOLDERS & SET FILE PERMISSIONS
-	$dirs = array("var", "var/xml", "var/json", "var/models", "var/tmp", "var/public", "var/public/stylesheets", "var/public/thumbnails", "app/hooks", "app/templates", "app/forms", "app/public/js", "app/public/uploads");
+	$dirs = array("var", "var/xml", "var/json", "var/models", "var/tmp", "var/public", "var/log", "var/public/stylesheets", "var/public/thumbnails", "app/hooks", "app/templates", "app/forms", "app/public/js", "app/public/uploads");
 	foreach ($dirs as $dir) if (!file_exists(BASE_DIR."/".$dir)) exec("mkdir ".BASE_DIR."/".$dir);
 	exec("chmod -R a+w ".BASE_DIR."/var ".BASE_DIR."/app/public/uploads");
 
 	if ($host) {
 		//INIT TABLES
-		$schemer = $container->get("Schemer");
+		$db = $container->get("Starbug\Core\DatabaseInterface");
+		$schemer = $container->get("Starbug\Core\Schemer");
 		$schemer->fill();
 		$schemer->migrate();
 
-		$root_user = query("users")->condition("email", "root")->one();
+		$root_user = $db->query("users")->condition("email", "root")->one();
 		if (empty($root_user['password']) || $root_user['modified'] === $root_user['created']) { // PASSWORD HAS NEVER BEEN UPDATED
 			//COLLECT USER INPUT
 			fwrite(STDOUT, "\nPlease choose a root password:");
@@ -31,7 +32,7 @@
 			fwrite(STDOUT, "\nusername: root");
 			fwrite(STDOUT, "\npassword: $admin_pass\n\n");
 			//UPDATE PASSWORD
-			$errors = store("users", "password:$admin_pass", "username:root");
+			$errors = $db->store("users", array("password" => $admin_pass, "email" => "root"));
 		}
 	} else {
 		fwrite(STDOUT, "\nHost file not found. Run 'sb generate host' to generate one.\n\n");

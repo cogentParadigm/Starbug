@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_form_autocomplete extends FormHook {
 	function build($form, &$control, &$field) {
 		$field['type'] = 'text';

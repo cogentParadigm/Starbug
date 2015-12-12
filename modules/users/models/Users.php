@@ -3,54 +3,69 @@
  * Users model
  * @ingroup models
  */
-class Users {
+namespace Starbug\Users;
+use Starbug\Core\UsersModel;
+use Starbug\Core\Session;
+use \Etc;
+class Users extends UsersModel {
 
 	/**
 	 * A function for an administrator to create and update users
 	 */
 	function create($user) {
-		if (logged_in("root") || logged_in("admin")) {
+		if ($this->user->loggedIn("root") || $this->user->loggedIn("admin")) {
 			foreach ($user as $k => $v) if (empty($v) && $k != "email") unset($user[$k]);
 		}
 		$this->store($user);
 		if ((!$this->errors()) && (empty($user['id']))) {
 			$uid = $this->insert_id;
-			$data = array("user" => get("users", $uid));
+			$data = array("user" => $this->load($uid));
 			$data['user']['password'] = $user['password'];
-			//$this->mailer->send(array("template" => "Account Creation", "to" => $user['email']), $data);
+			$this->mailer->send(array("template" => "Account Creation", "to" => $user['email']), $data);
 		}
 	}
 
 	function delete($user) {
-		store("users", array("id" => $user['id'], "statuses" => "deleted"));
+		$this->store(array("id" => $user['id'], "statuses" => "deleted"));
 	}
 
 	/**
 	 * A function for new users to register themselves
 	 */
-	function register() {
-
+	function register($user, $redirect=true) {
+		$this->store(array("email" => $user['email'], "password" => $user['password'], "password_confirm" => $user['password_confirm'], "groups" => "user"));
+		if (!$this->errors()) {
+			$this->login(array("email" => $user['email'], "password" => $user['password']), $redirect);
+		}
 	}
 
 	/**
 	 * A function for current users to update their profile
 	 */
-	function update_profile($user) {
-		return $this->store($user);
+	function update_profile($profile) {
+		$user = $this->query()->condition("id", $profile['id'])->one();
+		if (Session::authenticate($user['password'], $profile['current_password'], $user['id'], Etc::HMAC_KEY)) {
+			$this->store(array("id" => $user['id'], "email" => $profile['email'], "password" => $profile['password'], "password_confirm" => $profile['password_confirm']));
+			if (!$this->errors() && !empty($profile['password'])) {
+				$user = $this->query()->condition("id", $profile['id'])->one();
+				Session::authenticate($user['password'], $profile['password'], $user['id'], Etc::HMAC_KEY);
+			}
+		} else {
+			$this->error("Your credentials could not be authenticated.", "current_password");
+		}
 	}
 
 	/**
 	 * A function for logging in
 	 */
-	function login($login) {
-		$user = $this->query("select:users.*,users.groups as groups,users.statuses as statuses  where:email=?  limit:1", array($login['email']));
+	function login($login, $redirect=true) {
+		$user = $this->db->query("users")->select("users.*,users.groups as groups,users.statuses as statuses")->condition("users.email", $login['email'])->one();
 		if (Session::authenticate($user['password'], $login['password'], $user['id'], Etc::HMAC_KEY)) {
-			$user['groups'] = explode(",", $user['groups']);
-			$user['statuses'] = explode(",", $user['statuses']);
-			sb()->user = $user;
-			unset($user['password']);
+			$this->user->setUser($user);
 			$this->store(array("id" => $user['id'], "last_visit" => date("Y-m-d H:i:s")));
-			if (logged_in('admin') || logged_in('root')) redirect(uri('admin'));
+			if ($redirect) {
+				if ($this->user->loggedIn('admin') || $this->user->loggedIn('root')) redirect(uri('admin'));
+			}
 		} else {
 			$this->error("That email and password combination was not found.", "email");
 		}
@@ -71,14 +86,16 @@ class Users {
 		$email_address = trim($fields['email']);
 		if (empty($email_address)) $this->error("Please enter your email address.", "email");
 		else {
-			$user = $this->query("where:email='".$email_address."'  limit:1");
+			$user = $this->query()->condition("email", $email_address)->one();
 			if (!empty($user)) {
 				$id = $user['id'];
 				if (empty($id)) $this->error("Sorry, the email address you entered was not found. Please retry.", "email");
 				else {
 					$new_password = mt_rand(1000000, 9999999);
 					$this->store("id:$id  password:$new_password");
-					$result = exec("sb email password_reset $id $new_password");
+					$data = array("user" => $user);
+					$data['user']['password'] = $new_password;
+					$result = $this->mailer->send(array("template" => "Password Reset", "to" => $user['email']), $data);
 					if ((int)$result != 1) $this->error("Sorry, there was a problem emailing to your address. Please retry.", "email");
 				}
 			} else $this->error("Sorry, the email address you entered was not found. Please retry.", "email");

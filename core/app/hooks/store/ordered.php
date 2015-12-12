@@ -1,8 +1,12 @@
 <?php
+namespace Starbug\Core;
 class hook_store_ordered extends QueryHook {
 	var $conditions = false;
 	var $value = false;
 	var $increment = 1;
+	public function __construct(DatabaseInterface $db) {
+		$this->db = $db;
+	}
 	function set_conditions($query, $column, $argument, $value="insert") {
 		if (false === $this->conditions) {
 			$this->conditions = array();
@@ -12,7 +16,7 @@ class hook_store_ordered extends QueryHook {
 					foreach ($fields as $field) if (isset($query->fields[$field])) $this->conditions[$query->model.".".$field] = $query->fields[$field];
 				} else {
 					$id = $query->getId();
-					$row = query($query->model)->select($query->model.".*")->condition("id", $id)->one();
+					$row = $this->db->query($query->model)->select($query->model.".*")->condition("id", $id)->one();
 					$same_level = true;
 					foreach ($fields as $field) {
 						if (is_null($row[$field])) $row[$field] = "NULL";
@@ -23,7 +27,7 @@ class hook_store_ordered extends QueryHook {
 				}
 			} else if ($value != "insert") {
 				$id = $query->getId();
-				$row = query($query->model)->select($query->model.".*")->condition("id", $id)->one();
+				$row = $this->db->query($query->model)->select($query->model.".*")->condition("id", $id)->one();
 				$this->increment = ($row[$column] < $value) ? -1 : 1;
 			}
 		}
@@ -34,7 +38,7 @@ class hook_store_ordered extends QueryHook {
 	function insert(&$query, $key, $value, $column, $argument) {
 		$this->set_conditions($query, $column, $argument, "insert");
 		if (!empty($value) && is_numeric($value)) $this->value = $value;
-		$h = query($query->model)->select("MAX(".$query->model.".$column) as highest")->conditions($this->conditions)->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true))->one();
+		$h = $this->db->query($query->model)->select("MAX(".$query->model.".$column) as highest")->conditions($this->conditions)->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true))->one();
 		return $h['highest']+1;
 	}
 	function update(&$query, $key, $value, $column, $argument) {
@@ -50,8 +54,8 @@ class hook_store_ordered extends QueryHook {
 		$row = array("id" => $id);
 		$ids = array($row['id']);
 		while (!empty($row)) {
-			query($query->model)->condition("id", $row['id'])->set($column, $value)->raw()->update();
-			$row = query($query->model)->select($select, $query->model)->conditions($this->conditions)->condition($query->model.".id", $ids, "!=")->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true))->condition($query->model.".".$column, $value)->one();
+			$this->db->query($query->model)->condition("id", $row['id'])->set($column, $value)->raw()->update();
+			$row = $this->db->query($query->model)->select($select, $query->model)->conditions($this->conditions)->condition($query->model.".id", $ids, "!=")->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true))->condition($query->model.".".$column, $value)->one();
 			$ids[] = $row['id'];
 			$value += $this->increment;
 		}

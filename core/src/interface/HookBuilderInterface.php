@@ -6,7 +6,7 @@
  * @file core/src/interface/HookBuilderInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
-
+namespace Starbug\Core;
 interface HookBuilderInterface {
 	/**
 	* get a controller by name

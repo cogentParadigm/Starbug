@@ -11,6 +11,7 @@
  * the db class
  * @ingroup db
  */
+namespace Starbug\Core;
 /**
  * The Schemer class. Manages a schema of the database using migrations and handles synching a database with the schema
  * @ingroup Schemer
@@ -191,15 +192,21 @@ class Schemer {
 		$xd = 0; //dropped indexes
 
 		//CREATE TABLES FIRST
-		foreach ($this->tables as $table => $fields) {
-			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
-			if (false === ($row = $records->fetch())) {
-				// NEW TABLE																																													// NEW TABLE
-				fwrite(STDOUT, "Creating table ".P($table)."...\n");
-				$this->create($table);
-				$ts++;
+		do {
+			$previous_count = $ts;
+			$this->clean();
+			$this->fill();
+			foreach ($this->tables as $table => $fields) {
+				$records = $this->db->pdo->query("SHOW TABLES LIKE '".$this->db->prefix($table)."'");
+				if (false === ($row = $records->fetch())) {
+					// NEW TABLE																																													// NEW TABLE
+					fwrite(STDOUT, "Creating table ".$this->db->prefix($table)."...\n");
+					$this->create($table);
+					$this->generate_model($table);
+					$ts++;
+				}
 			}
-		}
+		} while ($ts > $previous_count);
 		//UPDATE TABLES WITH COLUMN ALTERATIONS AND FOREIGN KEYS
 		foreach ($this->tables as $table => $fields) {
 			$table_info = $this->get($table);
@@ -208,7 +215,7 @@ class Schemer {
 			foreach ($fields as $name => $field) {
 				if (!isset($this->tables[$field['type']])) {
 					// REAL COLUMN
-					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".P($table)." WHERE Field='".$name."'");
+					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".$this->db->prefix($table)." WHERE Field='".$name."'");
 					if (false === ($row = $records->fetch())) {
 						// NEW COLUMN																																												// NEW COLUMN
 						fwrite(STDOUT, "Adding column $name...\n");
@@ -217,29 +224,29 @@ class Schemer {
 					} else {
 						// OLD COLUMN																																												// OLD COLUMN
 						$type = explode(" ", $this->get_sql_type($field));
-						if (($row['Type'] != $type[0]) || ((isset($field['default'])) && ($row['Default'] != $field['default'])) || (isset($field['null']) && ($row['Null'] == "NO")) || (!isset($field['null']) && ($row['Null'] == "YES"))) {
+						if (($row['Type'] != $type[0]) || ((isset($field['default'])) && ($row['Default'] != $field['default']) && (!isset($field['null']) || $field['default'] !== "NULL" || !empty($row['Default']))) || (isset($field['null']) && ($row['Null'] == "NO")) || (!isset($field['null']) && ($row['Null'] == "YES"))) {
 							fwrite(STDOUT, "Altering column $name...\n");
 							$this->modify($table, $name);
 							$ms++;
 						}
 						if (isset($row['index'])) {
-							$index = $this->db->pdo->query("SHOW INDEXES FROM ".P($table)." WHERE key_name='".$name."'");
+							$index = $this->db->pdo->query("SHOW INDEXES FROM ".$this->db->prefix($table)." WHERE key_name='".$name."'");
 							if (empty($index)) $this->create_index($table, $name);
 						}
 					}
 				}
 				if (isset($field['references']) && ($field['constraint'] !== false)) {
-					$fks = $this->db->pdo->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".P($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".$this->db->database_name."'");
+					$fks = $this->db->pdo->query("SELECT * FROM information_schema.STATISTICS WHERE TABLE_NAME='".$this->db->prefix($table)."' && COLUMN_NAME='$name' && TABLE_SCHEMA='".$this->db->database_name."'");
 					if (false === ($row = $fks->fetch())) {
 						// ADD CONSTRAINT																																									// CONSTRAINT
-						fwrite(STDOUT, "Adding foreign key ".P($table)."_".$name."_fk...\n");
+						fwrite(STDOUT, "Adding foreign key ".$this->db->prefix($table)."_".$name."_fk...\n");
 						$this->add_foreign_key($table, $name);
 						$ms++;
 					}
 				}
 			}
 			//entity type definition
-			$rows = query("entities")->condition("name", $table)->one();
+			$rows = $this->db->query("entities")->condition("name", $table)->one();
 			unset($table_info['fields']);
 			unset($table_info['relations']);
 			unset($table_info['select']);
@@ -250,16 +257,16 @@ class Schemer {
 			if (empty($rows)) {
 				// ADD CONTENT TYPE																																														// ADD CONTENT TYPE
 				fwrite(STDOUT, "Adding Entity '$table'...\n");
-				store("entities", $table_info);
+				$this->db->store("entities", $table_info);
 				$is++;
 			} else {
-				$query = query("entities");
+				$query = $this->db->query("entities");
 				foreach ($table_info as $k => $v) $query->condition("entities.".$k, $v);
 				$rows = $query->all();
 				if (empty($rows)) {
 					// UPDATE CONTENT TYPE																																												// UPDATE CONTENT TYPE
 					fwrite(STDOUT, "Updating Entity '$table'...\n");
-					store("entities", $table_info, array("name" => $table));
+					$this->db->store("entities", $table_info, array("name" => $table));
 					$as++;
 				}
 			}
@@ -268,8 +275,8 @@ class Schemer {
 		}
 		foreach ($this->indexes as $idx => $index) {
 			$table = reset($index);
-			$name = P("").implode("_", $index)."_index";
-			$exists = $this->db->pdo->query("SHOW INDEXES FROM ".P($table)." WHERE key_name='".$name."'")->fetch();
+			$name = $this->db->prefix("").implode("_", $index)."_index";
+			$exists = $this->db->pdo->query("SHOW INDEXES FROM ".$this->db->prefix($table)." WHERE key_name='".$name."'")->fetch();
 			if (empty($exists)) {
 				fwrite(STDOUT, "Creating index '$name'...\n");
 				call_user_method_array("create_index", $this, $index);
@@ -277,8 +284,8 @@ class Schemer {
 		}
 		foreach ($this->index_drops as $idx => $index) {
 			$table = reset($index);
-			$name = P("").implode("_", $index)."_index";
-			$exists = $this->db->pdo->query("SHOW INDEXES FROM ".P($table)." WHERE key_name='".$name."'")->fetch();
+			$name = $this->db->prefix("").implode("_", $index)."_index";
+			$exists = $this->db->pdo->query("SHOW INDEXES FROM ".$this->db->prefix($table)." WHERE key_name='".$name."'")->fetch();
 			if (!empty($exists)) {
 				fwrite(STDOUT, "Dropping index '$name'...\n");
 				call_user_method_array("drop_index", $this, $index);
@@ -286,15 +293,15 @@ class Schemer {
 		}
 		foreach ($this->triggers as $name => $triggers) {
 			foreach ($triggers as $event => $trigger) {
-				$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($trigger['table']."_".$event."_".$trigger['action'])."'")->fetch();
+				$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".$this->db->prefix($trigger['table']."_".$event."_".$trigger['action'])."'")->fetch();
 				if (empty($record)) {
 					// ADD TRIGGER																																											// ADD TRIGGER
-					fwrite(STDOUT, "Creating trigger ".P($trigger['table'])."_".$event."_$trigger[action]...\n");
+					fwrite(STDOUT, "Creating trigger ".$this->db->prefix($trigger['table'])."_".$event."_$trigger[action]...\n");
 					$this->add_trigger($name, $event);
 					$gs++;
 				} else if ($record['ACTION_STATEMENT'] != $trigger['trigger']) {
 					// UPDATE TRIGGER																																										// UPDATE TRIGGER
-					fwrite(STDOUT, "Updating trigger ".P($trigger['table'])."_".$event."_$trigger[action]...\n");
+					fwrite(STDOUT, "Updating trigger ".$this->db->prefix($trigger['table'])."_".$event."_$trigger[action]...\n");
 					$this->remove_trigger($name, $event);
 					$this->add_trigger($name, $event);
 					$gu++;
@@ -302,7 +309,7 @@ class Schemer {
 			}
 		}
 		foreach ($this->taxonomies as $taxonomy => $items) {
-			$records = query("terms", "select:count(*) as count  where:taxonomy=?  limit:1", array($taxonomy));
+			$records = $this->db->query("terms", "select:count(*) as count  where:taxonomy=?  limit:1", array($taxonomy));
 			if ($records['count'] == 0) {
 				//CREATE TAXONOMY                                                                                     //CREATE TAXONOMY
 				fwrite(STDOUT, "Creating taxonomy ".$taxonomy."...\n");
@@ -310,14 +317,14 @@ class Schemer {
 			} else $is += $this->create_taxonomy($taxonomy, true);
 		}
 		foreach ($this->uris as $path => $uri) {
-			$rows = query("uris")->condition("path", $path)->one();
+			$rows = $this->db->query("uris")->condition("path", $path)->one();
 			if (empty($rows)) {
 				// ADD URI																																														// ADD URI
 				fwrite(STDOUT, "Adding URI '$path'...\n");
 				$this->add_uri($path);
 				$us++;
 			} else {
-				$query = query("uris")->select("uris.*,uris.groups.slug as groups");
+				$query = $this->db->query("uris")->select("uris.*,uris.groups.slug as groups");
 				$extra_terms = false;
 				foreach ($uri as $k => $v) {
 					if ($k == "groups" || $k == "statuses") $query->condition("uris.".$k.".slug", $v);
@@ -325,7 +332,7 @@ class Schemer {
 				}
 				$rows = $query->all();
 				if (!empty($rows) && !empty($rows[0]['groups'])) {
-					$g = query("uris")->select("uris.*,groups.slug")->condition("uris.id", $rows[0]['id']);
+					$g = $this->db->query("uris")->select("uris.*,groups.slug")->condition("uris.id", $rows[0]['id']);
 					if (!empty($uri['groups'])) $g->condition("groups.slug", $uri['groups'], "!=");
 					$g = $g->execute();
 					if (!empty($g)) {
@@ -348,7 +355,7 @@ class Schemer {
 					$permit['related_table'] = $model;
 					$permit['action'] = $action;
 					if (empty($permit['priv_type'])) $permit['priv_type'] = "*";
-					$query = query("permits");
+					$query = $this->db->query("permits");
 					foreach ($permit as $k => $v) {
 						if (0 === strpos($k, "user_") || 0 === strpos($k, "object_")) $query->condition($k.".slug", $v);
 						else $query->condition($k, $v);
@@ -357,14 +364,14 @@ class Schemer {
 					if (empty($row)) {
 						// ADD PERMIT																																										// ADD PERMIT
 						fwrite(STDOUT, "Adding $permit[priv_type] permit on $model::$action for ".$permit['role']."...\n");
-						store("permits", $permit);
+						$this->db->store("permits", $permit);
 						$ps++;
 					}
 				}
 			}
 		}
 		foreach ($this->menus as $menu => $items) {
-			$records = query("menus", "select:count(*) as count  where:menu=?  limit:1", array($menu));
+			$records = $this->db->query("menus", "select:count(*) as count  where:menu=?  limit:1", array($menu));
 			if ($records['count'] == 0) {
 				//CREATE MENU                                                                                          //CREATE MENU
 				fwrite(STDOUT, "Creating menu ".$menu."...\n");
@@ -373,22 +380,22 @@ class Schemer {
 		}
 		foreach ($this->tables as $table => $fields) $is += $this->populate($table, false);
 		foreach ($this->table_drops as $table) {
-			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
+			$records = $this->db->pdo->query("SHOW TABLES LIKE '".$this->db->prefix($table)."'");
 			if ($row = $records->fetch()) {
 				// DROP TABLE																																													// DROP TABLE
-				fwrite(STDOUT, "Dropping table ".P($table)."...\n");
+				fwrite(STDOUT, "Dropping table ".$this->db->prefix($table)."...\n");
 				$this->drop_table($table);
 				$td++;
 			}
 		}
 		foreach ($this->column_drops as $table => $cols) {
-			$records = $this->db->pdo->query("SHOW TABLES LIKE '".P($table)."'");
+			$records = $this->db->pdo->query("SHOW TABLES LIKE '".$this->db->prefix($table)."'");
 			if ($row = $records->fetch()) {
 				foreach ($cols as $col) {
-					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".P($table)." WHERE field='".$col."'");
+					$records = $this->db->pdo->query("SHOW COLUMNS FROM ".$this->db->prefix($table)." WHERE field='".$col."'");
 					if ($row = $records->fetch()) {
 						// DROP COLUMN																																										// DROP COLUMN
-						fwrite(STDOUT, "Dropping column ".P($table).".$col...\n");
+						fwrite(STDOUT, "Dropping column ".$this->db->prefix($table).".$col...\n");
 						$this->remove($table, $col);
 						$cd++;
 					}
@@ -398,9 +405,9 @@ class Schemer {
 		foreach ($this->trigger_drops as $name => $event) {
 			// DROP TRIGGER																																													// DROP TRIGGER
 			$parts = explode("::", $name);
-			$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".P($parts[0]."_".$event."_".$parts[1])."'")->fetch();
+			$record = $this->db->pdo->query("SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_NAME='".$this->db->prefix($parts[0]."_".$event."_".$parts[1])."'")->fetch();
 			if (false !== $record) {
-				fwrite(STDOUT, "Dropping trigger ".P($parts[0])."_".$event."_$parts[1]...\n");
+				fwrite(STDOUT, "Dropping trigger ".$this->db->prefix($parts[0])."_".$event."_$parts[1]...\n");
 				$this->remove_trigger($name, $event);
 				$gd++;
 			}
@@ -419,7 +426,7 @@ class Schemer {
 	function create($name, $backup = false, $write = true) {
 		$fields = $this->get_table($name);
 		$this->drop_table($name);
-		$sql = "CREATE TABLE `".P($name)."` (";
+		$sql = "CREATE TABLE `".$this->db->prefix($name)."` (";
 		$primary = array();
 		$index = array();
 		$sql_fields = "";
@@ -445,7 +452,7 @@ class Schemer {
 	 * @param string $name the name of the table from tables array
 	 */
 	function drop_table($name) {
-		$this->db->exec("DROP TABLE IF EXISTS `".P($name)."`");
+		$this->db->exec("DROP TABLE IF EXISTS `".$this->db->prefix($name)."`");
 	}
 
 	/**
@@ -457,7 +464,7 @@ class Schemer {
 		$fields = $this->get_table($table);
 		$field = $fields[$name];
 		$sql = "`".$name."` ".$this->get_sql_type($field);
-		$this->db->exec("ALTER TABLE `".P($table)."` ADD ".$sql);
+		$this->db->exec("ALTER TABLE `".$this->db->prefix($table)."` ADD ".$sql);
 	}
 
 	/**
@@ -466,7 +473,7 @@ class Schemer {
 	 * @param string $name the name of column
 	 */
 	function remove($table, $name) {
-		$this->db->exec("ALTER TABLE `".P($table)."` DROP COLUMN `".$name."`");
+		$this->db->exec("ALTER TABLE `".$this->db->prefix($table)."` DROP COLUMN `".$name."`");
 	}
 
 	/**
@@ -478,7 +485,7 @@ class Schemer {
 		$fields = $this->get_table($table);
 		$field = $fields[$name];
 		$sql = "`".$name."` `".$name."` ".$this->get_sql_type($field);
-		$this->db->exec("ALTER TABLE `".P($table)."` CHANGE ".$sql);
+		$this->db->exec("ALTER TABLE `".$this->db->prefix($table)."` CHANGE ".$sql);
 	}
 
 	/**
@@ -489,7 +496,7 @@ class Schemer {
 	function create_index($table, $name) {
 		$args = func_get_args();
 		$table = array_shift($args);
-		$sql = "CREATE INDEX ".P($table)."_".implode("_", $args)."_index ON `".P($table)."` (`".implode("`, `", $args)."`)";
+		$sql = "CREATE INDEX ".$this->db->prefix($table)."_".implode("_", $args)."_index ON `".$this->db->prefix($table)."` (`".implode("`, `", $args)."`)";
 		$this->db->exec($sql);
 	}
 
@@ -501,7 +508,7 @@ class Schemer {
 	function drop_index($table, $name) {
 		$args = func_get_args();
 		$table = array_shift($args);
-		$sql = "ALTER TABLE ".P($table)." DROP INDEX ".P($table)."_".implode("_", $args)."_index";
+		$sql = "ALTER TABLE ".$this->db->prefix($table)." DROP INDEX ".$this->db->prefix($table)."_".implode("_", $args)."_index";
 		$this->db->exec($sql);
 	}
 
@@ -517,7 +524,7 @@ class Schemer {
 		$append = "";
 		if ($field['update']) $append .= " ON UPDATE ".$field['update'];
 		if ($field['delete']) $append .= " ON DELETE ".$field['delete'];
-		$this->db->exec("ALTER TABLE `".P($table)."` ADD CONSTRAINT `".P($table)."_".$name."_fk` FOREIGN KEY (`$name`) REFERENCES `".P($ref[0])."` (`".$ref[1]."`)".$append);
+		$this->db->exec("ALTER TABLE `".$this->db->prefix($table)."` ADD CONSTRAINT `".$this->db->prefix($table)."_".$name."_fk` FOREIGN KEY (`$name`) REFERENCES `".$this->db->prefix($ref[0])."` (`".$ref[1]."`)".$append);
 	}
 
 	/**
@@ -525,7 +532,7 @@ class Schemer {
 	 * @param array $field the column options from the schema
 	 */
 	function get_sql_type($field) {
-		$type = "varchar(".(isset($field['length'])?$field['length']:"64").")";
+		$type = false;
 		if ($field['type'] == 'string') $type = "varchar(".(isset($field['length'])?$field['length']:"64").")";
 		else if ($field['type'] == 'password') $type = "varchar(100)";
 		else if (($field['type'] == 'text') || ($field['type'] == 'longtext')) $type = $field["type"];
@@ -534,7 +541,6 @@ class Schemer {
 		else if ($field['type'] == 'double') $type = "double(".$field['length'].")";
 		else if ($field['type'] == 'bool') $type = "tinyint(1)";
 		else if (($field['type'] == 'datetime') || ($field['type'] == 'timestamp')) $type = "datetime";
-		else if (!empty($field['type'])) $type = $field['type'].(isset($field['length'])?'('.$field['length'].')':"");
 		$type .= ((isset($field['null'])) ? " NULL" : " NOT NULL")
 						.((isset($field['unsigned'])) ? " UNSIGNED" : "")
 						.((isset($field['zerofill'])) ? " ZEROFILL" : "")
@@ -566,7 +572,7 @@ class Schemer {
 			list($table, $ops) = explode("  ", $table, 2);
 			$ops = star($ops);
 		} else $ops = array();
-		efault($this->tables[$table], array());
+		if (empty($this->tables[$table])) $this->tables[$table] = array();
 		$additional = array();
 		foreach ($args as $col) {
 			$col = star($col);
@@ -591,12 +597,11 @@ class Schemer {
 				foreach ($newcol as $nk => $nv) $access_col .= "  ".$nk.":".$nv;
 				$additional[] = array("permits", $access_col);
 			}
-			//if (isset($this->tables[$col['type']])) {
-			if ($this->models->has($col['type'])) {
+			if (isset($this->tables[$col['type']]) || $this->models->has($col['type'])) {
 				$ref_table_name = (empty($col['table'])) ? $table."_".$colname : $col['table'];
 				$ref_table_def = array($ref_table_name."  groups:false",
 					"owner  type:int  null:  references:users id  update:cascade  delete:cascade  optional:",
-					$table."_id  type:int  default:0  references:$table id  null:  update:cascade  delete:cascade",
+					$table."_id  type:int  default:NULL  references:$table id  null:  update:cascade  delete:cascade",
 					"position  type:int  ordered:".$table."_id  optional:"
 				);
 				if ($ref_table_name != $col['type']) {
@@ -609,7 +614,7 @@ class Schemer {
 		}
 		$search_cols = array_keys($this->tables[$table]);
 		foreach ($search_cols as $colname_index => $colname_value) if (isset($this->tables[$this->tables[$table][$colname_value]['type']])) unset($search_cols[$colname_index]);
-		efault($this->options[$table], array("select" => "$table.*", "search" => $table.'.'.implode(",$table.", $search_cols)));
+		if (empty($this->options[$table])) $this->options[$table] = array("select" => "$table.*", "search" => $table.'.'.implode(",$table.", $search_cols));
 		foreach ($ops as $k => $v) $this->options[$table][$k] = ($v === "false") ? false : (($v === "true") ? true : $v);
 		if (isset($ops['base']) && $ops['base'] !== $table) {
 			//find the root
@@ -668,7 +673,7 @@ class Schemer {
 	function add_uri($path) {
 		$uri = $this->uris[$path];
 		$entity = (empty($uri['type'])) ? "uris" : $uri['type'];
-		entity_save($entity, $uri);
+		$this->models->get($entity)->store($uri);
 	}
 
 	/**
@@ -678,7 +683,7 @@ class Schemer {
 	function update_uri($path, $uri = array()) {
 		if (empty($uri)) $uri = $this->uris[$path];
 		$entity = (empty($uri['type'])) ? "uris" : $uri['type'];
-		entity_save($entity, $uri, array("path" => $path));
+		$this->models->get($entity)->store($uri, array("path" => $path));
 	}
 
 	/**
@@ -689,8 +694,8 @@ class Schemer {
 	function uri($path, $args = array(), $groups = array()) {
 		$args = star($args);
 		$args['path'] = $path;
-		efault($args['title'], ucwords(str_replace("-", " ", $path)));
-		efault($args['statuses'], "published");
+		if(empty($args['title'])) $args['title'] = ucwords(str_replace("-", " ", $path));
+		if (empty($args['statuses'])) $args['statuses'] = "published";
 		$this->uris[$path] = $args;
 	}
 
@@ -700,7 +705,7 @@ class Schemer {
 	 */
 	function add_entity($name) {
 		$record = $this->entities[$name];
-		store("entities", $record);
+		$this->db->store("entities", $record);
 	}
 
 	/**
@@ -709,7 +714,7 @@ class Schemer {
 	 */
 	function update_entity($name, $record = array()) {
 		if (empty($record)) $record = $this->entities[$name];
-		store("entities", $record, array("name" => $name));
+		$this->db->store("entities", $record, array("name" => $name));
 	}
 
 	/**
@@ -731,7 +736,7 @@ class Schemer {
 	function block($path, $content, $ops = array()) {
 		$ops = star($ops);
 		$ops["content"] = $content;
-		efault($this->blocks[$path], array());
+		if (empty($this->blocks[$path])) $this->blocks[$path] = array();
 		$this->blocks[$path][] = $ops;
 	}
 
@@ -744,8 +749,8 @@ class Schemer {
 		$args = func_get_args();
 		$on = array_shift($args);
 		$on = explode("::", $on);
-		efault($this->permits[$on[0]], array());
-		efault($this->permits[$on[0]][$on[1]], array());
+		if (empty($this->permits[$on[0]])) $this->permits[$on[0]] = array();
+		if (empty($this->permits[$on[0]][$on[1]])) $this->permits[$on[0]][$on[1]] = array();
 		foreach ($args as $row) {
 			$row = star($row);
 			$role = array_shift($row);
@@ -811,7 +816,7 @@ class Schemer {
 	function menu($menu, $item) {
 		$args = func_get_args();
 		$menu = array_shift($args);
-		efault($this->menus[$menu], array());
+		if (empty($this->menus[$menu])) $this->menus[$menu] = array();
 		foreach ($args as $item) $this->menus[$menu][] = star($item);
 	}
 
@@ -823,7 +828,7 @@ class Schemer {
 	function taxonomy($taxonomy, $item) {
 		$args = func_get_args();
 		$taxonomy = array_shift($args);
-		efault($this->taxonomies[$taxonomy], array());
+		if (empty($this->taxonomies[$taxonomy])) $this->taxonomies[$taxonomy] = array();
 		foreach ($args as $item) $this->taxonomies[$taxonomy][] = star($item);
 	}
 
@@ -844,7 +849,7 @@ class Schemer {
 	 */
 	function create_blocks($path, $blocks = array()) {
 		$count = 0;
-		$uri = get("uris", "path:$path", "limit:1");
+		$uri = $this->db->get("uris", "path:$path", "limit:1");
 		if (!empty($blocks)) foreach ($blocks as $block) $count += $this->create_block($uri, $block);
 		return $count;
 	}
@@ -855,16 +860,16 @@ class Schemer {
 	 * @param array $block
 	 */
 	function create_block($uri, $block) {
-		efault($block['region'], "content");
+		if (empty($block['region'])) $block['region'] = "content";
 		$block['uris_id'] = $uri['id'];
 		$content = $block['content'];
 		unset($block['content']);
-		$results = get("blocks", $block);
+		$results = $this->db->get("blocks", $block);
 		if (empty($results)) {
 			fwrite(STDOUT, "Creating block for /".$uri['path']."...\n");
-			efault($block['position'], "");
+			if (empty($block['position'])) $block['position'] = "";
 			$block['content'] = $content;
-			store("blocks", $block);
+			$this->db->store("blocks", $block);
 			return 1;
 		}
 		return 0;
@@ -890,10 +895,10 @@ class Schemer {
 			if ($k == "groups" || $k == "statuses") $k = "menus.".$k;
 			$match[$k] = $v;
 		}
-		$record = query("menus")->conditions($match)->one();
+		$record = $this->db->query("menus")->conditions($match)->one();
 		if (empty($record)) {
 			if ($update) fwrite(STDOUT, "Creating $menu menu item...\n");
-			store("menus", $item);
+			$this->db->store("menus", $item);
 			$id = $this->models->get("menus")->insert_id;
 			$count = 1;
 		} else $id = $record['id'];
@@ -920,10 +925,10 @@ class Schemer {
 		$children = empty($item['children']) ? array() : $item['children'];
 		unset($item['children']);
 		$item['taxonomy'] = $taxonomy;
-		$record = query("terms")->conditions($item)->one();
+		$record = $this->db->query("terms")->conditions($item)->one();
 		if (empty($record)) {
 			if ($update) fwrite(STDOUT, "Creating $taxonomy taxonomy term...\n");
-			store("terms", $item);
+			$this->db->store("terms", $item);
 			$id = $this->models->get("terms")->insert_id;
 			$count = 1;
 		} else $id = $record['id'];
@@ -945,11 +950,11 @@ class Schemer {
 		if (!empty($pop)) {
 			foreach ($pop as $record) {
 				if ($record['immediate'] == $immediate) {
-					$match = query($table)->conditions($record['match'])->one();
+					$match = $this->db->query($table)->conditions($record['match'])->one();
 					if (empty($match)) {
 						$store = array_merge($record['match'], $record['others']);
 						fwrite(STDOUT, "Inserting $table record...\n");
-						store($table, $store);
+						$this->db->store($table, $store);
 						$count++;
 					}
 				}
@@ -965,7 +970,7 @@ class Schemer {
 	 */
 	function before($name, $trig, $each = true) {
 		$parts = explode("::", $name);
-		efault($this->triggers[$name], array());
+		if (empty($this->triggers[$name])) $this->triggers[$name] = array();
 		$trigger = array("table" => $parts[0], "action" => $parts[1], "type" => "before", "each" => $each, "trigger" => $trig);
 		$this->triggers[$name]["before"] = $trigger;
 	}
@@ -977,7 +982,7 @@ class Schemer {
 	 */
 	function after($name, $trig, $each = true) {
 		$parts = explode("::", $name);
-		efault($this->triggers[$name], array());
+		if (empty($this->triggers[$name])) $this->triggers[$name] = array();
 		$trigger = array("table" => $parts[0], "action" => $parts[1], "type" => "after", "each" => $each, "trigger" => $trig);
 		$this->triggers[$name]["after"] = $trigger;
 	}
@@ -988,7 +993,7 @@ class Schemer {
 	 * @param string $event before or after
 	 */
 	function drop_trigger($name, $event) {
-		efault($this->trigger_drops[$name], array());
+		if (empty($this->trigger_drops[$name])) $this->trigger_drops[$name] = array();
 		$this->trigger_drops[$name][$event] = "";
 	}
 
@@ -999,7 +1004,7 @@ class Schemer {
 	 */
 	function add_trigger($name, $type) {
 		$trigger = $this->triggers[$name][$type];
-		$sql = "CREATE TRIGGER `".P($trigger['table']."_".$type."_".$trigger['action'])."` $type $trigger[action] ON ".P($trigger['table']).(($trigger['each']) ? " FOR EACH ROW" : "")." ".$trigger['trigger'].";";
+		$sql = "CREATE TRIGGER `".$this->db->prefix($trigger['table']."_".$type."_".$trigger['action'])."` $type $trigger[action] ON ".$this->db->prefix($trigger['table']).(($trigger['each']) ? " FOR EACH ROW" : "")." ".$trigger['trigger'].";";
 		$this->db->exec($sql);
 	}
 
@@ -1010,7 +1015,7 @@ class Schemer {
 	 */
 	function remove_trigger($name, $type) {
 		$parts = explode("::", $name);
-		$sql = "DROP TRIGGER `".P($parts[0]."_".$type."_".$parts[1])."`;";
+		$sql = "DROP TRIGGER `".$this->db->prefix($parts[0]."_".$type."_".$parts[1])."`;";
 		$this->db->exec($sql);
 	}
 
@@ -1052,6 +1057,7 @@ class Schemer {
 		$template = new Template($locator);
 		$data = $template->get(array($base."/base", "base"), array("model" => $table, "config" => $this->config), array("prefix" => $render_prefix));
 		file_put_contents($output_path, $data);
+		if (!class_exists("Starbug\Core\\".ucwords($table)."Model")) include($output_path);
 	}
 
 	/**
@@ -1085,7 +1091,7 @@ class Schemer {
 	function get_logging_trigger($table, $type) {
 		if ($type == "insert") {
 			$trigger = "BEGIN
-				INSERT INTO ".P("log")." (table_name, object_id, action, created, modified) VALUES ('$table', NEW.id, 'INSERT', NOW(), NOW());
+				INSERT INTO ".$this->db->prefix("log")." (table_name, object_id, action, created, modified) VALUES ('$table', NEW.id, 'INSERT', NOW(), NOW());
 			END";
 		} else if ($type == "update") {
 			$trigger = "BEGIN";
@@ -1094,14 +1100,14 @@ class Schemer {
 			foreach ($fields as $name => $ops) {
 				$trigger .= "
 				IF OLD.$name != NEW.$name THEN
-					INSERT INTO ".P("log")." (table_name, object_id, action, column_name, old_value, new_value, created, modified) VALUES ('$table', NEW.id, 'UPDATE', '$name', OLD.$name, NEW.$name, NOW(), NOW());
+					INSERT INTO ".$this->db->prefix("log")." (table_name, object_id, action, column_name, old_value, new_value, created, modified) VALUES ('$table', NEW.id, 'UPDATE', '$name', OLD.$name, NEW.$name, NOW(), NOW());
 				END IF;";
 			}
 			$trigger .= "
 			END";
 		} else if ($type == "delete") {
 			$trigger = "BEGIN
-				INSERT INTO ".P("log")." (table_name, object_id, action, created, modified) VALUES ('$table', OLD.id, 'DELETE', NOW(), NOW());
+				INSERT INTO ".$this->db->prefix("log")." (table_name, object_id, action, created, modified) VALUES ('$table', OLD.id, 'DELETE', NOW(), NOW());
 			END";
 		}
 		return $trigger;
@@ -1138,8 +1144,8 @@ class Schemer {
 				else $field['input_type'] = "text";
 			}
 			$field[$field['type']] = "";
-			efault($field[$field['input_type']], "");
-			efault($field["label"], format_label($name));
+			if (empty($field[$field['input_type']])) $field[$field['input_type']] = "";
+			if (empty($field["label"])) $field["label"] = format_label($name);
 			foreach ($field as $k => $v) {
 				$data["fields"][$name][$k] = $v;
 			}
@@ -1158,7 +1164,7 @@ class Schemer {
 	 * convert table schema to XML
 	 */
 	function toXML($model) {
-		$xmlDoc = new DOMDocument();
+		$xmlDoc = new \DOMDocument();
 		$root = $xmlDoc->appendChild($xmlDoc->createElement("model"));
 		$xmlDoc->formatOutput = true;
 		foreach ($model as $key => $value) {

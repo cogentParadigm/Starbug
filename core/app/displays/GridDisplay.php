@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class GridDisplay extends ItemDisplay {
 	public $type = "grid";
 	public $template = "grid";
@@ -9,9 +10,10 @@ class GridDisplay extends ItemDisplay {
 	);
 	protected $request;
 
-	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hook_builder, Request $request) {
+	function __construct(TemplateInterface $output, Response $response, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, Request $request) {
 		$this->output = $output;
 		$this->response = $response;
+		$this->models = $models;
 		$this->hook_builder = $hook_builder;
 		$this->request = $request;
 	}
@@ -51,8 +53,8 @@ class GridDisplay extends ItemDisplay {
 		if (empty($options["field"])) $options["field"] = $field;
 		$options['data-dgrid-column'] = array();
 		if (empty($options['plugin']) && !isset($options['readonly'])) {
-			efault($options['editor'], "'text'");
-			efault($options['editOn'], "'dblclick'");
+			if (empty($options['editor'])) $options['editor'] = "'text'";
+			if (empty($options['editOn'])) $options['editOn'] = "'dblclick'";
 		}
 		foreach ($options as $k => $v) {
 			if (!in_array($k, array("id", "class", "style", "label", "data-dgrid-column", "plugin")) && $v !== "") {

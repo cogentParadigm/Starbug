@@ -7,7 +7,7 @@
 							<ul>
 										<li><a href="<?php echo uri(); ?>">Blog</a></li>
 										<li><a href="<?php echo uri(); ?>">Contact Us</a></li>
-										<?php if (logged_in()) { ?>
+										<?php if ($this->user->loggedIn()) { ?>
 											<li><a href="<?php echo uri("logout"); ?>">Log Out</a></li>
 										<?php } else { ?>
 											<li><a href="<?php echo uri("login"); ?>">Log In</a></li>

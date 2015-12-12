@@ -6,6 +6,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
+namespace Starbug\Core;
 /**
  * ApiRequest
  * @ingroup core
@@ -28,20 +29,16 @@ class ApiRequest {
 	public $data = array();
 	public $options = array();
 
+	protected $models;
+
 	/**
 	 * API Request constructor
 	 * @param string $what an api request string in the format '[object].[format]'
 	 * 										 where object is an API function or set of models to query, and format is the desired output format (json, jsonp, xml)
 	 * @param star $ops additional options, query paramaters if [object] is a model or group of models
 	 */
-	function __construct($what, $ops = "", $headers = true) {
-	 if (defined("ETC::API_WHITELIST")) {
-	  if (in_array($_SERVER['REMOTE_ADDR'], explode(",", Etc::API_WHITELIST)) && !sb()->user) {
-		  $this->whitelisting = true;
-		  //UN-COMMENT THIS LINE TO ALLOW WHITE LISTING, ENABLE IT AT YOUR OWN RISK
-		  //sb()->user = array("id" => 1, "memberships" => 1);
-	  }
-	 }
+	function __construct(ModelFactoryInterface $models, $what, $ops = "", $headers = true) {
+		$this->models = $models;
 		$this->headers = $headers;
 		$format = end(explode(".", $what));
 		$parts = explode("/", str_replace(".$format", "", $what));
@@ -66,9 +63,10 @@ class ApiRequest {
 	function __call($model, $args) {
 		list($action, $format, $ops) = $args;
 		$this->model = $model;
-		$query = entity_query($model);
-		if ((!empty($_POST['action'][$model])) && (empty(sb()->errors[$model]))) {
-			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : sb($model)->insert_id;
+		$instance = $this->models->get($model);
+		$query = $instance->query();
+		if ((!empty($_POST['action'][$model])) && !$instance->errors()) {
+			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : $instance->insert_id;
 			$query->condition($model.".id", $id);
 		}
 		//if (!empty($_GET['keywords'])) $query->search($_GET['keywords']);
@@ -82,8 +80,8 @@ class ApiRequest {
 			$ops['page'] = 1 + (int) $start/$ops['limit'];
 		}
 		$action_name = "query_".$action;
-		$query = sb($model)->query_filters($action, $query, $ops);
-		$query = sb($model)->$action_name($query, $ops);
+		$query = $instance->query_filters($action, $query, $ops);
+		$query = $instance->$action_name($query, $ops);
 
 		if ($ops['paged'] && $ops['limit']) {
 			$query->limit($ops['limit']);
@@ -101,7 +99,7 @@ class ApiRequest {
 		$this->data = $data;
 		$f = strtoupper($format);
 		$error = $f."errors";
-		if (empty(sb()->errors[$model])) {
+		if (!$instance->errors()) {
 			if (!empty($data)) {
 				$add = (isset($pager) && $pager->start > 0) ? 1 : 0;
 				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
@@ -137,7 +135,7 @@ class ApiRequest {
 	 */
 	protected function getJSON($identifier, $data) {
 		$json = ($this->query) ? '[' : '';
-		foreach ($data as $row) $json .= json_encode(sb($this->model)->filter($row, $this->action)).", ";
+		foreach ($data as $row) $json .= json_encode($this->models->get($this->model)->filter($row, $this->action)).", ";
 		return rtrim($json, ", ").(($this->query) ? ']' : '');
 	}
 
@@ -177,7 +175,7 @@ class ApiRequest {
 		 */
 		protected function getCSV($data, $headers = true) {
 			if ($this->headers) header('Content-Disposition: attachment; filename="'.$this->model.'.csv"');
-			foreach ($data as $idx => $row) $data[$idx] = sb($this->model)->filter($row, $this->action);
+			foreach ($data as $idx => $row) $data[$idx] = $this->models->get($this->model)->filter($row, $this->action);
 			$this->data = $data;
 		//$display = $this->context->build_display("list", $this->model, $this->action, array("template" => "csv"));
 			//$display->items = $data;
@@ -209,10 +207,11 @@ class ApiRequest {
 	 * @return string json output of errors
 	 */
 		protected function JSONerrors($model) {
-			$schema = sb($model)->hooks;
+			$instance = $this->models->get($model);
+			$schema = $instance->column_info();
 			if (empty($schema)) $schema = array();
 			$json = '{ "errors" : [';
-		 foreach (sb()->errors[$model] as $k => $v) {
+		 foreach ($instance->errors("", true) as $k => $v) {
 			 if (!empty($schema[$k]) && !empty($schema[$k]['label'])) $k = $schema[$k]['label'];
 			 $json .= '{ "field":"'.$k.'", "errors": [ ';
 			 foreach ($v as $e) $json .= '"'.$e.'", ';

@@ -24,6 +24,7 @@
 # Obviously, since this code is in the public domain, the above are not
 # requirements (there can be none), but merely suggestions.
 #
+namespace Starbug\Core;
 class PasswordHash {
 	protected $itoa64;
 	protected $iteration_count_log2;

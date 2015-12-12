@@ -6,6 +6,7 @@
  * @file core/src/interface/RouterInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 class Router implements RouterInterface {
 	const VARIABLE_REGEX = <<<'REGEX'
 	~\{
@@ -16,7 +17,7 @@ class Router implements RouterInterface {
 	\}~x
 REGEX;
 	const DEFAULT_DISPATCH_REGEX = '[^\/]+';
-	public function __construct(DatabaseInterface $db=null) {
+	public function __construct(DatabaseInterface $db) {
 		$this->db = $db;
 	}
 	/**
@@ -35,7 +36,7 @@ REGEX;
 		$query->sort("FIELD(path, '".implode("', '", $paths)."')");
 
 		foreach ($query as $result) {
-			$permitted = query("uris")->condition("uris.id", $result['id'])->action("read")->one();
+			$permitted = $this->db->query("uris")->condition("uris.id", $result['id'])->action("read")->one();
 			if ($permitted) {
 				$route = $permitted;
 				break;

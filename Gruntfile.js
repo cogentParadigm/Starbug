@@ -60,20 +60,31 @@ module.exports = function(grunt) {
 				formatters: [{id: 'lint-xml', dest: 'build/logs/lesslint.xml'}]
 			}
 		},
-		shell: {
-			'phploc': {
-				command: 'phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml app core modules'
+		phploc: {
+			default: {
+				dir: 'app core modules'
 			},
+			options: {
+				bin: 'vendor/bin/phploc',
+				countTests: true,
+				reportFileCSV: 'build/logs/phploc.csv',
+				reportFileXML: 'build/logs/phploc.xml',
+				progress: true,
+				quiet: false
+			}
+		},
+		shell: {
 			'phpcpd': {
-				command: 'phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules || true'
+				command: 'vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules util || true'
 			}
 		},
 		phpmd: {
 			local: {
 				dir: '.',
 				options: {
+					bin: 'vendor/bin/phpmd',
 					reportFormat: 'text',
-					exclude:'util,libraries,var,node_modules',
+					exclude:'libraries,var,node_modules,vendor',
 					rulesets:'etc/phpmd.xml'
 				}
 			},
@@ -82,7 +93,7 @@ module.exports = function(grunt) {
 				options: {
 					reportFormat: 'xml',
 					reportFile: 'build/logs/phpmd.xml',
-					exclude: 'util,libraries,var,node_modules',
+					exclude: 'libraries,var,node_modules,vendor',
 					rulesets: 'etc/phpmd.xml'
 				}
 			}
@@ -91,6 +102,7 @@ module.exports = function(grunt) {
 			local: {
 				dir: ['core', 'app', 'modules'],
 				options: {
+					bin: 'vendor/bin/phpcs',
 					extensions: 'php',
 					ignore: 'views,templates,layouts,forms',
 					standard: 'etc/phpcs.xml',
@@ -120,9 +132,8 @@ module.exports = function(grunt) {
 		intern: {
 			local: {
 				 options: {
-					 runType: 'runner',
-					 reporters: ['pretty'],
-					 config: 'core/app/public/js/tests/intern'
+					runType: 'runner',
+					config: 'core/app/public/js/tests/intern'
 				 }
 			},
 			ci: {
@@ -161,6 +172,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-jsvalidate');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-lesslint');
+	grunt.loadNpmTasks('grunt-phploc');
 	grunt.loadNpmTasks('grunt-shell');
 	grunt.loadNpmTasks('grunt-phpmd');
 	grunt.loadNpmTasks('grunt-phpcs');
@@ -172,8 +184,8 @@ module.exports = function(grunt) {
 	grunt.registerTask('lint', ['phplint', 'jsvalidate', 'jshint:local', 'lesslint']);
 	grunt.registerTask('lint-ci', ['phplint', 'jsvalidate', 'jshint:ci', 'lesslint']);
 
-	grunt.registerTask('local', ['lint', 'shell:phploc', 'phpmd:local', 'phpcs:local', 'shell:phpcpd', 'phpunit', 'intern:local']);
-	grunt.registerTask('ci', ['lint-ci', 'shell:phploc', 'phpmd:ci', 'phpcs:ci', 'shell:phpcpd', 'phpunit', 'intern:ci']);
+	grunt.registerTask('local', ['lint', 'phploc', 'phpmd:local', 'phpcs:local', 'shell:phpcpd', 'phpunit', 'intern:local']);
+	grunt.registerTask('ci', ['lint-ci', 'phploc', 'phpmd:ci', 'phpcs:ci', 'shell:phpcpd', 'phpunit', 'intern:ci']);
 
 	grunt.registerTask('default', ['local']);
 

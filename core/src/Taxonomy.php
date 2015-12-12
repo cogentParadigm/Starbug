@@ -6,20 +6,23 @@
  * @file core/src/Taxonomy.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 /**
  * implementation of TaxonomyInterface
  */
 class Taxonomy implements TaxonomyInterface {
 	protected $db;
 	protected $models;
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+	protected $user;
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, UserInterface $user) {
 		$this->db = $db;
 		$this->models = $models;
+		$this->user = $user;
 	}
 	function terms($taxonomy, $parent = 0, $depth = 0) {
 		$terms = array();
 		$parents = $this->db->query("terms")->condition("taxonomy", $taxonomy)->condition("parent", $parent)->sort("position");
-		if ($taxonomy == "groups" && !logged_in("root")) $parents->condition("slug", "root", "!=");
+		if ($taxonomy == "groups" && !$this->user->loggedIn("root")) $parents->condition("slug", "root", "!=");
 		foreach ($parents as $idx => $term) {
 			$term['depth'] = $depth;
 			$terms[] = $term;
@@ -36,7 +39,7 @@ class Taxonomy implements TaxonomyInterface {
 	 * @return bool returns true on success, false otherwise.
 	 */
 	function tag($table, $object_id, $field, $tag = "") {
-		$column_info = column_info($table, $field);
+		$column_info = $this->models->get($table)->column_info($field);
 		if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
 		$taxonomy = $column_info['taxonomy'];
 		$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
@@ -51,7 +54,7 @@ class Taxonomy implements TaxonomyInterface {
 		//IF THE TERM DOESN'T EXIST, ADD IT
 		$term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->params(array("tag" => $tag, "tax" => $taxonomy))->one();
 		if (empty($term)) $this->db->store("terms", "term:$tag  slug:$slug  taxonomy:$taxonomy  parent:0  position:");
-		else if ($term['taxonomy'] == "groups" && !logged_in("root") && in_array($term['slug'], array("root"))) return false;
+		else if ($term['taxonomy'] == "groups" && !$this->user->loggedIn("root") && in_array($term['slug'], array("root"))) return false;
 		if ($this->db->errors()) return false;
 
 		//APPLY TAG
@@ -68,7 +71,7 @@ class Taxonomy implements TaxonomyInterface {
 	 * @param string $tag the tag
 	 */
 	function untag($table, $object_id, $field, $tag = "") {
-		$column_info = column_info($table, $field);
+		$column_info = $this->models->get($table)->column_info($field);
 		if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
 		$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
 		$this->db->query($tags)->condition($tags.".".$table."_id", $object_id)->open("terms")->condition($field."_id.id", $tag)->orCondition($field."_id.slug", $tag)->orCondition($field."_id.term", $tag)->close()->delete();

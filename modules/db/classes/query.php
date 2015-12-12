@@ -10,12 +10,16 @@
 /**
  * The query class. provides a generic query representation
  * usage:
- * $query = new query("users");
+ * $query = $db->query("users");
  * $query->select("first_name, last_name")->condition(array("id" => array(1, 2, 3), "users.groups" => "admin"))
  * 			 ->sort('last_name')->limit(10)->skip(20);
  * @ingroup db
  */
-
+namespace Starbug\Core;
+use \IteratorAggregate;
+use \ArrayAccess;
+use \ArrayIterator;
+use \PDO;
 class query implements IteratorAggregate, ArrayAccess {
 
 	const PHASE_VALIDATION = 0;
@@ -50,6 +54,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	public $statements = array();
 	public $parameters = array();
 	public $fields = array();
+	public $unvalidated = array();
 	public $exclusions = array();
 	public $result = false;
 	public $pager = null;
@@ -74,16 +79,14 @@ class query implements IteratorAggregate, ArrayAccess {
 	public $store_on_errors = false;
 	protected $models;
 	protected $hook_builder;
-	protected $config;
 
 	/**
 	 * create a new query
 	 * @param string $collection the name of the primary table/collection to query
 	 * @param array $params parameters to merge into the query
 	 */
-	function __construct(DatabaseInterface $db, ConfigInterface $config, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, $collection, $params = array()) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, $collection, $params = array()) {
 		$this->db = $db;
-		$this->config = $config;
 		$this->models = $models;
 		$this->hook_builder = $hook_builder;
 		$params = star($params);
@@ -258,11 +261,11 @@ class query implements IteratorAggregate, ArrayAccess {
 		list($field, $alias) = array($parsed['collection'], $parsed['alias']);
 		if (empty($collection)) $collection = $this->last_collection;
 		$table = $this->query['from'][$collection];
-		$schema = column_info($table, $field);
+		$schema = $this->models->get($table)->column_info($field);
 		if ($schema['entity'] !== $table) {
 			$entity_collection = $collection."_".$schema['entity'];
 			if (!isset($this->query['from'][$entity_collection])) {
-				$base_entity = entity_base($table);
+				$base_entity = $this->models->get($table)->root();
 				$this->join($schema['entity']." as ".$entity_collection);
 				if ($schema['entity'] === $base_entity) $this->on($entity_collection.".id=".$collection.".".$base_entity."_id");
 				else $this->on($entity_collection.".".$base_entity."_id=".$collection.".".$base_entity."_id");
@@ -276,16 +279,15 @@ class query implements IteratorAggregate, ArrayAccess {
 			if (isset($schema['null'])) $type = "left";
 			$this->join($ref[0]." as ".$collection."_".$alias)->on($collection."_".$alias.".".$ref[1]."=".$collection.".".$field);
 		} else if ($this->models->has($schema['type'])) {
-			$type_schema = $this->config->get($schema['type'], 'json');
-			if (is_null($token)) $token = empty($type_schema['label_select']) ? $collection."_".$alias.".id" : str_replace($schema['type'], $collection."_".$alias, $type_schema['label_select']);
+			if (is_null($token)) $token = $collection."_".$alias.".id";
 			else $token = $collection."_".$alias.".".$token;
 			if (empty($schema['table'])) $schema['table'] = $table."_".$field;
 			if ($schema['table'] == $schema['type']) {
 				//no lookup required
 				if ($mode == "select") {
-					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".P($schema['type'])." ".$collection."_".$alias." WHERE ".$collection."_".$alias.".".$table."_id=".$collection.".id)";
+					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".$this->db->prefix($schema['type'])." ".$collection."_".$alias." WHERE ".$collection."_".$alias.".".$table."_id=".$collection.".id)";
 				} else if ($mode == "where" || $mode == "condition") {
-					$return = "(SELECT ".$token." FROM ".P($schema['type'])." ".$collection."_".$alias." WHERE ".$collection."_".$alias.".".$table."_id=".$collection.".id)";
+					$return = "(SELECT ".$token." FROM ".$this->db->prefix($schema['type'])." ".$collection."_".$alias." WHERE ".$collection."_".$alias.".".$table."_id=".$collection.".id)";
 				} else if ($mode == "group" || $mode == "set") {
 					$this->join($schema['type']." as ".$collection."_".$alias)
 								->on($collection."_".$alias.".".$table."_id=".$collection.".id");
@@ -293,9 +295,9 @@ class query implements IteratorAggregate, ArrayAccess {
 			} else {
 				//use lookup table
 				if ($mode == "select") {
-					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
+					$return = "(SELECT GROUP_CONCAT(".$token.") FROM ".$this->db->prefix($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".$this->db->prefix($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
 				} else if ($mode == "where" || $mode == "condition") {
-					$return = "(SELECT ".$token." FROM ".P($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".P($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
+					$return = "(SELECT ".$token." FROM ".$this->db->prefix($schema['table'])." ".$collection."_".$alias."_lookup INNER JOIN ".$this->db->prefix($schema['type'])." ".$collection."_".$alias." ON ".$collection."_".$alias.".id=".$collection."_".$alias."_lookup.".$field."_id WHERE ".$collection."_".$alias."_lookup.".$table."_id=".$collection.".id)";
 				} else if ($mode == "group" || $mode == "set") {
 					$this->join($schema['table']." as ".$collection."_".$alias."_lookup")
 								->on($collection."_".$alias."_lookup.".$table."_id=".$collection.".id")
@@ -589,138 +591,15 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * fields: 'name,description'
 	 * conditions: ((name LIKE '%beef%' OR description LIKE '%beef%') and (name LIKE '%broccoli%' OR description LIKE '%broccoli%'))
 	 */
-	function search($keywords = "", $fields = "") {
-		//if there are no search terms, there's nothing to do
-		if (empty($keywords)) return $this;
-
-		//if no fields are passed, search the default fields of all tables in the query
-		if (empty($fields)) {
-			$fieldsets = array();
-			foreach ($this->query['from'] as $alias => $model) {
-				$schema = $this->config->get($model, 'json');
-				if (!empty($schema['search']) && !isset($fieldsets[$model])) $fieldsets[$model] = $schema['search'];
-			}
-			$fields = implode(",", $fieldsets);
-		}
-
+	function search($keywords, $fields) {
+		//if there are no search terms or fields to search, there's nothing to do
+		if (empty($keywords) || empty($fields)) return $this;
 		//split tokens (allowing escaped commas)
 		$search_fields = preg_split('~(?<!\\\)' . preg_quote(",", '~') . '~', $fields);
 		//unescape those commas
 		foreach ($search_fields as $sfk => $sfv) $search_fields[$sfk] = str_replace("\,", ",", $sfv);
-
-
 		//generate the conditions
 		$this->where($this->search_clause($keywords, $search_fields));
-
-		return $this;
-	}
-
-	function action($action, $collection = "") {
-		if (empty($collection)) $collection = $this->last_collection;
-		if ($this->has($collection)) {
-			$type = $this->query['from'][$collection];
-			$base_type = entity_base($type);
-			$join = true;
-		} else {
-			$type = $collection;
-			$join = false;
-		}
-
-		$columns = column_info($type);
-		$user_columns = column_info("users");
-
-		if ($join) {
-			//join permits - match table and action
-			if (!$this->has("permits")) $this->innerJoin("permits")->on("'".$type."' LIKE permits.related_table && '".$action."' LIKE permits.action");
-			//global or object permit
-			$this->where("('global' LIKE permits.priv_type || (permits.priv_type='object' && permits.related_id=".$collection.".id))");
-
-			//determine what relationships the object must bear - defined by object_access fields
-			foreach ($columns as $cname => $column) {
-				if (isset($column['object_access'])) {
-					if ($this->models->has($column['type'])) {
-						//multiple reference
-						$object_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
-						$permit_field = "object_".$cname;
-						$ref = $cname."_id";
-						$target = ($type == $column['entity']) ? "id" : $column['entity']."_id";
-						$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$column['entity']."_id=".$collection.".".$target."))");
-					} else {
-						//single reference
-						$object_field = $cname;
-						$permit_field = "object_".$cname;
-						$this->where("(permits.".$permit_field." is null || permits.".$permit_field."=".$collection.".".$object_field.")");
-					}
-				}
-			}
-
-		} else {
-			//table permit
-			$this->where("'table' LIKE permits.priv_type && '".$type."' LIKE permits.related_table && '".$action."' LIKE permits.action");
-		}
-
-		//determine what relationships the user must bear - defined by user_access fields
-		foreach ($user_columns as $cname => $column) {
-			if (isset($column['user_access'])) {
-				$permit_field = "user_".$cname;
-				if (!logged_in()) {
-					$this->where("permits.".$permit_field." is null");
-				}else if ($this->models->has($column['type'])) {
-					//multiple reference
-					$user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
-					$ref = $cname."_id";
-					$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$ref." FROM ".P($user_table)." u WHERE u.users_id=".sb()->user['id']."))");
-				} else {
-					//single reference
-					$user_field = $cname;
-					$this->where("(permits.".$permit_field." is null || permits.".$permit_field." IN (SELECT ".$user_field." FROM ".P("users")." u WHERE u.id=".sb()->user['id']."))");
-				}
-			}
-		}
-
-		//generate a condition for each role a permit can have. One of these must be satisfied
-		$this->open("roles");
-		//everyone - no restriction
-		$this->where("permits.role='everyone'");
-		//user - a specific user
-		$this->orWhere("permits.role='user' && permits.who='".sb()->user['id']."'");
-
-		if ($join) {
-			//self - permit for user actions
-			if ($type == "users") $this->orWhere("permits.role='self' && ".$collection.".id='".sb()->user['id']."'");
-			//owner - grant access to owner of object
-			$this->orWhere("permits.role='owner' && ".$collection.".owner='".sb()->user['id']."'");
-			//[user_access field] - requires users and objects to share the same terms for the given relationship
-			foreach ($user_columns as $cname => $column) {
-				if (isset($column['user_access']) && isset($columns[$cname])) {
-					if ($this->models->has($column['type'])) {
-						//multiple reference
-						$user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
-						$object_table = empty($columns[$cname]['table']) ? $columns[$cname]['entity']."_".$cname : $columns[$cname]['table'];
-						$ref = $cname."_id";
-						$target = ($type == $columns[$cname]['entity']) ? "id" : $columns[$cname]['entity']."_id";
-						if (logged_in()) {
-							$this->orWhere("permits.role='".$cname."' && (EXISTS (".
-									"SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target." && o.".$ref." IN (".
-										"SELECT ".$ref." FROM ".P($user_table)." u WHERE u.users_id=".sb()->user['id'].
-									")".
-								") || NOT EXISTS (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target."))"
-							);
-						} else {
-							$this->orWhere("permits.role='".$cname."' && NOT EXISTS (SELECT ".$ref." FROM ".P($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target.")");
-						}
-					} else {
-						//single reference
-						if (logged_in()) {
-							$this->orWhere("permits.role='".$cname."' && (".$collection.".".$cname." is null || ".$collection.".".$cname." IN (SELECT ".$cname." FROM ".P("users")." id=".sb()->user['id']."))");
-						} else {
-							$this->orWhere("permits.role='".$cname."' && ".$collection.".".$cname." is null");
-						}
-					}
-				}
-			}
-		}
-		$this->close();
 		return $this;
 	}
 
@@ -850,14 +729,14 @@ class query implements IteratorAggregate, ArrayAccess {
 		$from = $last_collection = $last_alias = "";
 		foreach ($this->query['from'] as $alias => $collection) {
 			if (empty($from)) {
-				$from = "`".P($collection)."`";
+				$from = "`".$this->db->prefix($collection)."`";
 				if ($this->mode != "insert" && $this->mode != "truncate") $from .= " AS `".$alias."`";
 			} else {
 				if (empty($this->query['join'][$alias])) $this->query['join'][$alias] = "LEFT";
-				$collection_segment = ("(" === substr($collection, 0, 1)) ? $collection : "`".P($collection)."`";
+				$collection_segment = ("(" === substr($collection, 0, 1)) ? $collection : "`".$this->db->prefix($collection)."`";
 				$segment = " ".$this->query['join'][$alias]." JOIN ".$collection_segment." AS `".$alias."`";
 				if (empty($this->query['on'][$alias])) {
-					$relations = sb($collection)->relations;
+					$relations = $this->models->get($collection)->relations;
 					$relator = $last_alias;
 					$rel = array();
 					if (isset($relations[$last_collection])) {
@@ -880,7 +759,7 @@ class query implements IteratorAggregate, ArrayAccess {
 									$this->query['from'][$rel['lookup']] = $rel['lookup'];
 									$this->query['join'][$rel['lookup']] = $this->query['join'][$alias];
 									$this->query['on'][$rel['lookup']] = $relator.".id=$rel[lookup].$rel[ref]";
-									$segment = " ".$this->query['join'][$rel['lookup']]." JOIN ".P($rel['lookup'])." AS $rel[lookup] ON ".$this->query['on'][$rel['lookup']].$segment;
+									$segment = " ".$this->query['join'][$rel['lookup']]." JOIN ".$this->db->prefix($rel['lookup'])." AS $rel[lookup] ON ".$this->query['on'][$rel['lookup']].$segment;
 								}
 								$this->query['on'][$alias] = "$rel[lookup].$rel[hook]=$alias.id";
 							} else {
@@ -889,8 +768,10 @@ class query implements IteratorAggregate, ArrayAccess {
 						}
 					}
 				}
-				$segment .= " ON ".$this->query['on'][$alias];
-				if (isset($this->query['where']["on_".$alias])) $segment .= " && ".$this->build_condition_set("on_".$alias);
+				if (!empty($this->query['on'][$alias])) {
+					$segment .= " ON ".$this->query['on'][$alias];
+					if (isset($this->query['where']["on_".$alias])) $segment .= " && ".$this->build_condition_set("on_".$alias);
+				}
 				$from .= $segment;
 			}
 			$last_collection = $collection;
@@ -1085,12 +966,12 @@ class query implements IteratorAggregate, ArrayAccess {
 						//}
 					} else {
 						//otherwise we look at the field schema
-						$schema = column_info($table, $token);
+						$schema = $this->models->get($table)->column_info($token);
 						if (!empty($schema)) {
 							if ($schema['entity'] !== $table) {
 								$entity_collection = $collection."_".$schema['entity'];
 								if (!isset($this->query['from'][$entity_collection])) {
-									$base_entity = entity_base($table);
+									$base_entity = $this->models->get($table)->root();
 									$this->join($schema['entity']." as ".$entity_collection);
 									if ($schema['entity'] === $base_entity) $this->on($entity_collection.".id=".$collection.".".$base_entity."_id");
 									else $this->on($entity_collection.".".$base_entity."_id=".$collection.".".$base_entity."_id");
@@ -1116,7 +997,7 @@ class query implements IteratorAggregate, ArrayAccess {
 						$invert = true;
 					}
 					//if the loop continues, the current token becomes the next collection
-					$column_info = column_info($this->query['from'][$collection], $token);
+					$column_info = $this->models->get($this->query['from'][$collection])->column_info($token);
 					if (!empty($column_info) && $column_info['entity'] !== $this->query['from'][$collection]) {
 						$table = $column_info['entity'];
 						$collection = $collection."_".$column_info['entity'];
@@ -1230,6 +1111,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	}
 
 	function validate($phase = query::PHASE_VALIDATION) {
+		if ($phase == query::PHASE_VALIDATION && !$this->validated) $this->unvalidated = $this->fields;
 		$model = $this->models->get($this->model);
 		foreach ($model->hooks as $column => $hooks) {
 			if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) $hooks['required'] = "";
@@ -1245,8 +1127,8 @@ class query implements IteratorAggregate, ArrayAccess {
 		if (isset($this->fields[$column])) $key = $column;
 		else if (isset($this->fields[$this->model.".".$column])) $key = $this->model.".".$column;
 		else if (isset($this->fields[$this->base_collection.".".$column])) $key = $this->base_collection.".".$column;
-		if (!isset($this->hooks[$column."_".$hook])) $this->hooks[$column."_".$hook] = $this->hook_builder->get("store/".$hook);
-		foreach ($this->hooks[$column."_".$hook] as $hook) {
+		if (!isset($this->hooks["store_".$column."_".$hook])) $this->hooks["store_".$column."_".$hook] = $this->hook_builder->get("store/".$hook);
+		foreach ($this->hooks["store_".$column."_".$hook] as $hook) {
 			//hooks are invoked in 3 phases
 			//0 = validate (before)
 			//1 = store (during)
@@ -1326,7 +1208,7 @@ class query implements IteratorAggregate, ArrayAccess {
 			$this->record_count = $records->rowCount();
 			if ($this->mode == "insert") {
 				$this->insert_id = $this->db->lastInsertId();
-				sb($this->model)->insert_id = $this->insert_id;
+				$this->models->get($this->model)->insert_id = $this->insert_id;
 			}
 			if (!$this->raw) {
 				if ($this->mode == "delete") $this->validate(query::PHASE_AFTER_DELETE);
@@ -1422,7 +1304,6 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * @return pager
 	 */
 	function pager($page, $force = false) {
-		import("pager");
 		if ($force || is_null($this->pager)) {
 			$this->pager = new pager($this->count(), $this->query['limit'], $page);
 			$this->skip($this->pager->start);
@@ -1445,7 +1326,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		else if ($this->mode == "update") {
 			if (isset($this->fields["id"])) return $this->fields["id"];
 			else {
-				$record = query($this->model)->conditions($this)->one();
+				$record = $this->db->query($this->model)->conditions($this)->one();
 				return $record['id'];
 			}
 		} else if ($this->mode == "delete") {
@@ -1494,5 +1375,13 @@ class query implements IteratorAggregate, ArrayAccess {
 		if (!$this->executed) $this->execute();
 		if (!$this->result) return false;
 		unset($this->result[$offset]);
+	}
+
+	public function __call($name, $arguments) {
+		if (!isset($this->hooks["query_".$name])) $this->hooks["query_".$name] = $this->hook_builder->get("query/".$name);
+		foreach ($this->hooks["query_".$name] as $hook) {
+			call_user_func_array(array($hook, "query"), array(&$this, $arguments));
+		}
+		return $this;
 	}
 }

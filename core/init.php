@@ -7,21 +7,11 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
-// define SB_START_TIME to record application start time
-defined('SB_START_TIME') or define('SB_START_TIME',microtime(true));
 
-//define test mode as false
-if (!defined('SB_TEST_MODE')) define('SB_TEST_MODE', false);
-
-// define directory paths and set the include path
+// define base directory
 if (!defined('BASE_DIR')) define('BASE_DIR', str_replace("/core", "", dirname(__FILE__)));
-set_include_path(get_include_path().PATH_SEPARATOR.BASE_DIR);
 
-// define STDOUT and STDIN if they are not defined
-if (!defined('STDOUT')) define("STDOUT", fopen("php://stdout", "wb"));
-if (!defined('STDIN')) define("STDIN", fopen("php://stdin", "r"));
-
-// load configuration
+// load host configuration
 include(BASE_DIR."/etc/Etc.php");
 
 //define default database
@@ -35,29 +25,15 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERRO
 
 include(BASE_DIR."/core/autoload.php");
 
-$container = new Container();
-$container->register('base_directory', BASE_DIR, true);
-$container->register('modules', $modules, true);
-$container->register('database_name', DEFAULT_DATABASE, true);
+$di = include(BASE_DIR."/etc/di.php");
+$locator = new Starbug\Core\ResourceLocator($di['base_directory'], $di['modules']);
+$builder = new DI\ContainerBuilder();
+$builder->addDefinitions($di);
+foreach ($locator->locate("di.php", "etc") as $defs) $builder->addDefinitions($defs);
+$container = $builder->build();
 
-//create locator
-$locator = $container->get('ResourceLocatorInterface');
-
-// global functions
-foreach ($locator->locate("global_functions.php", "") as $global_include) include($global_include);
-
-if (file_exists(BASE_DIR."/var/autoload_classmap.php")) {
-	$loader = $container->get("AutoloaderInterface");
-	$loader->add(include(BASE_DIR."/var/autoload_classmap.php"));
-	$loader->register();
-
-	$context = $container->get("TemplateInterface");
-	$context->assign("container", $container);
-
-	new ErrorHandler($context, defined('SB_CLI') ? "exception-cli" : "exception-html");
-} else {
-	return false;
-}
-return true;
+$container->set('Interop\Container\ContainerInterface', $container);
+$container->set('Starbug\Core\ResourceLocatorInterface', $locator);
+$container->get("Starbug\Core\ErrorHandler")->register();
 
 ?>

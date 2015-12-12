@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class Display {
 
 	public $template = "default";

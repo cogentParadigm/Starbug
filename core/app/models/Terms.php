@@ -3,31 +3,32 @@
  * terms model
  * @ingroup models
  */
-class Terms {
+namespace Starbug\Core;
+class Terms extends TermsModel {
 
 	function create($term) {
 		if (!empty($term['term'])) {
 			$term['term'] = normalize($term['term']);
 			$term['slug'] = strtolower(str_replace(" ", "-", $term['term']));
 		}
-		if(empty($term['id'])) efault($term['position'], '');
+		if(empty($term['id']) && empty($term['position'])) $term['position'] = '';
 		$this->store($term);
 		if ($this->errors('slug') && !empty($term['term'])) foreach ($this->errors("slug", true) as $e) $this->error(str_replace("slug", "term", $e), "term");
 	}
 
 	function delete($term) {
 		try {
-			query("terms")->condition("id", $term['id'])->delete();
+			$this->db->query("terms")->condition("id", $term['id'])->delete();
 		} catch (Exception $e) {
-
+			//TODO: handle this if it's a foreign key constraint
 		}
-		$term = query("terms")->condition("id", $term['id'])->one();
+		$term = $this->db->query("terms")->condition("id", $term['id'])->one();
 		if ($term) $this->error("This term must be detached from all entities before it can be deleted.", "global");
 	}
 
 	function delete_taxonomy($term) {
 		$tax = $term['taxonomy'];
-		$this->remove("taxonomy:$tax");
+		$this->db->query("terms")->condition("taxonomy", $tax)->delete();
 	}
 
 	function query_admin($query, &$ops) {
@@ -51,7 +52,7 @@ class Terms {
 	}
 
 	function query_tree($query, &$ops) {
-		$query->select("terms.*,(SELECT COUNT(*) FROM ".P("terms")." as t WHERE t.parent=terms.id) as children");
+		$query->select("terms.*,(SELECT COUNT(*) FROM ".$this->db->prefix("terms")." as t WHERE t.parent=terms.id) as children");
 		if (!empty($ops['parent'])) $query->condition("parent", $ops['parent']);
 		else $query->condition("terms.parent", 0);
 		$query->sort("terms.position");

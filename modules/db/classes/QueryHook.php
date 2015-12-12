@@ -1,5 +1,12 @@
 <?php
+namespace Starbug\Core;
 class QueryHook {
+	/**
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
+	function query(&$query, $args=array()) {
+		//this hook is invoked when called as a function on a query.
+	}
 	/**
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 */

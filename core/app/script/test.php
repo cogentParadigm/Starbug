@@ -8,7 +8,6 @@
  * @ingroup script
  */
 	$what = array_shift($argv);
-	global $harness;
 	$no_errors = true;
 	$up = true;
 	$unit = true;
@@ -20,14 +19,6 @@
 	if ($what == "-s") {
 		exec("find ".BASE_DIR." -type f -name \*.php -exec php -l {} \;", $output);
 		$what = array_shift($argv);
-	} else if ($what == "-l") { //load layer
-		$unit = false;
-		$next = array_shift($argv);
-		$harness->layer($next);
-	} else if ($what == "-f") { //load fixture
-		$unit = false;
-		$next = array_shift($argv);
-		$harness->fixture($next);
 	} else {
 		exec("git diff-index --name-only HEAD", $diff);
 		foreach ($diff as $file) {

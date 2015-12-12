@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_store_time extends QueryHook {
 	function empty_before_insert(&$query, $column, $argument) {
 		$query->set($column, date("Y-m-d H:i:s"));

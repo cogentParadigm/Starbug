@@ -6,21 +6,24 @@
  * @file modules/emails/src/Mailer.php
  * @author Ali Gangji <ali@neonrain.com>
  */
-
+namespace Starbug\Core;
+use \PHPMailer;
 class Mailer implements MailerInterface {
 
-	private $host;
-	private $username;
-	private $password;
-	private $from_email;
-	private $from_name;
-	private $port;
-	private $secure;
-	private $macro;
+	protected $host;
+	protected $username;
+	protected $password;
+	protected $from_email;
+	protected $from_name;
+	protected $port;
+	protected $secure;
+	protected $macro;
+	protected $db;
 
-	function __construct(SettingsInterface $settings, MacroInterface $macro) {
+	function __construct(SettingsInterface $settings, MacroInterface $macro, DatabaseInterface $db) {
 		$this->settings = $settings;
 		$this->macro = $macro;
+		$this->db = $db;
 		$this->host = $settings->get("email_host");
 		$this->username = $settings->get("email_username");
 		$this->password = $settings->get("email_password");
@@ -52,7 +55,7 @@ class Mailer implements MailerInterface {
 		$data['url_flags'] = 'u';
 		//get template params
 		if (!empty($options['template'])) {
-			$template = query("email_templates")->condition("name", $options['template'])->one();
+			$template = $this->db->query("email_templates")->condition("name", $options['template'])->one();
 			if (!empty($template)) $options = array_merge($template, $options);
 		}
 		//set mailer params

@@ -10,14 +10,9 @@ dependencies = {
 				'sb',
 				'dojo/selector/acme',
 				'dojo/query',
+				'dojo/parser',
 				'bootstrap/Dropdown',
 				'bootstrap/Carousel'
-			]
-		},
-		{
-			name: "../starbug/ide.js",
-			dependencies: [
-				'starbug.IDE.IDE'
 			]
 		}
 	],
@@ -30,9 +25,9 @@ dependencies = {
 		["put-selector", "../put-selector"],
 		["xstyle", "../xstyle"],
 		["dbootstrap", "../dbootstrap"],
-		["bootstrap", "../bootstrap"],
-		["sb", "../../../core/app/public/js/sb"],
-		["starbug", "../../../core/app/public/js/starbug"],
-		["app", "../../../app/public/js"]
+		["bootstrap", "../dojo-bootstrap"],
+		["sb", "../../core/app/public/js/sb"],
+		["starbug", "../../core/app/public/js/starbug"],
+		["app", "../../app/public/js"]
 	]
 }

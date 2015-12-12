@@ -1,5 +1,9 @@
 <?php
+namespace Starbug\Core;
 class hook_form_select extends FormHook {
+	public function __construct(DatabaseInterface $db) {
+		$this->db = $db;
+	}
 	function build($form, &$control, &$field) {
 		$name = $field['name'];
 		$value = $form->get($field['name']);
@@ -22,7 +26,7 @@ class hook_form_select extends FormHook {
 		if (!empty($field['caption'])) {
 			if (!empty($field['from'])) {
 				$list = $options;
-				$options = query($field['from'], $field)->all();
+				$options = $this->db->query($field['from'], $field)->all();
 			} else $list = array();
 			$keys = array();
 			if (!empty($options)) foreach ($options[0] as $k => $v) if (false !== strpos($field['caption'], "%$k%")) $keys[] = $k;
@@ -34,7 +38,8 @@ class hook_form_select extends FormHook {
 			$options = $list; unset($field['caption']); unset($field['value']);
 		} else if (!empty($field['options'])) {
 			$keys = is_array($field['options']) ? $field['options'] : explode(",", $field['options']);
-			$values = (!empty($field['values'])) ? explode(",", $field['values']) : $keys;
+			$values = (!empty($field['values'])) ? $field['values'] : $keys;
+			$values = (is_array($values)) ? $values : explode(",", $field['values']);
 			$options = array();
 			foreach ($keys as $i => $k) $options[$k] = $values[$i];
 			unset($field['options']);

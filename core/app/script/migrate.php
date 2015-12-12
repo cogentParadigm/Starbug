@@ -7,9 +7,12 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup script
  */
+namespace Starbug\Core;
+use \Interop\Container\ContainerInterface;
 class MigrateCommand {
-	function __construct(Schemer $schemer, ContainerInterface $container) {
+	function __construct(Schemer $schemer, DatabaseInterface $db, ContainerInterface $container) {
 		$this->schemer = $schemer;
+		$this->db = $db;
 		$this->container = $container;
 	}
 	public function run($argv) {
@@ -37,10 +40,8 @@ class MigrateCommand {
 		if ((!empty($next)) && (0 !== $next)) {
 			//TODO: add support for changing databases to Database
 			//			and remove the dependency on the container from this file
-			$this->container->register("database_name", $next, true);
-			$db = $this->container->update("DatabaseInterface");
-			$this->schemer->set_database($db);
-			sb()->db = $db;
+			$this->container->set("database_name", $next);
+			$this->db->setDatabase($next, $this->container->get("databases.".$next));
 		}
 
 		//test mode

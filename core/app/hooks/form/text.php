@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_form_text extends FormHook {
 	function build($form, &$control, &$field) {
 		$field['type'] = 'text';

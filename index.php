@@ -16,7 +16,7 @@ include("core/init.php");
  * @ingroup global
  */
 global $request;
-$request = new Request($_SERVER['REQUEST_URI'], array(
+$request = new Starbug\Core\Request($_SERVER['REQUEST_URI'], array(
 	'server' => $_SERVER,
 	'parameters' => $_GET,
 	'data' => $_POST,
@@ -24,12 +24,8 @@ $request = new Request($_SERVER['REQUEST_URI'], array(
 	'cookies' => $_COOKIE,
 	'directory' => Etc::WEBSITE_URL
 ));
-$container->register("Request", $request, true);
-global $sb;
-$sb = $container->get("sb");
-$context->assign("sb", $sb);
-$application = $container->get("ApplicationInterface");
-$sb->start_session();
+$container->set("Starbug\Core\Request", $request);
+$application = $container->get("Starbug\Core\ApplicationInterface");
 $response = $application->handle($request);
 $response->send();
 ?>

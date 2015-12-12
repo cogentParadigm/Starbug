@@ -6,6 +6,7 @@
  * @file core/lib/ConfigInterface.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 /**
  * a simple interface for retrieving settings
  */

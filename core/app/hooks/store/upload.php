@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_store_upload extends QueryHook {
 	var $uploaded = false;
 	protected $request;

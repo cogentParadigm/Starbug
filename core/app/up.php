@@ -196,12 +196,10 @@ $this->table("errors  groups:false",
 	"message  type:text  length:512"
 );
 $this->table("logs  groups:false",
-	"type  type:string",
-	"severity  type:string",
-	"location  type:text  default:",
-	"referrer  type:text  default:",
+	"channel  type:string",
+	"level  type:int",
 	"message  type:text  default:",
-	"data  type:text  default:"
+	"time  type:int"
 );
 //SQL TRANSACTION LOG
 /*
@@ -214,4 +212,16 @@ $this->table("logs  groups:false",
 		"new_value  type:text"
 	);
 */
+$this->table("imports_fields  groups:false",
+	"source  type:text",
+	"destination  type:text",
+	"update_key  type:bool  default:0"
+);
+$this->table("imports  groups:false",
+	"name  type:string  length:128",
+	"model  type:string  length:128",
+	"action  type:string  length:128  default:",
+	"source  type:int  references:files id",
+	"fields  type:imports_fields  table:imports_fields"
+);
 ?>

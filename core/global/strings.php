@@ -32,16 +32,6 @@ function star($str = array()) {
 	return $arr;
 }
 /**
- * prefix a variable with the site prefix
- * @ingroup strings
- * @param string $var the value to prefix
- * @return string the prefixed value
- */
-function P($var) {
-	if (substr($var, 0, 1) == "(") return $var;
-	return sb()->db->prefix.$var;
-}
-/**
  * normalize a string
  * @ingroup strings
  * @param string $raw the raw string
@@ -167,7 +157,6 @@ function filter_html($content, $allowed = array()) {
 	return $purifier->purify($content);
 }
 function load_htmlpurifier($allowed = array()) {
-	import("htmlpurifier");
 	if (empty($allowed)) {
 		$allowed = array(
 			'img[src|alt|title|width|height|style|data-mce-src|data-mce-json]',

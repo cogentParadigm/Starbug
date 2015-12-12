@@ -3,11 +3,17 @@
  * languages model
  * @ingroup models
  */
+namespace Starbug\Intl;
 class Languages {
 
 	/******************************************************************
 	 * Query functions
 	 *****************************************************************/
+
+	function query_admin($query, &$ops) {
+		$query->sort("languages.name");
+		return $query;
+	}
 
 	function query_select($query, &$ops) {
 		if (!empty($ops['id'])) {
@@ -15,6 +21,7 @@ class Languages {
 		}
 		$query->select("languages.id");
 		$query->select("languages.name as label");
+		$query->sort("languages.name");
 		return $query;
 	}
 }

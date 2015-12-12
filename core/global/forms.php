@@ -20,7 +20,7 @@
  */
 function button($label, $ops="") {
 	$ops = star($ops);
-	efault($ops['type'], "submit");
+	if (empty($ops['type'])) $ops['type'] = "submit";
 	$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ")."btn";
 	echo '<button '.html_attributes($ops, false).'>'.$label.'</button>';
 }

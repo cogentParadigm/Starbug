@@ -4,7 +4,7 @@ define(['intern!object','intern/chai!assert','require'], function (registerSuite
 
         'test': function () {
           return this.remote.get(require.toUrl("core/app/public/js/tests/starbug/form/editable.html"))
-                .setFindTimeout(5000)
+                .setFindTimeout(10000)
                 .findById('test1')
                 .getVisibleText().then(function(text) {
                   //verify initial state

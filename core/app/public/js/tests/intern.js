@@ -15,7 +15,7 @@ define({
 	// Note that the `build` capability will be filled in with the current commit ID from the Travis CI environment
 	// automatically
 	capabilities: {
-		'selenium-version': '2.44.0'
+		'selenium-version': '2.45.0'
 	},
 
 	// Browsers to run integration testing against. Note that version numbers must be strings if used with Sauce
@@ -28,12 +28,8 @@ define({
 
 	// Maximum number of simultaneous integration tests that should be executed on the remote WebDriver service
 	maxConcurrency: 3,
-
-	useSauceConnect:false,
-	webdriver:{
-		host:'localhost',
-		port:4444
-	},
+	useSauceConnect: false,
+	tunnel:'SauceLabsTunnel',
 
 
 	// Configuration options for the module loader; any AMD configuration options supported by the specified AMD loader

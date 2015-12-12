@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class FormDisplay extends ItemDisplay {
 	public $type = "form";
 	public $template = "form";
@@ -26,6 +27,7 @@ class FormDisplay extends ItemDisplay {
 
 	function build($options) {
 		$this->options = $options;
+		if (empty($this->model) && !empty($this->options['model'])) $this->model = $this->options['model'];
 		// grab schema
 		if (!empty($this->model) && $this->models->has($this->model)) {
 			$this->schema = $this->models->get($this->model)->hooks;
@@ -115,10 +117,12 @@ class FormDisplay extends ItemDisplay {
 		// grab errors and update schema
 		$this->errors = array();
 		foreach ($this->fields as $name => $field) {
-			$this->schema[$name] = column_info($field['model'], $name);
+			$this->schema[$name] = $this->models->get($field['model'])->column_info($name);
 			$error_key = str_replace(array("][", "[", "]"), array(".", ".", ""), $name);
-			$errors = $this->models->get($this->schema[$name]['entity'])->errors($error_key, true);
-			if (!empty($errors)) $this->errors[$name] = $errors;
+			if (!empty($this->schema[$name]['entity'])) {
+				$errors = $this->models->get($this->schema[$name]['entity'])->errors($error_key, true);
+				if (!empty($errors)) $this->errors[$name] = $errors;
+			}
 		}
 	}
 
@@ -126,14 +130,14 @@ class FormDisplay extends ItemDisplay {
 		parent::render($query);
 	}
 
-	public function errors($key = "", $values = false) {
-		$key = (empty($key)) ? $this->model : $this->model.".".$key;
-		return $this->models->get($this->model)->errors($key, $values);
+	public function errors($key = "", $values = false, $model="") {
+		if (empty($model)) $model = $this->model;
+		return $this->models->get($model)->errors($key, $values);
 	}
 
 	public function error($error, $field = "global", $model="") {
 		if (empty($model)) $model = $this->model;
-		$this->models->get($this->model)->error($error, $field);
+		$this->models->get($model)->error($error, $field);
 	}
 
 	public function success($action) {
@@ -178,7 +182,7 @@ class FormDisplay extends ItemDisplay {
 		$parts = explode("[", $name);
 		if ($this->method == "post") $var = (empty($model)) ? $this->request->data : $this->request->data[$model];
 		else $var = $this->request->parameters;
-		foreach ($parts as $p) $var = $var[rtrim($p, "]")];
+		foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")];
 		if (is_array($var)) return $var;
 		else return stripslashes($var);
 	}
@@ -223,7 +227,7 @@ class FormDisplay extends ItemDisplay {
 		$ops['nolabel'] = (isset($ops['nolabel'])) ? true : false;
 		if (empty($ops['label'])) $ops['label'] = ucwords(str_replace("_", " ", $ops['name']));
 		$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ").$ops['name']."-field";
-		if (!in_array($control, array("checkbox", "radio"))) $ops['class'] .= " form-control";
+		if (in_array($control, array("autocomplete", "category_select", "file_select", "select", "tag_select", "textarea", "file", "input", "password", "text"))) $ops['class'] .= " form-control";
 	}
 
 	function assign($key, $value = null) {
@@ -265,7 +269,7 @@ class FormDisplay extends ItemDisplay {
 	}
 
 	function __call($name, $arguments) {
-		efault($arguments[1], array());
+		if (empty($arguments[1])) $arguments[1] = array();
 		return $this->form_control($name, $arguments[0], $arguments[1]);
 	}
 }

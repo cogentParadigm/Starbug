@@ -1,6 +1,7 @@
 <?php
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
+namespace Starbug\Core;
 class TermsTest extends ModelTest {
 
 	var $model = "terms";
@@ -9,7 +10,7 @@ class TermsTest extends ModelTest {
 		//create
 		$this->action("create", array("term" => "PHP Unit", "taxonomy" => "phpunit"));
 		$id = $this->insert_id;
-		$object = query($this->model)->condition("id", $id)->one();
+		$object = $this->db->query($this->model)->condition("id", $id)->one();
 		//lets verify the explicit values were set
 		$this->assertEquals("phpunit", $object['taxonomy']);
 		$this->assertEquals("PHP Unit", $object['term']);
@@ -17,7 +18,7 @@ class TermsTest extends ModelTest {
 		//update
 		$object["term"] = "Unit Testing";
 		$this->action("create", $object);
-		$updated = query($this->model)->condition("id", $id)->one();
+		$updated = $this->db->query($this->model)->condition("id", $id)->one();
 		$this->assertEquals("phpunit", $updated['taxonomy']);
 		$this->assertEquals("Unit Testing", $updated['term']);
 

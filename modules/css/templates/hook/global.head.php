@@ -6,10 +6,10 @@
 
 		<?php
 			$styles = $this->config->get("info.styles", 'themes/'.$response->theme);
-			efault($styles['screen'], array());
-			efault($styles['print'], array());
-			efault($styles['ie'], array());
-			efault($styles['less'], false);
+			if (empty($styles['screen'])) $styles['screen'] = array();
+			if (empty($styles['print'])) $styles['print'] = array();
+			if (empty($styles['ie'])) $styles['ie'] = array();
+			if (empty($styles['less'])) $styles['less'] = false;
 		?>
 
 		<?php if ($styles['less'] && file_exists(BASE_DIR."/app/themes/".$response->theme."/public/stylesheets/custom-screen.less")) { ?>
@@ -37,6 +37,6 @@
 			<script type="text/javascript">
 				less = { env: 'development' };
 			</script>
-			<script src="<?php echo uri("libraries/less-1.7.0.min.js"); ?>" type="text/javascript"></script>
+			<script src="<?php echo uri("libraries/less/dist/less.min.js"); ?>" type="text/javascript"></script>
 		<?php } ?>
 	<?php } ?>

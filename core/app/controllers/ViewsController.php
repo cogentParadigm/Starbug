@@ -1,5 +1,6 @@
 <?php
-class ViewsController {
+namespace Starbug\Core;
+class ViewsController extends Controller {
 	function show() {
 		$this->render($this->response->path);
 	}

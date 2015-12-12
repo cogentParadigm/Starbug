@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class ClassmapCommand {
 	protected $config;
 	protected $base_directory;
@@ -24,7 +25,7 @@ class ClassmapCommand {
 				$class = substr($file, 0, -4);
 				$data = file_get_contents($base."/".$directory."/".$file);
 				if (false !== strpos($data, 'class '.$class) || false !== strpos($data, 'interface '.$class)) {
-					$classes[$class] = $directory."/".$file;
+					$classes["Starbug\Core\\".$class] = $directory."/".$file;
 				}
 			}
 		}

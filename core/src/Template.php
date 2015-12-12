@@ -6,6 +6,7 @@
  * @file core/src/Template.php
  * @author Ali Gangji <ali@neonrain.com>
  */
+namespace Starbug\Core;
 /**
  * Template class. assign/render style templating system
  */
@@ -54,7 +55,7 @@ class Template implements TemplateInterface {
 		$this->path = ($this->options['all']) ? $found : end($found);
 
 	 if (!is_array($this->path) && !file_exists($this->path)) {
-		 throw new Exception("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
+		 throw new \Exception("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
 	 }
 
 		extract($this->vars);
@@ -119,9 +120,9 @@ class Template implements TemplateInterface {
 	function publish($topic, $tags = array(), $params = array()) {
 		if (!is_array($tags)) $tags = array($tags);
 		array_unshift($tags, "global");
-	 foreach ($tags as $tag) {
-		 $this->render("hook/".$tag.".".$topic, $params, array("all" => true));
-	 }
+		foreach ($tags as $tag) {
+			$this->render("hook/".$tag.".".$topic, $params, array("all" => true));
+		}
 	}
 
 	public function __get($name) {

@@ -7,6 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup ModelTest
  */
+namespace Starbug\Core;
 /**
  * @defgroup ModelTest
  * the base test class for models
@@ -16,29 +17,37 @@
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup Fixture
  */
-class ModelTest extends UnitTest {
+class ModelTest extends \PHPUnit_Framework_TestCase {
 
-	var $model;
-	
+	public $model;
+	protected $db;
+	protected $models;
+
+	function setUp() {
+		global $container;
+		$this->db = $container->get("Starbug\Core\DatabaseInterface");
+		$this->models = $container->get("Starbug\Core\ModelFactoryInterface");
+	}
+
 	function get() {
 		$args = array_merge(array($this->model), func_get_args());
-		return call_user_func_array("get", $args);
+		return call_user_func_array(array($this->db, "get"), $args);
 	}
 
 	function query() {
 		$args = array_merge(array($this->model), func_get_args());
-		return call_user_func_array("query", $args);
+		return call_user_func_array(array($this->db, "query"), $args);
 	}
-	
+
 	function action() {
 		$args = func_get_args();
 		$method = array_shift($args);
-		return call_user_func_array(array(sb($this->model), $method), $args);
+		return call_user_func_array(array($this->models->get($this->model), $method), $args);
 	}
-	
+
 	function __get($name) {
-		return sb($this->model)->$name;
+		return $this->models->get($this->model)->$name;
 	}
-	
+
 }
 ?>

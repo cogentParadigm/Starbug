@@ -1,0 +1,51 @@
+<?php
+namespace Starbug\Core;
+class ImportsForm extends FormDisplay {
+	public $source_keys = array();
+	public $source_values = array();
+	public $model = "imports";
+	public $cancel_url = "admin/imports";
+	function build_display($options) {
+		if ($options['operation'] == "run") {
+			$this->build_run($options);
+		} else {
+			$this->build_default($options);
+		}
+	}
+	function build_default($options) {
+		$source = $this->get("source");
+		$model = $this->get("model");
+		$this->add("name", "model  input_type:select  from:entities  query:model", "action", "source  input_type:file_select");
+		if (!empty($source) && !empty($model)) {
+			$this->add(array("fields",
+				"input_type" => "crud",
+				"data-dojo-props" => array(
+					"get_data" => "{model:'".$model."',  source:'".$source."'}"
+				)
+			));
+		}
+	}
+	function build_run($options) {
+		$this->actions->remove($this->default_action);
+		$source = $this->get("source");
+		$lines = $this->count_source($source);
+		if ($this->success("run")) {
+			$this->add(array("success", "input_type" => "html", "value" => '<p class="alert alert-success">Import completed</p>'));
+		}
+		$this->add(array("table", "input_type" => "template", "value" => "csv-table", "class" => "table table-striped", "csv" => $source));
+		$this->add(array("count", "input_type" => "html", "value" => "<p>".$lines." rows. Press import to begin.</p>"));
+		$this->actions->add("run  label:Import  class:btn-success");
+	}
+	function count_source($id) {
+		$file = query("files")->condition("id", $id)->one();
+		$$lines = 0;
+		if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) {
+			while (!feof($handle)) {
+				if (fgets($handle)) $lines++;
+			}
+		}
+		fclose($handle);
+		return $lines-1;
+	}
+}
+?>

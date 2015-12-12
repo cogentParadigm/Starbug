@@ -7,18 +7,18 @@
 		$mpath = "term_path";
 	}
 
-	efault($attributes, array());
+	if (empty($attributes)) $attributes = array();
 	$attributes['class'] = (empty($attributes['class']) ? "" : $attributes['class']." ")."nav";
 
 	if ($sortable) $attributes['class'] .= " sortable";
 
-	if ($menu_type == "taxonomy") $records = query("terms", "where:terms.taxonomy=?", array($taxonomy))->sort("terms.term_path ASC, terms.position ASC");
-	else $records = query("menus<uris", "select:menus.*,uris.title,uris.path,uris.breadcrumb  where:menus.menu=?", array($menu))->sort("menus.menu_path ASC, menus.position ASC");
+	if ($menu_type == "taxonomy") $records = $this->db->query("terms", "where:terms.taxonomy=?", array($taxonomy))->sort("terms.term_path ASC, terms.position ASC");
+	else $records = $this->db->query("menus", "select:menus.*,menus.uris_id.title,menus.uris_id.path,menus.uris_id.breadcrumb  where:menus.menu=?", array($menu))->sort("menus.menu_path ASC, menus.position ASC");
 	$links = array();
 
 	$forbidden = array();
 	foreach ($records as $link) {
-		if ($forbidden[$link['parent']] || (!empty($link['collective']) && !(userinfo("memberships") & $link['collective']))) {
+		if ($forbidden[$link['parent']]) {
 			$forbidden[$link['id']] = true;
 			continue;
 		}

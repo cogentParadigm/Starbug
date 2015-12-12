@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_store_length extends QueryHook {
 	protected $models;
 	function __construct(ModelFactoryInterface $models) {

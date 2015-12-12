@@ -1,5 +1,7 @@
 <?php
-class AdminMediaController {
+namespace Starbug\App;
+use Starbug\Core\Controller;
+class AdminMediaController extends Controller {
 	public $routes = array(
 		'update' => '{id}'
 	);

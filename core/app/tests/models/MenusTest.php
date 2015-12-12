@@ -1,6 +1,7 @@
 <?php
 # Copyright (C) 2008-2010 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
+namespace Starbug\Core;
 class MenusTest extends ModelTest {
 
 	var $model = "menus";
@@ -9,7 +10,7 @@ class MenusTest extends ModelTest {
 		//create
 		$this->action("create", array("content" => "PHP Unit", "menu" => "phpunit"));
 		$id = $this->insert_id;
-		$object = query($this->model)->condition("id", $id)->one();
+		$object = $this->db->query($this->model)->condition("id", $id)->one();
 		//lets verify the explicit values were set
 		$this->assertEquals("phpunit", $object['menu']);
 		$this->assertEquals("PHP Unit", $object['content']);
@@ -17,7 +18,7 @@ class MenusTest extends ModelTest {
 		//update
 		$object["content"] = "Unit Testing";
 		$this->action("create", $object);
-		$updated = query($this->model)->condition("id", $id)->one();
+		$updated = $this->db->query($this->model)->condition("id", $id)->one();
 		$this->assertEquals("phpunit", $updated['menu']);
 		$this->assertEquals("Unit Testing", $updated['content']);
 

@@ -6,27 +6,39 @@
 * @file modules/db/src/QueryBuilderFactory.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
+use \Interop\Container\ContainerInterface;
 /**
 * an implementation of ModelFactoryInterface
 */
 class ModelFactory implements ModelFactoryInterface {
-	protected $inheritance;
+	protected $locator;
 	protected $container;
 	protected $objects;
-	protected $validation;
-	public function __construct(InheritanceBuilderInterface $inheritance, ContainerInterface $container, $base_directory) {
-		$this->inheritance = $inheritance;
+	public function __construct(ResourceLocatorInterface $locator, ContainerInterface $container, $base_directory) {
+		$this->locator = $locator;
 		$this->container = $container;
 		$this->base_directory = $base_directory;
 		$this->objects = array();
 	}
 	public function has($collection) {
-		return (($this->objects[$collection]) || (file_exists($this->base_directory."/var/models/".ucwords($collection)."Model.php")));
+		return (!empty($collection) && (($this->objects[$collection]) || (file_exists($this->base_directory."/var/models/".ucwords($collection)."Model.php"))));
 	}
 	public function get($collection) {
 		if (!isset($this->objects[$collection])) {
-			$class = $this->inheritance->build("Model", "models/".ucwords($collection), "Table");
-			$this->objects[$collection] = $this->container->get($class);
+			$class = ucwords($collection);
+			$locations = $this->locator->locate($class.".php", "models");
+			end($locations);
+			$namespace = key($locations);
+			if (empty($namespace)) {
+				$namespace = "Starbug\Core";
+				if ($this->has($collection)) {
+					$class .= "Model";
+				} else {
+					$class = "Table";
+				}
+			}
+			$this->objects[$collection] = $this->container->get($namespace."\\".$class);
 		}
 		//return the saved object
 		return $this->objects[$collection];

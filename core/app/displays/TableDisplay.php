@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class TableDisplay extends ItemDisplay {
 	var $type = "table";
 	var $template = "table";

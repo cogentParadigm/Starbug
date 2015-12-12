@@ -6,14 +6,14 @@
 	$file = array();
 	foreach ($request->files['uploadedfiles'] as $key => $arr) $file[$key] = $arr[0];
 	if (!empty($file['category'])) $record['category'] = $file['category'];
-	$moved = sb("files")->upload($record, $file);
+	$moved = $this->models->get("files")->upload($record, $file);
 	if ($moved) {
-		$id = sb('files')->insert_id;
+		$id = $this->models->get('files')->insert_id;
 		$_post['id'] = $id;
 		$_post['original_name'] = str_replace(" ", "_", $file['name']);
 		$_post['name'] = $id."_".$_post['original_name'];
 		$_post['file'] = "app/public/uploads/".$_post['name'];
-		$_post['mime_type'] = sb("files")->get_mime($_post['file']);
+		$_post['mime_type'] = $this->models->get("files")->get_mime($_post['file']);
 		try{
 			list($width, $height) = getimagesize($_post['file']);
 			$image = true;
@@ -28,7 +28,7 @@
 		$_post['size'] = filesize($_post['file']);
 		$_post['image'] = $image;
 		$_post['statuses'] = "published";
-		$_post['owner'] = userinfo("id");
+		$_post['owner'] = $this->user->userinfo("id");
 		$htmldata[] = $_post;
 	} else {
 		$htmldata[] = array("ERROR" => "File could not be moved: ".$file['name']);

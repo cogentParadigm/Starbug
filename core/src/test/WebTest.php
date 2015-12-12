@@ -12,43 +12,22 @@
  * the base test class for models
  * @ingroup test
  */
+namespace Starbug\Core;
+use \Etc;
 /**
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup Fixture
  */
-class WebTest extends PHPUnit_Extensions_Selenium2TestCase {
-
-
-	var $fixtures = array();
-	var $layers = array();
-	
-	var $harness;
+class WebTest extends \PHPUnit_Extensions_Selenium2TestCase {
 
 	function setUp() {
-		global $harness;
-		$this->harness = $harness;
-		foreach ($this->layers as $layer) {
-			$this->harness->layer($layer);
-		}
-		foreach ($this->fixtures as $fixture) {
-			$this->harness->fixture($fixture);
-		}
 		$this->setBrowser('chrome');
 		$this->setBrowserUrl(Etc::DEFAULT_HOST.Etc::WEBSITE_URL);
-	}
-
-	function tearDown() {
-		foreach ($this->layers as $layer) {
-			$this->harness->layer($layer, false);
-		}
-		foreach ($this->fixtures as $fixture) {
-			$this->harness->fixture($fixture, false);
-		}
 	}
 
 	public function get($url) {
 		$this->url(Etc::DEFAULT_HOST.Etc::WEBSITE_URL.$url);
 	}
-	
+
 }
 ?>

@@ -1,13 +1,15 @@
 <?php
+namespace Starbug\Core;
 class hook_store_terms extends QueryHook {
-	protected $taxonomy;
-	function __construct(TaxonomyInterface $taxonomy) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, TaxonomyInterface $taxonomy) {
+		$this->db = $db;
+		$this->models = $models;
 		$this->taxonomy = $taxonomy;
 	}
 	function after_store(&$query, $key, $value, $column, $argument) {
 		$name = $query->model;
 		$id = $query->getId();
-		$category_column_info = sb($name)->hooks[$column];
+		$category_column_info = $this->models->get($name)->hooks[$column];
 		if (empty($category_column_info['taxonomy'])) $category_column_info['taxonomy'] = $name."_".$column;
 		$tags = empty($category_column_info['table']) ? $name."_".$column : $category_column_info['table'];
 		$mentioned_tags = array();
@@ -29,7 +31,7 @@ class hook_store_terms extends QueryHook {
 			}
 		}
 		if ($remove_unmentioned_tags) {
-			$query = query($tags)->condition($name."_id", $id);
+			$query = $this->db->query($tags)->condition($name."_id", $id);
 			if (!empty($mentioned_tags)) {
 				$query->condition($column."_id", $mentioned_tags, "!=")
 					->condition($column."_id.slug", $mentioned_tags, "!=")

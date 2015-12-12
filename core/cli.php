@@ -9,18 +9,14 @@
  */
 	if (!defined("SB_CLI")) define("SB_CLI", true);
 
-$result = include("init.php");
+include("init.php");
 
 global $request;
-$request = new Request("/", array(
+$request = new Starbug\Core\Request("/", array(
 	'server' => $_SERVER,
 	'directory' => Etc::WEBSITE_URL
 ));
-$container->register("Request", $request, true);
-if ($result) {
-	global $sb;
-	$sb = $container->get("sb");
-	$context->assign("sb", $sb);
-	$sb->user = array("groups" => array("root"));
-}
+$container->set("Starbug\Core\Request", $request);
+$user = $container->get("Starbug\Core\UserInterface");
+$user->setUser(array("id" => "NULL", "groups" => array("root")));
 ?>

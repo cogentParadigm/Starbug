@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_form_multiple_category_select extends FormHook {
 	protected $taxonomy;
 	function __construct(TaxonomyInterface $taxonomy) {

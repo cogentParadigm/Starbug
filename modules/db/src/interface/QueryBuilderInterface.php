@@ -6,6 +6,10 @@
 * @file modules/db/src/interface/QueryBuilderFactoryInterface.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
+
+use \IteratorAggregate;
+use \ArrayAccess;
 /**
 * query builder factory interface
 */
@@ -248,8 +252,6 @@ interface QueryBuilderInterface extends IteratorAggregate, ArrayAccess {
 	 * conditions: ((name LIKE '%beef%' OR description LIKE '%beef%') and (name LIKE '%broccoli%' OR description LIKE '%broccoli%'))
 	 */
 	function search($keywords = "", $fields = "");
-
-	function action($action, $collection = "");
 
 	/**************************************************************
 	 * query compiling functions

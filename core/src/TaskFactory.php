@@ -6,18 +6,24 @@
 * @file core/src/TaskFactory.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
+use \Interop\Container\ContainerInterface;
 /**
 * an implementation of TaskFactoryInterface
 */
 class TaskFactory implements TaskFactoryInterface {
 	protected $container;
+	protected $locator;
 	protected $tasks = array();
-	public function __construct(ContainerInterface $container) {
+	public function __construct(ContainerInterface $container, ResourceLocatorInterface $locator) {
 		$this->container = $container;
+		$this->locator = $locator;
 	}
 	public function get($task) {
 		if (!isset($this->tasks[$task])) {
-			$this->tasks[$task] = $this->container->build(ucwords($task)."Task");
+			$class = ucwords($task)."Task";
+			$namespace = end($this->locator->get_namespaces($class, "tasks"));
+			$this->tasks[$task] = $this->container->build($namespace.$class);
 		}
 		return $this->tasks[$task];
 	}

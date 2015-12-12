@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class DisplaysHelper {
 	public function __construct(DisplayFactoryInterface $displays) {
 		$this->displays = $displays;

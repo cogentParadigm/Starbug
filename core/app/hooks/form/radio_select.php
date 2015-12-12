@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class hook_form_radio_select extends FormHook {
 	function __construct(ModelFactoryInterface $models) {
 		$this->models = $models;

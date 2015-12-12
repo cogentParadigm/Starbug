@@ -6,6 +6,10 @@
 * @file modules/db/src/Database.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
+
+use \PDO;
+use \Etc;
 /**
 * DatabaseInterface cannonical implementation
 */
@@ -66,17 +70,25 @@ class Database implements DatabaseInterface {
 	protected $models;
 	protected $hooks;
 
-	public function __construct(ModelFactoryInterface $models, HookFactoryInterface $hooks, ConfigInterface $config, $database_name) {
+	public function __construct(PDO $pdo, ModelFactoryInterface $models, HookFactoryInterface $hooks, ConfigInterface $config, $database_name) {
 		$this->models = $models;
 		$this->hooks = $hooks;
 		$this->config = $config;
 		$params = $config->get("db/".$database_name);
-		$this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
+		$this->pdo = $pdo;
 		$this->set_debug(false);
 		$this->prefix = $params['prefix'];
 		$this->database_name = $params['db'];
 		if (defined('Etc::TIME_ZONE')) $this->exec("SET time_zone='".Etc::TIME_ZONE."'");
 		$this->queue = new QueryQueue();
+	}
+
+	public function setDatabase($name, PDO $connection) {
+		$this->pdo = $connection;
+		$params = $this->config->get("db/".$name);
+		$this->database_name = $params['db'];
+		$this->prefix = $params['prefix'];
+		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
 	public function set_debug($debug) {
@@ -148,7 +160,7 @@ class Database implements DatabaseInterface {
 		if (!empty($args['params'])) $replacements = $args['params'];
 
 		//create query object
-		$query = new query($this, $this->config, $this->models, $this->hooks, $froms);
+		$query = new query($this, $this->models, $this->hooks, $froms);
 
 		//call functions
 		foreach ($args as $k => $v) {
@@ -186,7 +198,7 @@ class Database implements DatabaseInterface {
 	function queue($name, $fields = array(), $from = "auto", $unshift = false) {
 		if (!is_array($fields)) $fields = star($fields);
 
-		$query = new query($this, $this->config, $this->models, $this->hooks, $name);
+		$query = new query($this, $this->models, $this->hooks, $name);
 		foreach ($fields as $col => $value) $query->set($col, $value);
 
 		if ($from === "auto" && !empty($fields['id'])) $from = array("id" => $fields['id']);
@@ -199,7 +211,7 @@ class Database implements DatabaseInterface {
 			$query->mode("insert");
 		}
 
-		if (sb($name)->store_on_errors) $query->store_on_errors = true;
+		if ($this->models->get($name)->store_on_errors) $query->store_on_errors = true;
 
 		if ($unshift) $this->queue->unshift($query);
 		else $this->queue->push($query);
@@ -219,10 +231,15 @@ class Database implements DatabaseInterface {
 	*/
 	function remove($from, $where) {
 		if (!empty($where)) {
-			$del = new query($this, $this->config, $this->models, $this->hooks, $from);
+			$del = new query($this, $this->models, $this->hooks, $from);
 			$this->record_count = $del->condition(star($where))->delete();
 			return $this->record_count;
 		}
+	}
+
+	function prefix($table) {
+		if (substr($table, 0, 1) == "(") return $table;
+		return $this->prefix.$table;
 	}
 
 	public function errors($key = "", $values = false) {
@@ -239,7 +256,8 @@ class Database implements DatabaseInterface {
 
 	public function error($error, $field = "global", $scope = "global") {
 		$this->errors[$scope][$field][] = $error;
-		//$this->logger->info("{model}::{action} - {field}:{message}", array("model" => $model, "action" => $this->request->data['action'][$model], "field" => $field, "message" => $error));
+		$statement = $this->prepare("INSERT INTO ".$this->prefix."errors (type, field, message, action, created, modified) VALUES (?, ?, ?, ?, NOW(), NOW())");
+		$statement->execute(array($scope, $field, $error, $this->models->get($scope)->action));
 	}
 
 	public function success($model, $action) {

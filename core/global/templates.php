@@ -7,6 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup templates
  */
+use Starbug\Core\Renderable;
 /**
  * @defgroup templates
  * global functions

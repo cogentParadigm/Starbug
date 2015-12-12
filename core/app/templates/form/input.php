@@ -1,11 +1,11 @@
 <?php if ($type == "file") { ?>
 	<?php
 		$files = "[]";
-		$column_info = column_info($display->model, $field);
+		$column_info = $this->models->get($display->model)->column_info($field);
 		$records = array();
 		if (!empty($value)) {
 			if (!is_array($value)) $value = explode(",", preg_replace("/[,\s]+/", ",", $value));
-			$records = query("files")->condition("id", $value)->sort("FIELD(id, '".implode("','", $value)."')")->all();
+			$records = $this->db->query("files")->condition("id", $value)->sort("FIELD(id, '".implode("','", $value)."')")->all();
 		}
 		if (count($records)) $files = str_replace('"', "'", json_encode($records));
 		$attrs = 'data-dojo-type="starbug/form/FileSelect" data-dojo-props="input_name:\''.$attributes['name'].'\', files:'.$files;

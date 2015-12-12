@@ -6,6 +6,8 @@
 * @file core/src/DisplayFactory.php
 * @author Ali Gangji <ali@neonrain.com>
 */
+namespace Starbug\Core;
+use \Interop\Container\ContainerInterface;
 /**
 * an implementation of DisplayFactoryInterface
 */
@@ -21,7 +23,7 @@ class HookFactory implements HookFactoryInterface {
 		$classes = $this->hooks->build($hook);
 		$hooks = array();
 		foreach ($classes as $class) {
-			$hooks[] = $this->container->build($class);
+			$hooks[] = $this->container->make($class);
 		}
 		return $hooks;
 	}

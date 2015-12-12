@@ -19,7 +19,7 @@ class <?php echo ucwords($name); ?> {
   }
 
   function query_filters($action, $query, $ops) {
-      if (!logged_in("root") && !logged_in("admin")) $query->action("read");
+      if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
       return $query;
   }
 
@@ -29,7 +29,7 @@ class <?php echo ucwords($name); ?> {
 
 	function display_admin($display, $ops) {
 	<?php if (!empty($base)) { ?>
-    sb($this->base)->display_admin($display, $ops);
+    $this->models->get($this->base)->display_admin($display, $ops);
   <?php } else { ?>
     $display->add("id");
   <?php } ?>

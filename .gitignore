@@ -3,3 +3,6 @@ app/public/uploads
 etc/Host.php
 */etc/db
 var
+vendor
+node_modules
+libraries

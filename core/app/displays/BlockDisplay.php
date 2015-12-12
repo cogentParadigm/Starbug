@@ -1,4 +1,5 @@
 <?php
+namespace Starbug\Core;
 class BlockDisplay extends Display {
 	public $template = "block";
 	protected $macro;

@@ -8,7 +8,7 @@ define([
 
         'find': function () {
           return this.remote.get(require.toUrl("core/app/public/js/tests/starbug/form/Autocomplete.html"))
-                .setFindTimeout(5000)
+                .setFindTimeout(10000)
                 .findById('test1')
                 .click()
                 .pressKeys('First Item')

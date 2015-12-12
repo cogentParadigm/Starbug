@@ -1,6 +1,6 @@
 <div id="top-right" class="nav">
 	<a href="<?php echo uri("logout"); ?>" class="small right blue button">Logout</a>
-	<a href="#"><?php echo userinfo("username"); ?></a>
+	<a href="#"><?php echo $this->user->userinfo("first_name")." ".$this->user->userinfo("last_name"); ?></a>
 </div>
 <a id="logo" href="./"><span><?php echo $this->settings->get("site_name"); ?></span></a>
 <ul id="tabs" class="nav nav-tabs">

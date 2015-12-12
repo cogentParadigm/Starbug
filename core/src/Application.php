@@ -7,6 +7,7 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
+namespace Starbug\Core;
 class Application implements ApplicationInterface {
 
 	protected $controllers;
@@ -15,7 +16,10 @@ class Application implements ApplicationInterface {
 	protected $request;
 	protected $response;
 	protected $config;
+	protected $user;
 	protected $locator;
+
+	use \Psr\Log\LoggerAwareTrait;
 
 	/**
 	 * constructor.
@@ -26,6 +30,7 @@ class Application implements ApplicationInterface {
 		RouterInterface $router,
 		SettingsInterface $settings,
 		ResourceLocatorInterface $locator,
+		UserInterface $user,
 		Response $response
 	) {
 		$this->controllers = $controllers;
@@ -33,11 +38,19 @@ class Application implements ApplicationInterface {
 		$this->router = $router;
 		$this->settings = $settings;
 		$this->locator = $locator;
+		$this->user = $user;
 		$this->response = $response;
 	}
 
 	public function handle(Request $request) {
-		if (empty($request->path)) $request->path = $this->settings->get("default_path");
+		$this->user->startSession();
+
+		if (empty($request->path)) {
+			$request->path = $this->settings->get("default_path");
+			$this->logger->addInfo("Request path is empty. Routing to default path: ".$request->path);
+		} else {
+			$this->logger->addInfo("Request path - ".$request->path);
+		}
 
 		$this->response->assign("request", $request);
 		$route = $this->router->route($request);
@@ -50,6 +63,7 @@ class Application implements ApplicationInterface {
 		foreach ($route as $k => $v) {
 			$this->response->{$k} = $v;
 		}
+		$this->logger->addInfo("Loading ".$route['controller'].' -> '.$route['action']);
 		$controller = $this->controllers->get($route['controller']);
 
 		if (isset($controller->routes[$route['action']])) {
@@ -76,6 +90,7 @@ class Application implements ApplicationInterface {
 	* @param string $value the function name
 	*/
 	protected function post_action($key, $value, $post = array()) {
+		$this->logger->addInfo("Attempting action ".$key.' -> '.$value);
 		if ($object = $this->models->get($key)) {
 			return $object->post($value, $post);
 		}
@@ -87,7 +102,7 @@ class Application implements ApplicationInterface {
 	protected function check_post($post, $cookies) {
 		if (!empty($post['action']) && is_array($post['action'])) {
 			//validate csrf token for authenticated requests
-			if (logged_in()) {
+			if ($this->user->loggedIn()) {
 				$validated = false;
 				if (!empty($cookies['oid']) && !empty($post['oid']) && $cookies['oid'] === $post['oid']) $validated = true;
 				if (true !== $validated) {
