@@ -37,6 +37,6 @@
 			<script type="text/javascript">
 				less = { env: 'development' };
 			</script>
-			<script src="<?php echo uri("libraries/less-1.7.0.min.js"); ?>" type="text/javascript"></script>
+			<script src="<?php echo uri("libraries/less/dist/less.min.js"); ?>" type="text/javascript"></script>
 		<?php } ?>
 	<?php } ?>
