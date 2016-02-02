@@ -14,8 +14,8 @@ class AdminUrisController extends Controller {
 		$this->assign("form", "uris");
 		$this->assign("cancel_url", "admin/uris");
 		if ($this->db->success("uris", "create") || $this->db->success("uris", "update")) {
-			if ($this->request->data['operation'] == "save") redirect(uri("admin/uris", "u"));
-			else if ($this->request->data['operation'] == "save_add_another") $this->request->data = array();
+			if ($this->request->getPost('operation') == "save") redirect(uri("admin/uris", "u"));
+			else if ($this->request->getPost('operation') == "save_add_another") $this->request->setPost(array());
 		}
 	}
 	function default_action() {

@@ -2,9 +2,10 @@
 	//file_put_contents(BASE_DIR."/files.log", json_encode($request->files));
 	$_post = array();
 	$htmldata = array();
-	$record = array("filename" => "", "mime_type" => "", "caption" => "uploaded file", "category" => $request->data['category']);
+	$record = array("filename" => "", "mime_type" => "", "caption" => "uploaded file", "category" => $request->getPost('category'));
 	$file = array();
-	foreach ($request->files['uploadedfiles'] as $key => $arr) $file[$key] = $arr[0];
+	$files = $request->getFiles();
+	foreach ($files['uploadedfiles'] as $key => $arr) $file[$key] = $arr[0];
 	if (!empty($file['category'])) $record['category'] = $file['category'];
 	$moved = $this->models->get("files")->upload($record, $file);
 	if ($moved) {

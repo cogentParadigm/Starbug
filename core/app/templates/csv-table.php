@@ -9,7 +9,7 @@
 	fclose($handle);
 	$lines--;
 	$size = 20;
-	$pager = new \Starbug\Core\pager($lines, $size, intval($this->request->parameters['pg']));
+	$pager = new \Starbug\Core\pager($lines, $size, intval($this->request->getParameter('pg')));
 	$line = 0;
 ?>
 <?php if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) { $head = fgetcsv($handle); ?>
@@ -33,9 +33,9 @@
 </table>
 <?php } ?>
 <?php
-	$vars = $this->request->parameters;
+	$vars = $this->request->getParameters();
 	unset($vars['pg']);
-	$prefix = uri($this->request->path)."?";
+	$prefix = uri($this->request->getPath())."?";
 	if (!empty($vars)) $prefix .= http_build_query($vars).'&';
 	$prefix .= "pg=";
 

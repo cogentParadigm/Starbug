@@ -16,7 +16,7 @@ class AdminTaxonomiesController extends Controller {
 		$this->assign("model", "terms");
 		$this->assign("form", "terms");
 		$this->assign("cancel_url", "admin/taxonomies");
-		if (!empty($this->request->parameters['taxonomy'])) $this->assign("taxonomy", normalize($this->request->parameters['taxonomy']));
+		if ($this->request->hasParameter('taxonomy')) $this->assign("taxonomy", normalize($this->request->getParameter('taxonomy')));
 	}
 	function default_action() {
 		$this->render("admin/list");
@@ -26,7 +26,7 @@ class AdminTaxonomiesController extends Controller {
 		$this->create();
 	}
 	function create() {
-		if ($this->db->success("terms", "create") && $this->request->format != "xhr") {
+		if ($this->db->success("terms", "create") && $this->request->getFormat() != "xhr") {
 			$term = $this->db->get("terms", $this->terms->insert_id);
 			redirect(uri("admin/taxonomies/taxonomy/".$term['taxonomy']));
 		} else $this->render("admin/create");

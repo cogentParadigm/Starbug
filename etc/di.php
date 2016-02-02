@@ -2,7 +2,6 @@
 use \Interop\Container\ContainerInterface;
 use \Monolog\Handler\StreamHandler;
 use \Monolog\Handler\PHPConsoleHandler;
-use \Etc;
 return array(
 	'base_directory' => BASE_DIR,
 	'modules' => array(

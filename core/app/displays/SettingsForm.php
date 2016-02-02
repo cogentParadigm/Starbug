@@ -6,10 +6,10 @@ class SettingsForm extends FormDisplay {
 	public $operation = "update";
 	function build_display($options) {
 		$settings = query("settings")->select("settings.*,category.term,category.slug")->sort("settings_category.term_path, settings_category.position");
-		$this->request->data['settings'] = array();
+		$this->request->setPost('settings', array());
 		$last = "";
 		foreach ($settings as $idx => $setting) {
-			$this->request->data['settings'][$setting['name']] = $setting['value'];
+			$this->request->setPost('settings', $setting['name'], $setting['value']);
 			if ($setting['term'] != $last) {
 				if ($idx > 0) {
 					//button("Save");

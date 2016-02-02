@@ -8,7 +8,7 @@
 	<div class="panel-body">
 <?php
 	if (empty($action)) $action = "create";
-	$this->displays->render(ucwords($model)."Form", array_merge($this->request->parameters, array("action" => $action)));
+	$this->displays->render(ucwords($model)."Form", array_merge($this->request->getParameters(), array("action" => $action)));
 ?>
 	</div>
 </div>

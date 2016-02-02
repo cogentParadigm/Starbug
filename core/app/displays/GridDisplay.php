@@ -10,7 +10,7 @@ class GridDisplay extends ItemDisplay {
 	);
 	protected $request;
 
-	function __construct(TemplateInterface $output, Response $response, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, Request $request) {
+	function __construct(TemplateInterface $output, Response $response, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, RequestInterface $request) {
 		$this->output = $output;
 		$this->response = $response;
 		$this->models = $models;
@@ -97,7 +97,7 @@ class GridDisplay extends ItemDisplay {
 		//convert from array to string
 		$this->attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($this->attributes['data-dojo-props'])), '{}');
 		//add query params
-		$params = array_merge($this->request->parameters, $this->options);
+		$params = array_merge($this->request->getParameters(), $this->options);
 		foreach ($params as $key => $value) if (is_array($value)) unset($params[$key]);
 		if (!empty($params)) {
 			$this->attributes['data-dojo-props'] .= ', query: {';

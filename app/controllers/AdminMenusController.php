@@ -19,7 +19,7 @@ class AdminMenusController extends Controller {
 		$this->render("admin/list");
 	}
 	function create() {
-		$this->assign("menu", $this->request->parameters['menu']);
+		$this->assign("menu", $this->request->getParameter('menu'));
 		if ($this->db->success("menus", "create")) {
 			$menu = $this->db->get("menus", $this->menus->insert_id);
 			redirect(uri("admin/menus/menu/".$menu['menu']));

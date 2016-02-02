@@ -8,7 +8,7 @@
 		<?php } ?>
 	<?php } ?>
 <?php if ($display->method == "post") { ?>
-	<input name="oid" type="hidden" value="<?php echo filter_string($request->cookies['oid']); ?>"/>
+	<input name="oid" type="hidden" value="<?php echo filter_string($request->getCookie('oid')); ?>"/>
 <?php } ?>
 <?php $item_id = $display->get("id"); if (!empty($item_id)) { ?>
 	<input id="id" name="<?php echo $display->model; ?>[id]" type="hidden" value="<?php echo filter_string($display->get('id')); ?>" />

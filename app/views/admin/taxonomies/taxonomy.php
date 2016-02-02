@@ -1,5 +1,5 @@
 <?php if ($this->db->success("terms", "create")) { ?>
-	<div class="alert alert-success">Term <?php echo (empty($this->request->data['terms']['id'])) ? "created" : "updated"; ?> successfully</div>
+	<div class="alert alert-success">Term saved successfully</div>
 <?php } ?>
 <div class="panel panel-default">
 	<div class="panel-heading"><strong>Update Taxonomy '<?php echo $taxonomy; ?>'</strong></div>

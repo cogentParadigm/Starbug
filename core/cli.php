@@ -11,12 +11,10 @@
 
 include("init.php");
 
-global $request;
-$request = new Starbug\Core\Request("/", array(
-	'server' => $_SERVER,
-	'directory' => Etc::WEBSITE_URL
-));
-$container->set("Starbug\Core\Request", $request);
+$url = $container->make("Starbug\Core\URLInterface", array('base_directory' => Etc::WEBSITE_URL));
+$request = $container->make("Starbug\Core\RequestInterface", array('url' => $url));
+$request->setHeaders($_SERVER);
+$container->set("Starbug\Core\RequestInterface", $request);
 $user = $container->get("Starbug\Core\UserInterface");
 $user->setUser(array("id" => "NULL", "groups" => array("root")));
 ?>

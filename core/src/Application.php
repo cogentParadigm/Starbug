@@ -42,14 +42,14 @@ class Application implements ApplicationInterface {
 		$this->response = $response;
 	}
 
-	public function handle(Request $request) {
+	public function handle(RequestInterface $request) {
 		$this->user->startSession();
 
-		if (empty($request->path)) {
-			$request->path = $this->settings->get("default_path");
-			$this->logger->addInfo("Request path is empty. Routing to default path: ".$request->path);
+		if (empty($request->getPath())) {
+			$request->setPath($this->settings->get("default_path"));
+			$this->logger->addInfo("Request path is empty. Routing to default path: ".$request->getPath());
 		} else {
-			$this->logger->addInfo("Request path - ".$request->path);
+			$this->logger->addInfo("Request path - ".$request->getPath());
 		}
 
 		$this->response->assign("request", $request);
@@ -57,11 +57,11 @@ class Application implements ApplicationInterface {
 
 		if (empty($route['theme'])) $route['theme'] = $this->settings->get("theme");
 		if (empty($route['layout'])) $route['layout'] = empty($route['type']) ? "views" : $route['type'];
-		if (empty($route['template'])) $route['template'] = $request->format;
+		if (empty($route['template'])) $route['template'] = $request->getFormat();
 		$this->locator->set("theme", "app/themes/".$route['theme']);
 
 		foreach ($route as $k => $v) {
-			$this->response->{$k} = $v;
+			if (!empty($v)) $this->response->{$k} = $v;
 		}
 		$this->logger->addInfo("Loading ".$route['controller'].' -> '.$route['action']);
 		$controller = $this->controllers->get($route['controller']);
@@ -78,7 +78,7 @@ class Application implements ApplicationInterface {
 		if (empty($route['arguments'])) $route['arguments'] = array();
 
 		$controller->start($request, $this->response);
-		$permitted = $this->check_post($request->data, $request->cookies);
+		$permitted = $this->check_post($request->getPost(), $request->getCookies());
 		if ($permitted) $controller->action($route['action'], $route['arguments']);
 		else $controller->forbidden();
 		$this->response = $controller->finish();

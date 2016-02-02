@@ -28,10 +28,10 @@ REGEX;
 	 *										- action: the action name
 	 *										- arguments: the arguments
 	 */
-	public function route(Request $request) {
+	public function route(RequestInterface $request) {
 		$route = array("controller" => "main", "action" => "missing", "arguments" => array());
 
-		$paths = $this->expand($request->path);
+		$paths = $this->expand($request->getPath());
 		$query = $this->db->query("uris")->condition("path", $paths)->select("id");
 		$query->sort("FIELD(path, '".implode("', '", $paths)."')");
 
@@ -52,7 +52,7 @@ REGEX;
 		}
 
 		if (!empty($route['controller']) && empty($route['action'])) {
-			$path = substr($request->path, strlen($route['path']) + 1);
+			$path = substr($request->getPath(), strlen($route['path']) + 1);
 			if (!empty($path)) {
 				$parts = explode("/", $path);
 				$route['action'] = $parts[0];
@@ -64,7 +64,7 @@ REGEX;
 	public function validate(Request $request, $route, $template) {
 		$data = $this->parse($template);
 		list($regex, $variables) = $this->build_regex($data);
-		$path = trim(str_replace($route['path'], "", $request->path), '/');
+		$path = trim(str_replace($route['path'], "", $request->getPath()), '/');
 		if (!preg_match($regex, $path, $matches)) {
 			return false;
 		}

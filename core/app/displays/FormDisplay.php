@@ -16,7 +16,7 @@ class FormDisplay extends ItemDisplay {
 	protected $vars = array();
 	protected $models;
 
-	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, Request $request, ModelFactoryInterface $models) {
+	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, ModelFactoryInterface $models) {
 		$this->output = $output;
 		$this->response = $response;
 		$this->hook_builder = $hooks;
@@ -89,8 +89,8 @@ class FormDisplay extends ItemDisplay {
 		if (empty($options['id'])) $this->items = array();
 		else parent::query(array("action" => $this->default_action) + $options);
 
-		if (!empty($this->request->parameters['copy']) && is_numeric($this->request->parameters['copy']) && empty($this->items)) {
-			$options['id'] = $this->request->parameters['copy'];
+		if (!empty($this->request->getParameter('copy')) && is_numeric($this->request->getParameter('copy')) && empty($this->items)) {
+			$options['id'] = $this->request->getParameter('copy');
 			parent::query(array("action" => $this->default_action) + $options);
 			if (!empty($this->items)) {
 				$this->items[0] = $this->models->get($this->model)->filter($this->items[0], 'copy');
@@ -100,8 +100,9 @@ class FormDisplay extends ItemDisplay {
 
 		//load POST data
 		if (!empty($this->items)) {
-			if (empty($this->request->data[$this->model])) $this->request->data[$this->model] = array();
-			foreach ($this->items[0] as $k => $v) if (!isset($this->request->data[$this->model][$k])) $this->request->data[$this->model][$k] = $v;
+			$data = $this->request->getPost();
+			if (empty($data[$this->model])) $data[$this->model] = array();
+			foreach ($this->items[0] as $k => $v) if (!isset($data[$this->model][$k])) $data[$this->model][$k] = $v;
 		}
 	}
 
@@ -180,8 +181,8 @@ class FormDisplay extends ItemDisplay {
 			$model = (empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
 		}
 		$parts = explode("[", $name);
-		if ($this->method == "post") $var = (empty($model)) ? $this->request->data : $this->request->data[$model];
-		else $var = $this->request->parameters;
+		if ($this->method == "post") $var = (empty($model)) ? $this->request->getPost() : $this->request->getPost($model);
+		else $var = $this->request->getParameters();
 		foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")];
 		if (is_array($var)) return $var;
 		else return stripslashes($var);
@@ -198,17 +199,26 @@ class FormDisplay extends ItemDisplay {
 		}
 		$parts = explode("[", $name);
 		$key = array_pop($parts);
+
+		$data = ($this->method == "post") ? $this->request->getPost() : $this->request->getParameters();
+
 		if (empty($model)) {
-			if ($this->method == "post") $var = &$this->request->data;
-			else $var = &$this->request->parameters;
+			$var = &$data;
 		} else {
-			if ($this->method == "post") $var = &$this->request->data[$model];
-			else $var = &$this->request->parameters[$model];
+			$var = &$data[$model];
 		}
+
 		foreach ($parts as $p) {
 			$var = &$var[rtrim($p, "]")];
 		}
+
 		$var[$key] = $value;
+
+		if ($this->method == "post") {
+			$this->request->setPost($data);
+		} else {
+			$this->request->setParameters($data);
+		}
 		return $value;
 	}
 

@@ -6,8 +6,9 @@ class Imports_fieldsForm extends FormDisplay {
 	public $model = "imports_fields";
 	public $cancel_url = "admin/imports_fields";
 	function build_display($options) {
-		if ($this->success("create") && empty($this->request->data['imports_fields']['id'])) {
-			$this->request->data['imports_fields']['id'] = $this->models->get($this->model)->insert_id;
+		$data = $this->request->getPost();
+		if ($this->success("create") && empty($data['imports_fields']['id'])) {
+			$this->request->setPost('imports_fields', 'id', $this->models->get($this->model)->insert_id);
 		}
 		$this->parse_source($options['source']);
 		$this->add(array("source", "input_type" => "select", "options" => $this->source_values));

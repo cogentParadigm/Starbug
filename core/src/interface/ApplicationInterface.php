@@ -10,8 +10,8 @@ namespace Starbug\Core;
 interface ApplicationInterface {
 	/**
 	 * an application must simply handle requests by returning a response object
-	 * @param Request $request the request object
+	 * @param RequestInterface $request the request object
 	 * @return Response the response object
 	 */
-	public function handle(Request $request);
+	public function handle(RequestInterface $request);
 }

@@ -68,7 +68,7 @@ class Controller {
 		$this->render("missing");
 	}
 
-	function start(Request $request, Response $response) {
+	function start(RequestInterface $request, Response $response) {
 		$this->request = $request;
 		$this->response = $response;
 		$this->init();
@@ -77,6 +77,22 @@ class Controller {
 	function finish() {
 		return $this->response;
 	}
+
+/**
+ * redirect to another page
+ * @ingroup routing
+ * @param string $url the url to redirect to
+ * @param int $delay number of seconds to wait before redirecting (default 0)
+ */
+function redirect($url){
+	if (!defined("SB_CLI")) {
+		if(!headers_sent()) {
+			header('location: '.$url);
+		} else {
+			echo '<script type="text/JavaScript">setTimeout("location.href = \''.$url.'\';");</script>';
+		}
+	}
+}
 
 	/**
 	 * if an unknown action is called, trigger a missing response

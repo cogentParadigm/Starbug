@@ -1,0 +1,225 @@
+<?php
+# Copyright (C) 2016 Ali Gangji
+# Distributed under the terms of the GNU General Public License v3
+/**
+* This file is part of StarbugPHP
+* @file core/src/URLBuilder.php
+* @author Ali Gangji <ali@neonrain.com>
+* @ingroup core
+*/
+namespace Starbug\Core;
+/**
+* URLBuilder class. generate absolute URLs from relative paths and modifiers
+* @ingroup core
+*/
+class URL implements URLInterface {
+	protected $scheme;
+	protected $host;
+	protected $port;
+	protected $user;
+	protected $password;
+	protected $dir = "/";
+	protected $components = array();
+	protected $path = "";
+	protected $format;
+	protected $parameters = array();
+	protected $fragment;
+	protected $absolute = false;
+
+	public function __construct($host="", $base_directory="/", $options=array()) {
+		$this->host = $host;
+		$this->dir = $base_directory;
+	}
+
+	public function setScheme($scheme) {
+		$this->scheme = $scheme;
+		$this->setAbsolute(true);
+		return $this;
+	}
+
+	public function getScheme($scheme) {
+		return $this->scheme;
+	}
+
+	public function setHost($host) {
+		$this->host = $host;
+		$this->setAbsolute(true);
+		return $this;
+	}
+
+	public function getHost() {
+		return $this->host;
+	}
+
+	public function setPort($port) {
+		$this->port = $port;
+		$this->setAbsolute(true);
+		return $this;
+	}
+
+	public function getPort() {
+		return $this->port;
+	}
+
+	public function setUser($user) {
+		$this->user = $user;
+		$this->setAbsolute(true);
+		return $this;
+	}
+
+	public function getUser() {
+		return $this->user;
+	}
+
+	public function setPassword($password) {
+		$this->password = $password;
+		$this->setAbsolute(true);
+		return $this;
+	}
+
+	public function getPassword() {
+		return $this->password;
+	}
+
+	public function setDirectory($dir) {
+		$this->dir = $dir;
+		return $this;
+	}
+
+	public function getDirectory() {
+		return $this->dir;
+	}
+
+	public function getComponent($index=0) {
+		return $this->components[$index];
+	}
+
+	public function getComponents() {
+		return $this->components;
+	}
+
+	public function setPath($path) {
+		//if the path contains a query string, split it off
+		if (false !== strpos($path, "?")) {
+			list($path, $query) = explode("?", $path, 2);
+		}
+
+		//if the path includes a format (such as .html, .json, .xml etc..) split it off and set the format for this url
+		$file = end(explode("/", $path));
+		if (false !== strpos($file, ".")) {
+			$this->format = end(explode(".", $file));
+			$path = substr($path, 0, -(strlen($this->format)+1));
+		}
+		$this->path = $path;
+		$this->components = explode("/", $path);
+		return $this;
+	}
+
+	public function getPath() {
+		return $this->path;
+	}
+
+	public function setFormat($format) {
+		$this->format = $format;
+		return $this;
+	}
+
+	public function getFormat() {
+		return $this->format;
+	}
+
+	public function setParameter($name, $value) {
+		$this->parameters[$name] = $value;
+		return $this;
+	}
+
+	public function setParameters($parameters=array()) {
+		foreach ($parameters as $key => $value) {
+			$this->setParameter($key, $value);
+		}
+		return $this;
+	}
+
+	public function hasParameter($name) {
+		return !empty($this->parameters[$name]);
+	}
+
+	public function getParameter($name) {
+		return $this->parameters[$name];
+	}
+
+	public function getParameters() {
+		return $this->parameters;
+	}
+
+	public function removeParameter($name) {
+		unset($this->parameters[$name]);
+		return $this;
+	}
+
+	public function clearParameters() {
+		$this->parameters = array();
+		return $this;
+	}
+
+	public function setFragment($fragment) {
+		$this->fragment = $fragment;
+		return $this;
+	}
+
+	public function getFragment() {
+		return $this->fragment;
+	}
+
+	public function setAbsolute($absolute) {
+		$this->absolute = $absolute;
+		return $this;
+	}
+
+	public function build() {
+		$url = '';
+		if ($this->absolute && isset($this->host)) {
+			if (isset($this->scheme)) {
+				$url .= $this->scheme . ':';
+			}
+			$url .= '//';
+			if (isset($this->user)) {
+				$url .= $this->user;
+				if (isset($this->password)) {
+					$url .= ':' . $this->password;
+				}
+				$url .= '@';
+			}
+			$url .= $this->host;
+			if (isset($this->port)) {
+				$url .= ':' . $this->port;
+			}
+		}
+		$url .= $this->dir . $this->path;
+		if (isset($this->format)) {
+			$url .= "." . $this->format;
+		}
+		if (!empty($this->parameters)) {
+			$url .= '?';
+			foreach ($this->parameters as $key => $value) {
+				$url .= $key . '=' . $value;
+			}
+		}
+		if (isset($this->fragment)) {
+			$url .= '#' . $fragment;
+		}
+		return $url;
+	}
+
+	public function url($path) {
+		return $this->setPath($path)->build();
+	}
+
+	public function http($path) {
+		return $this->setScheme("http")->setPath($path)->build();
+	}
+
+	public function https($path) {
+		return $this->setScheme("https")->setPath($path)->build();
+	}
+}

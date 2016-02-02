@@ -1,7 +1,6 @@
 <?php
 use \Interop\Container\ContainerInterface;
 use \Monolog\Logger;
-use \Etc;
 return array(
 	'environment' => Etc::ENVIRONMENT,
 	'database_name' => DEFAULT_DATABASE,

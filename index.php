@@ -11,19 +11,19 @@
 // include init file
 include("core/init.php");
 
-/**
- * global instance of the Request class
- * @ingroup global
- */
-global $request;
-$request = new Starbug\Core\Request($_SERVER['REQUEST_URI'], array(
-	'server' => $_SERVER,
-	'parameters' => $_GET,
-	'data' => $_POST,
-	'files' => $_FILES,
-	'cookies' => $_COOKIE,
-	'directory' => Etc::WEBSITE_URL
+$url = $container->make("Starbug\Core\URLInterface", array(
+	'host' => $_SERVER['HTTP_HPOST'],
+	'base_directory' => ETC::WEBSITE_URL
 ));
+$url->setPath(substr($_SERVER['REQUEST_URI'], strlen(Etc::WEBSITE_URL)));
+$url->setParameters($_GET);
+
+$request = $container->make("Starbug\Core\RequestInterface", array('url' => $url));
+$request->setHeaders($_SERVER)
+				->setPost($_POST)
+				->setFiles($_FILES)
+				->setCookies($_COOKIE);
+
 $container->set("Starbug\Core\Request", $request);
 $application = $container->get("Starbug\Core\ApplicationInterface");
 $response = $application->handle($request);
