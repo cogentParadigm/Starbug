@@ -33,7 +33,6 @@ class URL implements URLInterface {
 
 	public function setScheme($scheme) {
 		$this->scheme = $scheme;
-		$this->setAbsolute(true);
 		return $this;
 	}
 
@@ -43,7 +42,6 @@ class URL implements URLInterface {
 
 	public function setHost($host) {
 		$this->host = $host;
-		$this->setAbsolute(true);
 		return $this;
 	}
 
@@ -176,9 +174,9 @@ class URL implements URLInterface {
 		return $this;
 	}
 
-	public function build() {
+	public function build($path = false, $absolute = false) {
 		$url = '';
-		if ($this->absolute && isset($this->host)) {
+		if (($absolute || $this->absolute) && isset($this->host)) {
 			if (isset($this->scheme)) {
 				$url .= $this->scheme . ':';
 			}
@@ -195,7 +193,8 @@ class URL implements URLInterface {
 				$url .= ':' . $this->port;
 			}
 		}
-		$url .= $this->dir . $this->path;
+		if (false === $path) $path = $this->path;
+		$url .= $this->dir . $path;
 		if (isset($this->format)) {
 			$url .= "." . $this->format;
 		}
@@ -211,15 +210,15 @@ class URL implements URLInterface {
 		return $url;
 	}
 
-	public function url($path) {
-		return $this->setPath($path)->build();
-	}
-
-	public function http($path) {
-		return $this->setScheme("http")->setPath($path)->build();
-	}
-
-	public function https($path) {
-		return $this->setScheme("https")->setPath($path)->build();
+	public static function createFromSuperGlobals($base_directory="/") {
+		$url = new static($_SERVER['HTTP_HOST'], $base_directory);
+		$url->setPath(substr($_SERVER['REQUEST_URI'], strlen($base_directory)));
+		$url->setParameters($_GET);
+		if (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS'])) {
+			$url->setScheme("https");
+		} else {
+			$url->setScheme("http");
+		}
+		return $url;
 	}
 }

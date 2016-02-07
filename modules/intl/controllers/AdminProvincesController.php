@@ -16,12 +16,12 @@ class AdminProvincesController {
 		$this->render("admin/list");
 	}
 	function create() {
-		if ($this->db->success("provinces", "create")) redirect(uri("admin/provinces", 'u'));
+		if ($this->db->success("provinces", "create")) $this->redirect("admin/provinces");
 		else $this->render("admin/create");
 	}
 	function update($id) {
 		$this->assign("id", $id);
-		if ($this->db->success("provinces", "create")) redirect(uri("admin/provinces", 'u'));
+		if ($this->db->success("provinces", "create")) $this->redirect("admin/provinces");
 		else $this->render("admin/update");
 	}
 }

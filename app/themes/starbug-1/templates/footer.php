@@ -5,12 +5,12 @@
 						<div class="col">
 							<h4>Browse</h4>
 							<ul>
-										<li><a href="<?php echo uri(); ?>">Blog</a></li>
-										<li><a href="<?php echo uri(); ?>">Contact Us</a></li>
+										<li><a href="<?php echo $this->url->build(""); ?>">Blog</a></li>
+										<li><a href="<?php echo $this->url->build(""); ?>">Contact Us</a></li>
 										<?php if ($this->user->loggedIn()) { ?>
-											<li><a href="<?php echo uri("logout"); ?>">Log Out</a></li>
+											<li><a href="<?php echo $this->url->build("logout"); ?>">Log Out</a></li>
 										<?php } else { ?>
-											<li><a href="<?php echo uri("login"); ?>">Log In</a></li>
+											<li><a href="<?php echo $this->url->build("login"); ?>">Log In</a></li>
 										<?php } ?>
 								</ul>
 						</div>
@@ -56,7 +56,7 @@
         </div>
         <div class="col-lg-3">
             <a href="http://starbugphp.com" title="Powered by StarbugPHP" target="_blank" class="">
-                <img src="<?php echo uri("app/themes/starbug-1/public/images/logo-gray.png"); ?>" alt="StarbugPHP" class="pull-right">
+                <img src="<?php echo $this->url->build("app/themes/starbug-1/public/images/logo-gray.png"); ?>" alt="StarbugPHP" class="pull-right">
             </a>
         </div>
     </div>

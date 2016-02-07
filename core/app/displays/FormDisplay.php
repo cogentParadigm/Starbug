@@ -101,8 +101,8 @@ class FormDisplay extends ItemDisplay {
 		//load POST data
 		if (!empty($this->items)) {
 			$data = $this->request->getPost();
-			if (empty($data[$this->model])) $data[$this->model] = array();
-			foreach ($this->items[0] as $k => $v) if (!isset($data[$this->model][$k])) $data[$this->model][$k] = $v;
+			if (empty($data[$this->model])) $this->request->setPost($this->model, array());
+			foreach ($this->items[0] as $k => $v) if (!isset($data[$this->model][$k])) $this->request->setPost($this->model, $k, $v);
 		}
 	}
 

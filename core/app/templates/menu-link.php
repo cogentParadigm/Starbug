@@ -9,7 +9,7 @@
 	//determine where the link is going to
 	if (!empty($link['uris_id'])) {
 		$link_text = empty($link['breadcrumb']) ? $link['title'] : $link['breadcrumb'];
-		$link_attributes['href'] = uri($link["path"]);
+		$link_attributes['href'] = $this->url->build($link["path"]);
 		$parts = explode("/", $link['path']);
 		$active = !empty($link['path']);
 		foreach ($parts as $idx => $part) if ($request->getComponent($idx) !== $part) $active = false;
@@ -22,7 +22,7 @@
 	//href override
 	if (!empty($link['href'])) {
 		$absolute = (0 === strpos($link['href'], "http"));
-		$link_attributes['href'] = $absolute ? $link['href'] : uri($link['href']);
+		$link_attributes['href'] = $absolute ? $link['href'] : $this->url->build($link['href']);
 		if (!$absolute) {
 			$parts = explode("/", $link['href']);
 			$active = true;
@@ -77,7 +77,7 @@
 	<li<?php html_attributes($attributes); ?>>
 		<?php if ($editable) { ?>
 			<div class="btn-group pull-right" style="position:relative;z-index:100">
-				<a href="<?php echo uri("admin/$area/update/".$link['id']); ?>" class="btn btn-default Edit"><div class="fa fa-edit"></div></a>
+				<a href="<?php echo $this->url->build("admin/$area/update/".$link['id']); ?>" class="btn btn-default Edit"><div class="fa fa-edit"></div></a>
 				<a href="javascript:(function(){sb.get('<?php echo $model; ?>').remove('<?php echo $link['id']; ?>').then(function(){window.location.reload();});return false;})()" class="btn btn-default Delete"><div class="fa fa-times"></div></a>
 			</div>
 		<?php } ?>
@@ -99,7 +99,7 @@
 			if ($editable) {
 				?>
 			<div class="btn-group right">
-				<a href="<?php echo uri("admin/$area/update/".$link['id']); ?>" class="btn btn-mini Edit"><div class="sprite icon"></div></a>
+				<a href="<?php echo $this->url->build("admin/$area/update/".$link['id']); ?>" class="btn btn-mini Edit"><div class="sprite icon"></div></a>
 				<a href="javascript:(function(){sb.get('<?php echo $model; ?>').remove('<?php echo $link['id']; ?>').then(function(){window.location.reload();});return false;})()" class="btn btn-mini Delete"><div class="sprite icon"></div></a>
 			</div>
 				<?php

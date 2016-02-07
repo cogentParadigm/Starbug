@@ -17,12 +17,12 @@ class AdminImportsController extends Controller {
 		$this->render("admin/list");
 	}
 	function create() {
-		if ($this->db->success("imports", "create")) redirect(uri("admin/imports/update/".$this->models->get("imports")->insert_id, 'u'));
+		if ($this->db->success("imports", "create")) $this->redirect("admin/imports/update/".$this->models->get("imports")->insert_id);
 		else $this->render("admin/create");
 	}
 	function update($id) {
 		$this->assign("id", $id);
-		if ($this->db->success("imports", "create")) redirect(uri("admin/imports", 'u'));
+		if ($this->db->success("imports", "create")) $this->redirect("admin/imports");
 		else $this->render("admin/update");
 	}
 	function run($id) {

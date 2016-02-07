@@ -78,20 +78,17 @@ class Controller {
 		return $this->response;
 	}
 
+	public function url($path = "", $absolute = false) {
+		return $this->request->getURL()->build($path, $absolute);
+	}
 /**
  * redirect to another page
  * @ingroup routing
  * @param string $url the url to redirect to
  * @param int $delay number of seconds to wait before redirecting (default 0)
  */
-function redirect($url){
-	if (!defined("SB_CLI")) {
-		if(!headers_sent()) {
-			header('location: '.$url);
-		} else {
-			echo '<script type="text/JavaScript">setTimeout("location.href = \''.$url.'\';");</script>';
-		}
-	}
+function redirect($url) {
+	$this->response->redirect($this->url($url, true));
 }
 
 	/**

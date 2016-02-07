@@ -25,14 +25,14 @@ interface URLInterface {
 	public function getPassword();
 	public function setDirectory($dir);
 	public function getDirectory();
-	public function getComponent($index=0);
+	public function getComponent($index = 0);
 	public function getComponents();
 	public function setPath($path);
 	public function getPath();
 	public function setFormat($format);
 	public function getFormat();
 	public function setParameter($name, $value);
-	public function setParameters($parameters=array());
+	public function setParameters($parameters = array());
 	public function hasParameter($name);
 	public function getParameter($name);
 	public function getParameters();
@@ -41,8 +41,5 @@ interface URLInterface {
 	public function setFragment($fragment);
 	public function getFragment();
 	public function setAbsolute($absolute);
-	public function build();
-	public function url($path);
-	public function http($path);
-	public function https($path);
+	public function build($path = false, $absolute = false);
 }

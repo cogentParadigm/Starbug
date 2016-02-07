@@ -9,7 +9,7 @@
 		<!--[if lt IE 9]>
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-			<script type="text/javascript" src="<?php echo uri("libraries/release/dojo/dojo/dojo.js"); ?>"></script>
+			<script type="text/javascript" src="<?php echo $this->url->build("libraries/release/dojo/dojo/dojo.js"); ?>"></script>
 	<?php } else { ?>
 			<?php
 				$profile = file_get_contents(BASE_DIR."/etc/dojo.profile.js");
@@ -20,7 +20,7 @@
 				$paths = "";
 				foreach ($profile['prefixes'] as $p) $paths .= "'$p[0]':'$p[1]', ";
 			?>
-			<script type="text/javascript" src="<?php echo uri("libraries/dojo/dojo.js"); ?>"></script>
+			<script type="text/javascript" src="<?php echo $this->url->build("libraries/dojo/dojo.js"); ?>"></script>
 			<script type="text/javascript">
 				require({
 						packages: [<?php foreach ($profile['prefixes'] as $idx => $p) { if ($idx > 0) echo ','; echo "\n"; ?>
@@ -38,8 +38,8 @@
 		if (empty($scripts)) $scripts = array();
 	?>
 	<?php foreach ($scripts as $script) { ?>
-		<script type="text/javascript" src="<?php echo uri("app/themes/".$request->theme."/public/js/$script"); ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->url->build("app/themes/".$request->theme."/public/js/$script"); ?>"></script>
 	<?php } ?>
 	<script type="text/javascript">
-		var WEBSITE_URL = '<?php echo uri(); ?>';
+		var WEBSITE_URL = '<?php echo $this->url->build(""); ?>';
 	</script>

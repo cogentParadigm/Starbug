@@ -17,12 +17,12 @@ class AdminViewsController extends Controller {
 		$this->render("admin/list");
 	}
 	function create() {
-		if ($this->db->success("views", "create")) redirect(uri("admin/views", 'u'));
+		if ($this->db->success("views", "create")) $this->redirect("admin/views");
 		else $this->render("admin/create");
 	}
 	function update($id) {
 		$this->assign("id", $id);
-		if ($this->db->success("views", "create")) redirect(uri("admin/views", 'u'));
+		if ($this->db->success("views", "create")) $this->redirect("admin/views");
 		else $this->render("admin/update");
 	}
 }

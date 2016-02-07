@@ -28,7 +28,7 @@ class AdminTaxonomiesController extends Controller {
 	function create() {
 		if ($this->db->success("terms", "create") && $this->request->getFormat() != "xhr") {
 			$term = $this->db->get("terms", $this->terms->insert_id);
-			redirect(uri("admin/taxonomies/taxonomy/".$term['taxonomy']));
+			$this->redirect("admin/taxonomies/taxonomy/".$term['taxonomy']);
 		} else $this->render("admin/create");
 	}
 	function update($id) {
@@ -36,7 +36,7 @@ class AdminTaxonomiesController extends Controller {
 		$term = $this->db->get("terms", $id);
 		$this->assign("taxonomy", $term['taxonomy']);
 		if ($this->db->success("terms", "create")) {
-			redirect(uri("admin/taxonomies/taxonomy/".$term['taxonomy']));
+			$this->redirect("admin/taxonomies/taxonomy/".$term['taxonomy']);
 		} else $this->render("admin/update");
 	}
 	function taxonomy($taxonomy) {

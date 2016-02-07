@@ -7,24 +7,18 @@
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
-
+use Starbug\Core\URL;
+use Starbug\Core\Request;
 // include init file
 include("core/init.php");
 
-$url = $container->make("Starbug\Core\URLInterface", array(
-	'host' => $_SERVER['HTTP_HPOST'],
-	'base_directory' => ETC::WEBSITE_URL
-));
-$url->setPath(substr($_SERVER['REQUEST_URI'], strlen(Etc::WEBSITE_URL)));
-$url->setParameters($_GET);
-
-$request = $container->make("Starbug\Core\RequestInterface", array('url' => $url));
+$request = new Request(URL::createFromSuperGlobals(Etc::WEBSITE_URL));
 $request->setHeaders($_SERVER)
 				->setPost($_POST)
 				->setFiles($_FILES)
 				->setCookies($_COOKIE);
 
-$container->set("Starbug\Core\Request", $request);
+$container->set("Starbug\Core\RequestInterface", $request);
 $application = $container->get("Starbug\Core\ApplicationInterface");
 $response = $application->handle($request);
 $response->send();

@@ -18,7 +18,7 @@ class AdminUsersController extends Controller {
 	}
 	function create() {
 		$this->assign("form", "users");
-		if ($this->db->success("users", "create")) redirect(uri("admin/users", 'u'));
+		if ($this->db->success("users", "create")) $this->redirect("admin/users");
 		else $this->render("admin/create");
 	}
 	function update($id) {

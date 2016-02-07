@@ -17,12 +17,12 @@ class AdminPagesController extends Controller {
 		$this->render("admin/list");
 	}
 	function create() {
-		if ($this->db->success("pages", "create")) redirect(uri("admin/pages", 'u'));
+		if ($this->db->success("pages", "create")) $this->redirect("admin/pages");
 		else $this->render("admin/create");
 	}
 	function update($id) {
 		$this->assign("id", $id);
-		if ($this->db->success("pages", "create")) redirect(uri("admin/pages", 'u'));
+		if ($this->db->success("pages", "create")) $this->redirect("admin/pages");
 		else $this->render("admin/update");
 	}
 }

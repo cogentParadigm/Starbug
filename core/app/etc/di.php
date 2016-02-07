@@ -10,6 +10,10 @@ return array(
 	'Starbug\Core\ModelFactory' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Starbug\Core\GenerateCssCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Starbug\Core\ErrorHandler' => DI\object()->constructorParameter("exceptionTemplate", defined('SB_CLI') ? "exception-cli" : "exception-html"),
+	'Starbug\Core\URL' => function(ContainerInterface $c) {
+		$request = $c->get("Starbug\Core\RequestInterface");
+		return $request->getURL();
+	},
 	'databases.default' => function(ContainerInterface $c) {
 		$config = $c->get("Starbug\Core\ConfigInterface");
 		$name = $c->get("database_name");

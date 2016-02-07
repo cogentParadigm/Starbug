@@ -52,7 +52,7 @@ class Mailer implements MailerInterface {
 	}
 
 	function render($options = array(), $data = array()) {
-		$data['url_flags'] = 'u';
+		$data['absolute_urls'] = true;
 		//get template params
 		if (!empty($options['template'])) {
 			$template = $this->db->query("email_templates")->condition("name", $options['template'])->one();

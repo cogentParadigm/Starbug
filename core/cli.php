@@ -11,8 +11,8 @@
 
 include("init.php");
 
-$url = $container->make("Starbug\Core\URLInterface", array('base_directory' => Etc::WEBSITE_URL));
-$request = $container->make("Starbug\Core\RequestInterface", array('url' => $url));
+$url = $container->make("Starbug\Core\URL", array('base_directory' => Etc::WEBSITE_URL));
+$request = $container->make("Starbug\Core\Request", array('url' => $url));
 $request->setHeaders($_SERVER);
 $container->set("Starbug\Core\RequestInterface", $request);
 $user = $container->get("Starbug\Core\UserInterface");

@@ -41,7 +41,7 @@
 					}
 				?>
 				<?php if (!empty($display->cancel_url)) { ?>
-					<button type="button" class="cancel btn btn-danger" onclick="window.location='<?php echo uri($display->cancel_url); ?>'">Cancel</button>
+					<button type="button" class="cancel btn btn-danger" onclick="window.location='<?php echo $this->url->build($display->cancel_url); ?>'">Cancel</button>
 				<?php } ?>
 <?php if ($display->actions->template != "inline") { ?>
 			</div>

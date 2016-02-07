@@ -97,6 +97,11 @@ class Response {
 		$this->code = 403;
 	}
 
+	function redirect($url){
+		$this->headers['location'] = $url;
+		$this->content = '<script type="text/JavaScript">setTimeout("location.href = \''.$url.'\';");</script>';
+	}
+
 	/**
 	 * capture a rendered view and save it as the response output
 	 */

@@ -14,12 +14,12 @@ class Admin<?php echo ucwords($model); ?>Controller {
 		$this->render("admin/list");
 	}
 	function create() {
-		if ($this->db->success("<?php echo $model; ?>", "create")) redirect(uri("admin/<?php echo $model; ?>", 'u'));
+		if ($this->db->success("<?php echo $model; ?>", "create")) $this->redirect("admin/<?php echo $model; ?>");
 		else $this->render("admin/create");
 	}
 	function update($id) {
 		$this->assign("id", $id);
-		if ($this->db->success("<?php echo $model; ?>", "create")) redirect(uri("admin/<?php echo $model; ?>", 'u'));
+		if ($this->db->success("<?php echo $model; ?>", "create")) $this->redirect("admin/<?php echo $model; ?>");
 		else $this->render("admin/update");
 	}
 }

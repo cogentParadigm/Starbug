@@ -35,7 +35,8 @@
 <?php
 	$vars = $this->request->getParameters();
 	unset($vars['pg']);
-	$prefix = uri($this->request->getPath())."?";
+	$prefix = $this->request->getURL()->getDirectory();
+	$prefix .= $this->request->getPath()."?";
 	if (!empty($vars)) $prefix .= http_build_query($vars).'&';
 	$prefix .= "pg=";
 
