@@ -89,7 +89,7 @@ class FormDisplay extends ItemDisplay {
 		if (empty($options['id'])) $this->items = array();
 		else parent::query(array("action" => $this->default_action) + $options);
 
-		if (!empty($this->request->getParameter('copy')) && is_numeric($this->request->getParameter('copy')) && empty($this->items)) {
+		if ($this->request->hasParameter('copy') && is_numeric($this->request->getParameter('copy')) && empty($this->items)) {
 			$options['id'] = $this->request->getParameter('copy');
 			parent::query(array("action" => $this->default_action) + $options);
 			if (!empty($this->items)) {
