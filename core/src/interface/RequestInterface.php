@@ -28,6 +28,7 @@ interface RequestInterface {
 	public function getLanguage();
 	public function setPost($post);
 	public function getPost();
+	public function hasPost($post);
 	public function setHeader($header, $value);
 	public function setHeaders($headers);
 	public function getHeaders();

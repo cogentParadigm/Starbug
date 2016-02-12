@@ -90,6 +90,20 @@ class Request implements RequestInterface {
 		}
 		return $value;
 	}
+	public function hasPost($post) {
+		$args = func_get_args();
+		$value = $this->post;
+		$arg = array_shift($args);
+		while (!empty($args)) {
+			$arg = array_shift($args);
+			if (isset($value[$arg])) {
+				$value = $value[$arg];
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
 	public function setHeader($header, $value) {
 		$this->headers[$header] = $value;
 		return $this;
