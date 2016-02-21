@@ -4,7 +4,7 @@
 	$htmldata = array();
 	$record = array("filename" => "", "mime_type" => "", "caption" => "uploaded file", "category" => $request->getPost('category'));
 	$file = array();
-	$files = $request->getFiles();
+	$files = $request->getFiles()->get();
 	foreach ($files['uploadedfiles'] as $key => $arr) $file[$key] = $arr[0];
 	if (!empty($file['category'])) $record['category'] = $file['category'];
 	$moved = $this->models->get("files")->upload($record, $file);

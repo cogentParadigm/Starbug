@@ -1,5 +1,6 @@
 define([
 	"sb/kernel",
+	"sb/data",
 	"dbootstrap",
 	"starbug/form/_FormWidget"
 ], function(sb){
