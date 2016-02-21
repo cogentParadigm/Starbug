@@ -1,3 +1,5 @@
+!https://travis-ci.org/cogentParadigm/Starbug.svg?branch=dev!:https://travis-ci.org/cogentParadigm/Starbug
+
 h1. Starbug PHP Web Development Framework
 
 Starbug PHP is an open source framework for PHP that employs an MVC design pattern. Here are some of the core features provided:
