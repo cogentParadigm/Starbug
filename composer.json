@@ -10,6 +10,8 @@
 		"wp-cli/php-cli-tools": "^0.10.5"
 	},
 	"require-dev": {
+		"phpunit/phpunit": "5.*",
+		"phpunit/dbunit": "2.*",
 		"sebastian/phpcpd": "*",
 		"phploc/phploc": "*",
 		"phpmd/phpmd":"*",

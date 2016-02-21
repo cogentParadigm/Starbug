@@ -124,6 +124,7 @@ module.exports = function(grunt) {
 		phpunit: {
 			all: {
 				options: {
+					bin: 'vendor/bin/phpunit',
 					configuration: "etc/phpunit.xml",
 					execMaxBuffer: Infinity
 				}

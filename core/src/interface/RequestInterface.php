@@ -23,7 +23,7 @@ interface RequestInterface {
 	public function setParameters($parameters);
 	public function getParameters();
 	public function getFormat();
-	public function getComponent($index=0);
+	public function getComponent($index = 0);
 	public function setLanguage($language);
 	public function getLanguage();
 	public function setPost($post);

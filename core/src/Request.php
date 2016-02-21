@@ -15,12 +15,16 @@ namespace Starbug\Core;
 class Request implements RequestInterface {
 	protected $url;
 	protected $language = "en";
-	protected $post = array();
-	protected $headers = array();
-	protected $files = array();
-	protected $cookies = array();
+	protected $post;
+	protected $headers;
+	protected $files;
+	protected $cookies;
 
 	public function __construct(URLInterface $url) {
+		$this->post = new Bundle();
+		$this->headers = new Bundle();
+		$this->files = new Bundle();
+		$this->cookies = new Bundle();
 		$this->setURL($url);
 	}
 	public function setURL(URLInterface $url) {
@@ -74,66 +78,48 @@ class Request implements RequestInterface {
 	}
 	public function setPost($post) {
 		$args = func_get_args();
-		$target = &$this->post;
-		$value = array_pop($args);
-		foreach ($args as $arg) {
-			$target = &$target[$arg];
-		}
-		$target = $value;
+		call_user_func_array(array($this->post, 'set'), $args);
 		return $this;
 	}
 	public function getPost() {
 		$args = func_get_args();
-		$value = $this->post;
-		foreach ($args as $arg) {
-			$value = $value[$arg];
-		}
-		return $value;
+		return call_user_func_array(array($this->post, 'get'), $args);
 	}
 	public function hasPost($post) {
 		$args = func_get_args();
-		$value = $this->post;
-		$arg = array_shift($args);
-		while (!empty($args)) {
-			$arg = array_shift($args);
-			if (isset($value[$arg])) {
-				$value = $value[$arg];
-			} else {
-				return false;
-			}
-		}
-		return true;
+		return call_user_func_array(array($this->post, 'has'), $args);
 	}
 	public function setHeader($header, $value) {
-		$this->headers[$header] = $value;
+		$this->headers->set($header, $value);
 		return $this;
 	}
-	public function setHeaders($headers) {
-		$this->headers = $headers;
+	public function setHeaders($headers = array()) {
+		$this->headers->set($headers);
 		return $this;
 	}
 	public function getHeaders() {
 		return $this->headers;
 	}
 	public function getHeader($name) {
-		return $this->headers[$name];
+		return $this->headers->get($name);
 	}
 	public function setFiles($files) {
-		$this->files = $files;
+		$this->files->set($files);
 		return $this;
 	}
 	public function getFiles() {
 		return $this->files;
 	}
 	public function setCookie($name, $value) {
-		$this->cookies[$name] = $value;
+		$this->cookies->set($name, $value);
 		return $this;
 	}
 	public function getCookie($name) {
-		return $this->cookies[$name];
+		$value = $this->cookies->get($name);
+		return $this->cookies->get($name);
 	}
-	public function setCookies($cookies) {
-		$this->cookies = $cookies;
+	public function setCookies($cookies = array()) {
+		$this->cookies->set($cookies);
 		return $this;
 	}
 	public function getCookies() {
