@@ -1,5 +1,6 @@
 <?php echo '<?php'."\n"; ?>
-class <?php echo ucwords($model); ?>Controller {
+use Starbug\Core\Controller;
+class <?php echo ucwords($model); ?>Controller extends Controller {
 	function init() {
 		//perform any common startup here
 	}

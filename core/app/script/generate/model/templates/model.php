@@ -3,7 +3,8 @@
  * <?php echo $name; ?> model
  * @ingroup models
  */
-class <?php echo ucwords($name); ?> {
+use Starbug\Core\<?php echo ucwords($name); ?>Model;
+class <?php echo ucwords($name); ?> extends <?php echo ucwords($name); ?>Model {
 
 	function create($<?php echo $singular; ?>) {
 		$this->store($<?php echo $singular; ?>);
