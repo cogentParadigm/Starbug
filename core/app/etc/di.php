@@ -8,7 +8,7 @@ return array(
 	'Starbug\Core\*Interface' => DI\object('Starbug\Core\*'),
 	'Starbug\Core\ResourceLocator' => DI\object()->constructor(DI\get('base_directory'), DI\get('modules')),
 	'Starbug\Core\ModelFactory' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
-	'Starbug\Core\GenerateCssCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
+	'Starbug\Core\CssGenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Starbug\Core\ErrorHandler' => DI\object()->constructorParameter("exceptionTemplate", defined('SB_CLI') ? "exception-cli" : "exception-html"),
 	'Starbug\Core\URL' => function(ContainerInterface $c) {
 		$request = $c->get("Starbug\Core\RequestInterface");
