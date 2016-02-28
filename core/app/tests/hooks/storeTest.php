@@ -24,7 +24,8 @@ class storeTest extends DatabaseTestCase {
 		global $container;
 		$this->db = $container->get("Starbug\Core\DatabaseInterface");
 		$this->models = $container->get("Starbug\Core\ModelFactoryInterface");
-		$this->user = $container->get("Starbug\Core\UserInterface");
+		$this->user = $container->get("Starbug\Core\IdentityInterface");
+		$this->session = $container->get("Starbug\Core\SessionHandlerInterface");
 	}
 
 	/**
@@ -363,7 +364,7 @@ class storeTest extends DatabaseTestCase {
 		$record = $this->db->get("hook_store_password", $id);
 
 		//assert that the hashed password was stored
-		$this->assertTrue(Session::authenticate($record['value'], $pass, "0", Etc::HMAC_KEY));
+		$this->assertTrue(strlen($record['value']) > 64);
 	}
 
 	/**

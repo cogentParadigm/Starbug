@@ -1,5 +1,5 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
+# Copyright (C) 2008-2016 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP
@@ -14,18 +14,39 @@ namespace Starbug\Core;
  * "Hardened Stateless Session Cookies" - http://www.cl.cam.ac.uk/~sjm217/papers/protocols08cookies.pdf
  * @ingroup lib
  */
-class Session {
+class SessionHandler implements SessionHandlerInterface {
+	protected $user;
+	protected $storage;
+	protected $duration;
 
-	/**
-	* provide a salt and authenticator token for a password
-	*
-	* The authenticator will be 64 characters long, with a salt prepended.
-	* The salt will be 9, 12, or 29 characters long depending on the available cryptographic functions.
-	*
-	* @param string $password
-	* @return string $token
-	*/
-	function hash_password($password) {
+	public function __construct(SessionStorageInterface $storage, IdentityInterface $user, $duration = 2592000) {
+		$this->storage = $storage;
+		$this->user = $user;
+		$this->duration = $duration;
+	}
+	function startSession() {
+		$this->user->clearUser();
+		if (false !== $this->storage->load()) {
+			$user = $this->user->loadUser($this->storage->get("v"));
+			if (false !== $this->validate($user)) {
+				$this->user->setUser($user);
+			}
+		}
+	}
+	function loggedIn() {
+		return $this->user->loggedIn();
+	}
+	function set($key, $value, $secure = false) {
+		$this->storage->set($key, $value, $secure);
+	}
+	function get($key) {
+		return $this->storage->get($key);
+	}
+	function destroy() {
+		$this->user->clearUser();
+		$this->storage->destroy();
+	}
+	function hashPassword($password) {
 		//hash the password using phpass
 		$hasher = new PasswordHash(8, false);
 		$hash = $hasher->HashPassword($password);
@@ -51,7 +72,11 @@ class Session {
 	* @return bool Returns false if validation fails. If the password validates, true is returned
 	*/
 
-	function authenticate($hash, $password, $data, $key, $duration = 86400) {
+	function authenticate($user, $password, $duration = 0) {
+		$hash = $this->user->getHashedPassword($user);
+		$id = $this->user->getIdentity($user);
+		if (0 == $duration) $duration = $this->duration;
+
 		//separate salt and authenticator
 		$salt = substr($hash, 0, -64);
 		$auth = substr($hash, -64);
@@ -75,45 +100,28 @@ class Session {
 		if ($new_salt != $salt) return false;
 		if (hash('sha256', $new_hash) != $auth) return false;
 
-		//generate cookie containing expiry, value, hash, and digest
-		$session = "e=".(time()+$duration)."&v=".$data."&h=".urlencode($new_hash);
-		//append digest
-		$session .= '&d='.urlencode(hash_hmac("sha256", $session, $key));
+		//save data securely to session - expiry, value, hash
+		$this->storage->set("e", time()+$duration, true);
+		$this->storage->set("v", $id, true);
+		$this->storage->set("h", $new_hash, true);
 
-		//save cookie and return
-		if (!defined("SB_CLI")) {
-			setcookie("sid", $session, 0, uri(), null, false, true);
-			setcookie("oid", md5(uniqid(mt_rand(), true)), 0, uri(), null, false, false);
-		}
+		$this->storage->save();
 		return true;
-	}
-
-	function active() {
-		//obtain and parse session cookie
-		$session = $_COOKIE['sid'];
-		if (empty($session)) return false;
-		parse_str($session, $params);
-		return $params;
 	}
 
 	/**
 	* validate active session
 	*/
-	function validate($session, $hash, $key) {
+	protected function validate($user) {
 		//check expiration time
-		if (empty($session['e']) || $session['e'] < time()) return false;
-
-		//verify cookie integrity
-		if (hash_hmac("sha256", "e=".$session['e']."&v=".$session['v']."&h=".urlencode($session['h']), $key) != $session['d']) return false;
+		$expiry = $this->storage->get("e");
+		if (empty($expiry) || $expiry < time()) return false;
 
 		//validate user
-		if (hash("sha256", $session['h']) != substr($hash, -64)) return false;
+		$hash = $this->user->getHashedPassword($user);
+		if (hash("sha256", $this->storage->get("h")) != substr($hash, -64)) return false;
 
 		//we have a valid session
 		return true;
-	}
-
-	function destroy() {
-		if (!defined("SB_CLI")) setcookie("sid", null, time(), uri(), null, false, true);
 	}
 }

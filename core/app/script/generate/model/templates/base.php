@@ -20,7 +20,7 @@ class <?php echo ucwords($name); ?>Model extends Table {
   public $search_fields = "<?php echo $search; ?>";
 
 
-  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, UserInterface $user<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
+  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user<?php foreach ($factory as $n => $t) echo ', '.$t.' $'.$n; ?>) {
     $this->db = $db;
     $this->models = $models;
     $this->user = $user;<?php foreach ($factory as $n => $t) echo "\n\t\t\$this->".$n.' = $'.$n.';'; ?>

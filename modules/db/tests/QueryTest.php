@@ -6,7 +6,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	function setUp() {
 		global $container;
 		$this->db = $container->get("Starbug\Core\DatabaseInterface");
-		$this->user = $container->get("Starbug\Core\UserInterface");
+		$this->user = $container->get("Starbug\Core\IdentityInterface");
 	}
 
 	/**

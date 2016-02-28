@@ -14,7 +14,7 @@ class Taxonomy implements TaxonomyInterface {
 	protected $db;
 	protected $models;
 	protected $user;
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, UserInterface $user) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user) {
 		$this->db = $db;
 		$this->models = $models;
 		$this->user = $user;

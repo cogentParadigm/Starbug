@@ -16,7 +16,7 @@ class Application implements ApplicationInterface {
 	protected $request;
 	protected $response;
 	protected $config;
-	protected $user;
+	protected $session;
 	protected $locator;
 
 	use \Psr\Log\LoggerAwareTrait;
@@ -30,7 +30,7 @@ class Application implements ApplicationInterface {
 		RouterInterface $router,
 		SettingsInterface $settings,
 		ResourceLocatorInterface $locator,
-		UserInterface $user,
+		SessionHandlerInterface $session,
 		ResponseInterface $response
 	) {
 		$this->controllers = $controllers;
@@ -38,12 +38,12 @@ class Application implements ApplicationInterface {
 		$this->router = $router;
 		$this->settings = $settings;
 		$this->locator = $locator;
-		$this->user = $user;
+		$this->session = $session;
 		$this->response = $response;
 	}
 
 	public function handle(RequestInterface $request) {
-		$this->user->startSession();
+		$this->session->startSession();
 
 		$path = $request->getPath();
 		if (empty($path)) {
@@ -103,7 +103,7 @@ class Application implements ApplicationInterface {
 	protected function check_post($post, $cookies) {
 		if (!empty($post['action']) && is_array($post['action'])) {
 			//validate csrf token for authenticated requests
-			if ($this->user->loggedIn()) {
+			if ($this->session->loggedIn()) {
 				$validated = false;
 				if (!empty($cookies['oid']) && !empty($post['oid']) && $cookies['oid'] === $post['oid']) $validated = true;
 				if (true !== $validated) {

@@ -56,7 +56,7 @@ class Table {
 	 * @param string $type the un-prefixed table name
 	 * @param array $filters the column filters
 	 */
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, UserInterface $user) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user) {
 		$this->db = $db;
 		$this->models = $models;
 		$this->user = $user;

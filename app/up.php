@@ -52,9 +52,9 @@ $this->block("missing", "<p><strong>Oops! The page you are looking for was not f
 //403 PAGE
 $this->uri("forbidden", "type:views");
 //LOGIN/LOGOUT PAGES
-$this->uri("login", "type:views");
-$this->uri("logout", "type:views");
-$this->uri("forgot-password", "type:views");
+$this->uri("login", "controller:login");
+$this->uri("logout", "controller:login  action:logout");
+$this->uri("forgot-password", "controller:login  action:forgot_password");
 
 
 

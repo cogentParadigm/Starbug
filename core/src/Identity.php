@@ -3,27 +3,15 @@
 # Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP
- * @file core/src/User.php
+ * @file core/src/Identity.php
  * @author Ali Gangji <ali@neonrain.com>
  */
 namespace Starbug\Core;
-class User implements UserInterface {
+class Identity implements IdentityInterface {
 	protected $user = array();
-	protected $db = array();
-	public function __construct(DatabaseInterface $db) {
-		$this->db = $db;
-	}
-	public function startSession() {
-		$this->clearUser();
-		if (false !== ($session = Session::active())) {
-			if (!empty($session['v']) && is_numeric($session['v'])) {
-				$user = $this->db->query("users");
-				$user = $user->select("users.*,users.groups as groups,users.statuses as statuses")->condition("users.id", $session['v'])->one();
-				if (Session::validate($session, $user['password'], \Etc::HMAC_KEY)) {
-					$this->setUser($user);
-				}
-			}
-		}
+	protected $models = array();
+	public function __construct(ModelFactoryInterface $models) {
+		$this->models = $models;
 	}
 	public function loggedIn($group = "") {
 		if (empty($this->user)) return false;
@@ -37,6 +25,13 @@ class User implements UserInterface {
 	public function getUser() {
 		return $this->user;
 	}
+	public function loadUser($id) {
+		$user = $this->models->get("users")->query()
+			->select(array("groups.slug as groups", "statuses.slug as statuses"), "users");
+		if (is_array($id)) $user->conditions($id);
+		else $user->condition("users.id", $id);
+		return $user->one();
+	}
 	public function setUser($user) {
 		unset($user['password']);
 		if (!is_array($user['groups'])) $user['groups'] = is_null($user['groups']) ? array() : explode(",", $user['groups']);
@@ -45,5 +40,13 @@ class User implements UserInterface {
 	}
 	public function clearUser() {
 		$this->user = array();
+	}
+	public function getHashedPassword($user) {
+		if (!is_array($user)) $user = $this->loadUser($user);
+		return $user['password'];
+	}
+	public function getIdentity($user) {
+		if (!is_array($user)) $user = $this->loadUser($user);
+		return $user['id'];
 	}
 }

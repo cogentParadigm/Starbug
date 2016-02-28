@@ -10,6 +10,7 @@ return array(
 	'Starbug\Core\ModelFactory' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Starbug\Core\CssGenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Starbug\Core\ErrorHandler' => DI\object()->constructorParameter("exceptionTemplate", defined('SB_CLI') ? "exception-cli" : "exception-html"),
+	'Starbug\Core\SessionStorage' => DI\object()->constructorParameter('key', ETC::HMAC_KEY),
 	'Starbug\Core\URL' => function(ContainerInterface $c) {
 		$request = $c->get("Starbug\Core\RequestInterface");
 		return $request->getURL();

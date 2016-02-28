@@ -43,12 +43,14 @@ class Users extends UsersModel {
 	 * A function for current users to update their profile
 	 */
 	function update_profile($profile) {
-		$user = $this->query()->condition("id", $profile['id'])->one();
-		if (Session::authenticate($user['password'], $profile['current_password'], $user['id'], Etc::HMAC_KEY)) {
-			$this->store(array("id" => $user['id'], "email" => $profile['email'], "password" => $profile['password'], "password_confirm" => $profile['password_confirm']));
+		//force the user to enter their current password to update their profile
+		//validate it by authenticating the sessiong against the entry
+		if ($this->session->authenticate($profile['id'], $profile['current_password'])) {
+			$this->store(array("id" => $profile['id'], "email" => $profile['email'], "password" => $profile['password'], "password_confirm" => $profile['password_confirm']));
 			if (!$this->errors() && !empty($profile['password'])) {
-				$user = $this->query()->condition("id", $profile['id'])->one();
-				Session::authenticate($user['password'], $profile['password'], $user['id'], Etc::HMAC_KEY);
+				//changing your password will invalidate your current session
+				//so we need to re-authenticate using the new password
+				$this->session->authenticate($profile['id'], $profile['password']);
 			}
 		} else {
 			$this->error("Your credentials could not be authenticated.", "current_password");
@@ -59,13 +61,10 @@ class Users extends UsersModel {
 	 * A function for logging in
 	 */
 	function login($login, $redirect=true) {
-		$user = $this->db->query("users")->select("users.*,users.groups as groups,users.statuses as statuses")->condition("users.email", $login['email'])->one();
-		if (Session::authenticate($user['password'], $login['password'], $user['id'], Etc::HMAC_KEY)) {
+		$user = $this->user->loadUser(array("email" => $login['email']));
+		if ($this->session->authenticate($user, $login['password'])) {
 			$this->user->setUser($user);
 			$this->store(array("id" => $user['id'], "last_visit" => date("Y-m-d H:i:s")));
-			if ($redirect) {
-				if ($this->user->loggedIn('admin') || $this->user->loggedIn('root')) redirect(uri('admin'));
-			}
 		} else {
 			$this->error("That email and password combination was not found.", "email");
 		}
@@ -75,7 +74,7 @@ class Users extends UsersModel {
 	 * for logging out
 	 */
 	function logout() {
-		Session::destroy();
+		$this->session->destroy();
 		return array();
 	}
 
