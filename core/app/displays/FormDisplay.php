@@ -16,7 +16,7 @@ class FormDisplay extends ItemDisplay {
 	protected $vars = array();
 	protected $models;
 
-	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, ModelFactoryInterface $models) {
+	function __construct(TemplateInterface $output, ResponseInterface $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, ModelFactoryInterface $models) {
 		$this->output = $output;
 		$this->response = $response;
 		$this->hook_builder = $hooks;

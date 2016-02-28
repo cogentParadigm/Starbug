@@ -69,7 +69,11 @@ class Bundle implements \IteratorAggregate, \Countable, \ArrayAccess {
 	}
 
 	public function offsetSet($offset, $value) {
-		$this->data[$offset] = $value;
+		if (is_null($offset)) {
+			$this->data[] = $value;
+		} else {
+			$this->data[$offset] = $value;
+		}
 	}
 
 	public function offsetUnset($offset) {

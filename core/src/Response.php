@@ -1,5 +1,5 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
+# Copyright (C) 2015-2016 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP
@@ -12,15 +12,15 @@ namespace Starbug\Core;
  * Response class
  * @ingroup core
  */
-class Response {
+class Response implements ResponseInterface {
 
-	public $headers;
-	public $cookies;
-	public $code;
-	public $content_type = "text/html";
-	public $charset = "UTF-8";
+	protected $headers;
+	protected $cookies;
+	protected $code;
+	protected $content_type = "text/html";
+	protected $charset = "UTF-8";
 
-	public $codes = array(
+	protected $codes = array(
 		200 => 'OK',
 		301 => 'Moved Permanently',
 		302 => 'Found',
@@ -37,24 +37,131 @@ class Response {
 	public $theme;
 	public $template = "html";
 	public $layout = "views";
-	public $styles = array();
-	public $scripts = array();
+	public $styles;
+	public $scripts;
 
 	protected $output;
 
 	public function __construct(TemplateInterface $output, $status_code = 200, $headers = array()) {
 		$this->output = $output;
 		$this->code = $status_code;
-		$this->headers = $headers;
-		$this->cookies = array();
+		$this->headers = new Bundle($headers);
+		$this->cookies = new Bundle();
+		$this->styles = new Bundle();
+		$this->scripts = new Bundle();
 		$this->assign("response", $this);
 	}
 
+	public function getHeaders() {
+		return $this->headers;
+	}
+	public function setHeaders($headers = array()) {
+		foreach ($headers as $name => $value) {
+			$this->setHeader($name, $value);
+		}
+		return $this;
+	}
+	public function getHeader($name) {
+		return $this->headers->get($name);
+	}
+	public function setHeader($name, $value = null) {
+		$this->headers->set($name, $value);
+		return $this;
+	}
+	public function getCookies() {
+		return $this->cookies;
+	}
+	public function setCookies($cookies = array()) {
+		foreach ($cookies as $name => $value) {
+			$this->setCookie($name, $value);
+		}
+		return $this;
+	}
+	public function getCookie($name) {
+		return $this->cookies->get($name);
+	}
+	public function setCookie($name, $value = null) {
+		$this->cookies->set($name, $value);
+		return $this;
+	}
+	public function getCode() {
+		return $this->code;
+	}
+	public function setCode($code) {
+		$this->code = $code;
+		return $this;
+	}
+	public function getContentType() {
+		return $this->content_type;
+	}
+	public function setContentType($type) {
+		$this->content_type = $type;
+		return $this;
+	}
+	public function getCharset() {
+		return $this->charset;
+	}
+	public function setCharset($charset) {
+		$this->charset = $charset;
+		return $this;
+	}
+	public function getTheme() {
+		return $this->theme;
+	}
+	public function setTheme($theme) {
+		$this->theme = $theme;
+		return $this;
+	}
+	public function getTemplate() {
+		return $this->template;
+	}
+	public function setTemplate($template) {
+		$this->template = $template;
+		return $this;
+	}
+	public function getLayout() {
+		return $this->layout;
+	}
+	public function setLayout($layout) {
+		$this->layout = $layout;
+		return $this;
+	}
+	public function getStyles() {
+		return $this->styles;
+	}
+	public function setStyles($styles = array()) {
+		foreach ($styles as $name => $style) {
+			$this->setStyle($name, $style);
+		}
+		return $this;
+	}
+	public function getStyle($name) {
+		return $this->styles->get($name);
+	}
+	public function setStyle($name, $value = null) {
+		$this->styles->set($name, $value);
+		return $this;
+	}
+	public function getScripts() {
+		return $this->scripts;
+	}
+	public function setScripts($scripts = array()) {
+		foreach ($scripts as $name => $script) {
+			$this->setScript($name, $script);
+		}
+		return $this;
+	}
+	public function getScript($name) {
+		return $this->scripts->get($name);
+	}
+	public function setScript($name, $value = null) {
+		$this->scripts->set($name, $value);
+		return $this;
+	}
 	public function assign($key, $value = "") {
 		$this->output->assign($key, $value);
 	}
-
-	public function send_headers() {
+	public function sendHeaders() {
 		$code = $this->code;
 		if (isset($this->codes[$code])) $code .= " ".$this->codes[$code];
 		header("HTTP/1.1 ".$code);
@@ -65,34 +172,34 @@ class Response {
 		}
 	}
 
-	public function send_cookies() {
+	public function sendCookies() {
 	 foreach ($this->cookies as $name => $cookie) {
 		 setcookie($name, $cookie['value'], $cookie['expires'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
 	 }
 	}
 
-	public function send_content() {
+	public function sendContent() {
 		$this->output->render($this->template);
 	}
 
 	public function send() {
 		ob_start();
-		$this->send_headers();
-		$this->send_cookies();
-		$this->send_content();
+		$this->sendHeaders();
+		$this->sendCookies();
+		$this->sendContent();
 		ob_end_flush();
 	}
 
 	/**
-	* sends a 404 and sets the payload, path, and uri
-	*/
+	 * sends a 404 and sets the payload, path, and uri
+	 */
 	public function missing() {
 		$this->code = 404;
 	}
 
 	/**
-	* sends a 403 and sets the payload, path, and uri
-	*/
+	 * sends a 403 and sets the payload, path, and uri
+	 */
 	public function forbidden() {
 		$this->code = 403;
 	}
@@ -111,6 +218,6 @@ class Response {
 	}
 
 	public function js($mid) {
-		$this->scripts[] = $mid;
+		$this->scripts->set($mid, $mid);
 	}
 }

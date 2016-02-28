@@ -17,7 +17,7 @@ class ItemDisplay extends Display {
 	protected $response;
 	protected $models;
 
-	function __construct(TemplateInterface $output, Response $response, ModelFactoryInterface $models, HookFactoryInterface $hook_builder) {
+	function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, HookFactoryInterface $hook_builder) {
 		$this->output = $output;
 		$this->models = $models;
 		$this->response = $response;

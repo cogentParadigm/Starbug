@@ -68,7 +68,7 @@ class Controller {
 		$this->render("missing");
 	}
 
-	function start(RequestInterface $request, Response $response) {
+	function start(RequestInterface $request, ResponseInterface $response) {
 		$this->request = $request;
 		$this->response = $response;
 		$this->init();

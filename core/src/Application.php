@@ -31,7 +31,7 @@ class Application implements ApplicationInterface {
 		SettingsInterface $settings,
 		ResourceLocatorInterface $locator,
 		UserInterface $user,
-		Response $response
+		ResponseInterface $response
 	) {
 		$this->controllers = $controllers;
 		$this->models = $models;
