@@ -12,7 +12,7 @@ namespace Starbug\Core;
 * Request class. interprets the request (URI, $_GET, and $_POST) and serves the appropriate content
 * @ingroup core
 */
-class Bundle implements \IteratorAggregate, \Countable {
+class Bundle implements \IteratorAggregate, \Countable, \ArrayAccess {
 	protected $data;
 
 	public function __construct(array $data = array()) {
@@ -58,5 +58,21 @@ class Bundle implements \IteratorAggregate, \Countable {
 
 	public function count() {
 		return count($this->data);
+	}
+
+	public function offsetExists($offset) {
+		return isset($this->data[$offset]);
+	}
+
+	public function offsetGet($offset) {
+		return isset($this->data[$offset]) ? $this->data[$offset] : null;
+	}
+
+	public function offsetSet($offset, $value) {
+		$this->data[$offset] = $value;
+	}
+
+	public function offsetUnset($offset) {
+		unset($this->data[$offset]);
 	}
 }

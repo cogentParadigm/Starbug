@@ -59,7 +59,7 @@ class Response {
 		if (isset($this->codes[$code])) $code .= " ".$this->codes[$code];
 		header("HTTP/1.1 ".$code);
 		header('Content-Type: '.$this->content_type.'; charset='.$this->charset);
-		header('Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0');
+		header('Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0');
 		foreach ($this->headers as $name => $value) {
 			header($name.": ".$value);
 		}
