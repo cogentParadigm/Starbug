@@ -10,6 +10,7 @@
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 			<script type="text/javascript" src="<?php echo $this->url->build("libraries/release/dojo/dojo/dojo.js"); ?>"></script>
+			<?php $response->js("dojo/parser"); ?>
 	<?php } else { ?>
 			<?php
 				$profile = file_get_contents(BASE_DIR."/etc/dojo.profile.js");

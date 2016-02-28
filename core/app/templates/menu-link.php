@@ -48,6 +48,7 @@
 			$link_attributes['data-toggle'] = "dropdown";
 			$link_attributes['role'] = "button";
 			$link_attributes['data-target'] = "#";
+			$response->js("bootstrap/Dropdown");
 		}
 		$link_attributes['class'] = "dropdown-toggle";
 		$link_text .= '<i class="fa chevron pull-right"></i>';
