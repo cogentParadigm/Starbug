@@ -12,7 +12,6 @@
  * global functions
  */
 
-	include("core/global/cache.php");
 	include("core/global/strings.php");
 	include("core/global/templates.php");
 
