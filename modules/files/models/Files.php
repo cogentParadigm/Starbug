@@ -31,7 +31,7 @@ class Files extends FilesModel {
 				$id = (empty($record['id'])) ? $this->insert_id : $record['id'];
 				$move_function = $remote ? 'rename' : 'move_uploaded_file';
 				if ($move_function($file["tmp_name"], "app/public/uploads/".$id."_".$record['filename'])) {
-					if (reset(explode("/", $record['mime_type'])) == "image") image_thumb("app/public/uploads/".$id."_".$record['filename'], "w:100  h:100  a:1");
+					if (reset(explode("/", $record['mime_type'])) == "image") echo $this->images->thumb("app/public/uploads/".$id."_".$record['filename'], ["w" => 100, "h" => 100, "a" => 1]);
 					return true;
 				} else {
 					return false;
@@ -80,7 +80,7 @@ class Files extends FilesModel {
 	}
 
 	function filter($file) {
-		if (reset(explode("/", $file['mime_type'])) == "image") image_thumb("app/public/uploads/".$file['id']."_".$file['filename'], "w:100  h:100  a:1");
+		if (reset(explode("/", $file['mime_type'])) == "image") $this->images->thumb("app/public/uploads/".$file['id']."_".$file['filename'], ["w" => 100, "h" => 100, "a" => 1]);
 		return $file;
 	}
 }

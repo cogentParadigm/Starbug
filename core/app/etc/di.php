@@ -15,6 +15,7 @@ return array(
 		$request = $c->get("Starbug\Core\RequestInterface");
 		return $request->getURL();
 	},
+	'Starbug\Core\Images' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'databases.default' => function(ContainerInterface $c) {
 		$config = $c->get("Starbug\Core\ConfigInterface");
 		$name = $c->get("database_name");
