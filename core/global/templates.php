@@ -14,30 +14,6 @@ use Starbug\Core\Renderable;
  * @ingroup global
  */
 /**
-	* render an image
-	* @ingroup templates
-	* @param star $src the image path plus attributes. eg. 'image("giraffe.png  class:left")'
-	*/
-function image($src="", $flags="i") {
-	$ops = star($src);
-	$src = array_shift($ops);
-	$ops['src'] = uri($src, $flags);
-	echo '<img '.html_attributes($ops, false).'/>';
-}
-/**
-	* render a link
-	* @ingroup templates
-	* @param string $text the innerHTML of the link
-	* @param string $url (optional) the relative url to link to
-	* @param star $attributes HTML attributes for the link
-	*/
-function link_to($text, $url="", $attributes=array()) {
-	$attributes = star($attributes);
-	if (is_array($url)) $attributes = $url;
-	else if (!empty($url)) $attributes['href'] = uri($url);
-	echo '<a '.html_attributes($attributes, false).'>'.$text.'</a>';
-}
-/**
  * render a field
  * @ingroup templates
  * @param string $model the name of the model that the field belongs to
