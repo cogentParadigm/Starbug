@@ -1,7 +1,8 @@
 	<script type="text/javascript">
-<?php if (!empty($response->scripts)) { ?>
+<?php $scripts = implode('"'.",\n\t\t\t".'"', $response->getScripts()->get()); ?>
+<?php if (!empty($scripts)) { ?>
 		require([
-			"<?php echo implode('"'.",\n\t\t\t".'"', $response->getScripts()->get()); ?>"
+			"<?php echo $scripts; ?>"
 		]);
 <?php } ?>
 	</script>
