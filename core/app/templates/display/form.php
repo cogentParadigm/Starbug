@@ -37,7 +37,10 @@
 						$field['name'] = 'action';
 						if (!empty($display->model)) $field['name'] .= '['.$display->model.']';
 						$label = $field['label'];
-						button($label, $field);
+						$ops = $field;
+						if (empty($ops['type'])) $ops['type'] = "submit";
+						$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ")."btn";
+						echo '<button '.html_attributes($ops, false).'>'.$label.'</button>';
 					}
 				?>
 				<?php if (!empty($display->cancel_url)) { ?>

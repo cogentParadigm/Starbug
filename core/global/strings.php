@@ -42,35 +42,6 @@ function normalize($raw, $valid_chars = 'a-zA-Z0-9 \-_') {
 	return preg_replace("/[^".$valid_chars."]/", "", $raw);
 }
 /**
- * get the plural form of a singular form word
- * @ingroup strings
- * @param string $singular the singular form of the word
- * @return string the plural form of the word
- */
-function format_plural($singular) {
-	$rules = array(
-		'/(x¦ch¦ss¦sh)$/' => '\1es', # search, switch, fix, box, process, address
-		'/series$/' => '\1series',
-		'/([^aeiouy]¦qu)ies$/' => '\1y',
-		'/([^aeiouy]¦qu)y$/' => '\1ies', # query, ability, agency
-		'/(?:([^f])fe¦([lr])f)$/' => '\1\2ves', # half, safe, wife
-		'/sis$/' => 'ses', # basis, diagnosis
-		'/([ti])um$/' => '\1a', # datum, medium
-		'/person$/' => 'people', # person, salesperson
-		'/man$/' => 'men', # man, woman, spokesman
-		'/child$/' => 'children', # child
-		'/(.*)status$/' => '\1statuses',
-		'/s$/' => 's', # no change (compatibility)
-		'/$/' => 's'
-	);
-	$plural = $singular;
-	foreach ($rules as $pattern => $repl) {
-		$plural = preg_replace($pattern, $repl, $singular);
-		if ($singular != $plural) break; // leave if plural found
-	}
-	return $plural;
-}
-/**
  * helper function to format a machine name into a label
  */
 function format_label($name) {
