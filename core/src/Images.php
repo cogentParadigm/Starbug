@@ -84,6 +84,18 @@ class Images implements ImagesInterface {
 		if (!file_exists($this->base_directory."/".$target) || $dimensions['f']) {
 			if (!file_exists($this->base_directory."/".$dir)) mkdir($this->base_directory."/".$dir);
 			$thumb = new \PHPThumb\GD($this->base_directory."/".$current_file);
+			if (function_exists("exif_read_data")) {
+				$exif = exif_read_data($this->base_directory."/".$current_file);
+				if (!empty($exif['Orientation'])) {
+					if ($exif['Orientation'] === 3) {
+						$thumb->rotateImageNDegrees(180);
+					} else if ($exif['Orientation'] === 6) {
+						$thumb->rotateImageNDegrees(-90);
+					} else if ($exif['Orientation'] === 8) {
+						$thumb->rotateImageNDegrees(90);
+					}
+				}
+			}
 			if ($dimensions['a']) $thumb->adaptiveResize($dimensions['w'], $dimensions['h']);
 			else $thumb->resize($dimensions['w'], $dimensions['h']);
 			$thumb->save($this->base_directory."/".$target);
