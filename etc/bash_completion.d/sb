@@ -8,7 +8,7 @@ _sb() {
 	#
 	#  The basic options we'll complete.
 	#
-	opts=$(for x in `ls script/*.php`; do echo ${x:0:${#x}-4} ; done | xargs -n1 basename )
+	opts=$(for x in `ls core/app/script/*.php app/script/*.php modules/*/script/*.php`; do echo ${x:0:${#x}-4} ; done | xargs -n1 basename )
 
 
 	#
