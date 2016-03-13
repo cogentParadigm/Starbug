@@ -1,9 +1,7 @@
-#!/usr/bin/php
-<?php
-	if (file_exists("etc/Host.php")) include("core/cli.php");
-	$command = array_shift($argv);
-	$script = array_shift($argv);
-	if (file_exists("script/$script.php")) {
-		include("script/$script.php");
-	}
-?>
+file="sb"
+if [ -f "$file" ]
+then
+	php sb "$@"
+else
+	echo "local sb command not found. is this a Starbug project directory?"
+fi
