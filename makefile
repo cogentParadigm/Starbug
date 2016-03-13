@@ -1,4 +1,6 @@
+COMPLETIONS_DIR=$(shell pkg-config --variable=completionsdir bash-completion)
+
 install:
 	cp usr/bin/starbug /usr/bin/
 	cp usr/bin/sb /usr/bin/
-	if [ -d /etc/bash_completion.d ]; then cp etc/bash_completion.d/sb /etc/bash_completion.d/; fi
+	if [ -d $(COMPLETIONS_DIR) ]; then cp etc/bash_completion.d/sb $(COMPLETIONS_DIR)/; fi
