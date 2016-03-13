@@ -21,8 +21,8 @@ _sb() {
 			return 0
 			;;
 		* )
-			if [ -d script/${prev} ]; then
-				local options=$(for x in `ls script/${prev}`; do echo ${x} ; done | xargs -n1 basename )
+			if [ -d core/app/script/${prev} -o -d app/script/${prev} -o -d modules/*/script/${prev} ]; then
+				local options=$(for x in `ls core/app/script/${prev} app/script/${prev} modules/*/script/${prev} 2>/dev/null | grep -v ":"`; do echo ${x} ; done | xargs -n1 basename )
 				COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
 				return 0
 			fi
