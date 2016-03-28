@@ -110,7 +110,7 @@ define([
 			this.grid.set('collection', this.store);
 			var ids = [];
 			var items = this.store.data;
-			for (var i in items) ids.push(this.store.getIdentity(items[i]));
+			for (var i = 0;i<items.length;i++) ids.push(this.store.getIdentity(items[i]));
 			ids.push("-~");
 			this.input.value = ids.join(',');
 		},

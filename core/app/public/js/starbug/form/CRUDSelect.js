@@ -95,13 +95,14 @@ define([
 			this.dialog.show(false, {copy:item_id});
 		},
 		refresh: function() {
+			this.grid.refresh();
+			this.grid.renderArray(this.store.data);
 			this.grid.set('collection', this.store);
 			var ids = [];
 			var items = this.store.data;
 			for (var i = 0;i<items.length;i++) ids.push('#' + this.store.getIdentity(items[i]));
 			ids.push("-~");
 			this.input.value = ids.join(',');
-			this.grid.refresh();
 		},
 		set_status: function(value) {
 			/**

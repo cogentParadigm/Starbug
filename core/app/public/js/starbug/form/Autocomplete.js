@@ -80,6 +80,7 @@ define([
 				}
 
 			}, this.listNode);
+			this.list.startup();
 
 			/*
 			on(self.domNode, 'focus', function() {

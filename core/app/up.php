@@ -91,7 +91,7 @@ $this->table("uris", "blocks  type:blocks  table:blocks");
 $this->table("menus",
 	"menu  type:string  length:32  list:true  display:false",
 	"parent  type:int  default:0  materialized_path:menu_path",
-	"uris_id  type:int  references:uris id  label:Page  null:  update:cascade  delete:cascade",
+	"uris_id  type:int  references:uris id  label:Page  null:  default:NULL  update:cascade  delete:cascade",
 	"href  type:string  length:255  label:URL  default:",
 	"content  type:string  length:255  default:",
 	"target  type:string  default:",

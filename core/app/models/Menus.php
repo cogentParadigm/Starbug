@@ -6,6 +6,8 @@
 namespace Starbug\Core;
 class Menus extends MenusModel {
 
+	public $label_select = "CONCAT(menus.menu, ': ', menus.content)";
+
 	function create($menu) {
 		if (!isset($menu['position'])) $menu['position'] = "";
 		if (!isset($menu['template'])) $menu['template'] = "";

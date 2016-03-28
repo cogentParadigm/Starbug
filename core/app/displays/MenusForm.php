@@ -8,7 +8,7 @@ class MenusForm extends FormDisplay {
 		$this->layout->add("middle  ml:div.col-md-6  mr:div.col-md-6");
 		$this->layout->add("bottom  bl:div.col-md-6  br:div.col-md-6");
 		$this->add("menu  input_type:hidden  pane:tl  default:".$ops['menu']);
-		$this->add("parent  input_type:autocomplete  pane:tl  info:Leave empty to place the item at the top level.");
+		$this->add("parent  input_type:autocomplete  from:menus  pane:tl  info:Leave empty to place the item at the top level.");
 		$this->add("position  pane:tr  info:Enter 1 for the first position, leave empty for the last.");
 		$this->add("uris_id  pane:ml  input_type:autocomplete  from:uris  label:Page  info:Select a page.");
 		$this->add("href  pane:mr  label:URL  info:Enter a URL manually.");
