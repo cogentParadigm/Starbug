@@ -77,6 +77,9 @@ class ErrorHandler {
 	* error handler
 	*/
 	function handle_error($errno, $errstr, $errfile, $errline) {
+		if (0 == error_reporting()) {
+			return;
+		}
 		restore_error_handler();
 		restore_exception_handler();
 
