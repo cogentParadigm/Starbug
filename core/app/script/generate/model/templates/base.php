@@ -3,8 +3,17 @@
   $factory = isset($factory[$model]) ? $factory[$model] : array();
   extract($config->get($model, "json"));
   echo '<?php'."\n";
+  $use = [];
+  foreach ($factory as $n => $t) {
+    if (false != strpos($t, "\\")) {
+      $use[] = "use ".$t.";";
+      $parts = explode("\\", $t);
+      $factory[$n] = end($parts);
+    }
+  }
 ?>
 namespace Starbug\Core;
+<?php if (!empty($use)) echo implode("\n", $use)."\n"; ?>
 /**
  * <?php echo $name; ?> model base
  * @ingroup models

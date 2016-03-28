@@ -127,7 +127,9 @@ define([
 			/**
 			 * upload handler. adds the file to the list once it has been uploaded.
 			 */
-			files[0].filename = files[0].original_name;
+			for (var i = 0;i < files.length;i++) {
+				files[i].filename = files[i].original_name;
+			}
 			this.add(files);
 		},
 		onCancelUpload: function() {

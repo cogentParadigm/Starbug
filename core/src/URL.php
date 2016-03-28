@@ -195,16 +195,16 @@ class URL implements URLInterface {
 		}
 		if (false === $path) $path = $this->path;
 		$url .= $this->dir . $path;
-		if (isset($this->format)) {
+		if (false === $path && isset($this->format)) {
 			$url .= "." . $this->format;
 		}
-		if (!empty($this->parameters)) {
+		if (false === $path && !empty($this->parameters)) {
 			$url .= '?';
 			foreach ($this->parameters as $key => $value) {
 				$url .= $key . '=' . $value;
 			}
 		}
-		if (isset($this->fragment)) {
+		if (false === $path && isset($this->fragment)) {
 			$url .= '#' . $fragment;
 		}
 		return $url;
