@@ -1,5 +1,8 @@
 <?php echo '<?php'."\n"; ?>
-class Admin<?php echo ucwords($model); ?>Controller {
+namespace Starbug\App;
+use Starbug\Core\Controller;
+use Starbug\Core\DatabaseInterface;
+class Admin<?php echo ucwords($model); ?>Controller extends Controller {
 	public $routes = array(
 		'update' => '{id}'
 	);
