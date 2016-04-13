@@ -37,7 +37,7 @@ class FormDisplay extends ItemDisplay {
 		$this->layout = $this->displays->get("LayoutDisplay");
 		//create actions display
 		$this->actions = $this->displays->get("ItemDisplay");
-		$this->actions->add($this->default_action."  label:".$this->submit_label."  class:btn-success");
+		$this->actions->add([$this->default_action, "label" => $this->submit_label, "class" => "btn-success"]);
 
 		//run query
 		$this->before_query($options);
@@ -227,7 +227,6 @@ class FormDisplay extends ItemDisplay {
 	 * @param star $ops the option string
 	 */
 	function fill_ops(&$ops, $control = "") {
-		$ops = star($ops);
 		$name = array_shift($ops);
 		if (empty($ops['name'])) $ops['name'] = $name;
 		//model

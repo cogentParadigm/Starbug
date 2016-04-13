@@ -91,7 +91,7 @@ class Users extends UsersModel {
 				if (empty($id)) $this->error("Sorry, the email address you entered was not found. Please retry.", "email");
 				else {
 					$new_password = mt_rand(1000000, 9999999);
-					$this->store("id:$id  password:$new_password");
+					$this->store(["id" => $id, "password" => $new_password]);
 					$data = array("user" => $user);
 					$data['user']['password'] = $new_password;
 					$result = $this->mailer->send(array("template" => "Password Reset", "to" => $user['email']), $data);

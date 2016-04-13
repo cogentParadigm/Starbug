@@ -1,6 +1,5 @@
 <?php
 $new_label = "New ".$this->models->get($model)->singular_label." <b class=\"fa fa-plus\"></b>";
-$new_attrs = "class:btn btn-default";
 ?>
 
 <div class="btn-group pull-right">

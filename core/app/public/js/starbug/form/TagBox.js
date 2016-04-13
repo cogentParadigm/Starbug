@@ -4,7 +4,7 @@ define([
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
-	"sb",
+	"sb/store/Api",
 	"dojo/text!./templates/TagBox.html",
 	"dgrid/OnDemandList",
 	"put-selector/put",
@@ -15,7 +15,7 @@ define([
 	"dojo/dom-class",
 	"dijit/form/TextBox",
 	"dijit/form/Button"
-], function (declare, lang, Widget, Templated, _WidgetsInTemplate, sb, template, List, put, on, locale, dom, domattr, domclass) {
+], function (declare, lang, Widget, Templated, _WidgetsInTemplate, Api, template, List, put, on, locale, dom, domattr, domclass) {
 	return declare([Widget, Templated, _WidgetsInTemplate], {
 		currentUser:0, //logged in user
 		readOnly:false,
@@ -32,7 +32,7 @@ define([
 		input_name:'tags',
 		postCreate:function() {
 			var self = this;
-			this.store = sb.get('terms', 'tags');
+			this.store = new Api({model:'terms', action:'tags'});
 
 			this.input.name = this.input_name;
 			//instantiate a dgrid on demand list

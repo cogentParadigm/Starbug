@@ -11,6 +11,6 @@
 			</a>
 		</p>
 	</div>
-	<?php $this->displays->render("TermsTreeGrid",  array("taxonomy" => $taxonomy)); ?>
+	<?php $this->displays->render("TermsTreeGrid", array("taxonomy" => $taxonomy)); ?>
 	</div>
 </div>

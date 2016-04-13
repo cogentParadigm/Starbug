@@ -6,8 +6,9 @@ class TermsTreeGrid extends GridDisplay {
 	public function build_display($options) {
 		$this->dnd();
 		$this->attr('base_url', 'admin/taxonomies');
-		$this->insert(0, "id  plugin:starbug.grid.columns.tree  sortable:false");
-		$this->add("term  sortable:false", "position  sortable:false");
+		$this->insert(0, ["id", "plugin" => "starbug.grid.columns.tree", "sortable" => "false"]);
+		$this->add(["term", "sortable" => "false"]);
+		$this->add(["position", "sortable" => "false"]);
 	}
 }
 ?>

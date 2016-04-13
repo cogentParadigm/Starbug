@@ -7,7 +7,7 @@ class RegisterForm extends FormDisplay {
 	function build_display($options) {
 		$this->request->setPost('users', 'password', null);
 		$this->request->setPost('users', 'password_confirm', null);
-		$this->add("email", "password", "password_confirm  input_type:password");
+		$this->add("email", "password", ["password_confirm", "input_type" => "password"]);
 	}
 }
 ?>

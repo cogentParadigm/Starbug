@@ -20,7 +20,7 @@ class GridDisplay extends ItemDisplay {
 
 	function build($options=array()) {
 		//set defaults
-		if ($options['attributes']) $this->attributes = star($options['attributes']);
+		if ($options['attributes']) $this->attributes = $options['attributes'];
 		$this->options = $options;
 		if ($options['dnd']) $this->dnd();
 		$this->build_display($options);

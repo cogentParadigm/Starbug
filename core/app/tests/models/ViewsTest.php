@@ -24,7 +24,7 @@ class ViewsTest extends ModelTest {
 		//re fetch and test for updates
 		$object = $this->models->get("views")->load(array("path" => "phpunit"), true);
 
-		$block = $this->db->get("blocks", array("uris_id" => $object["uris_id"]), "limit:1");
+		$block = $this->db->get("blocks", array("uris_id" => $object["uris_id"]), ["limit" => "1"]);
 		$this->assertEquals("Test Title", $object['title']);
 		$this->assertEquals("Test Content", $block['content']);
 	}

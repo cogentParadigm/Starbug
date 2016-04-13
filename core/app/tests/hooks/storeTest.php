@@ -33,7 +33,7 @@ class storeTest extends DatabaseTestCase {
 	 */
 	function test_addslashes() {
 		//store a value with a quote
-		$this->db->store("hook_store_addslashes", "value:phpunit's");
+		$this->db->store("hook_store_addslashes", ["value" => "phpunit's"]);
 
 		//retrieve the record
 		$id = $this->models->get("hook_store_addslashes")->insert_id;
@@ -97,7 +97,7 @@ class storeTest extends DatabaseTestCase {
 		//category fields have an alias of %taxonomy% %slug% (see the alias hook)
 		//this means we can use the alias instead of an id, but we'll use the id
 		//since we only want to test the category hook
-		$this->db->store("hook_store_category", "value:published");
+		$this->db->store("hook_store_category", ["value" => "published"]);
 
 		//retrieve the record
 		$rid = $this->models->get("hook_store_category")->insert_id;
@@ -107,7 +107,7 @@ class storeTest extends DatabaseTestCase {
 		$this->assertSame($term['id'], $record["value"]);
 
 		//update the record
-		$this->db->store("hook_store_category", "id:$rid  value:deleted");
+		$this->db->store("hook_store_category", ["id" => $rid, "value" => "deleted"]);
 
 		//retrieve the updated record
 		$record = $this->db->get("hook_store_category", $rid);
@@ -121,7 +121,7 @@ class storeTest extends DatabaseTestCase {
 	 */
 	function test_confirm() {
 		//try to store with values that don't match
-		$this->db->store("hook_store_confirm", "value:one  value_confirm:two");
+		$this->db->store("hook_store_confirm", ["value" => "one", "value_confirm" => "two"]);
 
 		//verify the error exists
 		$this->assertSame("Your value fields do not match", $this->db->errors["hook_store_confirm"]["value"][0]);
@@ -130,7 +130,7 @@ class storeTest extends DatabaseTestCase {
 		$this->db->errors = array();
 
 		//store with matching values
-		$this->db->store("hook_store_confirm", "value:one  value_confirm:one");
+		$this->db->store("hook_store_confirm", ["value" => "one", "value_confirm" => "one"]);
 
 		//assert the lack of errors
 		$this->assertFalse($this->db->errors());
@@ -142,7 +142,7 @@ class storeTest extends DatabaseTestCase {
 	function test_datetime() {
 		//store a value
 		//anything strtotime can interpret will work
-		$this->db->store("hook_store_datetime", "value:February 12th, 1988");
+		$this->db->store("hook_store_datetime", ["value" => "February 12th, 1988"]);
 
 		//retrieve the record
 		$id = $this->models->get("hook_store_datetime")->insert_id;
@@ -207,7 +207,7 @@ class storeTest extends DatabaseTestCase {
 		$this->assertEmpty($l1_record["value_field"]);
 
 		//store record 2, child of record 1
-		$this->db->store("hook_store_materialized_path", "parent:".$l1);
+		$this->db->store("hook_store_materialized_path", ["parent" => $l1]);
 
 		//retrieve the record
 		$l2 = $this->models->get("hook_store_materialized_path")->insert_id;
@@ -217,7 +217,7 @@ class storeTest extends DatabaseTestCase {
 		$this->assertSame("-".$l1."-", $l2_record["value_field"]);
 
 		//store record 3, child of record 2
-		$this->db->store("hook_store_materialized_path", "parent:".$l2);
+		$this->db->store("hook_store_materialized_path", ["parent" => $l2]);
 
 		//retrieve the record
 		$l3 = $this->models->get("hook_store_materialized_path")->insert_id;
@@ -227,7 +227,7 @@ class storeTest extends DatabaseTestCase {
 		$this->assertSame("-".$l1."-".$l2."-", $l3_record["value_field"]);
 
 		//store record 4, child of record 3
-		$this->db->store("hook_store_materialized_path", "parent:".$l3);
+		$this->db->store("hook_store_materialized_path", ["parent" => $l3]);
 
 		//retrieve the record
 		$l4 = $this->models->get("hook_store_materialized_path")->insert_id;
@@ -237,7 +237,7 @@ class storeTest extends DatabaseTestCase {
 		$this->assertSame("-".$l1."-".$l2."-".$l3."-", $l4_record["value_field"]);
 
 		//store record 5, child of record 4
-		$this->db->store("hook_store_materialized_path", "parent:".$l4);
+		$this->db->store("hook_store_materialized_path", ["parent" => $l4]);
 
 		//retrieve the record
 		$l5 = $this->models->get("hook_store_materialized_path")->insert_id;
@@ -254,7 +254,7 @@ class storeTest extends DatabaseTestCase {
 		$str = "test";
 
 		//store record
-		$this->db->store("hook_store_md5", "value:".$str);
+		$this->db->store("hook_store_md5", ["value" => $str]);
 
 		//retrieve the record
 		$id = $this->models->get("hook_store_md5")->insert_id;
@@ -269,7 +269,7 @@ class storeTest extends DatabaseTestCase {
 	 */
 	function test_optional_update() {
 		//store the value
-		$this->db->store("hook_store_optional_update", "value:starbug");
+		$this->db->store("hook_store_optional_update", ["value" => "starbug"]);
 
 		//retrieve the record
 		$id = $this->models->get("hook_store_optional_update")->insert_id;
@@ -357,7 +357,7 @@ class storeTest extends DatabaseTestCase {
 		$pass = "myPassword";
 
 		//store record
-		$this->db->store("hook_store_password", "value:".$pass);
+		$this->db->store("hook_store_password", ["value" => $pass]);
 
 		//retrieve record
 		$id = $this->models->get("hook_store_password")->insert_id;
@@ -372,7 +372,7 @@ class storeTest extends DatabaseTestCase {
 	 */
 	function test_references() {
 		//store a uri
-		$this->db->store("uris", "path:hook_store_references");
+		$this->db->store("uris", ["path" => "hook_store_references"]);
 		$uid = $this->models->get("uris")->insert_id;
 
 		//store a record
@@ -404,7 +404,7 @@ class storeTest extends DatabaseTestCase {
 		$this->db->errors = array();
 
 		//store a record
-		$this->db->store("hook_store_required", "value:value");
+		$this->db->store("hook_store_required", ["value" => "value"]);
 
 		//retrieve the record
 		$id = $this->models->get("hook_store_required")->insert_id;
@@ -453,13 +453,13 @@ class storeTest extends DatabaseTestCase {
 	 */
 	function test_terms() {
 		//store terms
-		$this->db->store("hook_store_terms", "value:published,pending,deleted");
+		$this->db->store("hook_store_terms", ["value" => "published,pending,deleted"]);
 
 		//get the id
 		$id = $this->models->get("hook_store_terms")->insert_id;
 
 		//retrieve the entries
-		$terms = $this->db->query("hook_store_terms_value")->conditions("hook_store_terms_id:$id")->select("value_id.slug as slug")->sort("slug")->all();
+		$terms = $this->db->query("hook_store_terms_value")->conditions(["hook_store_terms_id" => $id])->select("value_id.slug as slug")->sort("slug")->all();
 
 		//verify the records are what we expect
 		$this->assertSame("deleted", $terms[0]["slug"]);
@@ -467,20 +467,20 @@ class storeTest extends DatabaseTestCase {
 		$this->assertSame("published", $terms[2]["slug"]);
 
 		//update the terms (remove deleted)
-		$this->db->store("hook_store_terms", "id:$id  value:-deleted");
+		$this->db->store("hook_store_terms", ["id" => $id, "value" => "-deleted"]);
 
 		//retrieve the entries
-		$terms = $this->db->query("hook_store_terms_value")->conditions("hook_store_terms_id:$id")->select("value_id.slug as slug")->sort("slug")->all();
+		$terms = $this->db->query("hook_store_terms_value")->conditions(["hook_store_terms_id" => $id])->select("value_id.slug as slug")->sort("slug")->all();
 
 		//verify the records are what we expect
 		$this->assertSame("pending", $terms[0]["slug"]);
 		$this->assertSame("published", $terms[1]["slug"]);
 
 		//update the terms (add deleted, remove others)
-		$this->db->store("hook_store_terms", "id:$id  value:deleted,-~");
+		$this->db->store("hook_store_terms", ["id" => $id, "value" => "deleted,-~"]);
 
 		//retrieve the entries
-		$terms = $this->db->query("hook_store_terms_value")->conditions("hook_store_terms_id:$id")->select("value_id.slug as slug")->sort("slug")->all();
+		$terms = $this->db->query("hook_store_terms_value")->conditions(["hook_store_terms_id" => $id])->select("value_id.slug as slug")->sort("slug")->all();
 
 		//verify the records are what we expect
 		$this->assertSame("deleted", $terms[0]["slug"]);
@@ -529,13 +529,13 @@ class storeTest extends DatabaseTestCase {
 	 */
 	function test_unique() {
 		//store a value
-		$this->db->store("hook_store_unique", "value:one");
+		$this->db->store("hook_store_unique", ["value" => "one"]);
 
 		//assert that there are no errors
 		$this->assertFalse($this->db->errors());
 
 		//try it again
-		$this->db->store("hook_store_unique", "value:one");
+		$this->db->store("hook_store_unique", ["value" => "one"]);
 
 		//verify the error exists
 		$this->assertSame("That value already exists.", $this->db->errors["hook_store_unique"]["value"][0]);

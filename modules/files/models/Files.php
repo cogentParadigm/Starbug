@@ -49,7 +49,7 @@ class Files extends FilesModel {
 	}
 
 	function delete($file) {
-		$this->remove("id:" .$file['id']);
+		$this->remove(["id" => $file['id']]);
 		return array();
 	}
 

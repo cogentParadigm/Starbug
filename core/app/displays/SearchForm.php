@@ -6,8 +6,8 @@ class SearchForm extends FormDisplay {
 	public $submit_label = "Search";
 	function build_display($options) {
 		$this->attributes['class'][] = 'form-inline';
-		$this->add("keywords  input_type:text  nolabel:");
-		$this->actions->add("search  class:btn-default");
+		$this->add(["keywords", "input_type" => "text", "nolabel"  => true]);
+		$this->actions->add(["search", "class" => "btn-default"]);
 		$this->actions->template = "inline";
 	}
 }
