@@ -53,7 +53,7 @@ class Taxonomy implements TaxonomyInterface {
 
 		//IF THE TERM DOESN'T EXIST, ADD IT
 		$term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->params(array("tag" => $tag, "tax" => $taxonomy))->one();
-		if (empty($term)) $this->db->store("terms", "term:$tag  slug:$slug  taxonomy:$taxonomy  parent:0  position:");
+		if (empty($term)) $this->db->store("terms", ["term" => $tag, "slug" => $slug, "taxonomy" => $taxonomy, "parent" => 0, "position" => ""]);
 		else if ($term['taxonomy'] == "groups" && !$this->user->loggedIn("root") && in_array($term['slug'], array("root"))) return false;
 		if ($this->db->errors()) return false;
 

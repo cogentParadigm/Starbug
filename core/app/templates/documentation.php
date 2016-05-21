@@ -1,7 +1,6 @@
 <?php
 	$path = ltrim($request->getPath(), "documentation");
 	if (empty($path)) $path = "/index";
-	if (empty($request->getFormat())) $request->getFormat() = "html";
 	if ("css" == $request->getFormat()) $mime = "text/css";
 	else if ("js" == $request->getFormat()) $mime = "text/javascript";
 	else if ("png" == $request->getFormat()) $mime = "image/png";

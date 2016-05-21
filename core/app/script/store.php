@@ -14,8 +14,7 @@ class StoreCommand {
 	}
 	public function run($argv) {
 		$name = array_shift($argv);
-		$params = join("  ", $argv);
-		$params = star($params);
+		$params = $this->parse($argv);
 		$instance = $this->models->get($name);
 		$instance->store($params);
 		if (!$instance->errors()) {
@@ -42,5 +41,13 @@ class StoreCommand {
   		$table->display();
 		}
 	}
+	public function parse($args) {
+		$params = array();
+    foreach ($args as $arg) {
+      $arg = explode(":", $arg);
+      $params[$arg[0]] = $arg[1];
+    }
+    return $params;
+  }
 }
 ?>

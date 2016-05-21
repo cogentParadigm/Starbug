@@ -17,7 +17,7 @@
  *
  *
  * add a uri (a new page in app/views/)
- * $this->uri("[path]", "[property1]:[value1]  [property2]:[value2]");
+ * $this->uri("[path]", ["property1" => "value1", "property2" => "value2"]);
  * some properties:
  * title - the page title
  * groups - a list of groups that have access (see etc/groups.json for available groups)
@@ -29,14 +29,14 @@
  * $this->uri("register");
  *
  * //create a page called secret-sauce that can only be accessed by users in the user group
- * $this->uri("secret-sauce", "groups:user");
+ * $this->uri("secret-sauce", ["groups" => "user"]);
  *
  *
  * Blocks
  * a block is a CMS region. Place content in blocks if you want it to be editable.
  *
  * add a block
- * $this->block("[path]", "[content]", "[option]:[value]  [option2]:[value2]");
+ * $this->block("[path]", "[content]", ["option" => "value", "option2" => "value2"]);
  * options:
  * region - a region name (default is 'content'). If an existing block is found in the same region for the same page, it will not be stored
  * type - the block type. default is 'text'
@@ -44,17 +44,17 @@
  *
  ********************************************************/
 //HOME PAGE
-$this->uri("home", "type:views  layout:home");
+$this->uri("home", ["type" => "views", "layout" => "home"]);
 $this->block("home", "<h1>Congratulations, she rides!</h1>\n<p>You&#39;ve successfully installed Starbug PHP!</p>");
 //404 PAGE
-$this->uri("missing", "title:404 - Not Found  type:views");
+$this->uri("missing", ["title" => "404 - Not Found", "type" => "views"]);
 $this->block("missing", "<p><strong>Oops! The page you are looking for was not found.</strong></p>");
 //403 PAGE
-$this->uri("forbidden", "type:views");
+$this->uri("forbidden", ["type" => "views"]);
 //LOGIN/LOGOUT PAGES
-$this->uri("login", "controller:login");
-$this->uri("logout", "controller:login  action:logout");
-$this->uri("forgot-password", "controller:login  action:forgot_password");
+$this->uri("login", ["controller" => "login"]);
+$this->uri("logout", ["controller" => "login", "action" => "logout"]);
+$this->uri("forgot-password", ["controller" => "login", "action" => "forgot_password"]);
 
 
 
@@ -65,44 +65,38 @@ $this->uri("forgot-password", "controller:login  action:forgot_password");
  * permits allow you to define who can call what functions by submitting an HTML form.
  *
  * add a permit
- * $this->permit("[model]::[function]", "[group-name]:[priv-type]  [group-name]:[priv-type]");
+ * $this->permit("[model]::[function]", ["role", "option" => "value"]);
  *
  *
  * Examples
  *
  * //create a permit to allow anyone to submit the contact form calling Users::contact
- * $this->permit("users::contact", "everyone:");
+ * $this->permit("users::contact", "everyone");
  *
  * //create permits to allow users create entries in the uris table, and to update records they created
- * $this->permit("uris::create", "user:table  owner:global");
+ * $this->permit("uris::create", ["everyone", "user_groups" => "user", "priv_type" => "table"]);
+ * $this->permit("uris::create", ["owner", "priv_type" => "global"]);
  *********************************************************/
 
 //GLOBAL READ AND WRITE PERMITS FOR ADMIN
-$this->permit("%::%",
-  "everyone  priv_type:%  user_groups:admin"
-);
+$this->permit("%::%", ["everyone", "priv_type" => "%", "user_groups" => "admin"]);
 
 // URI PERMITS
 // 'collective' is a column on every table representing the groups that own the records.
 // each record can have different group owners.
 // We can assign permissions based on those groups:
-//$this->permit("uris::read", "collective:global 4");
-$this->permit("uris::read",
-  "groups  priv_type:global  object_statuses:published"
-);
-$this->permit("menus::read",
-  "groups  priv_type:global  object_statuses:published"
-);
+$this->permit("uris::read", ["groups", "priv_type" => "global", "object_statuses" => "published"]);
+$this->permit("menus::read", ["groups", "priv_type" => "global", "object_statuses" => "published"]);
 // above, I am assigning read permissions to the owning groups (collective = owning groups).
 // For example, If we have these groups: user = 2, admin = 4, editor = 8
 // To make a page accessible to admins and editors, we can set collective:12 on that uri (see uris above).
 
 // USER PERMITS
-$this->permit("users::login", "everyone  priv_type:table");
-$this->permit("users::logout", "everyone  priv_type:table");
-$this->permit("users::register", "everyone  priv_type:table");
-$this->permit("users::update_profile", "self  priv_type:global"); //the 'self' role should only be used for user actions.
-$this->permit("users::reset_password", "everyone  priv_type:table");
+$this->permit("users::login", ["everyone", "priv_type" => "table"]);
+$this->permit("users::logout", ["everyone", "priv_type" => "table"]);
+$this->permit("users::register", ["everyone", "priv_type" => "table"]);
+$this->permit("users::update_profile", ["self", "priv_type" => "global"]); //the 'self' role should only be used for user actions.
+$this->permit("users::reset_password", ["everyone", "priv_type" => "table"]);
 
 
 
@@ -116,8 +110,8 @@ $this->permit("users::reset_password", "everyone  priv_type:table");
  *
  * define a table
  * $this->table("[table_name]",
- * 	"[column_name]  [option1]:[value1]  [option2]:[value2]",
- * 	"[column_name]  [option1]:[value1]  [option2]:[value2]"
+ * 	["column_name", "option1" => "value1", "option2" => "value2"],
+ * 	["column_name", "option1" => "value1", "option2" => "value2"]
  * );
  * key/value pairs are separated by a double space
  *

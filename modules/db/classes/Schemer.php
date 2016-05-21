@@ -164,7 +164,7 @@ class Schemer {
 		foreach ($fields as $column => $options) {
 			if ((isset($options['key'])) && ("primary" == $options['key'])) $primary[] = $column;
 		}
-		if (empty($primary)) $fields['id'] = star("type:int  auto_increment:  key:primary");
+		if (empty($primary)) $fields['id'] = ["type" => "int", "auto_increment" => "", "key" => "primary"];
 		return $fields;
 	}
 
@@ -309,9 +309,10 @@ class Schemer {
 			}
 		}
 		foreach ($this->taxonomies as $taxonomy => $items) {
-			$records = $this->db->query("terms", "select:count(*) as count  where:taxonomy=?  limit:1", array($taxonomy));
+			$records = $this->db->query("terms")
+				->select("count(*) as count")->condition("taxonomy", $taxonomy)->one();
 			if ($records['count'] == 0) {
-				//CREATE TAXONOMY                                                                                     //CREATE TAXONOMY
+				//CREATE TAXONOMY																																										 //CREATE TAXONOMY
 				fwrite(STDOUT, "Creating taxonomy ".$taxonomy."...\n");
 				$is += $this->create_taxonomy($taxonomy);
 			} else $is += $this->create_taxonomy($taxonomy, true);
@@ -371,9 +372,10 @@ class Schemer {
 			}
 		}
 		foreach ($this->menus as $menu => $items) {
-			$records = $this->db->query("menus", "select:count(*) as count  where:menu=?  limit:1", array($menu));
+			$records = $this->db->query("menus")
+				->select("count(*) as count")->condition("menu", $menu)->one();
 			if ($records['count'] == 0) {
-				//CREATE MENU                                                                                          //CREATE MENU
+				//CREATE MENU																																													//CREATE MENU
 				fwrite(STDOUT, "Creating menu ".$menu."...\n");
 				$is += $this->create_menu($menu);
 			} else $is += $this->create_menu($menu, true);
@@ -569,44 +571,41 @@ class Schemer {
 	function column($table) {
 		$args = func_get_args();
 		$table = array_shift($args);
-		if (false !== strpos($table, "  ")) {
-			list($table, $ops) = explode("  ", $table, 2);
-			$ops = star($ops);
-		} else $ops = array();
+		if (is_array($table)) {
+			$ops = $table;
+			$table = array_shift($ops);
+		} else {
+			$ops = array();
+		}
 		if (empty($this->tables[$table])) $this->tables[$table] = array();
 		$additional = array();
 		foreach ($args as $col) {
-			$col = star($col);
 			$colname = array_shift($col);
 			if ($col['type'] == "category") {
 				$col['references'] = "terms id";
 				$col['alias'] = '%taxonomy% %slug%';
 			}
-			$access = false;
+			$access_col = false;
 			if ($table !== "permits" && isset($col['user_access'])) {
-				$access = true;
-				$access_col = "user_".$colname;
+				$access_col = ["user_".$colname];
 			} else if ($table !== "permits" && isset($col['object_access'])) {
-				$access = true;
-				$access_col = "object_".$colname;
+				$access_col = ["object_".$colname];
 			}
-			if ($access) {
-				$newcol = $col;
-				$newcol['type'] = "category";
-				$newcol['null'] = "";
-				//if (isset($this->tables[$col['type']])) $newcol['references'] = $col['type']." id";
-				foreach ($newcol as $nk => $nv) $access_col .= "  ".$nk.":".$nv;
+			if ($access_col) {
+				foreach ($col as $nk => $nv) $access_col[$nk] = $nv;
+				$access_col['type'] = "category";
+				$access_col['null'] = "";
 				$additional[] = array("permits", $access_col);
 			}
 			if (isset($this->tables[$col['type']]) || $this->models->has($col['type'])) {
 				$ref_table_name = (empty($col['table'])) ? $table."_".$colname : $col['table'];
-				$ref_table_def = array($ref_table_name."  groups:false",
-					"owner  type:int  null:  references:users id  update:cascade  delete:cascade  optional:",
-					$table."_id  type:int  default:NULL  references:$table id  null:  update:cascade  delete:cascade",
-					"position  type:int  ordered:".$table."_id  optional:"
+				$ref_table_def = array([$ref_table_name, "groups" => false],
+					["owner", "type" => "int", "null" => true, "references" => "users id", "update" => "cascade", "delete" => "cascade", "optional" => true],
+					[$table."_id", "type" => "int", "default" => "NULL", "references" => "$table id", "null" => false, "update" => "cascade", "delete" => "cascade"],
+					["position", "type" => "int", "ordered" => $table."_id", "optional" => true]
 				);
 				if ($ref_table_name != $col['type']) {
-					$ref_table_def[] = $colname."_id  type:int  default:0  references:$col[type] id  update:cascade  delete:cascade";
+					$ref_table_def[] = [$colname."_id", "type" => "int", "default" => "0", "references" => $col['type']." id", "update" => "cascade", "delete" => "cascade"];
 					$this->index($ref_table_name, $table."_id", $colname."_id");
 				}
 				$additional[] = $ref_table_def;
@@ -624,11 +623,11 @@ class Schemer {
 			$this->tables[$table][$base."_id"] = array("type" => "int", "references" => $base." id");
 		} else if (empty($this->options['base'])) {
 			$add = array($table);
-			if (empty($this->tables[$table]["owner"])) $add[] = "owner  type:int  null:  references:users id  owner:  optional:";
-			if (empty($this->tables[$table]["groups"]) && (!isset($this->options[$table]["groups"]) || $this->options[$table]["groups"] == true)) $add[] = "groups  type:terms  taxonomy:groups  user_access:  optional:";
-			if (empty($this->tables[$table]["statuses"])) $add[] = "statuses  type:category  label:Status  taxonomy:statuses  object_access:  null:";
-			if (empty($this->tables[$table]["created"])) $add[] = "created  type:datetime  default:0000-00-00 00:00:00  time:insert";
-			if (empty($this->tables[$table]["modified"])) $add[] = "modified  type:datetime  default:0000-00-00 00:00:00  time:update";
+			if (empty($this->tables[$table]["owner"])) $add[] = ["owner", "type" => "int", "null" => true, "references" => "users id", "owner" => true, "optional" => true];
+			if (empty($this->tables[$table]["groups"]) && (!isset($this->options[$table]["groups"]) || $this->options[$table]["groups"] == true)) $add[] = ["groups", "type" => "terms", "taxonomy" => "groups", "user_access" => true, "optional" => true];
+			if (empty($this->tables[$table]["statuses"])) $add[] = ["statuses", "type" => "category", "label" => "Status", "taxonomy" => "statuses", "object_access" => true, "null" => true];
+			if (empty($this->tables[$table]["created"])) $add[] = ["created", "type" => "datetime", "default" => "0000-00-00 00:00:00", "time" => "insert"];
+			if (empty($this->tables[$table]["modified"])) $add[] = ["modified", "type" => "datetime", "default" => "0000-00-00 00:00:00", "time" => "update"];
 			if (count($add) > 1) $additional[] = $add;
 		}
 		foreach ($additional as $tbl) call_user_func_array(array($this, "column"), $tbl);
@@ -693,7 +692,6 @@ class Schemer {
 	 * @param star $args other fields
 	 */
 	function uri($path, $args = array(), $groups = array()) {
-		$args = star($args);
 		$args['path'] = $path;
 		if(empty($args['title'])) $args['title'] = ucwords(str_replace("-", " ", $path));
 		if (empty($args['statuses'])) $args['statuses'] = "published";
@@ -735,7 +733,6 @@ class Schemer {
 	 * @param star $ops options (region, type, position)
 	 */
 	function block($path, $content, $ops = array()) {
-		$ops = star($ops);
 		$ops["content"] = $content;
 		if (empty($this->blocks[$path])) $this->blocks[$path] = array();
 		$this->blocks[$path][] = $ops;
@@ -753,7 +750,6 @@ class Schemer {
 		if (empty($this->permits[$on[0]])) $this->permits[$on[0]] = array();
 		if (empty($this->permits[$on[0]][$on[1]])) $this->permits[$on[0]][$on[1]] = array();
 		foreach ($args as $row) {
-			$row = star($row);
 			$role = array_shift($row);
 			$row['role'] = $role;
 			$this->permits[$on[0]][$on[1]][] = $row;
@@ -766,7 +762,6 @@ class Schemer {
 		$on = explode("::", $on);
 		if (!empty($this->permits[$on[0]]) && !empty($this->permits[$on[0]][$on[1]])) {
 			foreach ($args as $row) {
-				$row = star($row);
 				$role = array_shift($row);
 				$row['role'] = $role;
 				foreach ($this->permits[$on[0]][$on[1]] as $idx => $existing) {
@@ -818,7 +813,7 @@ class Schemer {
 		$args = func_get_args();
 		$menu = array_shift($args);
 		if (empty($this->menus[$menu])) $this->menus[$menu] = array();
-		foreach ($args as $item) $this->menus[$menu][] = star($item);
+		foreach ($args as $item) $this->menus[$menu][] = $item;
 	}
 
 	/**
@@ -830,7 +825,7 @@ class Schemer {
 		$args = func_get_args();
 		$taxonomy = array_shift($args);
 		if (empty($this->taxonomies[$taxonomy])) $this->taxonomies[$taxonomy] = array();
-		foreach ($args as $item) $this->taxonomies[$taxonomy][] = star($item);
+		foreach ($args as $item) $this->taxonomies[$taxonomy][] = $item;
 	}
 
 	/**
@@ -840,7 +835,7 @@ class Schemer {
 	 * @param star $others the other, non-unique fields
 	 */
 	function store($table, $match, $others = array(), $immediate = false) {
-		$merge = array($table => array(array("match" => star($match), "others" => star($others), "immediate" => $immediate)));
+		$merge = array($table => array(array("match" => $match, "others" => $others, "immediate" => $immediate)));
 		$this->population = array_merge_recursive($this->population, $merge);
 	}
 
@@ -850,7 +845,7 @@ class Schemer {
 	 */
 	function create_blocks($path, $blocks = array()) {
 		$count = 0;
-		$uri = $this->db->get("uris", "path:$path", "limit:1");
+		$uri = $this->db->get("uris", ["path" => $path], ["limit" => "1"]);
 		if (!empty($blocks)) foreach ($blocks as $block) $count += $this->create_block($uri, $block);
 		return $count;
 	}
@@ -904,7 +899,6 @@ class Schemer {
 			$count = 1;
 		} else $id = $record['id'];
 		foreach ($children as $child) {
-			$child = star($child);
 			$child['parent'] = $id;
 			$count += $this->create_menu_item($menu, $child);
 		}
@@ -934,7 +928,6 @@ class Schemer {
 			$count = 1;
 		} else $id = $record['id'];
 		foreach ($children as $child) {
-			$child = star($child);
 			$child['parent'] = $id;
 			$count += $this->create_taxonomy_item($taxonomy, $child);
 		}

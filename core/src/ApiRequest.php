@@ -37,14 +37,14 @@ class ApiRequest {
 	 * 										 where object is an API function or set of models to query, and format is the desired output format (json, jsonp, xml)
 	 * @param star $ops additional options, query paramaters if [object] is a model or group of models
 	 */
-	function __construct(ModelFactoryInterface $models, $what, $ops = "", $headers = true) {
+	function __construct(ModelFactoryInterface $models, $what, $ops = array(), $headers = true) {
 		$this->models = $models;
 		$this->headers = $headers;
 		$format = end(explode(".", $what));
 		$parts = explode("/", str_replace(".$format", "", $what));
 		$call = reset($parts);
 		$action = next($parts);
-		$ops = array_merge(array("action" => "read", "where" => array(), "params" => array()), star($ops));
+		$ops = array_merge(array("action" => "read", "where" => array(), "params" => array()), $ops);
 		if (!is_array($ops['where'])) $ops['where'] = array($ops['where']);
 	 if ($this->headers) {
 		 header("Content-Type: ".$this->types[$format]);

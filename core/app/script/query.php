@@ -14,10 +14,9 @@ class QueryCommand {
   }
   public function run($argv) {
     $name = array_shift($argv);
-    $params = join("  ", $argv);
+    $params = $this->parse($argv);
     $records = $this->db->query($name, $params);
-    echo "query $name $params\n";
-    $params = star($params);
+    echo $records->interpolate()."\n";
     if (!empty($params['limit']) && $params['limit'] == 1) $records = array($records);
     else $records = $records->execute();
     if (empty($records)) {
@@ -30,6 +29,14 @@ class QueryCommand {
       $table->setRows($result);
       $table->display();
     }
+  }
+  public function parse($args) {
+    $params = array();
+    foreach ($args as $arg) {
+      $arg = explode(":", $arg);
+      $params[$arg[0]] = $arg[1];
+    }
+    return $params;
   }
 }
 ?>

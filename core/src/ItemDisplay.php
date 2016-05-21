@@ -39,7 +39,7 @@ class ItemDisplay extends Display {
 	function add($options) {
 		$args = func_get_args();
 		foreach ($args as $options) {
-			$options = star($options);
+			if (!is_array($options)) $options = [$options];
 			$field = array_shift($options);
 			if (empty($options['model']) && !empty($this->model)) $options['model'] = $this->model;
 			$target = empty($options['extend']) ? $field : $options['extend'];

@@ -115,9 +115,9 @@ class Database implements DatabaseInterface {
 		//loop through the input arguments
 		foreach ($args as $idx => $a) {
 			if ($idx == 0) $collection = $a; //first argument is the collection
-			else if ($idx == 1) $conditions = star($a); //second argument are the conditions
+			else if ($idx == 1) $conditions = $a; //second argument are the conditions
 			else {
-				$arg = star($a);
+				$arg = $a;
 				if (!empty($arg['orderby'])) $arg['sort'] = $arg['orderby']; //DEPRECATED: use sort
 			}
 		}
@@ -125,6 +125,7 @@ class Database implements DatabaseInterface {
 
 		//apply conditions
 		$query = $this->query($collection);
+		if (!is_array($conditions)) $conditions = [$conditions];
 		foreach ($conditions as $k => $v) {
 			if (isset($this->operators[$k])) {
 				$query->conditions($v, $k);
@@ -155,8 +156,7 @@ class Database implements DatabaseInterface {
 	* @param bool $mine optional. if true, joining models will be checked for relationships and ON statements will be added
 	* @return array record or records
 	*/
-	function query($froms, $args = "", $replacements = array()) {
-		$args = star($args);
+	function query($froms, $args = array(), $replacements = array()) {
 		if (!empty($args['params'])) $replacements = $args['params'];
 
 		//create query object
@@ -196,13 +196,10 @@ class Database implements DatabaseInterface {
 	* @return array validation errors
 	*/
 	function queue($name, $fields = array(), $from = "auto", $unshift = false) {
-		if (!is_array($fields)) $fields = star($fields);
-
 		$query = new query($this, $this->models, $this->hooks, $name);
 		foreach ($fields as $col => $value) $query->set($col, $value);
 
 		if ($from === "auto" && !empty($fields['id'])) $from = array("id" => $fields['id']);
-		else if (!is_array($from) && false !== $from && "auto" !== $from) $from = star($from);
 
 		if (!empty($from) && is_array($from)) {
 			$query->mode("update");
@@ -232,7 +229,7 @@ class Database implements DatabaseInterface {
 	function remove($from, $where) {
 		if (!empty($where)) {
 			$del = new query($this, $this->models, $this->hooks, $from);
-			$this->record_count = $del->condition(star($where))->delete();
+			$this->record_count = $del->condition($where)->delete();
 			return $this->record_count;
 		}
 	}

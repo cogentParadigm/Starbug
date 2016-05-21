@@ -33,8 +33,8 @@ class Renderable {
 	*/
 	function assign($key, $value) {
 		$args = func_get_args();
-		if (count($args) == 1) {
-			$args = star($args[0]);
+		if (count($args) == 1 && is_array($args[0])) {
+			$args = $args[0];
 			foreach ($args as $k => $v) $this->vars[$k] = $v;
 		} else $this->vars[$key] = $value;
 	}
