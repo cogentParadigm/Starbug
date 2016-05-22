@@ -89,7 +89,6 @@ class query implements IteratorAggregate, ArrayAccess {
 		$this->db = $db;
 		$this->models = $models;
 		$this->hook_builder = $hook_builder;
-		$params = star($params);
 		$this->from($collection);
 		foreach ($params as $key => $value) $this->{$key}($value);
 	}
@@ -330,7 +329,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		if (is_null($value)) $value = "";
 		$this->operation("condition", array("field" => $field, "value" => $value, "op" => $op, "ops" => $ops));
 		$set = $this->set;
-		$condition = array_merge(array("con" => "&&", "set" => $this->set, "value" => $value, "op" => $op), $this->parse_condition($field), star($ops));
+		$condition = array_merge(array("con" => "&&", "set" => $this->set, "value" => $value, "op" => $op), $this->parse_condition($field), $ops);
 		if (in_array($condition['op'], array("=", "!=", "IN", "NOT IN"))) $condition = array_merge($condition, $this->parse_field($condition['field'], "condition"));
 		else $condition['field'] = $this->parse_field($condition['field'], "group");
 		if (isset($condition['set']) && isset($condition['field'])) $set = $condition['set'];
@@ -346,7 +345,7 @@ class query implements IteratorAggregate, ArrayAccess {
 				}
 			}
 			return $this;
-		} else return $this->condition(star($fields), "", $op, $ops);
+		} else return $this->condition($fields, "", $op, $ops);
 	}
 
 	/**
@@ -374,7 +373,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
 	function orCondition($field, $value, $op = "=", $ops = array()) {
-		return $this->condition($field, $value, $op, array_merge(array("con" => "||"), star($ops)));
+		return $this->condition($field, $value, $op, array_merge(array("con" => "||"), $ops));
 	}
 
 
@@ -402,7 +401,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
 	function where($clause, $options = array()) {
-		$condition = array_merge($this->parse_condition($clause), array('con' => '&&', 'set' => $this->set), star($options));
+		$condition = array_merge($this->parse_condition($clause), array('con' => '&&', 'set' => $this->set), $options);
 		$condition['field'] = $this->parse_fields($condition['field'], "where");
 		$this->query['where'][$condition['set']][] = $condition;
 		$this->dirty();
@@ -430,7 +429,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
 	function orWhere($clause, $options = array()) {
-		return $this->where($clause, array_merge(array('con' => '||'), star($options)));
+		return $this->where($clause, array_merge(array('con' => '||'), $options));
 	}
 
 	/**
@@ -454,7 +453,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
 	function havingCondition($field, $value, $op = "=", $ops = array()) {
-		return $this->condition($field, $value, $op, array_merge(array("set" => ($this->set == "default" ? "having" : $this->set)), star($ops)));
+		return $this->condition($field, $value, $op, array_merge(array("set" => ($this->set == "default" ? "having" : $this->set)), $ops));
 	}
 
 	/**
@@ -482,7 +481,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
 	function orHavingCondition($field, $value, $op = "=", $ops = array()) {
-		return $this->havingCondition($field, $value, $op, array_merge(array("con" => "||"), star($ops)));
+		return $this->havingCondition($field, $value, $op, array_merge(array("con" => "||"), $ops));
 	}
 
 	/**
@@ -494,7 +493,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
 	function having($clause, $options = array()) {
-		return $this->where($clause, array_merge(array("set" => ($this->set == "default" ? "having" : $this->set)), star($options)));
+		return $this->where($clause, array_merge(array("set" => ($this->set == "default" ? "having" : $this->set)), $options));
 	}
 
 	/**
@@ -518,7 +517,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 * 									- con: the logical connective (eg. '&&', '||')
 	 */
 	function orHaving($clause, $options = array()) {
-		return $this->having($clause, array_merge(array("con" => "||"), star($options)));
+		return $this->having($clause, array_merge(array("con" => "||"), $options));
 	}
 
 	function set($field, $value) {
@@ -528,13 +527,12 @@ class query implements IteratorAggregate, ArrayAccess {
 	}
 
 	function fields($fields) {
-		$fields = star($fields);
 		foreach ($fields as $k => $v) $this->set($k, $v);
 		return $this;
 	}
 
 	function open($set, $con = "&&", $nest = false) {
-		$this->condition('#'.$set, null, "=", "con:".$con);
+		$this->condition('#'.$set, null, "=", ["con" => $con]);
 		if (!$nest && !empty($this->sets)) $this->close();
 		$this->sets[] = $this->set;
 		$this->set = $set;
