@@ -75,7 +75,7 @@ class InputFilter implements InputFilterInterface {
 				'hr'
 			);
 		}
-		$config = HTMLPurifier_Config::createDefault();
+		$config = \HTMLPurifier_Config::createDefault();
 		$config->set('HTML.Doctype', 'HTML 4.01 Transitional');
 		$config->set('CSS.AllowTricky', true);
 		$config->set('Cache.SerializerPath', '/tmp');
@@ -150,7 +150,7 @@ class InputFilter implements InputFilterInterface {
 			$def->addAttribute('tr', 'border', 'Text');
 		}
 
-		return new HTMLPurifier($config);
+		return new \HTMLPurifier($config);
 	}
 }
 ?>
