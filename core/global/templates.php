@@ -31,7 +31,7 @@ function render_field($model, $row, $field, $options=array()) {
 			}
 		}
 		if (empty($options['formatter'])) $options['formatter'] = sb($model)->hooks[$field]["type"];
-		if (empty($options['label'])) $column['label'] = (!empty(sb($model)->hooks[$field]["label"])) ? sb($model)->hooks[$field]["label"] : format_label($field);
+		if (empty($options['label'])) $column['label'] = (!empty(sb($model)->hooks[$field]["label"])) ? sb($model)->hooks[$field]["label"] : ucwords(str_replace('_', ' ', $field));
 		//BROKEN
 		//(new Template("field/field", array("model" => $model, "row" => $row, "field" => $field, "options" => $options)))->output();
 }

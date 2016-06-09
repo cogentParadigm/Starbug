@@ -8,7 +8,7 @@ class Terms extends TermsModel {
 
 	function create($term) {
 		if (!empty($term['term'])) {
-			$term['term'] = normalize($term['term']);
+			$term['term'] = $this->filter->normalize($term['term']);
 			$term['slug'] = strtolower(str_replace(" ", "-", $term['term']));
 		}
 		if(empty($term['id']) && empty($term['position'])) $term['position'] = '';

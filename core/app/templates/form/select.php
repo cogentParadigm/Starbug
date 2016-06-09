@@ -4,9 +4,9 @@ if ($mode == "display") {
 	$this->displays->render("DropdownDisplay", array("value" => $value, "attributes" => $attributes, "model" => $from, "action" => $query, "optional" => $optional, "other_option" => $other_option));
 } else { ?>
 	<?php
-		$other_id = normalize($name)."_other";
+		$other_id = $this->filter->normalize($name)."_other";
 	?>
-<select <?php html_attributes($attributes); ?><?php if ($other_option) { ?> onchange="var text = document.getElementById('<?php echo $other_id; ?>_text'); if (this.options[this.selectedIndex].hasAttribute('data-other')) text.style.display = 'block'; else text.style.display='none';"<?php } ?>>
+<select <?php echo $this->filter->attributes($attributes); ?><?php if ($other_option) { ?> onchange="var text = document.getElementById('<?php echo $other_id; ?>_text'); if (this.options[this.selectedIndex].hasAttribute('data-other')) text.style.display = 'block'; else text.style.display='none';"<?php } ?>>
 	<?php $found = false; foreach ($options as $caption => $val) { ?>
 		<?php
 			$selected = "";

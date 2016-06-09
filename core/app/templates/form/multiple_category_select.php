@@ -5,8 +5,8 @@
 				$attrs = ['type' => 'checkbox', 'class' => 'left checkbox', 'name' => $name.'[]', 'value' => $term['id']];
 				if (in_array($term['id'], $value)) $attrs['checked'] = 'checked';
 			?>
-			<label><input <?php html_attributes($attrs); ?>/><?php echo $term['term']; ?></label>
+			<label><input <?php echo $this->filter->attributes($attrs); ?>/><?php echo $term['term']; ?></label>
 		</div>
 	<?php } ?>
-	<input <?php html_attributes(["type" => "hidden", "name" => $name."[]", "value" => "-~"]); ?>/>
+	<input <?php echo $this->filter->attributes(["type" => "hidden", "name" => $name."[]", "value" => "-~"]); ?>/>
 </div>

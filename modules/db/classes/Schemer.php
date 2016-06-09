@@ -1139,7 +1139,7 @@ class Schemer {
 			}
 			$field[$field['type']] = "";
 			if (empty($field[$field['input_type']])) $field[$field['input_type']] = "";
-			if (empty($field["label"])) $field["label"] = format_label($name);
+			if (empty($field["label"])) $field["label"] = ucwords(str_replace('_', ' ', $name));
 			foreach ($field as $k => $v) {
 				$data["fields"][$name][$k] = $v;
 			}

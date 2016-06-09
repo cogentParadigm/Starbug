@@ -1,3 +1,3 @@
-<div <?php html_attributes($display->attributes); ?>>
+<div <?php echo $this->filter->attributes($display->attributes); ?>>
 	<?php echo $macro->replace($block['content']); ?>
 </div>

@@ -31,7 +31,8 @@ class Application implements ApplicationInterface {
 		SettingsInterface $settings,
 		ResourceLocatorInterface $locator,
 		SessionHandlerInterface $session,
-		ResponseInterface $response
+		ResponseInterface $response,
+		InputFilterInterface $filter
 	) {
 		$this->controllers = $controllers;
 		$this->models = $models;
@@ -40,6 +41,7 @@ class Application implements ApplicationInterface {
 		$this->locator = $locator;
 		$this->session = $session;
 		$this->response = $response;
+		$this->filter = $filter;
 	}
 
 	public function handle(RequestInterface $request) {
@@ -111,7 +113,7 @@ class Application implements ApplicationInterface {
 				}
 			}
 			//execute post actions
-			foreach ($post['action'] as $key => $val) return $this->post_action(normalize($key), normalize($val), $post[$key]);
+			foreach ($post['action'] as $key => $val) return $this->post_action($this->filter->normalize($key), $this->filter->normalize($val), $post[$key]);
 		}
 		return true;
 	}

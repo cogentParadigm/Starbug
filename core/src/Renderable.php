@@ -106,7 +106,7 @@ class Renderable {
 		foreach ($this->attributes as $k => $v) if (empty($v)) unset($this->attributes[$k]);
 		if (!empty($this->attributes)) {
 			foreach (array("class") as $attr) if (!empty($this->attributes[$attr])) $this->attributes[$attr] = implode(" ", $this->attributes[$attr]);
-			$value .= html_attributes($this->attributes, false);
+			$value .= $this->attributes($this->attributes);
 		}
 		//self closing tags
 		if ($this->selfClosing) {
@@ -147,5 +147,12 @@ class Renderable {
 			}
 		}
 		return array("tag" => $tag, "attributes" => $attributes);
+	}
+	function attributes($attributes) {
+		$valid = array("abbr", "accept-charset", "accept", "accesskey", "action", "align", "alink", "alt", "archive", "autocomplete", "axis", "background", "bgcolor", "cellpadding", "cellspacing", "char", "charoff", "charset", "checked", "cite", "class", "classid", "clear", "code", "codebase", "codetype", "color", "cols", "colspan", "compact", "content", "contenteditable", "contextmenu", "coords", "datetime", "declare", "defer", "dir", "disabled", "draggable", "dropzone", "enctype", "face", "for", "frame", "frameborder", "headers", "height", "hidden", "href", "hreflang", "hspace", "http-equiv", "id", "ismap", "label", "lang", "language", "link", "longdesc", "marginheight", "marginwidth", "maxlength", "media", "method", "multiple", "name", "nohref", "noresize", "noshade", "nowrap", "object", "placeholder", "profile", "prompt", "readonly", "rel", "rev", "rows", "rowspan", "rules", "scheme", "scope", "scrolling", "selected", "shape", "size", "span", "spellcheck", "src", "standby", "start", "style", "summary", "tabindex", "target", "text", "title", "type", "usemap", "valign", "value", "valuetype", "version", "vlink", "vspace", "width");
+		$validate = true;
+		$filtered = "";
+		foreach ($ops as $k => $v) if (!is_array($v) && (!$validate || (in_array($k, $valid) || (0===strpos($k, "on")) || (0===strpos($k, "data"))))) $filtered .= " $k=\"$v\"";
+		return $filtered;
 	}
 }

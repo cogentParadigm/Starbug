@@ -14,10 +14,11 @@ class Taxonomy implements TaxonomyInterface {
 	protected $db;
 	protected $models;
 	protected $user;
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user, InputFilterInterface $filter) {
 		$this->db = $db;
 		$this->models = $models;
 		$this->user = $user;
+		$this->filter = $filter;
 	}
 	function terms($taxonomy, $parent = 0, $depth = 0) {
 		$terms = array();
@@ -44,7 +45,7 @@ class Taxonomy implements TaxonomyInterface {
 		$taxonomy = $column_info['taxonomy'];
 		$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
 
-		$tag = normalize($tag);
+		$tag = $this->filter->normalize($tag);
 		$slug = strtolower($tag);
 		//IF THE TAG IS ALREADY APPLIED, RETURN TRUE
 		$existing = $this->db->query($table)->condition($table.".id", $object_id)

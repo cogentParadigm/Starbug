@@ -75,14 +75,14 @@
 	}
 ?>
 <?php if (empty($link['template'])) { ?>
-	<li<?php html_attributes($attributes); ?>>
+	<li<?php echo $this->filter->attributes($attributes); ?>>
 		<?php if ($editable) { ?>
 			<div class="btn-group pull-right" style="position:relative;z-index:100">
 				<a href="<?php echo $this->url->build("admin/$area/update/".$link['id']); ?>" class="btn btn-default Edit"><div class="fa fa-edit"></div></a>
 				<a href="javascript:(function(){sb.get('<?php echo $model; ?>').remove('<?php echo $link['id']; ?>').then(function(){window.location.reload();});return false;})()" class="btn btn-default Delete"><div class="fa fa-times"></div></a>
 			</div>
 		<?php } ?>
-		<a<?php html_attributes($link_attributes); ?>><?php echo $link_text; ?></a>
+		<a<?php echo $this->filter->attributes($link_attributes); ?>><?php echo $link_text; ?></a>
 		<?php if (!empty($link['children'])) { ?>
 		<ul class="dropdown-menu" role="menu">
 			<?php
@@ -96,7 +96,7 @@
 <?php } else { ?>
 	<?php
 		if ($link['template'] == "divider") {
-			echo '<li'.html_attributes($attributes, false).'>';
+			echo '<li'.$this->filter->attributes($attributes).'>';
 			if ($editable) {
 				?>
 			<div class="btn-group right">

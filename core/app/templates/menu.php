@@ -33,7 +33,7 @@
 		}
 	}
 ?>
-<ul<?php html_attributes($attributes); ?>>
+<ul<?php echo $this->filter->attributes($attributes); ?>>
 	<?php
 		foreach ($links as $link) {
 			$this->render("menu-link", array("link" => $link, "menu_type" => $menu_type));

@@ -1,4 +1,4 @@
-<form <?php html_attributes($display->attributes); ?>>
+<form <?php echo $this->filter->attributes($display->attributes); ?>>
 	<?php if (!empty($display->model) && !empty($display->default_action) && $display->success($display->default_action)) { ?>
 		<p class="alert alert-success">Saved</p>
 	<?php } ?>
@@ -8,10 +8,10 @@
 		<?php } ?>
 	<?php } ?>
 <?php if ($display->method == "post") { ?>
-	<input name="oid" type="hidden" value="<?php echo filter_string($request->getCookie('oid')); ?>"/>
+	<input name="oid" type="hidden" value="<?php echo $this->filter->string($request->getCookie('oid')); ?>"/>
 <?php } ?>
 <?php $item_id = $display->get("id"); if (!empty($item_id)) { ?>
-	<input id="id" name="<?php echo $display->model; ?>[id]" type="hidden" value="<?php echo filter_string($display->get('id')); ?>" />
+	<input id="id" name="<?php echo $display->model; ?>[id]" type="hidden" value="<?php echo $this->filter->string($display->get('id')); ?>" />
 <?php } ?>
 <?php
 	if (!$display->layout->is_empty()) {
@@ -40,7 +40,7 @@
 						$ops = $field;
 						if (empty($ops['type'])) $ops['type'] = "submit";
 						$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ")."btn";
-						echo '<button '.html_attributes($ops, false).'>'.$label.'</button>';
+						echo '<button '.$this->filter->attributes($ops).'>'.$label.'</button>';
 					}
 				?>
 				<?php if (!empty($display->cancel_url)) { ?>

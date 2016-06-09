@@ -1,8 +1,8 @@
 <?php
-	$other_id = normalize($display->attributes['name'])."_other";
+	$other_id = $this->filter->normalize($display->attributes['name'])."_other";
 	$found = false;
 ?>
-<select <?php html_attributes($display->attributes); ?><?php if ($display->options['other_option']) { ?> onchange="var text = document.getElementById('<?php echo $other_id; ?>_text'); if (this.options[this.selectedIndex].hasAttribute('data-other')) text.style.display = 'block'; else text.style.display='none';"<?php } ?>>
+<select <?php echo $this->filter->attributes($display->attributes); ?><?php if ($display->options['other_option']) { ?> onchange="var text = document.getElementById('<?php echo $other_id; ?>_text'); if (this.options[this.selectedIndex].hasAttribute('data-other')) text.style.display = 'block'; else text.style.display='none';"<?php } ?>>
 	<option value=""><?php if (!empty($display->options['optional'])) echo $display->options['optional']; ?></option>
 		<?php foreach ($display->items as $item) { ?>
 			<?php

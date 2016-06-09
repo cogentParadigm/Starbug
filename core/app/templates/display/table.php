@@ -1,5 +1,5 @@
 <div class="table-responsive">
-	<table <?php html_attributes($display->attributes); ?>>
+	<table <?php echo $this->filter->attributes($display->attributes); ?>>
 		<thead>
 			<tr>
 				<?php foreach ($display->fields as $name => $field) { ?>

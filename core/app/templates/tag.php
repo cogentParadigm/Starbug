@@ -1,1 +1,1 @@
-<<?php echo $tag; ?> <?php html_attributes($attributes); ?>><?php echo $innerHTML; ?></<?php echo $tag; ?>>
+<<?php echo $tag; ?> <?php echo $this->filter->attributes($attributes); ?>><?php echo $innerHTML; ?></<?php echo $tag; ?>>

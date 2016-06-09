@@ -13,7 +13,7 @@ class TermsForm extends FormDisplay {
 		//left
 		$this->add(["term", "pane" => "left"]);
 		if (!empty($ops['new'])) $display->add(["taxonomy", "pane" => "left", "input_type" => "text"]);
-		else $this->add(["taxonomy", "pane" => "left", "default" => filter_string($ops['taxonomy'])]);
+		else $this->add(["taxonomy", "pane" => "left", "default" => $ops['taxonomy']]);
 		$this->add(["description", "pane" => "left", "class" => "rich-text"]);
 		//$display->add(["blocks", "input_type" => "blocks", "pane" => "left"]);
 		$this->add(["images", "pane" => "left", "input_type" => "file_select", "size" => 0]);

@@ -13,7 +13,7 @@
 	$line = 0;
 ?>
 <?php if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) { $head = fgetcsv($handle); ?>
-<table <?php html_attributes($attributes); ?>>
+<table <?php echo $this->filter->attributes($attributes); ?>>
 <?php if (!empty($head)) { ?>
 	<thead>
 		<tr>

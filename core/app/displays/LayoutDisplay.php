@@ -8,7 +8,13 @@ class LayoutDisplay extends ItemDisplay {
 
 	public $default_cell = false;
 
-
+	function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, InputFilterInterface $filter) {
+		$this->output = $output;
+		$this->models = $models;
+		$this->response = $response;
+		$this->hook_builder = $hook_builder;
+		$this->filter = $filter;
+	}
 	/**
 	 * Allows you to filter the options for each column.
 	 * This is useful for adding defaults after the columns are set
@@ -47,7 +53,7 @@ class LayoutDisplay extends ItemDisplay {
 		foreach ($this->fields as $name => $field) {
 			if (!empty($match) && substr($name, 0, strlen($match)) != $match) continue;
 			$field['attributes']['class'] = implode(' ', $field['attributes']['class']);
-			$node = '<div '.html_attributes($field['attributes'], false).'>';
+			$node = '<div '.$this->filter->attributes($field['attributes']).'>';
 			foreach ($field as $key => $value) if ($key != 'attributes') $node .= (string) $this->cells[$key];
 			$node .= '</div>';
 			echo $node;

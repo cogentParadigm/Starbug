@@ -3,20 +3,22 @@ namespace Starbug\App;
 use Starbug\Core\Controller;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\InputFilterInterface;
 class AdminTaxonomiesController extends Controller {
 	public $routes = array(
 		'update' => '{id}',
 		'taxonomy' => '{taxonomy}'
 	);
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, InputFilterInterface $filter) {
 		$this->db = $db;
 		$this->terms = $models->get("terms");
+		$this->filter = $filter;
 	}
 	function init() {
 		$this->assign("model", "terms");
 		$this->assign("form", "terms");
 		$this->assign("cancel_url", "admin/taxonomies");
-		if ($this->request->hasParameter('taxonomy')) $this->assign("taxonomy", normalize($this->request->getParameter('taxonomy')));
+		if ($this->request->hasParameter('taxonomy')) $this->assign("taxonomy", $this->filter->normalize($this->request->getParameter('taxonomy')));
 	}
 	function default_action() {
 		$this->render("admin/list");
