@@ -155,4 +155,24 @@ class Renderable {
 		foreach ($ops as $k => $v) if (!is_array($v) && (!$validate || (in_array($k, $valid) || (0===strpos($k, "on")) || (0===strpos($k, "data"))))) $filtered .= " $k=\"$v\"";
 		return $filtered;
 	}
+	static function create($parent, $selector="", $content="") {
+		if (!($parent instanceof Renderable)) {
+			$content = $selector;
+			$selector = $parent;
+			$parent = null;
+		}
+
+		$selector = Renderable::parse_selector($selector);
+		if (empty($selector['tag'])) {
+			$node = $parent;
+			$node->attributes = array_merge($node->attributes, $selector['attributes']);
+		} else {
+			$node = new Renderable($selector);
+			if ($parent) $parent->appendChild($node);
+		}
+
+		$node->setText($content);
+
+		return $node;
+	}
 }

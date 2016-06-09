@@ -22,7 +22,7 @@ class LayoutDisplay extends ItemDisplay {
 	 */
 	function filter($field, $options, $column) {
 		foreach ($options as $k => $v) {
-			if ($k !== 'attributes') $this->cells[$k] = put($v);
+			if ($k !== 'attributes') $this->cells[$k] = Renderable::create($v);
 		}
 		if (!isset($options['attributes']['class'])) $options['attributes']['class'] = array('row');
 		else if (!in_array('row', $options['attributes']['class'])) $options['attributes']['class'][] = 'row';
@@ -34,7 +34,7 @@ class LayoutDisplay extends ItemDisplay {
 	}
 
 	function put($parent, $selector, $content = "", $key = "") {
-		$node = put($this->cells[$parent], $selector, $content);
+		$node = Renderable::create($this->cells[$parent], $selector, $content);
 		if (!empty($key)) $this->cells[$key] = $node;
 		return $node;
 	}
