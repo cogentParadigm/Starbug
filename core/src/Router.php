@@ -8,13 +8,14 @@
  */
 namespace Starbug\Core;
 class Router implements RouterInterface {
+	// eg. "/user/{name}[/{id:[0-9]+}]"
 	const VARIABLE_REGEX = <<<'REGEX'
-	~\{
-	    \s* ([a-zA-Z][a-zA-Z0-9_]*) \s*
-	    (?:
-	        : \s* ([^{}]*(?:\{(?-1)\}[^{}]*)*)
-	    )?
-	\}~x
+\{
+	\s* ([a-zA-Z][a-zA-Z0-9_-]*) \s*
+	(?:
+		: \s* ([^{}]*(?:\{(?-1)\}[^{}]*)*)
+	)?
+\}
 REGEX;
 	const DEFAULT_DISPATCH_REGEX = '[^\/]+';
 	public function __construct(DatabaseInterface $db) {
@@ -62,17 +63,20 @@ REGEX;
 		return $route;
 	}
 	public function validate(Request $request, $route, $template) {
-		$data = $this->parse($template);
-		list($regex, $variables) = $this->build_regex($data);
 		$path = trim(str_replace($route['path'], "", $request->getPath()), '/');
-		if (!preg_match($regex, $path, $matches)) {
-			return false;
-		}
-		$values = array();
-		$idx = 1;
-		foreach ($variables as $name) {
-			$values[$name] = $matches[$idx];
-			$idx ++;
+		$data = $this->parse($template);
+		$values = false;
+		foreach ($data as $i => $routeData) {
+			list($regex, $variables) = $this->build_regex($data[$i]);
+			if (!preg_match($regex, $path, $matches)) {
+				continue;
+			}
+			$values = array();
+			$idx = 1;
+			foreach ($variables as $name) {
+				$values[$name] = $matches[$idx];
+				$idx ++;
+			}
 		}
 		return $values;
 	}
@@ -100,7 +104,33 @@ REGEX;
 		return array('/'.$regex.'/', $variables);
 	}
 	public function parse($route) {
-		if (!preg_match_all(self::VARIABLE_REGEX, $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
+		$routeWithoutClosingOptionals = rtrim($route, ']');
+		$numOptionals = strlen($route) - strlen($routeWithoutClosingOptionals);
+		// Split on [ while skipping placeholders
+		$segments = preg_split('~' . self::VARIABLE_REGEX . '(*SKIP)(*F) | \[~x', $routeWithoutClosingOptionals);
+		if ($numOptionals !== count($segments) - 1) {
+			// If there are any ] in the middle of the route, throw a more specific error message
+			if (preg_match('~' . self::VARIABLE_REGEX . '(*SKIP)(*F) | \]~x', $routeWithoutClosingOptionals)) {
+				throw new BadRouteException("Optional segments can only occur at the end of a route");
+			}
+			throw new BadRouteException("Number of opening '[' and closing ']' does not match");
+		}
+		$currentRoute = '';
+		$routeDatas = [];
+		foreach ($segments as $n => $segment) {
+			if ($segment === '' && $n !== 0) {
+				throw new BadRouteException("Empty optional part");
+			}
+			$currentRoute .= $segment;
+			$routeDatas[] = $this->parsePlaceholders($currentRoute);
+		}
+		return $routeDatas;
+	}
+	/**
+	 * Parses a route string that does not contain optional segments.
+	 */
+	public function parsePlaceholders($route) {
+		if (!preg_match_all('~' . self::VARIABLE_REGEX . '~x', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
 			return array($route);
 		}
 		$offset = 0;

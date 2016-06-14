@@ -69,6 +69,8 @@ class ErrorHandler {
 		$error['traces'] = $exception->getTrace();
 
 		$this->logger->error(sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($exception), $error['message'], $error['file'], $error['line']), array('exception' => $exception));
+		header("HTTP/1.1 500");
+		header('Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0');
 		$this->out->render($this->exceptionTemplate, array("error" => $error));
 		exit(255);
 	}
@@ -104,6 +106,8 @@ class ErrorHandler {
 			$level = isset($this->map[$errno]) ? $this->map[$errno] : LogLevel::CRITICAL;
 			$this->logger->log($level, $error['message'], $error);
 		}
+		header("HTTP/1.1 500");
+		header('Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0');
 		$this->out->render($this->exceptionTemplate, array("error" => $error));
 		exit(1);
 	}

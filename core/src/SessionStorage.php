@@ -55,8 +55,8 @@ class SessionStorage implements SessionStorageInterface {
 		$session .= '&d='.urlencode(hash_hmac("sha256", $session, $this->key));
 		//write cookies
 		$url = $this->request->getURL();
-		setcookie("sid", $session, 0, $url->build(""), null, false, true);
-		setcookie("oid", md5(uniqid(mt_rand(), true)), 0, $url->build(""), null, false, false);
+		setcookie("sid", $session, $this->data['e'], $url->build(""), null, false, true);
+		setcookie("oid", md5(uniqid(mt_rand(), true)), $this->data['e'], $url->build(""), null, false, false);
 	}
 	/**
 	 * destroy the active session
