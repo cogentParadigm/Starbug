@@ -1,12 +1,3 @@
-# disable magic quotes
-php_flag magic_quotes_gpc off
-
-# disable mod security
-<IfModule mod_security.c>
-    SecFilterEngine Off
-    SecFilterScanPOST Off
-</IfModule>
-
 # compress static resources
 AddOutputFilterByType DEFLATE text/html
 <Files ~ "\.(gif|jpe?g|png|js|css|txt|html)$">
@@ -20,4 +11,5 @@ ExpiresDefault A1209600
 RewriteEngine On
 RewriteCond %{REQUEST_URI} !public/(.*)$
 RewriteCond %{REQUEST_URI} !libraries/(.*)$
+RewriteCond %{REQUEST_URI} !favicon.ico$
 RewriteRule (.*) index.php
