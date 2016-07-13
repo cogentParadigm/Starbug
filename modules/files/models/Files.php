@@ -70,18 +70,5 @@ class Files extends FilesModel {
 		return $mtype;
 		*/
 	}
-
-	function query_list($query, &$ops) {
-		$query->condition("files.statuses.slug", "deleted", "!=", array("ornull" => true));
-		if (!empty($ops['category']) && is_numeric($ops['category'])) {
-			$query->condition("category", $ops['category']);
-		}
-		return $query;
-	}
-
-	function filter($file) {
-		if (reset(explode("/", $file['mime_type'])) == "image") $this->images->thumb("app/public/uploads/".$file['id']."_".$file['filename'], ["w" => 100, "h" => 100, "a" => 1]);
-		return $file;
-	}
 }
 ?>

@@ -40,7 +40,7 @@ class ImportsForm extends FormDisplay {
 		$this->actions->add(["run", "label" => "Import", "class" => "btn-success"]);
 	}
 	function count_source($id) {
-		$file = query("files")->condition("id", $id)->one();
+		$file = $this->models->get("files")->query()->condition("id", $id)->one();
 		$$lines = 0;
 		if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) {
 			while (!feof($handle)) {

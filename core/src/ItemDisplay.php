@@ -6,7 +6,7 @@ class ItemDisplay extends Display {
 	const HOOK_PHASE_RENDER = 1;
 
 	public $model = "";
-	public $action = "";
+	public $collection = "";
 
 	public $fields = array(); //fields to display (columns)
 	public $items = array(); //items to display (rows)
@@ -16,10 +16,12 @@ class ItemDisplay extends Display {
 	protected $hook_builder;
 	protected $response;
 	protected $models;
+	protected $collections;
 
-	function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, HookFactoryInterface $hook_builder) {
+	function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, CollectionFactoryInterface $collections, HookFactoryInterface $hook_builder) {
 		$this->output = $output;
 		$this->models = $models;
+		$this->collections = $collections;
 		$this->response = $response;
 		$this->hook_builder = $hook_builder;
 	}
@@ -104,50 +106,17 @@ class ItemDisplay extends Display {
 		}
 	}
 
-	function query($options=null, $model="") {
-		if (empty($model)) $model = $this->model;
-
-		//set options
+	function query($options = null) {
 		if (is_null($options)) $options = $this->options;
-
-		//init query
-		$this->query = $this->models->get($model)->query();
-
-		//search
-		if (!empty($options['search'])) $this->query->search($options['search']);
-
-		//limit
-		if (!empty($options['limit'])) $this->query->limit($options['limit']);
-
-		$this->query = $this->build_query($this->query, $options);
-		if (!empty($model)) {
-			$action_name = "query_".$this->action;
-			$this->query = $this->models->get($model)->query_filters($this->action, $this->query, $options);
-			$this->query = $this->models->get($model)->$action_name($this->query, $options);
-		}
-
-		//page
-		if (!empty($options['page'])) {
-			$this->assign('paged', true);
-			$this->assign('pager', $this->query->pager($options['page']));
-		}
-
-		$this->items = (property_exists($this->query, "data")) ? $this->query->data : $this->query->all();
-		if (!empty($model)) {
-			foreach($this->items as $idx => $item) {
-				$this->items[$idx] = $this->models->get($model)->filter($item, $this->action);
-			}
-		}
-	}
-
-	function build_query($query, &$ops) {
-		return $query;
+		$collection = $this->collections->get($this->collection);
+		$collection->setModel($this->model);
+		$this->items = $collection->query($options);
 	}
 
 	/**
 	 * render the display with the specified items
 	 */
-	function render($query=true) {
+	function render($query = true) {
 		if ($query && !empty($this->model)) $this->query();
 		parent::render();
 	}

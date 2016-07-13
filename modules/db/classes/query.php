@@ -309,6 +309,23 @@ class query implements IteratorAggregate, ArrayAccess {
 		return $return;
 	}
 
+	public function selectRelationship($selection, $field, $collection = "") {
+		$parsed = $this->parse_collection($field);
+		list($field, $alias) = array($parsed['collection'], $parsed['alias']);
+		if (empty($collection)) $collection = $this->last_collection;
+		$table = $this->query['from'][$collection];
+		$schema = $this->models->get($table)->column_info($field);
+		if (empty($schema['table'])) $schema['table'] = $table."_".$field;
+		$selection = "(SELECT ".$selection." FROM ".$this->db->prefix($schema['table'])." ".$collection."_".$alias." WHERE ".$collection."_".$alias.".".$table."_id=".$collection.".id)";
+		if ($alias === $field) {
+			$alias = $selection;
+		}
+		$this->query['select'][$alias] = $selection;
+		$this->operation("select", array("alias" => $alias));
+		$this->dirty();
+		return $this;
+	}
+
 	//CONDITIONS
 
 	/**

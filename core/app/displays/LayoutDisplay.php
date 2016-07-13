@@ -8,9 +8,10 @@ class LayoutDisplay extends ItemDisplay {
 
 	public $default_cell = false;
 
-	function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, InputFilterInterface $filter) {
+	function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, CollectionFactoryInterface $collections, HookFactoryInterface $hook_builder, InputFilterInterface $filter) {
 		$this->output = $output;
 		$this->models = $models;
+		$this->collections = $collections;
 		$this->response = $response;
 		$this->hook_builder = $hook_builder;
 		$this->filter = $filter;

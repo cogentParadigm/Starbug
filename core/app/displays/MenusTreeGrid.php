@@ -7,7 +7,7 @@ class MenusTreeGrid extends GridDisplay {
 		$this->dnd();
 		$this->attr('base_url', 'admin/menus');
 		$this->insert(0, ["id", "plugin" => "starbug.grid.columns.tree", "sortable" => "false"]);
-		$this->add(["content  label" => "Title", "plugin" => "starbug.grid.columns.html", "sortable" => "false"]);
+		$this->add(["content", "label" => "Title", "plugin" => "starbug.grid.columns.html", "sortable" => "false"]);
 		$this->add(["position", "sortable" => "false"]);
 	}
 }

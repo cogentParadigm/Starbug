@@ -5,15 +5,17 @@ class GridDisplay extends ItemDisplay {
 	public $template = "grid";
 	public $grid_class = "starbug/grid/PagedGrid";
 	public $dnd = false;
+	public $action = "";
 	public $fields = array(
 		"row_options" => array("field" => "id", "label" => "Options", "class" => "field-options", "plugin" => "starbug.grid.columns.options")
 	);
 	protected $request;
 
-	function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, RequestInterface $request) {
+	function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, CollectionFactoryInterface $collections, HookFactoryInterface $hook_builder, RequestInterface $request) {
 		$this->output = $output;
 		$this->response = $response;
 		$this->models = $models;
+		$this->collections = $collections;
 		$this->hook_builder = $hook_builder;
 		$this->request = $request;
 	}

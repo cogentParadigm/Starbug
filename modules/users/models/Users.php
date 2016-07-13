@@ -100,25 +100,5 @@ class Users extends UsersModel {
 			} else $this->error("Sorry, the email address you entered was not found. Please retry.", "email");
 		}
 	}
-
-	function query_admin($query, &$ops) {
-		$query->select("users.*");
-		$query->select("users.groups.id as groups");
-		$query->select("users.statuses.id as statuses");
-		if (!empty($ops['group']) && is_numeric($ops['group'])) {
-			$query->condition("users.groups.id", $ops['group']);
-		}
-
-		if (!empty($ops['status']) && is_numeric($ops['status'])) $query->condition("users.statuses.id", $ops['status']);
-		else $query->condition("users.statuses.slug", "deleted", "!=", array("ornull" => true));
-		return $query;
-	}
-
-	function filter($row) {
-		//even though it shouldn't be useful to attackers,
-		//we don't want the password hash to be returned in api calls
-		unset($row['password']);
-		return $row;
-	}
 }
 ?>

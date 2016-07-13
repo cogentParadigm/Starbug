@@ -3,7 +3,7 @@ namespace Starbug\Core;
 class FormDisplay extends ItemDisplay {
 	public $type = "form";
 	public $template = "form";
-	public $action = "form";
+	public $collection = "Form";
 
 	public $url;
 	public $method = "post";
@@ -14,15 +14,15 @@ class FormDisplay extends ItemDisplay {
 	public $cancel_url = "";
 	public $actions;
 	protected $vars = array();
-	protected $models;
 
-	function __construct(TemplateInterface $output, ResponseInterface $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, ModelFactoryInterface $models) {
+	function __construct(TemplateInterface $output, ResponseInterface $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, ModelFactoryInterface $models, CollectionFactoryInterface $collections) {
 		$this->output = $output;
 		$this->response = $response;
 		$this->hook_builder = $hooks;
 		$this->displays = $displays;
 		$this->request = $request;
 		$this->models = $models;
+		$this->collections = $collections;
 	}
 
 	function build($options) {
