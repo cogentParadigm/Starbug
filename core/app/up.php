@@ -110,7 +110,7 @@ $this->table(["queues", "groups" => "false"],
 $this->table(["views", "base" => "uris", "description" => "A basic view"]);
 $this->table(["pages", "base" => "uris", "description" => "A basic page"]);
 // URIS
-$this->uri("api", ["controller" => "api", "action" => "apiRouting"]);
+$this->uri("api", ["controller" => "apiRouting", "action" => "response"]);
 $this->uri("profile", ["controller" => "profile"]);
 //Admin
 $this->uri("admin", ["controller" => "admin", "action" => "default_action", "groups" => "admin", "theme" => "storm"]);
