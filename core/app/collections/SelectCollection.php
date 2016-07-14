@@ -15,7 +15,7 @@ class SelectCollection extends Collection {
 			$query->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true));
 		}
 		$query->select($query->model.".id");
-		$query->select($this->models->get($this->model)->label_select." as label");
+		$query->select($this->models->get($query->model)->label_select." as label");
 		return $query;
 	}
 }
