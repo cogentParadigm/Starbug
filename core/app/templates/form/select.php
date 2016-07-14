@@ -1,7 +1,7 @@
 <?php if(isset($attributes['multiple'])) $attributes['name'] .= '[]'; ?>
 <?php
 if ($mode == "display") {
-	$this->displays->render("DropdownDisplay", array("value" => $value, "attributes" => $attributes, "model" => $from, "action" => $query, "optional" => $optional, "other_option" => $other_option));
+	$this->displays->render("DropdownDisplay", array("value" => $value, "attributes" => $attributes, "model" => $from, "collection" => $query, "optional" => $optional, "other_option" => $other_option));
 } else { ?>
 	<?php
 		$other_id = $this->filter->normalize($name)."_other";
