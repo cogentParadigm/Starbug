@@ -1,4 +1,4 @@
-<div <?php echo $this->filter-attributes($display->attributes); ?>>
+<div <?php echo $this->filter->attributes($display->attributes); ?>>
 		<?php $name = $display->options["name"]; $found = false; foreach ($display->items as $item) { if (empty($item['depth'])) $item['depth'] = 0; ?>
 			<div class="form-group radio" style="padding-left:<?php echo $item['depth']*15; ?>px">
 				<?php

@@ -14,6 +14,7 @@ class FormDisplay extends ItemDisplay {
 	public $cancel_url = "";
 	public $actions;
 	protected $vars = array();
+	public $horizontal = false;
 
 	function __construct(TemplateInterface $output, ResponseInterface $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, ModelFactoryInterface $models, CollectionFactoryInterface $collections) {
 		$this->output = $output;

@@ -33,7 +33,9 @@
 		}
 		if ($control == "input" && ($type == "checkbox" || $type == "radio")) $this->render("form/label");
 	?>
+<?php if ($form->horizontal) { ?><div class="col-sm-9"><?php } ?>
 <?php if ($control != "input" || ($type != "checkbox" && $type != "radio")) $this->render(array("$model/form/$field-$control", "form/$field-$control", "$model/form/$control", "form/$control")); ?>
+<?php if ($form->horizontal) { ?></div><?php } ?>
 <?php
 	if (!empty($after)) {
 		echo $after;
