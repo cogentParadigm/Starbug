@@ -22,7 +22,7 @@
 	} else {
 		foreach ($display->fields as $name => $field) {
 			$this->assign("display", $display);
-			echo $display->form_control($field['input_type'], array_merge(array($name), $field));
+			echo $display->form_control($field['input_type'], array_merge(array($name), $field))."\n";
 		}
 	}
 ?>
