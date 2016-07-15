@@ -54,7 +54,7 @@ class Application implements ApplicationInterface {
 		} else {
 			$this->logger->addInfo("Request path - ".$request->getPath());
 		}
-
+		$permitted = $this->check_post($request->getPost(), $request->getCookies());
 		$this->response->assign("request", $request);
 		$route = $this->router->route($request);
 
@@ -81,7 +81,6 @@ class Application implements ApplicationInterface {
 		if (empty($route['arguments'])) $route['arguments'] = array();
 
 		$controller->start($request, $this->response);
-		$permitted = $this->check_post($request->getPost(), $request->getCookies());
 		if ($permitted) $controller->action($route['action'], $route['arguments']);
 		else $controller->forbidden();
 		$this->response = $controller->finish();
