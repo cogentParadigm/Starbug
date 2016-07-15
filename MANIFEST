@@ -1,9 +1,16 @@
 --------------------------------------------------------------------------------------------------------------------------------
-WHEN FIRST CLONING THIS PROJECT:
+TO SETUP WHEN CLONING THIS PROJECT:
 run command: composer install
 edit files : app/etc/db/default.json (db credentials), and etc/Host.php (URL sub-directory, Timezone)
 run command: composer setup
 run command: sb store users id:1 groups:root,admin password:[replace with password]
+
+--------------------------------------------------------------------------------------------------------------------------------
+THE FIRST TIME YOU SETUP THE PROJECT, INSTALL AND COMMIT THE LIBRARIES:
+run command: bower install
+run command: git add libraries
+run command: git commit -am "libraries"
+run command: git push
 
 --------------------------------------------------------------------------------------------------------------------------------
 WHEN PULLING NEW CODE:
