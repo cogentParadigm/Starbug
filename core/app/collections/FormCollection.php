@@ -1,5 +1,5 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
+# Copyright (C) 2008-2016 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP
@@ -10,6 +10,7 @@
 namespace Starbug\Core;
 
 class FormCollection extends Collection {
+	public $copying = false;
 	public function build($query, &$ops) {
 		$model = $this->models->get($this->model);
 		if (empty($ops['action'])) $ops['action'] = "create";
@@ -36,6 +37,13 @@ class FormCollection extends Collection {
 			}
 			$parent = $this->models->get($parent)->base;
 		}
+		return $query;
+	}
+	public function filterQuery($query, &$ops) {
+		if (!empty($ops['copy'])) {
+			$this->copying = true;
+		}
+		$query = parent::filterQuery($query, $ops);
 		return $query;
 	}
 }

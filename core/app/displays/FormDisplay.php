@@ -94,7 +94,6 @@ class FormDisplay extends ItemDisplay {
 			$options['id'] = $this->request->getParameter('copy');
 			parent::query(array("action" => $this->default_action) + $options);
 			if (!empty($this->items)) {
-				$this->items[0] = $this->models->get($this->model)->filter($this->items[0], 'copy');
 				unset($this->items[0]['id']);
 			}
 		}

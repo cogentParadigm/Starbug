@@ -3,6 +3,7 @@ namespace Starbug\Core;
 class UrisForm extends FormDisplay {
 	public $model = "uris";
 	public $cancel_url = "admin/uris";
+	public $collection = "UrisForm";
 	function build_display($options) {
 		//layout
 		$this->layout->add(["top", "left" => "div.col-md-9", "right" => "div.col-md-3"]);
