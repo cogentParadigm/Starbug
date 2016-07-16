@@ -25,5 +25,8 @@ class AdminPostsController extends Controller {
 		if ($this->db->success("posts", "create")) $this->redirect("admin/posts");
 		else $this->render("admin/update");
 	}
+	function import() {
+		$this->render("admin/import");
+	}
 }
 ?>

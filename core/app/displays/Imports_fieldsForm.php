@@ -23,7 +23,7 @@ class Imports_fieldsForm extends FormDisplay {
 		$this->add(["update_key", "input_type" => "checkbox", "label" => "Use this field as a key to update records"]);
 	}
 	function parse_source($id) {
-		$file = query("files")->condition("id", $id)->one();
+		$file = $this->models->get("files")->load($id);
 		$head = array();
 		if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) {
 			$head = fgetcsv($handle);

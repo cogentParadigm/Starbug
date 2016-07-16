@@ -16,8 +16,8 @@ class ImportsForm extends FormDisplay {
 		$source = $this->get("source");
 		$model = $this->get("model");
 		$this->add("name");
-		$this->add(["model", "input_type" => "select", "from" => "entities", "query" => "model"]);
-		$this->add("action");
+		$this->add(["model", "input_type" => "hidden", "default" => $options['model']]);
+		$this->add(["action", "default" => "create"]);
 		$this->add(["source", "input_type" => "file_select"]);
 		if (!empty($source) && !empty($model)) {
 			$this->add(array("fields",

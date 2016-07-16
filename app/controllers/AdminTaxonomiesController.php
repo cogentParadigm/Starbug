@@ -45,5 +45,8 @@ class AdminTaxonomiesController extends Controller {
 		$this->assign("taxonomy", $taxonomy);
 		$this->render("admin/taxonomies/taxonomy");
 	}
+	function import() {
+		$this->render("admin/import");
+	}
 }
 ?>

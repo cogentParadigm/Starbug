@@ -26,5 +26,8 @@ class AdminUsersController extends Controller {
 		$this->assign("form", "users");
 		$this->render("admin/update");
 	}
+	function import() {
+		$this->render("admin/import");
+	}
 }
 ?>

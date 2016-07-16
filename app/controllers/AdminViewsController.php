@@ -25,5 +25,8 @@ class AdminViewsController extends Controller {
 		if ($this->db->success("views", "create")) $this->redirect("admin/views");
 		else $this->render("admin/update");
 	}
+	function import() {
+		$this->render("admin/import");
+	}
 }
 ?>

@@ -32,5 +32,8 @@ class AdminUrisController extends Controller {
 		$this->assign("action", "update");
 		$this->render("admin/update");
 	}
+	function import() {
+		$this->render("admin/import");
+	}
 }
 ?>

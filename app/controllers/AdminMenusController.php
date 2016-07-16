@@ -36,5 +36,8 @@ class AdminMenusController extends Controller {
 		$this->assign("menu", $menu);
 		$this->render("admin/menus/menu");
 	}
+	function import() {
+		$this->render("admin/import");
+	}
 }
 ?>

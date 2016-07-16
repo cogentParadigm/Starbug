@@ -22,7 +22,8 @@ class AdminImportsController extends Controller {
 	}
 	function update($id) {
 		$this->assign("id", $id);
-		if ($this->db->success("imports", "create")) $this->redirect("admin/imports");
+		$import = $this->models->get("imports")->load($id);
+		if ($this->db->success("imports", "create")) $this->redirect("admin/".$import['model']."/import");
 		else $this->render("admin/update");
 	}
 	function run($id) {

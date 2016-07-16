@@ -25,5 +25,8 @@ class AdminPagesController extends Controller {
 		if ($this->db->success("pages", "create")) $this->redirect("admin/pages");
 		else $this->render("admin/update");
 	}
+	function import() {
+		$this->render("admin/import");
+	}
 }
 ?>
