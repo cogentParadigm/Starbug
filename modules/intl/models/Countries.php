@@ -4,7 +4,8 @@
  * @ingroup models
  */
 namespace Starbug\Intl;
-class Countries {
+use Starbug\Core\CountriesModel;
+class Countries extends CountriesModel {
 
 	function create($country) {
 		$this->store($country);
@@ -13,15 +14,6 @@ class Countries {
   /******************************************************************
 	 * Query functions
 	 *****************************************************************/
-
-  function query_admin($query, &$ops) {
-    $query = parent::query_admin($query, $ops);
-    return $query;
-  }
-
-  function query_filters($action, $query, $ops) {
-      return $query;
-  }
 
 	function query_select($query, &$ops) {
 		if (!empty($ops['id'])) {
@@ -33,14 +25,6 @@ class Countries {
 		$query->sort("countries.name");
 		return $query;
 	}
-
-	/******************************************************************
-	 * Display functions
-	 *****************************************************************/
-
-	function display_admin($display, $ops) {
-	    $display->add("id");
-  	}
 
 }
 ?>

@@ -1,7 +1,8 @@
 <?php
 namespace Starbug\Intl;
+use Starbug\Core\Controller;
 use Starbug\Core\DatabaseInterface;
-class AdminCountriesController {
+class AdminCountriesController extends Controller {
 	public $routes = array(
 		'update' => '{id}'
 	);
@@ -10,7 +11,6 @@ class AdminCountriesController {
 	}
 	function init() {
 		$this->assign("model", "countries");
-		$this->assign("cancel_url", "admin/countries");
 	}
 	function default_action() {
 		$this->render("admin/list");
@@ -23,6 +23,9 @@ class AdminCountriesController {
 		$this->assign("id", $id);
 		if ($this->db->success("countries", "create")) $this->redirect("admin/countries");
 		else $this->render("admin/update");
+	}
+	function import() {
+		$this->render("admin/import");
 	}
 }
 ?>

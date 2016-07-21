@@ -62,6 +62,7 @@ class Collection {
 		foreach ($this->filters as $filter) {
 			$query = $filter->filterQuery($this, $query, $ops);
 		}
+		$query = $this->models->get($this->model)->filterQuery($this, $query, $ops);
 
 		$query = $this->build($query, $ops);
 
@@ -79,6 +80,7 @@ class Collection {
 			$data = $filter->filterRows($this, $data);
 		}
 		$this->results = $this->filterRows($data);
+		$this->results = $this->models->get($this->model)->filterRows($this, $data);
 
 		return $this->results;
 	}

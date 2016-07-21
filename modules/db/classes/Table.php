@@ -17,7 +17,7 @@ namespace Starbug\Core;
  * This class wraps a databse table, it is the base class for database models
  * @ingroup Table
  */
-class Table {
+class Table implements CollectionFilterInterface {
 	/**
 	 * @var db the db object
 	 */
@@ -370,6 +370,19 @@ class Table {
 				$this->db->remove($name, array("id" => $original[$name."_id"]));
 			}
 		}
+	}
+
+	function filterQuery($collection, $query, &$ops) {
+		return $query;
+	}
+	function filterRows($collection, $rows) {
+		foreach ($rows as $idx => $row) {
+			$rows[$idx] = $this->filterRow($collection, $row);
+		}
+		return $rows;
+	}
+	function filterRow($collection, $row) {
+		return $row;
 	}
 }
 ?>

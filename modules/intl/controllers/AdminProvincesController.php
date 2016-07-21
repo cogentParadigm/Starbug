@@ -1,7 +1,8 @@
 <?php
 namespace Starbug\Intl;
+use Starbug\Core\Controller;
 use Starbug\Core\DatabaseInterface;
-class AdminProvincesController {
+class AdminProvincesController extends Controller {
 	public $routes = array(
 		'update' => '{id}'
 	);
@@ -10,7 +11,6 @@ class AdminProvincesController {
 	}
 	function init() {
 		$this->assign("model", "provinces");
-		$this->assign("cancel_url", "admin/provinces");
 	}
 	function default_action() {
 		$this->render("admin/list");
@@ -23,6 +23,9 @@ class AdminProvincesController {
 		$this->assign("id", $id);
 		if ($this->db->success("provinces", "create")) $this->redirect("admin/provinces");
 		else $this->render("admin/update");
+	}
+	function import() {
+		$this->render("admin/import");
 	}
 }
 ?>
