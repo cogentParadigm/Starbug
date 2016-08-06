@@ -61,7 +61,7 @@ class Application implements ApplicationInterface {
 		if (empty($route['theme'])) $route['theme'] = $this->settings->get("theme");
 		if (empty($route['layout'])) $route['layout'] = empty($route['type']) ? "views" : $route['type'];
 		if (empty($route['template'])) $route['template'] = $request->getFormat();
-		$this->locator->set("theme", "app/themes/".$route['theme']);
+		$this->locator->set("Starbug\Theme", "app/themes/".$route['theme']);
 
 		foreach ($route as $k => $v) {
 			if (!empty($v)) $this->response->{$k} = $v;
