@@ -18,6 +18,7 @@ define([
 		templateString:'<div class="address-form"></div>',
 		country:'US',
 		store:null,
+		keys:false,
 		postCreate: function() {
 			this.url = WEBSITE_URL + 'address/form/';
 			this.show(this.item_id);
@@ -53,6 +54,11 @@ define([
 			var options = {query:{}};
 			if (this.item_id) options.query.id = this.item_id;
 			if (edit) options.query.edit = true;
+			if (this.keys && this.keys.length) {
+				for (var i in this.keys) {
+					options.query["keys[" + i + "]"] = this.keys[i];
+				}
+			}
 			xhr(request_url, options).then(lang.hitch(this, 'loadForm'));
 		},
 		update: function(evt) {

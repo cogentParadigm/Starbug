@@ -4,6 +4,9 @@ use Starbug\Core\Controller;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ModelFactoryInterface;
 class AddressController extends Controller {
+	public $routes = [
+		"form" => "form/[{locale}]"
+	];
 	public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
 		$this->db = $db;
 		$this->models = $models;
@@ -32,7 +35,11 @@ class AddressController extends Controller {
 		$this->assign("formatted_address", $formatted);
 		$this->assign("address", $address);
 		$this->assign("edit", $edit);
-		$this->assign("country", $country);
+		$options = array("code" => $country['code'], 'id' => $this->request->getParameter("id"));
+		if ($this->request->hasParameter("keys")) {
+			$options["input_name"] = $this->request->getParameter("keys");
+		}
+		$this->assign("options", $options);
 		$this->render("address/form");
 	}
 }

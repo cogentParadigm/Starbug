@@ -4,7 +4,8 @@ use Starbug\Core\FormDisplay;
 class AddressForm extends FormDisplay {
 	public $model = "address";
 	public $cancel_url = "address";
-	function build_display($options) {
+	function build_display($ops) {
+		if (!empty($ops["input_name"])) $this->template = "fields";
 		if (empty($ops['code'])) $ops['code'] = "US";
 		$country = $this->models->get("countries")->query()->condition("code", $ops['code'])->one();
 		//$country['province_label'] = t($country['province_label']);
