@@ -46,6 +46,7 @@ class Bundle implements \IteratorAggregate, \Countable, \ArrayAccess {
 		$target = &$this->data;
 		$value = array_pop($args);
 		foreach ($args as $arg) {
+			if (!is_array($target)) $target = array();
 			$target = &$target[$arg];
 		}
 		$target = $value;

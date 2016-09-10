@@ -9,19 +9,23 @@ define([
 	"dojo/dom-form",
 	"dojo/dom-class"
 ], function(declare, lang, xhr, query, Widget, Templated, put, domForm, domclass) {
-	return declare([Widget, Templated], {
+	return declare([Widget], {
 		dialog:null,
 		url:'',
 		formNode:null,
 		countryNode:null,
 		item_id: null,
-		templateString:'<div class="address-form"></div>',
 		country:'US',
 		store:null,
 		keys:false,
+		updateOnLoad:true,
 		postCreate: function() {
 			this.url = WEBSITE_URL + 'address/form/';
-			this.show(this.item_id);
+			if (this.updateOnLoad) {
+				this.show(this.item_id);
+			} else {
+				this.loadForm();
+			}
 		},
 		_onSubmit: function(evt){
 			evt.preventDefault();
@@ -70,7 +74,7 @@ define([
 		},
 		loadForm: function(data) {
 			var self = this;
-			this.domNode.innerHTML = data;
+			if (data) this.domNode.innerHTML = data;
 			this.formNode = query('form', this.domNode)[0];
 			query('form', this.domNode).on('submit', function(evt) {evt.preventDefault();});
 			query('.submit, [type=\"submit\"]', this.domNode).attr('onclick', '').on('click', lang.hitch(this, '_onSubmit'));
