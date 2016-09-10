@@ -17,12 +17,13 @@ class FormDisplay extends ItemDisplay {
 	protected $vars = array();
 	public $horizontal = false;
 
-	function __construct(TemplateInterface $output, ResponseInterface $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, ModelFactoryInterface $models, CollectionFactoryInterface $collections) {
+	function __construct(TemplateInterface $output, ResponseInterface $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, DatabaseInterface $db, ModelFactoryInterface $models, CollectionFactoryInterface $collections) {
 		$this->output = $output;
 		$this->response = $response;
 		$this->hook_builder = $hooks;
 		$this->displays = $displays;
 		$this->request = $request;
+		$this->db = $db;
 		$this->models = $models;
 		$this->collections = $collections;
 	}
@@ -123,11 +124,10 @@ class FormDisplay extends ItemDisplay {
 		$this->errors = array();
 		foreach ($this->fields as $name => $field) {
 			$this->schema[$name] = $this->models->get($field['model'])->column_info($name);
-			$error_key = str_replace(array("][", "[", "]"), array(".", ".", ""), $name);
-			if (!empty($this->schema[$name]['entity'])) {
-				$errors = $this->models->get($this->schema[$name]['entity'])->errors($error_key, true);
-				if (!empty($errors)) $this->errors[$name] = $errors;
-			}
+			$error_key = implode(".", $this->input_name);
+			$error_key .= ".".str_replace(array("][", "[", "]"), array(".", ".", ""), $name);
+			$errors = $this->db->errors($error_key, true);
+			if (!empty($errors)) $this->errors[$name] = $errors;
 		}
 	}
 

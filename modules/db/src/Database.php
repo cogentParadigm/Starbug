@@ -244,7 +244,7 @@ class Database implements DatabaseInterface {
 			$values = $key;
 			$key = "";
 		}
-		$parts = explode(".", $key);
+		$parts = explode(".", $key, 2);
 		$errors = $this->errors;
 		if (!empty($key)) foreach ($parts as $p) $errors = $errors[$p];
 		if ($values) return $errors;

@@ -17,6 +17,10 @@ class hook_store_references extends QueryHook {
 				$value = empty($value["id"]) ? $instance->insert_id : $value["id"];
 			} else {
 				$errors = $this->db->errors[$model];
+				unset($this->db->errors[$model]);
+				foreach ($errors as $field => $e) {
+					$this->db->errors[$query->model][$key.".".$field] = $e;
+				}
 			}
 		}
 		return $value;
