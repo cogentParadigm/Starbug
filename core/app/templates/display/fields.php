@@ -1,5 +1,5 @@
 <?php $item_id = $display->get("id"); if (!empty($item_id)) { ?>
-	<input id="id" name="<?php echo $display->model; ?>[id]" type="hidden" value="<?php echo $this->filter->string($display->get('id')); ?>" />
+	<input id="id" name="<?php echo $display->get_name("id"); ?>" type="hidden" value="<?php echo $this->filter->string($display->get('id')); ?>" />
 <?php } ?>
 <?php
 	if (!$display->layout->is_empty()) {
