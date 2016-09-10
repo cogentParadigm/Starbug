@@ -18,7 +18,7 @@ class Address extends AddressModel {
 		$country = $this->query("countries")->condition("id", $address['country'])->one();
 		$req = str_split($country['require']);
 		foreach ($req as $token) {
-			if (!in_array($token, array('N', 'A')) && empty($address[$this->map[$token]])) error("This field is required", $this->map[$token]);
+			if (!in_array($token, array('N', 'A')) && empty($address[$this->map[$token]])) $this->error("This field is required", $this->map[$token]);
 		}
 		$this->store($address);
 	}

@@ -14,7 +14,7 @@ class hook_form_address extends FormHook {
 			$field['data-dojo-props'] = array();
 		}
 		$field['data-dojo-props']['keys'] = "['".implode("', '", $form->input_name)."', '".$field["name"]."']";
-		if (!empty($value)) {
+		if (!empty($value) && $value !== "NULL") {
 			$field['data-dojo-props']['id'] = $value;
 		}
 		$props = array();
