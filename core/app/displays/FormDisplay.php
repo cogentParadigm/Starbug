@@ -4,6 +4,7 @@ class FormDisplay extends ItemDisplay {
 	public $type = "form";
 	public $template = "form";
 	public $collection = "Form";
+	public $input_name = false;
 
 	public $url;
 	public $method = "post";
@@ -29,6 +30,8 @@ class FormDisplay extends ItemDisplay {
 	function build($options) {
 		$this->options = $options;
 		if (empty($this->model) && !empty($this->options['model'])) $this->model = $this->options['model'];
+		if (!empty($options["input_name"])) $this->input_name = $options["input_name"];
+		if (false === $this->input_name) $this->input_name = [$this->model];
 		// grab schema
 		if (!empty($this->model) && $this->models->has($this->model)) {
 			$this->schema = $this->models->get($this->model)->hooks;
@@ -100,9 +103,10 @@ class FormDisplay extends ItemDisplay {
 
 		//load POST data
 		if (!empty($this->items)) {
-			$data = $this->request->getPost();
-			if (empty($data[$this->model])) $this->request->setPost($this->model, array());
-			foreach ($this->items[0] as $k => $v) if (!isset($data[$this->model][$k])) $this->request->setPost($this->model, $k, $v);
+			if (!$this->hasPost()) $this->setPost([]);
+			foreach ($this->items[0] as $k => $v) {
+				if (!$this->hasPost($k)) $this->setPost($k, $v);
+			}
 		}
 	}
 
@@ -153,6 +157,24 @@ class FormDisplay extends ItemDisplay {
 		return $this->models->get($args[0])->failure($args[1]);
 	}
 
+	public function hasPost() {
+		$args = func_get_args();
+		$keys = array_merge($this->input_name, $args);
+		return call_user_func_array([$this->request, "hasPost"], $keys);
+	}
+
+	public function getPost() {
+		$args = func_get_args();
+		$keys = array_merge($this->input_name, $args);
+		return call_user_func_array([$this->request, "getPost"], $keys);
+	}
+
+	public function setPost($value) {
+		$args = func_get_args();
+		$keys = array_merge($this->input_name, $args);
+		return call_user_func_array([$this->request, "setPost"], $keys);
+	}
+
 	/**
 	 * get the full name attribute
 	 * eg. name becomes users[name]
@@ -160,15 +182,21 @@ class FormDisplay extends ItemDisplay {
 	 * @param string $name the relative name
 	 * @return the full name
 	 */
-	function get_name($name, $model = "") {
-		if (empty($model)) {
-			$model = (empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
+	function get_name($name) {
+		$key = $this->input_name;
+		if (empty($key) || $this->method == "get") return $name;
+		else {
+			foreach ($key as $i => &$k) {
+				if ($i > 0) $k = "[".$k."]";
+			}
+			$key = implode("", $key);
+			if (false !== strpos($name, "[")) {
+				$parts = explode("[", $name, 2);
+				return $key."[".$parts[0]."][".$parts[1];
+			} else {
+				return $key."[".$name."]";
+			}
 		}
-		if (empty($model) || $this->method == "get") return $name;
-		else if (false !== strpos($name, "[")) {
-			$parts = explode("[", $name, 2);
-			return $model."[".$parts[0]."][".$parts[1];
-		} else return $model."[".$name."]";
 	}
 
 	/**
@@ -176,13 +204,10 @@ class FormDisplay extends ItemDisplay {
 	 * @param string $name the relative name
 	 * @return string the GET or POST value
 	 */
-	function get($name, $model = "") {
-		if (empty($model)) {
-			$model = (empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
-		}
+	function get($name) {
+		$keys = $this->input_name;
 		$parts = explode("[", $name);
-		if ($this->method == "post") $var = (empty($model)) ? $this->request->getPost() : $this->request->getPost($model);
-		else $var = $this->request->getParameters();
+		$var = ($this->method == "post") ? $this->getPost() : $this->request->getParameters();
 		foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")];
 		if (is_array($var)) return $var;
 		else return stripslashes($var);
@@ -193,29 +218,17 @@ class FormDisplay extends ItemDisplay {
 	 * @param string $name the relative name
 	 * @param string $value the value
 	 */
-	function set($name, $value, $model = "") {
-		if (empty($model)) {
-			$model = (!empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
-		}
+	function set($name, $value) {
 		$parts = explode("[", $name);
 		$key = array_pop($parts);
-
-		$data = ($this->method == "post") ? $this->request->getPost() : $this->request->getParameters();
-
-		if (empty($model)) {
-			$var = &$data;
-		} else {
-			$var = &$data[$model];
-		}
-
+		$data = ($this->method == "post") ? $this->getPost() : $this->request->getParameters();
 		foreach ($parts as $p) {
 			$var = &$var[rtrim($p, "]")];
 		}
-
 		$var[$key] = $value;
 
 		if ($this->method == "post") {
-			$this->request->setPost($data);
+			$this->setPost($data);
 		} else {
 			$this->request->setParameters($data);
 		}
@@ -266,7 +279,7 @@ class FormDisplay extends ItemDisplay {
 
 		$capture = "field";
 		if (empty($field['field'])) $field['field'] = reset(explode("[", $field['name']));
-		$field['name'] = $this->get_name($field['name'], $field['model']);
+		$field['name'] = $this->get_name($field['name']);
 		foreach ($field as $k => $v) $this->assign($k, $v);
 		if (isset($field['nofield'])) {
 			unset($field['nofield']);
