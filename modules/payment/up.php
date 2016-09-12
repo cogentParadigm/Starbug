@@ -45,26 +45,39 @@
 		["meta_description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
 		["sorting_weight", "type" => "int", "default" => "0"]
 	);
-	$this->table(["lines"],
+	$this->table(["lines", "groups" => false],
 		["type", "type" => "string"],
 		["description", "type" => "string", "length" => "255"],
 		["price", "type" => "int", "default" => "0"],
 		["qty", "type" => "int", "default" => "1"]
 	);
-	$this->table(["product_lines", "base" => "lines"],
+	$this->table(["product_lines", "base" => "lines", "groups" => false],
 		["product", "type" => "int", "references" => "products id"]
 	);
-	$this->table(["shipping_lines", "base" => "lines"]);
-	$this->table(["tax_lines", "base" => "lines"]);
-	$this->table(["orders", "search" => "orders.txn_id,orders.tracking_number,orders.order_status,orders.email,orders.phone,orders.billing_address.recipient,orders.shipping_address.recipient"],
-		["number", "type" => "int"],
+	$this->table(["shipping_lines", "base" => "lines", "groups" => false]);
+	$this->table(["tax_lines", "base" => "lines", "groups" => false]);
+	$this->table(["payments", "groups" => false],
+		["amount", "type" => "int", "default" => "0"],
+		["response_code", "type" => "int"],
+		["txn_id", "type" => "string", "length" => "32"],
+		["response", "type" => "text"]
+	);
+	$this->table(["subscriptions", "groups" => false],
+		["amount", "type" => "int", "default" => "0"],
+		["subscription_id", "type" => "string"],
+		["start_date", "type" => "datetime"],
+		["interval", "type" => "int"],
+		["unit", "type" => "string"],
+		["occurrences", "type" => "int"],
+		["trials", "type" => "int", "default" => "0"],
+		["trial_amount", "type" => "int", "default" => "0"],
+		["card", "type" => "string"],
+		["card_expiration", "type" => "datetime"],
+		["response", "type" => "text"]
+	);
+	$this->table(["orders", "search" => "orders.id,orders.order_status,orders.email,orders.phone,orders.billing_address.recipient,orders.shipping_address.recipient", "groups" => false],
 		["subtotal", "type" => "string", "length" => "32", "default" => ""],
 		["total", "type" => "string", "length" => "32"],
-		["cart", "type" => "text"],
-		["measurements", "type" => "text", "default" => "", "addslashes" => ""],
-		["response", "type" => "int"],
-		["txn_id", "type" => "string", "length" => "32"],
-		["tracking_number", "type" => "string", "length" => "64", "default" => ""],
 		["order_status", "type" => "string", "length" => "128", "default" => "cart"],
 		["lines", "type" => "lines", "table" => "lines", "optional" => ""],
 		["token", "type" => "string", "length" => "128", "default" => ""],
@@ -72,7 +85,8 @@
 		["shipping_address", "type" => "int", "references" => "address id", "null" => ""],
 		["email", "type" => "string", "length" => "128"],
 		["phone", "type" => "string"],
-		["purchased", "type" => "datetime", "null" => ""]
+		["payments", "type" => "payments", "table" => "payments"],
+		["subscriptions", "type" => "subscriptions", "table" => "subscriptions"]
 	);
 
 

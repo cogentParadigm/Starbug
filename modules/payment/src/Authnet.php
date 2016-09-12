@@ -1,12 +1,14 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
+# Copyright (C) 2008-2016 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
  * This file is part of StarbugPHP
- * @file modules/payment/classes/Authnet.php
+ * @file modules/payment/src/Authnet.php
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup payment
  */
+namespace Starbug\Payment;
+use Starbug\Core\TemplateInterface;
 class AuthnetXMLException extends Exception {
 	//generic exception class to allow instanceof matches
 }
@@ -29,11 +31,12 @@ class Authnet {
 	 * constructor. initializes the Authnet object capable of connecting to AIM, ARB or CIM
 	 * Login ID and Transaction Key will be fetched from payment gateway settings
 	 */
-	public function __construct() {
-		$this->login_id        = payment_settings('Authorize.Net', 'login_id');
-		$this->transaction_key = payment_settings('Authorize.Net', 'transaction_key');
-		$this->test_mode       = is_test_mode("Authorize.Net");
+	public function __construct(PaymentSettingsInterface $settings, TemplateInterface $templates) {
+		$this->login_id        = $settings->get('Authorize.Net', 'login_id');
+		$this->transaction_key = $settings->get('Authorize.Net', 'transaction_key');
+		$this->test_mode       = $settings->testMode("Authorize.Net");
 		$this->url = 'https://'.($this->test_mode ? "apitest" : "api").'.authorize.net/xml/v1/request.api';
+		$this->templates = $templates;
 	}
 
 	/**
@@ -47,9 +50,7 @@ class Authnet {
 	 */
 	public function __call($api_call, $args) {
 		foreach ($args[0] as $key => $value) $this->{$key} = $value;
-		$locator = new ResourceLocator(BASE_DIR, array("modules/db/payment"));
-		$template = new Template($locator);
-		$this->xml = $template->get("Authnet/$api_call", array("authnet" => $this));
+		$this->xml = $this->templates->get("Authnet/$api_call", array("authnet" => $this));
 		$this->process();
 	}
 

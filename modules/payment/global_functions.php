@@ -65,7 +65,7 @@ function AIMTransaction($fields) {
 
 		$authnet = new Authnet();
 		$authnet->AIMCreateTransactionRequest($fields);
-		if ($authnet->error()) error($authnet->text, 'global');
+		if ($authnet->error()) error($authnet->response->transactionResponse->errors->error->errorText, 'global');
 		return $authnet;
 
 	}
