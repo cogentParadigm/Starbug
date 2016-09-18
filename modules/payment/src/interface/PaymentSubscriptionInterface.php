@@ -5,7 +5,7 @@ namespace Starbug\Payment;
  */
 interface PaymentSubscriptionInterface {
 	public function create($order, $subscription);
-	public function update($subscription);
-	public function cancel($subscription);
-	public function status($subscription);
+	public function update($order, $subscription);
+	public function cancel($order, $subscription);
+	public function status($id);
 }
