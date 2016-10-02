@@ -79,9 +79,9 @@ class Collection {
 		foreach ($this->filters as $filter) {
 			$data = $filter->filterRows($this, $data);
 		}
-		$this->results = $this->filterRows($data);
-		$this->results = $this->models->get($this->model)->filterRows($this, $data);
-
+		$data = $this->filterRows($data);
+		$data = $this->models->get($this->model)->filterRows($this, $data);
+		$this->results = $data;
 		return $this->results;
 	}
 }
