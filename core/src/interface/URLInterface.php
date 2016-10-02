@@ -14,7 +14,7 @@ namespace Starbug\Core;
 */
 interface URLInterface {
 	public function setScheme($scheme);
-	public function getScheme($scheme);
+	public function getScheme();
 	public function setHost($host);
 	public function getHost();
 	public function setPort($port);

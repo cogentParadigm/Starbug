@@ -36,7 +36,7 @@ class URL implements URLInterface {
 		return $this;
 	}
 
-	public function getScheme($scheme) {
+	public function getScheme() {
 		return $this->scheme;
 	}
 
