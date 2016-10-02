@@ -1,0 +1,8 @@
+{
+	"orders":{
+		"request":"RequestInterface"
+	},
+	"product_lines":{
+		"cart":"Starbug\\Payment\\Cart"
+	}
+}

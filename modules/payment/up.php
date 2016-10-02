@@ -20,9 +20,9 @@
 		["is_test_mode" => "1", "is_active" => "1"]
 	);
 
-	$this->table(["product_types", "groups" => false],
+	$this->table(["product_types", "groups" => false, "label_select" => "product_types.name"],
 		["name", "type" => "string", "length" => "128"],
-		["slug", "type" => "string", "length" => "128", "unique" => "parent", "default" => "", "slug" => "name"],
+		["slug", "type" => "string", "length" => "128", "unique" => "", "default" => "", "slug" => "name"],
 		["description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
 		["content", "type" => "text", "default" => ""]
 	);
@@ -32,7 +32,7 @@
 		["name", "type" => "string"],
 		["path", "type" => "string", "length" => "128", "unique" => "", "default" => "", "slug" => "name"],
 		["price", "type" => "int", "default" => "0"],
-		["active", "type" => "bool", "default" => "1"],
+		["published", "type" => "bool", "default" => "1"],
 		["hidden", "type" => "bool", "default" => "0"],
 		["description", "type" => "text", "default" => ""],
 		["content", "type" => "text", "default" => ""],
@@ -63,6 +63,7 @@
 		["response", "type" => "text"]
 	);
 	$this->table(["subscriptions", "groups" => false],
+		["type", "type" => "string"],
 		["amount", "type" => "int", "default" => "0"],
 		["subscription_id", "type" => "string"],
 		["start_date", "type" => "datetime"],
@@ -90,7 +91,8 @@
 	);
 
 
-	$this->uri("cart", ["title" => "Shopping Cart"]);
-	$this->uri("checkout", ["title" => "Checkout"]);
+	$this->uri("cart", ["controller" => "cart", "title" => "Shopping Cart"]);
+	$this->uri("checkout", ["controller" => "checkout"]);
 	$this->uri("transaction", ["template" => "xhr"]);
+	$this->uri("product", ["controller" => "product"]);
 ?>
