@@ -1,6 +1,8 @@
 {
 	"orders":{
-		"request":"RequestInterface"
+		"request":"RequestInterface",
+		"cart":"Starbug\\Payment\\Cart",
+		"payments":"Starbug\\Payment\\PaymentInterface"
 	},
 	"product_lines":{
 		"cart":"Starbug\\Payment\\Cart"

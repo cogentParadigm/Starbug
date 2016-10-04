@@ -43,7 +43,7 @@ class PaymentSettings implements PaymentSettingsInterface {
 		} else {
 			$item = $this->db->query("payment_gateway_settings")
 				->select("IF(payment_gateway_id.is_test_mode=1, payment_gateway_settings.test_mode_value, payment_gateway_settings.live_mode_value) as value")
-				->condition("payment_gateways.$field_name", $gateway)
+				->condition("payment_gateway_id.$field_name", $gateway)
 				->condition("payment_gateway_settings.name", $setting)->one();
 			$this->settings[$gateway][$setting] = $item;
 		}

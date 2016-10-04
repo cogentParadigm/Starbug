@@ -1,5 +1,6 @@
 <?php
 namespace Starbug\Payment;
+use Starbug\Core\ModelFactoryInterface;
 class Payment implements PaymentInterface {
 	public function __construct(ModelFactoryInterface $models, Authnet $authnet) {
 		$this->storage = $models->get("payments");
