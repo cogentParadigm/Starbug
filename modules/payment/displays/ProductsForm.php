@@ -14,11 +14,63 @@ class ProductsForm extends FormDisplay {
 		$this->add(["type", "input_type" => "select", "from" => "product_types", "pane" => "left"]);
 		$this->add(["sku", "label" => "SKU", "pane" => "left"]);
 		$this->add(["name", "pane" => "left"]);
-		$this->add(["price", "pane" => "left", "info" => "Enter price in cents. For example $50 should be entered as 5000"]);
 		$this->add(["description", "pane" => "left"]);
 		$this->add(["content", "pane" => "left"]);
 		$this->add(["thumbnail", "input_type" => "file_select", "pane" => "left"]);
 		$this->add(["photos", "input_type" => "file_select", "pane" => "left"]);
+
+		$this->add([
+			"payment_type",
+			"pane" => "right",
+			"input_type" => "select",
+			"options" => ["Single Payment", "Recurring Payments"],
+			"values" => ["single", "recurring"],
+			"data-dojo-type" => "starbug/form/Dependency",
+			"data-dojo-props" => "key:'payment_type'"
+		]);
+		$this->add(["price", "pane" => "right", "info" => "Enter price in cents. For example $50 should be entered as 5000"]);
+		$this->add([
+			"unit",
+			"label" => "Recurrence Unit",
+			"pane" => "right",
+			"input_type" => "select",
+			"options" => ["Months", "Days"],
+			"values" => ["months", "days"],
+			"data-dojo-type" => "starbug/form/Dependent",
+			"data-dojo-props" => "key:'payment_type', values:['recurring']"
+		]);
+		$this->add([
+			"interval",
+			"label" => "Recurrence Interval",
+			"pane" => "right",
+			"info" => "For monthly recurrence enter a number between 1 and 12. For daily recurrence enter a number between 7 and 365",
+			"data-dojo-type" => "starbug/form/Dependent",
+			"data-dojo-props" => "key:'payment_type', values:['recurring']"
+		]);
+		$this->add([
+			"trial_amount",
+			"pane" => "right",
+			"info" => "Enter a price if you wish to charge a reduced amount during a trial period.",
+			"data-dojo-type" => "starbug/form/Dependent",
+			"data-dojo-props" => "key:'payment_type', values:['recurring']"
+		]);
+		$this->add([
+			"trials",
+			"label" => "Trial Occurrences",
+			"pane" => "right",
+			"info" => "Enter the number of payments in the trial period.",
+			"data-dojo-type" => "starbug/form/Dependent",
+			"data-dojo-props" => "key:'payment_type', values:['recurring']"
+		]);
+		$this->add([
+			"occurrences",
+			"label" => "Total Occurrences",
+			"pane" => "right",
+			"info" => "Enter the total number of payments. For on-going subscriptions with no end date, enter '9999'.",
+			"data-dojo-type" => "starbug/form/Dependent",
+			"data-dojo-props" => "key:'payment_type', values:['recurring']"
+		]);
+
 		$this->add(["position", "pane" => "right"]);
 		$this->add(["categories", "pane" => "right"]);
 		$this->add(["path", "label" => "URL path", "info" => "Leave empty to generate automatically", "pane" => "path"]);
