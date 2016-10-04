@@ -55,7 +55,13 @@
 		["type", "type" => "string"],
 		["description", "type" => "string", "length" => "255"],
 		["price", "type" => "int", "default" => "0"],
-		["qty", "type" => "int", "default" => "1"]
+		["qty", "type" => "int", "default" => "1"],
+		["recurring", "type" => "bool", "default" => "0"],
+		["interval", "type" => "int"],
+		["unit", "type" => "string"],
+		["occurrences", "type" => "int", "default" => "9999"],
+		["trials", "type" => "int", "default" => "0"],
+		["trial_amount", "type" => "int", "default" => "0"]
 	);
 	$this->table(["product_lines", "base" => "lines", "groups" => false],
 		["product", "type" => "int", "references" => "products id"]

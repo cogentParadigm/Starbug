@@ -18,9 +18,13 @@ class CartController extends Controller {
 	function add() {
 		$this->cart->init();
 		$product = $this->cart->addProduct($this->request->getParameters());
-		$product['description'] = '<strong>'.$product['description'].'</strong>';
-		$this->assign("product", $product);
-		$this->render("cart/add");
+		if ($this->request->hasParameter("to")) {
+			$this->redirect($this->request->getParameter("to"));
+		} else {
+			$product['description'] = '<strong>'.$product['description'].'</strong>';
+			$this->assign("product", $product);
+			$this->render("cart/add");
+		}
 	}
 }
 ?>

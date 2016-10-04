@@ -100,18 +100,28 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
 	}
 
 	function addProduct($options) {
-    $product = $this->models->get("products")->query()->condition("products.id", $options['id'])->one();
-    $line = array(
-      "product" => $product['id'],
-      "description" => $product['name'],
-      "price" => $product['price']
-    );
-    $this->init();
-    //pass id and qty
-    $line['qty'] = 1;
-    $this->add("product_lines", $line);
-    $line['id'] = $this->models->get("product_lines")->insert_id;
-    return $line;
+		$product = $this->models->get("products")->query()->condition("products.id", $options['id'])->one();
+		$line = array(
+			"product" => $product['id'],
+			"description" => $product['name'],
+			"price" => $product['price']
+		);
+		if ($product["payment_type"] == "recurring") {
+			$line += [
+				"recurring" => "1",
+				"interval" => $product["interval"],
+				"unit" => $product["unit"],
+				"occurrences" => $product["occurrences"],
+				"trials" => $product["trials"],
+				"trial_amount" => $product["trial_amount"]
+			];
+		}
+		$this->init();
+		//pass id and qty
+		$line['qty'] = 1;
+		$this->add("product_lines", $line);
+		$line['id'] = $this->models->get("product_lines")->insert_id;
+		return $line;
   }
 }
 

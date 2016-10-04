@@ -19,7 +19,7 @@ class PaymentSubscription implements PaymentInterface {
 			if (!empty($subscription[$field])) $record[$field] = $subscription[$field];
 		}
 		foreach (array('length' => 'interval', 'total_occurrences' => 'occurrences', 'trial_occurrences' => 'trials', 'expiration_date' => 'card_expiration') as $source => $dest) {
-			if (!empty($subscription[$source])) $record[$dest] = $subscription[$source];
+			if (empty($subscription[$dest]) && !empty($subscription[$source])) $record[$dest] = $subscription[$source];
 		}
 		if (!empty($subscription["card_number"])) {
 			$record["card"] = substr($subscription["card_number"], -4);
