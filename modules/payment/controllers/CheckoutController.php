@@ -14,7 +14,9 @@ class CheckoutController extends Controller {
 		$this->assign("cart", $this->cart);
 	}
 	function default_action() {
-		if (empty($this->cart)) {
+		if ($this->db->success("orders", "checkout")) {
+			$this->redirect("checkout/payment");
+		} else if (empty($this->cart)) {
 			$this->render("cart/empty");
 		} else if ($this->user->loggedIn()) {
 			$this->render("checkout/default");
@@ -23,11 +25,11 @@ class CheckoutController extends Controller {
 		}
 	}
 	function guest() {
-		if ($this->user->loggedIn()) {
+		if ($this->db->success("orders", "checkout")) {
+			$this->redirect("checkout/payment");
+		} else if ($this->user->loggedIn()) {
 			$this->redirect("checkout");
-			return;
-		}
-		if (empty($this->cart)) {
+		} else if (empty($this->cart)) {
 			$this->render("cart/empty");
 		} else {
 			$this->render("checkout/default");

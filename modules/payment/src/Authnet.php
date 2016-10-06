@@ -9,6 +9,7 @@
  */
 namespace Starbug\Payment;
 use Starbug\Core\TemplateInterface;
+use SimpleXMLElement;
 class AuthnetXMLException extends \Exception {
 	//generic exception class to allow instanceof matches
 }

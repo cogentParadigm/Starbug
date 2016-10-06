@@ -21,38 +21,14 @@ define([
 	return declare([Widget, Templated, _WidgetsInTemplate], {
 		selected:null,
 		query:{}, //parameters for the query
-		order:{},
-		store:null,
 		products:null,
 		shipping:null,
 		results:[],
-		totals:[],
 		grid:null,
-		coupons_grid:null,
-		giftcards_grid:null,
 		templateString: template, //the template
 		widgetsInTemplate: true,
-		enable_shipping:true,
-		shipping_method:'standard',
-		mode:'cart',
-		deferreds:null,
-		target:'checkout',
 		postCreate:function() {
 			var self = this;
-
-			if (this.mode == 'checkout') {
-				this.checkout.style.display = 'block';
-				this.submit.innerText = 'Continue to Payment';
-				if (this.enable_shipping) {
-					this.shipping_container.style.display = "block";
-					this.billing_same_container.style.display = "block";
-				}
-			} else if (this.mode == 'payment') {
-				this.submit.style.display = 'none';
-			}
-			this.submit.setAttribute('href', this.target);
-
-			this.store = new api({model:'orders', action:'cart'});
 			this.products = new api({model:'product_lines', action:'cart'});
 			this.shipping = new api({model:'shipping_lines', action:'cart'});
 
@@ -60,40 +36,6 @@ define([
 			this.grid = new EditableGrid({editor:this, selectionMode:'none'}, this.gridNode);
 			this.grid.startup();
 			this.refresh();
-		},
-		startup: function() {
-			var self = this;
-			this.shipping_address.onSave = function(data, address) {
-				var item = {shipping_address: address.item_id};
-				if (self.billing_same.checked) item.billing_address = address.item_id;
-				self.store.put(item, {action:'cart'}).then(function() {
-					if (self.deferreds.shipping_address) self.deferreds.shipping_address.resolve(true);
-				});
-			};
-			this.billing_address.onSave = function(data, address) {
-				self.store.put({billing_address: address.item_id}, {action:'cart'}).then(function() {
-					if (self.deferreds.billing_address) self.deferreds.billing_address.resolve(true);
-				});
-			};
-			if (this.order.shipping_address) {
-				this.shipping_address.item_id = this.order.shipping_address;
-				this.shipping_address.show();
-				if (this.order.billing_address == this.order.shipping_address) {
-					this.billing_same.checked = true;
-					this.billing_address.domNode.style.display = 'none';
-				}
-			}
-			if (this.order.billing_address && !this.billing_same.checked) {
-				this.billing_address.item_id = this.order.billing_address;
-				this.billing_address.show();
-			}
-			on(this.billing_same, 'change', function() {
-				if (this.checked) {
-					self.billing_address.domNode.style.display = 'none';
-				} else {
-					self.billing_address.domNode.style.display = 'block';
-				}
-			});
 		},
 		refresh:function() {
 			var self = this;
@@ -140,56 +82,6 @@ define([
 			this.products.put(data, {action:'update'}).then(function() {
 					self.refresh();
 			});
-		},
-		update_shipping: function(e) {
-			this.shipping_method = e.target.value;
-			this.refresh();
-		},
-		next: function(e) {
-			if (this.mode != 'checkout') return true;
-			e.preventDefault();
-			this.deferreds = {};
-			var saves = [];
-			if (!this.billing_same.checked) {
-				saves.push(this.save_address(this.billing_address, 'billing_address'));
-				saves.push(this.save_address(this.shipping_address, 'shipping_address'));
-			} else {
-				saves.push(this.save_address(this.shipping_address, 'shipping_address', 'billing_address'));
-			}
-			all(saves).then(function() {
-				window.location = e.target.href;
-			});
-		},
-		save_address: function(address, key, extra) {
-			var deferred = new Deferred();
-			if (address.formNode) address.execute();
-			else if (address.item_id) {
-				var data = {};
-				data[key] = address.item_id;
-				if (extra) data[extra] = address.item_id;
-				this.store.put(data, {action:'cart'}).then(function() {
-					deferred.resolve(true);
-				});
-			} else {
-				console.log('reject');
-				deferred.reject('error');
-			}
-			this.deferreds[key] = deferred;
-			return deferred.promise;
-		},
-		redeem_coupon: function(e) {
-			e.preventDefault();
-			var self = this;
-			this.coupons.put({code:this.coupon_key.value}, {action:'cart'}).then(function(result) {
-				if (result.errors) {
-					alert(result.errors[0].errors[0]);
-				} else {
-					self.refresh();
-				}
-			});
-		},
-		redeem_giftcard: function(e) {
-			e.preventDefault();
 		}
 	});
 });

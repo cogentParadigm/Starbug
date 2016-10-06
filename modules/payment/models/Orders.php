@@ -10,6 +10,15 @@ class Orders extends OrdersModel {
 		$this->store($order);
 	}
 
+	function checkout($order) {
+		$target = array("id" => $this->cart->get("id"));
+		if (isset($order['shipping_address'])) $target['shipping_address'] = $order['shipping_address'];
+		if (isset($order['billing_address'])) $target['billing_address'] = $order['billing_address'];
+		if ($target['id']) {
+			$this->store($target);
+		}
+	}
+
 	function payment($payment) {
 		if (empty($payment['id'])) {
 			$order = $this->cart->getOrder();
@@ -60,6 +69,14 @@ class Orders extends OrdersModel {
 		if (!$this->errors()) {
 			$this->store(array("id" => $order['id'], "order_status" => "pending"));
 		}
+	}
+
+	public function post($action, $data = array()) {
+		$this->action = $action;
+		if (in_array($action, ["checkout", "payment"]) && isset($data["id"]) && $this->cart->get("id") == $data["id"]) {
+			$this->$action($data);
+			return true;
+		} else return parent::post($action, $data);
 	}
 
 }
