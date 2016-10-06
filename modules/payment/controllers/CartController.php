@@ -9,7 +9,7 @@ class CartController extends Controller {
 		$this->assign("model", "orders");
 	}
 	function default_action() {
-		if (empty(count($this->cart))) {
+		if (empty($this->cart)) {
 			$this->render("cart/empty");
 		} else {
 			$this->render("cart/default");
