@@ -44,7 +44,7 @@ class Orders extends OrdersModel {
 		$total = $lines['total'];
 		if ($total) {
 			$ammend["total"] = $total;
-			$this->payments->create($payment + ["amount" => $total/100], $order);
+			$this->payments->create($order, $payment + ["amount" => $total/100]);
 		}
 
 		//determine recurring payment amounts
@@ -53,7 +53,7 @@ class Orders extends OrdersModel {
 			->condition("recurring", "1")->all();
 		foreach ($lines as $line) {
 			$price = $line["price"] * $line["qty"];
-			$this->subscriptions->create($payment + ["amount" => $price] + $line, $order);
+			$this->subscriptions->create($order, $payment + ["amount" => $price] + $line);
 		}
 
 		$this->store($ammend);
