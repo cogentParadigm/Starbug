@@ -32,6 +32,7 @@ define([
 		giftcards_grid:null,
 		templateString: template, //the template
 		widgetsInTemplate: true,
+		enable_shipping:true,
 		shipping_method:'standard',
 		mode:'cart',
 		deferreds:null,
@@ -42,6 +43,10 @@ define([
 			if (this.mode == 'checkout') {
 				this.checkout.style.display = 'block';
 				this.submit.innerText = 'Continue to Payment';
+				if (this.enable_shipping) {
+					this.shipping_container.style.display = "block";
+					this.billing_same_container.style.display = "block";
+				}
 			} else if (this.mode == 'payment') {
 				this.submit.style.display = 'none';
 			}

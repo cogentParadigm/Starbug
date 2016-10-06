@@ -35,13 +35,13 @@
 	<div class="totals" data-dojo-attach-point="totalsNode" style="margin:20px 0"></div>
 	<div class="clearfix" style="margin-bottom:20px"></div>
 	<div class="row" style="display:none" data-dojo-attach-point="checkout">
-		<div class="col-md-6">
+		<div class="col-md-6" data-dojo-attach-point="shipping_container" style="display:none">
 			<div class="panel panel-default">
 			  <div class="panel-heading">
 			    <h3 class="panel-title">Shipping Address</h3>
 			  </div>
 			  <div class="panel-body">
-			    <div data-dojo-type="starbug/form/Address" data-dojo-attach-point="shipping_address"></div>
+			    <div data-dojo-type="starbug/form/Address" data-dojo-props="keys:['orders', 'shipping_address']" data-dojo-attach-point="shipping_address"></div>
 			  </div>
 			</div>
 		</div>
@@ -51,11 +51,11 @@
 					<h3 class="panel-title">Billing Address</h3>
 				</div>
 				<div class="panel-body">
-					<label for="billing_same">
+					<label for="billing_same" data-dojo-attach-point="billing_same_container" style="display:none">
 						<input type="checkbox" value="1" data-dojo-attach-point="billing_same"/>
 						My billing address is the same as my shipping address
 					</label>
-					<div data-dojo-type="starbug/form/Address" data-dojo-attach-point="billing_address"></div>
+					<div data-dojo-type="starbug/form/Address" data-dojo-props="keys:['orders', 'billing_address']" data-dojo-attach-point="billing_address"></div>
 				</div>
 			</div>
 		</div>
