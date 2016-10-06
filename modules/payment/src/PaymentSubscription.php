@@ -3,12 +3,12 @@ namespace Starbug\Payment;
 use Starbug\Core\ModelFactoryInterface;
 class PaymentSubscription implements PaymentInterface {
 	public function __construct(ModelFactoryInterface $models, Authnet $authnet) {
-		$this->storage = $models->get("subscriptions");
+		$this->models = $models;
 		$this->authnet = $authnet;
 	}
 	protected function save($type, $order, $subscription) {
 		$record = ["orders_id" => $order["id"], "type" => $type];
-		if ($this->authnet->error()) $this->storage->error($this->authnet->response->messages->message->text, 'global');
+		if ($this->authnet->error()) $this->models->get("subscriptions")->error($this->authnet->response->messages->message->text, 'global');
 		else {
 			if ($type == "ARBCreateSubscriptionRequest") {
 				$record["subscription_id"] = $this->authnet->response->subscriptionId;
@@ -26,17 +26,17 @@ class PaymentSubscription implements PaymentInterface {
 			$record["card"] = substr($subscription["card_number"], -4);
 		}
 		$record["response"] = $this->authnet->response->asXML();
-		$this->storage->store($record);
+		$this->models->get("subscriptions")->store($record);
 	}
 	public function create($order, $subscription) {
 		// check for required fields
 		foreach (array('card_holder', 'address', 'city', 'state', 'zip', 'card_number', 'expiration_date', 'amount', 'total_occurrences', 'unit', 'length', 'start_date') as $field) {
-			if (empty($subscription[$field])) $this->storage->error('This field is required', $field);
+			if (empty($subscription[$field])) $this->models->get("subscriptions")->error('This field is required', $field);
 		}
-		if (isset($subscription['trial_occurrences']) && !isset($subscription['trial_amount'])) $this->storage->error("This field is required when trial occurrences is specified", "trial_amount");
+		if (isset($subscription['trial_occurrences']) && !isset($subscription['trial_amount'])) $this->models->get("subscriptions")->error("This field is required when trial occurrences is specified", "trial_amount");
 
 		//if we have all the fields, continue processing
-		if (!$this->storage->errors()) {
+		if (!$this->models->get("subscriptions")->errors()) {
 			//parse card holder
 			$cardholder = explode(" ", trim($subscription['card_holder']));
 			$subscription['first_name'] = reset($cardholder);
@@ -62,7 +62,7 @@ class PaymentSubscription implements PaymentInterface {
 	public function update($order, $subscription) {
 		// check for required fields
 		foreach (array('subscriptionId') as $field) {
-			if (empty($subscription[$field])) $this->storage->error('This field is required', $field);
+			if (empty($subscription[$field])) $this->models->get("subscriptions")->error('This field is required', $field);
 		}
 
 		//if we have all the fields, continue processing
@@ -95,9 +95,9 @@ class PaymentSubscription implements PaymentInterface {
 	}
 	public function cancel($order, $subscription) {
 		foreach (array('subscriptionId') as $field) {
-			if (empty($subscription[$field])) $this->storage->error('This field is required', $field);
+			if (empty($subscription[$field])) $this->models->get("subscriptions")->error('This field is required', $field);
 		}
-		if (!$this->storage->errors()) {
+		if (!$this->models->get("subscriptions")->errors()) {
 			$this->authnet->ARBCancelSubscriptionRequest($subscription);
 			$this->save("ARBCancelSubscriptionRequest", $order, $subscription);
 		}
