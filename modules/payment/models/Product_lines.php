@@ -27,8 +27,11 @@ class Product_lines extends Product_linesModel {
 		}
 	}
 	public function post($action, $data = array()) {
-		if ($action == "update" || $action == "delete") return true;
-		else return parent::post($action, $data);
+		$this->action = $action;
+		if ($action == "update" || $action == "delete") {
+			$this->$action($data);
+			return true;
+		} else return parent::post($action, $data);
 	}
 }
 ?>
