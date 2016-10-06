@@ -50,7 +50,7 @@ class Authnet {
 	 * such a call will build the XML request from templates/Authnet/ARBCreateSubscriptionRequest.php within this module
 	 */
 	public function __call($api_call, $args) {
-		foreach ($args[0] as $key => $value) $this->{$key} = $value;
+		foreach ($args[0] as $key => $value) if (!empty($value)) $this->{$key} = $value;
 		$this->xml = $this->templates->get("Authnet/$api_call", array("authnet" => $this));
 		$this->process();
 	}
