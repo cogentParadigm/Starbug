@@ -62,7 +62,7 @@ define([
 		remove:function(id, type) {
 			var self = this;
 			var store = false;
-			if (type == 'product') store = this.products;
+			if (type == 'product_lines') store = this.products;
 			if (store) {
 				store.remove(id).then(function(){
 					self.refresh();
