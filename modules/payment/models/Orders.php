@@ -49,7 +49,7 @@ class Orders extends OrdersModel {
 		$lines = $this->query("lines")
 			->condition("orders_id", $order['id'])
 			->condition("recurring", "0")
-			->select("SUM(CASE WHEN type='coupon' THEN -1*price ELSE price END*qty) as total")->one();
+			->select("SUM(CASE WHEN type='coupon_lines' THEN -1*price ELSE price END*qty) as total")->one();
 		$total = $lines['total'];
 		if ($total) {
 			$ammend["total"] = $total;

@@ -3,12 +3,8 @@ namespace Starbug\Payment;
 use Starbug\Core\Collection;
 use Starbug\Core\ModelFactoryInterface;
 class ProductLinesCollection extends Collection {
-	public function __construct(ModelFactoryInterface $models, Cart $cart) {
-		$this->models = $models;
-		$this->cart = $cart;
-	}
 	public function build($query, &$ops) {
-		$query->condition("product_lines.orders_id", $this->cart->get("id"));
+		$query->condition("product_lines.orders_id", $ops["id"]);
 		$query->select("product_lines.product.sku");
 		$query->select("product_lines.product.type.slug as product_type");
 		return $query;

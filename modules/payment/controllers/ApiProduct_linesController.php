@@ -4,8 +4,9 @@ use Starbug\Core\ApiController;
 use Starbug\Core\IdentityInterface;
 class ApiProduct_linesController extends ApiController {
 	public $model = "product_lines";
-	function __construct(IdentityInterface $user) {
+	function __construct(IdentityInterface $user, Cart $cart) {
 		$this->user = $user;
+		$this->cart = $cart;
 	}
 	function admin() {
 		$this->api->render("Admin");
@@ -14,6 +15,9 @@ class ApiProduct_linesController extends ApiController {
 		$this->api->render("Select");
 	}
 	function cart() {
+		$this->api->render("ProductLines", ["id" => $this->cart->get("id")]);
+	}
+	function order() {
 		$this->api->render("ProductLines");
 	}
 	function filterQuery($collection, $query, &$ops) {
