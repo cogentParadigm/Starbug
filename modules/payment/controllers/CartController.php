@@ -16,7 +16,6 @@ class CartController extends Controller {
 		}
 	}
 	function add() {
-		$this->cart->init();
 		$product = $this->cart->addProduct($this->request->getParameters());
 		if ($this->request->hasParameter("to")) {
 			$this->redirect($this->request->getParameter("to"));

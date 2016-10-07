@@ -8,6 +8,7 @@ return array(
 			} else {
 				$cid = md5(uniqid(mt_rand(), true));
 				setcookie("cid", $cid, 0, $url->build(""), null, false, false);
+				$request->setCookie("cid", $cid);
 			}
 			return ["token" => $cid];
 		},
