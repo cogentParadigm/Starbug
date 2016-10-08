@@ -44,8 +44,8 @@ class CSSParser {
 	function optimize($sheet, $dir) {
 		$sheet = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $sheet);
 		$sheet = str_replace("\n", "", $sheet);
-		$search = array("/{\s+/", "/\s+{/", "/;\s+/", "/:\s+/", "/}\s+/", "/;}/", "/\s+}/", "/\('/", '/\("/', "/'\)/", '/"\)/');
-		$replace = array("{", "{", ";", ":", "}", "}", "}", "(", "(", ")", ")");
+		$search = array("/{\s+/", "/\s+{/", "/;\s+/", "/:\s+/", "/}\s+/", "/;}/", "/\s+}/",'/\("/', '/"\)/');
+		$replace = array("{", "{", ";", ":", "}", "}", "}", "(", ")");
 		$sheet = preg_replace($search, $replace, $sheet);
 		preg_match_all("/@import url\(\"([^\)]*)\"\)/", $sheet, $matches);
 		$sheet = preg_replace("/@import url\([^\)]*\);/", "", $sheet);
