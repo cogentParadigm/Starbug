@@ -50,9 +50,9 @@
 	</div>
 </div>
 		<div clas="totals" style="margin:20px 0">
-			<div class="total">Subtotal: <strong><?php echo money_format('%.2n', $products['total']/100); ?></strong></div>
-			<div class="total">Shipping: <strong><?php echo money_format('%.2n', $shipping['total']/100); ?></strong></div>
-			<div class="total">Total: <strong><?php echo money_format('%.2n', ($products['total'] + $shipping['total'])/100); ?></strong></div>
+			<div class="total">Subtotal: <strong><?php echo $this->priceFormatter->format($products['total']); ?></strong></div>
+			<div class="total">Shipping: <strong><?php echo $this->priceFormatter->format($shipping['total']); ?></strong></div>
+			<div class="total">Total: <strong><?php echo $this->priceFormatter->format($products['total'] + $shipping['total']); ?></strong></div>
 		</div>
 
 	</div>

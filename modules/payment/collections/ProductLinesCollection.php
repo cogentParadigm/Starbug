@@ -3,6 +3,10 @@ namespace Starbug\Payment;
 use Starbug\Core\Collection;
 use Starbug\Core\ModelFactoryInterface;
 class ProductLinesCollection extends Collection {
+	public function __construct(ModelFactoryInterface $models, PriceFormatterInterface $formatter) {
+		$this->models = $models;
+		$this->formatter = $formatter;
+	}
 	public function build($query, &$ops) {
 		$query->condition("product_lines.orders_id", $ops["id"]);
 		$query->select("product_lines.product.sku");
@@ -13,8 +17,8 @@ class ProductLinesCollection extends Collection {
 		foreach ($rows as $idx => $item) {
 			$item['description'] = (string) '<strong>'.$item['description'].'</strong>';
 			$item['total'] = $item['price'] * $item['qty'];
-			$item['total_formatted'] = money_format('%.2n', $item['total']/100);
-			$item['price_formatted'] = money_format('%.2n', $item['price']/100);
+			$item['total_formatted'] = $this->formatter->format($item['total']);
+			$item['price_formatted'] = $this->formatter->format($item['price']);
 			if ($item["recurring"]) {
 				$unit = $item["unit"];
 				$interval = $item["interval"];

@@ -12,7 +12,12 @@ return array(
 			}
 			return ["token" => $cid];
 		},
+		'currency_locale' => 'en_US.UTF-8',
+		'currency_minor_unit' => 2,
 		'Starbug\Payment\*Interface' => DI\object('Starbug\Payment\*'),
-		'Starbug\Payment\Cart' => DI\object()->constructorParameter('conditions', DI\get('cart_token'))
+		'Starbug\Payment\Cart' => DI\object()->constructorParameter('conditions', DI\get('cart_token')),
+		'Starbug\Payment\PriceFormatter' => DI\object()
+			->constructorParameter('locale', DI\get('currency_locale'))
+			->constructorParameter('minorUnit', DI\get('currency_minor_unit'))
 );
 ?>

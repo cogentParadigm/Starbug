@@ -1,7 +1,12 @@
 <?php
 namespace Starbug\Payment;
 use Starbug\Core\AdminCollection;
+use Starbug\Core\ModelFactoryInterface;
 class AdminOrdersCollection extends AdminCollection {
+	public function __construct(ModelFactoryInterface $models, PriceFormatterInterface $formatter) {
+		$this->models = $models;
+		$this->formatter = $formatter;
+	}
 	public function build($query, &$ops) {
 		//add payments, subscriptions, and lines
 		$query->leftJoin("payments")->on("payments.orders_id=orders.id");
@@ -25,7 +30,7 @@ class AdminOrdersCollection extends AdminCollection {
 	}
 	public function filterRows($rows) {
 		foreach ($rows as $idx => $row) {
-			$rows[$idx]["total_formatted"] = money_format('%.2n', $row['total']/100);
+			$rows[$idx]["total_formatted"] = $this->formatter->format($row['total']);
 		}
 		return $rows;
 	}
