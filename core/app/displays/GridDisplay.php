@@ -100,7 +100,7 @@ class GridDisplay extends ItemDisplay {
 		$this->attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($this->attributes['data-dojo-props'])), '{}');
 		//add query params
 		$params = array_merge($this->request->getParameters(), $this->options);
-		foreach ($params as $key => $value) if (is_array($value)) unset($params[$key]);
+		foreach ($params as $key => $value) if (is_array($value)) $params[$key] = implode(",", $value);
 		if (!empty($params)) {
 			$this->attributes['data-dojo-props'] .= ', query: {';
 			foreach ($params as $k => $v) $this->attributes['data-dojo-props'] .= $k.":'".$v."', ";
