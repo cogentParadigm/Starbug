@@ -16,6 +16,6 @@ $new_label = "New ".$this->models->get($model)->singular_label." <b class=\"fa f
 	</a>
 </div>
 <?php
-	$this->displays->render("SearchForm", array("model" => $model));
+	$this->displays->render(array(ucwords($model)."SearchForm", "SearchForm"), array("model" => $model));
 ?>
 <br/>

@@ -18,11 +18,17 @@ class DisplayFactory implements DisplayFactoryInterface {
 		$this->container = $container;
 		$this->locator = $locator;
 	}
-	public function get($display) {
-		$locations = $this->locator->locate($display.".php", "displays");
-		end($locations);
-		$namespace = key($locations);
-		if (empty($namespace)) $namespace = "Starbug\Core";
-		return $this->container->make($namespace."\\".$display);
+	public function get($displays) {
+		if (!is_array($displays)) $displays = [$displays];
+		while (!empty($displays)) {
+			$display = array_shift($displays);
+			$locations = $this->locator->locate($display.".php", "displays");
+			if (!empty($locations) || empty($displays)) {
+				end($locations);
+				$namespace = key($locations);
+				if (empty($namespace)) $namespace = "Starbug\Core";
+				return $this->container->make($namespace."\\".$display);
+			}
+		}
 	}
 }
