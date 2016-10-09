@@ -19,9 +19,9 @@ class AdminOrdersCollection extends AdminCollection {
 		$query->select("CASE WHEN orders.billing_address is null THEN orders.shipping_address.recipient ELSE orders.billing_address.recipient END as customer");
 		//filters
 		if (!empty($ops["order_status"])) {
-			$query->condition("orders.order_status", $ops['order_status']);
+			$query->condition("orders.order_status", explode(",", $ops['order_status']));
 		} else {
-			$query->condition("orders.order_status", "cart", "!=");
+			$query->condition("orders.order_status", "pending");
 		}
 		//sorting
 		if (empty($ops["sort"])) $ops["sort"] = "purchased DESC, orders.created DESC, orders.id DESC";
