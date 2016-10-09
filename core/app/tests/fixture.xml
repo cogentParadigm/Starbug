@@ -48,12 +48,6 @@
 		<field name="last_name"></field>
 		<field name="email">root</field>
 		<field name="password"></field>
-		<field name="address"></field>
-		<field name="address2"></field>
-		<field name="city"></field>
-		<field name="state"></field>
-		<field name="country"></field>
-		<field name="zip"></field>
 		<field name="last_visit">0000-00-00 00:00:00</field>
 		<field name="owner" xsi:nil="true" />
 		<field name="statuses" xsi:nil="true" />
@@ -66,12 +60,6 @@
 		<field name="last_name">Admin</field>
 		<field name="email">admin@localhost</field>
 		<field name="password"></field>
-		<field name="address"></field>
-		<field name="address2"></field>
-		<field name="city"></field>
-		<field name="state"></field>
-		<field name="country"></field>
-		<field name="zip"></field>
 		<field name="last_visit">0000-00-00 00:00:00</field>
 		<field name="owner" xsi:nil="true" />
 		<field name="statuses" xsi:nil="true" />
@@ -84,12 +72,6 @@
 		<field name="last_name">User</field>
 		<field name="email">abdul@localhost</field>
 		<field name="password"></field>
-		<field name="address"></field>
-		<field name="address2"></field>
-		<field name="city"></field>
-		<field name="state"></field>
-		<field name="country"></field>
-		<field name="zip"></field>
 		<field name="last_visit">0000-00-00 00:00:00</field>
 		<field name="owner" xsi:nil="true" />
 		<field name="statuses" xsi:nil="true" />
