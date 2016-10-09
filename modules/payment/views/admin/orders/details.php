@@ -3,7 +3,7 @@
 	<div class="panel-body">
 		<?php
 			//product_lines::query_order
-			$this->displays->render("ProductLinesGrid", array("id" => $id, 'attributes' => array('base_url' => 'admin/orders')));
+			$this->displays->render("ProductLinesGrid", array("order" => $id, 'attributes' => array('base_url' => 'admin/orders')));
 		?>
 		<br/>
 		<?php

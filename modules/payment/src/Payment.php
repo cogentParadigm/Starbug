@@ -3,16 +3,16 @@ namespace Starbug\Payment;
 use Starbug\Core\ModelFactoryInterface;
 class Payment implements PaymentInterface {
 	public function __construct(ModelFactoryInterface $models, Authnet $authnet) {
-		$this->storage = $models->get("payments");
+		$this->models = $models;
 		$this->authnet = $authnet;
 	}
 	public function create($order, $payment) {
 		// check for required fields
 		foreach (array('card_holder', 'address', 'city', 'state', 'zip', 'card_number', 'expiration_date', 'amount') as $field) {
-			if (empty($payment[$field])) $this->storage->error('This field is required', $field);
+			if (empty($payment[$field])) $this->models->get("orders")->error('This field is required', $field);
 		}
 		//if we have all the fields, continue processing
-		if (!$this->storage->errors()) {
+		if (!$this->models->get("orders")->errors()) {
 			//parse card holder
 			$cardholder = explode(" ", trim($payment['card_holder']));
 			$payment['first_name'] = reset($cardholder);
@@ -31,11 +31,11 @@ class Payment implements PaymentInterface {
 			if (isset($payment['cvv2'])) $payment['card_code'] = $payment['cvv2'];
 
 			$this->authnet->AIMCreateTransactionRequest($payment);
-			if ($this->authnet->error()) $this->storage->error($authnet->response->transactionResponse->errors->error->errorText, 'global');
+			if ($this->authnet->error()) $this->models->get("orders")->error($this->authnet->response->transactionResponse->errors->error->errorText, 'global');
 			$code = $this->authnet->response->transactionResponse->responseCode;
 			$txn_id = $this->authnet->response->transactionResponse->transId;
-			$record = ["orders_id" => $order["id"], "response_code" => $code, "txn_id" => $txn_id, "amount" => $payment["amount"], "response" => $authnet->response->asXML()];
-			$this->storage->store($record);
+			$record = ["orders_id" => $order["id"], "response_code" => $code, "txn_id" => $txn_id, "amount" => $payment["amount"], "response" => $this->authnet->response->asXML()];
+			$this->models->get("payments")->store($record);
 		}
 	}
 }

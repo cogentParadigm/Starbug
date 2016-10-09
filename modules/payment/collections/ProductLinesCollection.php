@@ -8,7 +8,7 @@ class ProductLinesCollection extends Collection {
 		$this->formatter = $formatter;
 	}
 	public function build($query, &$ops) {
-		$query->condition("product_lines.orders_id", $ops["id"]);
+		$query->condition("product_lines.orders_id", $ops["order"]);
 		$query->select("product_lines.product.sku");
 		$query->select("product_lines.product.type.slug as product_type");
 		return $query;

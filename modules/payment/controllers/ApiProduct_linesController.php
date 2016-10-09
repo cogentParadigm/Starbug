@@ -15,7 +15,7 @@ class ApiProduct_linesController extends ApiController {
 		$this->api->render("Select");
 	}
 	function cart() {
-		$this->api->render("ProductLines", ["id" => $this->cart->get("id")]);
+		$this->api->render("ProductLines", ["order" => $this->cart->get("id")]);
 	}
 	function order() {
 		$this->api->render("ProductLines");

@@ -4,6 +4,9 @@ use Starbug\Core\Controller;
 use Starbug\Core\IdentityInterface;
 use Starbug\Core\DatabaseInterface;
 class CheckoutController extends Controller {
+	public $routes = [
+		"success" => "success/{id}"
+	];
 	public function __construct(Cart $cart, IdentityInterface $user, DatabaseInterface $db) {
 		$this->cart = $cart;
 		$this->user = $user;
@@ -43,6 +46,10 @@ class CheckoutController extends Controller {
 		} else {
 			$this->render("checkout/payment");
 		}
+	}
+	function success($id) {
+		$this->assign("id", $id);
+		$this->render("checkout/success");
 	}
 }
 ?>

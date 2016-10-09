@@ -22,9 +22,6 @@
 <?php if (isset($authnet->email)) { ?>
 			<email><?php echo $authnet->email; ?></email>
 <?php } ?>
-<?php if (isset($authnet->phone)) { ?>
-			<phoneNumber><?php echo $authnet->phone; ?></phoneNumber>
-<?php } ?>
 		</customer>
 <?php } ?>
     <billTo>
