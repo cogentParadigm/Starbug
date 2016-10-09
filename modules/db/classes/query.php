@@ -69,6 +69,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	public $dirty = true;
 	public $validated = false;
 	public $executed = false;
+	public $executable = true;
 	public $op = "default";
 	public $tags = array();
 	public $operations = array();
@@ -646,7 +647,10 @@ class query implements IteratorAggregate, ArrayAccess {
 		if ($this->mode === "query") {
 			if (empty($query['SELECT'])) $this->error("Missing SELECT clause for query.", "global");
 		} else if ($this->mode === "update") {
-			if (empty($query['SET'])) $this->error("Missing SET clause for update query.", "global");
+			if (empty($query['SET'])) {
+				if (empty($this->fields)) $this->error("Missing SET clause for update query.", "global");
+				else $this->executable = false;
+			}
 		}
 
 		foreach ($query as $key => $clause) $sql[$key] = $key." ".$clause;
@@ -1212,23 +1216,33 @@ class query implements IteratorAggregate, ArrayAccess {
 			exit();
 		}
 		if ($this->mode == "delete") $this->validate(query::PHASE_BEFORE_DELETE);
-		$records = $this->db->prepare($this->sql);
-		$records->execute($params);
-		$this->executed = true;
-		if ($this->mode == "query") {
-			$rows = $records->fetchAll(PDO::FETCH_ASSOC);
-			$this->result = $rows;
-			return ((!empty($this->query['limit'])) && ($this->query['limit'] == 1)) ? $rows[0] : $rows;
+		if ($this->executable) {
+			$records = $this->db->prepare($this->sql);
+			$records->execute($params);
+			$this->executed = true;
+			if ($this->mode == "query") {
+				$rows = $records->fetchAll(PDO::FETCH_ASSOC);
+				$this->result = $rows;
+				return ((!empty($this->query['limit'])) && ($this->query['limit'] == 1)) ? $rows[0] : $rows;
+			} else {
+				$this->record_count = $records->rowCount();
+				if ($this->mode == "insert") {
+					$this->insert_id = $this->db->lastInsertId();
+					$this->models->get($this->model)->insert_id = $this->insert_id;
+				}
+				if (!$this->raw) {
+					if ($this->mode == "delete") $this->validate(query::PHASE_AFTER_DELETE);
+					else $this->validate(query::PHASE_AFTER_STORE);
+				}
+				return $this->record_count;
+			}
 		} else {
-			$this->record_count = $records->rowCount();
-			if ($this->mode == "insert") {
-				$this->insert_id = $this->db->lastInsertId();
-				$this->models->get($this->model)->insert_id = $this->insert_id;
-			}
-			if (!$this->raw) {
-				if ($this->mode == "delete") $this->validate(query::PHASE_AFTER_DELETE);
-				else $this->validate(query::PHASE_AFTER_STORE);
-			}
+			//only reason to get here should be an update query
+			//with only 'virtual' fields, which will be very rare
+			//since most tables will have a modified flag
+			$this->executed = true;
+			$this->record_count = 0;
+			if (!$this->raw && $this->mode == "update") $this->validate(query::PHASE_AFTER_STORE);
 			return $this->record_count;
 		}
 	}
@@ -1353,6 +1367,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		$this->dirty = true;
 		$this->validated = false;
 		$this->executed = false;
+		$this->executable = true;
 	}
 
 	/**************************************************************
