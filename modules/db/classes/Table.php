@@ -334,6 +334,13 @@ class Table implements CollectionFilterInterface {
 				}
 				$this->db->store($name, $fields);
 			}
+			if ($idx > 0 && $this->db->errors($name)) {
+				$errors = $this->db->errors[$name];
+				unset($this->db->errors[$name]);
+				foreach ($errors as $field => $e) {
+					$this->db->errors[$chain[0]][$field] = $e;
+				}
+			}
 		}
 	}
 
