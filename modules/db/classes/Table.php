@@ -347,7 +347,7 @@ class Table implements CollectionFilterInterface {
 		if (empty($name)) $name = $this->type;
 		$chain = array();
 		$base = $name;
-		$original = $this->load($id, $name);
+		$original = $this->load($id, false, $name);
 		if (!$original) return;
 
 		if (empty($this->models->get($base)->base)) {
