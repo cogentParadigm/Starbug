@@ -477,7 +477,7 @@ class storeTest extends DatabaseTestCase {
 		$this->assertSame("published", $terms[1]["slug"]);
 
 		//update the terms (add deleted, remove others)
-		$this->db->store("hook_store_terms", ["id" => $id, "value" => "deleted,-~"]);
+		$this->db->store("hook_store_terms", ["id" => $id, "value" => "deleted"]);
 
 		//retrieve the entries
 		$terms = $this->db->query("hook_store_terms_value")->conditions(["hook_store_terms_id" => $id])->select("value_id.slug as slug")->sort("slug")->all();

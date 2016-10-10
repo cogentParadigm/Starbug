@@ -28,5 +28,4 @@
 				<div style="padding-left:20px"><input <?php echo $this->filter->attributes($other_attrs); ?>/><span><?php echo $display->options['other_option']; ?></span> <input type="text" style="width:150px;display:inline-block" value="<?php echo $other_value; ?>" oninput="var cb = document.getElementById('<?php echo $other_id; ?>');cb.value = this.value;cb.checked=true;" class="form-control"/></div>
 			</div>
 		<?php } ?>
-		<input <?php echo $this->filter->attributes(["type" => "hidden", "name" => $name."[]", "value" => "-~"]); ?>/>
 </div>

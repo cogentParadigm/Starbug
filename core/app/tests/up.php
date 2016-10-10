@@ -169,8 +169,8 @@ $this->table(["hook_store_slug", "groups" => "false"],
  ****************************************/
 //you can store terms by id, slug or title
 //you can comma separate multiple terms - published,pending
-//you can use a minus sign to remove terms - published,-pending
-//you can use a tilde (~) to remove other terms - published,-~
+//you can use minus/plus signs to remove/add terms - -pending,+published
+//if no minus or plus sign is included, terms will be replaced
 $this->table(["hook_store_terms", "groups" => "false"],
 	["value", "type" => "terms", "taxonomy" => "statuses"]
 );

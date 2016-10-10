@@ -8,5 +8,4 @@
 			<label><input <?php echo $this->filter->attributes($attrs); ?>/><?php echo $term['term']; ?></label>
 		</div>
 	<?php } ?>
-	<input <?php echo $this->filter->attributes(["type" => "hidden", "name" => $name."[]", "value" => "-~"]); ?>/>
 </div>

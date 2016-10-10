@@ -29,13 +29,23 @@ define([
 		size:0,
 		store:null,
 		dialog:null,
-		get_data:{},
-		post_data:{},
+		get_data:false,
+		post_data:false,
+		editing:false,
+		join:true,
 		postCreate:function() {
 			var self = this;
+			this.get_data = this.get_data || {};
+			this.post_data = this.post_data || {};
 			this.store = new Memory({data: []});
 			this.dialog = new Dialog({url:"admin/"+self.model+"/", get_data:self.get_data, post_data:self.post_data, callback:function(data) {
 				var object_id = query('input[name="'+self.model+'[id]"]').attr('value')[0];
+				if (false !== self.editing) {
+					if (object_id != self.editing) {
+						self.store.remove(self.editing);
+					}
+					self.editing = false;
+				}
 				sb.get(self.model, 'select').filter({'id':object_id}).fetch().then(function(data) {
 					self.add(data);
 				});
@@ -85,6 +95,7 @@ define([
 			dojo.global.dispatchEvent(new Event('resize'));
 		},
 		edit: function(item_id) {
+			this.editing = item_id;
 			this.dialog.show(item_id);
 		},
 		remove: function(item_id) {
@@ -100,8 +111,10 @@ define([
 			this.grid.set('collection', this.store);
 			var ids = [];
 			var items = this.store.data;
-			for (var i = 0;i<items.length;i++) ids.push('#' + this.store.getIdentity(items[i]));
-			ids.push("-~");
+			for (var i = 0;i<items.length;i++) {
+				var prefix = this.join ? '#' : '';
+				ids.push(prefix + this.store.getIdentity(items[i]));
+			}
 			this.input.value = ids.join(',');
 		},
 		set_status: function(value) {
