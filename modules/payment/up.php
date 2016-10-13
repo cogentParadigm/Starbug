@@ -105,6 +105,5 @@
 
 	$this->uri("cart", ["controller" => "cart", "title" => "Shopping Cart"]);
 	$this->uri("checkout", ["controller" => "checkout"]);
-	$this->uri("transaction", ["template" => "xhr"]);
 	$this->uri("product", ["controller" => "product"]);
 ?>
