@@ -1,0 +1,29 @@
+<div class="cart clearfix">
+	<table data-dojo-attach-point="gridNode" class="dgrid-autoheight">
+		<thead>
+			<tr>
+				<th data-dgrid-column="starbug.grid.columns.html({ field: 'description' })">Product</th>
+				<th data-dgrid-column="{ field: 'price_formatted'}">Price</th>
+				<th data-dgrid-column="{ field: 'total_formatted'}">Total</th>
+			</tr>
+		</thead>
+	</table>
+	<table data-dojo-attach-point="couponsNode" class="dgrid-autoheight" style="display:none;margin-top:20px">
+		<thead>
+			<tr>
+				<th data-dgrid-column="starbug.grid.columns.html({ field: 'description' })">Coupon</th>
+				<th data-dgrid-column="{ field: 'total_formatted'}">Discount</th>
+			</tr>
+		</thead>
+	</table>
+	<table data-dojo-attach-point="giftcardsNode" class="dgrid-autoheight" style="display:none;margin-top:20px">
+		<thead>
+			<tr>
+				<th data-dgrid-column="starbug.grid.columns.html({ field: 'description' })">Coupon</th>
+				<th data-dgrid-column="{ field: 'total_formatted'}">Amount</th>
+			</tr>
+		</thead>
+	</table>
+
+	<div class="totals" data-dojo-attach-point="totalsNode" style="margin:20px 0"></div>
+</div>

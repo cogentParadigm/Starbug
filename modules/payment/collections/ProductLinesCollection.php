@@ -11,6 +11,7 @@ class ProductLinesCollection extends Collection {
 		$query->condition("product_lines.orders_id", $ops["order"]);
 		$query->select("product_lines.product.sku");
 		$query->select("product_lines.product.type.slug as product_type");
+		$query->select("product_lines.orders_id.order_status as order_status");
 		return $query;
 	}
 	public function filterRows($rows) {

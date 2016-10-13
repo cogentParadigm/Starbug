@@ -86,7 +86,8 @@
 		["trial_amount", "type" => "int", "default" => "0"],
 		["card", "type" => "string"],
 		["card_expiration", "type" => "datetime"],
-		["response", "type" => "text"]
+		["response", "type" => "text"],
+		["expiration_date", "type" => "datetime"]
 	);
 	$this->table(["orders", "search" => "orders.id,orders.order_status,orders.email,orders.phone,orders.billing_address.recipient,orders.shipping_address.recipient", "groups" => false],
 		["subtotal", "type" => "string", "length" => "32", "default" => ""],
@@ -106,4 +107,5 @@
 	$this->uri("cart", ["controller" => "cart", "title" => "Shopping Cart"]);
 	$this->uri("checkout", ["controller" => "checkout"]);
 	$this->uri("product", ["controller" => "product"]);
+	$this->uri("subscriptions", ["controller" => "subscriptions"]);
 ?>

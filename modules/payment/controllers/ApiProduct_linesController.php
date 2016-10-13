@@ -15,14 +15,21 @@ class ApiProduct_linesController extends ApiController {
 		$this->api->render("Select");
 	}
 	function cart() {
-		$this->api->render("ProductLines", ["order" => $this->cart->get("id")]);
+		$params = [];
+		if (!$this->request->hasParameter("order")) {
+			$params["order"] = $this->cart->get("id");
+		}
+		$this->api->render("ProductLines", $params);
 	}
 	function order() {
 		$this->api->render("ProductLines");
 	}
 	function filterQuery($collection, $query, &$ops) {
 		if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) {
+			$query->open("access");
 			$query->condition("product_lines.orders_id.token", $this->request->getCookie("cid"));
+			$query->orCondition("product_lines.orders_id.owner", $this->user->userinfo("id"));
+			$query->close();
 		}
 		return $query;
 	}

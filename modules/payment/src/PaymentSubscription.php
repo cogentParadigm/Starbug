@@ -18,6 +18,7 @@ class PaymentSubscription implements PaymentSubscriptionInterface {
 		else {
 			if ($type == "ARBCreateSubscriptionRequest") {
 				$record["subscription_id"] = $this->authnet->response->subscriptionId;
+				$record["expiration_date"] = strtotime($subscription["start_date"] . "+ " . $subscription["interval"] . $subscription["unit"]);
 			} else if ($type == "ARBUpdateSubscriptionRequest") {
 				$record["subscription_id"] = $subscription["subscriptionId"];
 			}

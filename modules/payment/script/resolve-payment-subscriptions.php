@@ -43,6 +43,7 @@ class ResolvePaymentSubscriptionsCommand {
 										"created" => $transaction->submitTimeLocal
 									];
 									$this->models->get("payments")->store($payment);
+									$this->models->get("subscriptions")->store(["id" => $subscription["id"], "expiration_date" => strtotime($subscription["expiration_date"] . "+ " . $subscription["interval"] . $subscription["unit"])]);
 								}
 							}
 						}

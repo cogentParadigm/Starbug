@@ -19,7 +19,6 @@ define([
 	"starbug/form/Address"
 ], function (declare, Widget, Templated, _WidgetsInTemplate, api, template, GridFromHtml, Grid, Editor, put, on, query, all, Deferred) {
 	return declare([Widget, Templated, _WidgetsInTemplate], {
-		selected:null,
 		query:{}, //parameters for the query
 		products:null,
 		shipping:null,
