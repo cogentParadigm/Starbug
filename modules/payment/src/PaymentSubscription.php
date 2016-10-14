@@ -18,7 +18,7 @@ class PaymentSubscription implements PaymentSubscriptionInterface {
 		else {
 			if ($type == "ARBCreateSubscriptionRequest") {
 				$record["subscription_id"] = $this->authnet->response->subscriptionId;
-				$record["expiration_date"] = strtotime($subscription["start_date"] . "+ " . $subscription["interval"] . $subscription["unit"]);
+				$record["expiration_date"] = date("Y-m-d H:i:s", strtotime($subscription["start_date"] . "+ " . $subscription["interval"] . $subscription["unit"]));
 			} else if ($type == "ARBUpdateSubscriptionRequest") {
 				$record["subscription_id"] = $subscription["subscriptionId"];
 			}
@@ -27,7 +27,8 @@ class PaymentSubscription implements PaymentSubscriptionInterface {
 			if (!empty($subscription[$field])) $record[$field] = $subscription[$field];
 		}
 		foreach (array('length' => 'interval', 'total_occurrences' => 'occurrences', 'trial_occurrences' => 'trials', 'expiration_date' => 'card_expiration') as $source => $dest) {
-			if (empty($subscription[$dest]) && !empty($subscription[$source])) $record[$dest] = $subscription[$source];
+			if (!empty($subscription[$dest])) $record[$dest] = $subscription[$dest];
+			else if (!empty($subscription[$source])) $record[$dest] = $subscription[$source];
 		}
 		if (!empty($subscription["card_number"])) {
 			$record["card"] = substr($subscription["card_number"], -4);

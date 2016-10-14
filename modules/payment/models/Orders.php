@@ -62,7 +62,7 @@ class Orders extends OrdersModel {
 			->condition("recurring", "1")->all();
 		foreach ($lines as $line) {
 			$price = $line["price"] * $line["qty"];
-			$this->subscriptions->create($order, $payment + ["amount" => $price] + $line);
+			$this->subscriptions->create($order, $payment + ["amount" => $price/100] + $line);
 		}
 
 		$this->store($ammend);

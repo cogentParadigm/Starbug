@@ -40,10 +40,12 @@ class ResolvePaymentSubscriptionsCommand {
 										"response" => $transaction->asXML(),
 										"txn_id" => $transaction->transId,
 										"orders_id" => $subscription["orders_id"],
+										"subscriptions_id" => $subscription["id"],
 										"created" => $transaction->submitTimeLocal
 									];
 									$this->models->get("payments")->store($payment);
-									$this->models->get("subscriptions")->store(["id" => $subscription["id"], "expiration_date" => strtotime($subscription["expiration_date"] . "+ " . $subscription["interval"] . $subscription["unit"])]);
+									$expiration_date = date("Y-m-d H:i:s", strtotime($subscription["expiration_date"] . "+ " . $subscription["interval"] . $subscription["unit"]));
+									$this->models->get("subscriptions")->store(["id" => $subscription["id"], "expiration_date" => $expiration_date]);
 								}
 							}
 						}

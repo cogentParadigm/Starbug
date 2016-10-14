@@ -87,7 +87,8 @@
 		["card", "type" => "string"],
 		["card_expiration", "type" => "datetime"],
 		["response", "type" => "text"],
-		["expiration_date", "type" => "datetime"]
+		["expiration_date", "type" => "datetime"],
+		["payments", "type" => "payments", "table" => "payments"]
 	);
 	$this->table(["orders", "search" => "orders.id,orders.order_status,orders.email,orders.phone,orders.billing_address.recipient,orders.shipping_address.recipient", "groups" => false],
 		["subtotal", "type" => "string", "length" => "32", "default" => ""],
