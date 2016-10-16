@@ -82,9 +82,11 @@
 		["unit", "type" => "string"],
 		["limit", "type" => "int", "default" => 0],
 		["card", "type" => "int", "references" => "payment_cards id"],
+		["expiration_date", "type" => "datetime"],
+		["payments", "type" => "payments", "table" => "payments"],
+		["active", "type" => "bool", "default" => 1],
 		["canceled", "type" => "bool", "default" => 0],
-		["completed", "type" => "bool", "default" => 0],
-		["payments", "type" => "payments", "table" => "payments"]
+		["completed", "type" => "bool", "default" => 0]
 	);
 	$this->table(["orders", "search" => "orders.id,orders.order_status,orders.email,orders.phone,orders.billing_address.recipient,orders.shipping_address.recipient", "groups" => false],
 		["subtotal", "type" => "string", "length" => "32", "default" => ""],
