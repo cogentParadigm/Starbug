@@ -34,8 +34,8 @@ class ProductsForm extends FormDisplay {
 			"label" => "Recurrence Unit",
 			"pane" => "right",
 			"input_type" => "select",
-			"options" => ["Months", "Days"],
-			"values" => ["months", "days"],
+			"options" => ["Days", "Weeks", "Months", "Years"],
+			"values" => ["days", "weeks", "months", "years"],
 			"data-dojo-type" => "starbug/form/Dependent",
 			"data-dojo-props" => "key:'payment_type', values:['recurring']"
 		]);
@@ -43,30 +43,15 @@ class ProductsForm extends FormDisplay {
 			"interval",
 			"label" => "Recurrence Interval",
 			"pane" => "right",
-			"info" => "For monthly recurrence enter a number between 1 and 12. For daily recurrence enter a number between 7 and 365",
+			"info" => "For example, enter 6 and select a recurrence unit of 'Months' to bill every 6 months.",
 			"data-dojo-type" => "starbug/form/Dependent",
 			"data-dojo-props" => "key:'payment_type', values:['recurring']"
 		]);
 		$this->add([
-			"trial_amount",
+			"limit",
+			"label" => "Total Payments",
 			"pane" => "right",
-			"info" => "Enter a price if you wish to charge a reduced amount during a trial period.",
-			"data-dojo-type" => "starbug/form/Dependent",
-			"data-dojo-props" => "key:'payment_type', values:['recurring']"
-		]);
-		$this->add([
-			"trials",
-			"label" => "Trial Occurrences",
-			"pane" => "right",
-			"info" => "Enter the number of payments in the trial period.",
-			"data-dojo-type" => "starbug/form/Dependent",
-			"data-dojo-props" => "key:'payment_type', values:['recurring']"
-		]);
-		$this->add([
-			"occurrences",
-			"label" => "Total Occurrences",
-			"pane" => "right",
-			"info" => "Enter the total number of payments. For on-going subscriptions with no end date, enter '9999'.",
+			"info" => "Enter a number to limit the total number of payments.",
 			"data-dojo-type" => "starbug/form/Dependent",
 			"data-dojo-props" => "key:'payment_type', values:['recurring']"
 		]);

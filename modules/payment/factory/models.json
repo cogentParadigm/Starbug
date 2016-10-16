@@ -2,8 +2,8 @@
 	"orders":{
 		"request":"RequestInterface",
 		"cart":"Starbug\\Payment\\Cart",
-		"payments":"Starbug\\Payment\\PaymentInterface",
-		"subscriptions":"Starbug\\Payment\\PaymentSubscriptionInterface"
+		"gateway":"Starbug\\Payment\\GatewayInterface",
+		"subscriptions":"Starbug\\Payment\\TokenGatewayInterface"
 	},
 	"product_lines":{
 		"cart":"Starbug\\Payment\\Cart"

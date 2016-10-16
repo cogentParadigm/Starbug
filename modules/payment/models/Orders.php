@@ -46,23 +46,26 @@ class Orders extends OrdersModel {
 
 		//determine single payment amount
 		//TODO: validate prices, lines could be stale
-		$lines = $this->query("lines")
+		$lines = $this->query("product_lines")
 			->condition("orders_id", $order['id'])
-			->condition("recurring", "0")
-			->select("SUM(CASE WHEN type='coupon_lines' THEN -1*price ELSE price END*qty) as total")->one();
+			->condition("product_lines.product.payment_type", "single")
+			->select("SUM(product_lines.price * qty) as total")->one();
 		$total = $lines['total'];
 		if ($total) {
 			$ammend["total"] = $total;
-			$this->payments->create($order, $payment + ["amount" => $total/100]);
+			$this->gateway->purchase($payment + ["amount" => $total, "orders_id" => $order["id"]]);
 		}
 
 		//determine recurring payment amounts
-		$lines = $this->query("lines")
+		$lines = $this->query("product_lines")
 			->condition("orders_id", $order['id'])
-			->condition("recurring", "1")->all();
+			->condition("product_lines.product.payment_type", "recurring")->all();
 		foreach ($lines as $line) {
 			$price = $line["price"] * $line["qty"];
-			$this->subscriptions->create($order, $payment + ["amount" => $price/100] + $line);
+			$this->gateway->purchase($payment + ["amount" => $price, "orders_id" => $order["id"]]);
+			if (!$this->errors()) {
+				$this->subscriptions->createSubscription(["orders_id" => $order["id"], "amount" => $price, "product" => $line["product"], "payment" => $this->models->get("payments")->insert_id] + $payment);
+			}
 		}
 
 		$this->store($ammend);

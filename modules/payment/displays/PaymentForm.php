@@ -14,7 +14,7 @@ class PaymentForm extends FormDisplay {
 		$this->add(["card_holder", "label" => "Name on card", "input_type" => "text", "pane" => "top", "div" => "col-xs-12"]);
 		$this->add(["expiration_date[month]", "pane" => "middle", "div" => "col-xs-6", "label" => "Expiration<br/>Month", "input_type" => "select", "range" => "1-12"]);
 		$this->add(["expiration_date[year]", "pane" => "middle", "div" => "col-xs-6", "label" => "Expiration<br/>Year", "before" => "/", "input_type" => "select", "range" => date("Y")."-".(intval(date("Y"))+20)]);
-		$this->add(["card_code", "label" => "Security code", "pane" => "bottom", "div" => "col-xs-12", "input_type" => "text"]);
+		$this->add(["cvv", "label" => "Security code", "pane" => "bottom", "div" => "col-xs-12", "input_type" => "text"]);
 		$this->actions->add([$this->default_action, "class" => "btn-primary"]);
 	}
 }

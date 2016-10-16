@@ -35,9 +35,7 @@
 		["price", "type" => "int", "default" => "0"],
 		["interval", "type" => "int"],
 		["unit", "type" => "string"],
-		["occurrences", "type" => "int", "default" => "9999"],
-		["trials", "type" => "int", "default" => "0"],
-		["trial_amount", "type" => "int", "default" => "0"],
+		["limit", "type" => "int", "default" => 0],
 		["published", "type" => "bool", "default" => "1"],
 		["hidden", "type" => "bool", "default" => "0"],
 		["description", "type" => "text", "default" => ""],
@@ -55,39 +53,37 @@
 		["type", "type" => "string"],
 		["description", "type" => "string", "length" => "255"],
 		["price", "type" => "int", "default" => "0"],
-		["qty", "type" => "int", "default" => "1"],
-		["recurring", "type" => "bool", "default" => "0"],
-		["interval", "type" => "int"],
-		["unit", "type" => "string"],
-		["occurrences", "type" => "int", "default" => "9999"],
-		["trials", "type" => "int", "default" => "0"],
-		["trial_amount", "type" => "int", "default" => "0"]
+		["qty", "type" => "int", "default" => "1"]
 	);
 	$this->table(["product_lines", "base" => "lines", "groups" => false],
 		["product", "type" => "int", "references" => "products id"]
 	);
 	$this->table(["shipping_lines", "base" => "lines", "groups" => false]);
 	$this->table(["tax_lines", "base" => "lines", "groups" => false]);
+	$this->table(["payment_cards", "groups" => false],
+		["customer_reference", "type" => "string", "length" => "128", "default" => ""],
+		["card_reference", "type" => "string", "length" => "128"],
+		["brand", "type" => "string"],
+		["number", "type" => "string"],
+		["month", "type" => "int"],
+		["year", "type" => "int"]
+	);
 	$this->table(["payments", "groups" => false],
 		["amount", "type" => "int", "default" => "0"],
 		["response_code", "type" => "int"],
 		["txn_id", "type" => "string", "length" => "32"],
+		["card", "type" => "int", "references" => "payment_cards id", "null" => true, "default" => "NULL"],
 		["response", "type" => "text"]
 	);
 	$this->table(["subscriptions", "groups" => false],
-		["type", "type" => "string"],
 		["amount", "type" => "int", "default" => "0"],
-		["subscription_id", "type" => "string"],
 		["start_date", "type" => "datetime"],
 		["interval", "type" => "int"],
 		["unit", "type" => "string"],
-		["occurrences", "type" => "int"],
-		["trials", "type" => "int", "default" => "0"],
-		["trial_amount", "type" => "int", "default" => "0"],
-		["card", "type" => "string"],
-		["card_expiration", "type" => "datetime"],
-		["response", "type" => "text"],
-		["expiration_date", "type" => "datetime"],
+		["limit", "type" => "int", "default" => 0],
+		["card", "type" => "int", "references" => "payment_cards id"],
+		["canceled", "type" => "bool", "default" => 0],
+		["completed", "type" => "bool", "default" => 0],
 		["payments", "type" => "payments", "table" => "payments"]
 	);
 	$this->table(["orders", "search" => "orders.id,orders.order_status,orders.email,orders.phone,orders.billing_address.recipient,orders.shipping_address.recipient", "groups" => false],

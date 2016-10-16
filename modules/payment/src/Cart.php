@@ -106,16 +106,6 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
 			"description" => $product['name'],
 			"price" => $product['price']
 		);
-		if ($product["payment_type"] == "recurring") {
-			$line += [
-				"recurring" => "1",
-				"interval" => $product["interval"],
-				"unit" => $product["unit"],
-				"occurrences" => $product["occurrences"],
-				"trials" => $product["trials"],
-				"trial_amount" => $product["trial_amount"]
-			];
-		}
 		$this->init();
 		//pass id and qty
 		$line['qty'] = 1;
