@@ -38,11 +38,11 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 		}
 	}
 	public function updateSubscription($subscription) {
-		if (empty($subscription["id"])) $this->models->get("orders")->error('You must specify a subscription to update', 'global');
+		if (empty($subscription["id"])) $this->models->get("subscriptions")->error('You must specify a subscription to update', 'global');
 		else $this->saveSubscription($subscription);
 	}
 	public function cancelSubscription($subscription) {
-		if (empty($subscription["id"])) $this->models->get("orders")->error('You must specify a subscription to update', 'global');
+		if (empty($subscription["id"])) $this->models->get("subscriptions")->error('You must specify a subscription to update', 'global');
 		else $this->saveSubscription(["id" => $subscription["id"], "canceled" => 1, "active" => "0"]);
 	}
 	public function processSubscription($subscription) {
@@ -87,7 +87,7 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 	}
 	protected function saveSubscription($subscription) {
 		$record = [];
-		foreach (array('id', 'orders_id', 'amount', 'start_date', 'unit', 'interval', 'limit', 'card', 'canceled', 'completed', 'expiration_date') as $field) {
+		foreach (array('id', 'orders_id', 'product', 'amount', 'start_date', 'unit', 'interval', 'limit', 'card', 'canceled', 'completed', 'expiration_date') as $field) {
 			if (!empty($subscription[$field])) $record[$field] = $subscription[$field];
 		}
 		$this->models->get("subscriptions")->store($record);

@@ -84,5 +84,9 @@ class Collection {
 		$this->results = $data;
 		return $this->results;
 	}
+	public function one($ops = array()) {
+		$this->query($ops);
+		return reset($this->results);
+	}
 }
 ?>

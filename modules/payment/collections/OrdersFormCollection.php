@@ -15,6 +15,11 @@ class OrdersFormCollection extends FormCollection {
 			$query->action($ops["action"], "orders");
 		}
 		$query->condition("orders.id", $ops["id"]);
+		if (!empty($ops["subscription"])) {
+			$query->join("subscriptions")->on("subscriptions.orders_id=orders.id");
+			$query->condition("subscriptions.id", $ops["subscription"]);
+			$query->select("subscriptions.card");
+		}
 		return $query;
 	}
 }

@@ -76,6 +76,7 @@
 		["response", "type" => "text"]
 	);
 	$this->table(["subscriptions", "groups" => false],
+		["product", "type" => "int", "references" => "products id"],
 		["amount", "type" => "int", "default" => "0"],
 		["start_date", "type" => "datetime"],
 		["interval", "type" => "int"],
@@ -117,4 +118,9 @@
 	$this->uri("checkout", ["controller" => "checkout"]);
 	$this->uri("product", ["controller" => "product"]);
 	$this->uri("subscriptions", ["controller" => "subscriptions"]);
+
+	$this->permit("orders::checkout", ["owner", "priv_type" => "global"]);
+	$this->permit("orders::payment", ["owner", "priv_type" => "global"]);
+	$this->permit("subscriptions::update", ["owner", "priv_type" => "global"]);
+	$this->permit("subscriptions::cancel", ["owner", "priv_type" => "global"]);
 ?>
