@@ -22,8 +22,19 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 		if (!$this->models->get("orders")->errors()) {
 			//prevent attempts to update subscriptions using this method
 			unset($subscription["id"]);
-			$subscription["expiration_date"] = date("Y-m-d 00:00:00", strtotime($subscription["start_date"] . "+ " . $subscription["interval"] . " " . $subscription["unit"]) + 86400);
+			$next_billing = strtotime($subscription["start_date"] . "+ " . $subscription["interval"] . " " . $subscription["unit"]);
+			$subscription["expiration_date"] = date("Y-m-d 00:00:00", $next_billing + 86400);
 			$this->saveSubscription($subscription);
+			if (!$this->models->get("subscriptions")->errors()) {
+				//create a bill for the next payment
+				$this->models->get("bills")->store([
+					"amount" => $subscription["amount"],
+					"due_date" => $subscription["expiration_date"],
+					"scheduled_date" => date("Y-m-d 00:00:00", $next_billing),
+					"subscriptions_id" => $this->models->get("subscriptions")->insert_id,
+					"scheduled" => "1"
+				]);
+			}
 		}
 	}
 	public function updateSubscription($subscription) {
@@ -35,10 +46,10 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 		else $this->saveSubscription(["id" => $subscription["id"], "canceled" => 1, "active" => "0"]);
 	}
 	public function processSubscription($subscription) {
+		$complete = false;
 		//we will assume the subscription is neither canceled, completed, or up to date
-		$card = $this->getCard($subscription["card"]);
 		$purchase = [
-			"cardReference" => json_encode(["customerPaymentProfileId" => $card["card_reference"], "customerProfileId" => $card["customer_reference"]]),
+			"card" => $subscription["card"],
 			"orders_id" => $subscription["orders_id"],
 			"subscriptions_id" => $subscription["id"],
 			"amount" => $subscription["amount"]
@@ -50,10 +61,28 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 				"expiration_date" => date("Y-m-d H:i:s", strtotime($subscription["expiration_date"] . "+ " . $subscription["interval"] . " " . $subscription["unit"]))
 			];
 			if (!empty($subscription["limit"]) && $subscription["payments"] == $subscription["limit"]) {
+				$complete = true;
 				$update["completed"] = 1;
 				$update["active"] = "0";
 			}
 			$this->models->get("subscriptions")->store($update);
+			//the payment succeeded so add it to the bill and mark it as paid
+			$payment = $this->models->get("payments")->insert_id;
+			$this->models->get("bills")->store(["id" => $subscription["bill"], "payments" => "+".$payment, "paid" => "1"]);
+		} else if (isset($this->models->get("payments")->insert_id)) {
+			//the payment was decline so add it to the bill and unschedule it
+			$payment = $this->models->get("payments")->insert_id;
+			$this->models->get("bills")->store(["id" => $subscription["bill"], "payments" => "+".$payment, "scheduled" => "0"]);
+		}
+		if (!$complete && $subscription["active"] && !$subscription["canceled"]) {
+			//create a bill for the next payment
+			$this->models->get("bills")->store([
+				"amount" => $subscription["amount"],
+				"due_date" => $subscription["expiration_date"],
+				"scheduled_date" => date("Y-m-d 00:00:00", strtotime($subscription["expiration_date"]) - 86400),
+				"subscriptions_id" => $subscription["id"],
+				"scheduled" => "1"
+			]);
 		}
 	}
 	protected function saveSubscription($subscription) {
@@ -96,6 +125,10 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 		return $this->models->get("payment_cards")->load($id);
 	}
 	public function purchase($payment) {
+		if (!empty($payment["card"])) {
+			$card = $this->getCard($payment["card"]);
+			$payment["cardReference"] = json_encode(["customerPaymentProfileId" => $card["card_reference"], "customerProfileId" => $card["customer_reference"]]);
+		}
 		// check for required fields
 		foreach (array('cardReference', 'amount') as $field) {
 			if (empty($payment[$field])) $this->models->get("orders")->error('This field is required', $field);
@@ -107,7 +140,10 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 				$this->models->get("orders")->error($response->getMessage(), 'global');
 			}
 			$code = $response->getResultCode();
-			$txn_id = $response->getTransactionReference(false)->getTransId();
+			$txn_id = "";
+			if ($txn = $response->getTransactionReference(false)) {
+				$txn_id = $txn->getTransId();
+			}
 			$record = ["orders_id" => $payment["orders_id"], "subscriptions_id" => $payment["subscriptions_id"], "response_code" => $code, "txn_id" => $txn_id, "amount" => $payment["amount"], "response" => $response->getData()->asXML()];
 			$this->models->get("payments")->store($record);
 		}

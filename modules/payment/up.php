@@ -88,6 +88,15 @@
 		["canceled", "type" => "bool", "default" => 0],
 		["completed", "type" => "bool", "default" => 0]
 	);
+	$this->table(["bills", "groups" => false],
+		["amount", "type" => "int", "default" => "0"],
+		["due_date", "type" => "datetime"],
+		["scheduled_date", "type" => "datetime"],
+		["subscriptions_id", "type" => "int", "references" => "subscriptions id", "null" => true, "default" => "NULL"],
+		["payments", "type" => "payments", "table" => "payments"],
+		["scheduled", "type" => "bool", "default" => "0"],
+		["paid", "type" => "bool", "default" => "0"]
+	);
 	$this->table(["orders", "search" => "orders.id,orders.order_status,orders.email,orders.phone,orders.billing_address.recipient,orders.shipping_address.recipient", "groups" => false],
 		["subtotal", "type" => "string", "length" => "32", "default" => ""],
 		["total", "type" => "string", "length" => "32"],
@@ -99,7 +108,8 @@
 		["email", "type" => "string", "length" => "128"],
 		["phone", "type" => "string"],
 		["payments", "type" => "payments", "table" => "payments"],
-		["subscriptions", "type" => "subscriptions", "table" => "subscriptions"]
+		["subscriptions", "type" => "subscriptions", "table" => "subscriptions"],
+		["bills", "type" => "bills", "table" => "bills"]
 	);
 
 

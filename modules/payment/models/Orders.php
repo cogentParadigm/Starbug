@@ -53,7 +53,7 @@ class Orders extends OrdersModel {
 		$total = $lines['total'];
 		if ($total) {
 			$ammend["total"] = $total;
-			$this->gateway->purchase($payment + ["amount" => $total, "orders_id" => $order["id"]]);
+			$this->purchase($payment + ["amount" => $total, "orders_id" => $order["id"]]);
 		}
 
 		//determine recurring payment amounts
@@ -62,7 +62,7 @@ class Orders extends OrdersModel {
 			->condition("product_lines.product.payment_type", "recurring")->all();
 		foreach ($lines as $line) {
 			$price = $line["price"] * $line["qty"];
-			$this->gateway->purchase($payment + ["amount" => $price, "orders_id" => $order["id"]]);
+			$this->purchase($payment + ["amount" => $price, "orders_id" => $order["id"]]);
 			if (!$this->errors()) {
 				$this->subscriptions->createSubscription(["orders_id" => $order["id"], "amount" => $price, "product" => $line["product"], "payment" => $this->models->get("payments")->insert_id] + $payment);
 			}
@@ -71,6 +71,14 @@ class Orders extends OrdersModel {
 		$this->store($ammend);
 		if (!$this->errors()) {
 			$this->store(array("id" => $order['id'], "order_status" => "pending"));
+		}
+	}
+
+	protected function purchase($payment) {
+		if (empty($payment["card"])) {
+			$this->gateway->purchase($payment);
+		} else {
+			$this->subscriptions->purchase($payment);
 		}
 	}
 
