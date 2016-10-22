@@ -123,4 +123,5 @@
 	$this->permit("orders::payment", ["owner", "priv_type" => "global"]);
 	$this->permit("subscriptions::update", ["owner", "priv_type" => "global"]);
 	$this->permit("subscriptions::cancel", ["owner", "priv_type" => "global"]);
+	$this->permit("subscriptions::payment", ["owner", "priv_type" => "global"]);
 ?>

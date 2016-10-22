@@ -17,5 +17,11 @@ class Subscriptions extends SubscriptionsModel {
 		$this->gateway->cancelSubscription($subscription);
 	}
 
+	function payment($data) {
+		$this->update($data);
+		$subscription = $this->collections->get("ExpiredSubscriptions")->one(["id" => $data["bill"]]);
+		$this->gateway->processSubscription($subscription);
+	}
+
 }
 ?>

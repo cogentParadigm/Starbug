@@ -6,7 +6,8 @@
 		"subscriptions":"Starbug\\Payment\\TokenGatewayInterface"
 	},
 	"subscriptions":{
-		"gateway":"Starbug\\Payment\\TokenGatewayInterface"
+		"gateway":"Starbug\\Payment\\TokenGatewayInterface",
+		"collections":"CollectionFactoryInterface"
 	},
 	"product_lines":{
 		"cart":"Starbug\\Payment\\Cart"

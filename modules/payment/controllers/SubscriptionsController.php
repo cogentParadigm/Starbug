@@ -6,7 +6,8 @@ use Starbug\Core\CollectionFactoryInterface;
 use Starbug\Core\IdentityInterface;
 class SubscriptionsController extends Controller {
 	public $routes = [
-		"update" => "update/{id}"
+		"update" => "update/{id}",
+		"payment" => "payment/{id}"
 	];
 	public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, IdentityInterface $user) {
 		$this->models = $models;
@@ -22,9 +23,24 @@ class SubscriptionsController extends Controller {
 		$this->render("subscriptions/list");
 	}
 	function update($id) {
-		$subscription = $this->collections->get("Subscriptions")->one(["id" => $id]);
-		$this->assign("subscription", $subscription);
-		$this->render("subscriptions/update");
+		if ($this->models->get("subscriptions")->success("payment")) {
+			$this->redirect("subscriptions");
+		} else {
+			$subscription = $this->collections->get("Subscriptions")->one(["id" => $id]);
+			$this->assign("subscription", $subscription);
+			$this->render("subscriptions/update");
+		}
+	}
+	function payment($id) {
+		if ($this->models->get("subscriptions")->success("payment")) {
+			$this->redirect("subscriptions");
+		} else {
+			$bill = $this->models->get("bills")->load($id);
+			$subscription = $this->collections->get("Subscriptions")->one(["id" => $bill["subscriptions_id"]]);
+			$this->assign("subscription", $subscription);
+			$this->assign("bill", $bill);
+			$this->render("subscriptions/payment");
+		}
 	}
 }
 ?>

@@ -21,7 +21,7 @@
 				<p><strong class="h1"><?php echo $this->priceFormatter->format($bill["amount"]); ?></strong></p>
 				<p>
 					<?php if ($bill["due_date"] < $now) { ?>
-						<span class="label label-danger">Past Due</span>
+						<span class="label label-danger">Past Due</span> <a href="<?php echo $this->url->build("subscriptions/payment/".$bill["id"]); ?>">Make a payment</a>
 					<?php } else { ?>
 						Due <?php echo date("l, F j", strtotime($bill["scheduled_date"])); ?>
 					<?php } ?>

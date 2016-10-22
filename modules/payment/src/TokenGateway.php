@@ -69,20 +69,20 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 			//the payment succeeded so add it to the bill and mark it as paid
 			$payment = $this->models->get("payments")->insert_id;
 			$this->models->get("bills")->store(["id" => $subscription["bill"], "payments" => "+".$payment, "paid" => "1"]);
+			if (!$complete && $subscription["active"] && !$subscription["canceled"]) {
+				//create a bill for the next payment
+				$this->models->get("bills")->store([
+					"amount" => $subscription["amount"],
+					"due_date" => $subscription["expiration_date"],
+					"scheduled_date" => date("Y-m-d 00:00:00", strtotime($subscription["expiration_date"]) - 86400),
+					"subscriptions_id" => $subscription["id"],
+					"scheduled" => "1"
+				]);
+			}
 		} else if (isset($this->models->get("payments")->insert_id)) {
 			//the payment was decline so add it to the bill and unschedule it
 			$payment = $this->models->get("payments")->insert_id;
 			$this->models->get("bills")->store(["id" => $subscription["bill"], "payments" => "+".$payment, "scheduled" => "0"]);
-		}
-		if (!$complete && $subscription["active"] && !$subscription["canceled"]) {
-			//create a bill for the next payment
-			$this->models->get("bills")->store([
-				"amount" => $subscription["amount"],
-				"due_date" => $subscription["expiration_date"],
-				"scheduled_date" => date("Y-m-d 00:00:00", strtotime($subscription["expiration_date"]) - 86400),
-				"subscriptions_id" => $subscription["id"],
-				"scheduled" => "1"
-			]);
 		}
 	}
 	protected function saveSubscription($subscription) {
