@@ -8,6 +8,7 @@
  * @ingroup core
  */
 namespace Starbug\Core;
+use Starbug\Css\CssLoader;
 class Application implements ApplicationInterface {
 
 	protected $controllers;
@@ -17,7 +18,7 @@ class Application implements ApplicationInterface {
 	protected $response;
 	protected $config;
 	protected $session;
-	protected $locator;
+	protected $css;
 
 	use \Psr\Log\LoggerAwareTrait;
 
@@ -29,7 +30,7 @@ class Application implements ApplicationInterface {
 		ModelFactoryInterface $models,
 		RouterInterface $router,
 		SettingsInterface $settings,
-		ResourceLocatorInterface $locator,
+		CSSLoader $css,
 		SessionHandlerInterface $session,
 		ResponseInterface $response,
 		InputFilterInterface $filter
@@ -38,7 +39,7 @@ class Application implements ApplicationInterface {
 		$this->models = $models;
 		$this->router = $router;
 		$this->settings = $settings;
-		$this->locator = $locator;
+		$this->css = $css;
 		$this->session = $session;
 		$this->response = $response;
 		$this->filter = $filter;
@@ -61,7 +62,7 @@ class Application implements ApplicationInterface {
 		if (empty($route['theme'])) $route['theme'] = $this->settings->get("theme");
 		if (empty($route['layout'])) $route['layout'] = empty($route['type']) ? "views" : $route['type'];
 		if (empty($route['template'])) $route['template'] = $request->getFormat();
-		$this->locator->set("Starbug\Theme", "app/themes/".$route['theme']);
+		$this->css->setTheme($route['theme']);
 
 		foreach ($route as $k => $v) {
 			if (!empty($v)) $this->response->{$k} = $v;
