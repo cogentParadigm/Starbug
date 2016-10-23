@@ -192,21 +192,18 @@ class Schemer {
 		$xd = 0; //dropped indexes
 
 		//CREATE TABLES FIRST
-		do {
-			$previous_count = $ts;
-			$this->clean();
-			$this->fill();
-			foreach ($this->tables as $table => $fields) {
-				$records = $this->db->pdo->query("SHOW TABLES LIKE '".$this->db->prefix($table)."'");
-				if (false === ($row = $records->fetch())) {
-					// NEW TABLE																																													// NEW TABLE
-					fwrite(STDOUT, "Creating table ".$this->db->prefix($table)."...\n");
-					$this->create($table);
-					$this->generate_model($table);
-					$ts++;
-				}
+		$this->clean();
+		$this->fill();
+		foreach ($this->tables as $table => $fields) {
+			$records = $this->db->pdo->query("SHOW TABLES LIKE '".$this->db->prefix($table)."'");
+			if (false === ($row = $records->fetch())) {
+				// NEW TABLE																																													// NEW TABLE
+				fwrite(STDOUT, "Creating table ".$this->db->prefix($table)."...\n");
+				$this->create($table);
+				$this->generate_model($table);
+				$ts++;
 			}
-		} while ($ts > $previous_count);
+		}
 		//UPDATE TABLES WITH COLUMN ALTERATIONS AND FOREIGN KEYS
 		foreach ($this->tables as $table => $fields) {
 			$table_info = $this->get($table);
