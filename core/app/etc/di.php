@@ -28,7 +28,8 @@ return array(
 		return new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
 	},
 	'Starbug\Core\Database' => DI\object()
-															->method('setDatabase', DI\get('database_name')),
+		->method('setTimeZone', Etc::TIME_ZONE)
+		->method('setDatabase', DI\get('database_name')),
 	'Starbug\Core\Template' => DI\object()->constructorParameter('helpers', DI\get('Starbug\Core\HelperFactoryInterface')),
 	'Starbug\Core\Schemer' => DI\object()->constructorParameter('modules', DI\get('modules')),
 	'Starbug\Core\GenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
