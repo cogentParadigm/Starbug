@@ -54,8 +54,10 @@ interface DatabaseInterface {
 	 */
 	function remove($from, $where);
 	function prefix($table);
-	public function set_debug($debug);
+	public function setDatabase($name);
 	public function exec($statement);
+	public function prepare($statement);
+	public function lastInsertId();
 	public function errors($key = "", $values = false);
 	public function error($error, $field = "global", $scope = "global");
 	public function success($model, $action);
