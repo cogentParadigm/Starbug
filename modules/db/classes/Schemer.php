@@ -597,12 +597,12 @@ class Schemer {
 			if (isset($this->tables[$col['type']]) || $this->models->has($col['type'])) {
 				$ref_table_name = (empty($col['table'])) ? $table."_".$colname : $col['table'];
 				$ref_table_def = array([$ref_table_name, "groups" => false],
-					["owner", "type" => "int", "null" => true, "references" => "users id", "update" => "cascade", "delete" => "cascade", "optional" => true],
-					[$table."_id", "type" => "int", "default" => "NULL", "references" => "$table id", "null" => false, "update" => "cascade", "delete" => "cascade"],
+					["owner", "type" => "int", "null" => true, "references" => "users id", "owner" => true, "optional" => true],
+					[$table."_id", "type" => "int", "default" => "NULL", "references" => "$table id", "null" => false],
 					["position", "type" => "int", "ordered" => $table."_id", "optional" => true]
 				);
 				if ($ref_table_name != $col['type']) {
-					$ref_table_def[] = [$colname."_id", "type" => "int", "default" => "0", "references" => $col['type']." id", "update" => "cascade", "delete" => "cascade"];
+					$ref_table_def[] = [$colname."_id", "type" => "int", "default" => "0", "references" => $col['type']." id"];
 					$this->index($ref_table_name, $table."_id", $colname."_id");
 				}
 				$additional[] = $ref_table_def;
