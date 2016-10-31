@@ -5,6 +5,19 @@ class Subscriptions extends SubscriptionsModel {
 
 	function update($subscription) {
 		if (empty($subscription["card"])) {
+			//populate the billing address
+			$address = $this->query()->condition("id", $subscription["id"])
+				->select(["*", "country.name as country"], "subscriptions.orders_id.billing_address")->one();
+			$subscription['country'] = $address['country'];
+			$subscription['address'] = $address['address1'];
+			$subscription['address2'] = $address['address2'];
+			$subscription['zip'] = $address['postal_code'];
+			$subscription['city'] = $address['locality'];
+			$subscription['state'] = $address['administrative_area'];
+			if (is_numeric($subscription['state'])) {
+				$state = $this->query("provinces")->condition("id", $subscription['state'])->one();
+				$subscription['state'] = $state['name'];
+			}
 			$card = $this->gateway->createCard($subscription);
 			$subscription["card"] = $card["id"];
 		}

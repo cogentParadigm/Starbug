@@ -39,13 +39,7 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 	}
 	public function updateSubscription($subscription) {
 		if (empty($subscription["id"])) $this->models->get("subscriptions")->error('You must specify a subscription to update', 'global');
-		else {
-			if (empty($subscription["card"])) {
-				$card = $this->createCard($subscription);
-				$subscription["card"] = $card["id"];
-			}
-			$this->saveSubscription(["id" => $subscription["id"], "card" => $subscription["card"]]);
-		}
+		else $this->saveSubscription(["id" => $subscription["id"], "card" => $subscription["card"]]);
 	}
 	public function cancelSubscription($subscription) {
 		if (empty($subscription["id"])) $this->models->get("subscriptions")->error('You must specify a subscription to update', 'global');
