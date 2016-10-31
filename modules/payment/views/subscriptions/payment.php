@@ -24,6 +24,7 @@
 	</p>
 </div>
 <?php if (!$bill["paid"]) { ?>
+<p>Use the form below to submit a payment. To use a new card, select "Add a new card.." from the dropdown.</p>
 <div class="row">
 	<div class="col-sm-6">
 		<?php $this->displays->render("BillPaymentForm", array("bill" => $bill["id"], "id" => $subscription["id"])); ?>
