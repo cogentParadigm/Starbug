@@ -32,14 +32,13 @@ class SubscriptionsController extends Controller {
 	}
 	function payment($id) {
 		if ($this->models->get("subscriptions")->success("payment")) {
-			$this->redirect("subscriptions");
-		} else {
-			$bill = $this->models->get("bills")->load($id);
-			$subscription = $this->collections->get("Subscriptions")->one(["id" => $bill["subscriptions_id"]]);
-			$this->assign("subscription", $subscription);
-			$this->assign("bill", $bill);
-			$this->render("subscriptions/payment");
+			$this->request->setPost("subscriptions", []);
 		}
+		$bill = $this->models->get("bills")->load($id);
+		$subscription = $this->collections->get("Subscriptions")->one(["id" => $bill["subscriptions_id"]]);
+		$this->assign("subscription", $subscription);
+		$this->assign("bill", $bill);
+		$this->render("subscriptions/payment");
 	}
 }
 ?>

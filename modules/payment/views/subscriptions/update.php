@@ -5,7 +5,7 @@
 <?php } ?>
 <div data-dojo-type="payment/Order" data-dojo-props="query:{order:<?php echo $subscription["orders_id"]; ?>}"></div>
 <div style="clear:both"></div>
-<p>Use the form below to change the credit or debit card associated with this subscription. To add a new card, select "Add a new card.." from the dropdown. This will simply update your card on file. The new card will not be charged until your next due date.</p>
+<p class="alert alert-warning">Use the form below to change the credit or debit card associated with this subscription. To add a new card, select "Add a new card.." from the dropdown. This will simply update your card on file. The new card will not be charged until your next due date.</p>
 <div class="row">
 	<div class="col-sm-6">
 <?php $this->displays->render("UpdateSubscriptionForm", array("id" => $subscription["id"])); ?>

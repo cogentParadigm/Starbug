@@ -1,3 +1,8 @@
+<a href="<?php echo $this->url->build("subscriptions"); ?>" class="pull-right">Return to my subscriptions</a>
+<h2>Make a Payment</h2>
+<?php if ($this->db->success("subscriptions", "payment")) { ?>
+	<div class="alert alert-success">Your payment has been processed successfully.</div>
+<?php } ?>
 <?php $now = date("Y-m-d H:i:s"); ?>
 <div class="subscription">
 	<p>
@@ -24,7 +29,7 @@
 	</p>
 </div>
 <?php if (!$bill["paid"]) { ?>
-<p>Use the form below to submit a payment. To use a new card, select "Add a new card.." from the dropdown.</p>
+<p class="alert alert-warning">Use the form below to submit a payment. To use a new card, select "Add a new card.." from the dropdown.</p>
 <div class="row">
 	<div class="col-sm-6">
 		<?php $this->displays->render("BillPaymentForm", array("bill" => $bill["id"], "id" => $subscription["id"])); ?>
