@@ -26,7 +26,8 @@ class Subscriptions extends SubscriptionsModel {
 		if (!$this->errors()) {
 			$this->gateway->updateSubscription($subscription);
 			if ($email && !$this->db->errors()) {
-				$subscription = $this->query()->condition("subscriptions.id", $subscription["id"])->select("subscriptions.product.name as description")
+				$subscription = $this->query()->condition("subscriptions.id", $subscription["id"])
+					->select("subscriptions.product.name as description,subscriptions.orders_id.email as email")
 					->select(["brand", "number", "month", "year"], "subscriptions.card")->one();
 				$bill = $this->query("bills")->condition("subscriptions_id", $subscription["id"])->sort("due_date DESC")->one();
 				$subscription["details"] = implode("\n", [
@@ -51,7 +52,8 @@ class Subscriptions extends SubscriptionsModel {
 		$subscription = $this->collections->get("ExpiredSubscriptions")->one(["id" => $data["bill"]]);
 		$this->gateway->processSubscription($subscription);
 		if (!$this->db->errors()) {
-			$subscription = $this->query()->condition("subscriptions.id", $data["id"])->select("subscriptions.product.name as description,subscriptions.orders_id.email as email")
+			$subscription = $this->query()->condition("subscriptions.id", $data["id"])
+				->select("subscriptions.product.name as description,subscriptions.orders_id.email as email")
 				->select(["brand", "number", "month", "year"], "subscriptions.card")->one();
 			$bill = $this->query("bills")->condition("subscriptions_id", $data["id"])->sort("due_date DESC")->one();
 			$subscription["details"] = implode("\n", [
