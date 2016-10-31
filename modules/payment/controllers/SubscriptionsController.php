@@ -23,7 +23,7 @@ class SubscriptionsController extends Controller {
 		$this->render("subscriptions/list");
 	}
 	function update($id) {
-		if ($this->models->get("subscriptions")->success("payment")) {
+		if ($this->models->get("subscriptions")->success("update")) {
 			$this->redirect("subscriptions");
 		} else {
 			$subscription = $this->collections->get("Subscriptions")->one(["id" => $id]);
