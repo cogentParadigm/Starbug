@@ -41,6 +41,7 @@ class Orders extends OrdersModel {
 		}
 
 		//prepare details to be added to the order
+		$order_total = 0;
 		$ammend = array("id" => $order['id'], "email" => $payment['email'], "phone" => $payment['phone']);
 		if ($this->user->loggedIn()) $ammend['owner'] = $this->user->userinfo('id');
 
@@ -52,6 +53,7 @@ class Orders extends OrdersModel {
 			->select("SUM(product_lines.price * qty) as total")->one();
 		$total = $lines['total'];
 		if ($total) {
+			$order_total += $total;
 			$ammend["total"] = $total;
 			$this->purchase($payment + ["amount" => $total, "orders_id" => $order["id"]]);
 		}
@@ -62,6 +64,7 @@ class Orders extends OrdersModel {
 			->condition("product_lines.product.payment_type", "recurring")->all();
 		foreach ($lines as $line) {
 			$price = $line["price"] * $line["qty"];
+			$order_total += $price;
 			$this->purchase($payment + ["amount" => $price, "orders_id" => $order["id"]]);
 			if (!$this->errors()) {
 				$this->subscriptions->createSubscription(["orders_id" => $order["id"], "amount" => $price, "product" => $line["product"], "payment" => $this->models->get("payments")->insert_id] + $payment);
@@ -71,6 +74,31 @@ class Orders extends OrdersModel {
 		$this->store($ammend);
 		if (!$this->errors()) {
 			$this->store(array("id" => $order['id'], "order_status" => "pending"));
+			$lines = $this->query("product_lines")->condition("orders_id", $order["id"])->all();
+			$order["description"] = $lines[0]["description"];
+			$count = count($lines) - 1;
+			if ($count > 1) {
+				$order["description"] .= " and ".$count." other items";
+			} else if ($count > 0) {
+				$order["description"] .= " and 1 other item";
+			}
+			$rows = [];
+			foreach ($lines as $line) {
+				$rows[] = "<tr><td>".$line["description"]."</td><td>".$line["qty"]."</td><td>".$this->priceFormatter->format($line["price"]*$line["qty"])."</td></tr>";
+			}
+			$order["details"] = implode("\n", [
+				"<p>Order #".$order["id"]."</p>",
+				"<table>",
+				"<tr><th>Product</th><th>Qty</th><th>Total</th></tr>",
+				implode("\n", $rows),
+				"</table>",
+				"<p><strong>Order Total:</strong> ".$this->priceFormatter->format($order_total)."</p>"
+			]);
+			$data = [
+				"user" => $this->user->getUser(),
+				"order" => $order
+			];
+			$this->mailer->send(["template" => "Order Confirmation", "to" => $payment["email"]], $data);
 		}
 	}
 

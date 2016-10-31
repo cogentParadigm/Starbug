@@ -3,11 +3,15 @@
 		"request":"RequestInterface",
 		"cart":"Starbug\\Payment\\Cart",
 		"gateway":"Starbug\\Payment\\GatewayInterface",
-		"subscriptions":"Starbug\\Payment\\TokenGatewayInterface"
+		"subscriptions":"Starbug\\Payment\\TokenGatewayInterface",
+		"priceFormatter":"Starbug\\Payment\\PriceFormatterInterface",
+		"mailer":"MailerInterface"
 	},
 	"subscriptions":{
 		"gateway":"Starbug\\Payment\\TokenGatewayInterface",
-		"collections":"CollectionFactoryInterface"
+		"collections":"CollectionFactoryInterface",
+		"priceFormatter":"Starbug\\Payment\\PriceFormatterInterface",
+		"mailer":"MailerInterface"
 	},
 	"product_lines":{
 		"cart":"Starbug\\Payment\\Cart"

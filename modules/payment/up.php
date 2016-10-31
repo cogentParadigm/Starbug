@@ -124,4 +124,41 @@
 	$this->permit("subscriptions::update", ["owner", "priv_type" => "global"]);
 	$this->permit("subscriptions::cancel", ["owner", "priv_type" => "global"]);
 	$this->permit("subscriptions::payment", ["owner", "priv_type" => "global"]);
+
+	$this->store(
+		"email_templates",
+		["name" => "Order Confirmation"],
+		array(
+			"subject" => "Your [site:name] order confirmation",
+			"body" => "<h2>Order confirmation</h2>\n".
+				"<h3>Hello [user:first_name],</h3>\n".
+				"<p>Thank you for your purchase. You ordered [order:description].</p>\n".
+				"<h3>Details</h3>\n".
+				"[order:details]"
+		)
+	);
+	$this->store(
+		"email_templates",
+		["name" => "Update Subscription"],
+		array(
+			"subject" => "Your [site:name] subscription",
+			"body" => "<h2>Your subscription</h2>\n".
+				"<h3>Hello [user:first_name],</h3>\n".
+				"<p>Your [subscription:description] subscription has been updated.</p>\n".
+				"<h3>Details</h3>\n".
+				"[subscription:details]"
+		)
+	);
+	$this->store(
+		"email_templates",
+		["name" => "Payment Confirmation"],
+		array(
+			"subject" => "Your [site:name] payment confirmation",
+			"body" => "<h2>Payment confirmation</h2>\n".
+				"<h3>Hello [user:first_name],</h3>\n".
+				"<p>Thank you for your payment.</p>\n".
+				"<h3>Details</h3>\n".
+				"[payment:details]"
+		)
+	);
 ?>
