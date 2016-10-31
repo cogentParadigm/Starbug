@@ -46,7 +46,7 @@ class Gateway implements GatewayInterface {
 	}
 	protected function validateCard($payment, $plus = array()) {
 		$fields = array_merge(
-			array('card_holder', 'address', 'city', 'state', 'zip', 'card_number', 'expiration_date', 'amount'),
+			array('card_holder', 'address', 'city', 'state', 'zip', 'card_number', 'expiration_date'),
 			$plus
 		);
 		foreach ($fields as $field) {
