@@ -6,7 +6,7 @@ class Subscriptions extends SubscriptionsModel {
 	function update($subscription) {
 		if (empty($subscription["card"])) {
 			//populate the billing address
-			$address = $this->query()->condition("id", $subscription["id"])
+			$address = $this->query()->condition("subscriptions.id", $subscription["id"])
 				->select(["*", "country.name as country"], "subscriptions.orders_id.billing_address")->one();
 			$subscription['country'] = $address['country'];
 			$subscription['address'] = $address['address1'];
