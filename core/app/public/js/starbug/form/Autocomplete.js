@@ -69,7 +69,6 @@ define([
 				collection: self.store.filter(self.query),
 				keepScrollPosition:true,
 				renderRow: function(object, options){
-					console.log(object);
 					var node = put('div.autocomplete-item',object.label);
 					on(node, 'click', function(e) {
 						self.domNode.value = object.label;
@@ -114,7 +113,7 @@ define([
 			});
 			if (self.hiddenInput.value !== "") {
 				self.store.filter({id:parseInt(self.hiddenInput.value)}).fetch().then(function(results) {
-					if (results.length) {
+					if (results.length && self.domNode) {
 						self.domNode.value = results[0].label;
 					}
 				});
