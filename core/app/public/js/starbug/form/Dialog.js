@@ -111,7 +111,6 @@ define([
 		hide: function(evt) {
 			if (evt) evt.preventDefault();
 			this.inherited(arguments);
-			this.set('content', '');
 		},
 		remove: function(model, id) {
 			var args = {};
