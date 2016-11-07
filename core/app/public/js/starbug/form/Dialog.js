@@ -82,8 +82,8 @@ define([
 		load: function(data) {
 			this.loadForm(data.body.innerHTML);
 			if (domclass.contains(this.form, 'submitted')) {
-				this.hide();
 				if (this.callback != null) this.callback(data, this);
+				this.hide();
 			}
 		},
 		setValues: function(args) {
@@ -111,6 +111,7 @@ define([
 		hide: function(evt) {
 			if (evt) evt.preventDefault();
 			this.inherited(arguments);
+			self.dialog.set('content', '');
 		},
 		remove: function(model, id) {
 			var args = {};

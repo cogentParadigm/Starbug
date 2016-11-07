@@ -46,7 +46,6 @@ define([
 					}
 					self.editing = false;
 				}
-				self.dialog.set('content', '');
 				sb.get(self.model, 'select').filter({'id':object_id}).fetch().then(function(data) {
 					self.add(data);
 				});
