@@ -155,7 +155,7 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 		$subscription = $this->models->get("subscriptions")->query()->condition("subscriptions.id", $sid)
 			->select("subscriptions.product.name as description,subscriptions.orders_id.email as email")
 			->select(["brand", "number", "month", "year"], "subscriptions.card")->one();
-		$bill = $this->query("bills")->condition("subscriptions_id", $sid)->sort("due_date DESC")->one();
+		$bill = $this->models->get("bills")->query()->condition("subscriptions_id", $sid)->sort("due_date DESC")->one();
 		$reason = $this->models->get("orders")->errors("global", true);
 		$subscription["details"] = implode("\n", [
 			"<p><strong>Card:</strong>".$subscription["brand"]." xxxx".$subscription["number"]."</p>",
