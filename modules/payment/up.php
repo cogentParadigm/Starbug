@@ -71,7 +71,7 @@
 	$this->table(["payments", "groups" => false],
 		["amount", "type" => "int", "default" => "0"],
 		["response_code", "type" => "int"],
-		["txn_id", "type" => "string", "length" => "32"],
+		["txn_id", "type" => "string", "length" => "32", "default" => ""],
 		["card", "type" => "int", "references" => "payment_cards id", "null" => true, "default" => "NULL"],
 		["response", "type" => "text"]
 	);
