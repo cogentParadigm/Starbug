@@ -79,10 +79,12 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 					"scheduled" => "1"
 				]);
 			}
-		} else if (isset($this->models->get("payments")->insert_id)) {
-			//the payment was decline so add it to the bill and unschedule it
-			$payment = $this->models->get("payments")->insert_id;
-			$this->models->get("bills")->store(["id" => $subscription["bill"], "payments" => "+".$payment, "scheduled" => "0"]);
+		} else {
+			if (isset($this->models->get("payments")->insert_id)) {
+				//the payment was decline so add it to the bill and unschedule it
+				$payment = $this->models->get("payments")->insert_id;
+				$this->models->get("bills")->store(["id" => $subscription["bill"], "payments" => "+".$payment, "scheduled" => "0"]);
+			}
 			$this->sendDeclinedNotification($subscription["id"]);
 		}
 	}
@@ -150,7 +152,7 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 		}
 	}
 	protected function sendDeclinedNotification($sid) {
-		$subscription = $this->query()->condition("subscriptions.id", $sid)
+		$subscription = $this->models->get("subscriptions")->query()->condition("subscriptions.id", $sid)
 			->select("subscriptions.product.name as description,subscriptions.orders_id.email as email")
 			->select(["brand", "number", "month", "year"], "subscriptions.card")->one();
 		$bill = $this->query("bills")->condition("subscriptions_id", $sid)->sort("due_date DESC")->one();
