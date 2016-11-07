@@ -133,6 +133,10 @@ define([
 		},
 		onCancelUpload: function() {
 			this.set_status();
+		},
+		reset: function() {
+			this.store.setData([]);
+			this.refresh();
 		}
 	});
 });
