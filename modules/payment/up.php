@@ -161,4 +161,16 @@
 				"[payment:details]"
 		)
 	);
+	$this->store(
+		"email_templates",
+		["name" => "Payment Declined"],
+		array(
+			"subject" => "Your [site:name] payment was declined",
+			"body" => "<h2>Payment declined</h2>\n".
+				"<h3>Hello [user:first_name],</h3>\n".
+				"<p>Your payment was unsuccessful.</p>\n".
+				"<h3>Details</h3>\n".
+				"[payment:details]"
+		)
+	);
 ?>

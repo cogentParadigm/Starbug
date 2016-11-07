@@ -83,6 +83,7 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 			//the payment was decline so add it to the bill and unschedule it
 			$payment = $this->models->get("payments")->insert_id;
 			$this->models->get("bills")->store(["id" => $subscription["bill"], "payments" => "+".$payment, "scheduled" => "0"]);
+			$this->sendDeclinedNotification($subscription["id"]);
 		}
 	}
 	protected function saveSubscription($subscription) {
@@ -147,6 +148,23 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 			$record = ["orders_id" => $payment["orders_id"], "subscriptions_id" => $payment["subscriptions_id"], "response_code" => $code, "txn_id" => $txn_id, "amount" => $payment["amount"], "response" => $response->getData()->asXML()];
 			$this->models->get("payments")->store($record);
 		}
+	}
+	protected function sendDeclinedNotification($sid) {
+		$subscription = $this->query()->condition("subscriptions.id", $sid)
+			->select("subscriptions.product.name as description,subscriptions.orders_id.email as email")
+			->select(["brand", "number", "month", "year"], "subscriptions.card")->one();
+		$bill = $this->query("bills")->condition("subscriptions_id", $sid)->sort("due_date DESC")->one();
+		$reason = $this->models->get("orders")->errors("global", true);
+		$subscription["details"] = implode("\n", [
+			"<p><strong>Card:</strong>".$subscription["brand"]." xxxx".$subscription["number"]."</p>",
+			"<p><strong>Payment amount:</strong>".$this->priceFormatter->format($subscription["amount"])."</p>",
+			"<p><strong>Message:</strong> ".reset($reason)."</p>"
+		]);
+		$data = [
+			"user" => $this->user->getUser(),
+			"payment" => $subscription
+		];
+		$this->mailer->send(["template" => "Payment Declined", "to" => $subscription["email"]], $data);
 	}
 }
 ?>

@@ -1,12 +1,16 @@
 <?php
 namespace Starbug\Payment;
 use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\MailerInterface;
+use Starbug\Core\IdentityInterface;
 use Omnipay\Common\GatewayInterface as OmnipayInterface;
 use Omnipay\Common\CreditCard;
 class Gateway implements GatewayInterface {
-	public function __construct(ModelFactoryInterface $models, OmnipayInterface $gateway) {
+	public function __construct(ModelFactoryInterface $models, OmnipayInterface $gateway, MailerInterface $mailer, IdentityInterface $user) {
 		$this->models = $models;
 		$this->gateway = $gateway;
+		$this->mailer = $mailer;
+		$this->user = $user;
 	}
 	public function getName() {
 		return $this->gateway->getName();
