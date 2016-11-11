@@ -24,6 +24,8 @@ var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard,
 	noDataMessage:'No Results',
 	getBeforePut:false,
 	query:{},
+	deselectOnRefresh:false,
+	allowSelectAll:true,
 	constructor: function(args) {
 		if (args.model && args.action) {
 			args.query = args.query || {};
