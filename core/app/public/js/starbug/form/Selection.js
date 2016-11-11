@@ -54,7 +54,6 @@ define([
 			} else {
 				this.controls.style.display = 'block';
 			}
-			this.set_status();
 			for (var i = 0;i<items.length;i++) {
 				this.collection.put(items[i]);
 			}
@@ -80,15 +79,6 @@ define([
 				ids.push(this.prefix + this.collection.getIdentity(items[i]));
 			}
 			this.input.value = ids.join(',');
-		},
-		set_status: function(value) {
-			/**
-			 * updates the status indicator
-			 */
-			if (!value) this.statusNode.innerHTML = '';
-			else if (value == 'loading') {
-				this.statusNode.innerHTML = '<span class="fa fa-spinner fa-spin fa-lg"></span>';
-			}else this.statusNode.innerHTML = value;
 		}
 	});
 });
