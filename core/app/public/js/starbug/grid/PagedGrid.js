@@ -1,5 +1,6 @@
 define([
 	"dojo",
+	"dojo/on",
 	"starbug",
 	"sb",
 	"sb/data",
@@ -12,7 +13,7 @@ define([
 	"dgrid/Editor",
 	"dojo/_base/Deferred",
 	"dojo/dom-attr"
-], function(dojo, starbug, sb, data, api, GridFromHtml, List, Keyboard, Selector, Pagination, Editor, Deferred, attr){
+], function(dojo, on, starbug, sb, data, api, GridFromHtml, List, Keyboard, Selector, Pagination, Editor, Deferred, attr){
 window.dgrid = window.dgrid || {GridFromHtml:GridFromHtml};
 var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard, Selector, Pagination, Editor], {
 	pagingLinks: 2,
