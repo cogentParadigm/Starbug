@@ -36,8 +36,8 @@ var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard,
 		var grid = this;
 		for (var i in this.columns) if (typeof this.columns[i]['editor'] != "undefined") this.columns[i].autoSave = true;
 		//filter
-		on(this, '[data-filter='+this.model+']:change', function(e) {
-			self.applyFilterFromInput(e.target);
+		on(window.document, '[data-filter='+this.model+']:change', function(e) {
+			grid.applyFilterFromInput(e.target);
 		});
 	},
 	save: function () {
