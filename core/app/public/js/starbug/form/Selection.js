@@ -41,11 +41,11 @@ define([
 			}
 		},
 		add:function(items) {
-			var target_size = this.store.data.length + items.length;
+			var target_size = this.collection.data.length + items.length;
 			if (this.size == 0) {
 				//unlimited
 			} else if (this.size == 1) {
-				this.store.setData([]);
+				this.collection.setData([]);
 			} else if (target_size == this.size) {
 				this.controls.style.display = 'none';
 			} else if (target_size > this.size) {
@@ -56,7 +56,7 @@ define([
 			}
 			this.set_status();
 			for (var i = 0;i<items.length;i++) {
-				this.store.put(items[i]);
+				this.collection.put(items[i]);
 			}
 			if (items.length > 0) {
 				this.gridNode.style.display = 'block';
@@ -67,17 +67,17 @@ define([
 			window.dispatchEvent(new Event('resize'));
 		},
 		remove: function(item_id) {
-			this.store.remove(item_id);
+			this.collection.remove(item_id);
 			this.refresh();
 		},
 		refresh: function() {
 			this.grid.refresh();
-			this.grid.renderArray(this.store.data);
+			this.grid.renderArray(this.collection.data);
 			this.grid.set('collection', this.collection);
 			var ids = [];
-			var items = this.store.data;
+			var items = this.collection.data;
 			for (var i = 0;i<items.length;i++) {
-				ids.push(this.prefix + this.store.getIdentity(items[i]));
+				ids.push(this.prefix + this.collection.getIdentity(items[i]));
 			}
 			this.input.value = ids.join(',');
 		},
