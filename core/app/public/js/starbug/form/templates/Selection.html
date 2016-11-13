@@ -1,0 +1,13 @@
+<div class="form-group selection clearfix">
+	<input type="hidden" data-dojo-attach-point="input"/>
+	<div data-dojo-attach-point="gridNode" style="display:none">
+		<table data-dojo-attach-point="grid" class="dgrid-autoheight" data-dojo-type="starbug/grid/MemoryGrid">
+				<thead>
+						<tr>
+							<th data-dgrid-column="starbug.grid.columns.handle({field: 'id'})" class="field-drag">-</th>
+							<th data-dojo-attach-point="label" data-dgrid-column="starbug.grid.columns.html({field: 'label'})"></th>
+						</tr>
+				</thead>
+		</table>
+	</div>
+</div>
