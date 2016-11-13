@@ -2,6 +2,7 @@
 namespace Starbug\Db\Schema;
 class Schema implements SchemaInterface {
 	protected $tables = array();
+	protected $rows = array();
 	protected $hooks = array();
 	public function addHook(HookInterface $hook) {
 		$this->hooks[] = $hook;
@@ -33,6 +34,9 @@ class Schema implements SchemaInterface {
 		}
 		$this->invokeHooks("addTable", [$this->tables[$table], $ops, $this]);
 		return $this;
+	}
+	public function addRow($table, $keys, $defaults = array(), $immediate = false) {
+		$this->tables[$table]->addRow($keys, $defaults, $immediate);
 	}
 	public function getTable($table) {
 		$this->invokeHooks("getTable", [$this->tables[$table], $this]);

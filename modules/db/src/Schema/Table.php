@@ -3,6 +3,7 @@ namespace Starbug\Db\Schema;
 class Table {
 	protected $name;
 	protected $columns = array();
+	protected $rows = array();
 	protected $options = array();
 	protected $indexes = array();
 	protected $triggers = array();
@@ -23,8 +24,17 @@ class Table {
 			$this->columns[$name] = $column + ["dropped" => false];
 		}
 	}
+	public function addRow($keys, $defaults = array(), $immediate = false) {
+		$this->rows[] = ["keys" => $keys, "defaults" => $defaults, "immediate" => $immediate];
+	}
+	public function get($column, $key) {
+		return $this->columns[$column][$key];
+	}
 	public function set($column, $key, $value) {
 		$this->columns[$column][$key] = $value;
+	}
+	public function has($column, $key) {
+		return isset($this->columns[$column][$key]);
 	}
 	public function dropColumn($name) {
 		$this->columns[$name]["dropped"] = true;
@@ -37,6 +47,9 @@ class Table {
 		}
 		if (empty($primary)) $columns['id'] = ["type" => "int", "auto_increment" => true, "key" => "primary"];
 		return $columns;
+	}
+	public function getRows() {
+		return $this->rows;
 	}
 	public function setOption($name, $value) {
 		$this->options[$name] = $value;

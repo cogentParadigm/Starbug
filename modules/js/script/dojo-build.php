@@ -1,9 +1,6 @@
 <?php
 namespace Starbug\Js;
-class DojoBuildGenerateCommand {
-	public $dirs = array();
-	public $generate = array();
-	public $copy = array();
+class DojoBuildCommand {
 	public function __construct(DojoConfiguration $dojo, $base_directory) {
 		$this->dojo = $dojo;
 		$this->base_directory = $base_directory;

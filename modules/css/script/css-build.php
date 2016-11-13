@@ -3,17 +3,14 @@ namespace Starbug\Css;
 use Starbug\Core\ConfigInterface;
 use Starbug\Core\ResourceLocatorInterface;
 use Starbug\Core\CSSParser;
-class CssGenerateCommand {
-	public $dirs = array();
-	public $generate = array();
-	public $copy = array();
+class CssBuildCommand {
 	public function __construct($base_directory, ConfigInterface $config, CssLoader $css, ResourceLocatorInterface $locator) {
 		$this->base_directory = $base_directory;
 		$this->config = $config;
 		$this->css = $css;
 		$this->locator = $locator;
 	}
-	public function run($params) {
+	public function run($argv) {
 		$themes = $this->config->get("themes");
 		foreach ($themes as $name) {
 			$this->css->setTheme($name);
