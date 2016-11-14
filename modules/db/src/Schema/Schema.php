@@ -1,5 +1,6 @@
 <?php
 namespace Starbug\Db\Schema;
+use Starbug\Core\Bundle;
 class Schema implements SchemaInterface {
 	protected $tables = array();
 	protected $rows = array();
@@ -35,8 +36,13 @@ class Schema implements SchemaInterface {
 		$this->invokeHooks("addTable", [$this->tables[$table], $ops, $this]);
 		return $this;
 	}
-	public function addRow($table, $keys, $defaults = array(), $immediate = false) {
-		$this->tables[$table]->addRow($keys, $defaults, $immediate);
+	public function addRow($table, $keys, $defaults = array()) {
+		$row = new Bundle(["table" => $table, "keys" => $keys, "defaults" => $defaults]);
+		$this->rows[] = $row;
+		return $row;
+	}
+	public function getRows() {
+		return $this->rows;
 	}
 	public function getTable($table) {
 		$this->invokeHooks("getTable", [$this->tables[$table], $this]);
