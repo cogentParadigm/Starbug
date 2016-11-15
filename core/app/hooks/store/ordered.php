@@ -49,13 +49,19 @@ class hook_store_ordered extends QueryHook {
 		if (false !== $this->value) $value = $this->value;
 		if (empty($value)) return;
 		$select = array("id", $column);
-		if (!empty($argument)) $select = array_merge($select, array_keys($this->conditions));
+		if (!empty($argument)) $select = array_merge($select);
 		$id = $query->getId();
 		$row = array("id" => $id);
 		$ids = array($row['id']);
 		while (!empty($row)) {
 			$this->db->query($query->model)->condition("id", $row['id'])->set($column, $value)->raw()->update();
-			$row = $this->db->query($query->model)->select($select, $query->model)->conditions($this->conditions)->condition($query->model.".id", $ids, "!=")->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true))->condition($query->model.".".$column, $value)->one();
+			$row = $this->db->query($query->model)
+				->select($select, $query->model)
+				->select(array_keys($this->conditions))
+				->conditions($this->conditions)
+				->condition($query->model.".id", $ids, "!=")
+				->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true))
+				->condition($query->model.".".$column, $value)->one();
 			$ids[] = $row['id'];
 			$value += $this->increment;
 		}

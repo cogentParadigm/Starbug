@@ -75,7 +75,7 @@ $this->table(["entities", "groups" => "false"],
 	["description", "type" => "string", "length" => "255", "default" => ""]
 );
 $this->table(["blocks", "list" => "all"],
-	["uris_id", "type" => "int", "references" => "uris id", "alias" => "%path%"],
+	["uris_id", "type" => "int", "references" => "uris id", "alias" => "%path%", "delete" => "CASCADE"],
 	["region", "type" => "string", "length" => "64", "default" => "content"],
 	["type", "type" => "string", "length" => "32", "default" => "text"],
 	["content", "type" => "text", "default" => ""],
