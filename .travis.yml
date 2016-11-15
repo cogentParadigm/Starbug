@@ -19,6 +19,7 @@ before_install:
 
 install:
   - composer install
+  - npm install
 
 before_script:
   - sudo service postfix stop
@@ -38,7 +39,7 @@ before_script:
   - php sb migrate -t test
   - composer dump-autoload
 
-script: php sb test
+script: grunt phpunit
 
 notifications:
   email: false
