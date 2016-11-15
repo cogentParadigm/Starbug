@@ -32,7 +32,13 @@ class Migrator extends AbstractMigration {
 					}
 					if (isset($options["references"])) {
 						$parts = explode(" ", $options["references"]);
-						$t->addForeignKeyConstraint($this->db->prefix(array_shift($parts)), [$column], $parts);
+						$fkOptions = [];
+						foreach (["update", "delete"] as $option) {
+							if (!empty($options[$option])) {
+								$fkOptions["on".ucwords($option)] = $options[$option];
+							}
+						}
+						$t->addForeignKeyConstraint($this->db->prefix(array_shift($parts)), [$column], $parts, $fkOptions);
 					}
 					if (isset($options["index"])) {
 						$t->addIndex([$column]);
@@ -105,19 +111,24 @@ class Migrator extends AbstractMigration {
 		$rows = $this->schema->getRows();
 		foreach ($rows as $bundle) {
 			$row = $bundle->get();
+			$row["keys"] = $this->expandBundles($row["keys"]);
+			$row["defaults"] = $this->expandBundles($row["defaults"]);
 			$match = $this->db->query($row["table"])->conditions($row['keys'])->one();
 			if (empty($match)) {
 				$store = array_merge($row['keys'], $row['defaults']);
-				foreach ($store as $k => $v) {
-					if ($v instanceof Bundle) {
-						$ref = $this->db->query($v->get("table"))->conditions($v->get("keys"))->one();
-						$store[$k] = $ref["id"];
-					}
-				}
 				fwrite(STDOUT, "Inserting ".$row["table"]." record...\n");
 				$this->db->store($row["table"], $store);
 			}
 		}
+	}
+	protected function expandBundles($values) {
+		foreach ($values as $k => $v) {
+			if ($v instanceof Bundle) {
+				$ref = $this->db->query($v->get("table"))->conditions($v->get("keys"))->one();
+				$values[$k] = $ref["id"];
+			}
+		}
+		return $values;
 	}
 }
 ?>

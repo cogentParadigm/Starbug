@@ -104,18 +104,17 @@ class Migration extends AbstractMigration {
 		// CONTENT TYPES
 		$this->schema->addTable(["views", "base" => "uris", "description" => "A basic view"]);
 		$this->schema->addTable(["pages", "base" => "uris", "description" => "A basic page"]);
-		/*
+
 		// URIS
-		$this->uri("api", ["controller" => "apiRouting", "action" => "response"]);
-		$this->uri("profile", ["controller" => "profile"]);
+		$this->schema->addRow("uris", ["path" => "api"], ["controller" => "apiRouting", "action" => "response", "statuses" => "published"]);
+		$this->schema->addRow("uris", ["path" => "profile"], ["controller" => "profile", "statuses" => "published"]);
 		//Admin
-		$this->uri("admin", ["controller" => "admin", "action" => "default_action", "groups" => "admin", "theme" => "storm"]);
+		$this->schema->addRow("uris", ["path" => "admin"], ["controller" => "admin", "action" => "default_action", "groups" => "admin", "theme" => "storm", "statuses" => "published"]);
 		//Uploader
-		$this->uri("upload", ["controller" => "upload", "template" => "xhr", "groups" => "user"]);
+		$this->schema->addRow("uris", ["path" => "upload"], ["controller" => "upload", "template" => "xhr", "groups" => "user", "statuses" => "published"]);
 		//terms
-		$this->uri("terms", ["template" => "xhr", "groups" => "user"]);
-		$this->uri("robots", ["template" => "txt"]);
-		*/
+		$this->schema->addRow("uris", ["path" => "terms"], ["template" => "xhr", "groups" => "user", "statuses" => "published"]);
+		$this->schema->addRow("uris", ["path" => "robots"], ["template" => "txt", "statuses" => "published"]);
 
 		//admin menu
 		$content = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Content"]);
@@ -139,23 +138,19 @@ class Migration extends AbstractMigration {
 		$this->schema->addRow("terms", ["taxonomy" => "statuses", "term" => "Pending"]);
 		$this->schema->addRow("terms", ["taxonomy" => "statuses", "term" => "Published"]);
 		$this->schema->addRow("terms", ["taxonomy" => "statuses", "term" => "Private"]);
-		/*
+
 		//uris categories
-		$this->taxonomy("uris_categories",
-			["term" => "Uncategorized"]
-		);
+		$this->schema->addRow("terms", ["taxonomy" => "uris_categories", "term" => "Uncategorized"]);
+
 		//uris tags
-		$this->taxonomy("uris_tags",
-			["term" => "Uncategorized"]
-		);
+		$this->schema->addRow("terms", ["taxonomy" => "uris_tags", "term" => "Uncategorized"]);
+
 		//settings categories
-		$this->taxonomy("settings_category",
-			["term" => "General"],
-			["term" => "SEO"],
-			["term" => "Themes"],
-			["term" => "Email"]
-		);
-*/
+		$this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "General"]);
+		$this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "SEO"]);
+		$this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "Themes"]);
+		$this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "Email"]);
+
 		//general settings
 		$this->schema->addRow("settings", ["name" => "site_name"], ["category" => "settings_category general", "type" => "text", "label" => "Site Name", "autoload" => "1", "value" => "Starbug"]);
 		$this->schema->addRow("settings", ["name" => "tagline"], ["category" => "settings_category general", "type" => "text", "label" => "Tagline", "autoload" => "1", "value" => "Fresh XHTML and CSS, just like mom used to serve!"]);
