@@ -62,14 +62,13 @@ class Migrator extends AbstractMigration {
 		}
 		echo "Generating models..\n";
 		foreach ($tables as $name => $table) {
-			$this->generator->generate($this->definition, ["model" => $name, "base" => true]);
+			$this->generator->generate($this->definition, ["model" => $name, "update" => true]);
 		}
 		$this->populate();
 	}
 	protected function getType($column) {
 		$types = [
 			"int" => "integer",
-			"category" => "integer",
 			"bool" => "boolean",
 			"boolean" => "boolean",
 			"string" => "string",
@@ -80,7 +79,7 @@ class Migrator extends AbstractMigration {
 			"time" => "time",
 			"json" => "json"
 		];
-		return $types[$column["type"]];
+		return isset($types[$column["type"]]) ? $types[$column["type"]] : "integer";
 	}
 	protected function getOptions($column) {
 		$options = array();

@@ -32,7 +32,7 @@ class Model extends Definition {
 			"generate/model/base",
 				"var/models/".ucwords($options["model"])."Model.php"
 		);
-		if (empty($options["base"])) {
+		if (empty($options["update"])) {
 			$this->addTemplate(
 				"generate/model/model",
 					$this->module."/models/".ucwords($options["model"]).".php"

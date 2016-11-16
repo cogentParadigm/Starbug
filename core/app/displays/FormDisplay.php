@@ -61,14 +61,25 @@ class FormDisplay extends ItemDisplay {
 	 * filter columns to set the input type and some other defaults
 	 */
 	function filter($field, $options, $column) {
-		if (empty($options['input_type'])) $options['input_type'] = $column['input_type'];
+		if (empty($options['input_type'])) {
+			if ($column["type"] == "text") $options["input_type"] = "textarea";
+			else if ($column['type'] == "password") $options['input_type'] = "password";
+			else if ($column['type'] == "bool") $options['input_type'] = "checkbox";
+			else if ($column['type'] == "category") $options['input_type'] = "category_select";
+			else if ($column['type'] == "tags") $options['input_type'] = "tag_input";
+			else if (isset($column['upload'])) $options['input_type'] = "file_select";
+			else if ($column['type'] == "terms") $options['input_type'] = "multiple_category_select";
+			else if ($this->models->has($column['type'])) $options['input_type'] = "multiple_select";
+			else if (isset($column['references'])) $options['input_type'] = "select";
+			else $options['input_type'] = "text";
+		}
 		if ($options['input_type'] == "password") $options['class'] .= ((empty($options['class'])) ? "" : " ")."text";
 		else if ($column['type'] == "bool") $options['value'] = 1;
 		else if ($options['input_type'] == "datetime") $options['data-dojo-type'] = "starbug/form/DateTextBox";
 		else if ($options['input_type'] == "crud") {
 			if (empty($options['table'])) $options['table'] = (empty($column['table'])) ? $options['model']."_".$field : $column['table'];
 		} else if ($options['input_type'] == "category_select") {
-				if (empty($options['taxonomy'])) $options['taxonomy'] = (empty($column['taxonomy'])) ? $options['model']."_".$field : $column['taxonomy'];
+			if (empty($options['taxonomy'])) $options['taxonomy'] = (empty($column['taxonomy'])) ? $options['model']."_".$field : $column['taxonomy'];
 		}
 		if (!isset($options['required'])) {
 			$default = isset($column['default']);
