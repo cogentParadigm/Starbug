@@ -1,12 +1,6 @@
 <?php
-/**
- * Users model
- * @ingroup models
- */
 namespace Starbug\Users;
 use Starbug\Core\UsersModel;
-use Starbug\Core\Session;
-use \Etc;
 class Users extends UsersModel {
 
 	/**

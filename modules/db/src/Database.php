@@ -1,7 +1,6 @@
 <?php
 namespace Starbug\Core;
 use \PDO;
-use \Etc;
 /**
 * DatabaseInterface cannonical implementation
 */

@@ -1,6 +1,5 @@
 <?php
 namespace Starbug\Core;
-use \Etc;
 abstract class AbstractDatabase implements DatabaseInterface {
 	/**
 	* @var int holds the number of records returned by last query

@@ -3,8 +3,9 @@ namespace Starbug\Js;
 use Starbug\Core\ConfigInterface;
 class DojoConfiguration {
 	protected $options = false;
-	public function __construct(ConfigInterface $config) {
+	public function __construct(ConfigInterface $config, $environment) {
 		$this->config = $config;
+		$this->environment = $environment;
 	}
 	public function getConfiguration() {
 		$this->load();
@@ -37,6 +38,9 @@ class DojoConfiguration {
 		if (false === $this->options) {
 			$this->options = $this->config->get("dojo");
 		}
+	}
+	public function getEnvironment() {
+		return $this->environment;
 	}
 }
 ?>

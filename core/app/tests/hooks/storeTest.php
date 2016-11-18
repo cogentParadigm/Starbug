@@ -1,14 +1,5 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/app/tests/hooks/store/addslashes.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup test
- */
 namespace Starbug\Core;
-use \Etc;
 /**
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup test

@@ -2,15 +2,18 @@
 use \Interop\Container\ContainerInterface;
 use \Monolog\Logger;
 return array(
-	'environment' => Etc::ENVIRONMENT,
+	'environment' => 'development',
 	'database_name' => DEFAULT_DATABASE,
+	'website_url' => '/',
+	'time_zone' => 'America/Vancouver',
+	'hmac_key' => '',
 	'Starbug\Core\SettingsInterface' => DI\object('Starbug\Core\DatabaseSettings'),
 	'Starbug\Core\*Interface' => DI\object('Starbug\Core\*'),
 	'Starbug\Core\ResourceLocator' => DI\object()->constructor(DI\get('base_directory'), DI\get('modules')),
 	'Starbug\Core\ModelFactory' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Starbug\Core\CssGenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Starbug\Core\ErrorHandler' => DI\object()->constructorParameter("exceptionTemplate", defined('SB_CLI') ? "exception-cli" : "exception-html"),
-	'Starbug\Core\SessionStorage' => DI\object()->constructorParameter('key', ETC::HMAC_KEY),
+	'Starbug\Core\SessionStorage' => DI\object()->constructorParameter('key', DI\get('hmac_key')),
 	'Starbug\Core\URLInterface' => function(ContainerInterface $c) {
 		$request = $c->get("Starbug\Core\RequestInterface");
 		return $request->getURL();
@@ -28,7 +31,7 @@ return array(
 		return new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
 	},
 	'Starbug\Core\Database' => DI\object()
-		->method('setTimeZone', Etc::TIME_ZONE)
+		->method('setTimeZone', DI\get('time_zone'))
 		->method('setDatabase', DI\get('database_name')),
 	'Starbug\Core\Template' => DI\object()->constructorParameter('helpers', DI\get('Starbug\Core\HelperFactoryInterface')),
 	'Starbug\Core\Schemer' => DI\object()->constructorParameter('modules', DI\get('modules')),

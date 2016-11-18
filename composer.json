@@ -23,7 +23,7 @@
 	},
 	"scripts": {
 		"pre-install-cmd": "mkdir -p var",
-		"post-install-cmd": "php sb init",
+		"post-install-cmd": "php sb generate host",
 		"setup": [
 			"php sb setup",
 			"@composer dump-autoload"

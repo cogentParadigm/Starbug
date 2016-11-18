@@ -9,7 +9,7 @@
 	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 
-<?php if (Etc::ENVIRONMENT == "production") { ?>
+<?php if ($this->dojo->getEnvironment() == "production") { ?>
 
 	<script type="text/javascript" src="<?php echo $this->url->build("libraries/release/dojo/dojo/dojo.js"); ?>"></script>
 	<?php $response->js("dojo/parser"); ?>

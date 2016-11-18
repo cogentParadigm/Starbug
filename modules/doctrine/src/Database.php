@@ -4,7 +4,6 @@ use Starbug\Core\AbstractDatabase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Configuration;
-use \Etc;
 class Database extends AbstractDatabase {
 	protected $connection;
 	public function setDatabase($name) {
