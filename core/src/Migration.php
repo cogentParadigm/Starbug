@@ -8,7 +8,7 @@ class Migration extends AbstractMigration {
 	}
 	public function up() {
 		// This adds a table to the schema, The Schemer builds up a schema with all of the migrations that are to be run, and then updates the db
-		$this->schema->addTable(["users", "label_select" => "CONCAT(first_name, ' ', last_name, ' (', email, ')')", "groups" => true],
+		$this->schema->addTable(["users", "label_select" => "CONCAT(first_name, ' ', last_name)", "groups" => true],
 			["first_name", "type" => "string", "length" => "64", "list" => "true"],
 			["last_name", "type" => "string", "length" => "64", "list" => "true"],
 			["email", "type" => "string", "length" => "128", "unique" => "", "list" => "true"],
@@ -44,13 +44,13 @@ class Migration extends AbstractMigration {
 			["category", "type" => "category", "null" => ""],
 			["autoload", "type" => "bool", "default" => "0"]
 		);
-		$this->schema->addTable(["alias"],
+		$this->schema->addTable(["aliases", "singular" => "alias", "label_select" => "aliases.path"],
 			["path", "type" => "string", "length" => 255, "index" => true],
-			["alias", "type" => "string", "length" => 255, "index" => true]
+			["alias", "type" => "string", "length" => 255, "index" => true, "unique" => true]
 		);
 		$this->schema->addTable(["uris", "label" => "Pages", "singular_label" => "Page", "label_select" => "title", "groups" => true],
 			["title", "type" => "string", "length" => "128", "list" => "true"],
-			["path", "type" => "string", "length" => "64", "unique" => "", "list" => "true", "slug" => "title", "null" => "", "pattern" => "[path:token]"],
+			["path", "type" => "path", "path" => "uris/show/[uris:id]", "pattern" => "[uris:title]", "null" => true, "default" => "NULL"],
 			["template", "type" => "string", "length" => "64", "default" => "", "list" => "false"],
 			["categories", "type" => "terms", "optional" => ""],
 			["tags", "type" => "terms", "column" => "term"],
@@ -106,6 +106,7 @@ class Migration extends AbstractMigration {
 		$this->schema->addTable(["pages", "base" => "uris", "description" => "A basic page"]);
 
 		// URIS
+		/*
 		$this->schema->addRow("uris", ["path" => "api"], ["controller" => "apiRouting", "action" => "response", "statuses" => "published"]);
 		$this->schema->addRow("uris", ["path" => "profile"], ["controller" => "profile", "statuses" => "published"]);
 		//Admin
@@ -115,6 +116,7 @@ class Migration extends AbstractMigration {
 		//terms
 		$this->schema->addRow("uris", ["path" => "terms"], ["template" => "xhr", "groups" => "user", "statuses" => "published"]);
 		$this->schema->addRow("uris", ["path" => "robots"], ["template" => "txt", "statuses" => "published"]);
+		*/
 
 		//admin menu
 		$content = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Content"]);

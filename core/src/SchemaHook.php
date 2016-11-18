@@ -12,6 +12,8 @@ class SchemaHook implements HookInterface {
 		if ($column['type'] == "category") {
 			$table->set($name, "references", "terms id");
 			$table->set($name, "alias", "%taxonomy% %slug%");
+		} else if ($column["type"] == "path") {
+			$table->set($name, "references", "aliases id");
 		}
 		$access_col = false;
 		if ($table->getName() !== "permits" && isset($column['user_access'])) {
