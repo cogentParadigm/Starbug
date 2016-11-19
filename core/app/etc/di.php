@@ -7,6 +7,36 @@ return array(
 	'website_url' => '/',
 	'time_zone' => 'America/Vancouver',
 	'hmac_key' => '',
+	'routes' => [
+		"api" => [
+			"controller" => "apiRouting",
+			"action" => "response"
+		],
+		"profile" => [
+			"title" => "Profile",
+			"controller" => "profile"
+		],
+		"admin" => [
+			"title" => "Admin",
+			"controller" => "admin",
+			"action" => "default_action",
+			"groups" => "admin",
+			"theme" => "storm"
+		],
+		"upload" => [
+			"title" => "Upload",
+			"controller" => "upload",
+			"template" => "xhr",
+			"groups" => "user"
+		],
+		"terms" => [
+			"template" => "xhr",
+			"groups" => "user"
+		],
+		"robots" => [
+			"template" => "txt"
+		]
+	],
 	'Starbug\Core\SettingsInterface' => DI\object('Starbug\Core\DatabaseSettings'),
 	'Starbug\Core\*Interface' => DI\object('Starbug\Core\*'),
 	'Starbug\Core\ResourceLocator' => DI\object()->constructor(DI\get('base_directory'), DI\get('modules')),
@@ -18,6 +48,11 @@ return array(
 		$request = $c->get("Starbug\Core\RequestInterface");
 		return $request->getURL();
 	},
+	'Starbug\Core\Routing\Router' => DI\object()
+		->method('addStorage', DI\get('Starbug\Core\Routing\MemoryRouteStorage'))
+		->method('addAliasStorage', DI\get('Starbug\Core\Routing\DatabaseAliasStorage')),
+	'Starbug\Core\Routing\*Interface' => DI\object('Starbug\Core\Routing\*'),
+	'Starbug\Core\Routing\MemoryRouteStorage' => DI\object()->method('addRoutes', DI\get('routes')),
 	'Starbug\Core\Images' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'databases.default' => function(ContainerInterface $c) {
 		$config = $c->get("Starbug\Core\ConfigInterface");
@@ -30,6 +65,12 @@ return array(
 		$params = $config->get("db/test");
 		return new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
 	},
+	'db.schema.migrations' => [
+		DI\get('Starbug\Core\Migration')
+	],
+	'db.schema.hooks' => [
+		DI\get('Starbug\Core\SchemaHook')
+	],
 	'Starbug\Core\Database' => DI\object()
 		->method('setTimeZone', DI\get('time_zone'))
 		->method('setDatabase', DI\get('database_name')),

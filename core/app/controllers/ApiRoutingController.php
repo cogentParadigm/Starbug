@@ -1,5 +1,6 @@
 <?php
 namespace Starbug\Core;
+use Starbug\Core\Routing\RouterInterface;
 class ApiRoutingController extends Controller {
 	function __construct(ControllerFactoryInterface $controllers, RouterInterface $router, ApiRequest $api) {
 		$this->controllers = $controllers;
