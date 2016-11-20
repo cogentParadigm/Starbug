@@ -25,7 +25,7 @@ class Definition {
 		return $this->copy;
 	}
 	public function addTemplate($source, $destination) {
-		$this->templates[$source] = $destination;
+		$this->templates[$destination] = $source;
 	}
 	public function getTemplates() {
 		return $this->templates;

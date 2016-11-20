@@ -16,7 +16,7 @@ class Generator {
 			if (!file_exists($this->base_directory."/".$dir)) passthru("mkdir ".$this->base_directory."/".$dir);
 		}
 		//CREATE FILES
-		foreach ($definition->getTemplates() as $template => $output) {
+		foreach ($definition->getTemplates() as $output => $template) {
 			$data = $this->renderer->capture($template, $definition->getParameters());
 			file_put_contents($this->base_directory."/".$output, $data);
 		}
