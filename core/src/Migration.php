@@ -1,11 +1,7 @@
 <?php
 namespace Starbug\Core;
-use Starbug\Db\Schema\SchemaInterface;
 use Starbug\Db\Schema\AbstractMigration;
 class Migration extends AbstractMigration {
-	public function __construct(SchemaInterface $schema) {
-		$this->schema = $schema;
-	}
 	public function up() {
 		// This adds a table to the schema, The Schemer builds up a schema with all of the migrations that are to be run, and then updates the db
 		$this->schema->addTable(["users", "label_select" => "CONCAT(first_name, ' ', last_name)", "groups" => true],
