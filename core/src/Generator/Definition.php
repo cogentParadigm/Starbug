@@ -52,5 +52,11 @@ class Definition {
 			$this->setModule("app/themes/".$options["theme"]);
 		}
 	}
+	public function reset() {
+		$this->directories = [];
+		$this->templates = [];
+		$this->copy = [];
+		$this->parameters = [];
+	}
 }
 ?>
