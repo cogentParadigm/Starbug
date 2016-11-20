@@ -3,10 +3,10 @@ use \Interop\Container\ContainerInterface;
 use \Monolog\Handler\StreamHandler;
 use \Monolog\Handler\PHPConsoleHandler;
 return array(
-	'base_directory' => BASE_DIR,
 	'modules' => array(
 		"Starbug\Core" => "core/app",
 		"Starbug\Db" => "modules/db",
+		"Starbug\Doctrine" => "modules/doctrine",
 		"Starbug\Users" => "modules/users",
 		"Starbug\Emails" => "modules/emails",
 		"Starbug\Files" => "modules/files",

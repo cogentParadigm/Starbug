@@ -586,16 +586,16 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	function test_insert() {
 		//the insert method is normally an execution method
 		//passing false prevents the query from actually running
-		$query = $this->db->query("uris");
-		$query->set("path", "phpunit")->insert(false);
+		$query = $this->db->query("users");
+		$query->set("first_name", "PHPUnit")->insert(false);
 
 		//expected output (actual output contains extra fields due to validation)
-		$expected = "INSERT INTO `".$this->db->prefix("uris")."` SET `path` = :set0";
+		$expected = "INSERT INTO `".$this->db->prefix("users")."` SET `first_name` = :set0";
 
 		//compare
 		$actual = reset(explode(",", $query->build()));
 		$this->assertSame($expected, $actual);
-		$this->assertSame("phpunit", $query->parameters[":set0"]);
+		$this->assertSame("PHPUnit", $query->parameters[":set0"]);
 	}
 
 	function test_update() {

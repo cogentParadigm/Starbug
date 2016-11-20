@@ -3,7 +3,6 @@ use \Interop\Container\ContainerInterface;
 use \Monolog\Logger;
 return array(
 	'environment' => 'development',
-	'database_name' => DEFAULT_DATABASE,
 	'website_url' => '/',
 	'time_zone' => 'America/Vancouver',
 	'hmac_key' => '',
