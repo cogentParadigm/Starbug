@@ -36,7 +36,7 @@ before_script:
   - cat app/etc/db/default.json
   - cat app/etc/db/test.json
   - echo 'root' | composer setup
-  - php sb migrate -t test
+  - php sb migrate -t -db=test
   - composer dump-autoload
 
 script: grunt phpunit
