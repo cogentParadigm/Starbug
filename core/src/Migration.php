@@ -15,16 +15,6 @@ class Migration extends AbstractMigration {
 			["password", "type" => "password", "confirm" => "password_confirm", "optional_update" => ""],
 			["last_visit", "type" => "datetime", "default" => "0000-00-00 00:00:00", "list" => "true", "display" => "false"]
 		);
-		//This will be stored immediately after the creation of the users table
-		$this->schema->addRow("users", ["email" => "root"], ["groups" => "root,admin"]);
-		$this->schema->addTable(["permits", "list" => "all", "groups" => true],
-			["role", "type" => "string", "length" => "30"],
-			["who", "type" => "int", "default" => "0"],
-			["action", "type" => "string", "length" => "100"],
-			["priv_type", "type" => "string", "length" => "30", "default" => "table"],
-			["related_table", "type" => "string", "length" => "100"],
-			["related_id", "type" => "int", "default" => "0"]
-		);
 		$this->schema->addTable(["terms", "label_select" => "terms.term"],
 			["term", "type" => "string", "length" => "128"],
 			["slug", "type" => "string", "length" => "128", "unique" => "taxonomy parent", "display" => "false", "default" => "", "slug" => "term"],
@@ -33,6 +23,17 @@ class Migration extends AbstractMigration {
 			["parent", "type" => "int", "default" => "0", "input_type" => "category_select", "readonly" => "", "materialized_path" => "term_path"],
 			["position", "type" => "int", "ordered" => "taxonomy parent", "display" => "false"],
 			["term_path", "type" => "string", "length" => "255", "default" => "", "display" => "false"]
+		);
+		$this->schema->addColumn("users",
+			["groups", "type" => "terms", "taxonomy" => "groups", "user_access" => true, "optional" => true]
+		);
+		$this->schema->addTable(["permits", "list" => "all", "groups" => true],
+			["role", "type" => "string", "length" => "30"],
+			["who", "type" => "int", "default" => "0"],
+			["action", "type" => "string", "length" => "100"],
+			["priv_type", "type" => "string", "length" => "30", "default" => "table"],
+			["related_table", "type" => "string", "length" => "100"],
+			["related_id", "type" => "int", "default" => "0"]
 		);
 		$this->schema->addTable("settings",
 			["name", "type" => "string", "length" => "255"],
@@ -101,22 +102,11 @@ class Migration extends AbstractMigration {
 			["status", "type" => "string", "default" => ""],
 			["message", "type" => "text", "default" => ""]
 		);
+
+		$this->schema->addRow("users", ["email" => "root"], ["groups" => "root,admin"]);
 		// CONTENT TYPES
 		$this->schema->addTable(["views", "base" => "uris", "description" => "A basic view"]);
 		$this->schema->addTable(["pages", "base" => "uris", "description" => "A basic page"]);
-
-		// URIS
-		/*
-		$this->schema->addRow("uris", ["path" => "api"], ["controller" => "apiRouting", "action" => "response", "statuses" => "published"]);
-		$this->schema->addRow("uris", ["path" => "profile"], ["controller" => "profile", "statuses" => "published"]);
-		//Admin
-		$this->schema->addRow("uris", ["path" => "admin"], ["controller" => "admin", "action" => "default_action", "groups" => "admin", "theme" => "storm", "statuses" => "published"]);
-		//Uploader
-		$this->schema->addRow("uris", ["path" => "upload"], ["controller" => "upload", "template" => "xhr", "groups" => "user", "statuses" => "published"]);
-		//terms
-		$this->schema->addRow("uris", ["path" => "terms"], ["template" => "xhr", "groups" => "user", "statuses" => "published"]);
-		$this->schema->addRow("uris", ["path" => "robots"], ["template" => "txt", "statuses" => "published"]);
-		*/
 
 		//admin menu
 		$content = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Content"]);
