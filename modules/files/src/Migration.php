@@ -1,11 +1,7 @@
 <?php
 namespace Starbug\Files;
-use Starbug\Db\Schema\SchemaInterface;
 use Starbug\Db\Schema\AbstractMigration;
 class Migration extends AbstractMigration {
-	public function __construct(SchemaInterface $schema) {
-		$this->schema = $schema;
-	}
 	public function up() {
 		$this->schema->addTable(["files", "list" => "all"],
 			["filename", "type" => "string", "length" => "128"],
@@ -22,11 +18,7 @@ class Migration extends AbstractMigration {
 		$this->schema->addColumn("terms", ["images", "type" => "files", "optional" => ""]);
 
 		//files category
-		/*
-		$this->taxonomy("files_category",
-			["term" => "Uncategorized"]
-		);
-		*/
+		$this->schema->addRow("terms", ["taxonomy" => "files_category", "term" => "Uncategorized"]);
 	}
 }
 ?>

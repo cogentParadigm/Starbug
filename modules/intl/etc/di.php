@@ -4,6 +4,9 @@ return [
 		"address" => [
 			"controller" => "address"
 		]
+	]),
+	'db.schema.migrations' => DI\add([
+		DI\get('Starbug\Intl\Migration')
 	])
 ]
 ?>

@@ -7,6 +7,9 @@ return array(
 		"product" => ["controller" => "product"],
 		"subscriptions" => ["controller" => "subscriptions", "title" => "Subscriptions"]
 	]),
+	'db.schema.migrations' => DI\add([
+		DI\get('Starbug\Payment\Migration')
+	]),
 	'cart_token' => function(ContainerInterface $c) {
 			$request = $c->get("Starbug\Core\RequestInterface");
 			$url = $c->get("Starbug\Core\URLInterface");
