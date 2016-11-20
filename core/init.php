@@ -10,16 +10,10 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERRO
 
 include(BASE_DIR."/core/autoload.php");
 
-$di = include(BASE_DIR."/etc/di.php");
-$locator = new Starbug\Core\ResourceLocator($di['base_directory'], $di['modules']);
-$builder = new DI\ContainerBuilder();
-$builder->addDefinitions($di);
-foreach ($locator->locate("di.php", "etc") as $defs) $builder->addDefinitions($defs);
-$container = $builder->build();
+$factory = new Starbug\Core\ContainerFactory(str_replace("/core", "", dirname(__FILE__)));
+$container = $factory->build($args);
 
 date_default_timezone_set($container->get('time_zone'));
-$container->set('Interop\Container\ContainerInterface', $container);
-$container->set('Starbug\Core\ResourceLocatorInterface', $locator);
 $container->get("Starbug\Core\ErrorHandler")->register();
 
 ?>

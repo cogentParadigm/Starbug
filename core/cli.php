@@ -1,6 +1,15 @@
 <?php
 if (!defined("SB_CLI")) define("SB_CLI", true);
 
+$args = array();
+foreach ($argv as $i => $arg) {
+	if (0 === strpos($arg, "-")) {
+		$arg = str_replace("-", "", $arg);
+		$parts = (false !== strpos($arg, "=")) ? explode("=", $arg, 2) : array($arg, true);
+		$args[$parts[0]] = $parts[1];
+	}
+}
+
 include("init.php");
 
 $url = $container->make("Starbug\Core\URL", array('base_directory' => $container->get("website_url")));
