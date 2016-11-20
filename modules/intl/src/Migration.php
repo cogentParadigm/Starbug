@@ -36,8 +36,8 @@ class Migration extends AbstractMigration {
 		);
 
 		foreach (array("settings", "uris", "terms", "countries") as $m) {
-			$this->addColumn($m, ["language", "type" => "string", "default" => "", "input_type" => "select", "select" => "languages.*", "from" => "languages", "caption" => "%name%", "value" => "language", "optional" => "", "index" => ""]);
-			$this->addColumn($m, ["source", "type" => "int", "references" => "$m id", "null" => "", "index" => "", "constraint" => false, "default" => "NULL", "display" => false]);
+			$this->schema->addColumn($m, ["language", "type" => "string", "default" => "", "input_type" => "select", "select" => "languages.*", "from" => "languages", "caption" => "%name%", "value" => "language", "optional" => "", "index" => ""]);
+			$this->schema->addColumn($m, ["source", "type" => "int", "references" => "$m id", "null" => "", "index" => "", "constraint" => false, "default" => "NULL", "display" => false]);
 		}
 
 		$this->schema->addTable(["address", "groups" => false],

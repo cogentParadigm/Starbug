@@ -65,6 +65,9 @@ class Table {
 		$key = implode("_", $columns);
 		$this->indexes[$key]["dropped"] = true;
 	}
+	function getIndexes() {
+		return $this->indexes;
+	}
 	public function drop() {
 		$this->dropped = true;
 	}

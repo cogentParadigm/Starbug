@@ -23,6 +23,7 @@ class Migrator extends AbstractMigration {
 		foreach ($tables as $name => $table) {
 			$t = $to->createTable($this->db->prefix($name));
 			$columns = $table->getColumns();
+			$indexes = $table->getIndexes();
 			$primary = [];
 			foreach ($columns as $column => $options) {
 				if (!$this->schema->hasTable($options["type"])) {
@@ -49,6 +50,9 @@ class Migrator extends AbstractMigration {
 				}
 			}
 			$t->setPrimaryKey($primary);
+			foreach ($indexes as $index) {
+				$t->addIndex($index["columns"]);
+			}
 		}
 		$diff = $comparator->compare($from, $to);
 		$sql = $diff->toSaveSql($conn->getDatabasePlatform());
