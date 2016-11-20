@@ -35,7 +35,8 @@ before_script:
   - sed -i 's/"db":"test"/"db":"starbug_ci_test"/' app/etc/db/test.json
   - cat app/etc/db/default.json
   - cat app/etc/db/test.json
-  - echo 'root' | composer setup
+  - echo 'root' | php sb setup
+  - composer dump-autoload
   - php sb migrate -t -db=test
   - composer dump-autoload
 

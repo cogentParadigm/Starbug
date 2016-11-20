@@ -24,10 +24,6 @@
 	"scripts": {
 		"pre-install-cmd": "mkdir -p var",
 		"post-install-cmd": "php sb generate host",
-		"setup": [
-			"php sb setup",
-			"@composer dump-autoload"
-		],
 		"migrate": [
 			"php sb migrate",
 			"@composer dump-autoload"
