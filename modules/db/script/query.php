@@ -1,13 +1,6 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file script/query.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup script
- */
-namespace Starbug\Core;
+namespace Starbug\Db;
+use Starbug\Core\DatabaseInterface;
 class QueryCommand {
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
