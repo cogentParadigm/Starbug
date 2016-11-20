@@ -22,6 +22,6 @@
 		fwrite(STDOUT, "\nusername: root");
 		fwrite(STDOUT, "\npassword: $admin_pass\n\n");
 		//UPDATE PASSWORD
-		$errors = $db->store("users", array("password" => $admin_pass, "email" => "root", "groups" => "root,admin"));
+		$errors = $db->store("users", array("id" => $root_user["id"], "password" => $admin_pass, "groups" => "root,admin"));
 	}
 ?>
