@@ -113,12 +113,6 @@
 		["bills", "type" => "bills", "table" => "bills"]
 	);
 
-
-	$this->uri("cart", ["controller" => "cart", "title" => "Shopping Cart"]);
-	$this->uri("checkout", ["controller" => "checkout"]);
-	$this->uri("product", ["controller" => "product"]);
-	$this->uri("subscriptions", ["controller" => "subscriptions"]);
-
 	$this->permit("orders::checkout", ["owner", "priv_type" => "global"]);
 	$this->permit("orders::payment", ["owner", "priv_type" => "global"]);
 	$this->permit("subscriptions::update", ["owner", "priv_type" => "global"]);

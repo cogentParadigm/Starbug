@@ -103,16 +103,6 @@ $this->table(["queues", "groups" => "false"],
 // CONTENT TYPES
 $this->table(["views", "base" => "uris", "description" => "A basic view"]);
 $this->table(["pages", "base" => "uris", "description" => "A basic page"]);
-// URIS
-$this->uri("api", ["controller" => "apiRouting", "action" => "response"]);
-$this->uri("profile", ["controller" => "profile"]);
-//Admin
-$this->uri("admin", ["controller" => "admin", "action" => "default_action", "groups" => "admin", "theme" => "storm"]);
-//Uploader
-$this->uri("upload", ["controller" => "upload", "template" => "xhr", "groups" => "user"]);
-//terms
-$this->uri("terms", ["template" => "xhr", "groups" => "user"]);
-$this->uri("robots", ["template" => "txt"]);
 
 //Admin Menu
 $this->menu("admin",

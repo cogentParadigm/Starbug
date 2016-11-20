@@ -1,6 +1,12 @@
 <?php
 use \Interop\Container\ContainerInterface;
 return array(
+	'routes' => DI\add([
+		"cart" => ["controller" => "cart", "title" => "Shopping Cart"],
+		"checkout" => ["controller" => "checkout", "title" => "Checkout"],
+		"product" => ["controller" => "product"],
+		"subscriptions" => ["controller" => "subscriptions", "title" => "Subscriptions"]
+	]),
 	'cart_token' => function(ContainerInterface $c) {
 			$request = $c->get("Starbug\Core\RequestInterface");
 			$url = $c->get("Starbug\Core\URLInterface");

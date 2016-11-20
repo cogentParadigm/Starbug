@@ -49,6 +49,4 @@
 		["organization", "type" => "string", "length" => "128"],
 		["recipient", "type" => "string", "length" => "128"]
 	);
-
-	$this->uri("address", ["controller" => "address"]);
 ?>

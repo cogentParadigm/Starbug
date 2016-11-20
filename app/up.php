@@ -7,59 +7,6 @@
  *
  * after updating this file, run 'sb migrate' to apply changes
  */
-
-
-/*********************************************************
- * Uris
- * a uri is an entry in the uris table which corresponds to a page
- * setting the path to "my-new-page" will mean that the page
- * can be accessed at the /my-new-page and edited at app/views/my-new-page.php
- *
- *
- * add a uri (a new page in app/views/)
- * $this->uri("[path]", ["property1" => "value1", "property2" => "value2"]);
- * some properties:
- * title - the page title
- * groups - a list of groups that have access (see etc/groups.json for available groups)
- *
- *
- * * examples
- *
- * //create a page called register that loads the view app/views/register.php
- * $this->uri("register");
- *
- * //create a page called secret-sauce that can only be accessed by users in the user group
- * $this->uri("secret-sauce", ["groups" => "user"]);
- *
- *
- * Blocks
- * a block is a CMS region. Place content in blocks if you want it to be editable.
- *
- * add a block
- * $this->block("[path]", "[content]", ["option" => "value", "option2" => "value2"]);
- * options:
- * region - a region name (default is 'content'). If an existing block is found in the same region for the same page, it will not be stored
- * type - the block type. default is 'text'
- * position - specify to add additional blocks in the same space
- *
- ********************************************************/
-//HOME PAGE
-$this->uri("home", ["type" => "views", "layout" => "home"]);
-$this->block("home", "<h1>Congratulations, she rides!</h1>\n<p>You&#39;ve successfully installed Starbug PHP!</p>");
-//404 PAGE
-$this->uri("missing", ["title" => "404 - Not Found", "type" => "views"]);
-$this->block("missing", "<p><strong>Oops! The page you are looking for was not found.</strong></p>");
-//403 PAGE
-$this->uri("forbidden", ["type" => "views"]);
-//LOGIN/LOGOUT PAGES
-$this->uri("login", ["controller" => "login"]);
-$this->uri("logout", ["controller" => "login", "action" => "logout"]);
-$this->uri("forgot-password", ["controller" => "login", "action" => "forgot_password"]);
-
-
-
-
-
 /*********************************************************
  * Permits
  * permits allow you to define who can call what functions by submitting an HTML form.
