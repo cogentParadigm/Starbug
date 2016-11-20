@@ -5,6 +5,7 @@ class Host extends Definition {
 	public function build($options = []) {
 		parent::build($options);
 		if (!file_exists("var/etc/di.php")) {
+			$this->addDirectory("var/etc");
 			$this->setParameter("hmac_key", md5(uniqid(rand(), TRUE)));
 			$this->addTemplate("generate/host/di", "var/etc/di.php");
 		}
