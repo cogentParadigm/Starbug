@@ -9,7 +9,7 @@ class ContainerFactory {
 		$this->base_directory = $base_directory;
 	}
 	public function build($options = array()) {
-		$options = $options + $this->defaults;
+		$options = is_array($options) ? $options + $this->defaults : $this->defaults;
 		$di = include($this->base_directory."/etc/di.php");
 		$di["base_directory"] = $this->base_directory;
 		$di["database_name"] = $options["db"];
