@@ -84,10 +84,16 @@ class SchemaHook implements HookInterface {
 	}
 	public function getTable(Table $table, SchemaInterface $schema) {
 		$model = $table->getName();
+		$columns = $table->getColumns();
+		$search_cols = array_keys($columns);
+		foreach ($search_cols as $colname_index => $colname_value) {
+			if ($schema->hasTable($colname_value) || $this->models->has($colname_value)) unset($search_cols[$colname_index]);
+		}
 		$defaults = array(
 			"name" => $model,
 			"label" => ucwords(str_replace(array("-", "_"), array(" ", " "), $model)),
-			"singular" => rtrim($model, 's')
+			"singular" => rtrim($model, 's'),
+			"search" => $model.'.'.implode(",$model.", $search_cols)
 		);
 		$defaults["singular_label"] = ucwords(str_replace(array("-", "_"), array(" ", " "), $defaults["singular"]));
 		foreach ($defaults as $key => $value) {
@@ -95,7 +101,6 @@ class SchemaHook implements HookInterface {
 				$table->setOption($key, $value);
 			}
 		}
-		$columns = $table->getColumns();
 		foreach ($columns as $name => $column) {
 			if (!$table->has($name, $column["type"])) {
 				$table->set($name, $column["type"], "");
