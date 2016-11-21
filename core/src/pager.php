@@ -1,22 +1,5 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file util/pager.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup pager
- */
 namespace Starbug\Core;
-/**
- * @defgroup pager
- * pager utility
- * @ingroup util
- */
-/**
- * pagination class
- * @ingroup pager
- */
 class pager {
 	var $count; //total number of items
 	var $per; //items per page
