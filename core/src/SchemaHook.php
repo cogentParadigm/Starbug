@@ -87,7 +87,7 @@ class SchemaHook implements HookInterface {
 		$columns = $table->getColumns();
 		$search_cols = array_keys($columns);
 		foreach ($search_cols as $colname_index => $colname_value) {
-			if ($schema->hasTable($colname_value) || $this->models->has($colname_value)) unset($search_cols[$colname_index]);
+			if ($schema->hasTable($columns[$colname_value]["type"]) || $this->models->has($columns[$colname_value]["type"])) unset($search_cols[$colname_index]);
 		}
 		$defaults = array(
 			"name" => $model,
