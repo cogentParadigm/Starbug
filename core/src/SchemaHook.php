@@ -2,12 +2,12 @@
 namespace Starbug\Core;
 use Starbug\Db\Schema\HookInterface;
 use Starbug\Db\Schema\SchemaInterface;
-use Starbug\Db\Schema\Table;
+use Starbug\Db\Schema\Table as SchemaTable;
 class SchemaHook implements HookInterface {
 	public function __construct(ModelFactoryInterface $models) {
 		$this->models = $models;
 	}
-	public function addColumn($column, Table $table, SchemaInterface $schema) {
+	public function addColumn($column, SchemaTable $table, SchemaInterface $schema) {
 		$name = array_shift($column);
 		if ($column['type'] == "category") {
 			$table->set($name, "references", "terms id");
@@ -42,7 +42,7 @@ class SchemaHook implements HookInterface {
 			}
 		}
 	}
-	public function addTable(Table $table, array $options, SchemaInterface $schema) {
+	public function addTable(SchemaTable $table, array $options, SchemaInterface $schema) {
 		if ($table->hasOption('base') && $table->getOption('base') !== $table->getName()) {
 			//find the root
 			$base = $schema->getTable($table->getOption('base'));
@@ -82,7 +82,7 @@ class SchemaHook implements HookInterface {
 			}
 		}
 	}
-	public function getTable(Table $table, SchemaInterface $schema) {
+	public function getTable(SchemaTable $table, SchemaInterface $schema) {
 		$model = $table->getName();
 		$columns = $table->getColumns();
 		$search_cols = array_keys($columns);
