@@ -10,9 +10,9 @@ define(["dojo/_base/declare", "starbug/form/editable/Editable", "dijit/form/Sele
 			}
 			this.editorParams.labelAttr = 'label';
 			this.editorParams.onSetStore = function(store, items) {
-				this.options.unshift({label:'&nbsp;', value:'NULL'});
+				this.options.unshift({label:'&nbsp;', value:''});
 				this._loadChildren();
-				//this.set('value', self.get('value'));
+				this.set('value', self.get('value'));
 			};
 			this.editorParams.sortByLabel = false;
 		},
