@@ -49,8 +49,7 @@ class CssLoader {
 		$this->less = false;
 		$this->options = [
 			"screen" => [
-				"rel" => "stylesheet",
-				"href" => "var/public/stylesheets/".$this->response->theme."-screen.css"
+				["rel" => "stylesheet", "href" => "var/public/stylesheets/".$this->response->theme."-screen.css"]
 			]
 		];
 	}
