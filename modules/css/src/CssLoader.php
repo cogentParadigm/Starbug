@@ -34,6 +34,7 @@ class CssLoader {
 	public function setTheme($name) {
 		$this->modules["Starbug\Theme"] = "app/themes/".$name;
 		$this->locator->set("Starbug\Theme", "app/themes/".$name);
+		$this->response->theme = $name;
 		$this->options = false;
 	}
 	protected function load($reload = false) {
