@@ -13,6 +13,7 @@ return array(
 		"Starbug\Comments" => "modules/comments",
 		"Starbug\Css" => "modules/css",
 		"Starbug\Js" => "modules/js",
+		"Starbug\Content" => "modules/content",
 		"Starbug\Theme" => "app/themes/starbug-1",
 		"Starbug\Var" => "var",
 		"Starbug\App" => "app"
