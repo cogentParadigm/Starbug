@@ -20,7 +20,7 @@ class PagesTest extends ModelTest {
 		//re fetch and test for updates
 		$object = $this->models->get("pages")->load(array("path.alias" => "phpunit"), true);
 
-		$block = $this->db->get("blocks", array("pages_id" => $object["pages_id"]), ["limit" => "1"]);
+		$block = $this->db->get("blocks", array("pages_id" => $object["id"]), ["limit" => "1"]);
 		$this->assertEquals("Test Title", $object['title']);
 		$this->assertEquals("Test Content", $block['content']);
 	}
