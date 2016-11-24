@@ -93,7 +93,6 @@ class Migration extends AbstractMigration {
 		//settings categories
 		$this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "General"]);
 		$this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "SEO"]);
-		$this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "Themes"]);
 		$this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "Email"]);
 
 		//general settings
@@ -102,8 +101,6 @@ class Migration extends AbstractMigration {
 		//seo settings
 		$this->schema->addRow("settings", ["name" => "meta"], ["category" => "settings_category seo", "type" => "textarea", "label" => "Custom Analytics, etc..", "autoload" => "1"]);
 		$this->schema->addRow("settings", ["name" => "seo_hide"], ["category" => "settings_category seo", "type" => "checkbox", "value" => "1", "label" => "Hide from search engines", "autoload" => "1"]);
-		//theme settings
-		$this->schema->addRow("settings", ["name" => "theme"], ["category" => "settings_category themes", "type" => "text", "label" => "Theme", "autoload" => "1", "value" => "starbug-1"]);
 		//email settings
 		$this->schema->addRow("settings", ["name" => "email_address"], ["category" => "settings_category email", "type" => "text", "label" => "Email Address"]);
 		$this->schema->addRow("settings", ["name" => "email_host"], ["category" => "settings_category email", "type" => "text", "label" => "Email Host"]);

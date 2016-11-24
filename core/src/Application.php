@@ -1,6 +1,5 @@
 <?php
 namespace Starbug\Core;
-use Starbug\Css\CssLoader;
 use Starbug\Core\Routing\RouterInterface;
 class Application implements ApplicationInterface {
 
@@ -11,7 +10,6 @@ class Application implements ApplicationInterface {
 	protected $response;
 	protected $config;
 	protected $session;
-	protected $css;
 
 	use \Psr\Log\LoggerAwareTrait;
 
@@ -22,8 +20,6 @@ class Application implements ApplicationInterface {
 		ControllerFactoryInterface $controllers,
 		ModelFactoryInterface $models,
 		RouterInterface $router,
-		SettingsInterface $settings,
-		CSSLoader $css,
 		SessionHandlerInterface $session,
 		ResponseInterface $response,
 		InputFilterInterface $filter
@@ -31,8 +27,6 @@ class Application implements ApplicationInterface {
 		$this->controllers = $controllers;
 		$this->models = $models;
 		$this->router = $router;
-		$this->settings = $settings;
-		$this->css = $css;
 		$this->session = $session;
 		$this->response = $response;
 		$this->filter = $filter;
@@ -43,12 +37,6 @@ class Application implements ApplicationInterface {
 		$permitted = $this->check_post($request->getPost(), $request->getCookies());
 		$this->response->assign("request", $request);
 		$route = $this->router->route($request);
-
-		if (empty($route['theme'])) $route['theme'] = $this->settings->get("theme");
-		if (empty($route['layout'])) $route['layout'] = empty($route['type']) ? "views" : $route['type'];
-		if (empty($route['template'])) $route['template'] = $request->getFormat();
-		$this->css->setTheme($route['theme']);
-
 		foreach ($route as $k => $v) {
 			if (!empty($v)) $this->response->{$k} = $v;
 		}

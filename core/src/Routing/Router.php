@@ -14,11 +14,15 @@ REGEX;
 	const DEFAULT_DISPATCH_REGEX = '[^\/]+';
 	protected $storage = [];
 	protected $aliasStorage = [];
+	protected $filters = [];
 	public function addStorage(RouteStorageInterface $storage) {
 		$this->storage[] = $storage;
 	}
 	public function addAliasStorage(AliasStorageInterface $storage) {
 		$this->aliasStorage[] = $storage;
+	}
+	public function addFilter(RouteFilterInterface $filter) {
+		$this->filters[] = $filter;
 	}
 	public function getRoute(RequestInterface $request) {
 		if ($path = $this->resolveAlias($request)) {
@@ -26,10 +30,10 @@ REGEX;
 		}
 		foreach ($this->storage as $storage) {
 			if ($route = $storage->getRoute($request)) {
-				return $route;
+				return $this->filterRoute($route, $request);
 			}
 		}
-		return array("controller" => "main", "action" => "missing", "arguments" => array());
+		return $this->filterRoute(["controller" => "main", "action" => "missing", "arguments" => []], $request);
 	}
 	/**
 	 * a router must identify a controller from a Request
@@ -82,6 +86,12 @@ REGEX;
 			}
 		}
 		return false;
+	}
+	protected function filterRoute($route, RequestInterface $request) {
+		foreach ($this->filters as $filter) {
+			$route = $filter->filterRoute($route, $request);
+		}
+		return $route;
 	}
 	public function build_regex($routeData) {
 		$regex = '';
