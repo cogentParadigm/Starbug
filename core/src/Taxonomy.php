@@ -34,7 +34,7 @@ class Taxonomy implements TaxonomyInterface {
 	/**
 	 * apply tags
 	 * @ingroup taxonomy
-	 * @param string $taxonomy the taxonomy/classification of terms. eg. uris_tags
+	 * @param string $taxonomy the taxonomy/classification of terms. eg. products_tags
 	 * @param int $object_id the id of the object to apply the tag to
 	 * @param string $tag the tag
 	 * @return bool returns true on success, false otherwise.
@@ -67,7 +67,7 @@ class Taxonomy implements TaxonomyInterface {
 	 * remove tags
 	 * @ingroup taxonomy
 	 * @param string $table (optional) the table to which tags are applied. This is only needed if not implied by $taxonomy
-	 * @param string $taxonomy the taxonomy/classification of terms. eg. uris_tags or genres
+	 * @param string $taxonomy the taxonomy/classification of terms. eg. products_tags or genres
 	 * @param int $object_id the id of the object to apply the tag to
 	 * @param string $tag the tag
 	 */

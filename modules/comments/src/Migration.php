@@ -8,7 +8,6 @@ class Migration extends AbstractMigration {
 			["email", "type" => "string", "length" => "255"],
 			["comment", "type" => "text"]
 		);
-		$this->schema->addColumn("uris", ["comments", "type" => "comments", "display" => "false"]);
 	}
 }
 ?>

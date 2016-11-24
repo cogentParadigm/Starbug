@@ -362,9 +362,9 @@ class storeTest extends DatabaseTestCase {
 	 * hook_store_references
 	 */
 	function test_references() {
-		//store a uri
-		$this->db->store("uris", ["path" => "hook_store_references"]);
-		$uid = $this->models->get("uris")->insert_id;
+		//store a user
+		$this->db->store("users", ["email" => "hook_store_references"]);
+		$uid = $this->models->get("users")->insert_id;
 
 		//store a record
 		$this->db->store("hook_store_references", array("value" => ""));
@@ -373,12 +373,12 @@ class storeTest extends DatabaseTestCase {
 		$id = $this->models->get("hook_store_references")->insert_id;
 		$record = $this->db->get("hook_store_references", $id);
 
-		//assert that the record contains the last inserted uris id
+		//assert that the record contains the last inserted users id
 		$this->assertSame($uid, $record['value']);
 
 		//remove uri and truncate table
 		$this->db->query("hook_store_references")->unsafe_truncate();
-		$this->db->query("uris")->condition("path", "hook_store_references")->delete();
+		$this->db->query("users")->condition("email", "hook_store_references")->delete();
 	}
 
 	/**

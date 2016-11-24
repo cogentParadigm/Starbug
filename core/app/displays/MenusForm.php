@@ -10,7 +10,6 @@ class MenusForm extends FormDisplay {
 		$this->add(["menu", "input_type" => "hidden", "pane" => "tl", "default" => $ops['menu']]);
 		$this->add(["parent", "input_type" => "autocomplete", "from" => "menus", "pane" => "tl", "info" => "Leave empty to place the item at the top level."]);
 		$this->add(["position", "pane" => "tr", "info" => "Enter 1 for the first position, leave empty for the last."]);
-		$this->add(["uris_id", "pane" => "ml", "input_type" => "autocomplete", "from" => "uris", "label" => "Page", "info" => "Select a page."]);
 		$this->add(["href", "pane" => "mr", "label" => "URL", "info" => "Enter a URL manually."]);
 		$this->add(["content", "pane" => "bl", "info" => "Override the link text."]);
 		$this->add(["target", "pane" => "br", "input_type" => "checkbox", "label" => "Open in new tab/window", "value" => "_blank"]);

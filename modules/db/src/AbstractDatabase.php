@@ -110,7 +110,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
 
 	/**
 	* query the database
-	* @param string $froms comma delimeted list of tables to join. 'users' or 'uris,system_tags'
+	* @param string $froms comma delimeted list of tables to join. 'users' or 'users,permits'
 	* @param string $args starbug query string for params: select, where, limit, and action/priv_type
 	* @param bool $mine optional. if true, joining models will be checked for relationships and ON statements will be added
 	* @return array record or records

@@ -130,7 +130,7 @@ class TestsMigration extends AbstractMigration {
 		 ****************************************/
 		//reference another table (creates foreign key unless you specify constraint:false)
 		$this->schema->addTable(["hook_store_references"],
-			["value", "type" => "int", "references" => "uris id"]
+			["value", "type" => "int", "references" => "users id"]
 		);
 
 		/*****************************************

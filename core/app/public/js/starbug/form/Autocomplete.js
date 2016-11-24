@@ -28,7 +28,7 @@ define([
 ], function (declare, lang, Widget, Templated, Tooltip, sb, List, put, on, dom, domclass,domstyle,query) {
 	return declare([Widget, Templated], {
 		store: null,	// a string setting the store for the widget
-						// ex: sb.get('uris', 'select');
+						// ex: sb.get('users', 'select');
 		limit:1, 		// how many characters must be entered before the list of valies will be displayed
 		placeholder: '',
 		nodeHeight:0,

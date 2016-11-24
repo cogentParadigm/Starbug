@@ -1,23 +1,9 @@
 <?php
 	$attributes = $class = $link_attributes = array();
-	$link_text = "";
 	$active = false;
 
 	//add first class for first item in list
 	if ($link['position'] == 0) $class[] = "first";
-
-	//determine where the link is going to
-	if (!empty($link['uris_id'])) {
-		$link_text = empty($link['breadcrumb']) ? $link['title'] : $link['breadcrumb'];
-		$link_attributes['href'] = $this->url->build($link["path"]);
-		$parts = explode("/", $link['path']);
-		$active = !empty($link['path']);
-		foreach ($parts as $idx => $part) if ($request->getComponent($idx) !== $part) $active = false;
-		if ($active) $class[] = "active";
-	}
-
-	//taxonomy menus
-	if (!empty($link['term'])) $link['content'] = $link['term'];
 
 	//href override
 	if (!empty($link['href'])) {
@@ -30,9 +16,6 @@
 			if ($active) $class[] = "active";
 		}
 	}
-
-	//content override
-	if (!empty($link['content'])) $link_text = $link['content'];
 
 	//set the link target
 	if (!empty($link['target'])) $link_attributes['target'] = $link['target'];
@@ -51,7 +34,7 @@
 			$response->js("bootstrap/Dropdown");
 		}
 		$link_attributes['class'] = "dropdown-toggle";
-		$link_text .= '<i class="fa chevron pull-right"></i>';
+		$link["content"] .= '<i class="fa chevron pull-right"></i>';
 	}
 
 	//if sortable, set draggable attribute
@@ -66,23 +49,10 @@
 
 	//serialize the array of classes
 	if (!empty($class)) $attributes['class'] = implode(" ", $class);
-
-	if ($menu_type == "taxonomy") {
-		$area = "taxonomies";
-		$model = "terms";
-	} else {
-		$area = $model = "menus";
-	}
 ?>
 <?php if (empty($link['template'])) { ?>
 	<li<?php echo $this->filter->attributes($attributes); ?>>
-		<?php if ($editable) { ?>
-			<div class="btn-group pull-right" style="position:relative;z-index:100">
-				<a href="<?php echo $this->url->build("admin/$area/update/".$link['id']); ?>" class="btn btn-default Edit"><div class="fa fa-edit"></div></a>
-				<a href="javascript:(function(){sb.get('<?php echo $model; ?>').remove('<?php echo $link['id']; ?>').then(function(){window.location.reload();});return false;})()" class="btn btn-default Delete"><div class="fa fa-times"></div></a>
-			</div>
-		<?php } ?>
-		<a<?php echo $this->filter->attributes($link_attributes); ?>><?php echo $link_text; ?></a>
+		<a<?php echo $this->filter->attributes($link_attributes); ?>><?php echo $link["content"]; ?></a>
 		<?php if (!empty($link['children'])) { ?>
 		<ul class="dropdown-menu" role="menu">
 			<?php
@@ -97,14 +67,6 @@
 	<?php
 		if ($link['template'] == "divider") {
 			echo '<li'.$this->filter->attributes($attributes).'>';
-			if ($editable) {
-				?>
-			<div class="btn-group right">
-				<a href="<?php echo $this->url->build("admin/$area/update/".$link['id']); ?>" class="btn btn-mini Edit"><div class="sprite icon"></div></a>
-				<a href="javascript:(function(){sb.get('<?php echo $model; ?>').remove('<?php echo $link['id']; ?>').then(function(){window.location.reload();});return false;})()" class="btn btn-mini Delete"><div class="sprite icon"></div></a>
-			</div>
-				<?php
-			}
 			echo '</li>';
 		} else $this->render($link['template']);
 	?>

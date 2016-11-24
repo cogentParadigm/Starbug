@@ -47,9 +47,8 @@ return array(
 		$request = $c->get("Starbug\Core\RequestInterface");
 		return $request->getURL();
 	},
-	'Starbug\Core\Routing\Router' => DI\object()
-		->method('addStorage', DI\get('Starbug\Core\Routing\MemoryRouteStorage'))
-		->method('addAliasStorage', DI\get('Starbug\Core\Routing\DatabaseAliasStorage')),
+	'Starbug\Core\Routing\RouterInterface' => DI\object('Starbug\Core\Routing\Router')
+		->method('addStorage', DI\get('Starbug\Core\Routing\MemoryRouteStorage')),
 	'Starbug\Core\Routing\*Interface' => DI\object('Starbug\Core\Routing\*'),
 	'Starbug\Core\Routing\MemoryRouteStorage' => DI\object()->method('addRoutes', DI\get('routes')),
 	'Starbug\Core\Images' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),

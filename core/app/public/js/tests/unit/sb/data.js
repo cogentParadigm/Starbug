@@ -11,8 +11,8 @@ define(['intern!object', 'intern/chai!assert', 'dojo/_base/lang', 'sb/store/Api'
                 get:function() {
                   var users = sb.get('users');
                   assert.strictEqual(users instanceof Api, true, 'sb.get should return a store');
-                  var uris = sb.get('uris', 'test');
-                  assert.strictEqual(uris instanceof Api, true, 'sb.get should return a store');
+                  var select = sb.get('users', 'select');
+                  assert.strictEqual(select instanceof Api, true, 'sb.get should return a store');
                 },
                 query:function() {
                   var users = sb.query('users', 'admin', {value:'test'});

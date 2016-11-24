@@ -12,9 +12,6 @@ class Migration extends AbstractMigration {
 		);
 
 		//add sortable images to content
-		$this->schema->addColumn("uris", ["images", "type" => "files", "optional" => ""]);
-
-		//add sortable images to content
 		$this->schema->addColumn("terms", ["images", "type" => "files", "optional" => ""]);
 
 		//files category

@@ -41,28 +41,6 @@ class Migration extends AbstractMigration {
 			["category", "type" => "category", "null" => ""],
 			["autoload", "type" => "bool", "default" => "0"]
 		);
-		$this->schema->addTable(["aliases", "singular" => "alias", "label_select" => "aliases.path"],
-			["path", "type" => "string", "length" => 255, "index" => true],
-			["alias", "type" => "string", "length" => 255, "index" => true, "unique" => true]
-		);
-		$this->schema->addTable(["uris", "label" => "Pages", "singular_label" => "Page", "label_select" => "title", "groups" => true],
-			["title", "type" => "string", "length" => "128", "list" => "true"],
-			["path", "type" => "path", "path" => "uris/show/[uris:id]", "pattern" => "[uris:title]", "null" => true, "default" => "NULL"],
-			["template", "type" => "string", "length" => "64", "default" => "", "list" => "false"],
-			["categories", "type" => "terms", "optional" => ""],
-			["tags", "type" => "terms", "column" => "term"],
-			["parent", "type" => "int", "default" => "0", "list" => "false"],
-			["type", "type" => "string", "default" => "", "list" => "false"],
-			["theme", "type" => "string", "length" => "128", "default" => "", "list" => "false"],
-			["layout", "type" => "string", "length" => "64", "default" => ""],
-			["description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => "", "list" => "false"],
-			["meta", "type" => "text", "default" => "", "list" => "false"],
-			["meta_keywords", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => "", "list" => "false"],
-			["canonical", "type" => "string", "length" => "255", "default" => "", "list" => "false"],
-			["breadcrumb", "type" => "string", "length" => "255", "default" => "", "list" => "false"],
-			["controller", "type" => "string", "default" => ""],
-			["action", "type" => "string", "default" => ""]
-		);
 		$this->schema->addTable(["entities"],
 			["base", "type" => "string", "default" => ""],
 			["name", "type" => "string", "length" => "128"],
@@ -72,18 +50,9 @@ class Migration extends AbstractMigration {
 			["url_pattern", "type" => "string"],
 			["description", "type" => "string", "length" => "255", "default" => ""]
 		);
-		$this->schema->addTable(["blocks", "list" => "all"],
-			["uris_id", "type" => "int", "references" => "uris id", "alias" => "%path%"],
-			["region", "type" => "string", "length" => "64", "default" => "content"],
-			["type", "type" => "string", "length" => "32", "default" => "text"],
-			["content", "type" => "text", "default" => ""],
-			["position", "type" => "int", "ordered" => "uris_id"]
-		);
-		$this->schema->addTable("uris", ["blocks", "type" => "blocks", "table" => "blocks"]);
 		$this->schema->addTable(["menus", "groups" => true],
 			["menu", "type" => "string", "length" => "32", "list" => "true", "display" => "false"],
 			["parent", "type" => "int", "default" => "0", "materialized_path" => "menu_path"],
-			["uris_id", "type" => "int", "references" => "uris id", "label" => "Page", "null" => "", "default" => "NULL", "update" => "cascade", "delete" => "cascade"],
 			["href", "type" => "string", "length" => "255", "label" => "URL", "default" => ""],
 			["content", "type" => "string", "length" => "255", "default" => ""],
 			["target", "type" => "string", "default" => ""],
@@ -100,14 +69,8 @@ class Migration extends AbstractMigration {
 		);
 
 		$this->schema->addRow("users", ["email" => "root"], ["groups" => "root,admin"]);
-		// CONTENT TYPES
-		$this->schema->addTable(["views", "base" => "uris", "description" => "A basic view"]);
-		$this->schema->addTable(["pages", "base" => "uris", "description" => "A basic page"]);
 
 		//admin menu
-		$content = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Content"]);
-		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/views", "content" => "Views"], ["parent" => $content]);
-		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/pages", "content" => "Pages"], ["parent" => $content]);
 		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/users", "content" => "Users"]);
 		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/media", "content" => "Media", "target" => "_blank"]);
 		$configuration = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Configuration"]);
@@ -126,12 +89,6 @@ class Migration extends AbstractMigration {
 		$this->schema->addRow("terms", ["taxonomy" => "statuses", "term" => "Pending"]);
 		$this->schema->addRow("terms", ["taxonomy" => "statuses", "term" => "Published"]);
 		$this->schema->addRow("terms", ["taxonomy" => "statuses", "term" => "Private"]);
-
-		//uris categories
-		$this->schema->addRow("terms", ["taxonomy" => "uris_categories", "term" => "Uncategorized"]);
-
-		//uris tags
-		$this->schema->addRow("terms", ["taxonomy" => "uris_tags", "term" => "Uncategorized"]);
 
 		//settings categories
 		$this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "General"]);
