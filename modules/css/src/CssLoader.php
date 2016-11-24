@@ -34,6 +34,7 @@ class CssLoader {
 	public function setTheme($name) {
 		$this->modules["Starbug\Theme"] = "app/themes/".$name;
 		$this->locator->set("Starbug\Theme", "app/themes/".$name);
+		$this->response->theme = $name;
 		$this->options = false;
 	}
 	protected function load($reload = false) {
@@ -49,8 +50,7 @@ class CssLoader {
 		$this->less = false;
 		$this->options = [
 			"screen" => [
-				"rel" => "stylesheet",
-				"href" => "var/public/stylesheets/".$this->response->theme."-screen.css"
+				["rel" => "stylesheet", "href" => "var/public/stylesheets/".$this->response->theme."-screen.css"]
 			]
 		];
 	}
