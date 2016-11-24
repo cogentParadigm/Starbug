@@ -99,7 +99,6 @@ class Migration extends AbstractMigration {
 		//general settings
 		$this->schema->addRow("settings", ["name" => "site_name"], ["category" => "settings_category general", "type" => "text", "label" => "Site Name", "autoload" => "1", "value" => "Starbug"]);
 		$this->schema->addRow("settings", ["name" => "tagline"], ["category" => "settings_category general", "type" => "text", "label" => "Tagline", "autoload" => "1", "value" => "Fresh XHTML and CSS, just like mom used to serve!"]);
-		$this->schema->addRow("settings", ["name" => "default_path"], ["category" => "settings_category general", "type" => "text", "label" => "Default Path", "autoload" => "1", "value" => "home"]);
 		//seo settings
 		$this->schema->addRow("settings", ["name" => "meta"], ["category" => "settings_category seo", "type" => "textarea", "label" => "Custom Analytics, etc..", "autoload" => "1"]);
 		$this->schema->addRow("settings", ["name" => "seo_hide"], ["category" => "settings_category seo", "type" => "checkbox", "value" => "1", "label" => "Hide from search engines", "autoload" => "1"]);

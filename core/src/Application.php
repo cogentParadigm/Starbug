@@ -40,14 +40,6 @@ class Application implements ApplicationInterface {
 
 	public function handle(RequestInterface $request) {
 		$this->session->startSession();
-
-		$path = $request->getPath();
-		if (empty($path)) {
-			$request->setPath($this->settings->get("default_path"));
-			$this->logger->addInfo("Request path is empty. Routing to default path: ".$request->getPath());
-		} else {
-			$this->logger->addInfo("Request path - ".$request->getPath());
-		}
 		$permitted = $this->check_post($request->getPost(), $request->getCookies());
 		$this->response->assign("request", $request);
 		$route = $this->router->route($request);

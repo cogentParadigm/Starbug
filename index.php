@@ -10,6 +10,11 @@ $request->setHeaders($_SERVER)
 				->setFiles($_FILES)
 				->setCookies($_COOKIE);
 
+$path = $request->getPath();
+if (empty($path)) {
+	$request->setPath($container->get("default_path"));
+}
+
 $container->set("Starbug\Core\RequestInterface", $request);
 $application = $container->get("Starbug\Core\ApplicationInterface");
 $response = $application->handle($request);

@@ -4,6 +4,7 @@ use \Monolog\Logger;
 return array(
 	'environment' => 'development',
 	'website_url' => '/',
+	'default_path' => 'home',
 	'time_zone' => 'America/Vancouver',
 	'hmac_key' => '',
 	'routes' => [
