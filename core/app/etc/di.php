@@ -9,22 +9,22 @@ return array(
 	'hmac_key' => '',
 	'routes' => [
 		"api" => [
-			"controller" => "apiRouting",
+			"controller" => "Starbug\\Core\\ApiRoutingController",
 			"action" => "response"
 		],
 		"profile" => [
-			"title" => "Profile",
+			"title" => "Starbug\\Core\\ProfileController",
 			"controller" => "profile"
 		],
 		"admin" => [
 			"title" => "Admin",
-			"controller" => "admin",
+			"controller" => "Starbug\\Core\\AdminController",
 			"action" => "default_action",
 			"groups" => "admin",
 			"theme" => "storm"
 		],
 		"upload" => [
-			"title" => "Upload",
+			"title" => "Starbug\\Core\\UploadController",
 			"controller" => "upload",
 			"template" => "xhr",
 			"groups" => "user"
