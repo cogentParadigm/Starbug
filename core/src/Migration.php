@@ -107,12 +107,6 @@ class Migration extends AbstractMigration {
 			["field", "type" => "string", "length" => "64"],
 			["message", "type" => "text", "length" => "512"]
 		);
-		$this->schema->addTable(["logs"],
-			["channel", "type" => "string"],
-			["level", "type" => "int"],
-			["message", "type" => "text", "default" => ""],
-			["time", "type" => "int"]
-		);
 		//SQL TRANSACTION LOG
 		/*
 			$schema->addTable("log",
