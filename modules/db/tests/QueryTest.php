@@ -557,7 +557,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 								"INNER JOIN `".$this->db->prefix("permits")."` AS `permits` ON 'users' LIKE permits.related_table && 'read' LIKE permits.action ".
 								"WHERE ".
 									"('global' LIKE `permits`.priv_type || (`permits`.priv_type='object' && `permits`.related_id=`users`.id)) && ".
-									"(`permits`.object_statuses is null || `permits`.object_statuses=`users`.statuses) && ".
+									"(`permits`.object_deleted is null || `permits`.object_deleted=`users`.deleted) && ".
 									"(`permits`.user_groups is null || `permits`.user_groups IN (SELECT groups_id FROM ".$this->db->prefix("users_groups")." u WHERE `u`.users_id=2)) && ".
 									"(`permits`.role='everyone' || `permits`.role='user' && `permits`.who='2' || `permits`.role='self' && `users`.id='2' || `permits`.role='owner' && `users`.owner='2' || `permits`.role='groups' && (EXISTS (SELECT groups_id FROM ".$this->db->prefix("users_groups")." o WHERE `o`.users_id=`users`.id && `o`.groups_id IN (SELECT groups_id FROM ".$this->db->prefix("users_groups")." u WHERE `u`.users_id=2)) || NOT EXISTS (SELECT groups_id FROM ".$this->db->prefix("users_groups")." o WHERE `o`.users_id=`users`.id)))";
 

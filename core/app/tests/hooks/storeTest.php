@@ -71,40 +71,40 @@ class storeTest extends DatabaseTestCase {
 	/**
 	 * hook_store_category
 	 */
-	function test_category() {
-		//get the published term
-		$term = $this->db->query("terms")->conditions(array(
-			"taxonomy" => "statuses",
-			"slug" => "published"
+	function test_group() {
+		//get the user term
+		$user = $this->db->query("terms")->conditions(array(
+			"taxonomy" => "groups",
+			"slug" => "user"
 		))->one();
 
-		//get the deleted term
-		$del = $this->db->query("terms")->conditions(array(
-			"taxonomy" => "statuses",
-			"slug" => "deleted"
+		//get the admin term
+		$admin = $this->db->query("terms")->conditions(array(
+			"taxonomy" => "groups",
+			"slug" => "admin"
 		))->one();
 
 		//store a category
 		//category fields have an alias of %taxonomy% %slug% (see the alias hook)
 		//this means we can use the alias instead of an id, but we'll use the id
 		//since we only want to test the category hook
-		$this->db->store("hook_store_category", ["value" => "published"]);
+		$this->db->store("hook_store_category", ["value" => "user"]);
 
 		//retrieve the record
 		$rid = $this->models->get("hook_store_category")->insert_id;
 		$record = $this->db->get("hook_store_category", $rid);
 
 		//verify the correct id is set
-		$this->assertSame($term['id'], $record["value"]);
+		$this->assertSame($user['id'], $record["value"]);
 
 		//update the record
-		$this->db->store("hook_store_category", ["id" => $rid, "value" => "deleted"]);
+		$this->db->store("hook_store_category", ["id" => $rid, "value" => "admin"]);
 
 		//retrieve the updated record
 		$record = $this->db->get("hook_store_category", $rid);
 
 		//verify the term id was updated
-		$this->assertSame($del['id'], $record["value"]);
+		$this->assertSame($admin['id'], $record["value"]);
 	}
 
 	/**
@@ -444,7 +444,7 @@ class storeTest extends DatabaseTestCase {
 	 */
 	function test_terms() {
 		//store terms
-		$this->db->store("hook_store_terms", ["value" => "published,pending,deleted"]);
+		$this->db->store("hook_store_terms", ["value" => "user,admin"]);
 
 		//get the id
 		$id = $this->models->get("hook_store_terms")->insert_id;
@@ -453,28 +453,26 @@ class storeTest extends DatabaseTestCase {
 		$terms = $this->db->query("hook_store_terms_value")->conditions(["hook_store_terms_id" => $id])->select("value_id.slug as slug")->sort("slug")->all();
 
 		//verify the records are what we expect
-		$this->assertSame("deleted", $terms[0]["slug"]);
-		$this->assertSame("pending", $terms[1]["slug"]);
-		$this->assertSame("published", $terms[2]["slug"]);
+		$this->assertSame("admin", $terms[0]["slug"]);
+		$this->assertSame("user", $terms[1]["slug"]);
 
 		//update the terms (remove deleted)
-		$this->db->store("hook_store_terms", ["id" => $id, "value" => "-deleted"]);
+		$this->db->store("hook_store_terms", ["id" => $id, "value" => "-admin"]);
 
 		//retrieve the entries
 		$terms = $this->db->query("hook_store_terms_value")->conditions(["hook_store_terms_id" => $id])->select("value_id.slug as slug")->sort("slug")->all();
 
 		//verify the records are what we expect
-		$this->assertSame("pending", $terms[0]["slug"]);
-		$this->assertSame("published", $terms[1]["slug"]);
+		$this->assertSame("user", $terms[0]["slug"]);
 
 		//update the terms (add deleted, remove others)
-		$this->db->store("hook_store_terms", ["id" => $id, "value" => "deleted"]);
+		$this->db->store("hook_store_terms", ["id" => $id, "value" => "admin"]);
 
 		//retrieve the entries
 		$terms = $this->db->query("hook_store_terms_value")->conditions(["hook_store_terms_id" => $id])->select("value_id.slug as slug")->sort("slug")->all();
 
 		//verify the records are what we expect
-		$this->assertSame("deleted", $terms[0]["slug"]);
+		$this->assertSame("admin", $terms[0]["slug"]);
 	}
 
 	/**

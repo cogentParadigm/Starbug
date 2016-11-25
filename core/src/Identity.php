@@ -1,11 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/src/Identity.php
- * @author Ali Gangji <ali@neonrain.com>
- */
 namespace Starbug\Core;
 class Identity implements IdentityInterface {
 	protected $user = array();
@@ -27,7 +20,7 @@ class Identity implements IdentityInterface {
 	}
 	public function loadUser($id) {
 		$user = $this->models->get("users")->query()
-			->select(array("groups.slug as groups", "statuses.slug as statuses"), "users");
+			->select(["groups.slug as groups"], "users");
 		if (is_array($id)) $user->conditions($id);
 		else $user->condition("users.id", $id);
 		return $user->one();
@@ -35,7 +28,6 @@ class Identity implements IdentityInterface {
 	public function setUser($user) {
 		unset($user['password']);
 		if (!is_array($user['groups'])) $user['groups'] = is_null($user['groups']) ? array() : explode(",", $user['groups']);
-		if (!is_array($user['statuses'])) $user['statuses'] = is_null($user['statuses']) ? array() : explode(",", $user['statuses']);
 		$this->user = $user;
 	}
 	public function clearUser() {

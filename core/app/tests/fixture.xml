@@ -50,7 +50,7 @@
 		<field name="password"></field>
 		<field name="last_visit">0000-00-00 00:00:00</field>
 		<field name="owner" xsi:nil="true" />
-		<field name="statuses" xsi:nil="true" />
+		<field name="deleted">0</field>
 		<field name="created">2015-09-26 07:12:49</field>
 		<field name="modified">2015-09-26 07:12:49</field>
 	</row>
@@ -62,7 +62,7 @@
 		<field name="password"></field>
 		<field name="last_visit">0000-00-00 00:00:00</field>
 		<field name="owner" xsi:nil="true" />
-		<field name="statuses" xsi:nil="true" />
+		<field name="deleted">0</field>
 		<field name="created">2015-09-26 07:12:49</field>
 		<field name="modified">2015-09-26 07:12:49</field>
 	</row>
@@ -74,7 +74,7 @@
 		<field name="password"></field>
 		<field name="last_visit">0000-00-00 00:00:00</field>
 		<field name="owner" xsi:nil="true" />
-		<field name="statuses" xsi:nil="true" />
+		<field name="deleted">0</field>
 		<field name="created">2015-09-26 07:12:49</field>
 		<field name="modified">2015-09-26 07:12:49</field>
 	</row>
@@ -86,7 +86,7 @@
 		<field name="users_id">1</field>
 		<field name="position">1</field>
 		<field name="groups_id">1</field>
-		<field name="statuses" xsi:nil="true" />
+		<field name="deleted">0</field>
 		<field name="created">2015-09-26 07:12:49</field>
 		<field name="modified">2015-09-26 07:12:49</field>
 	</row>
@@ -96,7 +96,7 @@
 		<field name="users_id">2</field>
 		<field name="position">1</field>
 		<field name="groups_id">3</field>
-		<field name="statuses" xsi:nil="true" />
+		<field name="deleted">0</field>
 		<field name="created">2015-09-26 07:12:49</field>
 		<field name="modified">2015-09-26 07:12:49</field>
 	</row>
@@ -106,7 +106,7 @@
 		<field name="users_id">3</field>
 		<field name="position">1</field>
 		<field name="groups_id">2</field>
-		<field name="statuses" xsi:nil="true" />
+		<field name="deleted">0</field>
 		<field name="created">2015-09-26 07:12:49</field>
 		<field name="modified">2015-09-26 07:12:49</field>
 	</row>

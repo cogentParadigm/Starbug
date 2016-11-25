@@ -38,7 +38,7 @@ class hook_store_ordered extends QueryHook {
 	function insert(&$query, $key, $value, $column, $argument) {
 		$this->set_conditions($query, $column, $argument, "insert");
 		if (!empty($value) && is_numeric($value)) $this->value = $value;
-		$h = $this->db->query($query->model)->select("MAX(".$query->model.".$column) as highest")->conditions($this->conditions)->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true))->one();
+		$h = $this->db->query($query->model)->select("MAX(".$query->model.".$column) as highest")->conditions($this->conditions)->condition($query->model.".deleted", "0")->one();
 		return $h['highest']+1;
 	}
 	function update(&$query, $key, $value, $column, $argument) {
@@ -60,7 +60,7 @@ class hook_store_ordered extends QueryHook {
 				->select(array_keys($this->conditions))
 				->conditions($this->conditions)
 				->condition($query->model.".id", $ids, "!=")
-				->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true))
+				->condition($query->model.".deleted", "0")
 				->condition($query->model.".".$column, $value)->one();
 			$ids[] = $row['id'];
 			$value += $this->increment;

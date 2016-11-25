@@ -164,7 +164,7 @@ class TestsMigration extends AbstractMigration {
 		//you can use minus/plus signs to remove/add terms - -pending,+published
 		//if no minus or plus sign is included, terms will be replaced
 		$this->schema->addTable(["hook_store_terms"],
-			["value", "type" => "terms", "taxonomy" => "statuses"]
+			["value", "type" => "terms", "taxonomy" => "groups"]
 		);
 
 		/*****************************************

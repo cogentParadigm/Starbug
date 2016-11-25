@@ -74,12 +74,6 @@ class Migration extends AbstractMigration {
 		$this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "User"]);
 		$this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Admin"]);
 
-		//statuses
-		$this->schema->addRow("terms", ["taxonomy" => "statuses", "term" => "Deleted"]);
-		$this->schema->addRow("terms", ["taxonomy" => "statuses", "term" => "Pending"]);
-		$this->schema->addRow("terms", ["taxonomy" => "statuses", "term" => "Published"]);
-		$this->schema->addRow("terms", ["taxonomy" => "statuses", "term" => "Private"]);
-
 		//settings categories
 		$this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "General"]);
 		$this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "SEO"]);

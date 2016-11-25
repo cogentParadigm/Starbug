@@ -34,7 +34,6 @@
 			$_post['type'] = end(explode(".", $_post['name']));
 			$_post['size'] = filesize($_post['file']);
 			$_post['image'] = $image;
-			$_post['statuses'] = "published";
 			$_post['owner'] = $this->user->userinfo("id");
 			$htmldata[] = $_post;
 		} else {

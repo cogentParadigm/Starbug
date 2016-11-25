@@ -10,7 +10,7 @@ class UsersTest extends ModelTest {
 		$this->db->remove("users", ["email" => "phpunit@neonrain.com"]);
 		$this->action("create", ["email" => "phpunit@neonrain.com", "groups" => "user"]);
 		$user = $this->db->query("users")->select("users.*,users.groups as groups")
-							->condition("users.id", $this->insert_id)->condition("users.statuses.slug", "deleted", "!=", array("ornull" => true))->one();
+							->condition("users.id", $this->insert_id)->condition("users.deleted", "0")->one();
 		//lets verify the explicit values were set
 		$this->assertEquals($user['email'], "phpunit@neonrain.com");
 		//lets also verify that the implicit values were set
@@ -24,9 +24,9 @@ class UsersTest extends ModelTest {
 
 		//remove it and assert that the record is gone
 		$this->action("delete", $user);
-		$user = $this->db->query("users")->select("users.*,users.statuses.slug as statuses,users.groups as groups")
+		$user = $this->db->query("users")->select("users.*,users.groups as groups")
 							->condition("email", "phpunit@neonrain.com")->one();
-		$this->assertEquals($user['statuses'], "deleted");
+		$this->assertEquals($user['deleted'], "1");
 		$this->db->remove("users_groups", ["users_id" => $user['id']]);
 		$this->db->remove("users", ["email" => "phpunit@neonrain.com"]);
 	}

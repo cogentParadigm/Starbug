@@ -23,8 +23,14 @@ class SchemaHook implements HookInterface {
 		}
 		if ($access_col) {
 			foreach ($column as $nk => $nv) $access_col[$nk] = $nv;
-			$access_col['type'] = "category";
-			$access_col['null'] = "";
+			if ($schema->hasTable($column['type']) || $this->models->has($column['type'])) {
+				$access_col['type'] = "int";
+				$access_col['references'] = $column["type"]." id";
+			} else {
+				$access_col['type'] = $column["type"];
+			}
+			$access_col['null'] = true;
+			$access_col["default"] = "NULL";
 			$schema->addColumn("permits", $access_col);
 		}
 		if ($schema->hasTable($column['type']) || $this->models->has($column['type'])) {
@@ -65,9 +71,9 @@ class SchemaHook implements HookInterface {
 					["groups", "type" => "terms", "taxonomy" => "groups", "user_access" => true, "optional" => true]
 				);
 			}
-			if (!$table->hasColumn("statuses")) {
+			if (!$table->hasColumn("deleted")) {
 				$schema->addColumn($table->getName(),
-					["statuses", "type" => "category", "label" => "Status", "taxonomy" => "statuses", "object_access" => true, "null" => true]
+					["deleted", "type" => "bool", "default" => "0", "object_access" => true]
 				);
 			}
 			if (!$table->hasColumn("created")) {

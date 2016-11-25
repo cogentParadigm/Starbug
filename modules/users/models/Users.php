@@ -20,7 +20,7 @@ class Users extends UsersModel {
 	}
 
 	function delete($user) {
-		$this->store(array("id" => $user['id'], "statuses" => "deleted"));
+		$this->store(array("id" => $user['id'], "deleted" => "1"));
 	}
 
 	/**
