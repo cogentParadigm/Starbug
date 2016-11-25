@@ -2,7 +2,6 @@
 namespace Starbug\Css;
 use Starbug\Core\ConfigInterface;
 use Starbug\Core\ResourceLocatorInterface;
-use Starbug\Core\CSSParser;
 class CssBuildCommand {
 	public function __construct($base_directory, ConfigInterface $config, CssLoader $css, ResourceLocatorInterface $locator) {
 		$this->base_directory = $base_directory;
@@ -16,7 +15,7 @@ class CssBuildCommand {
 			$this->css->setTheme($name);
 			$config = $this->css->getConfiguration();
 			foreach ($config as $media => $styles) {
-				$parser = new CSSParser($this->base_directory."/var/public/stylesheets/".$name."-".$media.".css");
+				$parser = new CssParser($this->base_directory."/var/public/stylesheets/".$name."-".$media.".css");
 				foreach ($styles as $idx => $style) {
 					echo $style["href"]."\n";
 					if ($style["rel"] == "stylesheet/less") {

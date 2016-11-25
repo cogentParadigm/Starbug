@@ -1,18 +1,6 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/lib/CSSParser.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup CSSParser
- */
-namespace Starbug\Core;
-/**
- * Parses, omptimizes and combines CSS files. Used in conjuction with script/generate/css to combine all CSS sources per theme.
- * @ingroup CSSParser
- */
-class CSSParser {
+namespace Starbug\Css;
+class CssParser {
 	public $path;
 	public $css;
 	public $fonts;
