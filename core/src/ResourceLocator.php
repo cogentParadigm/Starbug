@@ -44,7 +44,9 @@ class ResourceLocator implements ResourceLocatorInterface {
 			for (end($this->modules); ($mid = key($this->modules)) !== null; prev($this->modules)){
 				if (class_exists($mid."\\".$class)) return $mid."\\".$class;
 			}
+		} else {
+			return $class;
 		}
-		return $class;
+		return false;
 	}
 }

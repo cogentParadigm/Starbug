@@ -1,11 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/src/Template.php
- * @author Ali Gangji <ali@neonrain.com>
- */
 namespace Starbug\Core;
 /**
  * Template class. assign/render style templating system
@@ -126,6 +119,6 @@ class Template implements TemplateInterface {
 	}
 
 	public function __get($name) {
-		return $this->helpers->get(ucwords($name)."Helper")->helper();
+		return $this->helpers->get($name)->helper();
 	}
 }

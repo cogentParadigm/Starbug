@@ -20,15 +20,16 @@ class DisplayFactory implements DisplayFactoryInterface {
 	}
 	public function get($displays) {
 		if (!is_array($displays)) $displays = [$displays];
-		while (!empty($displays)) {
-			$display = array_shift($displays);
-			$locations = $this->locator->locate($display.".php", "displays");
-			if (!empty($locations) || empty($displays)) {
-				end($locations);
-				$namespace = key($locations);
-				if (empty($namespace)) $namespace = "Starbug\Core";
-				return $this->container->make($namespace."\\".$display);
+		foreach ($displays as $display) {
+			if ($display = $this->locator->className($display)) {
+				$object = $this->container->get($display);
+				if ($object instanceof Display) {
+					return $object;
+				} else {
+					throw new Exception("DisplayFactoryInterface contract violation. ".$display." is not an instance of Starbug\\Core\\Display.");
+				}
 			}
 		}
+		throw new Exception("Display not found: ".implode(", ", $displays));
 	}
 }
