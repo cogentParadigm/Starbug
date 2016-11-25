@@ -41,15 +41,6 @@ class Migration extends AbstractMigration {
 			["category", "type" => "category", "null" => ""],
 			["autoload", "type" => "bool", "default" => "0"]
 		);
-		$this->schema->addTable(["entities"],
-			["base", "type" => "string", "default" => ""],
-			["name", "type" => "string", "length" => "128"],
-			["label", "type" => "string", "length" => "128"],
-			["singular", "type" => "string", "length" => "128"],
-			["singular_label", "type" => "string", "length" => "128"],
-			["url_pattern", "type" => "string"],
-			["description", "type" => "string", "length" => "255", "default" => ""]
-		);
 		$this->schema->addTable(["menus", "groups" => true],
 			["menu", "type" => "string", "length" => "32", "list" => "true", "display" => "false"],
 			["parent", "type" => "int", "default" => "0", "materialized_path" => "menu_path"],
@@ -97,7 +88,6 @@ class Migration extends AbstractMigration {
 
 		//general settings
 		$this->schema->addRow("settings", ["name" => "site_name"], ["category" => "settings_category general", "type" => "text", "label" => "Site Name", "autoload" => "1", "value" => "Starbug"]);
-		$this->schema->addRow("settings", ["name" => "tagline"], ["category" => "settings_category general", "type" => "text", "label" => "Tagline", "autoload" => "1", "value" => "Fresh XHTML and CSS, just like mom used to serve!"]);
 		//seo settings
 		$this->schema->addRow("settings", ["name" => "meta"], ["category" => "settings_category seo", "type" => "textarea", "label" => "Custom Analytics, etc..", "autoload" => "1"]);
 		$this->schema->addRow("settings", ["name" => "seo_hide"], ["category" => "settings_category seo", "type" => "checkbox", "value" => "1", "label" => "Hide from search engines", "autoload" => "1"]);
