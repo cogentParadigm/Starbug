@@ -57,6 +57,7 @@ class Migration extends AbstractMigration {
 		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/pages", "content" => "Pages"], ["parent" => $content]);
 		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/categories", "content" => "Categories"], ["parent" => $content]);
 		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/tags", "content" => "Tags"], ["parent" => $content]);
+		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/media", "content" => "Media"], ["target" => "_blank", "parent" => $content]);
 
 		//categories
 		$this->schema->addRow("categories", ["title" => "Uncategorized"]);
