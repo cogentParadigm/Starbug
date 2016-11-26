@@ -15,4 +15,3 @@ class Migration extends AbstractMigration {
 		$this->schema->addRow("permits", ["related_table" => "users", "action" => "reset_password", "role" => "everyone", "priv_type" => "table"]);
 	}
 }
-?>

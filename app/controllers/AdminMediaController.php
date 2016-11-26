@@ -17,4 +17,3 @@ class AdminMediaController extends Controller {
 		$this->render("admin/update");
 	}
 }
-?>

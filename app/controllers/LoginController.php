@@ -24,4 +24,3 @@ class LoginController extends Controller {
 		$this->render("forgot-password");
 	}
 }
-?>

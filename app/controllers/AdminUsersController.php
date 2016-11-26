@@ -30,4 +30,3 @@ class AdminUsersController extends Controller {
 		$this->render("admin/import");
 	}
 }
-?>

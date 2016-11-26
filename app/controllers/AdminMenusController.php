@@ -40,4 +40,3 @@ class AdminMenusController extends Controller {
 		$this->render("admin/import");
 	}
 }
-?>

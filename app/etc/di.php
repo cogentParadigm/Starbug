@@ -25,4 +25,3 @@ return [
 		DI\get('Starbug\App\Migration')
 	])
 ];
-?>
