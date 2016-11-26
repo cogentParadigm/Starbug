@@ -26,7 +26,7 @@
     <rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
     <rule ref="Generic.WhiteSpace.ScopeIndent">
       <properties>
-        <property name="indent" value="1"/>
+        <property name="indent" value="4"/>
       </properties>
     </rule>
 

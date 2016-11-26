@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 	// Project configuration.
 	grunt.initConfig({
 		phplint: {
-			all: ['app/**/*.php', 'modules/**/*.php', 'core/**/*.php', 'util/*.php']
+			all: ['app/**/*.php', 'modules/**/*.php', 'core/**/*.php']
 		},
 		jsvalidate: {
 			all: {
@@ -75,7 +75,7 @@ module.exports = function(grunt) {
 		},
 		shell: {
 			'phpcpd': {
-				command: 'vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules util || true'
+				command: 'vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules || true'
 			}
 		},
 		phpmd: {
@@ -104,7 +104,7 @@ module.exports = function(grunt) {
 				options: {
 					bin: 'vendor/bin/phpcs',
 					extensions: 'php',
-					ignore: 'views,templates,layouts,forms',
+					ignore: 'views,templates,layouts',
 					standard: 'etc/phpcs.xml',
 					ignoreExitCode: true
 				}
