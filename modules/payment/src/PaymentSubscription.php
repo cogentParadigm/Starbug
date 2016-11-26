@@ -118,4 +118,3 @@ class PaymentSubscription implements PaymentSubscriptionInterface {
 		return $this->authnet->response->status;
 	}
 }
-?>

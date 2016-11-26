@@ -35,4 +35,3 @@ class AdminOrdersController extends Controller {
 		else $this->render("admin/update");
 	}
 }
-?>

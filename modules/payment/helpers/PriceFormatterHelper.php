@@ -8,4 +8,3 @@ class PriceFormatterHelper {
 		return $this->target;
 	}
 }
-?>

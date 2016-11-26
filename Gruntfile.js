@@ -100,7 +100,7 @@ module.exports = function(grunt) {
 		},
 		phpcs: {
 			local: {
-				dir: ['core', 'app', 'modules'],
+				dir: ['core', 'modules', 'app'],
 				options: {
 					bin: 'vendor/bin/phpcs',
 					extensions: 'php',

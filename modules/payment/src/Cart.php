@@ -34,7 +34,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
 		}
 	}
 
-	public function load($conditions=array()) {
+	public function load($conditions = array()) {
 		if (empty($conditions)) $conditions = $this->conditions;
 		if (empty($conditions['order_status'])) $conditions['order_status'] = 'cart';
 		$this->order = $this->models->get("orders")->query()->conditions($conditions)->one();
@@ -57,7 +57,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
 		return empty($this->order) ? null : $this->order[$property];
 	}
 
-	public function add($type, $options=array()) {
+	public function add($type, $options = array()) {
 		$this->init(false);
 		$options['orders_id'] = $this->order['id'];
 		$this->models->get($type)->create($options);
@@ -112,7 +112,5 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
 		$this->add("product_lines", $line);
 		$line['id'] = $this->models->get("product_lines")->insert_id;
 		return $line;
-  }
+	}
 }
-
-?>

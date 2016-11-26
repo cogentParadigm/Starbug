@@ -11,4 +11,3 @@ class Payment_gatewaysForm extends FormDisplay {
 		$this->add("is_test_mode");
 	}
 }
-?>

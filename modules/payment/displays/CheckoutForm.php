@@ -37,4 +37,3 @@ class CheckoutForm extends FormDisplay {
 		$this->actions->add([$this->default_action, "class" => "btn-primary"]);
 	}
 }
-?>

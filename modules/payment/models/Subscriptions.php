@@ -68,6 +68,4 @@ class Subscriptions extends SubscriptionsModel {
 			$this->mailer->send(["template" => "Payment Confirmation", "to" => $subscription["email"]], $data);
 		}
 	}
-
 }
-?>

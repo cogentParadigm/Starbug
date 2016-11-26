@@ -23,4 +23,3 @@ class OrdersFormCollection extends FormCollection {
 		return $query;
 	}
 }
-?>

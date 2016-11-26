@@ -11,4 +11,3 @@ class Product_typesForm extends FormDisplay {
 		$this->add("content");
 	}
 }
-?>

@@ -35,4 +35,3 @@ class AdminPayment_gatewaysController extends Controller {
 		$this->render("admin/payment_gateways/settings");
 	}
 }
-?>

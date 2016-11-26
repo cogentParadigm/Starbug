@@ -9,4 +9,3 @@ class Payment_gateway_settingsGrid extends GridDisplay {
 		$this->add("description");
 	}
 }
-?>

@@ -174,4 +174,3 @@ class Migration extends AbstractMigration {
 		);
 	}
 }
-?>

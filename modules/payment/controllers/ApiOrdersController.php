@@ -18,4 +18,3 @@ class ApiOrdersController extends ApiController {
 		return $query;
 	}
 }
-?>

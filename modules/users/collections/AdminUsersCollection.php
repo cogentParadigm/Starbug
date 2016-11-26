@@ -14,4 +14,3 @@ class AdminUsersCollection extends Collection {
 		return $query;
 	}
 }
-?>

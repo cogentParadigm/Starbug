@@ -13,4 +13,3 @@ class DojoBuildCommand {
 		passthru("cd libraries/util/buildscripts; ./build.sh action=release optimize=shrinksafe layerOptimize=shrinksafe stripConsole=all copyTests=false profile=../../../var/etc/dojo.profile.js cssOptimize=comments");
 	}
 }
-?>

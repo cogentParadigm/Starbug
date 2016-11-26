@@ -18,4 +18,3 @@ class ApiProductsController extends ApiController {
 		return $query;
 	}
 }
-?>

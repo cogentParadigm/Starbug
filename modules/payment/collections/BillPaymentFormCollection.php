@@ -12,4 +12,3 @@ class BillPaymentFormCollection extends FormCollection {
 		return $query;
 	}
 }
-?>

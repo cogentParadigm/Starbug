@@ -12,4 +12,3 @@ class Payment_gatewaysGrid extends GridDisplay {
 		$this->add(["row_options", "plugin" => "payment.grid.columns.payment_gateway_options"]);
 	}
 }
-?>

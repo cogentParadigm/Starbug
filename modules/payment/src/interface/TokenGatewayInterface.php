@@ -6,4 +6,3 @@ interface TokenGatewayInterface extends GatewayInterface {
 	public function cancelSubscription($subcription);
 	public function processSubscription($subscription);
 }
-?>

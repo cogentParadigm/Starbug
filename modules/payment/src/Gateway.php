@@ -74,4 +74,3 @@ class Gateway implements GatewayInterface {
 		return $payment;
 	}
 }
-?>

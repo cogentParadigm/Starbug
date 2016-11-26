@@ -20,4 +20,3 @@ class Payment_gateway_settingsForm extends FormDisplay {
 		$this->add("description");
 	}
 }
-?>

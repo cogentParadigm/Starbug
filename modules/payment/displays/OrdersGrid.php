@@ -14,4 +14,3 @@ class OrdersGrid extends GridDisplay {
 		$this->add(["row_options", "plugin" => "payment.grid.columns.orders"]);
 	}
 }
-?>

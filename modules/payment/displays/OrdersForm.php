@@ -15,4 +15,3 @@ class OrdersForm extends FormDisplay {
 		$this->add(["shipping_address", "pane" => "right", "input_type" => "address"]);
 	}
 }
-?>

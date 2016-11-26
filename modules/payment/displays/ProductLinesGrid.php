@@ -13,4 +13,3 @@ class ProductLinesGrid extends GridDisplay {
 		$this->remove("row_options");
 	}
 }
-?>

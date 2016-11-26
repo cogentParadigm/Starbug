@@ -21,4 +21,3 @@ class SubscriptionsCollection extends Collection {
 		return $rows;
 	}
 }
-?>

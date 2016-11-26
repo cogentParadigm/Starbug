@@ -18,4 +18,3 @@ class OrdersSearchForm extends SearchForm {
 		$this->actions->template = "inline";
 	}
 }
-?>

@@ -1,12 +1,5 @@
 <?php
-# Copyright (C) 2008-2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file modules/payment/src/Authnet.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup payment
- */
+// @codingStandardsIgnoreFile
 namespace Starbug\Payment;
 use Starbug\Core\TemplateInterface;
 use SimpleXMLElement;

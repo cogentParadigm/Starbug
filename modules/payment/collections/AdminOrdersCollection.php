@@ -35,4 +35,3 @@ class AdminOrdersCollection extends AdminCollection {
 		return $rows;
 	}
 }
-?>

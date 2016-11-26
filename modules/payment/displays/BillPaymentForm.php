@@ -12,4 +12,3 @@ class BillPaymentForm extends PaymentForm {
 		$this->add(["bill", "input_type" => "hidden"]);
 	}
 }
-?>

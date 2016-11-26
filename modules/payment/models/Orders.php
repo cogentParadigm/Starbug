@@ -117,6 +117,4 @@ class Orders extends OrdersModel {
 			return true;
 		} else return parent::post($action, $data);
 	}
-
 }
-?>

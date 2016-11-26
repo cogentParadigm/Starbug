@@ -31,4 +31,3 @@ class AdminPayment_gateway_settingsController extends Controller {
 		$this->render("admin/import");
 	}
 }
-?>

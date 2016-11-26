@@ -65,4 +65,3 @@ class ProductsForm extends FormDisplay {
 		$this->add(["hidden", "pane" => "publishing", "value" => "1"]);
 	}
 }
-?>

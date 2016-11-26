@@ -8,4 +8,3 @@ class Product_typesGrid extends GridDisplay {
 		$this->add("name");
 	}
 }
-?>

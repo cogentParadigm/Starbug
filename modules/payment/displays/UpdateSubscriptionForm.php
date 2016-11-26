@@ -11,4 +11,3 @@ class UpdateSubscriptionForm extends PaymentForm {
 		$this->remove("phone");
 	}
 }
-?>

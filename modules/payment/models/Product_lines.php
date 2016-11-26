@@ -34,4 +34,3 @@ class Product_lines extends Product_linesModel {
 		} else return parent::post($action, $data);
 	}
 }
-?>

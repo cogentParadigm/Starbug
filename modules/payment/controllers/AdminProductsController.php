@@ -25,4 +25,3 @@ class AdminProductsController extends Controller {
 		else $this->render("admin/update");
 	}
 }
-?>

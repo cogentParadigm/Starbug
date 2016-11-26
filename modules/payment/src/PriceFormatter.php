@@ -14,4 +14,3 @@ class PriceFormatter implements PriceFormatterInterface {
 		return money_format('%.2n', $price/pow(10, $this->minorUnit));
 	}
 }
-?>

@@ -43,4 +43,3 @@ class DojoConfiguration {
 		return $this->environment;
 	}
 }
-?>

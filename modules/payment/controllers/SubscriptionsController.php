@@ -41,4 +41,3 @@ class SubscriptionsController extends Controller {
 		$this->render("subscriptions/payment");
 	}
 }
-?>

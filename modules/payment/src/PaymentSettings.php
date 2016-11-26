@@ -1,11 +1,4 @@
 <?php
-# Copyright (C) 2008-2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file modules/payment/src/PaymentSettings.php
- * @author Ali Gangji <ali@neonrain.com>
- */
 namespace Starbug\Payment;
 use Starbug\Core\DatabaseInterface;
 /**
@@ -17,8 +10,8 @@ class PaymentSettings implements PaymentSettingsInterface {
 	private $settings;
 
 	public function __construct(DatabaseInterface $db) {
-	$this->db = $db;
-	$this->settings = array();
+		$this->db = $db;
+		$this->settings = array();
 	}
 
 	public function testMode($gateway) {
@@ -47,6 +40,6 @@ class PaymentSettings implements PaymentSettingsInterface {
 				->condition("payment_gateway_settings.name", $setting)->one();
 			$this->settings[$gateway][$setting] = $item;
 		}
-	 return $item ? $item['value'] : false;
+		return $item ? $item['value'] : false;
 	}
 }

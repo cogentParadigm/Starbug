@@ -52,4 +52,3 @@ class CheckoutController extends Controller {
 		$this->render("checkout/success");
 	}
 }
-?>

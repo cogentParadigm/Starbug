@@ -169,4 +169,3 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 		$this->mailer->send(["template" => "Payment Declined", "to" => $subscription["email"]], $data);
 	}
 }
-?>

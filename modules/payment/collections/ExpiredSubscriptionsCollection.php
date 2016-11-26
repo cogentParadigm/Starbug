@@ -20,4 +20,3 @@ class ExpiredSubscriptionsCollection extends Collection {
 		return $query;
 	}
 }
-?>

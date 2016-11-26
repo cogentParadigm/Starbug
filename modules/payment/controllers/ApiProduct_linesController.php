@@ -34,4 +34,3 @@ class ApiProduct_linesController extends ApiController {
 		return $query;
 	}
 }
-?>

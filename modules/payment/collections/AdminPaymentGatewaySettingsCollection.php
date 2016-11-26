@@ -10,4 +10,3 @@ class AdminPaymentGatewaySettingsCollection extends AdminCollection {
 		return $query;
 	}
 }
-?>

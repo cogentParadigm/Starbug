@@ -5,4 +5,3 @@ namespace Starbug\Payment;
 interface PriceFormatterInterface {
 	public function format($price);
 }
-?>

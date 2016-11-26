@@ -10,4 +10,3 @@ class ProductsGrid extends GridDisplay {
 		$this->add("name");
 	}
 }
-?>

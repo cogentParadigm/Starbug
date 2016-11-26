@@ -18,4 +18,3 @@ class ApiPayment_gateway_settingsController extends ApiController {
 		return $query;
 	}
 }
-?>

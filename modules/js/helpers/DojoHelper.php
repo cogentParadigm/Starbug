@@ -8,4 +8,3 @@ class DojoHelper {
 		return $this->target;
 	}
 }
-?>

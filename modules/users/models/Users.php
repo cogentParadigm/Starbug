@@ -26,10 +26,10 @@ class Users extends UsersModel {
 	/**
 	 * A function for new users to register themselves
 	 */
-	function register($user, $redirect=true) {
+	function register($user) {
 		$this->store(array("email" => $user['email'], "password" => $user['password'], "password_confirm" => $user['password_confirm'], "groups" => "user"));
 		if (!$this->errors()) {
-			$this->login(array("email" => $user['email'], "password" => $user['password']), $redirect);
+			$this->login(array("email" => $user['email'], "password" => $user['password']));
 		}
 	}
 
@@ -54,7 +54,7 @@ class Users extends UsersModel {
 	/**
 	 * A function for logging in
 	 */
-	function login($login, $redirect=true) {
+	function login($login) {
 		$user = $this->user->loadUser(array("email" => $login['email']));
 		if ($this->session->authenticate($user, $login['password'])) {
 			$this->user->setUser($user);
@@ -95,4 +95,3 @@ class Users extends UsersModel {
 		}
 	}
 }
-?>

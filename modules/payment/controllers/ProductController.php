@@ -18,4 +18,3 @@ class ProductController extends Controller {
 		$this->render("products/details");
 	}
 }
-?>
