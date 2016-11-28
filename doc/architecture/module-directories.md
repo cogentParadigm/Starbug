@@ -1,3 +1,5 @@
+[< table of contents](../README.md)
+
 This is a list of directories which are part of the standard module hierarchy. That means they can exist or be defined in any module or theme, as well as in `core/app` or `app`.
 
 Ultimately we will be moving to PSR4 naming conventions and it is now possible to place certain classes like controllers anywhere you like. For example, I can create a controller with the name `Starbug\App\AdminPagesController` which will be loaded if I request `AdminPagesController`. If my routes reference my controller by an explicit namespace (recommended), then my controller is not bound to any any specific namespace.

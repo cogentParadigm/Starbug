@@ -1,3 +1,5 @@
+[< table of contents](../README.md)
+
 There are many components in Starbug such as migrations, models, controllers, displays, and templates that can be selectively merged or overridden by placing files in the right location.
 
 The list of installed modules is an ordered mapping of php namespaces to filesystem directories. It looks something like this.

@@ -1,3 +1,5 @@
+[< table of contents](../README.md)
+
 # `etc`
 
 Programmer driven configuration is handled through the `etc` module directory. The following files will be recognized in any `etc` directory and combined. You can usually use `var/etc/` to create environment specific configurations.

@@ -1,3 +1,5 @@
+[< table of contents](../README.md)
+
 This is the quickest path to get Starbug running directly after cloning from the official repository. The full instructions include instructions for moving the project to your own repository and committing the libraries installed through bower.
 
 1. The standard clone and change directory. Switch to the dev branch for the bleeding edge version.
