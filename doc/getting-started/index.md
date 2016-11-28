@@ -1,4 +1,4 @@
-[&gt table of contents](../README.md)
+[< table of contents](../README.md)
 
 Getting started is easy. You can follow these steps to setup a new project. If you just want to get it running, you might prefer the [quick and dirty instructions](basic.md).
 
