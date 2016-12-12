@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core;
 class ProfileController extends Controller {
-	public function __construct(UserInterface $user) {
+	public function __construct(IdentityInterface $user) {
 		$this->user = $user;
 	}
 	function init() {

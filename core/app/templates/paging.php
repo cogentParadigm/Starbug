@@ -7,10 +7,11 @@
  * @ingroup templates
  * renders links for paging
  */
-	$vars = $this->request->parameters;
+	$vars = $this->request->getParameters();
 	unset($vars['page']);
-	$prefix = uri($request->path)."?";
-	if (!empty($this->request->parameters)) $prefix .= http_build_query($vars).'&';
+	$prefix = $request->getURL()->getDirectory();
+	$prefix .= $request->getPath()."?";
+	if (!empty($vars)) $prefix .= http_build_query($vars).'&';
 	$prefix .= "page=";
 
 	$half = floor($request->pager->range/2);

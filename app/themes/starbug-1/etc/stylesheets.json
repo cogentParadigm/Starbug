@@ -1,0 +1,8 @@
+{
+	"screen": [
+		{
+			"href": "public/stylesheets/custom-screen.less",
+			"rel": "stylesheet/less"
+		}
+	]
+}

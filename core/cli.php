@@ -1,22 +1,21 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/cli.php init file for cli scripts
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup core
- */
-	if (!defined("SB_CLI")) define("SB_CLI", true);
+if (!defined("SB_CLI")) define("SB_CLI", true);
+
+$args = array();
+foreach ($argv as $i => $arg) {
+	if (0 === strpos($arg, "-")) {
+		$arg = str_replace("-", "", $arg);
+		$parts = (false !== strpos($arg, "=")) ? explode("=", $arg, 2) : array($arg, true);
+		$args[$parts[0]] = $parts[1];
+	}
+}
 
 include("init.php");
 
-global $request;
-$request = new Starbug\Core\Request("/", array(
-	'server' => $_SERVER,
-	'directory' => Etc::WEBSITE_URL
-));
-$container->set("Starbug\Core\Request", $request);
-$user = $container->get("Starbug\Core\UserInterface");
+$url = $container->make("Starbug\Core\URL", array('base_directory' => $container->get("website_url")));
+$request = $container->make("Starbug\Core\Request", array('url' => $url));
+$request->setHeaders($_SERVER);
+$container->set("Starbug\Core\RequestInterface", $request);
+$user = $container->get("Starbug\Core\IdentityInterface");
 $user->setUser(array("id" => "NULL", "groups" => array("root")));
 ?>

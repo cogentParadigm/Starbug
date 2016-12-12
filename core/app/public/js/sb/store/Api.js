@@ -149,9 +149,29 @@ define([
 			}, lang.hitch(this, 'handleError'));
 			return this.results;
 		},
-		fetch: function () {
-			var results = this._request();
+		fetch: function (kwArgs) {
+			var results = this._request(kwArgs);
 			this.results = new QueryResults(results.data, {
+				response: results.response
+			});
+			return this.results;
+		},
+		fetchRange: function (kwArgs) {
+			var start = kwArgs.start,
+				end = kwArgs.end,
+				requestArgs = {};
+			if (this.useRangeHeaders) {
+				requestArgs.headers = lang.mixin(this._renderRangeHeaders(start, end), kwArgs.headers);
+			} else {
+				requestArgs.queryParams = this._renderRangeParams(start, end);
+				if (kwArgs.headers) {
+					requestArgs.headers = kwArgs.headers;
+				}
+			}
+
+			var results = this._request(requestArgs);
+			this.results = new QueryResults(results.data, {
+				totalLength: results.total,
 				response: results.response
 			});
 			return this.results;

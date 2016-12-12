@@ -3,7 +3,8 @@ namespace Starbug\Core;
 class FormDisplay extends ItemDisplay {
 	public $type = "form";
 	public $template = "form";
-	public $action = "form";
+	public $collection = "Form";
+	public $input_name = false;
 
 	public $url;
 	public $method = "post";
@@ -14,20 +15,24 @@ class FormDisplay extends ItemDisplay {
 	public $cancel_url = "";
 	public $actions;
 	protected $vars = array();
-	protected $models;
+	public $horizontal = false;
 
-	function __construct(TemplateInterface $output, Response $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, Request $request, ModelFactoryInterface $models) {
+	function __construct(TemplateInterface $output, ResponseInterface $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, DatabaseInterface $db, ModelFactoryInterface $models, CollectionFactoryInterface $collections) {
 		$this->output = $output;
 		$this->response = $response;
 		$this->hook_builder = $hooks;
 		$this->displays = $displays;
 		$this->request = $request;
+		$this->db = $db;
 		$this->models = $models;
+		$this->collections = $collections;
 	}
 
 	function build($options) {
 		$this->options = $options;
 		if (empty($this->model) && !empty($this->options['model'])) $this->model = $this->options['model'];
+		if (!empty($options["input_name"])) $this->input_name = $options["input_name"];
+		if (false === $this->input_name) $this->input_name = [$this->model];
 		// grab schema
 		if (!empty($this->model) && $this->models->has($this->model)) {
 			$this->schema = $this->models->get($this->model)->hooks;
@@ -37,7 +42,7 @@ class FormDisplay extends ItemDisplay {
 		$this->layout = $this->displays->get("LayoutDisplay");
 		//create actions display
 		$this->actions = $this->displays->get("ItemDisplay");
-		$this->actions->add($this->default_action."  label:".$this->submit_label."  class:btn-success");
+		$this->actions->add([$this->default_action, "label" => $this->submit_label, "class" => "btn-success"]);
 
 		//run query
 		$this->before_query($options);
@@ -56,14 +61,25 @@ class FormDisplay extends ItemDisplay {
 	 * filter columns to set the input type and some other defaults
 	 */
 	function filter($field, $options, $column) {
-		if (empty($options['input_type'])) $options['input_type'] = $column['input_type'];
+		if (empty($options['input_type'])) {
+			if ($column["type"] == "text") $options["input_type"] = "textarea";
+			else if ($column['type'] == "password") $options['input_type'] = "password";
+			else if ($column['type'] == "bool") $options['input_type'] = "checkbox";
+			else if ($column['type'] == "category") $options['input_type'] = "category_select";
+			else if ($column['type'] == "tags") $options['input_type'] = "tag_input";
+			else if (isset($column['upload'])) $options['input_type'] = "file_select";
+			else if ($column['type'] == "terms") $options['input_type'] = "multiple_category_select";
+			else if ($this->models->has($column['type'])) $options['input_type'] = "multiple_select";
+			else if (isset($column['references'])) $options['input_type'] = "select";
+			else $options['input_type'] = "text";
+		}
 		if ($options['input_type'] == "password") $options['class'] .= ((empty($options['class'])) ? "" : " ")."text";
 		else if ($column['type'] == "bool") $options['value'] = 1;
 		else if ($options['input_type'] == "datetime") $options['data-dojo-type'] = "starbug/form/DateTextBox";
 		else if ($options['input_type'] == "crud") {
 			if (empty($options['table'])) $options['table'] = (empty($column['table'])) ? $options['model']."_".$field : $column['table'];
 		} else if ($options['input_type'] == "category_select") {
-				if (empty($options['taxonomy'])) $options['taxonomy'] = (empty($column['taxonomy'])) ? $options['model']."_".$field : $column['taxonomy'];
+			if (empty($options['taxonomy'])) $options['taxonomy'] = (empty($column['taxonomy'])) ? $options['model']."_".$field : $column['taxonomy'];
 		}
 		if (!isset($options['required'])) {
 			$default = isset($column['default']);
@@ -89,19 +105,20 @@ class FormDisplay extends ItemDisplay {
 		if (empty($options['id'])) $this->items = array();
 		else parent::query(array("action" => $this->default_action) + $options);
 
-		if (!empty($this->request->parameters['copy']) && is_numeric($this->request->parameters['copy']) && empty($this->items)) {
-			$options['id'] = $this->request->parameters['copy'];
+		if ($this->request->hasParameter('copy') && is_numeric($this->request->getParameter('copy')) && empty($this->items)) {
+			$options['id'] = $this->request->getParameter('copy');
 			parent::query(array("action" => $this->default_action) + $options);
 			if (!empty($this->items)) {
-				$this->items[0] = $this->models->get($this->model)->filter($this->items[0], 'copy');
 				unset($this->items[0]['id']);
 			}
 		}
 
 		//load POST data
 		if (!empty($this->items)) {
-			if (empty($this->request->data[$this->model])) $this->request->data[$this->model] = array();
-			foreach ($this->items[0] as $k => $v) if (!isset($this->request->data[$this->model][$k])) $this->request->data[$this->model][$k] = $v;
+			if (!$this->hasPost()) $this->setPost([]);
+			foreach ($this->items[0] as $k => $v) {
+				if (!$this->hasPost($k)) $this->setPost($k, $v);
+			}
 		}
 	}
 
@@ -118,11 +135,10 @@ class FormDisplay extends ItemDisplay {
 		$this->errors = array();
 		foreach ($this->fields as $name => $field) {
 			$this->schema[$name] = $this->models->get($field['model'])->column_info($name);
-			$error_key = str_replace(array("][", "[", "]"), array(".", ".", ""), $name);
-			if (!empty($this->schema[$name]['entity'])) {
-				$errors = $this->models->get($this->schema[$name]['entity'])->errors($error_key, true);
-				if (!empty($errors)) $this->errors[$name] = $errors;
-			}
+			$error_key = implode(".", $this->input_name);
+			$error_key .= ".".str_replace(array("][", "[", "]"), array(".", ".", ""), $name);
+			$errors = $this->db->errors($error_key, true);
+			if (!empty($errors)) $this->errors[$name] = $errors;
 		}
 	}
 
@@ -152,6 +168,24 @@ class FormDisplay extends ItemDisplay {
 		return $this->models->get($args[0])->failure($args[1]);
 	}
 
+	public function hasPost() {
+		$args = func_get_args();
+		$keys = array_merge($this->input_name, $args);
+		return call_user_func_array([$this->request, "hasPost"], $keys);
+	}
+
+	public function getPost() {
+		$args = func_get_args();
+		$keys = array_merge($this->input_name, $args);
+		return call_user_func_array([$this->request, "getPost"], $keys);
+	}
+
+	public function setPost($value) {
+		$args = func_get_args();
+		$keys = array_merge($this->input_name, $args);
+		return call_user_func_array([$this->request, "setPost"], $keys);
+	}
+
 	/**
 	 * get the full name attribute
 	 * eg. name becomes users[name]
@@ -159,15 +193,21 @@ class FormDisplay extends ItemDisplay {
 	 * @param string $name the relative name
 	 * @return the full name
 	 */
-	function get_name($name, $model = "") {
-		if (empty($model)) {
-			$model = (empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
+	function get_name($name) {
+		$key = $this->input_name;
+		if (empty($key) || $this->method == "get") return $name;
+		else {
+			foreach ($key as $i => &$k) {
+				if ($i > 0) $k = "[".$k."]";
+			}
+			$key = implode("", $key);
+			if (false !== strpos($name, "[")) {
+				$parts = explode("[", $name, 2);
+				return $key."[".$parts[0]."][".$parts[1];
+			} else {
+				return $key."[".$name."]";
+			}
 		}
-		if (empty($model) || $this->method == "get") return $name;
-		else if (false !== strpos($name, "[")) {
-			$parts = explode("[", $name, 2);
-			return $model."[".$parts[0]."][".$parts[1];
-		} else return $model."[".$name."]";
 	}
 
 	/**
@@ -175,13 +215,10 @@ class FormDisplay extends ItemDisplay {
 	 * @param string $name the relative name
 	 * @return string the GET or POST value
 	 */
-	function get($name, $model = "") {
-		if (empty($model)) {
-			$model = (empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
-		}
+	function get($name) {
+		$keys = $this->input_name;
 		$parts = explode("[", $name);
-		if ($this->method == "post") $var = (empty($model)) ? $this->request->data : $this->request->data[$model];
-		else $var = $this->request->parameters;
+		$var = ($this->method == "post") ? $this->getPost() : $this->request->getParameters();
 		foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")];
 		if (is_array($var)) return $var;
 		else return stripslashes($var);
@@ -192,23 +229,20 @@ class FormDisplay extends ItemDisplay {
 	 * @param string $name the relative name
 	 * @param string $value the value
 	 */
-	function set($name, $value, $model = "") {
-		if (empty($model)) {
-			$model = (!empty($this->fields[$name])) ? $this->model : $this->fields[$name]["model"];
-		}
+	function set($name, $value) {
 		$parts = explode("[", $name);
 		$key = array_pop($parts);
-		if (empty($model)) {
-			if ($this->method == "post") $var = &$this->request->data;
-			else $var = &$this->request->parameters;
-		} else {
-			if ($this->method == "post") $var = &$this->request->data[$model];
-			else $var = &$this->request->parameters[$model];
-		}
+		$data = ($this->method == "post") ? $this->getPost() : $this->request->getParameters();
 		foreach ($parts as $p) {
 			$var = &$var[rtrim($p, "]")];
 		}
 		$var[$key] = $value;
+
+		if ($this->method == "post") {
+			$this->setPost($data);
+		} else {
+			$this->request->setParameters($data);
+		}
 		return $value;
 	}
 
@@ -217,7 +251,6 @@ class FormDisplay extends ItemDisplay {
 	 * @param star $ops the option string
 	 */
 	function fill_ops(&$ops, $control = "") {
-		$ops = star($ops);
 		$name = array_shift($ops);
 		if (empty($ops['name'])) $ops['name'] = $name;
 		//model
@@ -257,7 +290,7 @@ class FormDisplay extends ItemDisplay {
 
 		$capture = "field";
 		if (empty($field['field'])) $field['field'] = reset(explode("[", $field['name']));
-		$field['name'] = $this->get_name($field['name'], $field['model']);
+		$field['name'] = $this->get_name($field['name']);
 		foreach ($field as $k => $v) $this->assign($k, $v);
 		if (isset($field['nofield'])) {
 			unset($field['nofield']);

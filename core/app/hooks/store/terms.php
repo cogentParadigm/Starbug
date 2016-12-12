@@ -13,18 +13,20 @@ class hook_store_terms extends QueryHook {
 		if (empty($category_column_info['taxonomy'])) $category_column_info['taxonomy'] = $name."_".$column;
 		$tags = empty($category_column_info['table']) ? $name."_".$column : $category_column_info['table'];
 		$mentioned_tags = array();
-		$remove_unmentioned_tags = false;
-		if (!is_array($value)) $value = explode(",", preg_replace("/[,\s]+/", ",", $value));
+		$remove_unmentioned_tags = true;
+		if (!is_array($value)) $value = explode(",", preg_replace("/[,]+[,\s]*/", ",", $value));
 		foreach ($value as $tag) {
-			if ($tag === "-~") {
-				//remove all tags not mentioned
-				$remove_unmentioned_tags = true;
-			} else if (0 === strpos($tag, "-")) {
+			if (0 === strpos($tag, "-")) {
 				//remove tag
 				$this->taxonomy->untag($name, $id, $column, substr($tag, 1));
 				$mentioned_tags[] = substr($tag, 1);
+				$remove_unmentioned_tags = false;
 			} else {
 				//add tag
+				if (0 === strpos($tag, "+")) {
+					$tag = substr($tag, 1);
+					$remove_unmentioned_tags = false;
+				}
 				//echo "tag('".$name."', ".$id.", '".$column."', '".$tag."')";
 				$this->taxonomy->tag($name, $id, $column, $tag);
 				$mentioned_tags[] = $tag;

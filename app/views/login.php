@@ -1,12 +1,9 @@
 <?php
-if (!empty($this->request->parameters['to'])) $this->request->parameters['to'] = uri($this->request->parameters['to']);
+if ($this->request->hasParameter('to')) $this->request->setParameter('to', $this->url->build($this->request->getParameter('to')));
 ?>
 <div id="content">
 <?php
-	if ($this->user->loggedIn()) redirect(uri());
-	else {
-		$this->assign("url", $this->request->parameters['to']);
-		$this->displays->render("LoginForm");
-	}
+	$this->assign("url", $this->request->getParameter('to'));
+	$this->displays->render("LoginForm");
 ?>
 </div>

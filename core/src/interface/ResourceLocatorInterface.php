@@ -1,11 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/lib/ResourceLocatorInterface.php
- * @author Ali Gangji <ali@neonrain.com>
- */
 namespace Starbug\Core;
 interface ResourceLocatorInterface {
 	/**
@@ -16,4 +9,5 @@ interface ResourceLocatorInterface {
 	 * @TODO allow boolean return
 	 */
 	function locate($name, $scope = "templates");
+	function className($class, $suffix = false);
 }

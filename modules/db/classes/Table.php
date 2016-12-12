@@ -17,7 +17,7 @@ namespace Starbug\Core;
  * This class wraps a databse table, it is the base class for database models
  * @ingroup Table
  */
-class Table {
+class Table implements CollectionFilterInterface {
 	/**
 	 * @var db the db object
 	 */
@@ -56,7 +56,7 @@ class Table {
 	 * @param string $type the un-prefixed table name
 	 * @param array $filters the column filters
 	 */
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, UserInterface $user) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user) {
 		$this->db = $db;
 		$this->models = $models;
 		$this->user = $user;
@@ -334,6 +334,13 @@ class Table {
 				}
 				$this->db->store($name, $fields);
 			}
+			if ($idx > 0 && $this->db->errors($name)) {
+				$errors = $this->db->errors[$name];
+				unset($this->db->errors[$name]);
+				foreach ($errors as $field => $e) {
+					$this->db->errors[$chain[0]][$field] = $e;
+				}
+			}
 		}
 	}
 
@@ -347,7 +354,7 @@ class Table {
 		if (empty($name)) $name = $this->type;
 		$chain = array();
 		$base = $name;
-		$original = $this->load($id, $name);
+		$original = $this->load($id, false, $name);
 		if (!$original) return;
 
 		if (empty($this->models->get($base)->base)) {
@@ -372,77 +379,17 @@ class Table {
 		}
 	}
 
-	function filter($data, $action = "") {
-		if (!empty($this->base)) {
-			$data = $this->models->get($this->base)->filter($data, $action);
-		}
-		return $data;
-	}
-
-
-	function build_display($display) {
-		$display->add("id");
-	}
-
-	function query_filters($action, $query, &$ops) {
-		if (!empty($this->base)) {
-			$this->models->get($this->base)->query_filters($action, $query, $ops);
-		} else {
-			if (!empty($ops['keywords'])) $query->search($ops['keywords'], $this->search_fields);
-		}
+	function filterQuery($collection, $query, &$ops) {
 		return $query;
 	}
-
-	function query_get($query, &$ops) {
-		return $query;
+	function filterRows($collection, $rows) {
+		foreach ($rows as $idx => $row) {
+			$rows[$idx] = $this->filterRow($collection, $row);
+		}
+		return $rows;
 	}
-
-	function query_admin($query, &$ops) {
-		if (!empty($this->base)) {
-			$query = $this->models->get($this->base)->query_admin($query, $ops);
-		} else {
-			if (!$this->user->loggedIn("admin") && !$this->user->loggedIn("root")) $query->action("read");
-		}
-		return $query;
-	}
-
-	function query_select($query, &$ops) {
-		if (!empty($ops['id'])) {
-			$query->condition($query->model.".id", explode(",", $ops['id']));
-		} else {
-			$query->condition($query->model.".statuses.slug", "deleted", "!=", array("ornull" => true));
-		}
-		$query->select($query->model.".id");
-		$query->select($this->label_select." as label");
-		return $query;
-	}
-
-	function query_form($query, &$ops) {
-		if (empty($ops['action'])) $ops['action'] = "create";
-		$query->action($ops['action'], $query->model);
-		$query->condition($query->model.".id", $ops['id']);
-		$fields = $this->hooks;
-		if (!empty($this->base)) {
-			unset($fields["id"]);
-			foreach($this->chain($this->base) as $b) unset($fields[$b."_id"]);
-		}
-		foreach ($fields as $fieldname => $field) {
-			if ($this->models->has($field['type'])) {
-				if (empty($field['column'])) $field['column'] = "id";
-				$query->select($query->model.'.'.$fieldname.'.'.$field['column'].' as '.$fieldname);
-			}
-		}
-		$parent = $this->base;
-		while (!empty($parent)) {
-			foreach ($this->models->get($parent)->hooks as $column => $field) {
-				if ($this->models->has($field['type'])) {
-					if (empty($field['column'])) $field['column'] = "id";
-					$query->select($query->model.'.'.$column.'.'.$field['column'].' as '.$column);
-				}
-			}
-			$parent = $this->models->get($parent)->base;
-		}
-		return $query;
+	function filterRow($collection, $row) {
+		return $row;
 	}
 }
 ?>

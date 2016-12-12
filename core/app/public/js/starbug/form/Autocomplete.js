@@ -28,7 +28,7 @@ define([
 ], function (declare, lang, Widget, Templated, Tooltip, sb, List, put, on, dom, domclass,domstyle,query) {
 	return declare([Widget, Templated], {
 		store: null,	// a string setting the store for the widget
-						// ex: sb.get('uris', 'select');
+						// ex: sb.get('users', 'select');
 		limit:1, 		// how many characters must be entered before the list of valies will be displayed
 		placeholder: '',
 		nodeHeight:0,
@@ -69,7 +69,6 @@ define([
 				collection: self.store.filter(self.query),
 				keepScrollPosition:true,
 				renderRow: function(object, options){
-					console.log(object);
 					var node = put('div.autocomplete-item',object.label);
 					on(node, 'click', function(e) {
 						self.domNode.value = object.label;
@@ -80,6 +79,7 @@ define([
 				}
 
 			}, this.listNode);
+			this.list.startup();
 
 			/*
 			on(self.domNode, 'focus', function() {
@@ -113,7 +113,7 @@ define([
 			});
 			if (self.hiddenInput.value !== "") {
 				self.store.filter({id:parseInt(self.hiddenInput.value)}).fetch().then(function(results) {
-					if (results.length) {
+					if (results.length && self.domNode) {
 						self.domNode.value = results[0].label;
 					}
 				});

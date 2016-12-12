@@ -27,10 +27,9 @@ class hook_form_crud extends FormHook {
 		$field['data-dojo-props']['model'] = "'".$field['table']."'";
 		$field['data-dojo-props']['value'] = '[]';
 		if (!empty($field['size'])) $field['data-dojo-props']['size'] = $field['size'];
-		 if (!empty($field['value'])) {
-			$value = is_array($field['value']) ? $field['value'] : explode(",", preg_replace("/[,\s]+/", ",", $field['value']));
-			$records = $this->db->query($field['table'])->condition("id", $value)->select("GROUP_CONCAT(id ORDER BY FIELD(id, '".implode("','", $value)."')) as id")->one();
-			$field['data-dojo-props']['value'] = '['.$records['id'].']';
+		if (!empty($field['value'])) {
+			$value = is_array($field['value']) ? implode(",", $field['value']) : $field['value'];
+			$field['data-dojo-props']['value'] = '['.str_replace('#', '', $value).']';
 		}
 		$props = array();
 		foreach ($field['data-dojo-props'] as $k => $v) {

@@ -1,11 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/lib/ResourceLocator.php
- * @author Ali Gangji <ali@neonrain.com>
- */
 namespace Starbug\Core;
 class ResourceLocator implements ResourceLocatorInterface {
 
@@ -41,5 +34,19 @@ class ResourceLocator implements ResourceLocatorInterface {
 			if (file_exists($target)) $paths[$mid] = $target;
 		}
 		return $paths;
+	}
+
+	function className($class, $suffix = false) {
+		if (false === strpos($class, "\\")) {
+			if (false !== $suffix) {
+				$class = ucwords($class).$suffix;
+			}
+			for (end($this->modules); ($mid = key($this->modules)) !== null; prev($this->modules)){
+				if (class_exists($mid."\\".$class)) return $mid."\\".$class;
+			}
+		} else {
+			return $class;
+		}
+		return false;
 	}
 }

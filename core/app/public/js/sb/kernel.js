@@ -4,6 +4,7 @@ define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, r
 			stores:{},
 			errors:{},
 			dialogs:{},
+			hasLoadedTinyMCE:false,
 			star: function(str) {
 				var starr = {};
 				var pos = null;
@@ -57,6 +58,11 @@ define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, r
 				var rt = window.document.getElementsByClassName("rich-text");
 				var ed = window.document.getElementsByClassName("editable");
 				if (rt.length > 0 || ed.length > 0) {
+					if (this.hasLoadedTinyMCE) {
+						window.tinymce.remove();
+						sb.initTinyMCE(rt, ed);
+						return;
+					}
 					var script = window.document.createElement('script');
 					script.type = 'text/javascript';
 					script.src = '//tinymce.cachefly.net/4.2/tinymce.min.js';
@@ -64,82 +70,85 @@ define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, r
 					script.onload = script.onreadystatechange = function() {
 						if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
 							done = true;
-							var tiny_mce_browser_callback = function(field_name, url, type, win){
-								window.SetUrl=function(url,width,height,caption){
-									var input_field = win.document.getElementById(field_name);
-									input_field.value = url;
-									if(caption){
-										input_field.setAttribute('alt', caption);
-									}
-								};
-								window.open(WEBSITE_URL+'admin/media?modal=true','media','modal,width=1020,height=600');
-							};
-
-							var tiny_options = {
-								// General options
-								theme : "modern",
-								plugins: [
-										"advlist autolink autoresize textcolor lists link image charmap print preview hr anchor pagebreak",
-										"searchreplace wordcount visualblocks visualchars code fullscreen charmap",
-										"insertdatetime media nonbreaking save table contextmenu directionality",
-										"emoticons template paste save"
-								],
-								paste_auto_cleanup_on_paste : true,
-								auto_cleanup_word: true,
-								convert_urls: false,
-								relative_urls: false,
-								toolbar1: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | print preview",
-								image_advtab: true,
-								formats: {
-									alignleft: {selector:'img', styles:{'margin':'0 15px 15px 0', 'float':'left'}},
-									alignright: {selector:'img', styles:{'margin':'0 0 15px 15px', 'float':'right'}},
-									btndefault: {inline:'a', classes:'btn btn-default', attributes:{href:'[uri:home]'}},
-									btnprimary: {inline:'a', classes:'btn btn-primary', attributes:{href:'[uri:home]'}},
-									btnsuccess: {inline:'a', classes:'btn btn-success', attributes:{href:'[uri:home]'}},
-									btninfo: {inline:'a', classes:'btn btn-info', attributes:{href:'[uri:home]'}},
-									btnwarning: {inline:'a', classes:'btn btn-warning', attributes:{href:'[uri:home]'}},
-									btndanger: {inline:'a', classes:'btn btn-danger', attributes:{href:'[uri:home]'}}
-								},
-								style_formats_merge:true,
-								style_formats: [
-									{
-										title:"Buttons", items: [
-											{title:"Default Button", format:"btndefault"},
-											{title:"Primary Button", format:"btnprimary"},
-											{title:"Success Button", format:"btnsuccess"},
-											{title:"Info Button", format:"btninfo"},
-											{title:"Warning Button", format:"btnwarning"},
-											{title:"Danger Button", format:"btndanger"}
-										]
-									}
-								],
-								file_browser_callback: tiny_mce_browser_callback
-							};
-
-							if (rt.length > 0) {
-								tiny_options.selector = "textarea.rich-text";
-								window.tinymce.init(tiny_options);
-							}
-							if (ed.length > 0) {
-								tiny_options.selector = "div.editable";
-								tiny_options.inline = true;
-								tiny_options.save_enablewhendirty = true;
-								tiny_options.toolbar1 += " save cancel";
-								tiny_options.save_onsavecallback = function(editor) {
-									var content = editor.getContent();
-									var block_id = editor.bodyElement.getAttribute('data-block-id');
-									sb.get('blocks').put({id:block_id, content:content}).then(function() {
-										editor.bodyElement.blur();
-									});
-								};
-								window.tinymce.init(tiny_options);
-							}
-
+							sb.initTinyMCE(rt, ed);
 							// Handle memory leak in IE
 							script.onload = script.onreadystatechange = null;
 						}
 					};
 					window.document.head.appendChild(script);
+					this.hasLoadedTinyMCE = true;
+				}
+			},
+			initTinyMCE: function(rt, ed) {
+				var tiny_mce_browser_callback = function(field_name, url, type, win){
+					window.SetUrl=function(url,width,height,caption){
+						var input_field = win.document.getElementById(field_name);
+						input_field.value = url;
+						if(caption){
+							input_field.setAttribute('alt', caption);
+						}
+					};
+					window.open(WEBSITE_URL+'admin/media?modal=true','media','modal,width=1020,height=600');
+				};
+
+				var tiny_options = {
+					// General options
+					theme : "modern",
+					plugins: [
+							"advlist autolink autoresize textcolor lists link image charmap print preview hr anchor pagebreak",
+							"searchreplace wordcount visualblocks visualchars code fullscreen charmap",
+							"insertdatetime media nonbreaking save table contextmenu directionality",
+							"emoticons template paste save"
+					],
+					paste_auto_cleanup_on_paste : true,
+					auto_cleanup_word: true,
+					convert_urls: false,
+					relative_urls: false,
+					toolbar1: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | print preview",
+					image_advtab: true,
+					formats: {
+						alignleft: {selector:'img', styles:{'margin':'0 15px 15px 0', 'float':'left'}},
+						alignright: {selector:'img', styles:{'margin':'0 0 15px 15px', 'float':'right'}},
+						btndefault: {inline:'a', classes:'btn btn-default', attributes:{href:'[uri:home]'}},
+						btnprimary: {inline:'a', classes:'btn btn-primary', attributes:{href:'[uri:home]'}},
+						btnsuccess: {inline:'a', classes:'btn btn-success', attributes:{href:'[uri:home]'}},
+						btninfo: {inline:'a', classes:'btn btn-info', attributes:{href:'[uri:home]'}},
+						btnwarning: {inline:'a', classes:'btn btn-warning', attributes:{href:'[uri:home]'}},
+						btndanger: {inline:'a', classes:'btn btn-danger', attributes:{href:'[uri:home]'}}
+					},
+					style_formats_merge:true,
+					style_formats: [
+						{
+							title:"Buttons", items: [
+								{title:"Default Button", format:"btndefault"},
+								{title:"Primary Button", format:"btnprimary"},
+								{title:"Success Button", format:"btnsuccess"},
+								{title:"Info Button", format:"btninfo"},
+								{title:"Warning Button", format:"btnwarning"},
+								{title:"Danger Button", format:"btndanger"}
+							]
+						}
+					],
+					file_browser_callback: tiny_mce_browser_callback
+				};
+
+				if (rt.length > 0) {
+					tiny_options.selector = "textarea.rich-text";
+					window.tinymce.init(tiny_options);
+				}
+				if (ed.length > 0) {
+					tiny_options.selector = "div.editable";
+					tiny_options.inline = true;
+					tiny_options.save_enablewhendirty = true;
+					tiny_options.toolbar1 += " save cancel";
+					tiny_options.save_onsavecallback = function(editor) {
+						var content = editor.getContent();
+						var block_id = editor.bodyElement.getAttribute('data-block-id');
+						sb.get('blocks').put({id:block_id, content:content}).then(function() {
+							editor.bodyElement.blur();
+						});
+					};
+					window.tinymce.init(tiny_options);
 				}
 			}
 		};

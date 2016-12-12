@@ -1,8 +1,10 @@
 define(["dojo", "sb", "put-selector/put"],
 function(dojo, sb, put){
+	dojo.global.starbug = dojo.global.starbug || {};
+	dojo.global.starbug.grid = dojo.global.starbug.grid || {};
 	dojo.global.starbug.grid.columns = dojo.global.starbug.grid.columns || {};
 	dojo.global.starbug.grid.columns.filesize = function(column){
-		
+
     function formatSize(bytes) {
         if (bytes >= 1073741824) bytes = Math.round((bytes / 1073741824)*100)/100 + ' GB';
         else if (bytes >= 1048576) bytes = Math.round((bytes / 1048576)*100)/100 + ' MB';
@@ -18,7 +20,7 @@ function(dojo, sb, put){
 			put(parent && parent.contents ? parent : cell, ".dgrid-filesize");
 			cell.innerHTML = formatSize(object.size);
 		};
-				
+
 		return column;
 
 	};

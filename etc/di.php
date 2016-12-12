@@ -2,18 +2,18 @@
 use \Interop\Container\ContainerInterface;
 use \Monolog\Handler\StreamHandler;
 use \Monolog\Handler\PHPConsoleHandler;
-use \Etc;
 return array(
-	'base_directory' => BASE_DIR,
 	'modules' => array(
 		"Starbug\Core" => "core/app",
 		"Starbug\Db" => "modules/db",
+		"Starbug\Doctrine" => "modules/doctrine",
 		"Starbug\Users" => "modules/users",
-		"Starbug\Emails" => "modules/emails",
 		"Starbug\Files" => "modules/files",
+		"Starbug\Emails" => "modules/emails",
 		"Starbug\Comments" => "modules/comments",
 		"Starbug\Css" => "modules/css",
 		"Starbug\Js" => "modules/js",
+		"Starbug\Content" => "modules/content",
 		"Starbug\Theme" => "app/themes/starbug-1",
 		"Starbug\Var" => "var",
 		"Starbug\App" => "app"

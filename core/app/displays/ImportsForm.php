@@ -15,7 +15,10 @@ class ImportsForm extends FormDisplay {
 	function build_default($options) {
 		$source = $this->get("source");
 		$model = $this->get("model");
-		$this->add("name", "model  input_type:select  from:entities  query:model", "action", "source  input_type:file_select");
+		$this->add("name");
+		$this->add(["model", "input_type" => "hidden", "default" => $options['model']]);
+		$this->add(["action", "default" => "create"]);
+		$this->add(["source", "input_type" => "file_select"]);
 		if (!empty($source) && !empty($model)) {
 			$this->add(array("fields",
 				"input_type" => "crud",
@@ -34,10 +37,10 @@ class ImportsForm extends FormDisplay {
 		}
 		$this->add(array("table", "input_type" => "template", "value" => "csv-table", "class" => "table table-striped", "csv" => $source));
 		$this->add(array("count", "input_type" => "html", "value" => "<p>".$lines." rows. Press import to begin.</p>"));
-		$this->actions->add("run  label:Import  class:btn-success");
+		$this->actions->add(["run", "label" => "Import", "class" => "btn-success"]);
 	}
 	function count_source($id) {
-		$file = query("files")->condition("id", $id)->one();
+		$file = $this->models->get("files")->query()->condition("id", $id)->one();
 		$$lines = 0;
 		if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) {
 			while (!feof($handle)) {

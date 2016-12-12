@@ -18,7 +18,7 @@ class AdminUsersController extends Controller {
 	}
 	function create() {
 		$this->assign("form", "users");
-		if ($this->db->success("users", "create")) redirect(uri("admin/users", 'u'));
+		if ($this->db->success("users", "create")) $this->redirect("admin/users");
 		else $this->render("admin/create");
 	}
 	function update($id) {
@@ -26,5 +26,7 @@ class AdminUsersController extends Controller {
 		$this->assign("form", "users");
 		$this->render("admin/update");
 	}
+	function import() {
+		$this->render("admin/import");
+	}
 }
-?>

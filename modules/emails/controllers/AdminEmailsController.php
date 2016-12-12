@@ -12,7 +12,7 @@ class AdminEmailsController extends Controller {
 	function init() {
 		$this->assign("model", "email_templates");
 		$this->assign("cancel_url", "admin/emails");
-		if ($this->db->success("email_templates", "create")) redirect(uri("admin/emails", 'u'));
+		if ($this->db->success("email_templates", "create")) $this->redirect("admin/emails");
 	}
 	function default_action() {
 		$this->render("admin/list");

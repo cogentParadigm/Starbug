@@ -30,5 +30,5 @@
 	</div>
 </div>
 <?php if ($dialog) { ?>
-<div id="<?php echo $model; ?>_dialog" data-dojo-type="starbug/form/Dialog" data-dojo-id="<?php echo $model; ?>_form" data-dojo-props="url:'<?php echo $request->path."/"; ?>', callback:function(){<?php echo $model; ?>_grid.refresh()}"></div>
+<div id="<?php echo $model; ?>_dialog" data-dojo-type="starbug/form/Dialog" data-dojo-id="<?php echo $model; ?>_form" data-dojo-props="url:'<?php echo $request->getPath()."/"; ?>', callback:function(){<?php echo $model; ?>_grid.refresh()}"></div>
 <?php } ?>

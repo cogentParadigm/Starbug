@@ -1,22 +1,20 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
 class QueryTest extends PHPUnit_Framework_TestCase {
 
 	function setUp() {
 		global $container;
 		$this->db = $container->get("Starbug\Core\DatabaseInterface");
-		$this->user = $container->get("Starbug\Core\UserInterface");
+		$this->user = $container->get("Starbug\Core\IdentityInterface");
 	}
 
 	/**
 	 * Test the IteratorAggregate interface
 	 */
 	function test_iteration() {
-		$query = $this->db->query("uris");
-		foreach ($query as $uri) {
-			$this->assertArrayHasKey("id", $uri);
-			$this->assertArrayHasKey("path", $uri);
+		$query = $this->db->query("users");
+		foreach ($query as $user) {
+			$this->assertArrayHasKey("id", $user);
+			$this->assertArrayHasKey("email", $user);
 			break;
 		}
 	}
@@ -25,10 +23,10 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test table aliases
 	 */
 	function test_alias() {
-		$query = $this->db->query("uris as pages");
+		$query = $this->db->query("users as people");
 
 		//expected output
-		$expected = "SELECT `pages`.* FROM `".$this->db->prefix("uris")."` AS `pages`";
+		$expected = "SELECT `people`.* FROM `".$this->db->prefix("users")."` AS `people`";
 
 		//compare
 		$actual = $query->build();
@@ -42,10 +40,10 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * > - right angle bracket for right join
 	 */
 	function test_inner_join() {
-		$query = $this->db->query("uris,users");
+		$query = $this->db->query("settings,users");
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".$this->db->prefix("uris")."` AS `uris` INNER JOIN `".$this->db->prefix("users")."` AS `users`";
+		$expected = "SELECT `settings`.* FROM `".$this->db->prefix("settings")."` AS `settings` INNER JOIN `".$this->db->prefix("users")."` AS `users`";
 
 		//compare
 		$actual = $query->build();
@@ -53,10 +51,10 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_left_join() {
-		$query = $this->db->query("uris<users");
+		$query = $this->db->query("settings<users");
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".$this->db->prefix("uris")."` AS `uris` LEFT JOIN `".$this->db->prefix("users")."` AS `users`";
+		$expected = "SELECT `settings`.* FROM `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("users")."` AS `users`";
 
 		//compare
 		$actual = $query->build();
@@ -64,10 +62,10 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_right_join() {
-		$query = $this->db->query("uris>users");
+		$query = $this->db->query("settings>users");
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".$this->db->prefix("uris")."` AS `uris` RIGHT JOIN `".$this->db->prefix("users")."` AS `users`";
+		$expected = "SELECT `settings`.* FROM `".$this->db->prefix("settings")."` AS `settings` RIGHT JOIN `".$this->db->prefix("users")."` AS `users`";
 
 		//compare
 		$actual = $query->build();
@@ -79,10 +77,10 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test ON clauses in query models
 	 */
 	function test_join_on() {
-		$query = $this->db->query("uris,users on uris.id=users.id");
+		$query = $this->db->query("settings,users on settings.id=users.id");
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".$this->db->prefix("uris")."` AS `uris` INNER JOIN `".$this->db->prefix("users")."` AS `users` ON uris.id=users.id";
+		$expected = "SELECT `settings`.* FROM `".$this->db->prefix("settings")."` AS `settings` INNER JOIN `".$this->db->prefix("users")."` AS `users` ON settings.id=users.id";
 
 		//compare
 		$actual = $query->build();
@@ -94,10 +92,10 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test aliases in query models
 	 */
 	function test_join_aliases() {
-		$query = $this->db->query("uris as pages,users as people");
+		$query = $this->db->query("settings as pages,users as people");
 
 		//expected output
-		$expected = "SELECT `pages`.* FROM `".$this->db->prefix("uris")."` AS `pages` INNER JOIN `".$this->db->prefix("users")."` AS `people`";
+		$expected = "SELECT `pages`.* FROM `".$this->db->prefix("settings")."` AS `pages` INNER JOIN `".$this->db->prefix("users")."` AS `people`";
 
 		//compare
 		$actual = $query->build();
@@ -108,10 +106,10 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test ON clauses and aliases together in query models
 	 */
 	function test_join_on_and_aliases() {
-		$query = $this->db->query("uris as pages,users as people on pages.id=people.id");
+		$query = $this->db->query("settings as pages,users as people on pages.id=people.id");
 
 		//expected output
-		$expected = "SELECT `pages`.* FROM `".$this->db->prefix("uris")."` AS `pages` INNER JOIN `".$this->db->prefix("users")."` AS `people` ON pages.id=people.id";
+		$expected = "SELECT `pages`.* FROM `".$this->db->prefix("settings")."` AS `pages` INNER JOIN `".$this->db->prefix("users")."` AS `people` ON pages.id=people.id";
 
 		//compare
 		$actual = $query->build();
@@ -122,14 +120,14 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test ON clauses and aliases together using extended syntax
 	 */
 	function test_join_on_and_aliases_extended() {
-		$query = $this->db->query("uris as pages");
+		$query = $this->db->query("settings as pages");
 
 		$query->innerJoin("users as people")->on("pages.id=people.id");
 		//this is also valid
 		//$query->innerJoin("users as people on pages.id=people.id");
 
 		//expected output
-		$expected = "SELECT `pages`.* FROM `".$this->db->prefix("uris")."` AS `pages` INNER JOIN `".$this->db->prefix("users")."` AS `people` ON pages.id=people.id";
+		$expected = "SELECT `pages`.* FROM `".$this->db->prefix("settings")."` AS `pages` INNER JOIN `".$this->db->prefix("users")."` AS `people` ON pages.id=people.id";
 
 		//compare
 		$actual = $query->build();
@@ -140,11 +138,11 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test select
 	 */
 	function test_select() {
-		$query = $this->db->query("uris");
-		$query->select("CONCAT(id, ' ', path) as path");
+		$query = $this->db->query("users");
+		$query->select("CONCAT(id, ' ', email) as label");
 
 		// the code above should produce the query below
-		$expected = "SELECT CONCAT(id, ' ', path) as path FROM `".$this->db->prefix("uris")."` AS `uris`";
+		$expected = "SELECT CONCAT(id, ' ', email) as label FROM `".$this->db->prefix("users")."` AS `users`";
 
 		//compare queries
 		$actual = $query->build();
@@ -153,16 +151,16 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * Test expansions in select clauses made by using the dot syntax on reference fields.
-	 * For example, uris.owner references users.id, and therefore you can select fields of the references row using the syntax:
-	 * SELECT uris.owner.first_name
+	 * For example, settings.owner references users.id, and therefore you can select fields of the references row using the syntax:
+	 * SELECT settings.owner.first_name
 	 */
 	function test_select_expansion() {
-		$query = $this->db->query("uris");
+		$query = $this->db->query("settings");
 		$query->select("CONCAT(owner.first_name, ' ', owner.last_name) as name");
 
 		// the code above should produce the query below
-		$expected = "SELECT CONCAT(`uris_owner`.first_name, ' ', `uris_owner`.last_name) as name ".
-			"FROM `".$this->db->prefix("uris")."` AS `uris` LEFT JOIN `".$this->db->prefix("users")."` AS `uris_owner` ON uris_owner.id=uris.owner";
+		$expected = "SELECT CONCAT(`settings_owner`.first_name, ' ', `settings_owner`.last_name) as name ".
+			"FROM `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("users")."` AS `settings_owner` ON settings_owner.id=settings.owner";
 
 		//compare queries
 		$actual = $query->build();
@@ -173,11 +171,11 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test where clauses
 	 */
 	function test_where() {
-		$query = $this->db->query("uris");
-		$query->where("uris.path LIKE '%path%'");
+		$query = $this->db->query("users");
+		$query->where("users.email LIKE '%email%'");
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".$this->db->prefix("uris")."` AS `uris` WHERE `uris`.path LIKE '%path%'";
+		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE `users`.email LIKE '%email%'";
 
 		//compare
 		$actual = $query->build();
@@ -188,27 +186,27 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test parameterized conditions
 	 */
 	function test_condition() {
-		$query = $this->db->query("uris");
-		$query->condition("uris.path", "%path%", "LIKE");
+		$query = $this->db->query("users");
+		$query->condition("users.email", "%email%", "LIKE");
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".$this->db->prefix("uris")."` AS `uris` WHERE `uris`.path LIKE :default0";
+		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE `users`.email LIKE :default0";
 
 		//compare
 		$actual = $query->build();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("%path%", $query->parameters[":default0"]);
+		$this->assertSame("%email%", $query->parameters[":default0"]);
 	}
 
 	/**
 	 * Test expansions in condition fields
 	 */
 	function test_condition_expansion() {
-		$query = $this->db->query("uris");
-		$query->condition("uris.owner.email", "root");
+		$query = $this->db->query("settings");
+		$query->condition("settings.owner.email", "root");
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".$this->db->prefix("uris")."` AS `uris` LEFT JOIN `".$this->db->prefix("users")."` AS `uris_owner` ON uris_owner.id=uris.owner WHERE `uris_owner`.email = :default0";
+		$expected = "SELECT `settings`.* FROM `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("users")."` AS `settings_owner` ON settings_owner.id=settings.owner WHERE `settings_owner`.email = :default0";
 
 		//compare
 		$actual = $query->build();
@@ -220,11 +218,11 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in condition fields
 	 */
 	function test_condition_expansion_select() {
-		$query = $this->db->query("uris")->select("uris.owner.email")->condition("uris.owner.email", "root");
+		$query = $this->db->query("settings")->select("settings.owner.email")->condition("settings.owner.email", "root");
 
 
 		//expected output
-		$expected = "SELECT `uris_owner`.email FROM `".$this->db->prefix("uris")."` AS `uris` LEFT JOIN `".$this->db->prefix("users")."` AS `uris_owner` ON uris_owner.id=uris.owner WHERE `uris_owner`.email = :default0";
+		$expected = "SELECT `settings_owner`.email FROM `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("users")."` AS `settings_owner` ON settings_owner.id=settings.owner WHERE `settings_owner`.email = :default0";
 
 		//compare
 		$actual = $query->build();
@@ -301,11 +299,11 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in condition fields
 	 */
 	function test_condition_expansion_terms() {
-		$query = $this->db->query("uris");
-		$query->condition("uris.groups", "user", "!=");
+		$query = $this->db->query("users");
+		$query->condition("users.groups", "user", "!=");
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".$this->db->prefix("uris")."` AS `uris` WHERE :default0 NOT IN (SELECT uris_groups.slug FROM ".$this->db->prefix("uris_groups")." uris_groups_lookup INNER JOIN ".$this->db->prefix("terms")." uris_groups ON uris_groups.id=uris_groups_lookup.groups_id WHERE uris_groups_lookup.uris_id=uris.id)";
+		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE :default0 NOT IN (SELECT users_groups.slug FROM ".$this->db->prefix("users_groups")." users_groups_lookup INNER JOIN ".$this->db->prefix("terms")." users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id)";
 
 		//compare
 		$actual = $query->build();
@@ -317,11 +315,11 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in condition fields and specify the comparator field explicitly
 	 */
 	function test_condition_expansion_terms_explicit_comparator() {
-		$query = $this->db->query("uris");
-		$query->condition("uris.groups.term", "User", '!=');
+		$query = $this->db->query("users");
+		$query->condition("users.groups.term", "User", '!=');
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".$this->db->prefix("uris")."` AS `uris` WHERE :default0 NOT IN (SELECT uris_groups.term FROM ".$this->db->prefix("uris_groups")." uris_groups_lookup INNER JOIN ".$this->db->prefix("terms")." uris_groups ON uris_groups.id=uris_groups_lookup.groups_id WHERE uris_groups_lookup.uris_id=uris.id)";
+		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE :default0 NOT IN (SELECT users_groups.term FROM ".$this->db->prefix("users_groups")." users_groups_lookup INNER JOIN ".$this->db->prefix("terms")." users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id)";
 
 		//compare
 		$actual = $query->build();
@@ -333,11 +331,11 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in where clauses
 	 */
 	function test_where_expansion_terms() {
-		$query = $this->db->query("uris");
-		$query->where(":group NOT IN uris.groups")->param("group", "user");
+		$query = $this->db->query("users");
+		$query->where(":group NOT IN users.groups")->param("group", "user");
 
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".$this->db->prefix("uris")."` AS `uris` WHERE :group NOT IN (SELECT uris_groups.slug FROM ".$this->db->prefix("uris_groups")." uris_groups_lookup INNER JOIN ".$this->db->prefix("terms")." uris_groups ON uris_groups.id=uris_groups_lookup.groups_id WHERE uris_groups_lookup.uris_id=uris.id)";
+		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE :group NOT IN (SELECT users_groups.slug FROM ".$this->db->prefix("users_groups")." users_groups_lookup INNER JOIN ".$this->db->prefix("terms")." users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id)";
 
 		//compare
 		$actual = $query->build();
@@ -349,11 +347,11 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test grouping
 	 */
 	function test_grouping() {
-		$query = $this->db->query("uris");
-		$query->select("COUNT(*) as count")->group("type");
+		$query = $this->db->query("users");
+		$query->select("COUNT(*) as count")->group("MONTH(created)");
 
 		//expected output
-		$expected = "SELECT COUNT(*) as count FROM `".$this->db->prefix("uris")."` AS `uris` GROUP BY type";
+		$expected = "SELECT COUNT(*) as count FROM `".$this->db->prefix("users")."` AS `users` GROUP BY MONTH(created)";
 
 		//compare
 		$actual = $query->build();
@@ -364,11 +362,11 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in GROUP BY clauses
 	 */
 	function test_grouping_expansion() {
-		$query = $this->db->query("uris");
+		$query = $this->db->query("settings");
 		$query->select("COUNT(*) as count")->group("owner.first_name");
 
 		//expected output
-		$expected = "SELECT COUNT(*) as count FROM `".$this->db->prefix("uris")."` AS `uris` LEFT JOIN `".$this->db->prefix("users")."` AS `uris_owner` ON uris_owner.id=uris.owner GROUP BY `uris_owner`.first_name";
+		$expected = "SELECT COUNT(*) as count FROM `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("users")."` AS `settings_owner` ON settings_owner.id=settings.owner GROUP BY `settings_owner`.first_name";
 
 		//compare
 		$actual = $query->build();
@@ -379,11 +377,11 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	 * Test expansions in GROUP BY clauses
 	 */
 	function test_grouping_expansion_terms() {
-		$query = $this->db->query("uris");
-		$query->select("COUNT(*) as count")->group("uris.groups");
+		$query = $this->db->query("users");
+		$query->select("COUNT(*) as count")->group("users.groups");
 
 		//expected output
-		$expected = "SELECT COUNT(*) as count FROM `".$this->db->prefix("uris")."` AS `uris` LEFT JOIN `".$this->db->prefix("uris_groups")."` AS `uris_groups_lookup` ON uris_groups_lookup.uris_id=uris.id LEFT JOIN `".$this->db->prefix("terms")."` AS `uris_groups` ON uris_groups.id=uris_groups_lookup.groups_id GROUP BY `uris_groups`.slug";
+		$expected = "SELECT COUNT(*) as count FROM `".$this->db->prefix("users")."` AS `users` LEFT JOIN `".$this->db->prefix("users_groups")."` AS `users_groups_lookup` ON users_groups_lookup.users_id=users.id LEFT JOIN `".$this->db->prefix("terms")."` AS `users_groups` ON users_groups.id=users_groups_lookup.groups_id GROUP BY `users_groups`.slug";
 
 		//compare
 		$actual = $query->build();
@@ -438,7 +436,7 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 
 	function test_or_condition() {
 		$query = $this->db->query("terms");
-		$query->condition("taxonomy", "uris_categories")->orCondition("taxonomy", "files_category");
+		$query->condition("taxonomy", "groups")->orCondition("taxonomy", "statuses");
 
 		//expected output
 		$expected = "SELECT `terms`.* FROM `".$this->db->prefix("terms")."` AS `terms` WHERE taxonomy = :default0 || taxonomy = :default1";
@@ -446,13 +444,13 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		//compare
 		$actual = $query->build();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("uris_categories", $query->parameters[":default0"]);
-		$this->assertSame("files_category", $query->parameters[":default1"]);
+		$this->assertSame("groups", $query->parameters[":default0"]);
+		$this->assertSame("statuses", $query->parameters[":default1"]);
 	}
 
 	function test_or_where() {
 		$query = $this->db->query("terms");
-		$query->where("taxonomy = :tax1")->orWhere("taxonomy = :tax2")->params(array("tax1" => "uris_categories", "tax2" => "files_category"));
+		$query->where("taxonomy = :tax1")->orWhere("taxonomy = :tax2")->params(array("tax1" => "groups", "tax2" => "statuses"));
 
 		//expected output
 		$expected = "SELECT `terms`.* FROM `".$this->db->prefix("terms")."` AS `terms` WHERE taxonomy = :tax1 || taxonomy = :tax2";
@@ -460,13 +458,13 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		//compare
 		$actual = $query->build();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("uris_categories", $query->parameters[":tax1"]);
-		$this->assertSame("files_category", $query->parameters[":tax2"]);
+		$this->assertSame("groups", $query->parameters[":tax1"]);
+		$this->assertSame("statuses", $query->parameters[":tax2"]);
 	}
 
 	function test_or_where_shorter() {
 		$query = $this->db->query("terms");
-		$query->where("taxonomy = :tax1 || taxonomy = :tax2")->params(array("tax1" => "uris_categories", "tax2" => "files_category"));
+		$query->where("taxonomy = :tax1 || taxonomy = :tax2")->params(array("tax1" => "groups", "tax2" => "statuses"));
 
 		//expected output
 		$expected = "SELECT `terms`.* FROM `".$this->db->prefix("terms")."` AS `terms` WHERE taxonomy = :tax1 || taxonomy = :tax2";
@@ -474,18 +472,18 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		//compare
 		$actual = $query->build();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("uris_categories", $query->parameters[":tax1"]);
-		$this->assertSame("files_category", $query->parameters[":tax2"]);
+		$this->assertSame("groups", $query->parameters[":tax1"]);
+		$this->assertSame("statuses", $query->parameters[":tax2"]);
 	}
 
 	function test_or_condition_set() {
 		$query = $this->db->query("terms");
 
-		$query->condition("taxonomy", "uris_categories");
+		$query->condition("taxonomy", "groups");
 
 		//recent is an arbritrary set name
 		$query->open("recent", "||");
-		$query->condition("created", date("Y-m-d")." 00:00:00", ">=")->andCondition("taxonomy", "files_category");
+		$query->condition("created", date("Y-m-d")." 00:00:00", ">=")->andCondition("taxonomy", "statuses");
 
 		//expected output
 		$expected = "SELECT `terms`.* FROM `".$this->db->prefix("terms")."` AS `terms` WHERE taxonomy = :default0 || (created >= :recent0 && taxonomy = :recent1)";
@@ -493,9 +491,9 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		//compare
 		$actual = $query->build();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("uris_categories", $query->parameters[":default0"]);
+		$this->assertSame("groups", $query->parameters[":default0"]);
 		$this->assertSame(date("Y-m-d")." 00:00:00", $query->parameters[":recent0"]);
-		$this->assertSame("files_category", $query->parameters[":recent1"]);
+		$this->assertSame("statuses", $query->parameters[":recent1"]);
 	}
 
 	function test_search_and() {
@@ -536,10 +534,10 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_multivalue_term_expansion() {
-		$query = $this->db->query("uris");
-		$query->condition("uris.groups", array("user", "admin"));
+		$query = $this->db->query("users");
+		$query->condition("users.groups", array("user", "admin"));
 		//expected output
-		$expected = "SELECT `uris`.* FROM `".$this->db->prefix("uris")."` AS `uris` WHERE (:default0 IN (SELECT uris_groups.slug FROM ".$this->db->prefix("uris_groups")." uris_groups_lookup INNER JOIN ".$this->db->prefix("terms")." uris_groups ON uris_groups.id=uris_groups_lookup.groups_id WHERE uris_groups_lookup.uris_id=uris.id) || :default1 IN (SELECT uris_groups.slug FROM ".$this->db->prefix("uris_groups")." uris_groups_lookup INNER JOIN ".$this->db->prefix("terms")." uris_groups ON uris_groups.id=uris_groups_lookup.groups_id WHERE uris_groups_lookup.uris_id=uris.id))";
+		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE (:default0 IN (SELECT users_groups.slug FROM ".$this->db->prefix("users_groups")." users_groups_lookup INNER JOIN ".$this->db->prefix("terms")." users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id) || :default1 IN (SELECT users_groups.slug FROM ".$this->db->prefix("users_groups")." users_groups_lookup INNER JOIN ".$this->db->prefix("terms")." users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id))";
 
 		//compare
 		$actual = $query->build();
@@ -549,19 +547,19 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function test_action() {
-		$query = $this->db->query("uris");
+		$query = $this->db->query("users");
 		$this->user->setUser(array("id" => 2));
 		$query->action("read");
 
 		//expected output
-		$expected = "SELECT `uris`.* ".
-								"FROM `".$this->db->prefix("uris")."` AS `uris` ".
-								"INNER JOIN `".$this->db->prefix("permits")."` AS `permits` ON 'uris' LIKE permits.related_table && 'read' LIKE permits.action ".
+		$expected = "SELECT `users`.* ".
+								"FROM `".$this->db->prefix("users")."` AS `users` ".
+								"INNER JOIN `".$this->db->prefix("permits")."` AS `permits` ON 'users' LIKE permits.related_table && 'read' LIKE permits.action ".
 								"WHERE ".
-									"('global' LIKE `permits`.priv_type || (`permits`.priv_type='object' && `permits`.related_id=`uris`.id)) && ".
-									"(`permits`.object_statuses is null || `permits`.object_statuses=`uris`.statuses) && ".
+									"('global' LIKE `permits`.priv_type || (`permits`.priv_type='object' && `permits`.related_id=`users`.id)) && ".
+									"(`permits`.object_deleted is null || `permits`.object_deleted=`users`.deleted) && ".
 									"(`permits`.user_groups is null || `permits`.user_groups IN (SELECT groups_id FROM ".$this->db->prefix("users_groups")." u WHERE `u`.users_id=2)) && ".
-									"(`permits`.role='everyone' || `permits`.role='user' && `permits`.who='2' || `permits`.role='owner' && `uris`.owner='2' || `permits`.role='groups' && (EXISTS (SELECT groups_id FROM ".$this->db->prefix("uris_groups")." o WHERE `o`.uris_id=`uris`.id && `o`.groups_id IN (SELECT groups_id FROM ".$this->db->prefix("users_groups")." u WHERE `u`.users_id=2)) || NOT EXISTS (SELECT groups_id FROM ".$this->db->prefix("uris_groups")." o WHERE `o`.uris_id=`uris`.id)))";
+									"(`permits`.role='everyone' || `permits`.role='user' && `permits`.who='2' || `permits`.role='self' && `users`.id='2' || `permits`.role='owner' && `users`.owner='2' || `permits`.role='groups' && (EXISTS (SELECT groups_id FROM ".$this->db->prefix("users_groups")." o WHERE `o`.users_id=`users`.id && `o`.groups_id IN (SELECT groups_id FROM ".$this->db->prefix("users_groups")." u WHERE `u`.users_id=2)) || NOT EXISTS (SELECT groups_id FROM ".$this->db->prefix("users_groups")." o WHERE `o`.users_id=`users`.id)))";
 
 		//compare
 		$actual = $query->build();
@@ -571,11 +569,11 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	function test_remove() {
 		//the delete method is normally an execution method
 		//passing false prevents the query from actually running
-		$query = $this->db->query("uris");
-		$query->condition("path", "phpunit")->delete(false);
+		$query = $this->db->query("users");
+		$query->condition("email", "phpunit")->delete(false);
 
 		//expected output
-		$expected = "DELETE `uris`.* FROM `".$this->db->prefix("uris")."` AS `uris` WHERE path = :default0";
+		$expected = "DELETE `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE email = :default0";
 
 		//compare
 		$actual = $query->build();
@@ -586,28 +584,28 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	function test_insert() {
 		//the insert method is normally an execution method
 		//passing false prevents the query from actually running
-		$query = $this->db->query("uris");
-		$query->set("path", "phpunit")->insert(false);
+		$query = $this->db->query("users");
+		$query->set("first_name", "PHPUnit")->insert(false);
 
 		//expected output (actual output contains extra fields due to validation)
-		$expected = "INSERT INTO `".$this->db->prefix("uris")."` SET `path` = :set0";
+		$expected = "INSERT INTO `".$this->db->prefix("users")."` SET `first_name` = :set0";
 
 		//compare
 		$actual = reset(explode(",", $query->build()));
 		$this->assertSame($expected, $actual);
-		$this->assertSame("phpunit", $query->parameters[":set0"]);
+		$this->assertSame("PHPUnit", $query->parameters[":set0"]);
 	}
 
 	function test_update() {
 		//the update method is normally an execution method
 		//passing false prevents the query from actually running
-		$query = $this->db->query("uris");
-		$query->set("title", "PHPUnit");
-		$query->condition("path", "phpunit");
+		$query = $this->db->query("users");
+		$query->set("first_name", "PHPUnit");
+		$query->condition("email", "phpunit");
 		$query->update(false);
 
 		//expected output
-		$expected = "UPDATE `".$this->db->prefix("uris")."` AS `uris` SET `title` = :set0, `modified` = :set1 WHERE path = :default0";
+		$expected = "UPDATE `".$this->db->prefix("users")."` AS `users` SET `first_name` = :set0, `modified` = :set1 WHERE email = :default0";
 
 		//compare
 		$actual = $query->build();
@@ -619,13 +617,13 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	function test_update_condition_expansion() {
 		//the update method is normally an execution method
 		//passing false prevents the query from actually running
-		$query = $this->db->query("uris");
-		$query->set("uris.title", "PHPUnit");
+		$query = $this->db->query("settings");
+		$query->set("settings.value", "PHPUnit");
 		$query->condition("owner.first_name", "phpunit");
 		$query->update(false);
 
 		//expected output
-		$expected = "UPDATE `".$this->db->prefix("uris")."` AS `uris` LEFT JOIN `".$this->db->prefix("users")."` AS `uris_owner` ON uris_owner.id=uris.owner SET `uris`.`title` = :set0, `modified` = :set1 WHERE `uris_owner`.first_name = :default0";
+		$expected = "UPDATE `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("users")."` AS `settings_owner` ON settings_owner.id=settings.owner SET `settings`.`value` = :set0, `modified` = :set1 WHERE `settings_owner`.first_name = :default0";
 
 		//compare
 		$actual = $query->build();
@@ -637,13 +635,13 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	function test_update_set_expansion() {
 		//the update method is normally an execution method
 		//passing false prevents the query from actually running
-		$query = $this->db->query("uris");
+		$query = $this->db->query("settings");
 		$query->set("owner.first_name", "PHPUnit");
-		$query->condition("uris.title", "phpunit");
+		$query->condition("settings.value", "phpunit");
 		$query->update(false);
 
 		//expected output
-		$expected = "UPDATE `".$this->db->prefix("uris")."` AS `uris` LEFT JOIN `".$this->db->prefix("users")."` AS `uris_owner` ON uris_owner.id=uris.owner SET `uris_owner`.`first_name` = :set0, `modified` = :set1 WHERE `uris`.title = :default0";
+		$expected = "UPDATE `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("users")."` AS `settings_owner` ON settings_owner.id=settings.owner SET `settings_owner`.`first_name` = :set0, `modified` = :set1 WHERE `settings`.value = :default0";
 
 		//compare
 		$actual = $query->build();

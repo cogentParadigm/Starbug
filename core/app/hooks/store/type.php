@@ -23,7 +23,7 @@ class hook_store_type extends QueryHook {
 		$type = $argument;
 		$type_ids = array();
 		$ids = array();
-		$clean = false;
+		$clean = true;
 
 		//loop through values
 		if (!is_array($value)) $value = explode(",", preg_replace("/[,\s]+/", ",", $value));
@@ -35,6 +35,10 @@ class hook_store_type extends QueryHook {
 			} else {
 				if (0 === strpos($type_id, "-")) {
 					$remove = true;
+					$clean = false;
+					$type_id = substr($type_id, 1);
+				} else if (0 === strpos($type_id, "+")) {
+					$clean = false;
 					$type_id = substr($type_id, 1);
 				}
 				if (0 === strpos($type_id, "#")) {
@@ -43,9 +47,7 @@ class hook_store_type extends QueryHook {
 				}
 			}
 
-			if ($remove && $type_id === "~") {
-				$clean = true;
-			} else if ($value_type === "object") {
+			if ($value_type === "object") {
 				if (isset($type_id['id'])) {
 					$entry = $this->db->query($target)->condition("id", $type_id['id']);
 					$ids[] = $type_id['id'];

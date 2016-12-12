@@ -7,7 +7,7 @@ define(["dojo/_base/Deferred", "starbug/grid/Grid", "dgrid/extensions/DijitRegis
 
 					var grid = this.grid, targetRow, targetPosition, fromRow, fromPosition;
 
-					if (!this._targetAnchor) return
+					if (!this._targetAnchor) return;
 
 					//get target position
 					targetRow = grid.row(this._targetAnchor);
@@ -16,10 +16,6 @@ define(["dojo/_base/Deferred", "starbug/grid/Grid", "dgrid/extensions/DijitRegis
 					//get source position
 					fromRow = grid.row(nodes[0]);
 					fromPosition = grid.collection.data.indexOf(fromRow.data);
-
-					console.log(targetPosition);
-					console.log(fromPosition);
-					console.log(nodes.length);
 
 					//pull out the movers
 					var movers = grid.collection.data.splice(fromPosition, nodes.length);

@@ -5,20 +5,22 @@ class hook_store_upload extends QueryHook {
 	protected $request;
 	protected $models;
 	protected $files;
-	function __construct(ModelFactoryInterface $models, Request $request) {
+	function __construct(ModelFactoryInterface $models, RequestInterface $request) {
 		$this->request = $request;
 		$this->models = $models;
 		$this->files = $models->get("files");
 	}
 	function empty_validate($query, $column, $argument) {
-		if (!empty($this->request->files[$column]["name"])) $query->set($column, $this->store($query, $column, "", $column, $argument));
+		$files = $this->request->getFiles();
+		if (!empty($files[$column]["name"])) $query->set($column, $this->store($query, $column, "", $column, $argument));
 	}
 	function store(&$query, $key, $value, $column, $argument) {
 		if ($this->uploaded) return $value;
 		else $this->uploaded = true;
+		$files = $this->request->getFiles();
 		$record = array("filename" => "", "mime_type" => "", "caption" => "$name $field");
 		if (!empty($value) && is_numeric($value)) $records['id'] = $value;
-		$file = $this->request->files[$column];
+		$file = $files[$column];
 		if (!empty($file['name'])) {
 			$this->files->upload($record, $file);
 			if (!$this->files->errors()) {

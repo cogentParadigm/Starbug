@@ -1,17 +1,17 @@
 --------------------------------------------------------------------------------------------------------------------------------
-WHEN FIRST CLONING A STARBUG PROJECT OR TO UPDATE YOUR SYSTEMS sb COMMAND:
-run command: sudo cp sb /usr/bin/
+TO SETUP WHEN CLONING THIS PROJECT:
+run command: composer install
+edit files : app/etc/db/default.json (db credentials), and etc/Host.php (URL sub-directory, Timezone)
+run command: php sb setup
+run command: composer dump-autoload
 
 --------------------------------------------------------------------------------------------------------------------------------
-WHEN FIRST CLONING THIS PROJECT:
-run command: git submodule init
-run command: git submodule update
-run command: sb generate host
-edit files : app/etc/db/default.json (db credentials), and etc/Host.php (URL sub-directory, Timezone)
-run command: sb setup
-run command: sb migrate
-run command: sb store users id:1 groups:root,admin password:[replace with password]
+THE FIRST TIME YOU SETUP THE PROJECT, INSTALL AND COMMIT THE LIBRARIES:
+run command: bower install
+run command: git add libraries
+run command: git commit -am "libraries"
+run command: git push
 
 --------------------------------------------------------------------------------------------------------------------------------
 WHEN PULLING NEW CODE:
-run command: sb migrate
+run command: composer migrate

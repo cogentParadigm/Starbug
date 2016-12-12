@@ -8,7 +8,7 @@ class hook_store_category extends QueryHook {
 		$this->models = $models;
 	}
 	function validate($query, $key, $value, $column, $argument) {
-		if (!empty($value) && !is_numeric($value)) {
+		if (!empty($value) && !is_numeric($value) && "NULL" !== $value) {
 			$field = $this->models->get($query->model)->hooks[$column];
 			$taxonomy = (empty($field["taxonomy"])) ? $query->model."_".$column : $field['taxonomy'];
 			$term = $this->db->query("terms")->condition("term", $value)->orCondition("slug", $value)->one();
@@ -17,7 +17,7 @@ class hook_store_category extends QueryHook {
 		return $value;
 	}
 	function store(&$query, $key, $value, $column, $argument) {
-		if (!empty($value) && !is_numeric($value)) $this->models->get($query->model)->error("Term not valid", $column);
+		if (!empty($value) && !is_numeric($value) && "NULL" !== $value) $this->models->get($query->model)->error("Term not valid", $column);
 		return $value;
 	}
 }

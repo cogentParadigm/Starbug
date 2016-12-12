@@ -4,7 +4,8 @@
  * @ingroup models
  */
 namespace Starbug\Intl;
-class Languages {
+use Starbug\Core\LanguagesModel;
+class Languages extends LanguagesModel {
 
 	/******************************************************************
 	 * Query functions

@@ -25,10 +25,14 @@
 	</logging>
 	<testsuites>
 		<testsuite name="core">
+			<directory>../core/tests/</directory>
 			<directory>../core/app/tests/</directory>
 		</testsuite>
 		<testsuite name="dbmodule">
 			<directory>../modules/db/tests/</directory>
+		</testsuite>
+		<testsuite name="content">
+			<directory>../modules/content/tests/</directory>
 		</testsuite>
 	</testsuites>
 

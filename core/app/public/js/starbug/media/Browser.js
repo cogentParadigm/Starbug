@@ -39,7 +39,7 @@ define([
 		modal:false,
 		postCreate:function() {
 			var self = this;
-			this.collection = new api({model:'files', action:'list'});
+			this.collection = new api({model:'files', action:'admin'});
 
 			//instantiate a dgrid on demand list
 			this.list = new List({
@@ -116,7 +116,7 @@ define([
 
 			//instantiate a dgrid on demand list
 			this.clist = new List({
-        collection: (new api({model:'terms', action:'list'})).filter({taxonomy:'files_category'}),
+        collection: (new api({model:'terms', action:'index'})).filter({taxonomy:'files_category'}),
         keepScrollPosition:true,
         renderRow: function(object, options){
 					//the renderRow function will render our list item
@@ -188,7 +188,7 @@ define([
 				this.gridNode.style.display = 'block';
 				this.contextMenu.style.display = 'none';
 				if (this.grid == null) {
-					this.grid = new Grid({model:'files', action:'list', query:this.query, editor:this}, this.gridTableNode);
+					this.grid = new Grid({model:'files', action:'admin', query:this.query, editor:this}, this.gridTableNode);
 				} else this.grid.set('query', this.query);
 			} else if (mode == 'icons') {
 				domclass.remove(this.detailsMode, 'active');

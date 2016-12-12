@@ -4,7 +4,8 @@
  * @ingroup models
  */
 namespace Starbug\Intl;
-class Provinces {
+use Starbug\Core\ProvincesModel;
+class Provinces extends ProvincesModel {
 
 	function create($province) {
 		$this->store($province);
@@ -14,35 +15,13 @@ class Provinces {
 	 * Query functions
 	 *****************************************************************/
 
-  function query_admin($query, &$ops) {
-    $query = parent::query_admin($query, $ops);
-    return $query;
-  }
-
-	function query_select($query, &$ops) {
-		 if (!empty($ops['id'])) {
-			$query->condition($query->model.".id", explode(",", $ops['id']));
-		}
-		$query->select("provinces.name as id");
-		$query->select("provinces.name as label");
+	function filterQuery($collection, $query, &$ops) {
 		$query->sort("provinces.name");
 		if (!empty($ops['attributes']['country'])) {
 			$query->condition("provinces.countries_id.code", $ops['attributes']['country']);
 		}
 		return $query;
 	}
-
-  function query_filters($action, $query, $ops) {
-      return $query;
-  }
-
-	/******************************************************************
-	 * Display functions
-	 *****************************************************************/
-
-	function display_admin($display, $ops) {
-	    $display->add("id");
-  	}
 
 }
 ?>

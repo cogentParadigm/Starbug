@@ -1,5 +1,6 @@
 define([
 	"dojo",
+	"dojo/on",
 	"starbug",
 	"sb",
 	"sb/data",
@@ -7,14 +8,14 @@ define([
 	"dgrid/GridFromHtml",
 	"dgrid/Grid",
 	"dgrid/Keyboard",
-	"dgrid/Selection",
+	"dgrid/Selector",
 	"dgrid/extensions/Pagination",
 	"dgrid/Editor",
 	"dojo/_base/Deferred",
 	"dojo/dom-attr"
-], function(dojo, starbug, sb, data, api, GridFromHtml, List, Keyboard, Selection, Pagination, Editor, Deferred, attr){
+], function(dojo, on, starbug, sb, data, api, GridFromHtml, List, Keyboard, Selector, Pagination, Editor, Deferred, attr){
 window.dgrid = window.dgrid || {GridFromHtml:GridFromHtml};
-var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard, Selection, Pagination, Editor], {
+var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard, Selector, Pagination, Editor], {
 	pagingLinks: 2,
 	firstLastArrows: true,
 	previousNextArrows: true,
@@ -23,6 +24,8 @@ var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard,
 	noDataMessage:'No Results',
 	getBeforePut:false,
 	query:{},
+	deselectOnRefresh:false,
+	allowSelectAll:true,
 	constructor: function(args) {
 		if (args.model && args.action) {
 			args.query = args.query || {};
@@ -34,6 +37,10 @@ var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard,
 		this.inherited(arguments);
 		var grid = this;
 		for (var i in this.columns) if (typeof this.columns[i]['editor'] != "undefined") this.columns[i].autoSave = true;
+		//filter
+		on(window.document, '[data-filter='+this.model+']:change', function(e) {
+			grid.applyFilterFromInput(e.target);
+		});
 	},
 	save: function () {
 
@@ -100,7 +107,7 @@ var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard,
 			dfd.resolve();
 			return promise;
 		},
-		filterChange:function(node) {
+		applyFilterFromInput:function(node) {
 			var name = (typeof node.get == "undefined") ? attr.get(node, 'name') : node.get('name');
 			var value = (typeof node.get == "undefined") ? attr.get(node, 'value') : node.get('value');
 			if (typeof value == "object" && typeof node.serialize == "function") {

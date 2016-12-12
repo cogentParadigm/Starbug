@@ -15,6 +15,7 @@ class hook_form_category_select extends FormHook {
 		$value = $form->get($value_name);
 		if ((empty($value)) && (!empty($field['default']))) {
 			$form->set($field['name'], $field['default']);
+			$value = $field["default"];
 			unset($field['default']);
 		}
 		if (empty($field['taxonomy'])) $field['taxonomy'] = ((empty($form->model)) ? "" : $form->model."_").$field['name'];
@@ -26,6 +27,7 @@ class hook_form_category_select extends FormHook {
 		$field['value'] = $form->get($value_name);
 		$form->assign("options", $options);
 		$field["terms"] = $terms;
+		$field["value"] = $value;
 	}
 }
 ?>

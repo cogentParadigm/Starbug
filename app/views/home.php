@@ -9,19 +9,19 @@
   <!-- Wrapper for slides -->
   <div class="carousel-inner" role="listbox">
     <div class="item active">
-      <img src="<?php echo image_thumb("app/themes/starbug-1/public/images/slides/1.jpg", "w:1920  h:882  a:1"); ?>">
+      <img src="<?php echo $this->images->thumb("app/themes/starbug-1/public/images/slides/1.jpg", ["w" => 1920, "h" => 882, "a" => 1]); ?>">
       <div class="carousel-caption">
         Test Caption
       </div>
     </div>
     <div class="item">
-      <img src="<?php echo image_thumb("app/themes/starbug-1/public/images/slides/2.jpg", "w:1920  h:882  a:1"); ?>">
+      <img src="<?php echo $this->images->thumb("app/themes/starbug-1/public/images/slides/2.jpg", ["w" => 1920, "h" => 882, "a" => 1]); ?>">
       <div class="carousel-caption">
         Another Caption
       </div>
     </div>
     <div class="item">
-      <img src="<?php echo image_thumb("app/themes/starbug-1/public/images/slides/3.jpg", "w:1920  h:882  a:1"); ?>">
+      <img src="<?php echo $this->images->thumb("app/themes/starbug-1/public/images/slides/3.jpg", ["w" => 1920, "h" => 882, "a" => 1]); ?>">
       <div class="carousel-caption">
         Another Caption
       </div>

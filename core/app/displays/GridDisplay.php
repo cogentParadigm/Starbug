@@ -5,22 +5,24 @@ class GridDisplay extends ItemDisplay {
 	public $template = "grid";
 	public $grid_class = "starbug/grid/PagedGrid";
 	public $dnd = false;
+	public $action = "";
 	public $fields = array(
 		"row_options" => array("field" => "id", "label" => "Options", "class" => "field-options", "plugin" => "starbug.grid.columns.options")
 	);
 	protected $request;
 
-	function __construct(TemplateInterface $output, Response $response, ModelFactoryInterface $models, HookFactoryInterface $hook_builder, Request $request) {
+	function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, CollectionFactoryInterface $collections, HookFactoryInterface $hook_builder, RequestInterface $request) {
 		$this->output = $output;
 		$this->response = $response;
 		$this->models = $models;
+		$this->collections = $collections;
 		$this->hook_builder = $hook_builder;
 		$this->request = $request;
 	}
 
 	function build($options=array()) {
 		//set defaults
-		if ($options['attributes']) $this->attributes = star($options['attributes']);
+		if ($options['attributes']) $this->attributes = $options['attributes'];
 		$this->options = $options;
 		if ($options['dnd']) $this->dnd();
 		$this->build_display($options);
@@ -97,8 +99,8 @@ class GridDisplay extends ItemDisplay {
 		//convert from array to string
 		$this->attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($this->attributes['data-dojo-props'])), '{}');
 		//add query params
-		$params = array_merge($this->request->parameters, $this->options);
-		foreach ($params as $key => $value) if (is_array($value)) unset($params[$key]);
+		$params = array_merge($this->request->getParameters(), $this->options);
+		foreach ($params as $key => $value) if (is_array($value)) $params[$key] = implode(",", $value);
 		if (!empty($params)) {
 			$this->attributes['data-dojo-props'] .= ', query: {';
 			foreach ($params as $k => $v) $this->attributes['data-dojo-props'] .= $k.":'".$v."', ";

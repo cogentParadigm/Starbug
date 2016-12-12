@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core;
 class hook_query_action extends QueryHook {
-	public function __construct(UserInterface $user, DatabaseInterface $db, ModelFactoryInterface $models) {
+	public function __construct(IdentityInterface $user, DatabaseInterface $db, ModelFactoryInterface $models) {
 		$this->user = $user;
 		$this->db = $db;
 		$this->models = $models;

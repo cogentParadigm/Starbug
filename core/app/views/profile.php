@@ -10,7 +10,7 @@
 		<?php if ($this->db->success("users", "update_profile")) { ?>
 			<div class="alert alert-success">You profile has been updated successfully.</div>
 		<?php } else { ?>
-			<?php $this->displays->render("ProfileForm", array_merge($this->request->parameters, array("operation" => $action, "id" => $id))); ?>
+			<?php $this->displays->render("ProfileForm", array_merge($this->request->getParameters(), array("operation" => $action, "id" => $id))); ?>
 		<?php } ?>
 	</div>
 </div>

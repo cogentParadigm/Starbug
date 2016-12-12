@@ -1,1 +1,1 @@
-<div <?php html_attributes($attributes); ?>></div>
+<div <?php echo $this->filter->attributes($attributes); ?>></div>

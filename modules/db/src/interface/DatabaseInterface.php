@@ -21,7 +21,7 @@ interface DatabaseInterface {
 	function get($collection, $conditions = array(), $options = array());
 	/**
 	 * query the database
-	 * @param string $froms comma delimeted list of tables to join. 'users' or 'uris,system_tags'
+	 * @param string $froms comma delimeted list of tables to join. 'users' or 'users,permits'
 	 * @param string $args starbug query string for params: select, where, limit, and action/priv_type
 	 * @param bool $mine optional. if true, joining models will be checked for relationships and ON statements will be added
 	 * @return array record or records
@@ -54,8 +54,10 @@ interface DatabaseInterface {
 	 */
 	function remove($from, $where);
 	function prefix($table);
-	public function set_debug($debug);
+	public function setDatabase($name);
 	public function exec($statement);
+	public function prepare($statement);
+	public function lastInsertId();
 	public function errors($key = "", $values = false);
 	public function error($error, $field = "global", $scope = "global");
 	public function success($model, $action);

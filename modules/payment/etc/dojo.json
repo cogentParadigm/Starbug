@@ -1,0 +1,5 @@
+{
+	"prefixes": [
+		["payment", "../../modules/payment/public/js"]
+	]
+}

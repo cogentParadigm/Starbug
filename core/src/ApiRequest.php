@@ -1,8 +1,8 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
+# Copyright (C) 2008-2016 Ali Gangji
 # Distributed under the terms of the GNU General Public License v3
 /**
- * @file core/ApiRequest.php
+ * @file core/src/ApiRequest.php
  * @author Ali Gangji <ali@neonrain.com>
  * @ingroup core
  */
@@ -13,210 +13,109 @@ namespace Starbug\Core;
  */
 class ApiRequest {
 
-	public $types = array(
+	protected $types = array(
 		"xml" => "text/xml",
 		"json" => "application/json",
 		"jsonp" => "application/x-javascript",
 		"csv" => "text/csv"
 	);
-	public $result = "";
-	public $whitelisting = false;
-	public $query = true;
-	public $headers = true;
-	public $model;
-	public $action;
-	public $template = false;
-	public $data = array();
-	public $options = array();
 
-	protected $models;
+	protected $results = [];
+	protected $time = '0000-00-00 00:00:00';
+	protected $options = [];
+	protected $ranges = [];
+	protected $filters = [];
+	protected $model;
 
-	/**
-	 * API Request constructor
-	 * @param string $what an api request string in the format '[object].[format]'
-	 * 										 where object is an API function or set of models to query, and format is the desired output format (json, jsonp, xml)
-	 * @param star $ops additional options, query paramaters if [object] is a model or group of models
-	 */
-	function __construct(ModelFactoryInterface $models, $what, $ops = "", $headers = true) {
+	public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, RequestInterface $request, ResponseInterface $response) {
 		$this->models = $models;
-		$this->headers = $headers;
-		$format = end(explode(".", $what));
-		$parts = explode("/", str_replace(".$format", "", $what));
-		$call = reset($parts);
-		$action = next($parts);
-		$ops = array_merge(array("action" => "read", "where" => array(), "params" => array()), star($ops));
-		if (!is_array($ops['where'])) $ops['where'] = array($ops['where']);
-	 if ($this->headers) {
-		 header("Content-Type: ".$this->types[$format]);
-		 header("Cache-Control: no-store, no-cache");
-	 }
-		$this->action = $action;
-		$this->result = call_user_func(array($this, $call), $action, $format, $ops);
+		$this->collections = $collections;
+		$this->request = $request;
+		$this->response = $response;
 	}
-
-	/**
-	 * API query function - outputs records from the DB
-	 * @param string $call function name passed by constructor
-	 * @param string $format the desired output format: json, jsonp or xml
-	 * @param star $ops additional options
-	 */
-	function __call($model, $args) {
-		list($action, $format, $ops) = $args;
+	public function setModel($model) {
 		$this->model = $model;
+	}
+	public function getModel() {
+		return $this->model;
+	}
+	public function setOptions($ops) {
+		foreach ($ops as $k => $v) {
+			$this->options[$k] = $v;
+		}
+	}
+	public function setOption($key, $value) {
+		$this->options[$key] = $value;
+	}
+	public function addFilter(CollectionFilterInterface $filter) {
+		$this->filters[] = $filter;
+	}
+	public function add($collection, $options = [], $name = false) {
+		if (!$name) $name = $this->model;
+		$options['time'] = $this->time;
+
+		//instantiate the model and collection
+		$instance = $this->models->get($this->model);
+		if ($instance->errors()) {
+			$this->results[$name] = $this->errors($this->model);
+			return;
+		}
+		$collection = $this->collections->get($collection);
+		$collection->setModel($this->model);
+
+		//register filters
+		foreach ($this->filters as $filter) {
+			$collection->addFilter($filter);
+		}
+
+		//populate default options
+		$options = $options + $this->options + $this->request->getParameters();
+		$range = $this->request->getHeader("HTTP_RANGE");
+		if (!empty($range)) {
+			list($start, $finish) = explode("-", end(explode("=", $range)));
+			$options['limit'] = 1 + (int) $finish - (int) $start;
+			$options['page'] = 1 + (int) $start/$options['limit'];
+		}
+		if ($this->request->hasPost('action', $this->model) && !$instance->errors()) {
+			$id = ($this->request->hasPost($this->model, 'id')) ? $this->request->getPost($this->model, 'id') : $instance->insert_id;
+			$options['id'] = $id;
+		}
+
+		$this->results[$name] = $collection->query($options);
+
+		if ($pager = $collection->getPager()) {
+			$this->response->setHeader("Content-Range", "items ".$pager->start.'-'.$pager->finish.'/'.$pager->count);
+		} else {
+			$count = count($this->results[$name]);
+			$this->response->setHeader("Content-Range", "items 0-$count/$count");
+		}
+	}
+
+	public function capture($key = false) {
+		$format = $this->request->getFormat();
+		$this->response->setContentType($this->types[$format]);
+		$this->response->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+		$this->response->setHeader('Sync-Time', date('Y-m-d H:i:s'));
+		$results = $key ? $this->results[$key] : $this->results;
+		$this->response->content = $results;
+	}
+
+	public function render($collection, $options = [], $name = false) {
+		$this->add($collection, $options, $name);
+		if (!$name) $name = $this->model;
+		$this->capture($name);
+	}
+
+	protected function errors($model) {
 		$instance = $this->models->get($model);
-		$query = $instance->query();
-		if ((!empty($_POST['action'][$model])) && !$instance->errors()) {
-			$id = (!empty($_POST[$model]['id'])) ? $_POST[$model]['id'] : $instance->insert_id;
-			$query->condition($model.".id", $id);
+		$schema = $instance->column_info();
+		if (empty($schema)) $schema = array();
+		$json = ["errors" => []];
+		$e = $instance->errors("", true);
+		foreach ($instance->errors("", true) as $k => $v) {
+			if (!empty($schema[$k]) && !empty($schema[$k]['label'])) $k = $schema[$k]['label'];
+			$json['errors'][] = ["field" => $k, "errors" => $v];
 		}
-		//if (!empty($_GET['keywords'])) $query->search($_GET['keywords']);
-
-		//paging
-		if (isset($_SERVER['HTTP_RANGE'])) {
-			list($start, $finish) = explode("-", end(explode("=", $_SERVER['HTTP_RANGE'])));
-			//$start = max((int) $start, 1);
-			$ops['paged'] = true;
-			$ops['limit'] = 1 + (int) $finish - (int) $start;
-			$ops['page'] = 1 + (int) $start/$ops['limit'];
-		}
-		$action_name = "query_".$action;
-		$query = $instance->query_filters($action, $query, $ops);
-		$query = $instance->$action_name($query, $ops);
-
-		if ($ops['paged'] && $ops['limit']) {
-			$query->limit($ops['limit']);
-			$pager = $query->pager($ops['page']);
-		} else if ($ops['limit']) {
-			$ops['paged'] = true;
-			$ops['page'] = $ops['skip'] ? intval($ops['skip'])/intval($ops['limit']) : 1;
-			$query->limit($ops['limit']);
-			$pager = $query->pager($ops['page']);
-		}
-
-		$this->options = $ops;
-
-		$data = (is_array($query) && isset($query['data'])) ? $query['data'] : $query->all();
-		$this->data = $data;
-		$f = strtoupper($format);
-		$error = $f."errors";
-		if (!$instance->errors()) {
-			if (!empty($data)) {
-				$add = (isset($pager) && $pager->start > 0) ? 1 : 0;
-				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
-				else {
-					$count = count($data);
-					header("Content-Range: items 0-$count/$count");
-				}
-				if (!isset($ops['headers'])) $ops['headers'] = true;
-				switch ($format) {
-					case "xml":
-						return $this->getXML($model, $data);
-						break;
-					case "json":
-						return $this->getJSON("id", $data);
-						break;
-					case "jsonp":
-						return $this->getJSONP($ops['pad'], $data);
-						break;
-					case "csv":
-						return $this->getCSV($data, $ops['headers']);
-						break;
-				}
-			} else {
-				if (isset($ops['paged'])) header("Content-Range: items ".$start.'-'.min($pager->count, $finish).'/'.$pager->count);
-			}
-		} else return $this->$error($model);
+		return $json;
 	}
-
-	/**
-	 * get a json formatted recordset
-	 * @param array $data an array of data
-	 * @return string json output of records
-	 */
-	protected function getJSON($identifier, $data) {
-		$json = ($this->query) ? '[' : '';
-		foreach ($data as $row) $json .= json_encode($this->models->get($this->model)->filter($row, $this->action)).", ";
-		return rtrim($json, ", ").(($this->query) ? ']' : '');
-	}
-
-	/**
-	 * get an padded json formatted recordset
-	 * @param array $data the data
-	 * @param string $pad the string to pad with
-	 * @return string padded json string of records
-	 */
-	protected function getJSONP($pad, $data) {
-		return $pad."(".json_encode($data).");";
-	}
-
-	/**
-	 * Get XML formatted recordset
-	 * @param string $root the root node name
-	 * @param array $data the data
-	 */
-	protected function getXML($root, $data) {
-		$xml = new XmlWriter();
-		$xml->openMemory();
-		$xml->startDocument('1.0', 'UTF-8');
-		$xml->startElement($root);
-	 foreach ($data as $row) {
-		 $xml->startElement("item");
-		 $this->write($xml, $row);
-		 $xml->endElement();
-	 }
-		$xml->endElement();
-		return $xml->outputMemory(true);
-	}
-
-		/**
-		 * get a CSV formatted recordset
-		 * @param array $data an array of data
-		 * @return string json output of records
-		 */
-		protected function getCSV($data, $headers = true) {
-			if ($this->headers) header('Content-Disposition: attachment; filename="'.$this->model.'.csv"');
-			foreach ($data as $idx => $row) $data[$idx] = $this->models->get($this->model)->filter($row, $this->action);
-			$this->data = $data;
-		//$display = $this->context->build_display("list", $this->model, $this->action, array("template" => "csv"));
-			//$display->items = $data;
-			//return $display->capture(false);
-			$this->template = "api/csv";
-			return "";
-		}
-
-	/**
-	 * Recursive XML tag writer
-	 * @param XMLWriter $xml the XMLWriter instance
-	 * @param array $data the data
-	 */
-		protected function write(XMLWriter $xml, $data) {
-		 foreach ($data as $key => $value) {
-		  if (is_array($value)) {
-		   $xml->startElement($key);
-		   $this->write($xml, $value);
-		   $xml->endElement();
-		   continue;
-		  }
-			 $xml->writeElement($key, $value);
-		 }
-		}
-
-	/**
-	 * get json formatted errors
-	 * @param string $model the model
-	 * @return string json output of errors
-	 */
-		protected function JSONerrors($model) {
-			$instance = $this->models->get($model);
-			$schema = $instance->column_info();
-			if (empty($schema)) $schema = array();
-			$json = '{ "errors" : [';
-		 foreach ($instance->errors("", true) as $k => $v) {
-			 if (!empty($schema[$k]) && !empty($schema[$k]['label'])) $k = $schema[$k]['label'];
-			 $json .= '{ "field":"'.$k.'", "errors": [ ';
-			 foreach ($v as $e) $json .= '"'.$e.'", ';
-			 $json = rtrim($json, ", ")." ] }, ";
-		 }
-			return rtrim($json, ", ")." ] }";
-		}
 }

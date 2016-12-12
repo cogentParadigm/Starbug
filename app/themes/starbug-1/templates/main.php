@@ -7,7 +7,7 @@
           </div>
           <div class="col-md-6">
               <ol class="breadcrumb">
-                  <li><a href="<?php echo uri(); ?>">Home</a></li>
+                  <li><a href="<?php echo $this->url->build(""); ?>">Home</a></li>
                   <li class="active"><?php echo $response->title; ?></li>
               </ol>
           </div>

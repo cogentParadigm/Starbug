@@ -1,4 +1,4 @@
-<form <?php html_attributes($display->attributes); ?>>
+<form <?php echo $this->filter->attributes($display->attributes); ?>>
 	<?php if (!empty($display->model) && !empty($display->default_action) && $display->success($display->default_action)) { ?>
 		<p class="alert alert-success">Saved</p>
 	<?php } ?>
@@ -8,24 +8,9 @@
 		<?php } ?>
 	<?php } ?>
 <?php if ($display->method == "post") { ?>
-	<input name="oid" type="hidden" value="<?php echo filter_string($request->cookies['oid']); ?>"/>
+	<input name="oid" type="hidden" value="<?php echo $this->filter->string($request->getCookie('oid')); ?>"/>
 <?php } ?>
-<?php $item_id = $display->get("id"); if (!empty($item_id)) { ?>
-	<input id="id" name="<?php echo $display->model; ?>[id]" type="hidden" value="<?php echo filter_string($display->get('id')); ?>" />
-<?php } ?>
-<?php
-	if (!$display->layout->is_empty()) {
-		foreach ($display->fields as $name => $field) {
-			$display->layout->append($field['pane'], $display->form_control($field['input_type'], array_merge(array($name), $field)));
-		}
-		$display->layout->render();
-	} else {
-		foreach ($display->fields as $name => $field) {
-			$this->assign("display", $display);
-			echo $display->form_control($field['input_type'], array_merge(array($name), $field));
-		}
-	}
-?>
+<?php $this->render("display/fields"); ?>
 <?php if ($display->actions->template != "inline") { ?>
 	<div class="row form-actions">
 		<div class="col-sm-12">
@@ -37,11 +22,14 @@
 						$field['name'] = 'action';
 						if (!empty($display->model)) $field['name'] .= '['.$display->model.']';
 						$label = $field['label'];
-						button($label, $field);
+						$ops = $field;
+						if (empty($ops['type'])) $ops['type'] = "submit";
+						$ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ")."btn";
+						echo '<button '.$this->filter->attributes($ops).'>'.$label.'</button>';
 					}
 				?>
 				<?php if (!empty($display->cancel_url)) { ?>
-					<button type="button" class="cancel btn btn-danger" onclick="window.location='<?php echo uri($display->cancel_url); ?>'">Cancel</button>
+					<button type="button" class="cancel btn btn-danger" onclick="window.location='<?php echo $this->url->build($display->cancel_url); ?>'">Cancel</button>
 				<?php } ?>
 <?php if ($display->actions->template != "inline") { ?>
 			</div>

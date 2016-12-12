@@ -1,10 +1,14 @@
-define(["dojo/_base/declare", "dojo/_base/lang", "dojo/dom-construct", "dojo/dom-style", "sb", "dijit/InlineEditBox"], function(declare, lang, domConstruct, domStyle, sb, InlineEdit) {
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/dom-construct", "dojo/dom-style", "sb", "dijit/InlineEditBox", "sb/store/Api"], function(declare, lang, domConstruct, domStyle, sb, InlineEdit, Api) {
 	return declare([InlineEdit], {
-		store:null,
+		model:false,
+		store:false,
 		field:'',
 		object_id:0,
 		autoSave:false,
 		storeOnSave:true,
+		postCreate: function() {
+			this.store = this.store || new Api({model:this.model, action:'admin'});
+		},
 		onChange:function(value) {
 			this.inherited(arguments);
 			value = this.wrapperWidget.editWidget.get('value');

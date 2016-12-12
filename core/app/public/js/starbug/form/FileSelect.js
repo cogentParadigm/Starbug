@@ -13,6 +13,7 @@ define([
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
 	"dstore/Memory",
+	"dstore/Trackable",
 	"dojo/ready",
 	"starbug/form/Uploader",
 	"starbug/grid/MemoryGrid",
@@ -20,7 +21,8 @@ define([
 	"starbug/grid/columns/handle",
 	"starbug/grid/columns/html",
 	"starbug/form/columns/FileSelectOptions"
-], function (dojo, declare, lang, Widget, Templated, _WidgetsInTemplate, sb, template, put, on, query, domclass, Deferred, Memory, ready) {
+], function (dojo, declare, lang, Widget, Templated, _WidgetsInTemplate, sb, template, put, on, query, domclass, Deferred, Memory, Trackable, ready) {
+	var TrackableMemory = declare([Memory, Trackable]);
 	return declare([Widget, Templated, _WidgetsInTemplate], {
 		files:[],
 		templateString: template, //the template (./templates/FileSelect.html)
@@ -30,7 +32,7 @@ define([
 		store:null,
 		postCreate:function() {
 			var self = this;
-			this.store = new Memory({data: []});
+			this.store = new TrackableMemory({data: []});
 			// initialize hidden input
 			this.input.name = this.input_name;
 
@@ -57,7 +59,7 @@ define([
 			var modal;
 			win.SetUrl=function(url, object){
 				self.add([object]);
-			}
+			};
 			modal = win.open(WEBSITE_URL+'admin/media?modal=true','media','modal,width=1020,height=600');
 		},
 		add:function(files) {
@@ -103,11 +105,12 @@ define([
 			this.refresh();
 		},
 		refresh: function() {
+			this.grid.refresh();
+			this.grid.renderArray(this.store.data);
 			this.grid.set('collection', this.store);
 			var ids = [];
 			var items = this.store.data;
-			for (var i in items) ids.push(this.store.getIdentity(items[i]));
-			ids.push("-~");
+			for (var i = 0;i<items.length;i++) ids.push(this.store.getIdentity(items[i]));
 			this.input.value = ids.join(',');
 		},
 		set_status: function(value) {
@@ -123,11 +126,17 @@ define([
 			/**
 			 * upload handler. adds the file to the list once it has been uploaded.
 			 */
-			files[0].filename = files[0].original_name;
+			for (var i = 0;i < files.length;i++) {
+				files[i].filename = files[i].original_name;
+			}
 			this.add(files);
 		},
 		onCancelUpload: function() {
 			this.set_status();
+		},
+		reset: function() {
+			this.store.setData([]);
+			this.refresh();
 		}
 	});
 });

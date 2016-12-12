@@ -82,8 +82,8 @@ define([
 		load: function(data) {
 			this.loadForm(data.body.innerHTML);
 			if (domclass.contains(this.form, 'submitted')) {
-				this.hide();
 				if (this.callback != null) this.callback(data, this);
+				this.hide();
 			}
 		},
 		setValues: function(args) {
@@ -111,6 +111,7 @@ define([
 		hide: function(evt) {
 			if (evt) evt.preventDefault();
 			this.inherited(arguments);
+			this.set('content', '');
 		},
 		remove: function(model, id) {
 			var args = {};
@@ -128,6 +129,7 @@ define([
 			query('.submit, [type=\"submit\"]', this.form).attr('onclick', '').on('click', lang.hitch(this, '_onSubmit'));
 			query('.cancel', this.form).attr('onclick', '').on('click', lang.hitch(this, 'hide'));
 			query('input[type="file"]', this.form).on('change', lang.hitch(this, 'upload'));
+			sb.editable();
 			behavior.apply();
 		}
 	});

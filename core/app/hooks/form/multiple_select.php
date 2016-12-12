@@ -18,7 +18,7 @@ class hook_form_multiple_select extends FormHook {
 		$info = $form->schema[$field['name']];
 		if ($this->models->has($info['type'])) {
 			if (empty($field['from'])) $field['from'] = $info['type'];
-			if (empty($field['query'])) $field['query'] = "select";
+			if (empty($field['query'])) $field['query'] = "Select";
 		}
 		$other_option = empty($field['other_option']) ? false : $field['other_option'];
 		$form->assign("value", $value);

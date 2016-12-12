@@ -14,10 +14,11 @@ class Taxonomy implements TaxonomyInterface {
 	protected $db;
 	protected $models;
 	protected $user;
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, UserInterface $user) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user, InputFilterInterface $filter) {
 		$this->db = $db;
 		$this->models = $models;
 		$this->user = $user;
+		$this->filter = $filter;
 	}
 	function terms($taxonomy, $parent = 0, $depth = 0) {
 		$terms = array();
@@ -33,7 +34,7 @@ class Taxonomy implements TaxonomyInterface {
 	/**
 	 * apply tags
 	 * @ingroup taxonomy
-	 * @param string $taxonomy the taxonomy/classification of terms. eg. uris_tags
+	 * @param string $taxonomy the taxonomy/classification of terms. eg. products_tags
 	 * @param int $object_id the id of the object to apply the tag to
 	 * @param string $tag the tag
 	 * @return bool returns true on success, false otherwise.
@@ -44,7 +45,7 @@ class Taxonomy implements TaxonomyInterface {
 		$taxonomy = $column_info['taxonomy'];
 		$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
 
-		$tag = normalize($tag);
+		$tag = $this->filter->normalize($tag);
 		$slug = strtolower($tag);
 		//IF THE TAG IS ALREADY APPLIED, RETURN TRUE
 		$existing = $this->db->query($table)->condition($table.".id", $object_id)
@@ -53,7 +54,7 @@ class Taxonomy implements TaxonomyInterface {
 
 		//IF THE TERM DOESN'T EXIST, ADD IT
 		$term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->params(array("tag" => $tag, "tax" => $taxonomy))->one();
-		if (empty($term)) $this->db->store("terms", "term:$tag  slug:$slug  taxonomy:$taxonomy  parent:0  position:");
+		if (empty($term)) $this->db->store("terms", ["term" => $tag, "slug" => $slug, "taxonomy" => $taxonomy, "parent" => "0", "position" => ""]);
 		else if ($term['taxonomy'] == "groups" && !$this->user->loggedIn("root") && in_array($term['slug'], array("root"))) return false;
 		if ($this->db->errors()) return false;
 
@@ -66,7 +67,7 @@ class Taxonomy implements TaxonomyInterface {
 	 * remove tags
 	 * @ingroup taxonomy
 	 * @param string $table (optional) the table to which tags are applied. This is only needed if not implied by $taxonomy
-	 * @param string $taxonomy the taxonomy/classification of terms. eg. uris_tags or genres
+	 * @param string $taxonomy the taxonomy/classification of terms. eg. products_tags or genres
 	 * @param int $object_id the id of the object to apply the tag to
 	 * @param string $tag the tag
 	 */

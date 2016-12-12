@@ -19,7 +19,7 @@
 <script type="text/javascript">
 	require(["dojo/query", "put-selector/put"], function(query, put) {
 		query('#settings-menu > li > a').forEach(function(node) {
-			put(node, '[href="<?php echo uri("admin/settings#"); ?>'+node.innerText+'"]');
+			put(node, '[href="<?php echo $this->url->build("admin/settings#"); ?>'+node.innerText+'"]');
 			put(node, 'i.fa.fa-chevron-right[style="float:right;font-size:1.6em;line-height:1.4em"]');
 		});
 	});

@@ -9,9 +9,9 @@ class DropdownDisplay extends ItemDisplay {
 			if (!empty($options['attributes']['class']) && !is_array($options['attributes']['class'])) $options['attributes']['class'] = array($options['attributes']['class']);
 			$this->attributes = array_merge_recursive($this->attributes, $options['attributes']);
 		}
-		if (!empty($options['model']) && !empty($options['action'])) {
+		if (!empty($options['model']) && !empty($options['collection'])) {
 			$this->model = $options['model'];
-			$this->action = $options['action'];
+			$this->collection = $options['collection'];
 		} else if (!empty($options['options'])) {
 			foreach ($options['options'] as $option) {
 				$this->items[] = array("id" => $option, "label" => $option);

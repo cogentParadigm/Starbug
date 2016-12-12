@@ -2,10 +2,11 @@
 namespace Starbug\Core;
 //stores a URL path slug
 class hook_store_slug extends QueryHook {
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, MacroInterface $macro) {
+	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, MacroInterface $macro, InputFilterInterface $filter) {
 		$this->db = $db;
 		$this->macro = $macro;
 		$this->models = $models;
+		$this->filter = $filter;
 	}
 	function empty_before_insert(&$query, $column, $argument) {
 		$query->set($column, $this->validate($query, $column, "", $column, $argument));
@@ -14,7 +15,7 @@ class hook_store_slug extends QueryHook {
 		if (empty($value) && isset($query->fields[$argument])) {
 			$value = $query->fields[$argument];
 
-			$value = strtolower(str_replace(" ", "-", normalize($value)));
+			$value = strtolower(str_replace(" ", "-", $this->filter->normalize($value)));
 
 			if (!empty($this->models->get($query->model)->hooks[$column]["pattern"])) {
 				$pattern = $this->models->get($query->model)->hooks[$column]["pattern"];

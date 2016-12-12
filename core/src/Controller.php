@@ -68,7 +68,7 @@ class Controller {
 		$this->render("missing");
 	}
 
-	function start(Request $request, Response $response) {
+	function start(RequestInterface $request, ResponseInterface $response) {
 		$this->request = $request;
 		$this->response = $response;
 		$this->init();
@@ -77,6 +77,19 @@ class Controller {
 	function finish() {
 		return $this->response;
 	}
+
+	public function url($path = "", $absolute = false) {
+		return $this->request->getURL()->build($path, $absolute);
+	}
+/**
+ * redirect to another page
+ * @ingroup routing
+ * @param string $url the url to redirect to
+ * @param int $delay number of seconds to wait before redirecting (default 0)
+ */
+function redirect($url) {
+	$this->response->redirect($this->url($url, true));
+}
 
 	/**
 	 * if an unknown action is called, trigger a missing response
