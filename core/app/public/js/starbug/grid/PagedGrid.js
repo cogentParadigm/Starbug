@@ -33,7 +33,7 @@ var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard,
 			this.collection = (new api({model:args.model, action:args.action})).filter(args.query);
 		}
 		if (localStorage.getItem('rowsPerPage')) {
-			this.rowsPerPage = localStorage.getItem('rowsPerPage');
+			this.rowsPerPage = parseInt(localStorage.getItem('rowsPerPage'));
 		}
 	},
 	startup: function() {
