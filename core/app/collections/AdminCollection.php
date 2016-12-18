@@ -7,6 +7,9 @@ class AdminCollection extends Collection {
 		} else {
 			$query->condition($query->model.".deleted", "0");
 		}
+		if (!empty($ops["sort"])) {
+			$query->sort($ops["sort"]);
+		}
 		return $query;
 	}
 }
