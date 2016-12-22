@@ -13,7 +13,7 @@ class CssBuildCommand {
 		$themes = $this->config->get("themes");
 		foreach ($themes as $name) {
 			$this->css->setTheme($name);
-			$config = $this->css->getConfiguration();
+			$config = $this->css->getDevelopmentConfiguration();
 			foreach ($config as $media => $styles) {
 				$parser = new CssParser($this->base_directory."/var/public/stylesheets/".$name."-".$media.".css");
 				foreach ($styles as $idx => $style) {
