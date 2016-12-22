@@ -1,5 +1,5 @@
 <?php echo implode("\n", $this->css->getStylesheets()); ?>
-<?php if ($this->css->hasLess()) { ?>
+<?php if ($this->css->has("rel", "stylesheet/less")) { ?>
 
 <script type="text/javascript">
 		less = { env: 'development' };
