@@ -76,6 +76,7 @@ class Migrator extends AbstractMigration {
 	protected function getType($column) {
 		$types = [
 			"int" => "integer",
+			"decimal" => "decimal",
 			"bool" => "boolean",
 			"boolean" => "boolean",
 			"string" => "string",
@@ -108,6 +109,10 @@ class Migrator extends AbstractMigration {
 		if ($column["type"] == "int" && empty($column["length"])) {
 			$options["length"] = 11;
 		}
+		if ($column["type"] == "decimal") {
+			if (!empty($column["precision"])) $options["precision"] = $column["precision"];
+			if (!empty($column["scale"])) $options["scale"] = $column["scale"];
+		}
 		if (isset($options["default"]) && $options["default"] == "NULL") {
 			$options["default"] = null;
 		}
@@ -137,4 +142,3 @@ class Migrator extends AbstractMigration {
 		return $values;
 	}
 }
-?>
