@@ -26,7 +26,8 @@ class hook_store_type extends QueryHook {
 		$clean = true;
 
 		//loop through values
-		if (!is_array($value)) $value = explode(",", preg_replace("/[,\s]+/", ",", $value));
+		if (empty($value)) $value = [];
+		else if (!is_array($value)) $value = explode(",", preg_replace("/[,\s]+/", ",", $value));
 		foreach ($value as $position => $type_id) {
 			$remove = false;
 			$value_type = ($type == $target) ? "id" : $column."_id";
