@@ -1,11 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
-* This file is part of StarbugPHP
-* @file modules/db/src/QueryBuilderFactory.php
-* @author Ali Gangji <ali@neonrain.com>
-*/
 namespace Starbug\Core;
 use \Interop\Container\ContainerInterface;
 /**
@@ -25,23 +18,19 @@ class ModelFactory implements ModelFactoryInterface {
 		return (!empty($collection) && (($this->objects[$collection]) || (file_exists($this->base_directory."/var/models/".ucwords($collection)."Model.php"))));
 	}
 	public function get($collection) {
-		if (!isset($this->objects[$collection])) {
-			$class = ucwords($collection);
-			$locations = $this->locator->locate($class.".php", "models");
-			end($locations);
-			$namespace = key($locations);
-			if (empty($namespace)) {
-				$namespace = "Starbug\Core";
-				if ($this->has($collection)) {
-					$class .= "Model";
-				} else {
-					$class = "Table";
-				}
+		$model = $this->locator->className($model);
+		if (false === $model) {
+			if ($this->has($collection)) {
+				$model = "Starbug\\Core\\".ucwords($collection)."Model";
+			} else {
+				$model = "Starbug\\Core\\Table";
 			}
-			$this->objects[$collection] = $this->container->get($namespace."\\".$class);
 		}
-		//return the saved object
-		return $this->objects[$collection];
+		$object = $this->container->get($model);
+		if ($object instanceof Table) {
+			return $object;
+		} else {
+			throw new Exception("ModelFactoryInterface contract violation. ".$model." is not an instance of Starbug\Core\Table.");
+		}
 	}
 }
-?>
