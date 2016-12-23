@@ -13,7 +13,7 @@ class hook_store_type extends QueryHook {
 		return $value;
 	}
 	function after_store(&$query, $key, $value, $column, $argument) {
-		if ($argument == "terms" || $argument == "blocks" || !$this->models->has($argument) || empty($value)) return;
+		if ($argument == "terms" || $argument == "blocks" || !$this->models->has($argument)) return;
 
 		//vars
 		$model = $query->model;
@@ -101,4 +101,3 @@ class hook_store_type extends QueryHook {
 		}
 	}
 }
-?>
