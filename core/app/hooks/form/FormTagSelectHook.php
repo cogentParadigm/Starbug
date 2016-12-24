@@ -14,4 +14,3 @@ class FormTagSelectHook extends FormHook {
 		$form->assign("value", $value);
 	}
 }
-?>

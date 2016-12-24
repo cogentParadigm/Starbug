@@ -31,4 +31,3 @@ class AdminImportsController extends Controller {
 		$this->render("admin/update", array("form_header" => "Run Import", "action" => "run"));
 	}
 }
-?>

@@ -7,4 +7,3 @@ class FormFileSelectHook extends FormHook {
 		$control = "input";
 	}
 }
-?>

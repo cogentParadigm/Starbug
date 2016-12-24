@@ -19,4 +19,3 @@ class StoreRequiredHook extends QueryHook {
 		return $value;
 	}
 }
-?>

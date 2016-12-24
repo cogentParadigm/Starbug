@@ -8,4 +8,3 @@ class ModelsHelper {
 		return $this->target;
 	}
 }
-?>

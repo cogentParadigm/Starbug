@@ -8,4 +8,3 @@ class UrlHelper {
 		return $this->target;
 	}
 }
-?>

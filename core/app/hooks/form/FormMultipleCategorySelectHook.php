@@ -24,4 +24,3 @@ class FormMultipleCategorySelectHook extends FormHook {
 		$field['writable'] = isset($field['writable']);
 	}
 }
-?>

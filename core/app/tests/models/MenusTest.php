@@ -1,6 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
 namespace Starbug\Core;
 class MenusTest extends ModelTest {
 
@@ -42,6 +40,4 @@ class MenusTest extends ModelTest {
 		$count = $this->query()->condition("menu", "phpunit")->count();
 		$this->assertEquals(0, $count);
 	}
-
 }
-?>

@@ -118,4 +118,3 @@ class QueryActionHook extends QueryHook {
 		$query->close();
 	}
 }
-?>

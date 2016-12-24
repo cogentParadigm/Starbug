@@ -10,4 +10,3 @@ class ProfileForm extends FormDisplay {
 		$this->add(["password_confirm", "input_type" => "password", "label" => "Confirm New Password", "required" => "false"]);
 	}
 }
-?>

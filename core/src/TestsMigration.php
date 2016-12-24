@@ -188,4 +188,3 @@ class TestsMigration extends AbstractMigration {
 		);
 	}
 }
-?>

@@ -17,4 +17,3 @@ class Host extends Definition {
 		}
 	}
 }
-?>

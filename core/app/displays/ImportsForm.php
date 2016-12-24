@@ -51,4 +51,3 @@ class ImportsForm extends FormDisplay {
 		return $lines-1;
 	}
 }
-?>

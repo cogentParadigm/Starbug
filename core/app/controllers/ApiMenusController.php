@@ -19,4 +19,3 @@ class ApiMenusController extends ApiController {
 		return $query;
 	}
 }
-?>

@@ -8,4 +8,3 @@ class SettingsHelper {
 		return $this->target;
 	}
 }
-?>

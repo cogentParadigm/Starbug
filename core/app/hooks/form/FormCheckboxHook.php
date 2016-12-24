@@ -8,4 +8,3 @@ class FormCheckboxHook extends FormHook {
 		$control = 'input';
 	}
 }
-?>

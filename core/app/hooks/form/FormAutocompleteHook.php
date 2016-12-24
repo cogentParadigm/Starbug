@@ -25,4 +25,3 @@ class FormAutocompleteHook extends FormHook {
 		$control = "input";
 	}
 }
-?>

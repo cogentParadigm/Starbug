@@ -32,4 +32,3 @@ class StoreUploadHook extends QueryHook {
 		return $value;
 	}
 }
-?>

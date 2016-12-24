@@ -97,6 +97,4 @@ function redirect($url) {
 	function __call($name, $arguments) {
 		$this->missing();
 	}
-
 }
-?>

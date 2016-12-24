@@ -7,4 +7,3 @@ class FormRadioHook extends FormHook {
 		$control = "input";
 	}
 }
-?>

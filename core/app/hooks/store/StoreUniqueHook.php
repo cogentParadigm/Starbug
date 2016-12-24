@@ -15,4 +15,3 @@ class StoreUniqueHook extends QueryHook {
 		return $value;
 	}
 }
-?>

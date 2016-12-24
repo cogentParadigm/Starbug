@@ -125,4 +125,3 @@ class Migration extends AbstractMigration {
 		);
 	}
 }
-?>

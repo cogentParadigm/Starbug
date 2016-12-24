@@ -25,4 +25,3 @@ class FormMultipleSelectHook extends FormHook {
 		$form->assign("other_option", $other_option);
 	}
 }
-?>

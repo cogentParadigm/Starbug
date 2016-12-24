@@ -13,4 +13,3 @@ class StoreMaterializedPathHook extends QueryHook {
 		return $value;
 	}
 }
-?>

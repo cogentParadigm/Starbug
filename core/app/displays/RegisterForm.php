@@ -10,4 +10,3 @@ class RegisterForm extends FormDisplay {
 		$this->add("email", "password", ["password_confirm", "input_type" => "password"]);
 	}
 }
-?>

@@ -14,4 +14,3 @@ class ImportsGrid extends GridDisplay {
 		$this->add(["row_options", "plugin" => "starbug.grid.columns.import_options"]);
 	}
 }
-?>

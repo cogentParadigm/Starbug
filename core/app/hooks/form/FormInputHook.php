@@ -10,4 +10,3 @@ class FormInputHook extends FormHook {
 		}
 	}
 }
-?>

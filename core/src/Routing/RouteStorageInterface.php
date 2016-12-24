@@ -6,4 +6,3 @@ interface RouteStorageInterface {
 	public function addRoutes($routes);
 	public function getRoute(RequestInterface $request);
 }
-?>

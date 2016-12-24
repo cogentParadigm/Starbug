@@ -1,8 +1,4 @@
 <?php
-/**
- * terms model
- * @ingroup models
- */
 namespace Starbug\Core;
 class Terms extends TermsModel {
 
@@ -30,6 +26,4 @@ class Terms extends TermsModel {
 		$tax = $term['taxonomy'];
 		$this->db->query("terms")->condition("taxonomy", $tax)->delete();
 	}
-
 }
-?>

@@ -14,4 +14,3 @@ class StoreExcludeHook extends QueryHook {
 		return $value;
 	}
 }
-?>

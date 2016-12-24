@@ -5,4 +5,3 @@ class StoreMd5Hook extends QueryHook {
 		return (empty($value) ? "" : md5($value));
 	}
 }
-?>

@@ -42,4 +42,3 @@ class Model extends Definition {
 		}
 	}
 }
-?>

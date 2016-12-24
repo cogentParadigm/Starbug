@@ -5,4 +5,3 @@ class DisplayLabelHook extends DisplayHook {
 		if (empty($options['label'])) $options['label'] = $column['label'];
 	}
 }
-?>

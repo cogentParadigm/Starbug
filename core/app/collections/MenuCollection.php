@@ -27,4 +27,3 @@ class MenuCollection extends Collection {
 		return $links;
 	}
 }
-?>

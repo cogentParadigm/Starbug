@@ -9,4 +9,3 @@ class LoginForm extends FormDisplay {
 		$this->add("email", "password");
 	}
 }
-?>

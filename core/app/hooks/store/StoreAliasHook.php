@@ -29,4 +29,3 @@ class StoreAliasHook extends QueryHook {
 		return $value;
 	}
 }
-?>

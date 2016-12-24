@@ -6,4 +6,3 @@ class StoreOptionalUpdateHook extends QueryHook {
 		return $value;
 	}
 }
-?>

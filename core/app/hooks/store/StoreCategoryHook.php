@@ -21,4 +21,3 @@ class StoreCategoryHook extends QueryHook {
 		return $value;
 	}
 }
-?>

@@ -16,4 +16,3 @@ class Crud extends Definition {
 		);
 	}
 }
-?>

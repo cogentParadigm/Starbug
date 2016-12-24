@@ -15,4 +15,3 @@ class StoreTimeHook extends QueryHook {
 		return date("Y-m-d H:i:s");
 	}
 }
-?>

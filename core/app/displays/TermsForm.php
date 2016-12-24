@@ -24,4 +24,3 @@ class TermsForm extends FormDisplay {
 		$this->add(["parent", "info" => "Start typing the title of the page and autocomplete results will display", "input_type" => "autocomplete", "from" => "terms", "pane" => "breadcrumbs"]);
 	}
 }
-?>

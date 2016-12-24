@@ -30,4 +30,3 @@ class FormCategorySelectHook extends FormHook {
 		$field["value"] = $value;
 	}
 }
-?>

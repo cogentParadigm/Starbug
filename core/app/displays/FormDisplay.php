@@ -306,4 +306,3 @@ class FormDisplay extends ItemDisplay {
 		return $this->form_control($name, $arguments[0], $arguments[1]);
 	}
 }
-?>

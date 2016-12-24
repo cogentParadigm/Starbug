@@ -32,4 +32,3 @@ class ImportsFieldsForm extends FormDisplay {
 		$this->source_values = array_values($head);
 	}
 }
-?>

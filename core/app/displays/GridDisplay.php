@@ -108,4 +108,3 @@ class GridDisplay extends ItemDisplay {
 		}
 	}
 }
-?>

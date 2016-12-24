@@ -532,6 +532,4 @@ class storeTest extends DatabaseTestCase {
 		//clear errors
 		$this->db->errors = array();
 	}
-
 }
-?>

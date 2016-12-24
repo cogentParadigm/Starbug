@@ -11,4 +11,3 @@ class StoreOwnerHook extends QueryHook {
 		return $this->user->loggedIn() ? $this->user->userinfo("id") : "NULL";
 	}
 }
-?>

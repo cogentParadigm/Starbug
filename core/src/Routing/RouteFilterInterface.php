@@ -10,4 +10,3 @@ interface RouteFilterInterface {
 	 */
 	public function filterRoute($route, RequestInterface $request);
 }
-?>

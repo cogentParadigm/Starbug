@@ -26,4 +26,3 @@ class ContainerFactory {
 		return $container;
 	}
 }
-?>

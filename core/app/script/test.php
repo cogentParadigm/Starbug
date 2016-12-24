@@ -1,12 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file script/test used to run unit tests and PHP syntax check
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup script
- */
 	$what = array_shift($argv);
 	$no_errors = true;
 	$up = true;
@@ -44,4 +36,3 @@
 	if ($unit) {
 		passthru("vendor/bin/phpunit -c etc/phpunit.xml $what ".implode(" ", $argv));
 	}
-?>

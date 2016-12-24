@@ -16,4 +16,3 @@ class StoreReferencesHook extends QueryHook {
 		return ($this->replace && !is_null($this->models->get($model)->insert_id)) ? $this->models->get($model)->insert_id : $value;
 	}
 }
-?>

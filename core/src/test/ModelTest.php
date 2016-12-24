@@ -1,12 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/lib/ModelTest.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup ModelTest
- */
 namespace Starbug\Core;
 /**
  * @defgroup ModelTest
@@ -48,6 +40,4 @@ class ModelTest extends \PHPUnit_Framework_TestCase {
 	function __get($name) {
 		return $this->models->get($this->model)->$name;
 	}
-
 }
-?>

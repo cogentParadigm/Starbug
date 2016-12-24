@@ -31,4 +31,3 @@ class StoreOperationHook extends QueryHook {
 		return $value;
 	}
 }
-?>

@@ -8,4 +8,3 @@ class StorePasswordHook extends QueryHook {
 		return (empty($value) ? $value : $this->session->hashPassword($value));
 	}
 }
-?>

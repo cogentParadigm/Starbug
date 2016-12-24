@@ -5,4 +5,3 @@ class StoreAddslashesHook extends QueryHook {
 		return addslashes($value);
 	}
 }
-?>

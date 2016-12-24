@@ -120,6 +120,4 @@ class ItemDisplay extends Display {
 		if ($query && !empty($this->model)) $this->query();
 		parent::render();
 	}
-
 }
-?>

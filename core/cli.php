@@ -18,4 +18,3 @@ $request->setHeaders($_SERVER);
 $container->set("Starbug\Core\RequestInterface", $request);
 $user = $container->get("Starbug\Core\IdentityInterface");
 $user->setUser(array("id" => "NULL", "groups" => array("root")));
-?>

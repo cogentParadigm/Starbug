@@ -15,4 +15,3 @@ class UsersForm extends FormDisplay {
 		$this->add(["groups", "input_type" => "multiple_category_select", "taxonomy" => "groups", "pane" => "right"]);
 	}
 }
-?>

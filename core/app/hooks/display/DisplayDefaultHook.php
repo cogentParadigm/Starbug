@@ -7,4 +7,3 @@ class DisplayDefaultHook extends DisplayHook {
 		}
 	}
 }
-?>

@@ -8,4 +8,3 @@ class StoreDefaultHook extends QueryHook {
 		return ($value === "") ? $argument : $value;
 	}
 }
-?>

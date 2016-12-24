@@ -7,4 +7,3 @@ class PasswordResetForm extends FormDisplay {
 		$this->add("email");
 	}
 }
-?>

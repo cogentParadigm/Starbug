@@ -14,4 +14,3 @@ class FormHiddenHook extends FormHook {
 		$control = "input";
 	}
 }
-?>

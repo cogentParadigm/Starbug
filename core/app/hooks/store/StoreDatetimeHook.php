@@ -5,4 +5,3 @@ class StoreDatetimeHook extends QueryHook {
 		return (empty($value)) ? $value : date('Y-m-d H:i:s', strtotime($value));
 	}
 }
-?>

@@ -12,4 +12,3 @@ class TableDisplay extends ItemDisplay {
 		$this->build_display($options);
 	}
 }
-?>

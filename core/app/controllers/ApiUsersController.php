@@ -20,4 +20,3 @@ class ApiUsersController extends ApiController {
 		return $row;
 	}
 }
-?>

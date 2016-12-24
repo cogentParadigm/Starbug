@@ -26,4 +26,3 @@ class GenerateCommand {
 		$this->generator->generate($definition, $args);
 	}
 }
-?>

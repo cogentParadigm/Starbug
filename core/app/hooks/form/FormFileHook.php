@@ -20,4 +20,3 @@ class FormFileHook extends FormHook {
 		$control = "input";
 	}
 }
-?>

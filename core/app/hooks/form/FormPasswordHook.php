@@ -6,4 +6,3 @@ class FormPasswordHook extends FormHook {
 		$control = "input";
 	}
 }
-?>

@@ -19,4 +19,3 @@ class DropdownDisplay extends ItemDisplay {
 		}
 	}
 }
-?>

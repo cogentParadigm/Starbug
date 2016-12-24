@@ -30,4 +30,3 @@ class ApiRoutingController extends Controller {
 		$this->response = $controller->finish();
 	}
 }
-?>

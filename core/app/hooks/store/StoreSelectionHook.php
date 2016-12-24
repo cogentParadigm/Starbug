@@ -16,4 +16,3 @@ class StoreSelectionHook extends QueryHook {
 		$this->db->query($query->model)->conditions($conditions)->condition("id", $id, "!=")->set($column, 0)->update();
 	}
 }
-?>

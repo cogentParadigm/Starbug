@@ -13,4 +13,3 @@ class FormTextHook extends FormHook {
 		$control = "input";
 	}
 }
-?>

@@ -22,4 +22,3 @@ class Form extends Definition {
 		);
 	}
 }
-?>

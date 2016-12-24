@@ -73,6 +73,4 @@ class Display {
 		$this->attributes["class"] = implode(" ", $this->attributes["class"]);
 		$this->output->render("display/".$this->template, array("display" => $this) + $this->options);
 	}
-
 }
-?>

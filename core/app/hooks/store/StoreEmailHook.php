@@ -10,4 +10,3 @@ class StoreEmailHook extends QueryHook {
 		return $value;
 	}
 }
-?>

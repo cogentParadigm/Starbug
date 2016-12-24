@@ -5,4 +5,3 @@ class FormTemplateHook extends FormHook {
 		$field['nofield'] = true;
 	}
 }
-?>

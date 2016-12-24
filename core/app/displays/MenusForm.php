@@ -16,4 +16,3 @@ class MenusForm extends FormDisplay {
 		$this->add(["template", "pane" => "br", "input_type" => "checkbox", "label" => "Divider", "value" => "divider"]);
 	}
 }
-?>

@@ -11,4 +11,3 @@ class StoreConfirmHook extends QueryHook {
 		return $value;
 	}
 }
-?>

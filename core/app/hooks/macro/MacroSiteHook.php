@@ -9,4 +9,3 @@ class MacroSiteHook extends MacroHook {
 		return $this->settings->get($name);
 	}
 }
-?>

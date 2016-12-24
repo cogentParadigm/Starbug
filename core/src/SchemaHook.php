@@ -117,4 +117,3 @@ class SchemaHook implements HookInterface {
 		}
 	}
 }
-?>

@@ -1,12 +1,4 @@
 <?php
-# Copyright (C) 2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
-* This file is part of StarbugPHP
-* @file core/src/Bundle.php
-* @author Ali Gangji <ali@neonrain.com>
-* @ingroup core
-*/
 namespace Starbug\Core;
 /**
 * Request class. interprets the request (URI, $_GET, and $_POST) and serves the appropriate content

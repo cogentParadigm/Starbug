@@ -24,4 +24,3 @@
 		//UPDATE PASSWORD
 		$errors = $db->store("users", array("id" => $root_user["id"], "password" => $admin_pass, "groups" => "root,admin"));
 	}
-?>

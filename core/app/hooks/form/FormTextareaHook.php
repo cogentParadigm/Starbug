@@ -13,4 +13,3 @@ class FormTextareaHook extends FormHook {
 		$form->assign("value", $form->set($field['name'], htmlentities($value, ENT_QUOTES, "UTF-8")));
 	}
 }
-?>

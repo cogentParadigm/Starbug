@@ -11,4 +11,3 @@ class SearchForm extends FormDisplay {
 		$this->actions->template = "inline";
 	}
 }
-?>

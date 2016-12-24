@@ -22,4 +22,3 @@ class Grid extends Definition {
 		);
 	}
 }
-?>

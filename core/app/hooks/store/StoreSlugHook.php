@@ -49,4 +49,3 @@ class StoreSlugHook extends QueryHook {
 			return $exists;
 	}
 }
-?>

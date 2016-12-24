@@ -12,5 +12,3 @@ $container = $factory->build($args);
 
 date_default_timezone_set($container->get('time_zone'));
 $container->get("Starbug\Core\ErrorHandler")->register();
-
-?>

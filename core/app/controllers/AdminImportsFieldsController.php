@@ -22,4 +22,3 @@ class AdminImportsFieldsController extends Controller {
 		$this->render("admin/update");
 	}
 }
-?>

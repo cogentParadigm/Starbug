@@ -16,4 +16,3 @@ class ApiImportsFieldsController extends ApiController {
 		return $query;
 	}
 }
-?>

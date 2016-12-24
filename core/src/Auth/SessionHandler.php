@@ -1,12 +1,4 @@
 <?php
-# Copyright (C) 2008-2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/lib/Session.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup Session
- */
 namespace Starbug\Core;
 /**
  * @defgroup Session

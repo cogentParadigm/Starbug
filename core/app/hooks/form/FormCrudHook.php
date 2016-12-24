@@ -38,4 +38,3 @@ class FormCrudHook extends FormHook {
 		$field['data-dojo-props'] = implode(', ', $props);
 	}
 }
-?>

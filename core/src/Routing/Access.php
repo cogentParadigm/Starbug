@@ -16,4 +16,3 @@ class Access implements AccessInterface {
 		return false;
 	}
 }
-?>

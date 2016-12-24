@@ -8,4 +8,3 @@ class CollectionsHelper {
 		return $this->target;
 	}
 }
-?>

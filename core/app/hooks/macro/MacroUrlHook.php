@@ -9,4 +9,3 @@ class MacroUrlHook extends MacroHook {
 		return isset($data['absolute_urls']) ? $this->url->build($name, $data['absolute_urls']) : $this->url->build($name);
 	}
 }
-?>

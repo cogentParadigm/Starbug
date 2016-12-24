@@ -7,4 +7,3 @@ class FormSubmitHook extends FormHook {
 		$control = "input";
 	}
 }
-?>
