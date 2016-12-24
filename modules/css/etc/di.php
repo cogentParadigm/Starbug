@@ -9,4 +9,3 @@ return [
 	'Starbug\Core\Routing\RouterInterface' => DI\object()
 		->method('addFilter', DI\get('Starbug\Css\RouteFilter')),
 ];
-?>
