@@ -42,7 +42,7 @@ class ResourceLocator implements ResourceLocatorInterface {
 				$class = $class.$suffix;
 			}
 			$class = $this->formatClassName($class);
-			for (end($this->modules); ($mid = key($this->modules)) !== null; prev($this->modules)){
+			for (end($this->modules); ($mid = key($this->modules)) !== null; prev($this->modules)) {
 				if (class_exists($mid."\\".$class)) return $mid."\\".$class;
 			}
 		} else {

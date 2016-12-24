@@ -44,7 +44,7 @@ return array(
 	'Starbug\Core\CssGenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Starbug\Core\ErrorHandler' => DI\object()->constructorParameter("exceptionTemplate", defined('SB_CLI') ? "exception-cli" : "exception-html"),
 	'Starbug\Core\SessionStorage' => DI\object()->constructorParameter('key', DI\get('hmac_key')),
-	'Starbug\Core\URLInterface' => function(ContainerInterface $c) {
+	'Starbug\Core\URLInterface' => function (ContainerInterface $c) {
 		$request = $c->get("Starbug\Core\RequestInterface");
 		return $request->getURL();
 	},
@@ -53,13 +53,13 @@ return array(
 	'Starbug\Core\Routing\*Interface' => DI\object('Starbug\Core\Routing\*'),
 	'Starbug\Core\Routing\MemoryRouteStorage' => DI\object()->method('addRoutes', DI\get('routes')),
 	'Starbug\Core\Images' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
-	'databases.default' => function(ContainerInterface $c) {
+	'databases.default' => function (ContainerInterface $c) {
 		$config = $c->get("Starbug\Core\ConfigInterface");
 		$name = $c->get("database_name");
 		$params = $config->get("db/".$name);
 		return new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
 	},
-	'databases.test' => function(ContainerInterface $c) {
+	'databases.test' => function (ContainerInterface $c) {
 		$config = $c->get("Starbug\Core\ConfigInterface");
 		$params = $config->get("db/test");
 		return new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
@@ -76,7 +76,7 @@ return array(
 	'Starbug\Core\Template' => DI\object()->constructorParameter('helpers', DI\get('Starbug\Core\HelperFactoryInterface')),
 	'Starbug\Core\GenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Starbug\Core\Application' => DI\object()->method('setLogger', DI\get('Psr\Log\LoggerInterface')),
-	'Psr\Log\LoggerInterface' => function(ContainerInterface $c) {
+	'Psr\Log\LoggerInterface' => function (ContainerInterface $c) {
 		$logger = new Logger("main");
 		$env = $c->get("environment");
 		$handlers = $c->get("log.handlers.".$env);

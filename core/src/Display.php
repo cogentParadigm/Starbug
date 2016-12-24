@@ -22,7 +22,7 @@ class Display {
 	/**
 	 * build the display from a set of options
 	 */
-	function build($options=array()) {
+	function build($options = array()) {
 		$this->options = $options;
 		$this->build_display($options);
 	}
@@ -34,7 +34,7 @@ class Display {
 	/**
 	 * option getter/setter
 	 */
-	function option($name, $value=null) {
+	function option($name, $value = null) {
 		if (is_array($name)) {
 			foreach ($name as $k => $v) $this->option($k, $v);
 		} else if (is_null($value)) {
@@ -49,7 +49,7 @@ class Display {
 	/**
 	* attribute getter/setter
 	*/
-	function attr($name, $value=null) {
+	function attr($name, $value = null) {
 		if (is_array($name)) {
 			foreach ($name as $k => $v) $this->attr($k, $v);
 		} else if (is_null($value)) {

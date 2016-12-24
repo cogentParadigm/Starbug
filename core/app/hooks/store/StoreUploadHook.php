@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core;
 class StoreUploadHook extends QueryHook {
-	var $uploaded = false;
+	protected $uploaded = false;
 	protected $request;
 	protected $models;
 	protected $files;
@@ -26,7 +26,7 @@ class StoreUploadHook extends QueryHook {
 			if (!$this->files->errors()) {
 				$value = (empty($record['id'])) ? $this->files->insert_id : $record['id'];
 			} else {
-				foreach($this->files->errors("filename", true) as $type => $message) $this->models->get($query->model)->error($message, $column);
+				foreach ($this->files->errors("filename", true) as $type => $message) $this->models->get($query->model)->error($message, $column);
 			}
 		}
 		return $value;

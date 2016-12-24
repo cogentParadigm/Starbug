@@ -1,14 +1,14 @@
 <?php
 namespace Starbug\Core;
 class pager {
-	var $count; //total number of items
-	var $per; //items per page
-	var $last; //last page
-	var $start; // showing $start to $finish of $count items
-	var $finish; // showing $start to $finish of $count items
-	var $current_page; //current page
-	var $range; //number of page links to show
-	function __construct($total, $items_per_page, $current_pg=1, $range=6) {
+	public $count; //total number of items
+	public $per; //items per page
+	public $last; //last page
+	public $start; // showing $start to $finish of $count items
+	public $finish; // showing $start to $finish of $count items
+	public $current_page; //current page
+	public $range; //number of page links to show
+	function __construct($total, $items_per_page, $current_pg = 1, $range = 6) {
 		$this->count = $total;
 		$this->per = $items_per_page;
 		$this->range = $range;

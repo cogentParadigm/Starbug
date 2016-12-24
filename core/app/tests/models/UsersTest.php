@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 class UsersTest extends ModelTest {
 
-	var $model = "users";
+	public $model = "users";
 
 	function test_create() {
 		$this->db->remove("users", ["email" => "phpunit@neonrain.com"]);

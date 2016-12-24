@@ -8,9 +8,9 @@ class Images implements ImagesInterface {
 		$this->base_directory = $base_directory;
 	}
 	function info($file) {
-		if (!is_file($file)) return FALSE;
+		if (!is_file($file)) return false;
 
-		$details = FALSE;
+		$details = false;
 		$data = @getimagesize($file);
 		$file_size = @filesize($file);
 

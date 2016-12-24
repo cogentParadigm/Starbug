@@ -18,7 +18,7 @@ class Model extends Definition {
 		}
 		$this->setParameter("fields", $table->getColumns());
 		$factory = $this->config->get("models", "factory");
-	  $factory = isset($factory[$options["model"]]) ? $factory[$options["model"]] : array();
+		$factory = isset($factory[$options["model"]]) ? $factory[$options["model"]] : array();
 		$use = [];
 		foreach ($factory as $n => $t) {
 			if (false != strpos($t, "\\")) {

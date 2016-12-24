@@ -5,7 +5,7 @@ class StoreLengthHook extends QueryHook {
 	function __construct(ModelFactoryInterface $models) {
 		$this->models = $models;
 	}
-	function validate(&$query, $key, $value, $column, $argument) {
+	function validate($query, $key, $value, $column, $argument) {
 		$length = explode("-", $argument);
 		if (!next($length)) $length = array(0, $length[0]);
 		$value_length = strlen($value);

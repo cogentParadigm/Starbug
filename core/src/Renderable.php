@@ -155,7 +155,7 @@ class Renderable {
 		foreach ($attributes as $k => $v) if (!is_array($v) && (!$validate || (in_array($k, $valid) || (0===strpos($k, "on")) || (0===strpos($k, "data"))))) $filtered .= " $k=\"$v\"";
 		return $filtered;
 	}
-	static function create($parent, $selector="", $content="") {
+	static function create($parent, $selector = "", $content = "") {
 		if (!($parent instanceof Renderable)) {
 			$content = $selector;
 			$selector = $parent;

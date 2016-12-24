@@ -6,7 +6,7 @@ class QueryActionHook extends QueryHook {
 		$this->db = $db;
 		$this->models = $models;
 	}
-	function query(&$query, $args=array()) {
+	function query($query, $args = array()) {
 		$action = array_shift($args);
 		$collection = array_shift($args);
 		if (empty($collection)) $collection = $query->last_collection;
@@ -48,7 +48,6 @@ class QueryActionHook extends QueryHook {
 					}
 				}
 			}
-
 		} else {
 			//table permit
 			$query->where("'table' LIKE permits.priv_type && '".$type."' LIKE permits.related_table && '".$action."' LIKE permits.action");
@@ -95,7 +94,8 @@ class QueryActionHook extends QueryHook {
 						$ref = $cname."_id";
 						$target = ($type == $columns[$cname]['entity']) ? "id" : $columns[$cname]['entity']."_id";
 						if ($this->user->loggedIn()) {
-							$query->orWhere("permits.role='".$cname."' && (EXISTS (".
+							$query->orWhere(
+								"permits.role='".$cname."' && (EXISTS (".
 									"SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target." && o.".$ref." IN (".
 										"SELECT ".$ref." FROM ".$this->db->prefix($user_table)." u WHERE u.users_id=".$this->user->userinfo("id").
 									")".

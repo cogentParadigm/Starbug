@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 class MenusTest extends ModelTest {
 
-	var $model = "menus";
+	public $model = "menus";
 
 	function test_create_update_delete() {
 		//create

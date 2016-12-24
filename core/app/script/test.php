@@ -1,38 +1,38 @@
 <?php
+$what = array_shift($argv);
+$no_errors = true;
+$up = true;
+$unit = true;
+$output = array();
+if ($what == "-u") {
+	$up = false;
 	$what = array_shift($argv);
-	$no_errors = true;
-	$up = true;
-	$unit = true;
-	$output = array();
-	if ($what == "-u") {
-		$up = false;
-		$what = array_shift($argv);
+}
+if ($what == "-s") {
+	exec("find ".BASE_DIR." -type f -name \*.php -exec php -l {} \;", $output);
+	$what = array_shift($argv);
+} else {
+	exec("git diff-index --name-only HEAD", $diff);
+	foreach ($diff as $file) {
+		$handle = fopen(BASE_DIR."/$file", "r");
+		$line = fgets($handle);
+		fclose($handle);
+		if ((false !== strpos($file, ".php")) || (0 === strpos($line, "#!/usr/bin/php"))) exec("php -l ".BASE_DIR."/$file", $output);
 	}
-	if ($what == "-s") {
-		exec("find ".BASE_DIR." -type f -name \*.php -exec php -l {} \;", $output);
-		$what = array_shift($argv);
-	} else {
-		exec("git diff-index --name-only HEAD", $diff);
-		foreach ($diff as $file) {
-			$handle = fopen(BASE_DIR."/$file", "r");
-			$line = fgets($handle);
-			fclose($handle);
-			if ((false !== strpos($file, ".php")) || (0 === strpos($line, "#!/usr/bin/php"))) exec("php -l ".BASE_DIR."/$file", $output);
-		}
+}
+foreach ($output as $line) {
+	if (false === (strpos($line, "No syntax errors detected"))) {
+		$no_errors = false;
+		$filename = str_replace("Errors parsing ", "", $line);
+		fwrite(STDOUT, "-----------------------------------------------------------------------\n");
+		fwrite(STDOUT, $line."\n");
+		exec("php -d display_errors=1 -l $filename", $err);
+		foreach ($err as $e) if ($e != $line) fwrite(STDOUT, $e."\n");
+		fwrite(STDOUT, "-----------------------------------------------------------------------\n\n");
 	}
-	foreach($output as $line) {
-		if (false === (strpos($line, "No syntax errors detected"))) {
-			$no_errors = false;
-			$filename = str_replace("Errors parsing ", "", $line);
-			fwrite(STDOUT, "-----------------------------------------------------------------------\n");
-			fwrite(STDOUT, $line."\n");
-			exec("php -d display_errors=1 -l $filename", $err);
-			foreach($err as $e) if ($e != $line) fwrite(STDOUT, $e."\n");
-			fwrite(STDOUT, "-----------------------------------------------------------------------\n\n");
-		}
-	}
-	if ($no_errors) fwrite(STDOUT, "\nNo syntax errors detected!\n\n");
-	else exit(1);
-	if ($unit) {
-		passthru("vendor/bin/phpunit -c etc/phpunit.xml $what ".implode(" ", $argv));
-	}
+}
+if ($no_errors) fwrite(STDOUT, "\nNo syntax errors detected!\n\n");
+else exit(1);
+if ($unit) {
+	passthru("vendor/bin/phpunit -c etc/phpunit.xml $what ".implode(" ", $argv));
+}

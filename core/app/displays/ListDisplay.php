@@ -1,6 +1,6 @@
 <?php
 namespace Starbug\Core;
 class ListDisplay extends ItemDisplay {
-	var $type = "list";
-	var $template = "ul";
+	public $type = "list";
+	public $template = "ul";
 }

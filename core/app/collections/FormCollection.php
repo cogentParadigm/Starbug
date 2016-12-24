@@ -10,7 +10,7 @@ class FormCollection extends Collection {
 		$fields = $model->hooks;
 		if (!empty($model->base)) {
 			unset($fields["id"]);
-			foreach($model->chain($model->base) as $b) unset($fields[$b."_id"]);
+			foreach ($model->chain($model->base) as $b) unset($fields[$b."_id"]);
 		}
 		foreach ($fields as $fieldname => $field) {
 			if ($this->models->has($field['type'])) {

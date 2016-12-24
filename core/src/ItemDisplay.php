@@ -76,7 +76,6 @@ class ItemDisplay extends Display {
 		$this->fields = array();
 		call_user_func_array(array($this, 'add'), $args);
 		$this->fields = $before + $this->fields + $after;
-
 	}
 
 	function update($options) {

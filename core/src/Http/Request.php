@@ -55,7 +55,7 @@ class Request implements RequestInterface {
 	public function getFormat() {
 		return $this->url->getFormat();
 	}
-	public function getComponent($index=0) {
+	public function getComponent($index = 0) {
 		return $this->url->getComponent($index);
 	}
 	public function getComponents() {

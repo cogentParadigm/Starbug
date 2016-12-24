@@ -165,9 +165,9 @@ class Response implements ResponseInterface {
 	}
 
 	public function sendCookies() {
-	 foreach ($this->cookies as $name => $cookie) {
-		 setcookie($name, $cookie['value'], $cookie['expires'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
-	 }
+		foreach ($this->cookies as $name => $cookie) {
+			setcookie($name, $cookie['value'], $cookie['expires'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+		}
 	}
 
 	public function sendContent() {
@@ -196,7 +196,7 @@ class Response implements ResponseInterface {
 		$this->code = 403;
 	}
 
-	function redirect($url){
+	function redirect($url) {
 		$this->headers['location'] = $url;
 		$this->content = '<script type="text/JavaScript">setTimeout("location.href = \''.$url.'\';");</script>';
 	}
@@ -204,7 +204,7 @@ class Response implements ResponseInterface {
 	/**
 	 * capture a rendered view and save it as the response output
 	 */
-	public function capture($template, $params=array(), $options = array()) {
+	public function capture($template, $params = array(), $options = array()) {
 		$options = $options + array("scope" => "views");
 		$this->content = $this->output->capture($template, $params, $options);
 	}

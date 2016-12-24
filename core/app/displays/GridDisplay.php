@@ -20,7 +20,7 @@ class GridDisplay extends ItemDisplay {
 		$this->request = $request;
 	}
 
-	function build($options=array()) {
+	function build($options = array()) {
 		//set defaults
 		if ($options['attributes']) $this->attributes = $options['attributes'];
 		$this->options = $options;

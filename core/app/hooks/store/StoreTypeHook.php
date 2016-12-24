@@ -5,14 +5,14 @@ class StoreTypeHook extends QueryHook {
 		$this->db = $db;
 		$this->models = $models;
 	}
-	function empty_validate(&$query, $column, $argument) {
+	function empty_validate($query, $column, $argument) {
 		if ($this->models->has($argument)) $query->exclude($column);
 	}
-	function validate(&$query, $key, $value, $column, $argument) {;
+	function validate($query, $key, $value, $column, $argument) {
 		if ($this->models->has($argument)) $query->exclude($key);
 		return $value;
 	}
-	function after_store(&$query, $key, $value, $column, $argument) {
+	function after_store($query, $key, $value, $column, $argument) {
 		if ($argument == "terms" || $argument == "blocks" || !$this->models->has($argument)) return;
 
 		//vars

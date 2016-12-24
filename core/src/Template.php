@@ -25,11 +25,11 @@ class Template implements TemplateInterface {
 	 * @copydoc TemplateInterface::assign
 	 */
 	function assign($key, $value = "") {
-	 if (is_array($key)) {
-		 foreach ($key as $k => $v) $this->assign($k, $v);
-	 } else {
-		 $this->vars[$key] = $value;
-	 }
+		if (is_array($key)) {
+			foreach ($key as $k => $v) $this->assign($k, $v);
+		} else {
+			$this->vars[$key] = $value;
+		}
 	}
 	/**
 	 * @copydoc TemplateInterface::output
@@ -41,22 +41,22 @@ class Template implements TemplateInterface {
 		if (!is_array($paths)) $paths = array($paths);
 		$path = reset($paths);
 		$found = array();
-	 while (empty($found) && $path) {
-		 $found = $this->locator->locate($path.".php", $scope);
-		 $path = next($paths);
-	 }
+		while (empty($found) && $path) {
+			$found = $this->locator->locate($path.".php", $scope);
+			$path = next($paths);
+		}
 		$this->path = ($this->options['all']) ? $found : end($found);
 
-	 if (!is_array($this->path) && !file_exists($this->path)) {
-		 throw new \Exception("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
-	 }
+		if (!is_array($this->path) && !file_exists($this->path)) {
+			throw new \Exception("template not found: ".(is_array($paths) ? implode("\n", $paths) : $paths));
+		}
 
 		extract($this->vars);
-	 if (is_array($this->path)) {
-		 foreach ($this->path as $p) include($p);
-	 } else {
-		 include($this->path);
-	 }
+		if (is_array($this->path)) {
+			foreach ($this->path as $p) include($p);
+		} else {
+			include($this->path);
+		}
 	}
 
 	/**

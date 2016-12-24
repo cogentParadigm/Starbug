@@ -11,7 +11,7 @@ class StoreSelectionHook extends QueryHook {
 		if (!empty($argument)) {
 			$fields = explode(" ", $argument);
 			$row = $this->db->query($query->model)->condition("id", $id)->one();
-			foreach($fields as $field) $conditions[$field] = $row[$field];
+			foreach ($fields as $field) $conditions[$field] = $row[$field];
 		}
 		$this->db->query($query->model)->conditions($conditions)->condition("id", $id, "!=")->set($column, 0)->update();
 	}

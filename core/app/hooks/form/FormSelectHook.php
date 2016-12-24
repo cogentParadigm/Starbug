@@ -19,7 +19,9 @@ class FormSelectHook extends FormHook {
 		}
 		if (!empty($field['range'])) {
 			$range = explode("-", $field['range']);
-			for ($i=$range[0];$i<=$range[1];$i++) $options[$i] = $i;
+			for ($i = $range[0]; $i <= $range[1]; $i++) {
+				$options[$i] = $i;
+			}
 			unset($field['range']);
 		}
 		$mode = "template";
@@ -32,10 +34,12 @@ class FormSelectHook extends FormHook {
 			if (!empty($options)) foreach ($options[0] as $k => $v) if (false !== strpos($field['caption'], "%$k%")) $keys[] = $k;
 			foreach ($options as $o) {
 				$cap = $field['caption'];
-				foreach($keys as $k) $cap = str_replace("%$k%", $o[$k], $cap);
+				foreach ($keys as $k) $cap = str_replace("%$k%", $o[$k], $cap);
 				$list[$cap] = $o[$field['value']];
 			}
-			$options = $list; unset($field['caption']); unset($field['value']);
+			$options = $list;
+			unset($field['caption']);
+			unset($field['value']);
 		} else if (!empty($field['options'])) {
 			$keys = is_array($field['options']) ? $field['options'] : explode(",", $field['options']);
 			$values = (!empty($field['values'])) ? $field['values'] : $keys;

@@ -38,6 +38,6 @@ interface ResponseInterface {
 	public function missing();
 	public function forbidden();
 	function redirect($url);
-	public function capture($template, $params=array(), $options = array());
+	public function capture($template, $params = array(), $options = array());
 	public function js($mid);
 }

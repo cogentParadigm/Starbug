@@ -35,9 +35,9 @@ class Macro implements MacroInterface {
 		// $tokens grouped by $types, pointing to the version of the token found in
 		// the source text. For example, $results['user']['email'] = '[user:email]';
 		$results = array();
-	 for ($i = 0; $i < count($tokens); $i++) {
-		 $results[$types[$i]][$tokens[$i]] = $matches[0][$i];
-	 }
+		for ($i = 0; $i < count($tokens); $i++) {
+			$results[$types[$i]][$tokens[$i]] = $matches[0][$i];
+		}
 
 		return $results;
 	}
@@ -86,11 +86,11 @@ class Macro implements MacroInterface {
 			}
 		}
 		//populate overrides from data
-	 if (!empty($data[$type]) && is_array($data[$type])) {
-	  foreach ($tokens as $index => $token) {
-		  if (!empty($data[$type][$index])) $replacements[$token] = $data[$type][$index];
-	  }
-	 }
+		if (!empty($data[$type]) && is_array($data[$type])) {
+			foreach ($tokens as $index => $token) {
+				if (!empty($data[$type][$index])) $replacements[$token] = $data[$type][$index];
+			}
+		}
 		//return replacements
 		return $replacements;
 	}

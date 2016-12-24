@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 class TermsTest extends ModelTest {
 
-	var $model = "terms";
+	public $model = "terms";
 
 	function test_create_update_delete() {
 		//create

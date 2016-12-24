@@ -15,7 +15,7 @@ class FormMultipleCategorySelectHook extends FormHook {
 		if (empty($field['parent'])) $field['parent'] = 0;
 		$terms = $this->taxonomy->terms($field['taxonomy'], $field['parent']);
 		$value = $form->get($field['name']);
-		if (!is_array($value)) $value = explode(",",$value);
+		if (!is_array($value)) $value = explode(",", $value);
 		foreach ($value as $idx => $v) {
 			if (substr($v, 0, 1) == "-") unset($value[$idx]);
 		}

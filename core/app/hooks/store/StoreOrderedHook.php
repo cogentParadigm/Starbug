@@ -1,13 +1,13 @@
 <?php
 namespace Starbug\Core;
 class StoreOrderedHook extends QueryHook {
-	var $conditions = false;
-	var $value = false;
-	var $increment = 1;
+	protected $conditions = false;
+	protected $value = false;
+	protected $increment = 1;
 	public function __construct(DatabaseInterface $db) {
 		$this->db = $db;
 	}
-	function set_conditions($query, $column, $argument, $value="insert") {
+	function set_conditions($query, $column, $argument, $value = "insert") {
 		if (false === $this->conditions) {
 			$this->conditions = array();
 			if (!empty($argument)) {

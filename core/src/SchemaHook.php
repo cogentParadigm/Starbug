@@ -52,7 +52,9 @@ class SchemaHook implements HookInterface {
 		if ($table->hasOption('base') && $table->getOption('base') !== $table->getName()) {
 			//find the root
 			$base = $schema->getTable($table->getOption('base'));
-			while ($base->hasOption('base')) $base = $schema->getTable($base->getOption("base"));
+			while ($base->hasOption('base')) {
+				$base = $schema->getTable($base->getOption("base"));
+			}
 			$base = $base->getName();
 			if (!$table->hasColumn($base."_id")) {
 				$schema->addColumn(

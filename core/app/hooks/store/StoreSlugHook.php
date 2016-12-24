@@ -36,16 +36,16 @@ class StoreSlugHook extends QueryHook {
 	}
 
 	function exists($query, $column, $value) {
-			$exists = $this->db->query($query->model)->condition($query->model.".".$column, $value);
-			$id = 0;
-			if ($query->mode == "update") {
-				$id = $query->getId();
-				$exists->condition($query->model.".id", $id, "!=");
-			}
-			if (!empty($this->models->get($query->model)->hooks[$column]["unique"])) {
-				$parts = explode(" ", $this->models->get($query->model)->hooks[$column]["unique"]);
-				foreach ($parts as $c) if (!empty($c)) $exists->condition($c, $query->fields[$c]);
-			}
-			return $exists;
+		$exists = $this->db->query($query->model)->condition($query->model.".".$column, $value);
+		$id = 0;
+		if ($query->mode == "update") {
+			$id = $query->getId();
+			$exists->condition($query->model.".id", $id, "!=");
+		}
+		if (!empty($this->models->get($query->model)->hooks[$column]["unique"])) {
+			$parts = explode(" ", $this->models->get($query->model)->hooks[$column]["unique"]);
+			foreach ($parts as $c) if (!empty($c)) $exists->condition($c, $query->fields[$c]);
+		}
+		return $exists;
 	}
 }
