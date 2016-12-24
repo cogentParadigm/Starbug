@@ -2,7 +2,7 @@
 namespace Starbug\Payment;
 use Starbug\Core\Controller;
 use Starbug\Core\DatabaseInterface;
-class AdminProduct_typesController extends Controller {
+class AdminProductTypesController extends Controller {
 	public $routes = array(
 		'update' => '{id}'
 	);

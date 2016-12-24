@@ -39,8 +39,9 @@ class ResourceLocator implements ResourceLocatorInterface {
 	function className($class, $suffix = false) {
 		if (false === strpos($class, "\\")) {
 			if (false !== $suffix) {
-				$class = ucwords($class).$suffix;
+				$class = $class.$suffix;
 			}
+			$class = $this->formatClassName($class);
 			for (end($this->modules); ($mid = key($this->modules)) !== null; prev($this->modules)){
 				if (class_exists($mid."\\".$class)) return $mid."\\".$class;
 			}
@@ -48,5 +49,14 @@ class ResourceLocator implements ResourceLocatorInterface {
 			return $class;
 		}
 		return false;
+	}
+
+	/**
+	 * convert a name with underscores to camel case format
+	 * @param  string $className the name of a class
+	 * @return string            the camel case converted name
+	 */
+	protected function formatClassName($className) {
+		return str_replace(" ", "", ucwords(str_replace("_", " ", $className)));
 	}
 }

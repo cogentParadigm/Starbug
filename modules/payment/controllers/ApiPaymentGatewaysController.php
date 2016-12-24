@@ -2,13 +2,13 @@
 namespace Starbug\Payment;
 use Starbug\Core\ApiController;
 use Starbug\Core\IdentityInterface;
-class ApiPayment_gateway_settingsController extends ApiController {
-	public $model = "payment_gateway_settings";
+class ApiPaymentGatewaysController extends ApiController {
+	public $model = "payment_gateways";
 	function __construct(IdentityInterface $user) {
 		$this->user = $user;
 	}
 	function admin() {
-		$this->api->render("AdminPaymentGatewaySettings");
+		$this->api->render("Admin");
 	}
 	function select() {
 		$this->api->render("Select");

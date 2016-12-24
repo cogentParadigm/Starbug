@@ -4,7 +4,7 @@
  * @ingroup models
  */
 namespace Starbug\Emails;
-class Email_templates extends \Starbug\Core\Email_templatesModel {
+class EmailTemplates extends \Starbug\Core\EmailTemplatesModel {
 
 	function create($email_template) {
 		$this->store($email_template);

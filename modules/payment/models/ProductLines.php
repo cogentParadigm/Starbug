@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Payment;
-use Starbug\Core\Product_linesModel;
-class Product_lines extends Product_linesModel {
+use Starbug\Core\ProductLinesModel;
+class ProductLines extends ProductLinesModel {
 	function update($lines) {
 		if (count($this->cart)) {
 			foreach ($lines as $id => $qty) {

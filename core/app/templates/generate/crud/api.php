@@ -2,7 +2,7 @@
 namespace Starbug\App;
 use Starbug\Core\ApiController;
 use Starbug\Core\IdentityInterface;
-class Api<?php echo ucwords($model); ?>Controller extends ApiController {
+class Api<?php echo $className; ?>Controller extends ApiController {
 	public $model = "<?php echo $model; ?>";
 	function __construct(IdentityInterface $user) {
 		$this->user = $user;

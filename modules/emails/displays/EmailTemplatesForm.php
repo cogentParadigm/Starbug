@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Emails;
 use Starbug\Core\FormDisplay;
-class Email_templatesForm extends FormDisplay {
+class EmailTemplatesForm extends FormDisplay {
 	public $model = "email_templates";
 	public $cancel_url = "admin/emails";
 	function build_display($options) {

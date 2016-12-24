@@ -17,16 +17,12 @@ class ModelFactory implements ModelFactoryInterface {
 	public function has($collection) {
 		return (!empty($collection) && (($this->objects[$collection]) || (file_exists($this->base_directory."/var/models/".ucwords($collection)."Model.php"))));
 	}
-	public function get($collection) {
-		$model = $this->locator->className($model);
-		if (false === $model) {
-			if ($this->has($collection)) {
-				$model = "Starbug\\Core\\".ucwords($collection)."Model";
-			} else {
-				$model = "Starbug\\Core\\Table";
-			}
+	public function get($model) {
+		$className = $this->locator->className($model);
+		if (false === $className) {
+			$className = "Starbug\\Core\\".str_replace(" ", "", ucwords(str_replace("_", " ", $model)))."Model";
 		}
-		$object = $this->container->get($model);
+		$object = $this->container->get($className);
 		if ($object instanceof Table) {
 			return $object;
 		} else {

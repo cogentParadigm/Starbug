@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Payment;
 use Starbug\Core\GridDisplay;
-class Payment_gatewaysGrid extends GridDisplay {
+class PaymentGatewaysGrid extends GridDisplay {
 	public $model = "payment_gateways";
 	public $action = "admin";
 	function build_display($options) {

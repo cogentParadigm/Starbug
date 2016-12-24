@@ -983,8 +983,8 @@ class query implements IteratorAggregate, ArrayAccess {
 						//foreach ($schema as $n => $f) {
 							//if ($f['type'] == "terms" || $f['type'] == "category") $this->select($collection.".".$n);
 						//}
-					} else {
-						//otherwise we look at the field schema
+					} else if (!empty($table)) {
+						//otherwise we look at the field schema if we recognize the table
 						$schema = $this->models->get($table)->column_info($token);
 						if (!empty($schema)) {
 							if ($schema['entity'] !== $table) {

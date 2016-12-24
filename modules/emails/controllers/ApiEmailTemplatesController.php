@@ -1,9 +1,9 @@
 <?php
-namespace Starbug\Payment;
+namespace Starbug\Emails;
 use Starbug\Core\ApiController;
 use Starbug\Core\IdentityInterface;
-class ApiProduct_typesController extends ApiController {
-	public $model = "product_types";
+class ApiEmailTemplatesController extends ApiController {
+	public $model = "email_templates";
 	function __construct(IdentityInterface $user) {
 		$this->user = $user;
 	}
@@ -18,3 +18,4 @@ class ApiProduct_typesController extends ApiController {
 		return $query;
 	}
 }
+?>

@@ -5,7 +5,7 @@ namespace Starbug\Core;
  * <?php echo $name; ?> model base
  * @ingroup models
  */
-class <?php echo ucwords($name); ?>Model extends Table {
+class <?php echo $className; ?>Model extends Table {
 
   public $type = "<?php echo $name; ?>";
   public $base = "<?php echo $base; ?>";

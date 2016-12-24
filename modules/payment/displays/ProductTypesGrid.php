@@ -1,11 +1,10 @@
 <?php
-namespace Starbug\Emails;
+namespace Starbug\Payment;
 use Starbug\Core\GridDisplay;
-class Email_templatesGrid extends GridDisplay {
-	public $model = "email_templates";
+class ProductTypesGrid extends GridDisplay {
+	public $model = "product_types";
 	public $action = "admin";
 	function build_display($options) {
 		$this->add("name");
 	}
 }
-?>

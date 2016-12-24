@@ -10,6 +10,7 @@ class Model extends Definition {
 	}
 	public function build($options = []) {
 		parent::build($options);
+		$className = str_replace(" ", "", ucwords(str_replace("_", " ", $options["model"])));
 		$schema = $this->schemer->getSchema();
 		$table = $schema->getTable($options["model"]);
 		foreach ($table->getOptions() as $key => $value) {
@@ -28,14 +29,15 @@ class Model extends Definition {
 		}
 		$this->setParameter("factory", $factory);
 		$this->setParameter("use", $use);
+		$this->setParameter("className", $className);
 		$this->addTemplate(
 			"generate/model/base",
-				"var/models/".ucwords($options["model"])."Model.php"
+				"var/models/".$className."Model.php"
 		);
 		if (empty($options["update"])) {
 			$this->addTemplate(
 				"generate/model/model",
-					$this->module."/models/".ucwords($options["model"]).".php"
+					$this->module."/models/".$className.".php"
 			);
 		}
 	}

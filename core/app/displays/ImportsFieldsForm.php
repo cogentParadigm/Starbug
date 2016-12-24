@@ -1,6 +1,6 @@
 <?php
 namespace Starbug\Core;
-class Imports_fieldsForm extends FormDisplay {
+class ImportsFieldsForm extends FormDisplay {
 	public $source_keys = array();
 	public $source_values = array();
 	public $model = "imports_fields";

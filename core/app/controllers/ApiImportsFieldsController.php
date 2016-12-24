@@ -1,9 +1,7 @@
 <?php
-namespace Starbug\Payment;
-use Starbug\Core\ApiController;
-use Starbug\Core\IdentityInterface;
-class ApiPayment_gatewaysController extends ApiController {
-	public $model = "payment_gateways";
+namespace Starbug\Core;
+class ApiImportsFieldsController extends ApiController {
+	public $model = "imports_fields";
 	function __construct(IdentityInterface $user) {
 		$this->user = $user;
 	}
@@ -18,3 +16,4 @@ class ApiPayment_gatewaysController extends ApiController {
 		return $query;
 	}
 }
+?>

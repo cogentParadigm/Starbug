@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Payment;
 use Starbug\Core\FormDisplay;
-class Product_typesForm extends FormDisplay {
+class ProductTypesForm extends FormDisplay {
 	public $model = "product_types";
 	public $cancel_url = "admin/product_types";
 	function build_display($options) {

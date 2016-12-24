@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Core;
-use \Interop\Container\ContainerInterface;
+use Interop\Container\ContainerInterface;
+use Exception;
 /**
 * an implementation of DisplayFactoryInterface
 */

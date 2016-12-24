@@ -1,7 +1,7 @@
 <?php echo '<?php'."\n"; ?>
 namespace Starbug\App;
 use Starbug\Core\GridDisplay;
-class <?php echo ucwords($model); ?>Grid extends GridDisplay {
+class <?php echo $className; ?>Grid extends GridDisplay {
 	public $model = "<?php echo $model; ?>";
 	public $action = "admin";
 	function build_display($options) {

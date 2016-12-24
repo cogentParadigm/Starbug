@@ -1,12 +1,14 @@
 <?php
-namespace Starbug\Core;
-class ApiImports_fieldsController extends ApiController {
-	public $model = "imports_fields";
+namespace Starbug\Payment;
+use Starbug\Core\ApiController;
+use Starbug\Core\IdentityInterface;
+class ApiPaymentGatewaySettingsController extends ApiController {
+	public $model = "payment_gateway_settings";
 	function __construct(IdentityInterface $user) {
 		$this->user = $user;
 	}
 	function admin() {
-		$this->api->render("Admin");
+		$this->api->render("AdminPaymentGatewaySettings");
 	}
 	function select() {
 		$this->api->render("Select");
@@ -16,4 +18,3 @@ class ApiImports_fieldsController extends ApiController {
 		return $query;
 	}
 }
-?>

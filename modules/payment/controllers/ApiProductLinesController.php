@@ -2,7 +2,7 @@
 namespace Starbug\Payment;
 use Starbug\Core\ApiController;
 use Starbug\Core\IdentityInterface;
-class ApiProduct_linesController extends ApiController {
+class ApiProductLinesController extends ApiController {
 	public $model = "product_lines";
 	function __construct(IdentityInterface $user, Cart $cart) {
 		$this->user = $user;

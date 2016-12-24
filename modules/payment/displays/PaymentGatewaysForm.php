@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Payment;
 use Starbug\Core\FormDisplay;
-class Payment_gatewaysForm extends FormDisplay {
+class PaymentGatewaysForm extends FormDisplay {
 	public $model = "payment_gateways";
 	public $cancel_url = "admin/payment_gateways";
 	function build_display($options) {
