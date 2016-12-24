@@ -15,7 +15,7 @@ class ControllerFactory implements ControllerFactoryInterface {
 	public function get($controller) {
 		$className = $this->locator->className($controller, "Controller");
 		if (false === $className) {
-			throw new Exception("Controller not found. ".$controller." is not an instance of Controller.");
+			throw new Exception("Controller not found. ".$controller.".");
 		}
 		$object = $this->container->get($className);
 		if ($object instanceof Controller) {
