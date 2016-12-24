@@ -24,4 +24,3 @@ class ApiFilesController extends ApiController {
 		return $file;
 	}
 }
-?>

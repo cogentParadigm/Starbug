@@ -18,4 +18,3 @@ class Migration extends AbstractMigration {
 		$this->schema->addRow("terms", ["taxonomy" => "files_category", "term" => "Uncategorized"]);
 	}
 }
-?>
