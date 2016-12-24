@@ -8,4 +8,3 @@ class PagesGrid extends GridDisplay {
 		$this->add("title", "published", ["modified", "label" => "Last Modified"]);
 	}
 }
-?>

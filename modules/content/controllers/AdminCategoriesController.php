@@ -34,4 +34,3 @@ class AdminCategoriesController extends Controller {
 		$this->render("admin/import");
 	}
 }
-?>

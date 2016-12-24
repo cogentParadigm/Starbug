@@ -9,4 +9,3 @@ class PagesController extends Controller {
 		$this->render("blocks", array("region" => "content", "id" => $id), array("scope" => "templates"));
 	}
 }
-?>

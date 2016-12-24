@@ -9,4 +9,3 @@ return [
 	'Starbug\Core\Routing\RouterInterface' => DI\object()
 		->method('addAliasStorage', DI\get('Starbug\Content\AliasStorage')),
 ];
-?>

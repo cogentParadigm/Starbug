@@ -27,4 +27,3 @@ class AdminCategoriesCollection extends Collection {
 		return $rows;
 	}
 }
-?>

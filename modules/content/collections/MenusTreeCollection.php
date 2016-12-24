@@ -13,4 +13,3 @@ class MenusTreeCollection extends ParentCollection {
 		return parent::filterRows($rows);
 	}
 }
-?>

@@ -26,4 +26,3 @@ class hook_store_blocks extends QueryHook {
 		$this->db->query("blocks")->condition($query->model."_id", $id)->delete();
 	}
 }
-?>

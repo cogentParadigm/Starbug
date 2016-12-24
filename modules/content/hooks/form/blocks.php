@@ -27,4 +27,3 @@ class hook_form_blocks extends FormHook {
 		$field['containers'] = $containers;
 	}
 }
-?>

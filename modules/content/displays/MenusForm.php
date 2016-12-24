@@ -7,4 +7,3 @@ class MenusForm extends ParentForm {
 		$this->add(["pages_id", "pane" => "ml", "input_type" => "autocomplete", "from" => "pages", "label" => "Page", "info" => "Select a page."]);
 	}
 }
-?>

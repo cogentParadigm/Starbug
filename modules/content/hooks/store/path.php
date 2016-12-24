@@ -86,4 +86,3 @@ class hook_store_path extends QueryHook {
 		return $exists;
 	}
 }
-?>

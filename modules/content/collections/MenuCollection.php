@@ -17,4 +17,3 @@ class MenuCollection extends ParentCollection {
 		return parent::filterRows($rows);
 	}
 }
-?>

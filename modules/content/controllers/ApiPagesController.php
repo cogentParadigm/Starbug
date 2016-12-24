@@ -18,4 +18,3 @@ class ApiPagesController extends ApiController {
 		return $query;
 	}
 }
-?>

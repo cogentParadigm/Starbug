@@ -1,5 +1,6 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Content;
+use Starbug\Core\ModelTest;
 class PagesTest extends ModelTest {
 	public $model = "pages";
 	function test_create() {
@@ -35,6 +36,4 @@ class PagesTest extends ModelTest {
 		$object = $this->models->get("pages")->load(array("path.alias" => "phpunit"), true);
 		$this->assertEquals(empty($object), true);
 	}
-
 }
-?>
