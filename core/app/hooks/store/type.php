@@ -13,7 +13,7 @@ class hook_store_type extends QueryHook {
 		return $value;
 	}
 	function after_store(&$query, $key, $value, $column, $argument) {
-		if ($argument == "terms" || $argument == "blocks" || !$this->models->has($argument) || empty($value)) return;
+		if ($argument == "terms" || $argument == "blocks" || !$this->models->has($argument)) return;
 
 		//vars
 		$model = $query->model;
@@ -26,7 +26,8 @@ class hook_store_type extends QueryHook {
 		$clean = true;
 
 		//loop through values
-		if (!is_array($value)) $value = explode(",", preg_replace("/[,\s]+/", ",", $value));
+		if (empty($value)) $value = [];
+		else if (!is_array($value)) $value = explode(",", preg_replace("/[,\s]+/", ",", $value));
 		foreach ($value as $position => $type_id) {
 			$remove = false;
 			$value_type = ($type == $target) ? "id" : $column."_id";
@@ -101,4 +102,3 @@ class hook_store_type extends QueryHook {
 		}
 	}
 }
-?>
