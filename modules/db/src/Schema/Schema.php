@@ -82,4 +82,3 @@ class Schema implements SchemaInterface {
 		}
 	}
 }
-?>

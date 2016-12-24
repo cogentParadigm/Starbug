@@ -1,23 +1,5 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file modules/db/src/Collection.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup db
- */
 namespace Starbug\Core;
-
-/**
- * usage:
- * $queue = new QueryQueue();
- * $queue->push($query);
- * $queue->push($query2);
- * $queue->execute();
- * @ingroup db
- */
-
 class Collection {
 	protected $model;
 	protected $search_fields = false;
@@ -89,4 +71,3 @@ class Collection {
 		return reset($this->results);
 	}
 }
-?>

@@ -1,12 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/db/query.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup db
- */
 /**
  * The query class. provides a generic query representation
  * usage:
@@ -1182,7 +1174,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		return $this->db->errors($key, $values);
 	}
 
-	public function error($error, $field = "global", $model="") {
+	public function error($error, $field = "global", $model = "") {
 		if (empty($model)) $model = $this->model;
 		$this->db->error($error, $field, $model);
 	}
@@ -1260,7 +1252,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		if ($this->mode != "delete") $this->dirty();
 		$this->mode = "delete";
 		if ($run) return $this->execute();
-	  else return $this;
+		else return $this;
 	}
 
 	function insert($run = true) {

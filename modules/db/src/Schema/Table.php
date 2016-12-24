@@ -78,4 +78,3 @@ class Table {
 		return $this->dropped;
 	}
 }
-?>

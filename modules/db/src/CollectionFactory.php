@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 use \Interop\Container\ContainerInterface;
 /**
-* an implementation of ModelFactoryInterface
+* an implementation of CollectionFactoryInterface
 */
 class CollectionFactory implements CollectionFactoryInterface {
 	protected $locator;

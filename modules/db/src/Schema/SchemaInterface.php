@@ -13,4 +13,3 @@ interface SchemaInterface {
 	public function dropIndex($table, $columns);
 	public function clean();
 }
-?>

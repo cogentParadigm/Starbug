@@ -2,7 +2,7 @@
 use Interop\Container\ContainerInterface;
 return [
 	'Starbug\Db\Schema\*Interface' => DI\object('Starbug\Db\Schema\*'),
-	'Starbug\Db\Schema\SchemaInterface' => function(ContainerInterface $c) {
+	'Starbug\Db\Schema\SchemaInterface' => function (ContainerInterface $c) {
 		$schema = $c->get('Starbug\Db\Schema\Schema');
 		$hooks = $c->get('db.schema.hooks');
 		foreach ($hooks as $hook) {
@@ -10,7 +10,7 @@ return [
 		}
 		return $schema;
 	},
-	'Starbug\Db\Schema\SchemerInterface' => function(ContainerInterface $c) {
+	'Starbug\Db\Schema\SchemerInterface' => function (ContainerInterface $c) {
 		$schemer = $c->get('Starbug\Db\Schema\Schemer');
 		$c->set('Starbug\Db\Schema\SchemerInterface', $schemer);
 		$migrations = $c->get('db.schema.migrations');
@@ -20,4 +20,3 @@ return [
 		return $schemer;
 	}
 ];
-?>

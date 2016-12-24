@@ -4,7 +4,7 @@ class QueryHook {
 	/**
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 */
-	function query(&$query, $args=array()) {
+	function query(&$query, $args = array()) {
 		//this hook is invoked when called as a function on a query.
 	}
 	/**
@@ -110,4 +110,3 @@ class QueryHook {
 		//this hook is invoked after deletion
 	}
 }
-?>

@@ -33,4 +33,3 @@ class Database extends AbstractDatabase {
 		return $this->connection;
 	}
 }
-?>

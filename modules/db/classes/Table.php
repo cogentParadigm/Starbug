@@ -1,17 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of Starbug PHP
- * @file core/db/Table.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup Table
- */
-/**
- * @defgroup Table
- * the db class
- * @ingroup db
- */
 namespace Starbug\Core;
 /**
  * This class wraps a databse table, it is the base class for database models
@@ -81,7 +68,7 @@ class Table implements CollectionFilterInterface {
 		return $this->db->errors($key, $values);
 	}
 
-	public function error($error, $field = "global", $model="") {
+	public function error($error, $field = "global", $model = "") {
 		if (empty($model)) $model = $this->type;
 		$this->db->error($error, $field, $model);
 	}
@@ -171,7 +158,9 @@ class Table implements CollectionFilterInterface {
 	function root($entity = "") {
 		if (empty($entity)) $entity = $this->type;
 		$base = $entity;
-		while (!empty($this->models->get($base)->base)) $base = $this->models->get($base)->base;
+		while (!empty($this->models->get($base)->base)) {
+			$base = $this->models->get($base)->base;
+		}
 		return $base;
 	}
 
@@ -180,7 +169,7 @@ class Table implements CollectionFilterInterface {
 	 * @param string $entity the name of the entity
 	 * @return array the inheritance chain. the first member will be $entity
 	 */
-	function chain($entity="") {
+	function chain($entity = "") {
 		if (empty($entity)) $entity = $this->type;
 		$chain = array();
 		while (!empty($entity)) {
@@ -207,7 +196,9 @@ class Table implements CollectionFilterInterface {
 				$entity = $this->models->get($entity)->base;
 			}
 		} else {
-			while (!isset($this->models->get($entity)->hooks[$column]) && !empty($this->models->get($entity)->base)) $entity = $this->models->get($entity)->base;
+			while (!isset($this->models->get($entity)->hooks[$column]) && !empty($this->models->get($entity)->base)) {
+				$entity = $this->models->get($entity)->base;
+			}
 			if (isset($this->models->get($entity)->hooks[$column])) $info = $this->models->get($entity)->hooks[$column];
 			$info["entity"] = $entity;
 		}
@@ -219,7 +210,7 @@ class Table implements CollectionFilterInterface {
 	 * Query helper to provide a query with all tables joined and columns selected
 	 * @param string $entity the name of the entity
 	 */
-	function query($entity="") {
+	function query($entity = "") {
 		if (empty($entity)) $entity = $this->type;
 		$chain = array();
 		$base = $entity;
@@ -259,7 +250,7 @@ class Table implements CollectionFilterInterface {
 	 * @param boolean $reset set to true if you don't want to load from cache
 	 * @param string $name the name of the entity
 	 */
-	function load($id, $reset = false, $name="") {
+	function load($id, $reset = false, $name = "") {
 		if (empty($name)) $name = $this->type;
 		static $entities = array();
 		$key = $name;
@@ -287,7 +278,7 @@ class Table implements CollectionFilterInterface {
 	 * @param array $from the conditions to match on instead of an ID. must map to a single entity
 	 * @param string $name the name of the entity
 	 */
-	function store($fields, $from = array(), $name="") {
+	function store($fields, $from = array(), $name = "") {
 		if (empty($name)) $name = $this->type;
 		$chain = array();
 		$base = $name;
@@ -350,7 +341,7 @@ class Table implements CollectionFilterInterface {
 	 * @param int $id the id of the item to delete
 	 * @param string $name the entity name
 	 */
-	function remove($id, $name="") {
+	function remove($id, $name = "") {
 		if (empty($name)) $name = $this->type;
 		$chain = array();
 		$base = $name;
@@ -392,4 +383,3 @@ class Table implements CollectionFilterInterface {
 		return $row;
 	}
 }
-?>

@@ -34,4 +34,3 @@ class Database extends AbstractDatabase {
 		throw new Exception('Call to undefined method/class function: ' . $method);
 	}
 }
-?>
