@@ -18,4 +18,3 @@ class ApiEmailTemplatesController extends ApiController {
 		return $query;
 	}
 }
-?>

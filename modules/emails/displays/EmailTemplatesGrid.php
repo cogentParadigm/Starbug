@@ -8,4 +8,3 @@ class EmailTemplatesGrid extends GridDisplay {
 		$this->add("name");
 	}
 }
-?>

@@ -16,4 +16,3 @@ class EmailTemplatesForm extends FormDisplay {
 		$this->add(["body", "pane" => "body"]);
 	}
 }
-?>

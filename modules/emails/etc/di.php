@@ -4,4 +4,3 @@ return [
 		DI\get('Starbug\Emails\Migration')
 	])
 ];
-?>
