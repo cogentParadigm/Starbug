@@ -1,6 +1,6 @@
 <?php
 return [
-	"routes" => DI\decorate(function($routes) {
+	"routes" => DI\decorate(function ($routes) {
 		$routes["home"] = [
 			"title" => "Home",
 			"type" => "views",
