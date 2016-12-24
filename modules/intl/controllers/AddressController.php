@@ -43,4 +43,3 @@ class AddressController extends Controller {
 		$this->render("address/form");
 	}
 }
-?>

@@ -10,4 +10,3 @@ class ProvincesForm extends FormDisplay {
 		$this->add("code");
 	}
 }
-?>

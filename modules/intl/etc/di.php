@@ -9,4 +9,3 @@ return [
 		DI\get('Starbug\Intl\Migration')
 	])
 ]
-?>

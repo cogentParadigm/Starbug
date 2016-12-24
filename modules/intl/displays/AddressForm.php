@@ -41,4 +41,3 @@ class AddressForm extends FormDisplay {
 		}
 	}
 }
-?>

@@ -43,4 +43,3 @@ class hook_form_address extends FormHook {
 		$field["options"] = $options;
 	}
 }
-?>

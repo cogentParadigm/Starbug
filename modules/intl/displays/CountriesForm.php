@@ -17,4 +17,3 @@ class CountriesForm extends FormDisplay {
 		$this->add("postal_url");
 	}
 }
-?>

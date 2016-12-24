@@ -11,7 +11,7 @@ class Provinces extends ProvincesModel {
 		$this->store($province);
 	}
 
-  /******************************************************************
+	/******************************************************************
 	 * Query functions
 	 *****************************************************************/
 
@@ -22,6 +22,4 @@ class Provinces extends ProvincesModel {
 		}
 		return $query;
 	}
-
 }
-?>

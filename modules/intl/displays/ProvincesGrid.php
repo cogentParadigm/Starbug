@@ -9,4 +9,3 @@ class ProvincesGrid extends GridDisplay {
 		$this->add("code");
 	}
 }
-?>
