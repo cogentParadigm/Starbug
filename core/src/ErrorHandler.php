@@ -9,7 +9,7 @@ use Psr\Log\LogLevel;
 class ErrorHandler {
 
 	protected $out;
-	protected $exceptionTemplate;
+	protected $exceptionTemplate = "exception-cli";
 	protected $logger;
 	protected $map = array(
 		E_ERROR             => LogLevel::CRITICAL,
@@ -30,10 +30,13 @@ class ErrorHandler {
 	);
 	protected $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
 
-	function __construct(TemplateInterface $out, LoggerInterface $logger, $exceptionTemplate = "exception-html") {
+	function __construct(TemplateInterface $out, LoggerInterface $logger) {
 		$this->out = $out;
 		$this->logger = $logger;
-		$this->exceptionTemplate = $exceptionTemplate;
+	}
+
+	public function setTemplate($template) {
+		$this->exceptionTemplate = $template;
 	}
 
 	public function register() {

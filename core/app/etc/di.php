@@ -42,7 +42,13 @@ return array(
 	'Starbug\Core\ResourceLocator' => DI\object()->constructor(DI\get('base_directory'), DI\get('modules')),
 	'Starbug\Core\ModelFactory' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Starbug\Core\CssGenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
-	'Starbug\Core\ErrorHandler' => DI\object()->constructorParameter("exceptionTemplate", defined('SB_CLI') ? "exception-cli" : "exception-html"),
+	'Starbug\Core\ErrorHandler' => DI\decorate(function ($previous, $container) {
+		$cli = $container->get("cli");
+		if (false === $cli) {
+			$previous->setTemplate("exception-html");
+		}
+		return $previous;
+	}),
 	'Starbug\Core\SessionStorage' => DI\object()->constructorParameter('key', DI\get('hmac_key')),
 	'Starbug\Core\URLInterface' => function (ContainerInterface $c) {
 		$request = $c->get("Starbug\Core\RequestInterface");
