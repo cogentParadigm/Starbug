@@ -76,6 +76,7 @@ return array(
 	'Starbug\Core\Template' => DI\object()->constructorParameter('helpers', DI\get('Starbug\Core\HelperFactoryInterface')),
 	'Starbug\Core\GenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Starbug\Core\Application' => DI\object()->method('setLogger', DI\get('Psr\Log\LoggerInterface')),
+	'Starbug\Core\SetupCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Psr\Log\LoggerInterface' => function (ContainerInterface $c) {
 		$logger = new Logger("main");
 		$env = $c->get("environment");

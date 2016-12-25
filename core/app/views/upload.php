@@ -1,5 +1,4 @@
 <?php
-	//file_put_contents(BASE_DIR."/files.log", json_encode($request->files));
 	$_post = array();
 	$htmldata = array();
 	$record = array("filename" => "", "mime_type" => "", "caption" => "uploaded file", "category" => $request->getPost('category'));

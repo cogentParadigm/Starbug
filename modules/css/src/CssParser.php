@@ -4,22 +4,24 @@ class CssParser {
 	public $path;
 	public $css;
 	public $fonts;
-	function __construct($filename, $output_path = "") {
+	protected $directory;
+	function __construct($directory, $filename, $output_path = "") {
 		$this->css = $this->fonts = array();
 		$args = func_get_args();
+		$this->directory = array_shift($args);
 		$count = count($args);
 		if ($count == 1) {
 			//IF THERE IS ONLY ONE PARAM, USE IT AS THE OUTPUT PATH
-			$this->path = $args[0];
+			$this->path = $this->directory."/".$args[0];
 		} else {
 			//IF THERE ARE MORE PARAMS, USE THE LAST ONE AS THE OUTPUT PATH
-			$this->path = array_pop($args);
-			foreach ($args as $a) $this->add_file($a);
+			$this->path = $this->directory."/".array_pop($args);
+			foreach ($args as $a) $this->add_file($this->directory."/".$a);
 		}
 	}
 	function add_file($filename, $desc = "") {
 		if (empty($desc)) $desc = end(explode("/", $filename));
-		$replacement = str_replace(BASE_DIR, "", realpath(dirname($filename)."/../"))."/"; //translates ../ into ../../../app/public/
+		$replacement = str_replace($this->directory, "", realpath(dirname($filename)."/../"))."/"; //translates ../ into ../../../app/public/
 		$sheet = str_replace("url(../", "url(../../..$replacement", $this->optimize(file_get_contents($filename), dirname($filename)));
 		$base = $desc;
 		$count = 0;

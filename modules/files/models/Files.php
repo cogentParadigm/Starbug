@@ -13,7 +13,7 @@ class Files extends FilesModel {
 		if (!$this->errors()) {
 			if ($record['filename'] != $original['filename']) {
 				//rename file
-				$result = rename(BASE_DIR."/app/public/uploads/".$record['id']."_".$original['filename'], BASE_DIR."/app/public/uploads/".$record['id']."_".$record['filename']);
+				$result = rename("app/public/uploads/".$record['id']."_".$original['filename'], "app/public/uploads/".$record['id']."_".$record['filename']);
 				if (!$result) $this->store(array("id" => $record['id'], "filename" => $original['filename']));
 			}
 		}
