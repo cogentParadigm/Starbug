@@ -1,6 +1,6 @@
 <?php
 namespace Starbug\Core;
-class pager {
+class Pager {
 	public $count; //total number of items
 	public $per; //items per page
 	public $last; //last page

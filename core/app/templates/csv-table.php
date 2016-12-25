@@ -9,7 +9,7 @@
 	fclose($handle);
 	$lines--;
 	$size = 20;
-	$pager = new \Starbug\Core\pager($lines, $size, intval($this->request->getParameter('pg')));
+	$pager = new \Starbug\Core\Pager($lines, $size, intval($this->request->getParameter('pg')));
 	$line = 0;
 ?>
 <?php if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) { $head = fgetcsv($handle); ?>

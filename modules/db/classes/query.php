@@ -1326,7 +1326,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 */
 	function pager($page, $force = false) {
 		if ($force || is_null($this->pager)) {
-			$this->pager = new pager($this->count(), $this->query['limit'], $page);
+			$this->pager = new Pager($this->count(), $this->query['limit'], $page);
 			$this->skip($this->pager->start);
 		}
 		return $this->pager;
