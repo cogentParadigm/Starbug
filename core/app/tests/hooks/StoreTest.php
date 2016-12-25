@@ -4,7 +4,7 @@ namespace Starbug\Core;
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup test
  */
-class storeTest extends DatabaseTestCase {
+class StoreTest extends DatabaseTestCase {
 
 	public function getDataSet() {
 		return $this->createMySQLXMLDataSet(dirname(__FILE__).'/../fixture.xml');
