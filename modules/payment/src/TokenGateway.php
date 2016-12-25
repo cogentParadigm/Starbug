@@ -164,7 +164,8 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
 		]);
 		$data = [
 			"user" => $this->user->getUser(),
-			"payment" => $subscription
+			"payment" => $subscription,
+			"bill" => $bill
 		];
 		$this->mailer->send(["template" => "Payment Declined", "to" => $subscription["email"]], $data);
 	}
