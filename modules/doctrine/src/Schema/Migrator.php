@@ -67,8 +67,9 @@ class Migrator extends AbstractMigration {
 		echo "Generating models..\n";
 		foreach ($tables as $name => $table) {
 			$this->generator->generate($this->definition, ["model" => $name, "update" => true]);
-			$class = "Starbug\\Core\\".ucwords($name)."Model";
-			if (!class_exists($class)) include("var/models/".ucwords($name)."Model.php");
+			$className = str_replace(" ", "", ucwords(str_replace("_", " ", $name)))."Model";
+			$class = "Starbug\\Core\\".$className;
+			if (!class_exists($class)) include("var/models/".$className.".php");
 			$this->definition->reset();
 		}
 		$this->populate();
