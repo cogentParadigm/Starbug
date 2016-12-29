@@ -16,7 +16,7 @@ class ModelFactory implements ModelFactoryInterface {
 		$this->objects = array();
 	}
 	public function has($collection) {
-		return (!empty($collection) && (($this->objects[$collection]) || (file_exists($this->base_directory."/var/models/".ucwords($collection)."Model.php"))));
+		return (!empty($collection) && (($this->objects[$collection]) || (file_exists($this->base_directory."/var/models/".str_replace(" ", "", ucwords(str_replace("_", " ", $collection)))."Model.php"))));
 	}
 	public function get($model) {
 		$className = $this->locator->className($model);
