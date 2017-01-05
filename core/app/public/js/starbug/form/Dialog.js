@@ -128,7 +128,7 @@ define([
 			query('form', this.domNode).on('submit', function(evt) {evt.preventDefault();});
 			query('.submit, [type=\"submit\"]', this.form).attr('onclick', '').on('click', lang.hitch(this, '_onSubmit'));
 			query('.cancel', this.form).attr('onclick', '').on('click', lang.hitch(this, 'hide'));
-			query('input[type="file"]', this.form).on('change', lang.hitch(this, 'upload'));
+			//query('input[type="file"]', this.form).on('change', lang.hitch(this, 'upload'));
 			sb.editable();
 			behavior.apply();
 		}
