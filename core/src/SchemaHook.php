@@ -36,7 +36,7 @@ class SchemaHook implements HookInterface {
 		if ($schema->hasTable($column['type']) || $this->models->has($column['type'])) {
 			$ref_table_name = (empty($column['table'])) ? $table->getName()."_".$name : $column['table'];
 			$schema->addTable([$ref_table_name, "groups" => false],
-				["owner", "type" => "int", "null" => true, "references" => "users id", "update" => "cascade", "delete" => "cascade", "optional" => true],
+				["owner", "type" => "int", "null" => true, "references" => "users id", "owner" => true, "update" => "cascade", "delete" => "cascade", "optional" => true],
 				[$table->getName()."_id", "type" => "int", "default" => "NULL", "references" => $table->getName()." id", "null" => true, "update" => "cascade", "delete" => "cascade"],
 				["position", "type" => "int", "ordered" => $table->getName()."_id", "optional" => true]
 			);
