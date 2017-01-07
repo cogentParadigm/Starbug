@@ -19,6 +19,10 @@ interface ResponseInterface {
 	public function setContentType($type);
 	public function getCharset();
 	public function setCharset($charset);
+	public function getContent();
+	public function setContent($content);
+	public function getFilePath();
+	public function setFilePath($path);
 	public function getTheme();
 	public function setTheme($theme);
 	public function getTemplate();

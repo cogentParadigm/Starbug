@@ -11,6 +11,7 @@ class Response implements ResponseInterface {
 	protected $code;
 	protected $content_type = "text/html";
 	protected $charset = "UTF-8";
+	protected $filepath = false;
 
 	protected $codes = array(
 		200 => 'OK',
@@ -97,6 +98,20 @@ class Response implements ResponseInterface {
 		$this->charset = $charset;
 		return $this;
 	}
+	public function getContent() {
+		return $this->content;
+	}
+	public function setContent($content) {
+		$this->content = $content;
+		return $this;
+	}
+	public function getFilePath() {
+		return $this->filepath;
+	}
+	public function setFilePath($path) {
+		$this->filepath = $path;
+		return $this;
+	}
 	public function getTheme() {
 		return $this->theme;
 	}
@@ -174,12 +189,17 @@ class Response implements ResponseInterface {
 		$this->output->render($this->template);
 	}
 
+	public function sendFile() {
+		readfile($this->filepath);
+	}
+
 	public function send() {
 		ob_start();
 		$this->sendHeaders();
 		$this->sendCookies();
-		$this->sendContent();
+		if (false === $this->filepath) $this->sendContent();
 		ob_end_flush();
+		if (false !== $this->filepath) $this->sendFile();
 	}
 
 	/**
