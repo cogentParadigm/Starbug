@@ -32,7 +32,7 @@ class Files extends FilesModel {
 				$id = (empty($record['id'])) ? $this->insert_id : $record['id'];
 				$stream = fopen($file["tmp_name"], "r+");
 				$success = $this->filesystem->writeStream($id."_".$record["filename"], $stream);
-				fclose($stream);
+				if (is_resource($stream)) fclose($stream);
 				if ($success) {
 					if (reset(explode("/", $record['mime_type'])) == "image") $this->images->thumb("default://".$id."_".$record['filename'], ["w" => 100, "h" => 100, "a" => 1]);
 					return true;
