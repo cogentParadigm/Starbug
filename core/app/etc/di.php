@@ -103,14 +103,14 @@ return array(
 	'filesystem.adapter.default' => 'public',
 	'filesystem.adapter.public' => function (ContainerInterface $c) {
 		$here = $c->get("Starbug\Core\URLInterface");
-		$url = new URL($here->getHost(), $here->getDirectory()."app/public/uploads/");
+		$url = (new URL($here->getHost(), $here->getDirectory()."app/public/uploads/"))->setScheme($here->getScheme());
 		$adapter = new Local($c->get("base_directory")."/app/public/uploads");
 		$adapter->setURLInterface($url);
 		return $adapter;
 	},
 	'filesystem.adapter.thumbnails' => function (ContainerInterface $c) {
 		$here = $c->get("Starbug\Core\URLInterface");
-		$url = new URL($here->getHost(), $here->getDirectory()."var/public/thumbnails/");
+		$url = (new URL($here->getHost(), $here->getDirectory()."var/public/thumbnails/"))->setScheme($here->getScheme());
 		$adapter = new Local($c->get("base_directory")."/var/public/thumbnails");
 		$adapter->setURLInterface($url);
 		return $adapter;
@@ -118,7 +118,7 @@ return array(
 	'filesystem.adapter.tmp' => function (ContainerInterface $c) {
 		$here = $c->get("Starbug\Core\URLInterface");
 		$tmp = $c->get("filesystem.tmp");
-		$url = new URL($here->getHost(), $here->getDirectory().$tmp."/");
+		$url = (new URL($here->getHost(), $here->getDirectory().$tmp."/"))->setScheme($here->getScheme());
 		$adapter = new Local($c->get("base_directory")."/".$tmp);
 		$adapter->setURLInterface($url);
 		return $adapter;
