@@ -2,5 +2,5 @@
 namespace Starbug\Core\Storage;
 use League\Flysystem\AdapterInterface as ParentInterface;
 interface AdapterInterface extends ParentInterface {
-	public function getURL($path);
+	public function getURL($path, $absolute = false);
 }
