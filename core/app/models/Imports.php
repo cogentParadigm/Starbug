@@ -17,7 +17,7 @@ class Imports extends ImportsModel {
 		foreach ($fields as $field) {
 			if ($field['update_key']) $keys[] = $field['destination'];
 		}
-		if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) {
+		if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file['id']."_".$file['filename'])["stream"])) {
 			$row = fgetcsv($handle);
 			foreach ($row as $idx => $column) $head[$column] = $idx;
 			while (false !== ($row = fgetcsv($handle))) {

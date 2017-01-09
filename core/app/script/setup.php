@@ -9,7 +9,7 @@ class SetupCommand {
 	}
 	public function run($argv) {
 		//CREATE FOLDERS & SET FILE PERMISSIONS
-		$dirs = array("var", "var/xml", "var/json", "var/models", "var/tmp", "var/public", "var/log", "var/public/stylesheets", "var/public/thumbnails", "app/templates", "app/public/js", "app/public/uploads");
+		$dirs = array("var", "var/models", "var/tmp", "var/public", "var/log", "var/tmp/thumbnails", "var/public/stylesheets", "var/public/thumbnails", "app/public/uploads");
 		foreach ($dirs as $dir) if (!file_exists($this->base_directory."/".$dir)) exec("mkdir ".$this->base_directory."/".$dir);
 		exec("chmod -R a+w ".$this->base_directory."/var ".$this->base_directory."/app/public/uploads");
 

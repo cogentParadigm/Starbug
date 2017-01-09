@@ -1,7 +1,7 @@
 <?php
 	$file = $this->db->query("files")->condition("id", $csv)->one();
 	$$lines = 0;
-	if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) {
+	if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file['id']."_".$file['filename'])["stream"])) {
 		while (!feof($handle)) {
 			if (fgets($handle)) $lines++;
 		}
@@ -12,7 +12,7 @@
 	$pager = new \Starbug\Core\Pager($lines, $size, intval($this->request->getParameter('pg')));
 	$line = 0;
 ?>
-<?php if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) { $head = fgetcsv($handle); ?>
+<?php if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file['id']."_".$file['filename'])["stream"])) { $head = fgetcsv($handle); ?>
 <table <?php echo $this->filter->attributes($attributes); ?>>
 <?php if (!empty($head)) { ?>
 	<thead>

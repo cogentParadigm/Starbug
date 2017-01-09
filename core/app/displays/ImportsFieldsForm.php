@@ -1,10 +1,14 @@
 <?php
 namespace Starbug\Core;
+use League\Flysystem\MountManager;
 class ImportsFieldsForm extends FormDisplay {
 	public $source_keys = array();
 	public $source_values = array();
 	public $model = "imports_fields";
 	public $cancel_url = "admin/imports_fields";
+	public function setFilesystems(MountManager $filesystems) {
+		$this->filesystems = $filesystems;
+	}
 	function build_display($options) {
 		$data = $this->request->getPost();
 		if ($this->success("create") && empty($data['imports_fields']['id'])) {
@@ -25,7 +29,7 @@ class ImportsFieldsForm extends FormDisplay {
 	function parse_source($id) {
 		$file = $this->models->get("files")->load($id);
 		$head = array();
-		if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) {
+		if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file["id"]."_".$file["filename"])["stream"])) {
 			$head = fgetcsv($handle);
 		}
 		$this->source_keys = array_keys($head);
