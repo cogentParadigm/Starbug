@@ -19,11 +19,11 @@
 			$_post['original_name'] = str_replace(" ", "_", $file['name']);
 			$_post['name'] = $id."_".$_post['original_name'];
 			$_post['url'] = $this->filesystems->getFilesystem("default")->getURL($_post['name']);
-			$_post['thumbnail'] = $this->images->thumb("default://".$_post['name'], ["w" => 100, "w" => 100, "a" => 1]);
 			$_post['mime_type'] = $this->models->get("files")->get_mime($file['tmp_name']);
 			try{
 				list($width, $height) = getimagesize($file['tmp_name']);
 				$image = true;
+				$_post['thumbnail'] = $this->images->thumb("default://".$_post['name'], ["w" => 100, "w" => 100, "a" => 1]);
 			} catch(Exception $e){
 				$width=0;
 				$height=0;
