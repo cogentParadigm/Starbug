@@ -11,7 +11,7 @@ define(["dojo/_base/declare", "dijit/form/DateTextBox", "dojo/date/locale", "doj
 			return locale.format(dateObject, this.sqlFormat).toUpperCase();
 		},
 		onChange: function(value) {
-			on.emit(this.domNode, "change", {bubbles: true, cancelable: true});
+			on.emit(this.textbox, "change", {bubbles: true, cancelable: true});
 		}
 	});
 });
