@@ -83,7 +83,7 @@ class GridDisplay extends ItemDisplay {
 
 	function before_render() {
 		$this->attributes['model'] = $this->model;
-		$this->attributes['class'][] = "dgrid-autoheight";
+		$this->attributes['class'][] = "dgrid-autoheight dbootstrap-grid";
 		if (empty($this->attributes['id'])) $this->attributes['id'] = $this->model."_grid";
 		if (empty($this->attributes['data-dojo-id'])) $this->attributes['data-dojo-id'] = $this->attributes['id'];
 		$this->attributes['action'] = $this->action;
