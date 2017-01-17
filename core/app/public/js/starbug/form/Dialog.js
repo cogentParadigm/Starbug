@@ -18,8 +18,6 @@ define([
 		callback:null,
 		form:null,
 		item_id: 0,
-		post_data:{},
-		get_data:{},
 		crudSuffixes:true,
 		format:"xhr",
 		doLayout:false,
@@ -28,12 +26,13 @@ define([
 		draggable:false,
 		postCreate: function() {
 			this.inherited(arguments);
+			this.get_data = this.get_data || {};
+			this.post_data = this.post_data || {};
 			var layoutDefaults = {width:'90%', height:'90%', position:'fixed', top:'0', left:'0', right:'0', bottom:'0', margin:'auto', overflow:'auto'};
 			for (var i in layoutDefaults) if (typeof this.layoutParams[i] == "undefined") this.layoutParams[i] = layoutDefaults[i];
 			domstyle.set(this.domNode, this.layoutParams);
-			if (this.showTitle == false) domstyle.set(this.titleBar, 'display', 'none');
+			if (this.showTitle === false) domstyle.set(this.titleBar, 'display', 'none');
 			this.set('content', '');
-
 		},
 		_position: function() {},
 		resize: function(dim) {
