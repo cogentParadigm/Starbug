@@ -11,7 +11,7 @@ class Response implements ResponseInterface {
 	protected $code;
 	protected $content_type = "text/html";
 	protected $charset = "UTF-8";
-	protected $filepath = false;
+	protected $callable = false;
 
 	protected $codes = array(
 		200 => 'OK',
@@ -105,11 +105,11 @@ class Response implements ResponseInterface {
 		$this->content = $content;
 		return $this;
 	}
-	public function getFilePath() {
-		return $this->filepath;
+	public function getCallable() {
+		return $this->callable;
 	}
-	public function setFilePath($path) {
-		$this->filepath = $path;
+	public function setCallable(callable $callable) {
+		$this->callable = $callable;
 		return $this;
 	}
 	public function getTheme() {
@@ -189,17 +189,13 @@ class Response implements ResponseInterface {
 		$this->output->render($this->template);
 	}
 
-	public function sendFile() {
-		readfile($this->filepath);
-	}
-
 	public function send() {
 		ob_start();
 		$this->sendHeaders();
 		$this->sendCookies();
-		if (false === $this->filepath) $this->sendContent();
+		if (false === $this->callable) $this->sendContent();
 		ob_end_flush();
-		if (false !== $this->filepath) $this->sendFile();
+		if (false !== $this->callable) call_user_func($this->callable);
 	}
 
 	/**

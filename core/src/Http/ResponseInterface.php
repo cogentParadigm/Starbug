@@ -21,8 +21,8 @@ interface ResponseInterface {
 	public function setCharset($charset);
 	public function getContent();
 	public function setContent($content);
-	public function getFilePath();
-	public function setFilePath($path);
+	public function getCallable();
+	public function setCallable(callable $callable);
 	public function getTheme();
 	public function setTheme($theme);
 	public function getTemplate();
