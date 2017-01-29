@@ -10,6 +10,8 @@ class CssBuildCommand {
 		$this->locator = $locator;
 	}
 	public function run($argv) {
+		echo "This command is deprecated. Use 'grunt build', 'grunt css', or 'grunt watch'.\n";
+		return;
 		$themes = $this->config->get("themes");
 		foreach ($themes as $name) {
 			$this->css->setTheme($name);

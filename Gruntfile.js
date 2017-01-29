@@ -165,6 +165,43 @@ module.exports = function(grunt) {
 					delete:true
 				}
 			}
+		},
+		less: {
+			options: {
+				plugins: [
+					new (require("less-plugin-autoprefix"))({browsers: ["last 2 versions"]}),
+					new (require("less-plugin-clean-css"))({advanced:true, keepSpecialComments: false})
+				]
+			},
+			"starbug-1": {
+				files: {
+					"app/themes/starbug-1/public/stylesheets/dist/screen.css": "app/themes/starbug-1/public/stylesheets/src/screen.less"
+				}
+			},
+			storm: {
+				files: {
+					"app/themes/storm/public/stylesheets/dist/screen.css": "app/themes/storm/public/stylesheets/src/screen.less"
+				}
+			},
+			semantic: {
+				files: {
+					"app/themes/semantic/public/stylesheets/dist/screen.css": "app/themes/semantic/public/stylesheets/src/screen.less"
+				}
+			}
+		},
+		watch: {
+			"starbug-1": {
+				files: ["app/themes/starbug-1/public/stylesheets/src/**/*"],
+				tasks: ["less:starbug-1"]
+			},
+			storm: {
+				files: ["app/themes/storm/public/stylesheets/src/**/*"],
+				tasks: ["less:storm"]
+			},
+			semantic: {
+				files: ["app/themes/semantic/public/stylesheets/src/**/*"],
+				tasks: ["less:semantic"]
+			}
 		}
 	});
 
@@ -181,6 +218,8 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('intern');
 	grunt.loadNpmTasks('grunt-deployments');
   grunt.loadNpmTasks('grunt-rsync');
+	grunt.loadNpmTasks('grunt-contrib-less');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	grunt.registerTask('lint', ['phplint', 'jsvalidate', 'jshint:local', 'lesslint']);
 	grunt.registerTask('lint-ci', ['phplint', 'jsvalidate', 'jshint:ci', 'lesslint']);
@@ -190,4 +229,6 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('default', ['local']);
 
+	grunt.registerTask('css', ['less']);
+	grunt.registerTask('build', ['css']);
 };

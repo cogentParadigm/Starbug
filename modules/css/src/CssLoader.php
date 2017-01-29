@@ -5,12 +5,11 @@ use Starbug\Core\URLInterface;
 use Starbug\Core\ResponseInterface;
 class CssLoader {
 	protected $options = false;
-	public function __construct(ResourceLocatorInterface $locator, URLInterface $url, ResponseInterface $response, $modules, $environment) {
+	public function __construct(ResourceLocatorInterface $locator, URLInterface $url, ResponseInterface $response, $modules) {
 		$this->locator = $locator;
 		$this->url = $url;
 		$this->response = $response;
 		$this->modules = $modules;
-		$this->environment = $environment;
 	}
 	public function getConfiguration($reload = false) {
 		$this->load($reload);
@@ -38,21 +37,10 @@ class CssLoader {
 	}
 	protected function load($reload = false) {
 		if (false === $this->options || true == $reload) {
-			if ($this->environment == "production") {
-				$this->options = $this->getProductionConfiguration();
-			} else {
-				$this->options = $this->getDevelopmentConfiguration();
-			}
+			$this->options = $this->readConfiguration();
 		}
 	}
-	public function getProductionConfiguration() {
-		return [
-			"screen" => [
-				["rel" => "stylesheet", "href" => "var/public/stylesheets/".$this->response->theme."-screen.css"]
-			]
-		];
-	}
-	public function getDevelopmentConfiguration() {
+	public function readConfiguration() {
 		$options = [];
 		$resources = $this->locator->locate("stylesheets.json", "etc");
 		$resources = array_reverse($resources);

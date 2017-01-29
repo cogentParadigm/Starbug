@@ -1,9 +1,10 @@
 /********************* bootstrap ************************************/
-@import "../../../../../libraries/bootstrap/less/bootstrap.less";
+@import "../../../../../../libraries/bootstrap/less/bootstrap.less";
 
 /********************* dbootstrap ************************************/
-@import "../../../../../libraries/dbootstrap/theme/dbootstrap/index.less";
-@fa-font-base-path:"../../../../../libraries/font-awesome";
+@import "../../../../../../libraries/dbootstrap/theme/dbootstrap/index.less";
+@dijit-path:"../../../../../../libraries/dijit";
+@fa-font-base-path:"../../../../../../libraries/font-awesome";
 
 /********************* variables ************************************/
 @link-color:#419BC0;
@@ -12,7 +13,7 @@
 @nav-link-hover-bg:#FFF;
 
 /********************* structural elements *********************/
-body{background:url(../images/bg.png) repeat-x #FFF;color:#666;overflow-x:hidden}
+body{background:url(../../images/bg.png) repeat-x #FFF;color:#666;overflow-x:hidden}
 .page{position:relative;padding:4px 12px;text-align:left;transition:transform 0.5s}
 #logo{font-size:16px;color:#FFF;display:block;margin-bottom:4px}
 #top-right{float:right;color:#FFF}
@@ -26,7 +27,7 @@ body h1, body.claro h1{margin:0 0 4px 0;font-weight:bold;font-size:140%;line-hei
 h2{color:#419bc0;font-size:150%}
 
 /********************* nav *********************/
-#nav > li{float:left;background:url(../images/nav-col-border.png) top right no-repeat;height:100%}
+#nav > li{float:left;background:url(../../images/nav-col-border.png) top right no-repeat;height:100%}
 #nav > li.last{background:transparent}
 #nav > li > a{padding:20px 12px 16px 12px;height:auto;line-height:14px;color:#FFF;font-weight:bold;font-size:12px}
 #nav .caret{border-top-color:#FFF;margin-left:8px}
@@ -89,7 +90,7 @@ a:hover{text-decoration:underline}
 
 /********************* forms *********************/
 textarea{width:309px;height:100px}
-#login_form{width:234px;height:128px;margin:34px auto 0;padding:136px 85px 0;background:url(../images/login-bg.png) no-repeat}
+#login_form{width:234px;height:128px;margin:34px auto 0;padding:136px 85px 0;background:url(../../images/login-bg.png) no-repeat}
 #login_form input.text{width:221px;color:#419bc0}
 #login_form span.error{width:221px;position:absolute;top:330px}
 .left.field{margin-right:5px}
@@ -109,10 +110,10 @@ body.claro div div.dijitTabPaneWrapper{background:transparent;overflow:visible}
 .dijitContentPane .box-top{margin-top:-6px;margin-left:-5px}
 .dijitContentPane .box{margin-left:-5px}
 body.claro .dijitTabPaneWrapper, body.claro .dijitTabContainerTop-tabs, body.claro .dijitTabContainerBottom-tabs, body.claro .dijitTabContainerLeft-tabs, body.claro .dijitTabContainerRight-tabs{border:none}
-body.claro .dijitTabCloseButton{background:url(../images/sprite.png) -53px -68px no-repeat}
+body.claro .dijitTabCloseButton{background:url(../../images/sprite.png) -53px -68px no-repeat}
 body.claro .dijitTabContainerTop-tabs .dijitTabContent, body.claro .dijitTabContainerTop-tabs .dijitTabInnerDiv,body.claro .dijitTabListContainer-top .tabStripButton,body.claro .dijitTabListContainer-bottom .tabStripButton{background-image:none}
 body.claro .dijitTabStripIcon{background:transparent}
-body.claro .dijitContentPaneLoading, body.claro .dijitTreeExpandoLoading, body.dijitRtl .dijitContentPaneLoading, body.claro .dojoxGridLoading{background-image:url(../js/dojo/dijit/themes/claro/images/loadingAnimation.gif)}
+body.claro .dijitContentPaneLoading, body.claro .dijitTreeExpandoLoading, body.dijitRtl .dijitContentPaneLoading, body.claro .dojoxGridLoading{background-image:url(../../js/dojo/dijit/themes/claro/images/loadingAnimation.gif)}
 body.claro .dijitDialogTitleBar, body.claro .dijitTitlePaneTitle{background-image:none}
 body.claro .dijitDialogUnderlay{background:#111;opacity:0.8}
 body.claro .dijitDialog{-webkit-box-shadow:none;background:none;border:none}
