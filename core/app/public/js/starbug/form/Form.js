@@ -98,7 +98,7 @@ define([
 		attach: function() {
 			this.form = query('form', this.domNode)[0];
 			query('form', this.domNode).on('submit', function(evt) {evt.preventDefault();});
-			query('.submit, [type=\"submit\"]', this.form).attr('onclick', '').on('click', lang.hitch(this, '_onSubmit'));
+			query('.submit, [type=\"submit\"]', this.domNode).attr('onclick', '').on('click', lang.hitch(this, '_onSubmit'));
 		}
 	});
 });
