@@ -41,8 +41,25 @@ class Schema implements SchemaInterface {
 		$this->rows[] = $row;
 		return $row;
 	}
+	public function addRows($table, $rows) {
+		foreach ($rows as $row) {
+			if (!isset($row[1])) $row[1] = [];
+			$this->addRow($table, $row[0], $row[1]);
+		}
+	}
 	public function getRows() {
 		return $this->rows;
+	}
+	public function retractRows($table, $retractKeys = []) {
+		foreach ($this->rows as $idx => $row) {
+			if ($table != $row->get("table")) continue;
+			$keys = $row->get("keys");
+			$retract = true;
+			foreach ($retractKeys as $k => $v) {
+				if ($keys[$k] != $v) $retract = false;
+			}
+			if ($retract) unset($this->rows[$idx]);
+		}
 	}
 	public function getTable($table) {
 		$this->invokeHooks("getTable", [$this->tables[$table], $this]);
