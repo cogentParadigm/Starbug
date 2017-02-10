@@ -64,11 +64,10 @@ class Migration extends AbstractMigration {
 
 		//admin menu
 		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/users"], ["content" => "Users", "icon" => "fa-users"]);
-		$configuration = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Configuration"]);
-		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/taxonomies"], ["parent" => $configuration, "content" => "Taxonomy", "icon" => "fa-organization"]);
+		$configuration = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Configuration"], ["icon" => "fa-cogs"]);
 		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/menus"], ["parent" => $configuration, "content" => "Menus", "icon" => "fa-list"]);
 		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/emails"], ["parent" => $configuration, "content" => "Email Templates", "icon" => "fa-envelope"]);
-		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/settings"], ["parent" => $configuration, "content" => "Settings", "icon" => "fa-cogs"]);
+		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/settings"], ["parent" => $configuration, "content" => "Settings", "icon" => "fa-cog"]);
 
 		//groups
 		$this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Root"]);
