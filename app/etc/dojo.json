@@ -1,0 +1,5 @@
+{
+	"prefixes": [
+		["storm", "../../app/themes/storm/public/js"]
+	]
+}

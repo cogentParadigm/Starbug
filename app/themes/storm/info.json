@@ -4,7 +4,7 @@
 	"description":"Administrative theme for Starbug PHP",
 	//content regions
 	"regions": [
-		"header", "main"
+		"sidebar", "main"
 	],
 	//default layout
 	"layout": "one-column",

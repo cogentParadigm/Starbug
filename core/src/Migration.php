@@ -46,6 +46,7 @@ class Migration extends AbstractMigration {
 			["parent", "type" => "int", "default" => "0", "materialized_path" => "menu_path"],
 			["href", "type" => "string", "length" => "255", "label" => "URL", "default" => ""],
 			["content", "type" => "string", "length" => "255", "default" => ""],
+			["icon", "type" => "string", "default" => ""],
 			["target", "type" => "string", "default" => ""],
 			["template", "type" => "string", "length" => "128", "default" => ""],
 			["position", "type" => "int", "ordered" => "menu parent", "default" => "0"],
@@ -62,12 +63,12 @@ class Migration extends AbstractMigration {
 		$this->schema->addRow("users", ["email" => "root"], ["groups" => "root,admin"]);
 
 		//admin menu
-		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/users", "content" => "Users"]);
+		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/users"], ["content" => "Users", "icon" => "fa-users"]);
 		$configuration = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Configuration"]);
-		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/taxonomies", "content" => "Taxonomy"], ["parent" => $configuration]);
-		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/menus", "content" => "Menus"], ["parent" => $configuration]);
-		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/emails", "content" => "Email Templates"], ["parent" => $configuration]);
-		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/settings", "content" => "Settings"], ["parent" => $configuration]);
+		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/taxonomies"], ["parent" => $configuration, "content" => "Taxonomy", "icon" => "fa-organization"]);
+		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/menus"], ["parent" => $configuration, "content" => "Menus", "icon" => "fa-list"]);
+		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/emails"], ["parent" => $configuration, "content" => "Email Templates", "icon" => "fa-envelope"]);
+		$this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/settings"], ["parent" => $configuration, "content" => "Settings", "icon" => "fa-cogs"]);
 
 		//groups
 		$this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Root"]);
