@@ -9,9 +9,9 @@ class SetupCommand {
 	}
 	public function run($argv) {
 		//CREATE FOLDERS & SET FILE PERMISSIONS
-		$dirs = array("var", "var/models", "var/tmp", "var/public", "var/log", "var/tmp/thumbnails", "var/public/stylesheets", "var/public/thumbnails", "app/public/uploads");
+		$dirs = array("var", "var/models", "var/tmp", "var/public", "var/log", "var/public/uploads");
 		foreach ($dirs as $dir) if (!file_exists($this->base_directory."/".$dir)) exec("mkdir ".$this->base_directory."/".$dir);
-		exec("chmod -R a+w ".$this->base_directory."/var ".$this->base_directory."/app/public/uploads");
+		exec("chmod -R a+w ".$this->base_directory."/var");
 
 		//INIT TABLES
 		$this->schemer->migrate();

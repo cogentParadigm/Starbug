@@ -75,7 +75,7 @@ class Images implements ImagesInterface {
 		$dimensions = array_merge(array('w' => 0, 'h' => 0, 'a' => false), $dimensions);
 		$dir = $dimensions['w']."x".$dimensions['h']."a".$dimensions['a'];
 		$target = $dir."/".$filename;
-		if (!$this->filesystems->has("thumbnails://".$target) || $dimensions['f']) {
+		if (!$this->filesystems->has($filesystem."://thumbnails/".$target) || $dimensions['f']) {
 			$this->filesystems->put("tmp://images/".$filename, $this->filesystems->read($url));
 			$thumb = new \PHPThumb\GD($this->base_directory."/var/tmp/images/".$filename);
 			if (function_exists("exif_read_data")) {
@@ -92,11 +92,11 @@ class Images implements ImagesInterface {
 			}
 			if ($dimensions['a']) $thumb->adaptiveResize($dimensions['w'], $dimensions['h']);
 			else $thumb->resize($dimensions['w'], $dimensions['h']);
-			if (!file_exists($this->base_directory."/var/tmp/thumbnails/".$dir)) mkdir($this->base_directory."/var/tmp/thumbnails/".$dir);
+			if (!$this->filesystems->has("tmp://thumbnails/".$dir)) $this->filesystems->createDir("tmp://thumbnails/".$dir);
 			$thumb->save($this->base_directory."/var/tmp/thumbnails/".$target);
-			$this->filesystems->move("tmp://thumbnails/".$target, "thumbnails://".$target);
+			$this->filesystems->move("tmp://thumbnails/".$target, $filesystem."://thumbnails/".$target);
 		}
-		return $this->filesystems->getFilesystem("thumbnails")->getURL($target, $absolute);
+		return $this->filesystems->getFilesystem($filesystem)->getURL("thumbnails/".$target, $absolute);
 	}
 	function composite($dest, $composite, $x, $y) {
 		switch (gettype($dest)) {

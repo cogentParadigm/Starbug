@@ -99,19 +99,12 @@ return array(
 		}
 		return $logger;
 	},
-	'filesystem.adapters' => ['default', 'public', 'thumbnails', 'tmp'],
+	'filesystem.adapters' => ['default', 'public', 'tmp'],
 	'filesystem.adapter.default' => 'public',
 	'filesystem.adapter.public' => function (ContainerInterface $c) {
 		$here = $c->get("Starbug\Core\URLInterface");
-		$url = (new URL($here->getHost(), $here->getDirectory()."app/public/uploads/"))->setScheme($here->getScheme());
-		$adapter = new Local($c->get("base_directory")."/app/public/uploads");
-		$adapter->setURLInterface($url);
-		return $adapter;
-	},
-	'filesystem.adapter.thumbnails' => function (ContainerInterface $c) {
-		$here = $c->get("Starbug\Core\URLInterface");
-		$url = (new URL($here->getHost(), $here->getDirectory()."var/public/thumbnails/"))->setScheme($here->getScheme());
-		$adapter = new Local($c->get("base_directory")."/var/public/thumbnails");
+		$url = (new URL($here->getHost(), $here->getDirectory()."var/public/uploads/"))->setScheme($here->getScheme());
+		$adapter = new Local($c->get("base_directory")."/var/public/uploads");
 		$adapter->setURLInterface($url);
 		return $adapter;
 	},
