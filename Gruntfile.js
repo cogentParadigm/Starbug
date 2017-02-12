@@ -167,12 +167,6 @@ module.exports = function(grunt) {
 			}
 		},
 		less: {
-			options: {
-				plugins: [
-					new (require("less-plugin-autoprefix"))({browsers: ["last 2 versions"]}),
-					new (require("less-plugin-clean-css"))({advanced:true, keepSpecialComments: false})
-				]
-			},
 			"starbug-1": {
 				files: {
 					"app/themes/starbug-1/public/stylesheets/dist/screen.css": "app/themes/starbug-1/public/stylesheets/src/screen.less"
@@ -189,37 +183,52 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		postcss: {
+			options: {
+				processors: [
+					require("postcss-cssnext")(),
+					require("cssnano")({autoprefixer: false, discardComments:{removeAll:true}})
+				]
+			},
+			"starbug-1": {
+				src: "app/themes/starbug-1/public/stylesheets/dist/*.css"
+			},
+			storm: {
+				src: "app/themes/storm/public/stylesheets/dist/*.css"
+			}
+		},
 		watch: {
 			"starbug-1": {
 				files: ["app/themes/starbug-1/public/stylesheets/src/**/*"],
-				tasks: ["less:starbug-1"]
+				tasks: ["css:starbug-1"]
 			},
 			storm: {
 				files: ["app/themes/storm/public/stylesheets/src/**/*"],
-				tasks: ["less:storm"]
+				tasks: ["css:storm"]
 			},
 			semantic: {
 				files: ["app/themes/semantic/public/stylesheets/src/**/*"],
-				tasks: ["less:semantic"]
+				tasks: ["css:semantic"]
 			}
 		}
 	});
 
 	// These plugins provide necessary tasks.
-	grunt.loadNpmTasks('grunt-phplint');
-	grunt.loadNpmTasks('grunt-jsvalidate');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-contrib-less');
+	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-deployments');
+	grunt.loadNpmTasks('grunt-jsvalidate');
 	grunt.loadNpmTasks('grunt-lesslint');
+	grunt.loadNpmTasks('grunt-phpcs');
+	grunt.loadNpmTasks('grunt-phplint');
 	grunt.loadNpmTasks('grunt-phploc');
 	grunt.loadNpmTasks('grunt-shell');
 	grunt.loadNpmTasks('grunt-phpmd');
-	grunt.loadNpmTasks('grunt-phpcs');
 	grunt.loadNpmTasks('grunt-phpunit');
-	grunt.loadNpmTasks('intern');
-	grunt.loadNpmTasks('grunt-deployments');
+	grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-rsync');
-	grunt.loadNpmTasks('grunt-contrib-less');
-	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('intern');
 
 	grunt.registerTask('lint', ['phplint', 'jsvalidate', 'jshint:local', 'lesslint']);
 	grunt.registerTask('lint-ci', ['phplint', 'jsvalidate', 'jshint:ci', 'lesslint']);
@@ -229,6 +238,14 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('default', ['local']);
 
-	grunt.registerTask('css', ['less']);
-	grunt.registerTask('build', ['css']);
+	grunt.registerTask('css', function(target) {
+		grunt.task.run.apply(grunt.task, ['less', 'postcss'].map(function(task) {
+			return (target == null) ? task : task + ':' + target
+		}));
+	});
+	grunt.registerTask('build', function(target) {
+		grunt.task.run.apply(grunt.task, ['css'].map(function(task) {
+			return (target == null) ? task : task + ':' + target
+		}));
+	});
 };
