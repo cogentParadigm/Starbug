@@ -5,8 +5,9 @@ define([
 	"dojo/on",
 	"dijit/_WidgetBase",
 	"dojo/dom-attr",
-	"dijit/registry"
-], function(declare, lang, query, on, Widget, attr, registry){
+	"dijit/registry",
+	"dojo/ready"
+], function(declare, lang, query, on, Widget, attr, registry, ready){
 	return declare([Widget], {
 		key:false,
 		value:false,
@@ -21,11 +22,12 @@ define([
 		},
 		startup: function() {
 			this.inherited(arguments);
-			var self = this;
-			query('[data-depend='+this.key+']').forEach(function(node) {
-				self.dependents.push(registry.byNode(node));
-			});
-			this.execute();
+			ready(lang.hitch(this, function() {
+				query('[data-depend='+this.key+']').forEach(lang.hitch(this, function(node) {
+					this.dependents.push(registry.byNode(node));
+				}));
+				this.execute();
+			}));
 		},
 		execute: function() {
 			this.value = attr.get(this.domNode, 'value');
