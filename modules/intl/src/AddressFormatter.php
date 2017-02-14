@@ -2,6 +2,16 @@
 namespace Starbug\Intl;
 use Starbug\Core\DatabaseInterface;
 class AddressFormatter {
+	protected $map = array(
+		'N' => 'recipient',
+		'O' => 'organization',
+		'A' => 'address1',
+		'D' => 'district',
+		'C' => 'locality',
+		'S' => 'administrative_area',
+		'Z' => 'postal_code',
+		'X' => 'sorting_code'
+	);
 	public function __construct(DatabaseInterface $db) {
 		$this->db = $db;
 	}
