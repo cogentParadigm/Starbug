@@ -21,6 +21,9 @@ class Collection {
 	public function addFilter(CollectionFilterInterface $filter) {
 		$this->filters[] = $filter;
 	}
+	public function prepare($query, &$ops) {
+		return $query;
+	}
 	public function build($query, &$ops) {
 		return $query;
 	}
@@ -38,16 +41,19 @@ class Collection {
 		if (false === $this->search_fields) {
 			$this->search_fields = $this->models->get($this->model)->search_fields;
 		}
+		//create
 		$query = $this->models->get($this->model)->query();
+		//prepare
+		$query = $this->prepare($query, $ops);
+		//filter query
 		$query = $this->filterQuery($query, $ops);
-
 		foreach ($this->filters as $filter) {
 			$query = $filter->filterQuery($this, $query, $ops);
 		}
 		$query = $this->models->get($this->model)->filterQuery($this, $query, $ops);
-
+		//build
 		$query = $this->build($query, $ops);
-
+		//paginate
 		if (!empty($ops['limit'])) {
 			$query->limit($ops['limit']);
 			$page = empty($ops['page']) ? 1 : $ops['page'];
