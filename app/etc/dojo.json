@@ -1,4 +1,18 @@
 {
+	"layers": [
+		{
+			"name": "dojo.js",
+			"dependencies": [
+				"dbootstrap",
+				"sb",
+				"dojo/selector/acme",
+				"dojo/query",
+				"dojo/parser",
+				"bootstrap/Dropdown",
+				"bootstrap/Carousel"
+			]
+		}
+	],
 	"prefixes": [
 		["storm", "../../app/themes/storm/public/js"]
 	]
