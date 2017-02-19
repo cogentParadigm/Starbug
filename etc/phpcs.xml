@@ -7,6 +7,7 @@
       <!-- this would disallow tabs -->
       <exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
       <exclude name="Generic.Files.LineLength"/>
+      <!-- should be followed and exclusion removed -->
       <exclude name="PSR1.Methods.CamelCapsMethodName"/>
       <!-- this would require a newline after namespace -->
       <!-- should be followed and exclusion removed -->
@@ -19,9 +20,12 @@
       <!-- this would require ELSEIF vs ELSE IF -->
       <!-- should be followed and exclusion removed -->
       <exclude name="PSR2.ControlStructures.ElseIfDeclaration"/>
+      <!-- this would disallow content after the opening parenthesis -->
+      <!-- this is only done in migrations to separate table from columns  -->
       <exclude name="PSR2.Methods.FunctionCallSignature.ContentAfterOpenBracket"/>
+      <!-- this would visibility declaration on all methods -->
+      <!-- should be followed and exclusion removed -->
       <exclude name="Squiz.Scope.MethodScope"/>
-      <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
       <!-- this would require that a methods opening brace is on a new line -->
       <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine"/>
     </rule>

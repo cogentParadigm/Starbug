@@ -13,8 +13,7 @@ class FormCrudHook extends FormHook {
 			} else {
 				$field['value'] = htmlentities($var, ENT_QUOTES, "UTF-8");
 			}
-		}
-		else if (!empty($field['default'])) {
+		} elseif (!empty($field['default'])) {
 			$field['value'] = $field['default'];
 			unset($field['default']);
 		}

@@ -59,7 +59,7 @@ class QueryActionHook extends QueryHook {
 				$permit_field = "user_".$cname;
 				if (!$this->user->loggedIn()) {
 					$query->where("permits.".$permit_field." is null");
-				}else if ($this->models->has($column['type'])) {
+				} elseif ($this->models->has($column['type'])) {
 					//multiple reference
 					$user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
 					$ref = $cname."_id";

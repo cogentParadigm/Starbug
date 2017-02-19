@@ -157,19 +157,27 @@ class ErrorHandler {
 				continue;
 			}
 
-			if (is_object($value)) $args[$key] = get_class($value);
-			else if (is_bool($value)) $args[$key] = $value ? 'true' : 'false';
-			else if (is_string($value)) {
-				if (strlen($value)>64) $args[$key] = '"'.substr($value, 0, 64).'..."';
-				else $args[$key] = '"'.$value.'"';
+			if (is_object($value)) {
+				$args[$key] = get_class($value);
+			} elseif (is_bool($value)) {
+				$args[$key] = $value ? 'true' : 'false';
+			} elseif (is_string($value)) {
+				if (strlen($value)>64) {
+					$args[$key] = '"'.substr($value, 0, 64).'..."';
+				} else {
+					$args[$key] = '"'.$value.'"';
+				}
+			} elseif (is_array($value)) {
+				$args[$key] = 'array('.ErrorHandler::argumentsToString($value).')';
+			} elseif ($value === null) {
+				$args[$key] = 'null';
+			} elseif (is_resource($value)) {
+				$args[$key] = 'resource';
 			}
-			else if (is_array($value)) $args[$key] = 'array('.ErrorHandler::argumentsToString($value).')';
-			else if ($value===null) $args[$key] = 'null';
-			else if (is_resource($value)) $args[$key] = 'resource';
 
 			if (is_string($key)) {
 				$args[$key] = '"'.$key.'" => '.$args[$key];
-			} else if ($isAssoc) {
+			} elseif ($isAssoc) {
 				$args[$key] = $key.' => '.$args[$key];
 			}
 		}
