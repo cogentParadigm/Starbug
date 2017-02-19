@@ -18,7 +18,7 @@ class Form extends Definition {
 		$this->setParameter("className", $className);
 		$this->addTemplate(
 			"generate/form/form",
-				$this->module."/displays/".$className."Form.php"
+			$this->module."/displays/".$className."Form.php"
 		);
 	}
 }

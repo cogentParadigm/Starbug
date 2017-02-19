@@ -32,12 +32,12 @@ class Model extends Definition {
 		$this->setParameter("className", $className);
 		$this->addTemplate(
 			"generate/model/base",
-				"var/models/".$className."Model.php"
+			"var/models/".$className."Model.php"
 		);
 		if (empty($options["update"])) {
 			$this->addTemplate(
 				"generate/model/model",
-					$this->module."/models/".$className.".php"
+				$this->module."/models/".$className.".php"
 			);
 		}
 	}

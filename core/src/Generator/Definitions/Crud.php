@@ -8,11 +8,11 @@ class Crud extends Definition {
 		$this->setParameter("className", $className);
 		$this->addTemplate(
 			"generate/crud/controller",
-				$this->module."/controllers/Admin".$className."Controller.php"
+			$this->module."/controllers/Admin".$className."Controller.php"
 		);
 		$this->addTemplate(
 			"generate/crud/api",
-				$this->module."/controllers/Api".$className."Controller.php"
+			$this->module."/controllers/Api".$className."Controller.php"
 		);
 	}
 }

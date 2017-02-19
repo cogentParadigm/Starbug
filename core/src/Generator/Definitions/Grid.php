@@ -18,7 +18,7 @@ class Grid extends Definition {
 		$this->setParameter("className", $className);
 		$this->addTemplate(
 			"generate/grid/grid",
-				$this->module."/displays/".$className."Grid.php"
+			$this->module."/displays/".$className."Grid.php"
 		);
 	}
 }

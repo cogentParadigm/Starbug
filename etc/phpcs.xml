@@ -16,8 +16,9 @@
       <exclude name="PSR2.Namespaces.UseDeclaration"/>
       <!-- this would require that a class opening brace is on a new line -->
       <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine"/>
+      <!-- this would require ELSEIF vs ELSE IF -->
+      <!-- should be followed and exclusion removed -->
       <exclude name="PSR2.ControlStructures.ElseIfDeclaration"/>
-      <exclude name="PSR2.Methods.FunctionCallSignature.Indent"/>
       <exclude name="PSR2.Methods.FunctionCallSignature.ContentAfterOpenBracket"/>
       <exclude name="Squiz.Scope.MethodScope"/>
       <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
