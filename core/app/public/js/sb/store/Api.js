@@ -81,9 +81,12 @@ define([
 			var store = this;
 
 			var data = {};
-			for (var k in object) data[this.model+'['+k+']'] = object[k];
+			if (options.formData) data = options.formData;
+			else {
+				for (var k in object) data[this.model+'['+k+']'] = object[k];
+				data.oid = cookie('oid');
+			}
 			data['action['+this.model+']'] = options.action || this.put_action;
-			data.oid = cookie('oid');
 
 			var initialResponse = request.post(this.target, {
 				data: data,
