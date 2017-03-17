@@ -2,6 +2,7 @@
 use Interop\Container\ContainerInterface;
 return [
 	'Starbug\Db\Schema\*Interface' => DI\object('Starbug\Db\Schema\*'),
+	'Starbug\Db\Query\*Interface' => DI\object('Starbug\Db\Query\*'),
 	'Starbug\Db\Schema\SchemaInterface' => function (ContainerInterface $c) {
 		$schema = $c->get('Starbug\Db\Schema\Schema');
 		$hooks = $c->get('db.schema.hooks');

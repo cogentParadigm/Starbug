@@ -71,8 +71,54 @@ class Schema implements SchemaInterface {
 		}
 		return $this->tables;
 	}
+	/**
+	 * get the root model of an entity
+	 * @param string $entity the entity
+	 * @return string the base model
+	 */
+	public function getEntityRoot($table) {
+		$base = $table;
+		while ($this->getTable($base)->hasOption("base")) {
+			$base = $this->getTable($base)->getOption("base");
+		}
+		return $base;
+	}
+	/**
+	 * get an array representing the chain of inheritance for an entity
+	 * @param string $entity the name of the entity
+	 * @return array the inheritance chain. the first member will be $entity
+	 */
+	public function getEntityChain($table) {
+		$chain = [];
+		while (!empty($table)) {
+			$chain[] = $table;
+			$table = $this->getTable($table)->getOption("base");
+		}
+		return $chain;
+	}
+	/**
+	 * get entity or column info
+	 * @param string $entity entity name
+	 * @param string $column column name
+	 */
+	public function getColumn($table, $column = "") {
+		$info = [];
+		if (!$this->hasTable($table)) return $info;
+		while (!empty($table)) {
+			$table = $this->getTable($table);
+			$columns = $table->getColumns();
+			foreach ($columns as $col => $properties) $columns[$col]["entity"] = $table->getName();
+			$info = array_merge($columns, $info);
+			$table = $table->getOption("base");
+		}
+		if (!empty($column) && isset($info[$column])) return $info[$column];
+		return $info;
+	}
 	public function hasTable($table) {
 		return isset($this->tables[$table]);
+	}
+	public function hasColumn($table, $column) {
+		return ($this->hasTable($table) && $this->tables[$table]->hasColumn($column));
 	}
 	public function dropTable($table) {
 		$this->tables[$table]->drop();
