@@ -14,7 +14,7 @@ class Migration extends AbstractMigration {
       ["user_agent", "type" => "text", "default" => ""],
       ["environment", "type" => "string", "length" => "128", "default" => ""]
     );
-    $this->table("notifications",
+    $this->schema->addTable("notifications",
       ["type", "type" => "string", "default" => ""],
       ["subject", "type" => "string", "length" => "128"],
       ["body", "type" => "text", "default" => ""],
