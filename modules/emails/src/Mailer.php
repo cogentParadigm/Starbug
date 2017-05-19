@@ -93,7 +93,7 @@ class Mailer implements MailerInterface {
 		}
 		if (!empty($options['attachments'])) {
 			$attachments = $options['attachments'];
-			foreach ($attachment as $a) {
+			foreach ($attachments as $a) {
 				if (is_array($a)) $mailer->AddAttachment($a[0], $a[1]);
 				else $mailer->AddAttachment($a);
 			}
