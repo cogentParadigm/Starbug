@@ -19,7 +19,7 @@ define([
       this.query = this.query || {};
       this.query = new Query({query:this.query});
       if (false == this.collection && false !== this.model) {
-        this.collection = new Api({model:model, action:"select"});
+        this.collection = new Api({model:this.model, action:"select"});
       }
       this.listParams = this.listParams || {};
       this.listParams.delegate = this.selection;
