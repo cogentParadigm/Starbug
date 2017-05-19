@@ -1,4 +1,7 @@
 <?php
+
+use Interop\Container\ContainerInterface;
+
 return [
   'Starbug\Devices\NotificationHandlerInterface' => function (ContainerInterface $c) {
     $manager = $c->get("Starbug\Devices\NotificationManager");
