@@ -4,7 +4,7 @@ use Interop\Container\ContainerInterface;
 
 return [
   'db.schema.migrations' => DI\add([
-    DI\get('Starbug\Comments\Migration')
+    DI\get('Starbug\Devices\Migration')
   ]),
   'Starbug\Devices\NotificationHandlerInterface' => function (ContainerInterface $c) {
     $manager = $c->get("Starbug\Devices\NotificationManager");
