@@ -1,9 +1,9 @@
 <?php echo '<?php'."\n"; ?>
-/**
- * <?php echo $name; ?> model
- * @ingroup models
- */
+
+namespace Starbug\App;
+
 use Starbug\Core\<?php echo $className; ?>Model;
+
 class <?php echo $className; ?> extends <?php echo $className; ?>Model {
 
 }
