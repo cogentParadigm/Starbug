@@ -1,8 +1,10 @@
 <?php
 namespace Starbug\Core\Generator\Definitions;
+
 use Starbug\Core\Generator\Definition;
 use Starbug\Db\Schema\SchemerInterface;
 use Starbug\Core\ConfigInterface;
+
 class Model extends Definition {
 	public function __construct(SchemerInterface $schemer, ConfigInterface $config) {
 		$this->schemer = $schemer;
@@ -18,7 +20,7 @@ class Model extends Definition {
 		}
 		$this->setParameter("fields", $table->getColumns());
 		$factory = $this->config->get("models", "factory");
-		$factory = isset($factory[$options["model"]]) ? $factory[$options["model"]] : array();
+		$factory = isset($factory[$options["model"]]) ? $factory[$options["model"]] : [];
 		$use = [];
 		foreach ($factory as $n => $t) {
 			if (false != strpos($t, "\\")) {
