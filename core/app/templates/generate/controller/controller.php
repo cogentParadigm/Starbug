@@ -1,5 +1,4 @@
 <?php echo '<?php'."\n"; ?>
-
 namespace Starbug\App;
 
 use Starbug\Core\Controller;
@@ -15,4 +14,3 @@ class <?php echo ucwords($name); ?>Controller extends Controller {
     $this->render("<?php echo $name; ?>/default");
   }
 }
-<?php echo '?>'; ?>

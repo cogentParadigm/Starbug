@@ -6,7 +6,7 @@ use Starbug\Core\Generator\Definition;
 /**
  * Controller generator.
  */
-class Controller extends Definition {
+class Collection extends Definition {
   /**
    * {@inheritdoc}
    *
@@ -17,8 +17,8 @@ class Controller extends Definition {
   public function build(array $options = []) {
     parent::build($options);
     $this->addTemplate(
-      "generate/controller/controller",
-      $this->module."/controllers/".ucwords($options["name"])."Controller.php"
+      "generate/collection/collection",
+      $this->module."/collections/".ucwords($options["name"])."Controller.php"
     );
   }
 }
