@@ -9,13 +9,13 @@ return [
   'Starbug\Devices\NotificationHandlerInterface' => function (ContainerInterface $c) {
     $manager = $c->get("Starbug\Devices\NotificationManager");
     $handlers = $c->get("notification.handlers");
-    foreach ($handlers as $handler) {
-      $manager->addHandler($handler);
+    foreach ($handlers as $name => $handler) {
+      $manager->addHandler($name, $handler);
     }
     return $manager;
   },
   'notification.handlers' => [
-    DI\get('Starbug\Devices\EmailNotificationHandler'),
-    DI\get('Starbug\Devices\ApplePushNotificationHandler')
+    "email" => DI\get('Starbug\Devices\EmailNotificationHandler'),
+    "push" => DI\get('Starbug\Devices\PushNotificationHandler')
   ]
 ];

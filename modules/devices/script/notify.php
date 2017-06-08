@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\App;
+namespace Starbug\Devices;
 use Starbug\Core\IdentityInterface;
 class NotifyCommand {
   public function __construct(NotificationHandlerInterface $notifications, IdentityInterface $user) {

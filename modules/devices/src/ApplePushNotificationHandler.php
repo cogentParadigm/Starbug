@@ -19,12 +19,10 @@ class ApplePushNotificationHandler implements NotificationHandlerInterface {
   }
 
   public function deliver($owner, $type, $subject, $body, $data = []) {
-    if ($owner[$type."_push"]) {
-      $devices = $this->models->get("devices")->query()
-                    ->condition("platform", "ios")->condition("owner", $owner['id'])->all();
-      foreach ($devices as $device) {
-        $this->push($device['token'], $subject, $data, $device['environment']);
-      }
+    $devices = $this->models->get("devices")->query()
+                  ->condition("platform", "ios")->condition("owner", $owner['id'])->all();
+    foreach ($devices as $device) {
+      $this->push($device['token'], $subject, $data, $device['environment']);
     }
   }
 
