@@ -10,7 +10,7 @@ class NotificationManager implements NotificationHandlerInterface {
     $this->handlers[$name] = $handler;
   }
   public function getHandler($name) {
-    return $this->Handlers[$name];
+    return $this->handlers[$name];
   }
   public function deliver($owner, $type, $subject, $body, $data = []) {
     // store notification
