@@ -6,6 +6,6 @@ class EmailNotificationHandler implements NotificationHandlerInterface {
     $this->mailer = $mailer;
   }
   public function deliver($owner, $type, $subject, $body, $data = []) {
-    $this->mailer->send(["to" => $owner['email'], "subject" => $subject, "body" => $body]);
+    $this->mailer->send($data + ["to" => $owner["email"], "subject" => $subject, "body" => $body]);
   }
 }
