@@ -11,6 +11,9 @@ class Migration extends AbstractMigration {
     $this->notifications = $notifications;
   }
   public function up() {
+    $this->schema->addTable("users",
+      ["notification_batch_frequency", "input_type" => "int", "default" => "0"]
+    );
     $this->schema->addTable("devices",
       ["token", "type" => "text"],
       ["platform", "type" => "string", "default" => ""],
