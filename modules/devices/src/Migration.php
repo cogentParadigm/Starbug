@@ -31,7 +31,7 @@ class Migration extends AbstractMigration {
       ["batch_key", "type" => "string", "length" => "255", "default" => ""]
     );
     $handlers = $this->notifications->getHandlers();
-    foreach ($handler as $name => $handler) {
+    foreach ($handlers as $name => $handler) {
       $this->schema->addTable("notifications",
         [$name."_data", "type" => "text", "default" => ""]
       );
