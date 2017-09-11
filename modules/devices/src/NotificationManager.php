@@ -36,7 +36,7 @@ class NotificationManager implements NotificationManagerInterface {
     $results = $this->db->query("notifications")->condition("send_date", $now, "<=")->condition("sent", "0000-00-00 00:00:00")->all();
     $user_notifications = [];
     foreach ($results as $result) {
-      $uid = $result["owner"];
+      $uid = $result["users_id"];
       if (!isset($user_notifications[$uid])) {
         $user_notifications[$uid] = [
           "user" => $this->db->get("users", $uid),
