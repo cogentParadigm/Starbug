@@ -43,7 +43,7 @@ class NotificationManager implements NotificationManagerInterface {
           "notifications" => []
         ];
       }
-      $user_notifications[$uid]["notifications"][$result["batch_key"]] = $result;
+      $user_notifications[$uid]["notifications"][$result["batch_key"]][] = $result;
     }
     foreach ($user_notifications as $uid => $user) {
       $owner = $user["user"];
