@@ -6,7 +6,7 @@ use Starbug\Db\Schema\AbstractMigration;
 use Starbug\Db\Schema\SchemaInterface;
 
 class Migration extends AbstractMigration {
-  public function __construct(SchemaInterface $schema, NotificationManager $notifications) {
+  public function __construct(SchemaInterface $schema, NotificationManagerInterface $notifications) {
     $this->schema = $schema;
     $this->notifications = $notifications;
   }
