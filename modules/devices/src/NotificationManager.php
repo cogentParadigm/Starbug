@@ -33,7 +33,7 @@ class NotificationManager implements NotificationManagerInterface {
     $now = date("Y-m-d H:i:s");
     $hour = intval(date("H"));
     $minute = intval(date("i"));
-    $results = $this->db->query("notifications")->condition("send_date", $now, "<=")->condition("sent", "0")->all();
+    $results = $this->db->query("notifications")->condition("send_date", $now, "<=")->condition("sent", "0000-00-00 00:00:00")->all();
     $user_notifications = [];
     foreach ($results as $result) {
       $uid = $result["owner"];
@@ -60,7 +60,7 @@ class NotificationManager implements NotificationManagerInterface {
             $body = [];
             foreach ($notifications as $notification) {
               $body[] = $notification["body"];
-              $this->db->store("notifications", ["id" => $notification["id"], "sent" => "1"]);
+              $this->db->store("notifications", ["id" => $notification["id"], "sent" => date("Y-m-d H:i:s")]);
             }
             foreach ($this->handlers as $handlerName => $handler) {
               if ($owner[$type."_".$handlerName]) {
@@ -79,7 +79,7 @@ class NotificationManager implements NotificationManagerInterface {
               $handler->deliver($owner, $notification["type"], $notification["subject"], $notification["body"], $data);
             }
           }
-          $this->db->store("notifications", ["id" => $notification["id"], "sent" => "1"]);
+          $this->db->store("notifications", ["id" => $notification["id"], "sent" => date("Y-m-d H:i:s")]);
         }
       }
     }
