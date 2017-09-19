@@ -8,7 +8,7 @@
       $this->assign("model", "product_options");
       $this->assign("dialog", true);
       $this->render(["product_options/admin-toolbar", "admin-toolbar"]);
-      $this->displays->render("ProductOptionsGrid", ["product_types_id" => $id, "attributes" => ["dialog" => "options_form"]]);
+      $this->displays->render("ProductOptionsGrid", ["product_types_id" => $id, "attributes" => ["dialog" => "product_options_form"]]);
     ?>
   </div>
 </div>
