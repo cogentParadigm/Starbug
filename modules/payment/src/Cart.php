@@ -34,10 +34,26 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     }
   }
 
+  public function reset($load = true, $create = true) {
+    $this->order = false;
+    if ($load) {
+      $this->init($create);
+    }
+  }
+
+  public function setConditions($conditions) {
+    $this->conditions = $conditions;
+  }
+
   public function load($conditions = array()) {
     if (empty($conditions)) $conditions = $this->conditions;
     if (empty($conditions['order_status'])) $conditions['order_status'] = 'cart';
-    $this->order = $this->models->get("orders")->query()->conditions($conditions)->one();
+    $order = $this->models->get("orders")->query()->conditions($conditions)->one();
+    $this->setOrder($order);
+  }
+
+  public function setOrder($order) {
+    $this->order = $order;
     if (!empty($this->order)) {
       foreach ($this->lines as $k => $v) {
         $this->lines[$k] = $this->models->get($k."_lines")->query()->condition($k."_lines.orders_id", $this->order['id']);
