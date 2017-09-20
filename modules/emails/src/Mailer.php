@@ -1,6 +1,9 @@
 <?php
 namespace Starbug\Core;
-use \PHPMailer;
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class Mailer implements MailerInterface {
 
 	protected $host;
