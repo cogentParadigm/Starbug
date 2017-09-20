@@ -19,13 +19,11 @@ class AdminUsersController extends Controller {
     $this->render("admin/list");
   }
   function create() {
-    $this->assign("form", "users");
     if ($this->db->success("users", "create")) $this->redirect("admin/users");
     else $this->render("admin/create");
   }
   function update($id) {
     $this->assign("id", $id);
-    $this->assign("form", "users");
     $this->render("admin/update");
   }
   function import() {
