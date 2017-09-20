@@ -21,6 +21,7 @@ class AdminProductOptionsCollection extends Collection {
       $query->condition("product_options.parent", "0");
     }
     $query->select("(SELECT COUNT(*) FROM ".$this->db->prefix("product_options")." WHERE parent=product_options.id) as children");
+    $query->sort("product_options.position");
     return parent::build($query, $ops);
   }
 }
