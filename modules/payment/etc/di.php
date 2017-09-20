@@ -49,5 +49,6 @@ return array(
       $gateway->setDeveloperMode(true);
     }
     return $gateway;
-  }
+  },
+  'Starbug\Payment\ProductOptionsForm' => DI\object()->method('setTableSchema', DI\get('Starbug\Db\Schema\SchemerInterface'))
 );

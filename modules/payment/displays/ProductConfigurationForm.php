@@ -23,14 +23,18 @@ class ProductConfigurationForm extends FormDisplay {
   protected function addOptions($items, $children) {
     foreach ($items as $item) {
       $this->layout->add([$item["id"]."Row", $item["id"]."Cell" => "div.col-xs-12"]);
+      $input_name = "options[".$item["id"]."]";
+      $target = empty($item["parent"]) ? $item["id"] : $item["parent"]."Fieldset";
+      $field = [$input_name, "label" => $item["name"], "pane" => $target];
       if ($item["type"] == "Fieldset") {
         $this->layout->put($item["id"]."Cell", "div", "", $item["id"]."Fieldset");
         if (!empty($children[$item["id"]])) {
           $this->addOptions($children[$item["id"]], $children);
         }
-      } else if ($item["type"] == "Text") {
-        $target = empty($item["parent"]) ? $item["id"] : $item["parent"]."Fieldset";
-        $this->add(["options[".$item["id"]."]", "input_type" => "text", "label" => $item["name"], "pane" => $target]);
+      } elseif ($item["type"] == "Text") {
+        $this->add($field + ["input_type" => "text"]);
+      } elseif ($item["type"] == "Reference") {
+        $this->add($field + ["input_type" => "text", "data-dojo-type" => "sb/form/Select", "data-dojo-props" => "model:'".$item["reference_type"]."'"]);
       }
     }
   }
