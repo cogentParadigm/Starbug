@@ -42,7 +42,8 @@ class Migration extends AbstractMigration {
       ["parent", "type" => "int", "default" => "0", "materialized_path" => "tree_path"],
       ["position", "type" => "int", "ordered" => "parent"],
       ["tree_path", "type" => "string", "length" => "255", "default" => ""],
-      ["reference_type", "type" => "string"]
+      ["reference_type", "type" => "string"],
+      ["columns", "type" => "int", "default" => "12"]
     );
     $this->schema->addTable(["products", "label_select" => "products.name"],
       ["type", "type" => "int", "references" => "product_types id", "alias" => "%slug%", "null" => ""],

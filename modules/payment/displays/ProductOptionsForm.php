@@ -21,6 +21,7 @@ class ProductOptionsForm extends FormDisplay {
     $this->add("required");
     $this->add(["parent", "input_type" => "select"] + $tree);
     $this->add("position");
+    $this->add(["columns", "input_type" => "select", "options" => "1,2,3,4,5,6,7,8,9,10,11,12"]);
   }
   public function getOptionsTree($type, $parent = 0, $prefix = "") {
     $options = $values = [""];

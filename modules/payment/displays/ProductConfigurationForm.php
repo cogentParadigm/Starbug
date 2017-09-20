@@ -18,16 +18,20 @@ class ProductConfigurationForm extends FormDisplay {
         $children[$option["parent"]][] = $option;
       }
     }
+    $this->layout->add(["row", "container" => "div.col-xs-12"]);
     $this->addOptions($items, $children);
   }
   protected function addOptions($items, $children) {
     foreach ($items as $item) {
-      $this->layout->add([$item["id"]."Row", $item["id"]."Cell" => "div.col-xs-12"]);
       $input_name = "options[".$item["id"]."]";
-      $target = empty($item["parent"]) ? $item["id"] : $item["parent"]."Fieldset";
-      $field = [$input_name, "label" => $item["name"], "pane" => $target];
+      $target = empty($item["parent"]) ? "container" : $item["parent"];
+      $field = [$input_name, "label" => $item["name"], "pane" => $target, "div" => "col-xs-12 col-sm-".$item["columns"]];
       if ($item["type"] == "Fieldset") {
-        $this->layout->put($item["id"]."Cell", "div", "", $item["id"]."Fieldset");
+        $this->layout->put($target, "div.col-xs-12.col-sm-".$item["columns"], "", $item["id"]."FieldsetCol");
+        $this->layout->put($item["id"]."FieldsetCol", "div.panel.panel-default", "", $item["id"]."FieldsetPanel");
+        $this->layout->put($item["id"]."FieldsetPanel", "div.panel-heading", $item["name"]);
+        $this->layout->put($item["id"]."FieldsetPanel", "div.panel-body", "", $item["id"]."PanelBody");
+        $this->layout->put($item["id"]."PanelBody", "div.row", "", $item["id"]);
         if (!empty($children[$item["id"]])) {
           $this->addOptions($children[$item["id"]], $children);
         }
