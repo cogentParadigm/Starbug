@@ -26,6 +26,8 @@ define([
 		grid:null,
 		templateString: template, //the template
 		widgetsInTemplate: true,
+		mode: 'cart',
+		checkoutUrl: '/checkout',
 		postCreate:function() {
 			var self = this;
 			this.products = new api({model:'product_lines', action:'cart'});
@@ -35,6 +37,9 @@ define([
 			this.grid = new EditableGrid({editor:this, selectionMode:'none'}, this.gridNode);
 			this.grid.startup();
 			this.refresh();
+			if (this.mode == "cart") {
+				put(this.actionsNode, 'a.pull-right.btn.btn-default[href=$] $', this.checkoutUrl, 'Checkout');
+			}
 		},
 		refresh:function() {
 			var self = this;
