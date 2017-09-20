@@ -99,8 +99,8 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     return $count;
   }
 
-  function addProduct($options) {
-    $product = $this->models->get("products")->query()->condition("products.id", $options['id'])->one();
+  function addProduct($input) {
+    $product = $this->models->get("products")->query()->condition("products.id", $input['id'])->one();
     $line = array(
       "product" => $product['id'],
       "description" => $product['name'],
@@ -111,6 +111,17 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     $line['qty'] = 1;
     $this->add("product_lines", $line);
     $line['id'] = $this->models->get("product_lines")->insert_id;
+    if (!empty($input["options"])) {
+      foreach ($input["options"] as $option => $value) {
+        $conditions = ["product_lines_id" => $line["id"], "options_id" => $option];
+        $exists = $this->models->get("product_lines_options")->query()->conditions($conditions)->one();
+        if ($exists) {
+          $this->models->get("product_lines_options")->store(["id" => $exists["id"], "value" => $value]);
+        } else {
+          $this->models->get("product_lines_options")->store($conditions + ["value" => $value]);
+        }
+      }
+    }
     return $line;
   }
 }

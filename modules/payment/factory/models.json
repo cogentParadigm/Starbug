@@ -13,6 +13,9 @@
 		"priceFormatter":"Starbug\\Payment\\PriceFormatterInterface",
 		"mailer":"MailerInterface"
 	},
+	"products": {
+		"cart":"Starbug\\Payment\\Cart"
+	},
 	"product_lines":{
 		"cart":"Starbug\\Payment\\Cart"
 	}
