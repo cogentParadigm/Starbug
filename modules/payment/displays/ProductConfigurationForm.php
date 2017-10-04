@@ -39,6 +39,8 @@ class ProductConfigurationForm extends FormDisplay {
         $this->add($field + ["input_type" => "text"]);
       } elseif ($item["type"] == "Reference") {
         $this->add($field + ["input_type" => "text", "data-dojo-type" => "sb/form/Select", "data-dojo-props" => "model:'".$item["reference_type"]."'"]);
+      } elseif ($item["type"] == "Hidden") {
+        $this->add($field + ["input_type" => "hidden"]);
       }
     }
   }
