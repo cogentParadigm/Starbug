@@ -7,6 +7,7 @@ class ProductConfigurationForm extends FormDisplay {
   public $model = "products";
   public $default_action = "add";
   public $submit_label = "Add To Cart";
+  public $collection = "ProductConfigurationForm";
   public function build_display($ops) {
     $options = $this->db->query("product_options")->condition("product_types_id", $ops["type"])
       ->sort("product_options.tree_path, product_options.position")->all();
@@ -23,7 +24,7 @@ class ProductConfigurationForm extends FormDisplay {
   }
   protected function addOptions($items, $children) {
     foreach ($items as $item) {
-      $input_name = "options[".$item["id"]."]";
+      $input_name = "options[".$item["slug"]."]";
       $target = empty($item["parent"]) ? "container" : $item["parent"];
       $field = [$input_name, "label" => $item["name"], "pane" => $target, "div" => "col-xs-12 col-sm-".$item["columns"]];
       if ($item["type"] == "Fieldset") {

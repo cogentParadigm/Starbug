@@ -18,6 +18,11 @@ class ProductLinesCollection extends Collection {
   }
   public function filterRows($rows) {
     foreach ($rows as $idx => $item) {
+      $options = $this->models->get("product_lines_options")->query()
+        ->select("options_id.slug")->condition("product_lines_id", $item["id"])->all();
+      foreach ($options as $option) {
+        $item["options"][$option["slug"]] = $option["value"];
+      }
       $item['description'] = (string) '<strong>'.$item['description'].'</strong>';
       $item['total'] = $item['price'] * $item['qty'];
       $item['total_formatted'] = $this->formatter->format($item['total']);
@@ -28,7 +33,7 @@ class ProductLinesCollection extends Collection {
         $phrase = "";
         if ($unit == "days" && $interval == 365) {
           $phrase = "year";
-        } else if ($interval == 1) {
+        } elseif ($interval == 1) {
           $phrase = substr($unit, 0, 1);
         } else {
           $phrase = $interval." ".$unit;

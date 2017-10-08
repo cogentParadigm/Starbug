@@ -79,6 +79,7 @@ class Migration extends AbstractMigration {
       ["options", "type" => "product_options"]
     );
     $this->schema->addTable(["product_lines_options"],
+      ["options_id", "type" => "int", "references" => "product_options id", "update" => "cascade", "delete" => "cascade", "alias" => "%slug%"],
       ["value", "type" => "string", "length" => "255", "default" => ""]
     );
     $this->schema->addTable(["shipping_lines", "base" => "lines", "groups" => false]);
