@@ -5,6 +5,7 @@ use Starbug\Core\Collection;
 use Starbug\Core\ModelFactoryInterface;
 
 class ProductLinesCollection extends Collection {
+  protected $model = "product_lines";
   public function __construct(ModelFactoryInterface $models, PriceFormatterInterface $formatter) {
     $this->models = $models;
     $this->formatter = $formatter;
