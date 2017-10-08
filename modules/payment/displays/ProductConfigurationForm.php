@@ -38,6 +38,8 @@ class ProductConfigurationForm extends FormDisplay {
         }
       } elseif ($item["type"] == "Text") {
         $this->add($field + ["input_type" => "text"]);
+      } elseif ($item["type"] == "Textarea") {
+        $this->add($field + ["input_type" => "textarea"]);
       } elseif ($item["type"] == "Select List") {
         $options = $values = [""];
         if (!empty($children[$item["id"]])) {
