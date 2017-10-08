@@ -13,9 +13,15 @@ class Orders extends OrdersModel {
   }
 
   function checkout($order) {
-    $target = array("id" => $this->cart->get("id"));
-    if (isset($order['shipping_address'])) $target['shipping_address'] = $order['shipping_address'];
-    if (isset($order['billing_address'])) $target['billing_address'] = $order['billing_address'];
+    $target = ["id" => $this->cart->get("id"), "billing_same" => $order["billing_same"]];
+    if (isset($order['shipping_address'])) {
+      $target['shipping_address'] = $order['shipping_address'];
+    }
+    if ($target["billing_same"]) {
+      $target["billing_address"] = "NULL";
+    } elseif (isset($order['billing_address'])) {
+      $target['billing_address'] = $order['billing_address'];
+    }
     if ($target['id']) {
       $this->store($target);
     }

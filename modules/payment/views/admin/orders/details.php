@@ -43,7 +43,11 @@
 			</div>
 			<div class="panel-body">
 				<?php
-					echo $this->models->get("address")->format($order['billing_address']);
+					if ($order["billing_same"]) {
+						echo "Same as shipping address";
+					} else {
+						echo $this->models->get("address")->format($order['billing_address']);
+					}
 				?>
 			</div>
 		</div>

@@ -21,7 +21,11 @@
 			</div>
 			<div class="panel-body">
 				<?php
-					echo $this->models->get("address")->format($cart->get('billing_address'));
+					if ($cart->get("billing_same")) {
+						echo "Same as shipping address";
+					} else {
+						echo $this->models->get("address")->format($cart->get('billing_address'));
+					}
 				?>
 			</div>
 		</div>

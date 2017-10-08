@@ -130,6 +130,7 @@ class Migration extends AbstractMigration {
       ["token", "type" => "string", "length" => "128", "default" => ""],
       ["billing_address", "type" => "int", "references" => "address id", "null" => "", "operation" => "create"],
       ["shipping_address", "type" => "int", "references" => "address id", "null" => "", "operation" => "create"],
+      ["billing_same", "type" => "bool", "default" => "0"],
       ["email", "type" => "string", "length" => "128"],
       ["phone", "type" => "string"],
       ["payments", "type" => "payments", "table" => "payments"],

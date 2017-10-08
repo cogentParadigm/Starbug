@@ -10,7 +10,6 @@ define([
 ], function(declare, lang, query, on, Widget, attr, registry, ready){
 	return declare([Widget], {
 		key:false,
-		value:false,
 		dependents:null,
 		constructor: function() {
 			this.dependents = [];
@@ -32,7 +31,7 @@ define([
 		execute: function() {
 			this.value = attr.get(this.domNode, 'value');
 			for (var i in this.dependents) {
-				this.dependents[i].toggleDependency(this.value);
+				this.dependents[i].toggleDependency(this.get('value'));
 			}
 		}
 	});
