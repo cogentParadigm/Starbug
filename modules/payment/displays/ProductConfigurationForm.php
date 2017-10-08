@@ -26,7 +26,7 @@ class ProductConfigurationForm extends FormDisplay {
     foreach ($items as $item) {
       $input_name = "options[".$item["slug"]."]";
       $target = empty($item["parent"]) ? "container" : $item["parent"];
-      $field = [$input_name, "label" => $item["name"], "pane" => $target, "div" => "col-xs-12 col-sm-".$item["columns"]];
+      $field = [$input_name, "label" => $item["name"], "pane" => $target, "div" => "col-xs-12 col-sm-".$item["columns"], "required" => (bool) $item["required"]];
       if ($item["type"] == "Fieldset") {
         $this->layout->put($target, "div.col-xs-12.col-sm-".$item["columns"], "", $item["id"]."FieldsetCol");
         $this->layout->put($item["id"]."FieldsetCol", "div.panel.panel-default", "", $item["id"]."FieldsetPanel");
@@ -38,10 +38,21 @@ class ProductConfigurationForm extends FormDisplay {
         }
       } elseif ($item["type"] == "Text") {
         $this->add($field + ["input_type" => "text"]);
+      } elseif ($item["type"] == "Select List") {
+        $options = $values = [""];
+        if (!empty($children[$item["id"]])) {
+          foreach ($children[$item["id"]] as $option) {
+            $options[] = $option["name"];
+            $values[] = $option["slug"];
+          }
+        }
+        $this->add($field + ["input_type" => "select", "options" => $options, "values" => $values]);
       } elseif ($item["type"] == "Reference") {
         $this->add($field + ["input_type" => "text", "data-dojo-type" => "sb/form/Select", "data-dojo-props" => "model:'".$item["reference_type"]."'"]);
       } elseif ($item["type"] == "Hidden") {
         $this->add($field + ["input_type" => "hidden"]);
+      } elseif ($item["type"] == "File") {
+        $this->add($field + ["input_type" => "file_select"]);
       }
     }
   }
