@@ -2,5 +2,5 @@
 namespace Starbug\Payment;
 
 interface CartHookInterface {
-  public function addProduct(&$line, $input);
+  public function addProduct($product, &$line, &$input);
 }

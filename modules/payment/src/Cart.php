@@ -125,7 +125,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     $this->init();
     //pass id and qty
     $line['qty'] = 1;
-    $this->invokeHooks("addProduct", [&$line, $input]);
+    $this->invokeHooks("addProduct", [$product, &$line, &$input]);
     $this->add("product_lines", $line);
     $line['id'] = $this->models->get("product_lines")->insert_id;
     if (!empty($input["options"])) {
