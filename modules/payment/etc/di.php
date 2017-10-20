@@ -23,8 +23,9 @@ return array(
   },
   'currency_locale' => 'en_US.UTF-8',
   'currency_minor_unit' => 2,
+  'payment.cart.hooks' => [],
   'Starbug\Payment\*Interface' => DI\object('Starbug\Payment\*'),
-  'Starbug\Payment\Cart' => DI\object()->constructorParameter('conditions', DI\get('cart_token')),
+  'Starbug\Payment\Cart' => DI\object()->constructorParameter('conditions', DI\get('cart_token'))->method("addHooks", DI\get('payment.cart.hooks')),
   'Starbug\Payment\PriceFormatter' => DI\object()
     ->constructorParameter('locale', DI\get('currency_locale'))
     ->constructorParameter('minorUnit', DI\get('currency_minor_unit')),
