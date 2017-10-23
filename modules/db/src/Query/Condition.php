@@ -49,6 +49,10 @@ class Condition implements ConditionInterface {
 		return $this->conjunction;
 	}
 
+	public function setConditions(array $conditions) {
+		$this->conditions = $conditions;
+	}
+
 	public function count() {
 		return count($this->conditions);
 	}

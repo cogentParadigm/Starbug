@@ -11,4 +11,8 @@ trait Group {
 	public function getGroup() {
 		return $this->group;
 	}
+
+	public function setGroup(array $group) {
+		$this->group = $group;
+	}
 }

@@ -3,7 +3,7 @@ namespace Starbug\Db\Query;
 class Compiler implements CompilerInterface {
 	protected $parameterCount = [];
 	protected $prefix;
-	protected $sqlCountQuery;
+	protected $hooks = [];
 
 	public function __construct($prefix = "") {
 		$this->prefix = $prefix;
@@ -11,6 +11,9 @@ class Compiler implements CompilerInterface {
 
 	public function build(QueryInterface $query) {
 		$this->parameterCount = [];
+
+		$this->invokeHooks("beforeCompileQuery", [$query, $this]);
+
 		$components = $this->buildComponentClauses($query);
 
 		$sql = [];
@@ -18,22 +21,23 @@ class Compiler implements CompilerInterface {
 			$sql[$key] = $key." ".$clause;
 		}
 		$sqlQuery = implode(' ', $sql);
+		$sqlCountQuery = "";
 
 		unset($sql['LIMIT']);
 		unset($sql['ORDER BY']);
 		if (!empty($components['HAVING'])) {
-			$this->sqlCountQuery = "SELECT COUNT(*) as count FROM (".implode(' ', $sql).") as c";
+			$sqlCountQuery = "SELECT COUNT(*) as count FROM (".implode(' ', $sql).") as c";
 		} else if (!empty($components['GROUP BY'])) {
 			$sql['SELECT'] = "SELECT COUNT(DISTINCT ".$components['GROUP BY'].") as count";
 			unset($sql['GROUP BY']);
-			$this->sqlCountQuery = implode(' ', $sql);
+			$sqlCountQuery = implode(' ', $sql);
 		} else {
 			if (!$query->isSelect()) $components['SELECT'] = "*";
 			$sql['SELECT'] = "SELECT COUNT(".((false !== strpos(strtolower($components['SELECT']), 'distinct')) ? $components['SELECT'] : "*").") as count";
-			$this->sqlCountQuery = implode(' ', $sql);
+			$sqlCountQuery = implode(' ', $sql);
 		}
 
-		return $sqlQuery;
+		return new CompiledQuery($sqlQuery, $sqlCountQuery);
 	}
 
 	protected function buildQuery($query) {
@@ -154,6 +158,10 @@ class Compiler implements CompilerInterface {
 				$set[$idx] = $condition["condition"];
 			} else {
 				$conditions = "";
+				if ($condition["field"] instanceof QueryInterface) {
+					$condition["field"] = "(".$this->build($condition["field"])->getSql().")";
+					$condition["invert"] = true;
+				}
 				if (!empty($condition['ornull']) && $condition['operator'] === "!=") $conditions .= "(".$condition['field']." is NULL || ";
 				if (empty($condition['invert'])) $conditions .= $condition['field'];
 				if (!is_null($condition['value'])) {
@@ -229,5 +237,16 @@ class Compiler implements CompilerInterface {
 
 	protected function prefix($table) {
 		return $this->prefix.$table;
+	}
+
+	public function addHook(CompilerHookInterface $hook) {
+		$this->hooks[] = $hook;
+		return $this;
+	}
+
+	protected function invokeHooks($method, $args) {
+		foreach ($this->hooks as $hook) {
+			call_user_func_array([$hook, $method], $args);
+		}
 	}
 }

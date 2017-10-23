@@ -139,7 +139,7 @@ class QueryCompilerTest extends PHPUnit_Framework_TestCase {
 		$this->query->addJoinOne("pages.owner", "users");
 
 		//expected output
-		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` JOIN `test_users` AS `users` ON users.id=pages.owner";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` LEFT JOIN `test_users` AS `users` ON users.id=pages.owner";
 
 		//compare
 		$actual = $this->compile();
@@ -154,7 +154,7 @@ class QueryCompilerTest extends PHPUnit_Framework_TestCase {
 		$this->query->addJoinOne("pages.owner", "users", "pages_owner");
 
 		//expected output
-		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` JOIN `test_users` AS `pages_owner` ON pages_owner.id=pages.owner";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` LEFT JOIN `test_users` AS `pages_owner` ON pages_owner.id=pages.owner";
 
 		//compare
 		$actual = $this->compile();
@@ -169,7 +169,7 @@ class QueryCompilerTest extends PHPUnit_Framework_TestCase {
 		$this->query->addJoinMany("pages", "comments");
 
 		//expected output
-		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` JOIN `test_comments` AS `comments` ON comments.pages_id=pages.id";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` LEFT JOIN `test_comments` AS `comments` ON comments.pages_id=pages.id";
 
 		//compare
 		$actual = $this->compile();
@@ -184,7 +184,7 @@ class QueryCompilerTest extends PHPUnit_Framework_TestCase {
 		$this->query->addJoinMany("p", "comments", "c");
 
 		//expected output
-		$expected = "SELECT `p`.* FROM `test_pages` AS `p` JOIN `test_comments` AS `c` ON c.pages_id=p.id";
+		$expected = "SELECT `p`.* FROM `test_pages` AS `p` LEFT JOIN `test_comments` AS `c` ON c.pages_id=p.id";
 
 		//compare
 		$actual = $this->compile();
@@ -202,8 +202,8 @@ class QueryCompilerTest extends PHPUnit_Framework_TestCase {
 		$this->query->addJoinOne("users_groups.groups_id", "groups");
 
 		//expected output
-		$expected = "SELECT `users`.* FROM `test_users` AS `users` JOIN `test_users_groups` AS `users_groups` ON users_groups.users_id=users.id ".
-								"JOIN `test_groups` AS `groups` ON groups.id=users_groups.groups_id";
+		$expected = "SELECT `users`.* FROM `test_users` AS `users` LEFT JOIN `test_users_groups` AS `users_groups` ON users_groups.users_id=users.id ".
+								"LEFT JOIN `test_groups` AS `groups` ON groups.id=users_groups.groups_id";
 
 		//compare
 		$actual = $this->compile();
@@ -435,7 +435,7 @@ class QueryCompilerTest extends PHPUnit_Framework_TestCase {
 
 		//
 		$this->query->setTable("terms");
-		
+
 		$this->query->addCondition($condition);
 
 		//expected output

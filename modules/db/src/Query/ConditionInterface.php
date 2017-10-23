@@ -7,4 +7,5 @@ interface ConditionInterface extends Countable {
 	public function removeCondition($properties);
 	public function getConditions();
 	public function getConjunction();
+	public function setConditions(array $conditions);
 }

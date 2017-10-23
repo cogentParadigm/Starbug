@@ -1,23 +1,43 @@
 <?php
 namespace Starbug\Db\Tests;
-use Starbug\Db\Query\Query;
-use Starbug\Db\Query\Builder;
-use Starbug\Db\Query\Compiler;
-use PHPUnit_Framework_TestCase;
-class QueryBuilderTest extends PHPUnit_Framework_TestCase {
+use Starbug\Db\Query\Extensions\Search;
+class QueryBuilderTest extends QueryBuilderTestBase {
 
-	function setUp() {
-		$this->compiler = new Compiler("test_");
-	}
-
-	function createQuery() {
-		$this->builder = new Builder(new Query());
-		return $this->builder;
-	}
-
-	function compile(Builder $builder = null) {
-		if (is_null($builder)) $builder = $this->builder;
-		return $this->compiler->build($builder->getQuery());
+	function parse($query, $builder = false) {
+		if (!$builder) {
+			$builder = new Builder($query);
+			$builder->setSchema($this->createSchema());
+		}
+		$selection = $query->getSelection();
+		foreach ($selection as $alias => $clause) {
+			$query->removeSelection($alias);
+			$alias = ($alias == $clause) ? false : $alias;
+			$query->addSelection($builder->parseColumns($query, $clause), $alias);
+		}
+		$condition = $query->getCondition();
+		$conditions = $condition->getConditions();
+		foreach ($conditions as &$c) {
+			if (is_array($c)) {
+				if (!empty($c["condition"])) {
+					$c["condition"] = $builder->parseColumns($query, $c["condition"]);
+				} else if (!empty($c["field"])) {
+					if (is_object($c["field"])) {
+						$this->parse($c["field"]);
+					} else $c["field"] = $builder->parseColumn($query, $c["field"]);
+				}
+			}
+		}
+		$condition->setConditions($conditions);
+		$groups = $query->getGroup();
+		$query->setGroup([]);
+		foreach ($groups as $group => $value) {
+			$query->addGroup($builder->parseColumns($query, $group));
+		}
+		$values = $query->getValues();
+		$query->setValues([]);
+		foreach ($values as $key => $value) {
+			$query->setValue($builder->parseColumn($query, $key), $value);
+		}
 	}
 
 	/**
@@ -35,10 +55,10 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function testJoin() {
-		$this->createQuery()->from("settings")->join("users");
+		$this->createQuery()->from("pages")->join("users");
 
 		//expected output
-		$expected = "SELECT `settings`.* FROM `test_settings` AS `settings` JOIN `test_users` AS `users`";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` JOIN `test_users` AS `users`";
 
 		//compare
 		$actual = $this->compile();
@@ -46,10 +66,10 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function testInnerJoin() {
-		$this->createQuery()->from("settings")->innerJoin("users");
+		$this->createQuery()->from("pages")->innerJoin("users");
 
 		//expected output
-		$expected = "SELECT `settings`.* FROM `test_settings` AS `settings` INNER JOIN `test_users` AS `users`";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` INNER JOIN `test_users` AS `users`";
 
 		//compare
 		$actual = $this->compile();
@@ -57,10 +77,10 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function testLeftJoin() {
-		$this->createQuery()->from("settings")->leftJoin("users");
+		$this->createQuery()->from("pages")->leftJoin("users");
 
 		//expected output
-		$expected = "SELECT `settings`.* FROM `test_settings` AS `settings` LEFT JOIN `test_users` AS `users`";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` LEFT JOIN `test_users` AS `users`";
 
 		//compare
 		$actual = $this->compile();
@@ -68,10 +88,10 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function testRightJoin() {
-		$this->createQuery()->from("settings")->rightJoin("users");
+		$this->createQuery()->from("pages")->rightJoin("users");
 
 		//expected output
-		$expected = "SELECT `settings`.* FROM `test_settings` AS `settings` RIGHT JOIN `test_users` AS `users`";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` RIGHT JOIN `test_users` AS `users`";
 
 		//compare
 		$actual = $this->compile();
@@ -82,10 +102,10 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 	 * Test ON clauses in query models
 	 */
 	function testJoinCondition() {
-		$this->createQuery()->from("settings")->innerJoin("users")->on("settings.id=users.id");
+		$this->createQuery()->from("pages")->innerJoin("users")->on("pages.id=users.id");
 
 		//expected output
-		$expected = "SELECT `settings`.* FROM `test_settings` AS `settings` INNER JOIN `test_users` AS `users` ON settings.id=users.id";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` INNER JOIN `test_users` AS `users` ON pages.id=users.id";
 
 		//compare
 		$actual = $this->compile();
@@ -97,10 +117,10 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 	 * Test aliases in query models
 	 */
 	function testJoinAliases() {
-		$this->createQuery()->from("settings as s")->innerJoin("users as u");
+		$this->createQuery()->from("pages as p")->innerJoin("users as u");
 
 		//expected output
-		$expected = "SELECT `s`.* FROM `test_settings` AS `s` INNER JOIN `test_users` AS `u`";
+		$expected = "SELECT `p`.* FROM `test_pages` AS `p` INNER JOIN `test_users` AS `u`";
 
 		//compare
 		$actual = $this->compile();
@@ -111,10 +131,10 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 	 * Test ON clauses and aliases together in query models
 	 */
 	function testJoinOnAndAliases() {
-		$this->createQuery()->from("settings as s")->innerJoin("users as u")->on("s.id=u.id");
+		$this->createQuery()->from("pages as p")->innerJoin("users as u")->on("s.id=u.id");
 
 		//expected output
-		$expected = "SELECT `s`.* FROM `test_settings` AS `s` INNER JOIN `test_users` AS `u` ON s.id=u.id";
+		$expected = "SELECT `p`.* FROM `test_pages` AS `p` INNER JOIN `test_users` AS `u` ON s.id=u.id";
 
 		//compare
 		$actual = $this->compile();
@@ -128,7 +148,7 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 		$this->createQuery()->from("pages")->joinOne("pages.owner", "users");
 
 		//expected output
-		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` JOIN `test_users` AS `users` ON users.id=pages.owner";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` LEFT JOIN `test_users` AS `users` ON users.id=pages.owner";
 
 		//compare
 		$actual = $this->compile();
@@ -151,15 +171,15 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * Test expansions in select clauses made by using the dot syntax on reference fields.
-	 * For example, settings.owner references users.id, and therefore you can select fields of the references row using the syntax:
-	 * SELECT settings.owner.first_name
+	 * For example, pages.owner references users.id, and therefore you can select fields of the references row using the syntax:
+	 * SELECT pages.owner.first_name
 	 */
 	function testSelectExpansion() {
-		$this->createQuery()->from("settings")->select("CONCAT(owner.first_name, ' ', owner.last_name) as name");
+		$this->createQuery()->from("pages")->select("CONCAT(owner.first_name, ' ', owner.last_name) as name");
 
 		// the code above should produce the query below
-		$expected = "SELECT CONCAT(`settings_owner`.first_name, ' ', `settings_owner`.last_name) AS name ".
-			"FROM `test_settings` AS `settings` LEFT JOIN `test_users` AS `settings_owner` ON settings_owner.id=settings.owner";
+		$expected = "SELECT CONCAT(`pages_owner`.first_name, ' ', `pages_owner`.last_name) AS name ".
+			"FROM `test_pages` AS `pages` LEFT JOIN `test_users` AS `pages_owner` ON pages_owner.id=pages.owner";
 
 		//compare queries
 		$actual = $this->compile();
@@ -173,8 +193,7 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 		$this->createQuery()->from("users")->where("users.email LIKE '%email%'");
 
 		//expected output
-		$expected = "SELECT `users`.* FROM `test_users` AS `users` WHERE users.email LIKE '%email%'";
-		//$expected = "SELECT `users`.* FROM `test_users` AS `users` WHERE `users`.email LIKE '%email%'";
+		$expected = "SELECT `users`.* FROM `test_users` AS `users` WHERE `users`.email LIKE '%email%'";
 
 		//compare
 		$actual = $this->compile();
@@ -188,8 +207,7 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 		$this->createQuery()->from("users")->condition("users.email", "%email%", "LIKE");
 
 		//expected output
-		$expected = "SELECT `users`.* FROM `test_users` AS `users` WHERE users.email LIKE :default0";
-		//$expected = "SELECT `users`.* FROM `test_users` AS `users` WHERE `users`.email LIKE :default0";
+		$expected = "SELECT `users`.* FROM `test_users` AS `users` WHERE `users`.email LIKE :default0";
 
 		//compare
 		$actual = $this->compile();
@@ -200,155 +218,128 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Test expansions in condition fields
 	 */
-	function test_condition_expansion() {
-		return;
-		$query = $this->db->query("settings");
-		$query->condition("settings.owner.email", "root");
+	function testConditionExpansion() {
+		$this->createQuery()->from("pages")->condition("pages.owner.email", "root");
 
 		//expected output
-		$expected = "SELECT `settings`.* FROM `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("users")."` AS `settings_owner` ON settings_owner.id=settings.owner WHERE `settings_owner`.email = :default0";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` LEFT JOIN `test_users` AS `pages_owner` ON pages_owner.id=pages.owner WHERE `pages_owner`.email = :default0";
 
 		//compare
-		$actual = $query->build();
+		$actual = $this->compile();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("root", $query->parameters[":default0"]);
+		$this->assertSame("root", $this->builder->getQuery()->getParameter("default0"));
 	}
 
 	/**
 	 * Test expansions in condition fields
 	 */
-	function test_condition_expansion_select() {
-		return;
-		$query = $this->db->query("settings")->select("settings.owner.email")->condition("settings.owner.email", "root");
-
+	function testConditionExpansionSelect() {
+		$this->createQuery()->from("pages")->select("pages.owner.email")->condition("pages.owner.email", "root");
 
 		//expected output
-		$expected = "SELECT `settings_owner`.email FROM `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("users")."` AS `settings_owner` ON settings_owner.id=settings.owner WHERE `settings_owner`.email = :default0";
+		$expected = "SELECT `pages_owner`.email FROM `test_pages` AS `pages` LEFT JOIN `test_users` AS `pages_owner` ON pages_owner.id=pages.owner WHERE `pages_owner`.email = :default0";
 
 		//compare
-		$actual = $query->build();
+		$actual = $this->compile();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("root", $query->parameters[":default0"]);
+		$this->assertSame("root", $this->builder->getQuery()->getParameter("default0"));
 	}
 
 	/**
 	 * Test expansions in condition fields
 	 */
-	function test_condition_expansion_many() {
-		return;
-		$query = $this->db->query("terms");
-		$query->condition("images.mime_type", "image/png");
+	function testConditionExpansionMany() {
+		$this->createQuery()->from("pages")->subquery("images.mime_type", function($sub, $query) {
+			$query->condition($sub, "image/png");
+		});
 
 		//expected output
-		$expected = "SELECT `terms`.* FROM `".$this->db->prefix("terms")."` AS `terms` WHERE :default0 IN (SELECT terms_images.mime_type FROM ".$this->db->prefix("terms_images")." terms_images_lookup INNER JOIN ".$this->db->prefix("files")." terms_images ON terms_images.id=terms_images_lookup.images_id WHERE terms_images_lookup.terms_id=terms.id)";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` WHERE :default0 IN (".
+			"SELECT `files`.mime_type FROM `test_pages_images` AS `pages_images` ".
+			"LEFT JOIN `test_files` AS `files` ON files.id=pages_images.images_id ".
+			"WHERE `pages_images`.pages_id=`pages`.id)";
 
 		//compare
-		$actual = $query->build();
+		$actual = $this->compile();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("image/png", $query->parameters[":default0"]);
-	}
-
-	/**
-	 * Test expansions in condition fields
-	 * when not using =, !=, IN, or NOT IN the sub-query comparison does not work, and therefore the query should join to obtain the field for comparison
-	 */
-	function test_condition_expansion_many_join() {
-		return;
-		$query = $this->db->query("terms");
-		$query->condition("images.mime_type", "image/%", "LIKE")->group("terms.id");
-
-		//expected output
-		$expected = "SELECT `terms`.* FROM `".$this->db->prefix("terms")."` AS `terms` LEFT JOIN `".$this->db->prefix("terms_images")."` AS `terms_images_lookup` ON terms_images_lookup.terms_id=terms.id LEFT JOIN `".$this->db->prefix("files")."` AS `terms_images` ON terms_images.id=terms_images_lookup.images_id WHERE `terms_images`.mime_type LIKE :default0 GROUP BY `terms`.id";
-
-		//compare
-		$actual = $query->build();
-		$this->assertSame($expected, $actual);
-		$this->assertSame("image/%", $query->parameters[":default0"]);
+		$this->assertSame("image/png", $this->builder->getQuery()->getParameter("default0"));
 	}
 
 	/**
 	 * Test expansions in condition fields
 	 */
-	function test_condition_expansion_category() {
-		return;
-		$query = $this->db->query("settings");
-		$query->condition("settings.category.slug", "general");
+	function testConditionExpansionManyJoin() {
+		$this->createQuery()->from("pages")->condition("images.mime_type", "image/%", "LIKE")->group("pages.id");
 
 		//expected output
-		$expected = "SELECT `settings`.* FROM `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("terms")."` AS `settings_category` ON settings_category.id=settings.category WHERE `settings_category`.slug = :default0";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` LEFT JOIN `test_pages_images` AS `pages_images_lookup` ON pages_images_lookup.pages_id=pages.id LEFT JOIN `test_files` AS `pages_images` ON pages_images.id=pages_images_lookup.images_id WHERE `pages_images`.mime_type LIKE :default0 GROUP BY `pages`.id";
 
 		//compare
-		$actual = $query->build();
+		$actual = $this->compile();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("general", $query->parameters[":default0"]);
+		$this->assertSame("image/%", $this->builder->getQuery()->getParameter("default0"));
 	}
 
 	/**
 	 * Test expansions in condition fields
 	 */
-	function test_condition_expansion_category_explicit() {
-		return;
-		$query = $this->db->query("settings");
-		$query->condition("settings.category.term", "General");
+	function testConditionExpansionCategory() {
+		$this->createQuery()->from("pages")->condition("pages.category.slug", "general");
 
 		//expected output
-		$expected = "SELECT `settings`.* FROM `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("terms")."` AS `settings_category` ON settings_category.id=settings.category WHERE `settings_category`.term = :default0";
+		$expected = "SELECT `pages`.* FROM `test_pages` AS `pages` LEFT JOIN `test_terms` AS `pages_category` ON pages_category.id=pages.category WHERE `pages_category`.slug = :default0";
 
 		//compare
-		$actual = $query->build();
+		$actual = $this->compile();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("General", $query->parameters[":default0"]);
-	}
-
-	/**
-	 * Test expansions in condition fields
-	 */
-	function test_condition_expansion_terms() {
-		return;
-		$query = $this->db->query("users");
-		$query->condition("users.groups", "user", "!=");
-
-		//expected output
-		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE :default0 NOT IN (SELECT users_groups.slug FROM ".$this->db->prefix("users_groups")." users_groups_lookup INNER JOIN ".$this->db->prefix("terms")." users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id)";
-
-		//compare
-		$actual = $query->build();
-		$this->assertSame($expected, $actual);
-		$this->assertSame("user", $query->parameters[":default0"]);
+		$this->assertSame("general", $this->builder->getQuery()->getParameter("default0"));
 	}
 
 	/**
 	 * Test expansions in condition fields and specify the comparator field explicitly
 	 */
-	function test_condition_expansion_terms_explicit_comparator() {
-		return;
-		$query = $this->db->query("users");
-		$query->condition("users.groups.term", "User", '!=');
+	function testConditionExpansionTermsJoin() {
+		$this->createQuery()->from("users")->condition("users.groups.slug", "user", "!=")->group("users.id");
 
 		//expected output
-		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE :default0 NOT IN (SELECT users_groups.term FROM ".$this->db->prefix("users_groups")." users_groups_lookup INNER JOIN ".$this->db->prefix("terms")." users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id)";
+		$expected = "SELECT `users`.* FROM `test_users` AS `users` LEFT JOIN `test_users_groups` AS `users_groups_lookup` ON users_groups_lookup.users_id=users.id LEFT JOIN `test_terms` AS `users_groups` ON users_groups.id=users_groups_lookup.groups_id WHERE `users_groups`.slug != :default0 GROUP BY `users`.id";
 
 		//compare
-		$actual = $query->build();
+		$actual = $this->compile();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("User", $query->parameters[":default0"]);
+		$this->assertSame("user", $this->builder->getQuery()->getParameter("default0"));
+	}
+
+	/**
+	 * Test expansions in condition fields
+	 */
+	function testConditionExpansionTermsSubquery() {
+		$this->createQuery()->from("users")->subquery("users.groups.slug", function($sub, $query) {
+			$query->condition($sub, "user", "!=");
+		});
+
+		//expected output
+		$expected = "SELECT `users`.* FROM `test_users` AS `users` WHERE :default0 NOT IN (SELECT `terms`.slug FROM `test_users_groups` AS `users_groups` LEFT JOIN `test_terms` AS `terms` ON terms.id=users_groups.groups_id WHERE `users_groups`.users_id=`users`.id)";
+
+		//compare
+		$actual = $this->compile();
+		$this->assertSame($expected, $actual);
+		$this->assertSame("user", $this->builder->getQuery()->getParameter("default0"));
 	}
 
 	/**
 	 * Test expansions in where clauses
 	 */
-	function test_where_expansion_terms() {
-		return;
-		$query = $this->db->query("users");
-		$query->where(":group NOT IN users.groups")->param("group", "user");
+	function testWhereExpansionTermsJoin() {
+		$this->createQuery()->from("users")->where("users.groups.slug != :group")->group("users.id")->bind("group", "user");
 
 		//expected output
-		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE :group NOT IN (SELECT users_groups.slug FROM ".$this->db->prefix("users_groups")." users_groups_lookup INNER JOIN ".$this->db->prefix("terms")." users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id)";
+		$expected = "SELECT `users`.* FROM `test_users` AS `users` LEFT JOIN `test_users_groups` AS `users_groups_lookup` ON users_groups_lookup.users_id=users.id LEFT JOIN `test_terms` AS `users_groups` ON users_groups.id=users_groups_lookup.groups_id WHERE `users_groups`.slug != :group GROUP BY `users`.id";
 
 		//compare
-		$actual = $query->build();
+		$actual = $this->compile();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("user", $query->parameters[":group"]);
+		$this->assertSame("user", $this->builder->getQuery()->getParameter("group"));
 	}
 
 	/**
@@ -368,32 +359,28 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Test expansions in GROUP BY clauses
 	 */
-	function test_grouping_expansion() {
-		return;
-		$query = $this->db->query("settings");
-		$query->select("COUNT(*) as count")->group("owner.first_name");
+	function testGroupingExpansion() {
+		$this->createQuery()->from("pages")->select("COUNT(*) as count")->group("owner.first_name");
 
 		//expected output
-		$expected = "SELECT COUNT(*) as count FROM `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("users")."` AS `settings_owner` ON settings_owner.id=settings.owner GROUP BY `settings_owner`.first_name";
+		$expected = "SELECT COUNT(*) AS count FROM `test_pages` AS `pages` LEFT JOIN `test_users` AS `pages_owner` ON pages_owner.id=pages.owner GROUP BY `pages_owner`.first_name";
 
 		//compare
-		$actual = $query->build();
+		$actual = $this->compile();
 		$this->assertSame($expected, $actual);
 	}
 
 	/**
 	 * Test expansions in GROUP BY clauses
 	 */
-	function test_grouping_expansion_terms() {
-		return;
-		$query = $this->db->query("users");
-		$query->select("COUNT(*) as count")->group("users.groups");
+	function testGroupingExpansionTerms() {
+		$this->createQuery()->from("users")->select("COUNT(*) as count")->group("users.groups.slug");
 
 		//expected output
-		$expected = "SELECT COUNT(*) as count FROM `".$this->db->prefix("users")."` AS `users` LEFT JOIN `".$this->db->prefix("users_groups")."` AS `users_groups_lookup` ON users_groups_lookup.users_id=users.id LEFT JOIN `".$this->db->prefix("terms")."` AS `users_groups` ON users_groups.id=users_groups_lookup.groups_id GROUP BY `users_groups`.slug";
+		$expected = "SELECT COUNT(*) AS count FROM `test_users` AS `users` LEFT JOIN `test_users_groups` AS `users_groups_lookup` ON users_groups_lookup.users_id=users.id LEFT JOIN `test_terms` AS `users_groups` ON users_groups.id=users_groups_lookup.groups_id GROUP BY `users_groups`.slug";
 
 		//compare
-		$actual = $query->build();
+		$actual = $this->compile();
 		$this->assertSame($expected, $actual);
 	}
 
@@ -407,8 +394,7 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 			->havingCondition("count", "0", ">");
 
 		//expected output
-		$expected = "SELECT terms.taxonomy, COUNT(*) AS count FROM `test_terms` AS `terms` GROUP BY terms.taxonomy HAVING count > :default0";
-		//$expected = "SELECT `terms`.taxonomy,COUNT(*) as count FROM `test_terms` AS `terms` GROUP BY `terms`.taxonomy HAVING count > :default0";
+		$expected = "SELECT `terms`.taxonomy, COUNT(*) AS count FROM `test_terms` AS `terms` GROUP BY `terms`.taxonomy HAVING count > :default0";
 
 		//compare
 		$actual = $this->compile();
@@ -515,7 +501,7 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 		$conditions = $query->createOrCondition(); //create OR condition
 		$conditions->condition("taxonomy", "groups"); //add A
 		$conditions->condition($recent); //add (B AND C)
-		
+
 		$query->condition($conditions);
 
 		//expected output
@@ -529,52 +515,25 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame("statuses", $this->builder->getQuery()->getParameter("default2"));
 	}
 
-	function test_search_and() {
-		return;
-		$query = $this->db->query("users");
-		$query->search("ali gangji", "first_name,last_name");
+	function testMultiValueTermExpansion() {
+		$this->createQuery()->from("users")->condition("users.groups.slug", ["user", "admin"]);
 
 		//expected output
-		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE ((first_name LIKE '%ali%' OR last_name LIKE '%ali%') AND (first_name LIKE '%gangji%' OR last_name LIKE '%gangji%'))";
+		$expected = "SELECT `users`.* FROM `test_users` AS `users` LEFT JOIN `test_users_groups` AS `users_groups_lookup` ON users_groups_lookup.users_id=users.id LEFT JOIN `test_terms` AS `users_groups` ON users_groups.id=users_groups_lookup.groups_id WHERE `users_groups`.slug IN (:default0, :default1)";
 
 		//compare
-		$actual = $query->build();
+		$actual = $this->compile();
 		$this->assertSame($expected, $actual);
+		$this->assertSame("user", $this->builder->getQuery()->getParameter("default0"));
+		$this->assertSame("admin", $this->builder->getQuery()->getParameter("default1"));
 	}
 
-	function test_search_or() {
-		return;
-		$query = $this->db->query("users");
-		$query->search("ali or gangji", "first_name,last_name");
-
-		//expected output
-		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE ((first_name LIKE '%ali%' OR last_name LIKE '%ali%') or (first_name LIKE '%gangji%' OR last_name LIKE '%gangji%'))";
-
-		//compare
-		$actual = $query->build();
-		$this->assertSame($expected, $actual);
-	}
-
-	function test_search_fields() {
-		return;
-		$query = $this->db->query("users");
-		$query->search("ali", "first_name");
-		$query->search("gangji", "last_name");
-
-		//expected output
-		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE ((first_name LIKE '%ali%')) && ((last_name LIKE '%gangji%'))";
-
-		//compare
-		$actual = $query->build();
-		$this->assertSame($expected, $actual);
-	}
-
-	function test_multivalue_term_expansion() {
+	function testMultiValueTermExpansionSubquery() {
 		return;
 		$query = $this->db->query("users");
 		$query->condition("users.groups", array("user", "admin"));
 		//expected output
-		$expected = "SELECT `users`.* FROM `".$this->db->prefix("users")."` AS `users` WHERE (:default0 IN (SELECT users_groups.slug FROM ".$this->db->prefix("users_groups")." users_groups_lookup INNER JOIN ".$this->db->prefix("terms")." users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id) || :default1 IN (SELECT users_groups.slug FROM ".$this->db->prefix("users_groups")." users_groups_lookup INNER JOIN ".$this->db->prefix("terms")." users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id))";
+		$expected = "SELECT `users`.* FROM `users` AS `users` WHERE (:default0 IN (SELECT users_groups.slug FROM `users_groups` users_groups_lookup INNER JOIN `terms` users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id) || :default1 IN (SELECT users_groups.slug FROM `users_groups` users_groups_lookup INNER JOIN `terms` users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id))";
 
 		//compare
 		$actual = $query->build();
@@ -591,13 +550,13 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 
 		//expected output
 		$expected = "SELECT `users`.* ".
-								"FROM `".$this->db->prefix("users")."` AS `users` ".
-								"INNER JOIN `".$this->db->prefix("permits")."` AS `permits` ON 'users' LIKE permits.related_table && 'read' LIKE permits.action ".
+								"FROM `users` AS `users` ".
+								"INNER JOIN `permits` AS `permits` ON 'users' LIKE permits.related_table && 'read' LIKE permits.action ".
 								"WHERE ".
 									"('global' LIKE `permits`.priv_type || (`permits`.priv_type='object' && `permits`.related_id=`users`.id)) && ".
 									"(`permits`.object_deleted is null || `permits`.object_deleted=`users`.deleted) && ".
-									"(`permits`.user_groups is null || `permits`.user_groups IN (SELECT groups_id FROM ".$this->db->prefix("users_groups")." u WHERE `u`.users_id=2)) && ".
-									"(`permits`.role='everyone' || `permits`.role='user' && `permits`.who='2' || `permits`.role='self' && `users`.id='2' || `permits`.role='owner' && `users`.owner='2' || `permits`.role='groups' && (EXISTS (SELECT groups_id FROM ".$this->db->prefix("users_groups")." o WHERE `o`.users_id=`users`.id && `o`.groups_id IN (SELECT groups_id FROM ".$this->db->prefix("users_groups")." u WHERE `u`.users_id=2)) || NOT EXISTS (SELECT groups_id FROM ".$this->db->prefix("users_groups")." o WHERE `o`.users_id=`users`.id)))";
+									"(`permits`.user_groups is null || `permits`.user_groups IN (SELECT groups_id FROM `users_groups` u WHERE `u`.users_id=2)) && ".
+									"(`permits`.role='everyone' || `permits`.role='user' && `permits`.who='2' || `permits`.role='self' && `users`.id='2' || `permits`.role='owner' && `users`.owner='2' || `permits`.role='groups' && (EXISTS (SELECT groups_id FROM `users_groups` o WHERE `o`.users_id=`users`.id && `o`.groups_id IN (SELECT groups_id FROM `users_groups` u WHERE `u`.users_id=2)) || NOT EXISTS (SELECT groups_id FROM `users_groups` o WHERE `o`.users_id=`users`.id)))";
 
 		//compare
 		$actual = $query->build();
@@ -641,41 +600,31 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame("phpunit", $this->builder->getQuery()->getParameter("default0"));
 	}
 
-	function test_update_condition_expansion() {
-		return;
-		//the update method is normally an execution method
-		//passing false prevents the query from actually running
-		$query = $this->db->query("settings");
-		$query->set("settings.value", "PHPUnit");
-		$query->condition("owner.first_name", "phpunit");
-		$query->update(false);
+	function testUpdateConditionExpansion() {
+		$this->createQuery()->from("pages")->set("pages.content", "PHPUnit")->condition("owner.first_name", "phpunit")->update();
 
 		//expected output
-		$expected = "UPDATE `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("users")."` AS `settings_owner` ON settings_owner.id=settings.owner SET `settings`.`value` = :set0, `modified` = :set1 WHERE `settings_owner`.first_name = :default0";
+		$expected = "UPDATE `test_pages` AS `pages` LEFT JOIN `test_users` AS `pages_owner` ON pages_owner.id=pages.owner SET `pages`.`content` = :set0 WHERE `pages_owner`.first_name = :default0";
+		//$expected = "UPDATE `test_pages` AS `pages` LEFT JOIN `test_users` AS `pages_owner` ON pages_owner.id=pages.owner SET `pages`.`content` = :set0, `modified` = :set1 WHERE `pages_owner`.first_name = :default0";
 
 		//compare
-		$actual = $query->build();
+		$actual = $this->compile();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("PHPUnit", $query->parameters[":set0"]);
-		$this->assertSame("phpunit", $query->parameters[":default0"]);
+		$this->assertSame("PHPUnit", $this->builder->getQuery()->getParameter("set0"));
+		$this->assertSame("phpunit", $this->builder->getQuery()->getParameter("default0"));
 	}
 
 	function test_update_set_expansion() {
-		return;
-		//the update method is normally an execution method
-		//passing false prevents the query from actually running
-		$query = $this->db->query("settings");
-		$query->set("owner.first_name", "PHPUnit");
-		$query->condition("settings.value", "phpunit");
-		$query->update(false);
+		$this->createQuery()->from("pages")->set("owner.first_name", "PHPUnit")->condition("pages.content", "phpunit")->update();
 
 		//expected output
-		$expected = "UPDATE `".$this->db->prefix("settings")."` AS `settings` LEFT JOIN `".$this->db->prefix("users")."` AS `settings_owner` ON settings_owner.id=settings.owner SET `settings_owner`.`first_name` = :set0, `modified` = :set1 WHERE `settings`.value = :default0";
+		$expected = "UPDATE `test_pages` AS `pages` LEFT JOIN `test_users` AS `pages_owner` ON pages_owner.id=pages.owner SET `pages_owner`.`first_name` = :set0 WHERE `pages`.content = :default0";
+		//$expected = "UPDATE `test_pages` AS `pages` LEFT JOIN `test_users` AS `pages_owner` ON pages_owner.id=pages.owner SET `pages_owner`.`first_name` = :set0, `modified` = :set1 WHERE `pages`.content = :default0";
 
 		//compare
-		$actual = $query->build();
+		$actual = $this->compile();
 		$this->assertSame($expected, $actual);
-		$this->assertSame("PHPUnit", $query->parameters[":set0"]);
-		$this->assertSame("phpunit", $query->parameters[":default0"]);
+		$this->assertSame("PHPUnit", $this->builder->getQuery()->getParameter("set0"));
+		$this->assertSame("phpunit", $this->builder->getQuery()->getParameter("default0"));
 	}
 }

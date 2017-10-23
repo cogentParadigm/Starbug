@@ -27,10 +27,10 @@ trait Joins {
 	}
 
 	public function addJoinOne($column, $target, $alias = false) {
-		return $this->addJoin($target, $alias)->to(RelationshipType::ONE)->via($column);
+		return $this->addLeftJoin($target, $alias)->to(RelationshipType::ONE)->via($column);
 	}
 
 	public function addJoinMany($base, $target, $alias = false) {
-		return $this->addJoin($target, $alias)->to(RelationshipType::MANY)->via($base);
+		return $this->addLeftJoin($target, $alias)->to(RelationshipType::MANY)->via($base);
 	}
 }

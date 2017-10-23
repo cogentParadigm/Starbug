@@ -111,7 +111,7 @@ class Schema implements SchemaInterface {
 			$info = array_merge($columns, $info);
 			$table = $table->getOption("base");
 		}
-		if (!empty($column) && isset($info[$column])) return $info[$column];
+		if (!empty($column)) return isset($info[$column]) ? $info[$column] : [];
 		return $info;
 	}
 	public function hasTable($table) {

@@ -30,6 +30,7 @@ interface QueryInterface {
 	public function getParameters();
 	public function addGroup($column);
 	public function getGroup();
+	public function setGroup(array $group);
 	public function addSort($column, $direction = 0);
 	public function getSort();
 	public function setLimit($limit);
@@ -39,6 +40,7 @@ interface QueryInterface {
 	public function setValue($field, $value);
 	public function getValue($field);
 	public function getValues();
+	public function setValues(array $values);
 	public function getMode();
 	public function setMode($mode);
 	public function isSelect();

@@ -93,6 +93,6 @@ interface BuilderInterface {
 	 */
 	public function skip($skip);
 	public function mode($mode);
-	public function setQuery(QueryInterface $query);
+	public function reset();
 	public function getQuery();
 }
