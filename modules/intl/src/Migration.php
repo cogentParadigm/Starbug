@@ -52,5 +52,9 @@ class Migration extends AbstractMigration {
 			["organization", "type" => "string", "length" => "128"],
 			["recipient", "type" => "string", "length" => "128"]
 		);
+
+		$this->schema->addTable("users",
+			["addresses", "type" => "address", "optional" => true]
+		);
 	}
 }

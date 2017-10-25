@@ -64,9 +64,10 @@ define([
 				request_url += token+i+'='+this.get_data[i];
 				token = '&';
 			}
-			iframe(
+			xhr(
 			request_url,
 			{
+				method: 'POST',
 				data: data,
 				handleAs:'html'
 			}).then(lang.hitch(this, 'load'));
@@ -79,7 +80,7 @@ define([
 			delete this.post_data['action[files]'];
 		},
 		load: function(data) {
-			this.loadForm(data.body.innerHTML);
+			this.loadForm(data);
 			if (domclass.contains(this.form, 'submitted')) {
 				if (this.callback != null) this.callback(data, this);
 				this.hide();
