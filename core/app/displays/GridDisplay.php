@@ -77,7 +77,7 @@ class GridDisplay extends ItemDisplay {
 		return $options;
 	}
 
-	function query() {
+	function query($options = null) {
 		//defer query responsibilities to dgrid
 	}
 

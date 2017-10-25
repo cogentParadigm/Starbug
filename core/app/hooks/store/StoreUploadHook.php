@@ -14,7 +14,7 @@ class StoreUploadHook extends QueryHook {
 		$files = $this->request->getFiles();
 		if (!empty($files[$column]["name"])) $query->set($column, $this->store($query, $column, "", $column, $argument));
 	}
-	function store(&$query, $key, $value, $column, $argument) {
+	function store($query, $key, $value, $column, $argument) {
 		if ($this->uploaded) return $value;
 		else $this->uploaded = true;
 		$files = $this->request->getFiles();

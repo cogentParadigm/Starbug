@@ -4,7 +4,7 @@ class StoreSelectionHook extends QueryHook {
 	public function __construct(DatabaseInterface $db) {
 		$this->db = $db;
 	}
-	function after_store(&$query, $key, $value, $column, $argument) {
+	function after_store($query, $key, $value, $column, $argument) {
 		if (empty($value)) return;
 		$id = $query->getId();
 		$conditions = array("`".$column."`" => 1);

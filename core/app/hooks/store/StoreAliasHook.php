@@ -5,7 +5,7 @@ class StoreAliasHook extends QueryHook {
 		$this->db = $db;
 		$this->models = $models;
 	}
-	function validate(&$query, $key, $value, $column, $alias) {
+	function validate($query, $key, $value, $column, $alias) {
 		if (!empty($value) && !is_numeric($value) && $value != "NULL") {
 			$referenced_model = explode(" ", $this->models->get($query->model)->hooks[$column]["references"]);
 			// $alias might be '%first_name% %last_name%'

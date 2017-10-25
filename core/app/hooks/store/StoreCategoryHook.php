@@ -16,7 +16,7 @@ class StoreCategoryHook extends QueryHook {
 		}
 		return $value;
 	}
-	function store(&$query, $key, $value, $column, $argument) {
+	function store($query, $key, $value, $column, $argument) {
 		if (!empty($value) && !is_numeric($value) && "NULL" !== $value) $this->models->get($query->model)->error("Term not valid", $column);
 		return $value;
 	}

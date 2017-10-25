@@ -12,17 +12,17 @@ class StorePathHook extends QueryHook {
 		$this->models = $models;
 		$this->filter = $filter;
 	}
-	function empty_before_insert(&$query, $column, $argument) {
+	function empty_before_insert($query, $column, $argument) {
 		$query->set($column, $this->before_insert($query, $column, "", $column, $argument));
 	}
-	function before_insert(&$query, $key, $value, $column, $argument) {
+	function before_insert($query, $key, $value, $column, $argument) {
 		if (empty($value)) {
 			$value = $this->generate($query, $column);
 		}
 		if (!is_numeric($value)) $query->exclude($key);
 		return $value;
 	}
-	function before_update(&$query, $key, $value, $column, $argument) {
+	function before_update($query, $key, $value, $column, $argument) {
 		$path = $this->macro->replace($argument, [$query->model => ["id" => $query->getId()]]);
 		if (empty($value)) {
 			$value = $this->generate($query, $column, $path);
@@ -32,7 +32,7 @@ class StorePathHook extends QueryHook {
 		}
 		return $value;
 	}
-	function after_insert(&$query, $key, $value, $column, $argument) {
+	function after_insert($query, $key, $value, $column, $argument) {
 		$id = $query->getId();
 		$path = $this->macro->replace($argument, [$query->model => ["id" => $id]]);
 		if (!is_numeric($value)) {

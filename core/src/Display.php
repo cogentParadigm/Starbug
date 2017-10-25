@@ -22,12 +22,12 @@ class Display {
 	/**
 	 * build the display from a set of options
 	 */
-	function build($options = array()) {
+	function build($options = []) {
 		$this->options = $options;
 		$this->build_display($options);
 	}
 
-	function build_display() {
+	function build_display($options) {
 		//override this function
 	}
 

@@ -6,7 +6,7 @@ class StoreTermsHook extends QueryHook {
 		$this->models = $models;
 		$this->taxonomy = $taxonomy;
 	}
-	function after_store(&$query, $key, $value, $column, $argument) {
+	function after_store($query, $key, $value, $column, $argument) {
 		$name = $query->model;
 		$id = $query->getId();
 		$category_column_info = $this->models->get($name)->hooks[$column];

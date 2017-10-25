@@ -6,7 +6,7 @@ class StoreOperationHook extends QueryHook {
 		$this->models = $models;
 		$this->db = $db;
 	}
-	function validate(&$query, $key, $value, $column, $argument) {
+	function validate($query, $key, $value, $column, $argument) {
 		if (is_array($value)) {
 			$hooks = $this->models->get($query->model)->hooks[$column];
 			if ($this->models->has($hooks["type"])) {

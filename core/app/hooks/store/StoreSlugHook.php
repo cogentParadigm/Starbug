@@ -8,10 +8,10 @@ class StoreSlugHook extends QueryHook {
 		$this->models = $models;
 		$this->filter = $filter;
 	}
-	function empty_before_insert(&$query, $column, $argument) {
+	function empty_before_insert($query, $column, $argument) {
 		$query->set($column, $this->validate($query, $column, "", $column, $argument));
 	}
-	function validate(&$query, $key, $value, $column, $argument) {
+	function validate($query, $key, $value, $column, $argument) {
 		if (empty($value) && isset($query->fields[$argument])) {
 			$value = $query->fields[$argument];
 

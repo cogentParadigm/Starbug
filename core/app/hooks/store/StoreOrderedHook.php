@@ -32,20 +32,20 @@ class StoreOrderedHook extends QueryHook {
 			}
 		}
 	}
-	function empty_before_insert(&$query, $column, $argument) {
+	function empty_before_insert($query, $column, $argument) {
 		$query->set($column, $this->insert($query, $column, "", $column, $argument));
 	}
-	function insert(&$query, $key, $value, $column, $argument) {
+	function insert($query, $key, $value, $column, $argument) {
 		$this->set_conditions($query, $column, $argument, "insert");
 		if (!empty($value) && is_numeric($value)) $this->value = $value;
 		$h = $this->db->query($query->model)->select("MAX(".$query->model.".$column) as highest")->conditions($this->conditions)->condition($query->model.".deleted", "0")->one();
 		return $h['highest']+1;
 	}
-	function update(&$query, $key, $value, $column, $argument) {
+	function update($query, $key, $value, $column, $argument) {
 		$this->set_conditions($query, $column, $argument, $value);
 		return $value;
 	}
-	function after_store(&$query, $key, $value, $column, $argument) {
+	function after_store($query, $key, $value, $column, $argument) {
 		if (false !== $this->value) $value = $this->value;
 		if (empty($value)) return;
 		$select = array("id", $column);

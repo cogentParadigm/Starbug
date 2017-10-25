@@ -28,7 +28,7 @@ class FormDisplay extends ItemDisplay {
 		$this->collections = $collections;
 	}
 
-	function build($options) {
+	function build($options = []) {
 		$this->options = $options;
 		if (empty($this->model) && !empty($this->options['model'])) $this->model = $this->options['model'];
 		if (!empty($options["input_name"])) $this->input_name = $options["input_name"];
