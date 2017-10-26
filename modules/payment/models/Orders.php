@@ -36,7 +36,8 @@ class Orders extends OrdersModel {
     $this->request->setPost('orders', 'id', $order['id']);
 
     //populate the billing address
-    $address = $this->query("address")->condition("address.id", $order['billing_address'])->select("address.*,address.country.name as country")->one();
+    $billing_address = $order["billing_same"] ? $order["shipping_address"] : $order["billing_address"];
+    $address = $this->query("address")->condition("address.id", $billing_address)->select("address.*,address.country.name as country")->one();
     $payment['country'] = $address['country'];
     $payment['address'] = $address['address1'];
     $payment['address2'] = $address['address2'];
