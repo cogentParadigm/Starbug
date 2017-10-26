@@ -186,6 +186,7 @@ module.exports = function(grunt) {
 		postcss: {
 			options: {
 				processors: [
+					require("lost")(),
 					require("postcss-cssnext")(),
 					require("cssnano")({autoprefixer: false, discardComments:{removeAll:true}})
 				]
