@@ -34,7 +34,7 @@ define([
     dialogClass: Dialog,
     buildRendering: function() {
       this.inherited(arguments);
-      put(this.listNode, '.dgrid-addresses');
+      put(this.listNode, '.dgrid-addresses.clearfix');
     }
   });
 });
