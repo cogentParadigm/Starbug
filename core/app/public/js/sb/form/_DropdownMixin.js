@@ -16,7 +16,7 @@ define([
       this.inherited(arguments);
       //this.domNode should be a text input with name and value set appropriately
       this.domNode.type = "hidden";
-      this.createControlNode();
+      this.createControlGroup();
       this.createDropdownNode();
     },
     postCreate:function() {
@@ -28,13 +28,22 @@ define([
       this.inherited(arguments);
       this.addStyles();
     },
+    createControlGroup: function() {
+      this.createControlGroupNode();
+      this.createControlNode();
+      this.createToggleNode();
+    },
+    createControlGroupNode: function() {
+      this.controlGroupNode = put(this.domNode.parentNode, ".dropdown-widget div.input-group");
+    },
     createControlNode: function() {
-      var group = put(this.domNode.parentNode, ".dropdown-widget div.input-group");
-      this.controlNode = put(group, 'input[type=text][autocomplete=off][readonly].form-control');
+      this.controlNode = put(this.controlGroupNode, 'input[type=text][autocomplete=off][readonly].form-control');
       if (this.domNode.getAttribute("placeholder")) {
         put(this.controlNode, '[placeholder='+this.domNode.getAttribute('placeholder')+']');
       }
-      this.toggleNode = put(group, 'span.input-group-btn button[type=button].btn.btn-default span.caret+span.sr-only $<', 'Toggle Dropdown');
+    },
+    createToggleNode: function() {
+      this.toggleNode = put(this.controlGroupNode, 'span.input-group-btn button[type=button].btn.btn-default span.caret+span.sr-only $<', 'Toggle Dropdown');
     },
     createDropdownNode: function() {
       this.dropdownNode = put(this.domNode.parentNode, 'div.select-list.hidden');

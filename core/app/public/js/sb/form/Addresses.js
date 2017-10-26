@@ -1,14 +1,14 @@
 define([
   "dojo/_base/declare",
   "dojo/_base/lang",
-  "./CRUDSelect",
+  "./CRUDList",
   "../grid/SingleSelectionList",
   "starbug/form/AddressDialog",
   "dojo/on",
   "dojo/query",
   "put-selector/put"
-], function (declare, lang, CRUDSelect, List, Dialog, on, query, put) {
-  return declare([CRUDSelect], {
+], function (declare, lang, CRUDList, List, Dialog, on, query, put) {
+  return declare([CRUDList], {
     model: "address",
     newItemLabel: '<span class="fa fa-plus"></span> Add New Address',
     url: '/address/',

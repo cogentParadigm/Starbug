@@ -17,20 +17,19 @@ define([
       this.selectionNode = this.controlNode;
     },
     renderSelection: function() {
-      this.selectionNode.value = '';
-      var labels = [];
-      var items = this.selection.getData();
-      for (var i = 0; i < items.length; i++) {
-        labels.push(items[i].label);
-      }
-      this.selectionNode.value = labels.join(",");
+      this.selectionNode.value = this.get('displayedValue');
       this.list.refresh();
     },
     focus: function() {
       this.open();
     },
     _getDisplayedValueAttr: function() {
-      return this.selectionNode.value;
+      var labels = [];
+      var items = this.selection.getData();
+      for (var i = 0; i < items.length; i++) {
+        labels.push(items[i].label);
+      }
+      return labels.join(",");
     }
   });
 });

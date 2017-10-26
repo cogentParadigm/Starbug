@@ -17,7 +17,7 @@ define([
 		},
 		renderRow: function(object, options) {
 			var self = this;
-			var label = object.label.length ? object.label : {innerHTML: "&nbsp;"};
+			var label = object.label.length ? {innerHTML: object.label} : {innerHTML: "&nbsp;"};
 			var node = put('a.list-group-item', label);
 			this.delegate.get(object.id).then(function(selected) {
 				if (selected) put(node, 'span.pull-right span.fa.fa-check.text-success');

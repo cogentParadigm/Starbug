@@ -16,7 +16,7 @@ class CheckoutForm extends FormDisplay {
       "input_type" => "html",
       "value" => '<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Shipping Address</h3></div><div class="panel-body">'
     ]);
-    $this->add(["shipping_address", "pane" => "left", "input_type" => "address", "nolabel" => ""]);
+    $this->add(["shipping_address", "pane" => "left", "input_type" => "text", "nolabel" => "", "data-dojo-type" => "sb/form/AddressSelect"]);
     $this->add([
       "shipping_panel_bottom",
       "pane" => "left",
@@ -43,10 +43,11 @@ class CheckoutForm extends FormDisplay {
     $this->add([
       "billing_address",
       "pane" => "right",
-      "input_type" => "address",
+      "input_type" => "text",
       "nolabel" => "",
+      "data-dojo-type" => "sb/form/AddressSelect",
       "data-dojo-mixins" => "starbug/form/Dependent",
-      "data-dojo-props" => ["key" => "'billing_same'", "values" => "[0]"]
+      "data-dojo-props" => "key:'billing_same',values:[0]"
     ]);
     $this->add([
       "billing_panel_bottom",
