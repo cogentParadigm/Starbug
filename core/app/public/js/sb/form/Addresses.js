@@ -17,9 +17,9 @@ define([
         var self = this;
         var label = object.label.length ? object.label : "&nbsp;";
         var node = put('div', {innerHTML: label});
-        var editButton = put(node, 'a.edit-address[href="javascript:;"]', 'Edit');
-        put(node, 'span', ' | ');
-        var deleteButton = put(node, 'a.delete-address[href="javascript:;"]', 'Delete');
+        var buttons = put(node, 'div.btn-group');
+        var editButton = put(buttons, 'a.btn.btn-default[href="javascript:;"]', {innerHTML: '<span class="fa fa-edit"></span> Edit'});
+        var deleteButton = put(buttons, 'a.btn.btn-default[href="javascript:;"]', {innerHTML: '<span class="fa fa-times"></span> Delete'});
         on(editButton, "click", lang.hitch(this, function() {
           this.editor.edit(object.id);
         }));
