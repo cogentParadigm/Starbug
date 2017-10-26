@@ -31,6 +31,10 @@ define([
         return node;
       }
     }),
-    dialogClass: Dialog
+    dialogClass: Dialog,
+    buildRendering: function() {
+      this.inherited(arguments);
+      put(this.listNode, '.dgrid-addresses');
+    }
   });
 });

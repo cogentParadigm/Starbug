@@ -14,5 +14,6 @@ class SelectAddressCollection extends Collection {
         "label" => $this->address->format($row)
       ];
     }
+    return $rows;
   }
 }

@@ -11,7 +11,7 @@ class ApiAddressController extends ApiController {
     $this->api->render("Admin");
   }
   function select() {
-    $this->api->render("Select");
+    $this->api->render("SelectAddress");
   }
   function filterQuery($collection, $query, &$ops) {
     if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");

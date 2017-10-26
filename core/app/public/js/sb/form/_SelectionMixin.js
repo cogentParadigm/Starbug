@@ -37,7 +37,9 @@ define([
       this.domNode.value = ids.join(',');
       on.emit(this.domNode, "change", {bubbles: true, cancelable: true});
       this.renderSelection();
-      this.updateStyles();
+      if (typeof this.updateStyles == "function") {
+        this.updateStyles();
+      }
     },
     startup: function() {
       this.inherited(arguments);
