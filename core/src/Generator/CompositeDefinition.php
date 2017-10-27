@@ -62,7 +62,7 @@ class CompositeDefinition extends Definition {
     }
     return $parameters;
   }
-  public function build($options = []) {
+  public function build(array $options = []) {
     parent::build($options);
     foreach ($this->definitions as $definition) {
       $definition->build($options);

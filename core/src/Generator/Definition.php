@@ -62,13 +62,13 @@ class Definition {
   public function getParameters() {
     return $this->parameters;
   }
-  public function build($options = []) {
+  public function build(array $options = []) {
     $this->parameters = $options;
     if (!empty($options["module"])) {
       if ($options["module"] == "app") $this->setModule("app");
-      else if ($options["module"] == "core") $this->setModule("core/app");
+      elseif ($options["module"] == "core") $this->setModule("core/app");
       else $this->setModule("modules/".$options["module"]);
-    } else if (!empty($options["theme"])) {
+    } elseif (!empty($options["theme"])) {
       $this->setModule("app/themes/".$options["theme"]);
     }
   }
