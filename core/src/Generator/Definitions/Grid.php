@@ -6,7 +6,7 @@ class Grid extends Definition {
 	public function __construct(SchemerInterface $schemer) {
 		$this->schemer = $schemer;
 	}
-	public function build($options = []) {
+	public function build(array $options = []) {
 		parent::build($options);
 		$className = str_replace(" ", "", ucwords(str_replace("_", " ", $options["model"])));
 		$schema = $this->schemer->getSchema();
