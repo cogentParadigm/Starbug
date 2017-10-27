@@ -8,7 +8,7 @@ define([
   return declare([CRUDSelect], {
     model: 'address',
     searchable: true,
-    newItemLabel: '<span class="fa fa-plus"></span> Add New Address',
+    newItemLabel: 'Add New Address',
     url: '/address/',
     dialogClass: Dialog,
     postCreate: function() {

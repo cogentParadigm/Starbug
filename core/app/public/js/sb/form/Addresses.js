@@ -10,7 +10,7 @@ define([
 ], function (declare, lang, CRUDList, List, Dialog, on, query, put) {
   return declare([CRUDList], {
     model: "address",
-    newItemLabel: '<span class="fa fa-plus"></span> Add New Address',
+    newItemLabel: 'Add New Address',
     url: '/address/',
     listClass: declare([List], {
       renderRow: function(object, options){

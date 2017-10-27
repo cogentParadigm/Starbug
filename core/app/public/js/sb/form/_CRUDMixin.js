@@ -11,9 +11,10 @@ define([
     model: false,
     collection: false,
     editing: false,
+    newItemIcon: '<span class="fa fa-plus"></span>',
+    newItemLabel: 'New',
     postMixInProperties: function() {
       this.inherited(arguments);
-      this.newItemLabel = this.newItemLabel || '<span class="fa fa-plus"></span> New';
       this.dialogClass = this.dialogClass || Dialog;
       if (false == this.collection && false !== this.model) {
         this.collectionParams = this.collectionParams || {};
@@ -28,7 +29,7 @@ define([
     },
     createActionsNode: function() {
       this.actionsNode = put(this.domNode.parentNode, "div[style=margin-top:15px]");
-      this.addButton = put(this.actionsNode, "button.btn.btn-default[type=button]", {innerHTML:this.newItemLabel});
+      this.addButton = put(this.actionsNode, "button.btn.btn-default[type=button]", {innerHTML:this.newItemIcon + ' ' + this.newItemLabel});
     },
     postCreate:function() {
       this.inherited(arguments);
