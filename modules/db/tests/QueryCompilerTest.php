@@ -12,7 +12,7 @@ class QueryCompilerTest extends PHPUnit_Framework_TestCase {
 
 	function compile(Query $query = null) {
 		if (is_null($query)) $query = $this->query;
-		return $this->compiler->build($query);
+		return $this->compiler->build($query)->getSql();
 	}
 
 	function createQuery() {
