@@ -24,7 +24,7 @@ class Schema implements SchemaInterface {
 			$ops = array();
 		}
 		if (empty($this->tables[$table])) {
-			$this->tables[$table] = new Table($this, $table);
+			$this->tables[$table] = new Table($table);
 		}
 		foreach ($ops as $k => $v) {
 			$this->tables[$table]->setOption($k, $v);

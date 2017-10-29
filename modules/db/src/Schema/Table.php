@@ -1,15 +1,13 @@
 <?php
 namespace Starbug\Db\Schema;
 class Table {
-	protected $schema;
 	protected $name;
 	protected $columns = array();
 	protected $options = array();
 	protected $indexes = array();
 	protected $triggers = array();
 	protected $dropped = false;
-	public function __construct(SchemaInterface $schema, $name) {
-		$this->schema = $schema;
+	public function __construct($name) {
 		$this->name = $name;
 	}
 	public function getName() {
@@ -44,9 +42,6 @@ class Table {
 			if ((isset($options['key'])) && ("primary" == $options['key'])) $primary[] = $column;
 		}
 		if (empty($primary)) $columns['id'] = ["type" => "int", "auto_increment" => true, "key" => "primary"];
-		if ($this->hasOption("base") && $this->getOption("base") !== $this->name) {
-			$columns = array_merge($this->schema->getTable($this->getOption("base"))->getColumns(), $columns);
-		}
 		return $columns;
 	}
 	public function setOption($name, $value) {

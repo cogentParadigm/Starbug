@@ -23,8 +23,8 @@ class Action {
     }
 
     $base_type = $this->schema->getEntityRoot($type);
-    $columns = $this->schema->getTable($type)->getColumns();
-    $user_columns = $this->schema->getTable("users")->getColumns();
+    $columns = $this->schema->getColumn($type);
+    $user_columns = $this->schema->getColumn("users");
 
     if ($join) {
       //join permits - match table and action
