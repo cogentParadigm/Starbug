@@ -1,13 +1,15 @@
 <?php
 namespace Starbug\Db\Schema;
 class Table {
+	protected $schema;
 	protected $name;
 	protected $columns = array();
 	protected $options = array();
 	protected $indexes = array();
 	protected $triggers = array();
 	protected $dropped = false;
-	public function __construct($name) {
+	public function __construct(SchemaInterface $schema, $name) {
+		$this->schema = $schema;
 		$this->name = $name;
 	}
 	public function getName() {
@@ -20,7 +22,7 @@ class Table {
 		$args = func_get_args();
 		foreach ($args as $column) {
 			$name = array_shift($column);
-			$this->columns[$name] = $column + ["dropped" => false];
+			$this->columns[$name] = $column + ["dropped" => false, "entity" => $this->name];
 		}
 	}
 	public function get($column, $key) {
@@ -37,11 +39,14 @@ class Table {
 	}
 	public function getColumns() {
 		$columns = $this->columns;
-		$primary = array();
+		$primary = [];
 		foreach ($columns as $column => $options) {
 			if ((isset($options['key'])) && ("primary" == $options['key'])) $primary[] = $column;
 		}
 		if (empty($primary)) $columns['id'] = ["type" => "int", "auto_increment" => true, "key" => "primary"];
+		if ($this->hasOption("base") && $this->getOption("base") !== $this->name) {
+			$columns = array_merge($this->schema->getTable($this->getOption("base"))->getColumns(), $columns);
+		}
 		return $columns;
 	}
 	public function setOption($name, $value) {

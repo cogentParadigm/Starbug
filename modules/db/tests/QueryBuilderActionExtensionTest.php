@@ -1,12 +1,12 @@
 <?php
 namespace Starbug\Db\Tests;
-use Starbug\Core\Identity;
+use Starbug\Core\IdentityInterface;
 use Starbug\Db\Query\Extensions\Action;
 class QueryBuilderActionExtensionTest extends QueryBuilderTestBase {
 
   function setUp() {
     parent::setUp();
-    $this->user = new Identity();
+    $this->user = new MockIdentity();
     $this->action = new Action($this->user, $this->createSchema());
   }
 
@@ -18,7 +18,6 @@ class QueryBuilderActionExtensionTest extends QueryBuilderTestBase {
 
   function testAction() {
     $query = $this->createQuery()->from("users");
-    $this->user->setUser(array("id" => 2));
     $query->action("read");
 
     //expected output
@@ -26,14 +25,16 @@ class QueryBuilderActionExtensionTest extends QueryBuilderTestBase {
                 "FROM `test_users` AS `users` ".
                 "INNER JOIN `test_permits` AS `permits` ON 'users' LIKE permits.related_table && 'read' LIKE permits.action ".
                 "WHERE ".
-                  "('global' LIKE `permits`.priv_type || (`permits`.priv_type='object' && `permits`.related_id=`users`.id)) && ".
-                  "(`permits`.object_deleted is null || `permits`.object_deleted=`users`.deleted) && ".
-                  "(`permits`.user_groups is null || `permits`.user_groups IN (SELECT groups_id FROM `users_groups` u WHERE `u`.users_id=2)) && ".
-                  "(`permits`.role='everyone' || `permits`.role='user' && `permits`.who='2' || `permits`.role='self' && `users`.id='2' || `permits`.role='owner' && `users`.owner='2' || `permits`.role='groups' && (EXISTS (SELECT groups_id FROM `users_groups` o WHERE `o`.users_id=`users`.id && `o`.groups_id IN (SELECT groups_id FROM `users_groups` u WHERE `u`.users_id=2)) || NOT EXISTS (SELECT groups_id FROM `users_groups` o WHERE `o`.users_id=`users`.id)))";
+                  "('global' LIKE `permits`.priv_type || (`permits`.priv_type='object' && `permits`.related_id=`users`.id)) AND ".
+                  "(`permits`.object_deleted is null || `permits`.object_deleted=`users`.deleted) AND ".
+                  "(permits.user_groups IS NULL OR permits.user_groups IN (SELECT groups_id FROM `test_users_groups` AS `u` WHERE `u`.users_id = :default0)) AND ".
+                  "(permits.role='everyone' OR permits.role='user' && permits.who='2' OR permits.role='self' && users.id='2' OR permits.role='owner' && users.owner='2' OR (permits.role = :default1 AND (EXISTS (SELECT groups_id FROM `test_users_groups` AS `o` WHERE `o`.users_id=`users`.id AND `o`.groups_id IN (SELECT groups_id FROM `test_users_groups` AS `u` WHERE `u`.users_id = :default0)) OR NOT EXISTS (SELECT groups_id FROM `test_users_groups` AS `o` WHERE `o`.users_id=`users`.id))))";
 
     //compare
     $actual = $this->compile();
     $this->assertSame($expected, $actual);
+    $this->assertSame(2, $this->builder->getQuery()->getParameter("default0"));
+    $this->assertSame("groups", $this->builder->getQuery()->getParameter("default1"));
   }
 
 }

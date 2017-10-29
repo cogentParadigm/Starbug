@@ -40,6 +40,15 @@ class Compiler implements CompilerInterface {
 		return new CompiledQuery($sqlQuery, $sqlCountQuery);
 	}
 
+	protected function buildSubquery(QueryInterface $query, QueryInterface $parent) {
+		$result = $this->build($query);
+		$parameters = $query->getParameters();
+		foreach ($parameters as $name => $value) {
+			$parent->setParameter($name, $value);
+		}
+		return $result;
+	}
+
 	protected function buildQuery($query) {
 		$components = $this->buildComponentClauses($query);
 		$sql = [];
@@ -158,8 +167,11 @@ class Compiler implements CompilerInterface {
 				$set[$idx] = $condition["condition"];
 			} else {
 				$conditions = "";
+				if ($condition["field"] instanceof BuilderInterface) {
+					$condition["field"] = $condition["field"]->getQuery();
+				}
 				if ($condition["field"] instanceof QueryInterface) {
-					$condition["field"] = "(".$this->build($condition["field"])->getSql().")";
+					$condition["field"] = "(".$this->buildSubquery($condition["field"], $query)->getSql().")";
 					$condition["invert"] = true;
 				}
 				if (!empty($condition['ornull']) && $condition['operator'] === "!=") $conditions .= "(".$condition['field']." is NULL || ";
@@ -189,13 +201,27 @@ class Compiler implements CompilerInterface {
 					} else if ($condition['value'] === "NULL") {
 						$condition['operator'] = str_replace(array('!=', '='), array("IS NOT ", "IS"), $condition['operator']);
 						$conditions .= ' '.$condition['operator'].' NULL';
+					} elseif ($condition["value"] instanceof BuilderInterface) {
+						$condition['operator'] = str_replace(array('!', '='), array("NOT ", "IN"), $condition['operator']);
+						$condition["value"] = "(".$this->buildSubquery($condition["value"]->getQuery(), $query)->getSql().")";
+						$conditions .= ' '.$condition['operator'].' '.$condition["value"];
+					} elseif ($condition["value"] instanceof QueryInterface) {
+						$condition['operator'] = str_replace(array('!', '='), array("NOT ", "IN"), $condition['operator']);
+						$condition["value"] = "(".$this->buildSubquery($condition["value"], $query)->getSql().")";
+						$conditions .= ' '.$condition['operator'].' '.$condition["value"];
 					} else {
+						$unary = false;
 						$index = $this->incrementParameterIndex();
 						if (!empty($condition['invert'])) {
 							$condition['operator'] = str_replace(array('!', '='), array("NOT ", "IN"), $condition['operator']);
-							$conditions .= ":default".$index." ".$condition['operator']." ".$condition['field'];
+							if (in_array($condition["operator"], ["EXISTS", "NOT EXISTS"])) {
+								$unary = true;
+								$conditions .= $condition['operator']." ".$condition['field'];
+							} else {
+								$conditions .= ":default".$index." ".$condition['operator']." ".$condition['field'];
+							}
 						} else $conditions .= ' '.$condition['operator'].' :default'.$index;
-						$query->setParameter("default".$index, $condition['value']);
+						if (!$unary) $query->setParameter("default".$index, $condition['value']);
 					}
 				}
 				if (!empty($condition['ornull']) && $condition['operator'] === "!=") $conditions .= ")";

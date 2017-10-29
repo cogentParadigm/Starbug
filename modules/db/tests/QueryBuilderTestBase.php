@@ -34,24 +34,38 @@ class QueryBuilderTestBase extends PHPUnit_Framework_TestCase {
     $schema = new Schema();
     $schema->addTable("files",
       ["filename", "type" => "string"],
-      ["mime_type", "type" => "string"]
+      ["mime_type", "type" => "string"],
+      ["deleted", "type" => "bool", "default" => "0", "object_access" => true]
     );
     $schema->addTable("terms",
       ["name", "type" => "string"],
-      ["slug", "type" => "string"]
+      ["slug", "type" => "string"],
+      ["deleted", "type" => "bool", "default" => "0", "object_access" => true]
     );
     $schema->addTable("users",
       ["first_name", "type" => "string"],
-      ["groups", "type" => "terms", "taxonomy" => "groups"]
+      ["groups", "type" => "terms", "taxonomy" => "groups", "user_access" => true, "optional" => true],
+      ["deleted", "type" => "bool", "default" => "0", "object_access" => true]
+    );
+    $schema->addTable("permits",
+      ["role", "type" => "string", "length" => "30"],
+      ["who", "type" => "int", "default" => "0"],
+      ["action", "type" => "string", "length" => "100"],
+      ["priv_type", "type" => "string", "length" => "30", "default" => "table"],
+      ["related_table", "type" => "string", "length" => "100"],
+      ["related_id", "type" => "int", "default" => "0"],
+      ["groups", "type" => "terms", "taxonomy" => "groups", "user_access" => true, "optional" => true]
     );
     $schema->addTable("pages",
       ["owner", "type" => "int", "references" => "users id"],
       ["category", "type" => "int", "references" => "terms id"],
       ["comments", "type" => "comments"],
-      ["images", "type" => "files"]
+      ["images", "type" => "files"],
+      ["deleted", "type" => "bool", "default" => "0", "object_access" => true]
     );
     $schema->addTable("comments",
-      ["comment", "type" => "text"]
+      ["comment", "type" => "text"],
+      ["deleted", "type" => "bool", "default" => "0", "object_access" => true]
     );
     // This schema instance has no hooks so we have to manually
     // define the join tables to use all schema aware features.

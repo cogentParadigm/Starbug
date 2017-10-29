@@ -6,11 +6,19 @@ trait Parameters {
 
 	public function setParameter($name, $value = null) {
 		if (!is_array($name)) $name = array($name => $value);
-		foreach ($name as $k => $v) $this->parameters[":".$k] = $v;
+		foreach ($name as $k => $v) {
+			if (0 !== strpos($k, ":")) {
+				$k = ":" . $k;
+			}
+			$this->parameters[$k] = $v;
+		}
 	}
 
 	public function getParameter($name) {
-		return $this->parameters[":".$name];
+		if (0 !== strpos($name, ":")) {
+			$name = ":" . $name;
+		}
+		return $this->parameters[$name];
 	}
 
 	public function getParameters() {
