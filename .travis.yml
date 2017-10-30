@@ -3,7 +3,9 @@ language: php
 php:
   - 5.6
   - 7.0
-#  - hhvm # remove until mailer can be mocked and sendmail setup can be removed
+  - 7.1
+  - 7.2
+  - hhvm
 
 # env:
 #   global:
