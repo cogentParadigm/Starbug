@@ -2,6 +2,7 @@
 namespace Starbug\Payment;
 
 use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\CollectionFactoryInterface;
 
 /**
  * A wrapper around orders intended for mediating shopping cart behavior.
@@ -20,8 +21,9 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
   /**
    * constructor.
    */
-  public function __construct(ModelFactoryInterface $models, $conditions) {
+  public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, $conditions) {
     $this->models = $models;
+    $this->collections = $collections;
     $this->conditions = $conditions;
   }
 
@@ -56,9 +58,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     $this->order = $order;
     if (!empty($this->order)) {
       foreach ($this->lines as $k => $v) {
-        $this->lines[$k] = $this->models->get($k."_lines")->query()->condition($k."_lines.orders_id", $this->order['id']);
-        if ($k == "product") $this->lines[$k]->select("product_lines.product.type.slug as product_type");
-        $this->lines[$k] = $this->lines[$k]->all();
+        $this->lines[$k] = $this->collections->get(ucwords($k)."Lines")->query(["order" => $this->order["id"]]);
       }
     }
   }
@@ -139,6 +139,23 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
         }
       }
     }
+    return $line;
+  }
+
+  public function selectShippingMethod($input) {
+    $this->init();
+    $method = $this->collections->get("SelectShippingMethods")->one(["order" => $this->order["id"], "id" => $input["id"]]);
+    $line = [
+      "method" => $method["id"],
+      "description" => $method["name"],
+      "price" => (string) $method["price"]
+    ];
+    $line["qty"] = 1;
+    if (!empty($this->lines["shipping"])) {
+      $line["id"] = $this->lines["shipping"][0]["id"];
+    }
+    $this->add("shipping_lines", $line);
+    $line["id"] = $this->models->get("shipping_lines")->insert_id;
     return $line;
   }
 

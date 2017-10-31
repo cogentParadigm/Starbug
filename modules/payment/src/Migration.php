@@ -5,6 +5,7 @@ use Starbug\Db\Schema\AbstractMigration;
 
 class Migration extends AbstractMigration {
   public function up() {
+    // Payment gateways and gateway settings.
     $this->schema->addTable(["payment_gateways", "label_select" => "payment_gateways.name", "groups" => false],
       ["name", "type" => "string", "length" => "255"],
       ["description", "type" => "text", "default" => ""],
@@ -26,6 +27,7 @@ class Migration extends AbstractMigration {
       ["is_test_mode" => "1", "is_active" => "1"]
     );
 
+    // Products, product types, product options
     $this->schema->addTable(["product_types", "groups" => false, "label_select" => "product_types.name"],
       ["name", "type" => "string", "length" => "128"],
       ["slug", "type" => "string", "length" => "128", "unique" => "", "default" => "", "slug" => "name"],
@@ -68,6 +70,26 @@ class Migration extends AbstractMigration {
       ["meta_description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
       ["sorting_weight", "type" => "int", "default" => "0"]
     );
+
+    // Shipping methods and rates.
+    $this->schema->addTable(["shipping_rates", "label_select" => "CONCAT(shipping_rates.name, ' - $', ROUND(shipping_rates.price/100, 2), IF(additive=1, ' (additive)', ''))"],
+      ["name", "type" => "string", "length" => "128"],
+      ["additive", "type" => "bool", "default" => "0"],
+      ["product_types", "type" => "product_types"],
+      ["product_options", "type" => "product_options"],
+      ["price", "type" => "int", "default" => "0"]
+    );
+    $this->schema->addTable(["shipping_rates_product_options", "label_select" => "CONCAT(shipping_rates_product_options.product_options_id.name, ' ', shipping_rates_product_options.operator, ' ', shipping_rates_product_options.value)"],
+      ["operator", "type" => "string", "default" => "="],
+      ["value", "type" => "text", "default" => ""]
+    );
+    $this->schema->addTable(["shipping_methods", "label_select" => "shipping_methods.name"],
+      ["name", "type" => "string", "length" => "128"],
+      ["description", "type" => "text", "default" => ""],
+      ["shipping_rates", "type" => "shipping_rates", "table" => "shipping_rates"],
+      ["position", "type" => "int", "ordered" => ""]
+    );
+    // Line items.
     $this->schema->addTable(["lines", "groups" => false],
       ["type", "type" => "string"],
       ["description", "type" => "string", "length" => "255"],
@@ -82,8 +104,11 @@ class Migration extends AbstractMigration {
       ["options_id", "type" => "int", "references" => "product_options id", "update" => "cascade", "delete" => "cascade", "alias" => "%slug%"],
       ["value", "type" => "string", "length" => "255", "default" => ""]
     );
-    $this->schema->addTable(["shipping_lines", "base" => "lines", "groups" => false]);
+    $this->schema->addTable(["shipping_lines", "base" => "lines"],
+      ["method", "type" => "int", "references" => "shipping_methods id"]
+    );
     $this->schema->addTable(["tax_lines", "base" => "lines", "groups" => false]);
+    // Payments, cards, subscriptions, bills
     $this->schema->addTable(["payment_cards", "groups" => false],
       ["customer_reference", "type" => "string", "length" => "128", "default" => ""],
       ["card_reference", "type" => "string", "length" => "128"],
@@ -122,6 +147,7 @@ class Migration extends AbstractMigration {
       ["scheduled", "type" => "bool", "default" => "0"],
       ["paid", "type" => "bool", "default" => "0"]
     );
+    // Orders.
     $this->schema->addTable(["orders", "search" => "orders.id,orders.order_status,orders.email,orders.phone,orders.billing_address.recipient,orders.shipping_address.recipient", "groups" => false],
       ["subtotal", "type" => "string", "length" => "32", "default" => ""],
       ["total", "type" => "string", "length" => "32"],

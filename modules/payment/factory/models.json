@@ -16,6 +16,9 @@
 	"products": {
 		"cart":"Starbug\\Payment\\Cart"
 	},
+	"shipping_methods": {
+		"cart":"Starbug\\Payment\\Cart"
+	},
 	"product_lines":{
 		"cart":"Starbug\\Payment\\Cart"
 	}
