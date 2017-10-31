@@ -77,7 +77,7 @@ define([
 				put(put(self.totalsNode, 'div.total', 'Total: '), 'strong', '$'+((total + shipping_total)/100).toFixed(2));
 
 				self.shippingMethods.filter(self.query).fetch().then(lang.hitch(self, function(results) {
-					if (shippingLines.length == 0 && refreshCount < 2) {
+					if (shippingLines.length == 0 && this.refreshCount < 2) {
 						this.selectShippingMethod(results[0].id);
 					} else {
 						put(this.shippingMethodsNode, {innerHTML: ''});
@@ -87,7 +87,7 @@ define([
 							put(group, 'span.help-block', method.description);
 						}
 					}
-					self.refreshCount++;
+					this.refreshCount++;
 				}));
 			});
 		},
