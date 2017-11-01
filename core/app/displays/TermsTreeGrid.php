@@ -11,4 +11,3 @@ class TermsTreeGrid extends GridDisplay {
 		$this->add(["position", "sortable" => "false"]);
 	}
 }
-?>

@@ -8,4 +8,3 @@ class DbHelper {
 		return $this->target;
 	}
 }
-?>

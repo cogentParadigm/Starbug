@@ -8,4 +8,3 @@ class CssHelper {
 		return $this->target;
 	}
 }
-?>

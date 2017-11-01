@@ -12,4 +12,3 @@ class CsvDisplay extends ItemDisplay {
 		else parent::query($options);
 	}
 }
-?>

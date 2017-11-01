@@ -1,10 +1,14 @@
 <?php
 namespace Starbug\Core;
+use League\Flysystem\Filesystem;
 class ImportsForm extends FormDisplay {
 	public $source_keys = array();
 	public $source_values = array();
 	public $model = "imports";
 	public $cancel_url = "admin/imports";
+	public function setFilesystems(MountManager $filesystems) {
+		$this->filesystems = $filesystems;
+	}
 	function build_display($options) {
 		if ($options['operation'] == "run") {
 			$this->build_run($options);
@@ -42,7 +46,7 @@ class ImportsForm extends FormDisplay {
 	function count_source($id) {
 		$file = $this->models->get("files")->query()->condition("id", $id)->one();
 		$$lines = 0;
-		if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) {
+		if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file["id"]."_".$file["filename"])["stream"])) {
 			while (!feof($handle)) {
 				if (fgets($handle)) $lines++;
 			}
@@ -51,4 +55,3 @@ class ImportsForm extends FormDisplay {
 		return $lines-1;
 	}
 }
-?>

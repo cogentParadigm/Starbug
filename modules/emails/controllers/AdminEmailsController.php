@@ -25,4 +25,3 @@ class AdminEmailsController extends Controller {
 		$this->render("admin/update");
 	}
 }
-?>

@@ -8,4 +8,3 @@ class MenusGrid extends GridDisplay {
 		$this->add(["row_options", "plugin" => "starbug.grid.columns.menu_options"]);
 	}
 }
-?>

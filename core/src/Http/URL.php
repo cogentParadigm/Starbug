@@ -1,12 +1,4 @@
 <?php
-# Copyright (C) 2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
-* This file is part of StarbugPHP
-* @file core/src/URLBuilder.php
-* @author Ali Gangji <ali@neonrain.com>
-* @ingroup core
-*/
 namespace Starbug\Core;
 /**
 * URLBuilder class. generate absolute URLs from relative paths and modifiers
@@ -26,7 +18,7 @@ class URL implements URLInterface {
 	protected $fragment;
 	protected $absolute = false;
 
-	public function __construct($host="", $base_directory="/", $options=array()) {
+	public function __construct($host = "", $base_directory = "/", $options = array()) {
 		$this->host = $host;
 		$this->dir = $base_directory;
 	}
@@ -88,7 +80,7 @@ class URL implements URLInterface {
 		return $this->dir;
 	}
 
-	public function getComponent($index=0) {
+	public function getComponent($index = 0) {
 		return $this->components[$index];
 	}
 
@@ -131,7 +123,7 @@ class URL implements URLInterface {
 		return $this;
 	}
 
-	public function setParameters($parameters=array()) {
+	public function setParameters($parameters = array()) {
 		foreach ($parameters as $key => $value) {
 			$this->setParameter($key, $value);
 		}
@@ -210,7 +202,7 @@ class URL implements URLInterface {
 		return $url;
 	}
 
-	public static function createFromSuperGlobals($base_directory="/") {
+	public static function createFromSuperGlobals($base_directory = "/") {
 		$url = new static($_SERVER['HTTP_HOST'], $base_directory);
 		$url->setPath(substr($_SERVER['REQUEST_URI'], strlen($base_directory)));
 		$url->setParameters($_GET);

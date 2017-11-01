@@ -8,4 +8,3 @@ class RequestHelper {
 		return $this->target;
 	}
 }
-?>

@@ -25,4 +25,3 @@ class PagesFormCollection extends FormCollection {
 		return $rows;
 	}
 }
-?>

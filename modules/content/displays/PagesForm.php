@@ -31,4 +31,3 @@ class PagesForm extends FormDisplay {
 		$this->add(["parent", "info" => "Start typing the title of the page and autocomplete results will display", "input_type" => "autocomplete", "from" => "pages", "pane" => "breadcrumbs"]);
 	}
 }
-?>

@@ -16,7 +16,8 @@
     "bootstrap": "~3.3.6",
     "less": "~2.5.3",
     "dojo-bootstrap": "~3.0.2",
-    "font-awesome": "components-font-awesome#~4.5.0"
+    "font-awesome": "components-font-awesome#~4.7.0",
+    "animate.css": "^3.5.2"
   },
   "license": "GPL-3.0+",
   "ignore": [

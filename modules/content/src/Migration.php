@@ -66,4 +66,3 @@ class Migration extends AbstractMigration {
 		$this->schema->addRow("tags", ["title" => "Uncategorized"]);
 	}
 }
-?>

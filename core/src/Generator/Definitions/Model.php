@@ -1,15 +1,18 @@
 <?php
 namespace Starbug\Core\Generator\Definitions;
+
 use Starbug\Core\Generator\Definition;
 use Starbug\Db\Schema\SchemerInterface;
 use Starbug\Core\ConfigInterface;
+
 class Model extends Definition {
 	public function __construct(SchemerInterface $schemer, ConfigInterface $config) {
 		$this->schemer = $schemer;
 		$this->config = $config;
 	}
-	public function build($options = []) {
+	public function build(array $options = []) {
 		parent::build($options);
+		$className = str_replace(" ", "", ucwords(str_replace("_", " ", $options["model"])));
 		$schema = $this->schemer->getSchema();
 		$table = $schema->getTable($options["model"]);
 		foreach ($table->getOptions() as $key => $value) {
@@ -17,7 +20,7 @@ class Model extends Definition {
 		}
 		$this->setParameter("fields", $table->getColumns());
 		$factory = $this->config->get("models", "factory");
-	  $factory = isset($factory[$options["model"]]) ? $factory[$options["model"]] : array();
+		$factory = isset($factory[$options["model"]]) ? $factory[$options["model"]] : [];
 		$use = [];
 		foreach ($factory as $n => $t) {
 			if (false != strpos($t, "\\")) {
@@ -28,16 +31,16 @@ class Model extends Definition {
 		}
 		$this->setParameter("factory", $factory);
 		$this->setParameter("use", $use);
+		$this->setParameter("className", $className);
 		$this->addTemplate(
 			"generate/model/base",
-				"var/models/".ucwords($options["model"])."Model.php"
+			"var/models/".$className."Model.php"
 		);
 		if (empty($options["update"])) {
 			$this->addTemplate(
 				"generate/model/model",
-					$this->module."/models/".ucwords($options["model"]).".php"
+				$this->module."/models/".$className.".php"
 			);
 		}
 	}
 }
-?>

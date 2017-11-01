@@ -1,10 +1,8 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
 namespace Starbug\Core;
 class UsersTest extends ModelTest {
 
-	var $model = "users";
+	public $model = "users";
 
 	function test_create() {
 		$this->db->remove("users", ["email" => "phpunit@neonrain.com"]);
@@ -30,6 +28,4 @@ class UsersTest extends ModelTest {
 		$this->db->remove("users_groups", ["users_id" => $user['id']]);
 		$this->db->remove("users", ["email" => "phpunit@neonrain.com"]);
 	}
-
 }
-?>

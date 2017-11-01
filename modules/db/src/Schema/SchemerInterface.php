@@ -6,4 +6,3 @@ interface SchemerInterface {
 	public function migrate();
 	public function getSchema();
 }
-?>

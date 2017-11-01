@@ -8,4 +8,3 @@ class AdminSettingsController extends Controller {
 		$this->render("settings");
 	}
 }
-?>

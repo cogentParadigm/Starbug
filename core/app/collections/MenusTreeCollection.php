@@ -29,4 +29,3 @@ class MenusTreeCollection extends Collection {
 		return $rows;
 	}
 }
-?>

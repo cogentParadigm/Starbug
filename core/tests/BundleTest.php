@@ -1,10 +1,6 @@
 <?php
-# Copyright (C) 2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
 namespace Starbug\Core\Tests;
-
 use Starbug\Core\Bundle;
-
 class BundleTest extends \PHPUnit_Framework_TestCase {
 	public function testHas() {
 		$bundle = new Bundle(array('key' => 'value'));
@@ -51,4 +47,3 @@ class BundleTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals('c', $bundle->get('a', 'b'));
 	}
 }
-?>

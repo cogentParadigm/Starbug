@@ -32,4 +32,3 @@ class Translation {
 		return $strings[$target_language][$name];
 	}
 }
-?>

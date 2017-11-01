@@ -30,28 +30,16 @@ h2. Project Info
 
 h2. Dependencies
 
-* PHP 5.4+
+* PHP 5.6+
 * MySQL 5.1.6+
 
 Optional dependencies are listed in the links section.
 
 h2. Getting Started
 
-Installing starbug is easy, just follow these simple steps:
+This repository is itself a base application. To get started you will most likely want to clone it and push it up to your own project repository.
 
-# Initialize a new application and change to that directory:<pre><code>git clone git://github.com/cogentParadigm/Starbug.git myapp
-cd myapp</code></pre>
-# Generate a host file and enter your database and other details:<pre><code>./sb generate host
-vi etc/Host.php</code></pre>
-# Run setup:<pre><code>./sb setup</code></pre>
-# Open up your browser and point it to your installation directory!
-
-h2. Extra Steps
-
-We recommend you take following additional steps:
-
-# Copy the sb command to your path:<pre><code>cp sb /usr/bin/sb</code></pre>
-# Copy the bash completion file to take advantage of auto-completion when running sb commands:<pre><code>cp core/lib/bash_completion/sb /etc/bash_completion.d/</code></pre>
+Visit [Getting Started](doc/getting-started/index.md) for installation instructions.
 
 h2. License
 

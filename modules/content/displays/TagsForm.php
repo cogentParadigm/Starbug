@@ -19,4 +19,3 @@ class TagsForm extends FormDisplay {
 		$this->add(["slug", "label" => "Machine Name", "info" => "Leave empty to generate automatically", "pane" => "path"]);
 	}
 }
-?>

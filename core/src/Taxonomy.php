@@ -1,11 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/src/Taxonomy.php
- * @author Ali Gangji <ali@neonrain.com>
- */
 namespace Starbug\Core;
 /**
  * implementation of TaxonomyInterface
@@ -49,7 +42,7 @@ class Taxonomy implements TaxonomyInterface {
 		$slug = strtolower($tag);
 		//IF THE TAG IS ALREADY APPLIED, RETURN TRUE
 		$existing = $this->db->query($table)->condition($table.".id", $object_id)
-										->open("tag")->condition($field.".id", $tag)->orCondition($field.".slug", $tag)->orCondition($field.".term", $tag)->close();
+										->open("tag")->condition($table.".".$field.".id", $tag)->orCondition($table.".".$field.".slug", $tag)->orCondition($table.".".$field.".term", $tag)->close();
 		if ($existing->one()) return true;
 
 		//IF THE TERM DOESN'T EXIST, ADD IT

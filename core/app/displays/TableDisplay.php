@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Core;
 class TableDisplay extends ItemDisplay {
-	var $type = "table";
-	var $template = "table";
-	function build($options=array()) {
+	public $type = "table";
+	public $template = "table";
+	function build($options = array()) {
 		$this->options = $options;
 		$this->attributes["class"][] = "table";
 		$this->attributes["class"][] = "table-bordered";
@@ -12,4 +12,3 @@ class TableDisplay extends ItemDisplay {
 		$this->build_display($options);
 	}
 }
-?>

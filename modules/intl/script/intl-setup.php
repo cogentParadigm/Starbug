@@ -22,7 +22,7 @@ class IntlSetupCommand {
 
 		//populate countries
 		$countries = $this->config->get("countries");
-		foreach($countries as $c) {
+		foreach ($countries as $c) {
 			$exists = $this->db->query("countries")->condition("code", $c['code'])->one();
 			$data = json_decode(file_get_contents($address_data.$c['code']), true);
 			$record = array("name" => $c['name'], "code" => $c['code']);
@@ -73,5 +73,3 @@ class IntlSetupCommand {
 		}
 	}
 }
-
-?>

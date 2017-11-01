@@ -5,4 +5,3 @@ class UploadController extends Controller {
 		$this->render("upload");
 	}
 }
-?>

@@ -14,4 +14,3 @@ class AdminPagesCollection extends Collection {
 		return $query;
 	}
 }
-?>

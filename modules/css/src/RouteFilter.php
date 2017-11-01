@@ -15,4 +15,3 @@ class RouteFilter implements RouteFilterInterface {
 		return $route;
 	}
 }
-?>

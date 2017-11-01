@@ -13,8 +13,9 @@ class Files extends FilesModel {
 		if (!$this->errors()) {
 			if ($record['filename'] != $original['filename']) {
 				//rename file
-				$result = rename(BASE_DIR."/app/public/uploads/".$record['id']."_".$original['filename'], BASE_DIR."/app/public/uploads/".$record['id']."_".$record['filename']);
-				if (!$result) $this->store(array("id" => $record['id'], "filename" => $original['filename']));
+				if ($this->filesystem->rename($record['id']."_".$original['filename'], $record['id']."_".$record['filename'])) {
+					$this->store(array("id" => $record['id'], "filename" => $original['filename']));
+				}
 			}
 		}
 	}
@@ -29,9 +30,11 @@ class Files extends FilesModel {
 			$this->store($record);
 			if ((!$this->errors()) && (!empty($record['filename']))) {
 				$id = (empty($record['id'])) ? $this->insert_id : $record['id'];
-				$move_function = $remote ? 'rename' : 'move_uploaded_file';
-				if ($move_function($file["tmp_name"], "app/public/uploads/".$id."_".$record['filename'])) {
-					if (reset(explode("/", $record['mime_type'])) == "image") $this->images->thumb("app/public/uploads/".$id."_".$record['filename'], ["w" => 100, "h" => 100, "a" => 1]);
+				$stream = fopen($file["tmp_name"], "r+");
+				$success = $this->filesystem->writeStream($id."_".$record["filename"], $stream);
+				if (is_resource($stream)) fclose($stream);
+				if ($success) {
+					if (reset(explode("/", $record['mime_type'])) == "image") $this->images->thumb("default://".$id."_".$record['filename'], ["w" => 100, "h" => 100, "a" => 1]);
 					return true;
 				} else {
 					return false;
@@ -71,4 +74,3 @@ class Files extends FilesModel {
 		*/
 	}
 }
-?>

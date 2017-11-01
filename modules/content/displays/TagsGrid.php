@@ -11,4 +11,3 @@ class TagsGrid extends GridDisplay {
 		$this->add(["position", "sortable" => "false"]);
 	}
 }
-?>

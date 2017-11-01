@@ -1,8 +1,4 @@
 <?php
-/**
- * imports model
- * @ingroup models
- */
 namespace Starbug\Core;
 class Imports extends ImportsModel {
 
@@ -21,7 +17,7 @@ class Imports extends ImportsModel {
 		foreach ($fields as $field) {
 			if ($field['update_key']) $keys[] = $field['destination'];
 		}
-		if (false !== ($handle = fopen("app/public/uploads/".$file['id']."_".$file['filename'], "r"))) {
+		if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file['id']."_".$file['filename'])["stream"])) {
 			$row = fgetcsv($handle);
 			foreach ($row as $idx => $column) $head[$column] = $idx;
 			while (false !== ($row = fgetcsv($handle))) {
@@ -52,31 +48,4 @@ class Imports extends ImportsModel {
 			}
 		}
 	}
-
-	/******************************************************************
-	 * Query functions
-	 *****************************************************************/
-
-	function query_admin($query, &$ops) {
-		$query = parent::query_admin($query, $ops);
-		if (!empty($ops['model'])) {
-			$query->condition($query->model.".model", $ops['model']);
-		}
-    return $query;
-  }
-
-	function query_filters($action, $query, $ops) {
-		if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
-		return $query;
-	}
-
-	/******************************************************************
-	 * Display functions
-	 *****************************************************************/
-
-	function display_admin($display, $ops) {
-		$display->add("id");
-	}
-
 }
-?>

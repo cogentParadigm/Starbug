@@ -5,4 +5,3 @@ interface HookInterface {
 	public function addTable(Table $table, array $options, SchemaInterface $schema);
 	public function getTable(Table $table, SchemaInterface $schema);
 }
-?>

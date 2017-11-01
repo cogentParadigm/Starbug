@@ -11,4 +11,3 @@ class RemoveCommand {
 		$this->models->get($name)->remove($id);
 	}
 }
-?>

@@ -5,13 +5,11 @@ use Starbug\Core\URLInterface;
 use Starbug\Core\ResponseInterface;
 class CssLoader {
 	protected $options = false;
-	protected $less = false;
-	public function __construct(ResourceLocatorInterface $locator, URLInterface $url, ResponseInterface $response, $modules, $environment) {
+	public function __construct(ResourceLocatorInterface $locator, URLInterface $url, ResponseInterface $response, $modules) {
 		$this->locator = $locator;
 		$this->url = $url;
 		$this->response = $response;
 		$this->modules = $modules;
-		$this->environment = $environment;
 	}
 	public function getConfiguration($reload = false) {
 		$this->load($reload);
@@ -39,24 +37,11 @@ class CssLoader {
 	}
 	protected function load($reload = false) {
 		if (false === $this->options || true == $reload) {
-			if ($this->environment == "production") {
-				$this->loadProduction();
-			} else {
-				$this->loadDevelopment();
-			}
+			$this->options = $this->readConfiguration();
 		}
 	}
-	protected function loadProduction() {
-		$this->less = false;
-		$this->options = [
-			"screen" => [
-				["rel" => "stylesheet", "href" => "var/public/stylesheets/".$this->response->theme."-screen.css"]
-			]
-		];
-	}
-	protected function loadDevelopment() {
-		$this->less = false;
-		$this->options = [];
+	public function readConfiguration() {
+		$options = [];
 		$resources = $this->locator->locate("stylesheets.json", "etc");
 		$resources = array_reverse($resources);
 		foreach ($resources as $mid => $resource) {
@@ -67,15 +52,19 @@ class CssLoader {
 						$style = ["href" => $style];
 					}
 					if (empty($style["rel"])) $style["rel"] = "stylesheet";
-					else if ($style["rel"] == "stylesheet/less") $this->less = true;
 					$style["href"] = $this->modules[$mid] . "/" . $style["href"];
-					$this->options[$media][] = $style;
+					$options[$media][] = $style;
 				}
 			}
 		}
+		return $options;
 	}
-	public function hasLess() {
-		return $this->less;
+	public function has($property, $value) {
+		foreach ($this->options as $media => $styles) {
+			foreach ($styles as $style) {
+				if (isset($style[$property]) && $style[$property] == $value) return true;
+			}
+		}
+		return false;
 	}
 }
-?>

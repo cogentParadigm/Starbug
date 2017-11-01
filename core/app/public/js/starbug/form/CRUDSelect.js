@@ -33,12 +33,14 @@ define([
 		post_data:false,
 		editing:false,
 		join:true,
+		url:false,
 		postCreate:function() {
 			var self = this;
 			this.get_data = this.get_data || {};
 			this.post_data = this.post_data || {};
 			this.store = new Memory({data: []});
-			this.dialog = new Dialog({url:"admin/"+self.model+"/", get_data:self.get_data, post_data:self.post_data, callback:function(data) {
+			this.url = this.url || 'admin/' + this.model + '/';
+			this.dialog = new Dialog({url:self.url, get_data:self.get_data, post_data:self.post_data, callback:function(data) {
 				var object_id = query('input[name="'+self.model+'[id]"]').attr('value')[0];
 				if (false !== self.editing) {
 					if (object_id != self.editing) {

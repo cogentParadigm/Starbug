@@ -11,7 +11,7 @@ class Countries extends CountriesModel {
 		$this->store($country);
 	}
 
-  /******************************************************************
+	/******************************************************************
 	 * Query functions
 	 *****************************************************************/
 
@@ -25,6 +25,4 @@ class Countries extends CountriesModel {
 		$query->sort("countries.name");
 		return $query;
 	}
-
 }
-?>

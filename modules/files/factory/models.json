@@ -1,5 +1,6 @@
 {
 	"files": {
+		"filesystem": "Starbug\\Core\\Storage\\FilesystemInterface",
 		"images": "ImagesInterface"
 	}
 }

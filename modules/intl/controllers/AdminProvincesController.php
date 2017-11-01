@@ -28,4 +28,3 @@ class AdminProvincesController extends Controller {
 		$this->render("admin/import");
 	}
 }
-?>

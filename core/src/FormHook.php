@@ -6,7 +6,5 @@ class FormHook {
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 */
 	function build($form, &$control, &$field) {
-
 	}
 }
-?>

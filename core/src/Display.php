@@ -22,19 +22,19 @@ class Display {
 	/**
 	 * build the display from a set of options
 	 */
-	function build($options=array()) {
+	function build($options = []) {
 		$this->options = $options;
 		$this->build_display($options);
 	}
 
-	function build_display() {
+	function build_display($options) {
 		//override this function
 	}
 
 	/**
 	 * option getter/setter
 	 */
-	function option($name, $value=null) {
+	function option($name, $value = null) {
 		if (is_array($name)) {
 			foreach ($name as $k => $v) $this->option($k, $v);
 		} else if (is_null($value)) {
@@ -49,7 +49,7 @@ class Display {
 	/**
 	* attribute getter/setter
 	*/
-	function attr($name, $value=null) {
+	function attr($name, $value = null) {
 		if (is_array($name)) {
 			foreach ($name as $k => $v) $this->attr($k, $v);
 		} else if (is_null($value)) {
@@ -73,6 +73,4 @@ class Display {
 		$this->attributes["class"] = implode(" ", $this->attributes["class"]);
 		$this->output->render("display/".$this->template, array("display" => $this) + $this->options);
 	}
-
 }
-?>

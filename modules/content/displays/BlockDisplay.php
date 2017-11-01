@@ -14,4 +14,3 @@ class BlockDisplay extends Display {
 		$this->output->assign("macro", $this->macro);
 	}
 }
-?>

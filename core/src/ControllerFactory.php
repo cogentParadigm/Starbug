@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Core;
-use \Interop\Container\ContainerInterface;
+use Interop\Container\ContainerInterface;
+use Exception;
 /**
 * an implementation of ControllerFactoryInterface
 */
@@ -12,11 +13,11 @@ class ControllerFactory implements ControllerFactoryInterface {
 		$this->container = $container;
 	}
 	public function get($controller) {
-		$controller = $this->locator->className($controller, "Controller");
-		if (false === $controller) {
-			$controller = "Starbug\\Core\\Controller";
+		$className = $this->locator->className($controller, "Controller");
+		if (false === $className) {
+			throw new Exception("Controller not found. ".$controller.".");
 		}
-		$object = $this->container->get($controller);
+		$object = $this->container->get($className);
 		if ($object instanceof Controller) {
 			return $object;
 		} else {

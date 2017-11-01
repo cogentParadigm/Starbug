@@ -1,11 +1,4 @@
 <?php
-# Copyright (C) 2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/src/interface/InputFilterInterface.php
- * @author Ali Gangji <ali@neonrain.com>
- */
 namespace Starbug\Core;
 interface InputFilterInterface {
 	/**
@@ -25,4 +18,3 @@ interface InputFilterInterface {
 	function html($content, $allowed = array());
 	function attributes($attributes);
 }
-?>

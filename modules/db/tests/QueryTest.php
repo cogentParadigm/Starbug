@@ -1,4 +1,6 @@
 <?php
+namespace Starbug\Db\Tests;
+use PHPUnit_Framework_TestCase;
 class QueryTest extends PHPUnit_Framework_TestCase {
 
 	function setUp() {
@@ -650,4 +652,3 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame("phpunit", $query->parameters[":default0"]);
 	}
 }
-?>

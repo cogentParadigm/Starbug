@@ -1,30 +1,25 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
-* This file is part of StarbugPHP
-* @file core/src/DisplayFactory.php
-* @author Ali Gangji <ali@neonrain.com>
-*/
 namespace Starbug\Core;
-use \Interop\Container\ContainerInterface;
+use Interop\Container\ContainerInterface;
+use Exception;
 /**
-* an implementation of DisplayFactoryInterface
+* an implementation of HookFactoryInterface
 */
 class HookFactory implements HookFactoryInterface {
 	private $hooks;
 	private $container;
 	private $classes = array();
-	public function __construct(ContainerInterface $container, HookBuilderInterface $hooks) {
-		$this->hooks = $hooks;
+	public function __construct(ContainerInterface $container, ResourceLocatorInterface $locator) {
 		$this->container = $container;
+		$this->locator = $locator;
 	}
 	public function get($hook) {
-		$classes = $this->hooks->build($hook);
-		$hooks = array();
-		foreach ($classes as $class) {
-			$hooks[] = $this->container->make($class);
+		$parts = explode("/", $hook);
+		$className = $this->locator->className($parts[0]." ".$parts[1], "Hook");
+		if (false == $className) {
+			return [];
 		}
-		return $hooks;
+		$object = $this->container->make($className);
+		return [$object];
 	}
 }

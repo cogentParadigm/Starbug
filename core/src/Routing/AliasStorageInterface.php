@@ -6,4 +6,3 @@ interface AliasStorageInterface {
 	public function addAliases($aliases);
 	public function getPath(RequestInterface $request);
 }
-?>

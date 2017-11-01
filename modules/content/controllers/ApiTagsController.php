@@ -18,4 +18,3 @@ class ApiTagsController extends ApiController {
 		return $query;
 	}
 }
-?>

@@ -18,4 +18,3 @@ class ApiCountriesController extends ApiController {
 		return $query;
 	}
 }
-?>

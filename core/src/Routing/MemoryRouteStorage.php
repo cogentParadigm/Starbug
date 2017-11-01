@@ -39,4 +39,3 @@ class MemoryRouteStorage implements RouteStorageInterface {
 		return $expanded;
 	}
 }
-?>

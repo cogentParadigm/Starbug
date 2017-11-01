@@ -1,13 +1,9 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file modules/emails/src/Mailer.php
- * @author Ali Gangji <ali@neonrain.com>
- */
 namespace Starbug\Core;
-use \PHPMailer;
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class Mailer implements MailerInterface {
 
 	protected $host;
@@ -81,7 +77,7 @@ class Mailer implements MailerInterface {
 	 * @param array $options
 	 * @param array $data
 	 */
-	function send($options = array(), $data = array(), $rendered=false) {
+	function send($options = array(), $data = array(), $rendered = false) {
 		$mailer = $this->create();
 		if (!$rendered) $options = $this->render($options, $data);
 		//set mailer params
@@ -100,7 +96,7 @@ class Mailer implements MailerInterface {
 		}
 		if (!empty($options['attachments'])) {
 			$attachments = $options['attachments'];
-			foreach ($attachment as $a) {
+			foreach ($attachments as $a) {
 				if (is_array($a)) $mailer->AddAttachment($a[0], $a[1]);
 				else $mailer->AddAttachment($a);
 			}

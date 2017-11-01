@@ -1,5 +1,4 @@
 <?php
-	//file_put_contents(BASE_DIR."/files.log", json_encode($request->files));
 	$_post = array();
 	$htmldata = array();
 	$record = array("filename" => "", "mime_type" => "", "caption" => "uploaded file", "category" => $request->getPost('category'));
@@ -19,11 +18,12 @@
 			$_post['id'] = $id;
 			$_post['original_name'] = str_replace(" ", "_", $file['name']);
 			$_post['name'] = $id."_".$_post['original_name'];
-			$_post['file'] = "app/public/uploads/".$_post['name'];
-			$_post['mime_type'] = $this->models->get("files")->get_mime($_post['file']);
+			$_post['url'] = $this->filesystems->getFilesystem("default")->getURL($_post['name']);
+			$_post['mime_type'] = $this->models->get("files")->get_mime($file['tmp_name']);
 			try{
-				list($width, $height) = getimagesize($_post['file']);
+				list($width, $height) = getimagesize($file['tmp_name']);
 				$image = true;
+				$_post['thumbnail'] = $this->images->thumb("default://".$_post['name'], ["w" => 100, "w" => 100, "a" => 1]);
 			} catch(Exception $e){
 				$width=0;
 				$height=0;
@@ -32,7 +32,7 @@
 			$_post['width'] = $width;
 			$_post['height'] = $height;
 			$_post['type'] = end(explode(".", $_post['name']));
-			$_post['size'] = filesize($_post['file']);
+			$_post['size'] = filesize($file['tmp_name']);
 			$_post['image'] = $image;
 			$_post['owner'] = $this->user->userinfo("id");
 			$htmldata[] = $_post;

@@ -8,4 +8,3 @@ class TermsGrid extends GridDisplay {
 		$this->add(["row_options", "plugin" => "starbug.grid.columns.taxonomy_options"]);
 	}
 }
-?>
