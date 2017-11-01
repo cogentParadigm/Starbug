@@ -121,7 +121,7 @@ class ErrorHandler {
 	/**
 	* renders source around an line. used for exception and error output details
 	*/
-	function render_source($file, $line, $max) {
+	public static function render_source($file, $line, $max) {
 		$line--;	// adjust line number to 0-based from 1-based
 		if ($line<0 || ($lines=@file($file))===false || ($count=count($lines))<=$line) return '';
 
@@ -144,7 +144,7 @@ class ErrorHandler {
 	/**
 	* converts function arguments from a trace into a readable string
 	*/
-	function argumentsToString($args) {
+	public static function argumentsToString($args) {
 		$count=0;
 
 		$isAssoc=$args!==array_values($args);

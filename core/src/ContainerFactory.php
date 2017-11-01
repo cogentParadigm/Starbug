@@ -19,7 +19,7 @@ class ContainerFactory {
 		$builder = new ContainerBuilder();
 		$builder->addDefinitions($di);
 		foreach ($locator->locate("di.php", "etc") as $defs) $builder->addDefinitions($defs);
-		if ($options["t"]) {
+		if (!empty($options["t"])) {
 			foreach ($locator->locate("di.php", "tests/etc") as $defs) $builder->addDefinitions($defs);
 		}
 		$container = $builder->build();
