@@ -11,6 +11,7 @@ define([
 ], function (declare, lang, Evented, put, Memory, on, query, domclass, geometry) {
   return declare([Evented], {
     size:1,
+    valuePrefix:'',
     constructor: function(kwArgs) {
       lang.mixin(this, kwArgs);
       this.selection = this.selection || new Memory({data: []});
@@ -22,7 +23,7 @@ define([
       return this.selection.data;
     },
     getIdentity: function(item) {
-      return this.selection.getIdentity(item);
+      return this.valuePrefix + this.selection.getIdentity(item);
     },
     add:function(items) {
       var target_size = this.selection.data.length + items.length;
