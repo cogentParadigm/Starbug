@@ -84,7 +84,7 @@ class Executor implements ExecutorInterface {
   /**
    * {@inheritDoc}
    */
-  public function validate(BuilderInterface $builder, int $phase = self::PHASE_VALIDATION) {
+  public function validate(BuilderInterface $builder, $phase = self::PHASE_VALIDATION) {
     $query = $builder->getQuery();
     if ($phase == self::PHASE_VALIDATION && !$query->isValidated()) $query->beginValidation();
     $model = $this->models->get($query->getTable()->getName());

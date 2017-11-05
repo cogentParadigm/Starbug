@@ -30,7 +30,7 @@ class MockExecutor implements ExecutorInterface {
   /**
    * {@inheritDoc}
    */
-  public function validate(BuilderInterface $builder, int $phase = self::PHASE_VALIDATION) {
+  public function validate(BuilderInterface $builder, $phase = self::PHASE_VALIDATION) {
     // Empty method
   }
 

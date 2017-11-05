@@ -14,7 +14,7 @@ interface ExecutorInterface {
    * @param BuilderInterface $builder The query builder.
    * @param integer $phase The validation phase. Must be one of the PHASE_* constant values above.
    */
-  public function validate(BuilderInterface $builder, int $phase = self::PHASE_VALIDATION);
+  public function validate(BuilderInterface $builder, $phase = self::PHASE_VALIDATION);
 
   /**
    * Execute the query and get back the rows.
