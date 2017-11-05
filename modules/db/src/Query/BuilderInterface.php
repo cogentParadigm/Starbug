@@ -76,6 +76,7 @@ interface BuilderInterface {
 	 */
 	public function group($column);
 	public function set($field, $value = null);
+	public function exclude($column);
 	/**
 	 * add a field or fields to sort by
 	 * @param string $column the column or ORDER BY statement

@@ -13,13 +13,13 @@ class QueryBuilderTestBase extends PHPUnit_Framework_TestCase {
   }
 
   function createCompiler() {
-    $compiler = new Compiler("test_");
+    $compiler = new Compiler(new MockDatabase());
     $compiler->addHook(new QueryCompilerHook($this->createSchema()));
     return $compiler;
   }
 
   function createQuery() {
-    $this->builder = new Builder();
+    $this->builder = new Builder(new MockExecutor());
     $this->builder->setSchema($this->createSchema());
     return $this->builder;
   }

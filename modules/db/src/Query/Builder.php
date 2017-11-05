@@ -8,10 +8,12 @@ class Builder implements BuilderInterface {
   use Traits\Hooks;
   use Traits\Parsing;
   use Traits\Builder;
+  use Traits\Execution;
 
   protected $schema;
 
-  public function __construct() {
+  public function __construct(ExecutorInterface $executor) {
+    $this->executor = $executor;
     $this->reset();
   }
 
@@ -56,7 +58,7 @@ class Builder implements BuilderInterface {
   }
 
   public function query($table = false) {
-    $builder = new static($this->createQuery());
+    $builder = new static($this->executor);
     $builder->setSchema($this->schema);
     if ($table) $builder->from($table);
     return $builder;

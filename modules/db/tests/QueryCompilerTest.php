@@ -19,8 +19,8 @@ class QueryCompilerTest extends PHPUnit_Framework_TestCase {
 		return new Query();
 	}
 
-	function createCompiler($prefix = "test_") {
-		return new Compiler($prefix);
+	function createCompiler() {
+		return new Compiler(new MockDatabase());
 	}
 
 	/**

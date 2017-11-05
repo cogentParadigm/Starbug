@@ -14,5 +14,5 @@ class Query implements QueryInterface {
   use Traits\Sort;
   use Traits\Limit;
   use Traits\Set;
-
+  use Traits\Exclusion;
 }

@@ -13,6 +13,10 @@ trait Set {
 		return $this->values[$field];
 	}
 
+	public function hasValue($field) {
+		return isset($this->values[$field]);
+	}
+
 	public function getValues() {
 		return $this->values;
 	}
@@ -21,9 +25,8 @@ trait Set {
 		$this->values = $values;
 	}
 
-	public function setValidatedValues($values) {
-		if (empty($this->unvalidatedValues)) $this->unvalidatedValues = $this->values;
-		$this->values = $values;
+	public function beginValidation() {
+		$this->unvalidatedValues = $this->values;
 	}
 
 	public function getUnvalidatedValue($field) {

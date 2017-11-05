@@ -10,9 +10,11 @@ class BuilderFactory implements BuilderFactoryInterface {
   }
   public function create() {
     if (is_null($this->extensions)) {
-      $this->extensions = $container->get("db.query.builder.extensions");
+      $this->extensions = $this->container->get("db.query.builder.extensions");
     }
     $builder = $this->container->make("Starbug\Db\Query\BuilderInterface");
+    $schemer = $this->container->get('Starbug\Db\Schema\SchemerInterface');
+    $builder->setSchema($schemer->getSchema());
     foreach ($this->extensions as $name => $extension) {
       $builder->addExtension($name, $extension);
     }

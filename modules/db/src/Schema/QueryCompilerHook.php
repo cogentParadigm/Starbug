@@ -5,6 +5,7 @@ use Starbug\Db\Query\CompilerInterface;
 use Starbug\Db\Query\CompilerHookInterface;
 use Starbug\Db\Query\QueryInterface;
 use Starbug\Db\Query\Traits\Parsing;
+use Starbug\Db\Query\ConditionInterface;
 
 class QueryCompilerHook implements CompilerHookInterface {
 
@@ -26,16 +27,7 @@ class QueryCompilerHook implements CompilerHookInterface {
 		}
 		$condition = $query->getCondition();
 		$conditions = $condition->getConditions();
-		foreach ($conditions as &$c) {
-			if (is_array($c)) {
-				if (!empty($c["condition"])) {
-					$c["condition"] = $this->parseColumns($query, $c["condition"]);
-				} else if (!empty($c["field"]) && is_string($c["field"])) {
-					$c["field"] = $this->parseColumn($query, $c["field"]);
-				}
-			}
-		}
-		$condition->setConditions($conditions);
+		$this->parseCondition($query, $condition);
 		$groups = $query->getGroup();
 		$query->setGroup([]);
 		foreach ($groups as $group => $value) {
@@ -46,5 +38,21 @@ class QueryCompilerHook implements CompilerHookInterface {
 		foreach ($values as $key => $value) {
 			$query->setValue($this->parseColumn($query, $key), $value);
 		}
-  }
+	}
+
+	protected function parseCondition(QueryInterface $query, ConditionInterface $condition) {
+		$conditions = $condition->getConditions();
+		foreach ($conditions as &$c) {
+			if (is_array($c)) {
+				if (!empty($c["condition"])) {
+					$c["condition"] = $this->parseColumns($query, $c["condition"]);
+				} elseif (!empty($c["field"]) && is_string($c["field"])) {
+					$c["field"] = $this->parseColumn($query, $c["field"]);
+				}
+			} elseif ($c instanceof ConditionInterface) {
+				$this->parseCondition($query, $c);
+			}
+		}
+		$condition->setConditions($conditions);
+	}
 }

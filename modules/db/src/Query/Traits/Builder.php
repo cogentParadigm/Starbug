@@ -168,6 +168,10 @@ trait Builder {
     return $this->addCondition($this->query->getCondition(), $field, $value, $operator, $options);
   }
 
+  public function conditions($fields, $operator = "=", $options = []) {
+    return $this->condition($fields, "", $operator, $options);
+  }
+
   public function where($condition, $options = []) {
     return $this->addWhere($this->query->getCondition(), $condition, $options);
   }
@@ -198,6 +202,16 @@ trait Builder {
     return $this;
   }
 
+  function param($name, $value = null) {
+    //TODO: throw deprecation error.
+    return $this->bind($name, $value = null);
+  }
+
+  function params($name, $value = null) {
+    //TODO: throw deprecation error.
+    return $this->bind($name, $value = null);
+  }
+
   /**
    * add a field or fields to group by
    * @param string $column the column or group by statement
@@ -213,6 +227,11 @@ trait Builder {
     } else {
       $this->query->setValue($field, $value);
     }
+    return $this;
+  }
+
+  function exclude($column) {
+    $this->query->addExclusion($column);
     return $this;
   }
 
@@ -235,22 +254,6 @@ trait Builder {
     return $this;
   }
 
-  public function insert() {
-    return $this->mode("insert");;
-  }
-
-  public function update() {
-    return $this->mode("update");;
-  }
-
-  public function delete() {
-    return $this->mode("delete");
-  }
-
-  public function truncate() {
-    return $this->mode("truncate");
-  }
-
   /**
    * set the number of records to skip
    * @param int $skip the number of records to skip
@@ -262,6 +265,11 @@ trait Builder {
 
   public function mode($mode) {
     $this->query->setMode($mode);
+    return $this;
+  }
+
+  public function raw($raw = true) {
+    $this->query->setRaw($raw);
     return $this;
   }
 

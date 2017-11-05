@@ -48,4 +48,7 @@ interface QueryInterface {
 	public function isUpdate();
 	public function isDelete();
 	public function isTruncate();
+	public function addExclusion($column);
+	public function removeExclusion($column);
+	public function isExcluded($column);
 }

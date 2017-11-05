@@ -2,12 +2,12 @@
 namespace Starbug\Db\Query\Traits;
 
 trait ValidationState {
-  protected $dirty = true;
+  protected $validated = false;
   protected $raw = false;
   protected $errorsPreventSaving = true;
 
-  function isDirty() {
-    return $this->dirty;
+  function isValidated() {
+    return $this->validated;
   }
 
   public function isRaw() {
@@ -18,8 +18,8 @@ trait ValidationState {
     return $this->errorsPreventSaving;
   }
 
-  function setDirty($dirty = true) {
-    $this->dirty = $dirty;
+  function setValidated($validated = true) {
+    $this->validated = $validated;
   }
 
   public function setRaw($raw = true) {

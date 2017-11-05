@@ -9,6 +9,9 @@ trait Mode {
 	}
 
 	public function setMode($mode) {
+		if ($this->mode != $mode) {
+			$this->setValidated(false);
+		}
 		$this->mode = $mode;
 	}
 

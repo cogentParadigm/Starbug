@@ -1,12 +1,23 @@
 <?php
 namespace Starbug\Db\Query;
+
+use Starbug\Core\DatabaseInterface;
+
 class Compiler implements CompilerInterface {
 	protected $parameterCount = [];
 	protected $prefix;
 	protected $hooks = [];
 
-	public function __construct($prefix = "") {
+	public function __construct(DatabaseInterface $db) {
+		$this->db = $db;
+	}
+
+	public function setPrefix($prefix) {
 		$this->prefix = $prefix;
+	}
+
+	public function getPrefix() {
+		return $this->db->prefix("");
 	}
 
 	public function build(QueryInterface $query) {
@@ -146,7 +157,7 @@ class Compiler implements CompilerInterface {
 		$set = array();
 		$values = $query->getValues();
 		foreach ($values as $name => $value) {
-			if (!isset($this->exclusions[$name]) || true != $this->exclusions[$name]) {
+			if (!$query->isExcluded($name)) {
 				if ($value == "NULL") $value = null;
 				$idx = $this->incrementParameterIndex("set");
 				$set[] = "`".str_replace(".", "`.`", str_replace('`', '', $name))."` = :set".$idx;
@@ -262,11 +273,18 @@ class Compiler implements CompilerInterface {
 	}
 
 	protected function prefix($table) {
-		return $this->prefix.$table;
+		return $this->db->prefix($table);
 	}
 
 	public function addHook(CompilerHookInterface $hook) {
 		$this->hooks[] = $hook;
+		return $this;
+	}
+
+	public function addHooks($hooks) {
+		foreach ($hooks as $hook) {
+			$this->addHook($hook);
+		}
 		return $this;
 	}
 

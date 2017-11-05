@@ -3,43 +3,6 @@ namespace Starbug\Db\Tests;
 use Starbug\Db\Query\Extensions\Search;
 class QueryBuilderTest extends QueryBuilderTestBase {
 
-	function parse($query, $builder = false) {
-		if (!$builder) {
-			$builder = new Builder($query);
-			$builder->setSchema($this->createSchema());
-		}
-		$selection = $query->getSelection();
-		foreach ($selection as $alias => $clause) {
-			$query->removeSelection($alias);
-			$alias = ($alias == $clause) ? false : $alias;
-			$query->addSelection($builder->parseColumns($query, $clause), $alias);
-		}
-		$condition = $query->getCondition();
-		$conditions = $condition->getConditions();
-		foreach ($conditions as &$c) {
-			if (is_array($c)) {
-				if (!empty($c["condition"])) {
-					$c["condition"] = $builder->parseColumns($query, $c["condition"]);
-				} else if (!empty($c["field"])) {
-					if (is_object($c["field"])) {
-						$this->parse($c["field"]);
-					} else $c["field"] = $builder->parseColumn($query, $c["field"]);
-				}
-			}
-		}
-		$condition->setConditions($conditions);
-		$groups = $query->getGroup();
-		$query->setGroup([]);
-		foreach ($groups as $group => $value) {
-			$query->addGroup($builder->parseColumns($query, $group));
-		}
-		$values = $query->getValues();
-		$query->setValues([]);
-		foreach ($values as $key => $value) {
-			$query->setValue($builder->parseColumn($query, $key), $value);
-		}
-	}
-
 	/**
 	 * Test table aliases
 	 */
@@ -542,27 +505,6 @@ class QueryBuilderTest extends QueryBuilderTestBase {
 		$this->assertSame("admin", $query->parameters[":default1"]);
 	}
 
-	function test_action() {
-		return;
-		$query = $this->db->query("users");
-		$this->user->setUser(array("id" => 2));
-		$query->action("read");
-
-		//expected output
-		$expected = "SELECT `users`.* ".
-								"FROM `users` AS `users` ".
-								"INNER JOIN `permits` AS `permits` ON 'users' LIKE permits.related_table && 'read' LIKE permits.action ".
-								"WHERE ".
-									"('global' LIKE `permits`.priv_type || (`permits`.priv_type='object' && `permits`.related_id=`users`.id)) && ".
-									"(`permits`.object_deleted is null || `permits`.object_deleted=`users`.deleted) && ".
-									"(`permits`.user_groups is null || `permits`.user_groups IN (SELECT groups_id FROM `users_groups` u WHERE `u`.users_id=2)) && ".
-									"(`permits`.role='everyone' || `permits`.role='user' && `permits`.who='2' || `permits`.role='self' && `users`.id='2' || `permits`.role='owner' && `users`.owner='2' || `permits`.role='groups' && (EXISTS (SELECT groups_id FROM `users_groups` o WHERE `o`.users_id=`users`.id && `o`.groups_id IN (SELECT groups_id FROM `users_groups` u WHERE `u`.users_id=2)) || NOT EXISTS (SELECT groups_id FROM `users_groups` o WHERE `o`.users_id=`users`.id)))";
-
-		//compare
-		$actual = $query->build();
-		$this->assertSame($expected, $actual);
-	}
-
 	function testRemove() {
 		$this->createQuery()->from("users")->condition("email", "phpunit")->mode("delete");
 
@@ -601,7 +543,7 @@ class QueryBuilderTest extends QueryBuilderTestBase {
 	}
 
 	function testUpdateConditionExpansion() {
-		$this->createQuery()->from("pages")->set("pages.content", "PHPUnit")->condition("owner.first_name", "phpunit")->update();
+		$this->createQuery()->from("pages")->set("pages.content", "PHPUnit")->condition("owner.first_name", "phpunit")->mode("update");
 
 		//expected output
 		$expected = "UPDATE `test_pages` AS `pages` LEFT JOIN `test_users` AS `pages_owner` ON pages_owner.id=pages.owner SET `pages`.`content` = :set0 WHERE `pages_owner`.first_name = :default0";
@@ -615,7 +557,7 @@ class QueryBuilderTest extends QueryBuilderTestBase {
 	}
 
 	function test_update_set_expansion() {
-		$this->createQuery()->from("pages")->set("owner.first_name", "PHPUnit")->condition("pages.content", "phpunit")->update();
+		$this->createQuery()->from("pages")->set("owner.first_name", "PHPUnit")->condition("pages.content", "phpunit")->mode("update");
 
 		//expected output
 		$expected = "UPDATE `test_pages` AS `pages` LEFT JOIN `test_users` AS `pages_owner` ON pages_owner.id=pages.owner SET `pages_owner`.`first_name` = :set0 WHERE `pages`.content = :default0";
