@@ -132,7 +132,7 @@ class Renderable {
 	* @param string $selector css selector
 	* @return string regex pattern
 	*/
-	function parse_selector($selector) {
+	public static function parse_selector($selector) {
 		$pattern = '/^(?P<type>[\*|\w|\-]+)?(?P<id>#[\w|\-]+)?(?P<classes>\.[\w|\-|\.]+)*(?P<data>\[.+\])*$/';
 		preg_match($pattern, $selector, $matches);
 		$tag = $matches['type'];
