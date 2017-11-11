@@ -97,15 +97,50 @@ class Executor implements ExecutorInterface {
     if ($phase == self::PHASE_VALIDATION) $query->setValidated(true);
   }
 
+  /**
+   * Replaces any parameter placeholders in a query with the value of that
+   * parameter. Useful for debugging. Assumes anonymous parameters from
+   * $params are are in the same order as specified in $query
+   *
+   * @param string $query The sql query with parameter placeholders
+   * @param array $params The array of substitution parameters
+   *
+   * @return string The interpolated query
+   */
+  public function interpolate(QueryInterface $query, $params = null) {
+    $result = $this->compiler->build($query);
+    if (is_null($params)) $params = $query->getParameters();
+    $keys = array();
+    $values = $params;
+
+      # build a regular expression for each parameter
+    foreach ($params as $key => $value) {
+      if (is_string($key)) {
+        $keys[] = '/'.$key.'/';
+      } else {
+        $keys[] = '/[?]/';
+      }
+
+      if (is_array($value)) $values[$key] = implode(',', $value);
+
+      if (is_null($value)) $values[$key] = 'NULL';
+    }
+    // Walk the array to see if we can add single-quotes to strings
+    array_walk($values, create_function('&$v, $k', 'if (!is_numeric($v) && $v!="NULL") $v = "\'".$v."\'";'));
+
+    $interpolation = preg_replace($keys, $values, $result->getSql());
+
+    return $interpolation;
+  }
+
   protected function invoke_hook(BuilderInterface $builder, $phase, $column, $hook, $argument) {
     $query = $builder->getQuery();
     $key = false;
-    $values = $query->getValues();
     $model = $query->getTable()->getName();
     $alias = $query->getAlias();
-    if (isset($values[$column])) $key = $column;
-    elseif (isset($values[$model.".".$column])) $key = $model.".".$column;
-    elseif (isset($values[$alias.".".$column])) $key = $alias.".".$column;
+    if ($query->hasValue($column)) $key = $column;
+    elseif ($query->hasValue($model.".".$column)) $key = $model.".".$column;
+    elseif ($query->hasValue($alias.".".$column)) $key = $alias.".".$column;
     if (!isset($this->hooks["store_".$column."_".$hook])) $this->hooks["store_".$column."_".$hook] = $this->hookFactory->get("store/".$hook);
     $wasHook = $hook;
     foreach ($this->hooks["store_".$column."_".$hook] as $hook) {
@@ -119,18 +154,18 @@ class Executor implements ExecutorInterface {
           elseif ($query->isUpdate()) $hook->empty_before_update($builder, $column, $argument);
           $hook->empty_validate($builder, $column, $argument);
         } else {
-          if ($query->isInsert()) $query->setValue($key, $hook->before_insert($builder, $key, $values[$key], $column, $argument));
-          elseif ($query->isUpdate()) $query->setValue($key, $hook->before_update($builder, $key, $values[$key], $column, $argument));
-          $query->setValue($key, $hook->validate($builder, $key, $values[$key], $column, $argument));
+          if ($query->isInsert()) $query->setValue($key, $hook->before_insert($builder, $key, $query->getValue($key), $column, $argument));
+          elseif ($query->isUpdate()) $query->setValue($key, $hook->before_update($builder, $key, $query->getValue($key), $column, $argument));
+          $query->setValue($key, $hook->validate($builder, $key, $query->getValue($key), $column, $argument));
         }
       } elseif ($phase == self::PHASE_STORE && $key != false) {
-        if ($query->isInsert()) $query->setValue($key, $hook->insert($builder, $key, $values[$key], $column, $argument));
-        elseif ($query->isUpdate()) $query->setValue($key, $hook->update($builder, $key, $values[$key], $column, $argument));
-        $query->setValue($key, $hook->store($builder, $key, $values[$key], $column, $argument));
+        if ($query->isInsert()) $query->setValue($key, $hook->insert($builder, $key, $query->getValue($key), $column, $argument));
+        elseif ($query->isUpdate()) $query->setValue($key, $hook->update($builder, $key, $query->getValue($key), $column, $argument));
+        $query->setValue($key, $hook->store($builder, $key, $query->getValue($key), $column, $argument));
       } elseif ($phase == self::PHASE_AFTER_STORE && $key != false) {
-        if ($query->isInsert()) $hook->after_insert($builder, $key, $values[$key], $column, $argument);
-        elseif ($query->isUpdate()) $hook->after_update($builder, $key, $values[$key], $column, $argument);
-        $hook->after_store($builder, $key, $values[$key], $column, $argument);
+        if ($query->isInsert()) $hook->after_insert($builder, $key, $query->getValue($key), $column, $argument);
+        elseif ($query->isUpdate()) $hook->after_update($builder, $key, $query->getValue($key), $column, $argument);
+        $hook->after_store($builder, $key, $query->getValue($key), $column, $argument);
       } elseif ($phase == self::PHASE_BEFORE_DELETE) {
         $hook->before_delete($builder, $column, $argument);
       } elseif ($phase == self::PHASE_AFTER_DELETE) {

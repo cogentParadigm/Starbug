@@ -172,16 +172,48 @@ trait Builder {
     return $this->condition($fields, "", $operator, $options);
   }
 
+  public function orCondition($field, $value = "", $operator = "=", $options = []) {
+    return $this->condition($field, $value, $operator, ["con" => "OR"] + $options);
+  }
+
+  public function andCondition($field, $value = "", $operator = "=", $options = []) {
+    return $this->condition($field, $value, $operator, ["con" => "AND"] + $options);
+  }
+
   public function where($condition, $options = []) {
     return $this->addWhere($this->query->getCondition(), $condition, $options);
+  }
+
+  public function orWhere($condition, $options = []) {
+    return $this->where($condition, ["con" => "OR"] + $options);
+  }
+
+  public function andWhere($condition, $options = []) {
+    return $this->where($condition, ["con" => "AND"] + $options);
   }
 
   public function havingCondition($field, $value = "", $operator = "=", $options = []) {
     return $this->addCondition($this->query->getHavingCondition(), $field, $value, $operator, $options);
   }
 
+  public function orHavingCondition($field, $value = "", $operator = "=", $options = []) {
+    return $this->havingCondition($field, $value, $operator, ["con" => "OR"] + $options);
+  }
+
+  public function andHavingCondition($field, $value = "", $operator = "=", $options = []) {
+    return $this->havingCondition($field, $value, $operator, ["con" => "AND"] + $options);
+  }
+
   public function havingWhere($condition, $options = []) {
     return $this->addWhere($this->query->getHavingCondition(), $condition, $options);
+  }
+
+  public function orHavingWhere($condition, $options = []) {
+    return $this->havingWhere($condition, ["con" => "OR"] + $options);
+  }
+
+  public function andHavingWhere($condition, $options = []) {
+    return $this->havingWhere($condition, ["con" => "AND"] + $options);
   }
 
   public function createCondition() {

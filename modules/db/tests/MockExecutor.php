@@ -3,6 +3,7 @@ namespace Starbug\Db\Tests;
 
 use Starbug\Db\Query\ExecutorInterface;
 use Starbug\Db\Query\BuilderInterface;
+use Starbug\Db\Query\QueryInterface;
 
 class MockExecutor implements ExecutorInterface {
 
@@ -31,7 +32,11 @@ class MockExecutor implements ExecutorInterface {
    * {@inheritDoc}
    */
   public function validate(BuilderInterface $builder, $phase = self::PHASE_VALIDATION) {
-    // Empty method
+    // Empty method.
+  }
+
+  public function interpolate(QueryInterface $query, $params = null) {
+    // Empty method.
   }
 
 }

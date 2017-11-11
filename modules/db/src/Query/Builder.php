@@ -8,6 +8,7 @@ class Builder implements BuilderInterface {
   use Traits\Hooks;
   use Traits\Parsing;
   use Traits\Builder;
+  use Traits\Pagination;
   use Traits\Execution;
 
   protected $schema;

@@ -31,6 +31,9 @@ trait Hooks {
 			if (!is_null($result)) {
 				return $result;
 			}
+		} else {
+			$trace = debug_backtrace();
+			trigger_error('Call to undefined method via __call(): '.$name.' in '.$trace[0]['file'].' on line '.$trace[0]['line'], E_USER_WARNING);
 		}
 		return $this;
 	}

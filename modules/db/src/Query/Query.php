@@ -15,4 +15,5 @@ class Query implements QueryInterface {
   use Traits\Limit;
   use Traits\Set;
   use Traits\Exclusion;
+  use Traits\Tagging;
 }

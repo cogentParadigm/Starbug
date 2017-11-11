@@ -36,6 +36,18 @@ interface ExecutorInterface {
   public function count(BuilderInterface $builder, array $params = []);
 
   /**
+   * Replaces any parameter placeholders in a query with the value of that
+   * parameter. Useful for debugging. Assumes anonymous parameters from
+   * $params are are in the same order as specified in $query
+   *
+   * @param string $query The sql query with parameter placeholders
+   * @param array $params The array of substitution parameters
+   *
+   * @return string The interpolated query
+   */
+  public function interpolate(QueryInterface $query, $params = null);
+
+  /**
    * Return the database connection being used.
    *
    * @return Starbug\Core\DatabaseInterface The connection.

@@ -51,7 +51,7 @@ trait Execution {
     return $result;
   }
   function count(array $params = []) {
-    return $this->executor->count($this->query, $params);
+    return $this->executor->count($this, $params);
   }
   function getId() {
     if ($this->query->isInsert()) return $this->query->getValue("id");
@@ -64,5 +64,12 @@ trait Execution {
     } elseif ($this->mode == "delete") {
       return $this->query->getValue("id");
     }
+  }
+
+  /**
+   * @see Starbug\Db\Query\ExecutorInterface
+   */
+  public function interpolate($params = null) {
+    return $this->executor->interpolate($this->query, $params);
   }
 }

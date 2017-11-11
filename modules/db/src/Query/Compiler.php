@@ -20,8 +20,8 @@ class Compiler implements CompilerInterface {
 		return $this->db->prefix("");
 	}
 
-	public function build(QueryInterface $query) {
-		$this->parameterCount = [];
+	public function build(QueryInterface $query, $reset = true) {
+		if ($reset) $this->parameterCount = [];
 
 		$this->invokeHooks("beforeCompileQuery", [$query, $this]);
 
@@ -52,7 +52,7 @@ class Compiler implements CompilerInterface {
 	}
 
 	protected function buildSubquery(QueryInterface $query, QueryInterface $parent) {
-		$result = $this->build($query);
+		$result = $this->build($query, false);
 		$parameters = $query->getParameters();
 		foreach ($parameters as $name => $value) {
 			$parent->setParameter($name, $value);
@@ -171,11 +171,14 @@ class Compiler implements CompilerInterface {
 		$conjunction = $set->getConjunction();
 		$set = $set->getConditions();
 		if (empty($set)) return "";
+		$segments = [];
 		foreach ($set as $idx => $condition) {
-			if ($condition instanceof ConditionInterface) {
-				$set[$idx] = "(".$this->buildCondition($query, $condition).")";
-			} else if (!empty($condition["condition"])) {
-				$set[$idx] = $condition["condition"];
+			if (!empty($condition["condition"])) {
+				if ($condition["condition"] instanceof ConditionInterface) {
+					$set[$idx] = "(".$this->buildCondition($query, $condition["condition"]).")";
+				} else {
+					$set[$idx] = $condition["condition"];
+				}
 			} else {
 				$conditions = "";
 				if ($condition["field"] instanceof BuilderInterface) {
@@ -238,8 +241,12 @@ class Compiler implements CompilerInterface {
 				if (!empty($condition['ornull']) && $condition['operator'] === "!=") $conditions .= ")";
 				$set[$idx] = $conditions;
 			}
+			if (!empty($segments)) {
+				$segments[] = empty($condition["con"]) ? $conjunction : $condition["con"];
+			}
+			$segments[] = $set[$idx];
 		}
-		return implode(" ".$conjunction." ", $set);
+		return implode(" ", $segments);
 	}
 
 	function buildGroup($query) {
