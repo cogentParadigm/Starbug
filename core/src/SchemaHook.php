@@ -80,12 +80,12 @@ class SchemaHook implements HookInterface {
 			}
 			if (!$table->hasColumn("created")) {
 				$schema->addColumn($table->getName(),
-					["created", "type" => "datetime", "default" => "0000-00-00 00:00:00", "time" => "insert"]
+					["created", "type" => "datetime", "default" => "0000-00-00 00:00:00", "timestamp" => "insert"]
 				);
 			}
 			if (!$table->hasColumn("modified")) {
 				$schema->addColumn($table->getName(),
-					["modified", "type" => "datetime", "default" => "0000-00-00 00:00:00", "time" => "update"]
+					["modified", "type" => "datetime", "default" => "0000-00-00 00:00:00", "timestamp" => "update"]
 				);
 			}
 		}
