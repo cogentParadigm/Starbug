@@ -73,12 +73,34 @@ define([
         localStorage.setItem(saveKey, value);
       }
       var filters = {};
-      filters[name] = value;
-      this.filter(filters);
+      if (name.substr(-2) == '[]') {
+        filters[name.substr(0, name.length-2)] = [value];
+      } else {
+        filters[name] = value;
+      }
+      var remove = false;
+      if (node.tagName == "INPUT" && node.type == "checkbox" && !node.checked) {
+        remove = true;
+      }
+      this.filter(filters, remove);
     },
 
-    filter: function(params) {
-      lang.mixin(this.query, params);
+    filter: function(params, remove) {
+      for (var k in params) {
+        if (lang.isArray(params[k]) && lang.isArray(this.query[k])) {
+          if (remove) {
+            this.query[k] = this.query[k].filter(function(i) {return params[k].indexOf(i) < 0;});
+          } else {
+            this.query[k] = this.query[k].concat(params[k]);
+          }
+        } else {
+          if (remove) {
+            delete this.query[k];
+          } else {
+            this.query[k] = params[k];
+          }
+        }
+      }
       this.emit('change', {query:this.query, update:params});
     },
 
@@ -89,7 +111,12 @@ define([
     },
 
     getInputValue: function(node) {
-      return (typeof node.get == "undefined") ? attr.get(node, 'value') : node.get('value');
+      var widget = registry.byNode(node);
+      if (typeof widget == "undefined" || typeof widget.get == "undefined") {
+        return (typeof node.get == "undefined") ? attr.get(node, 'value') : node.get('value');
+      } else {
+        return widget.get('value');
+      }
     },
 
     setInputValue: function(input, value) {

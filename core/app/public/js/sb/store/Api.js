@@ -179,6 +179,39 @@ define([
 			});
 			return this.results;
 		},
+		_renderFilterParams: function (filter) {
+			// summary:
+			//		Constructs filter-related params to be inserted into the query string
+			// returns: String
+			//		Filter-related params to be inserted in the query string
+			var type = filter.type;
+			var args = filter.args;
+			if (!type) {
+				return [''];
+			}
+			if (type === 'string') {
+				return [args[0]];
+			}
+			if (type === 'and' || type === 'or') {
+				return [arrayUtil.map(filter.args, function (arg) {
+					// render each of the arguments to and or or, then combine by the right operator
+					var renderedArg = this._renderFilterParams(arg);
+					return ((arg.type === 'and' || arg.type === 'or') && arg.type !== type) ?
+						// need to observe precedence in the case of changing combination operators
+						'(' + renderedArg + ')' : renderedArg;
+				}, this).join(type === 'and' ? '&' : '|')];
+			}
+			var target = args[1];
+			if (target) {
+				if(target._renderUrl) {
+					// detected nested query, and render the url inside as an argument
+					target = '(' + target._renderUrl() + ')';
+				} else if (target instanceof Array) {
+					target = String(target);
+				}
+			}
+			return [encodeURIComponent(args[0]) + '=' + (type === 'eq' ? '' : type + '=') + encodeURIComponent(target)];
+		},
 		_renderRangeParams: function (start, end) {
 			// summary:
 			//		Constructs range-related params to be inserted in the query string
