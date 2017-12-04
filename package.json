@@ -23,6 +23,7 @@
     "postcss-css-variables": "^0.8.0",
     "postcss-cssnext": "^2.9.0",
     "postcss-custom-media": "^6.0.0",
+    "postcss-extend": "^1.0.5",
     "postcss-import": "^11.0.0",
     "postcss-partial-import": "^4.1.0",
     "postcss-url": "^5.1.2"
