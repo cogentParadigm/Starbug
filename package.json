@@ -21,6 +21,7 @@
     "lost": "^8.0.0",
     "postcss": "^6.0.14",
     "postcss-advanced-variables": "^1.2.2",
+    "postcss-calc": "^6.0.1",
     "postcss-css-variables": "^0.8.0",
     "postcss-cssnext": "^2.9.0",
     "postcss-custom-media": "^6.0.0",
