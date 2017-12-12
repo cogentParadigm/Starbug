@@ -48,7 +48,7 @@ class ImportsForm extends FormDisplay {
   function count_source($id) {
     $file = $this->models->get("files")->query()->condition("id", $id)->one();
     $$lines = 0;
-    if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file["id"]."_".$file["filename"])["stream"])) {
+    if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file["id"]."_".$file["filename"]))) {
       while (!feof($handle)) {
         if (fgets($handle)) $lines++;
       }
