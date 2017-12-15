@@ -84,10 +84,10 @@ define([
 					var full_path = object.thumbnail;
 					var div = put('div');
 					if (object.mime_type.split('/')[0] == "image") {
-						var img = put(div, 'img');
+						var img = put(div, 'img.img-responsive');
 						img.src = full_path;
 					}
-					put(div, 'a.filename[href="'+full_path+'"][target="_blank"]', object.filename);
+					put(div, 'a.filename[href="'+full_path+'"][target="_blank"][style="word-wrap:break-word"]', object.filename);
 					files[i].filename = div.innerHTML;
 				}
 				this.store.put(files[i]);
