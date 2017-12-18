@@ -74,6 +74,7 @@ define([
       return this.domNode.value;
     },
     renderSelection: function() {
+      this.list.refresh();
       this.list.renderArray(this.selection.getData());
     }
   });
