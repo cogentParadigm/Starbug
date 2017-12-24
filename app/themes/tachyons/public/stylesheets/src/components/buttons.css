@@ -1,0 +1,38 @@
+.btn {
+  // A button should display inline but allow vertical padding.
+  display: inline-block;
+
+  // A row of buttons should keep vertical alignment
+  // regardless of tag type or quantity of text.
+  vertical-align: middle;
+  white-space: nowrap;
+
+  // Similarly, the padding and height should be equal.
+  padding: var(--spacing-small) var(--spacing-medium);
+  line-height: var(--base-line-height);
+  font-size: var(--base-font-size);
+
+  // Default appearance.
+  color: var(--dark-gray);
+  background-color: var(--near-white);
+  border: 1px solid var(--near-white);
+  border-radius: .25rem;
+}
+
+.btn-dark {
+  color: var(--white);
+  background-color: var(--gray);
+  border-color: var(--gray);
+}
+
+.btn-success {
+  color: var(--white);
+  background-color: var(--green);
+  border-color: var(--green);
+}
+
+.btn-danger {
+  color: var(--white);
+  background-color: var(--red);
+  border-color: var(--red);
+}

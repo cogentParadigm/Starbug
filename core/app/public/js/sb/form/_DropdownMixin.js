@@ -43,7 +43,7 @@ define([
       }
     },
     createToggleNode: function() {
-      this.toggleNode = put(this.controlGroupNode, 'span.input-group-btn button[type=button].btn.btn-default span.caret+span.sr-only $<', 'Toggle Dropdown');
+      this.toggleNode = put(this.controlGroupNode, 'span.input-group-btn button[type=button].btn.btn-default.btn-dark span.fa.fa-chevron-down+span.sr-only $<', 'Toggle Dropdown');
     },
     createDropdownNode: function() {
       this.dropdownNode = put(this.domNode.parentNode, 'div.select-list.hidden');

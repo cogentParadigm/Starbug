@@ -50,16 +50,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    lesslint: {
-      src: ['app/**/custom-screen.less'],
-      options: {
-        failOnError: false,
-        csslint:{
-          'adjoining-classes': false
-        },
-        formatters: [{id: 'lint-xml', dest: 'build/logs/lesslint.xml'}]
-      }
-    },
     phploc: {
       default: {
         dir: 'app core modules'
@@ -160,8 +150,8 @@ module.exports = function(grunt) {
       dev: {
         options: {
           ssh:true,
-          src:"remote:/path/to/app/public/uploads/",
-          dest:"./app/public/uploads/",
+          src:"remote:/path/to/var/public/uploads/",
+          dest:"./var/public/uploads/",
           delete:true
         }
       }
@@ -176,19 +166,16 @@ module.exports = function(grunt) {
         files: {
           "app/themes/storm/public/stylesheets/dist/screen.css": "app/themes/storm/public/stylesheets/src/screen.less"
         }
-      },
-      semantic: {
-        files: {
-          "app/themes/semantic/public/stylesheets/dist/screen.css": "app/themes/semantic/public/stylesheets/src/screen.less"
-        }
       }
     },
     postcss: {
       options: {
+        map: true,
+        parser: require("postcss-scss"),
         processors: [
-          require("postcss-partial-import")(),
-          require('postcss-advanced-variables')(),
-          require("postcss-extend")(),
+          require("precss")(),
+          require('postcss-url')({url: 'rebase'}),
+          require("postcss-calc")(),
           require("lost")(),
           require("postcss-cssnext")(),
           require("cssnano")({autoprefixer: false, discardComments:{removeAll:true}})
@@ -199,6 +186,10 @@ module.exports = function(grunt) {
       },
       storm: {
         src: "app/themes/storm/public/stylesheets/dist/*.css"
+      },
+      tachyons: {
+        src: "app/themes/tachyons/public/stylesheets/src/screen.css",
+        dest: "app/themes/tachyons/public/stylesheets/dist/screen.css"
       }
     },
     watch: {
@@ -210,9 +201,9 @@ module.exports = function(grunt) {
         files: ["app/themes/storm/public/stylesheets/src/**/*"],
         tasks: ["css:storm"]
       },
-      semantic: {
-        files: ["app/themes/semantic/public/stylesheets/src/**/*"],
-        tasks: ["css:semantic"]
+      tachyons: {
+        files: ["app/themes/tachyons/public/stylesheets/src/**/*"],
+        tasks: ["css:tachyons"]
       }
     }
   });
@@ -223,7 +214,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-deployments');
   grunt.loadNpmTasks('grunt-jsvalidate');
-  grunt.loadNpmTasks('grunt-lesslint');
   grunt.loadNpmTasks('grunt-phpcs');
   grunt.loadNpmTasks('grunt-phplint');
   grunt.loadNpmTasks('grunt-phploc');
@@ -234,8 +224,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-rsync');
   grunt.loadNpmTasks('intern');
 
-  grunt.registerTask('lint', ['phplint', 'jsvalidate', 'jshint:local', 'lesslint']);
-  grunt.registerTask('lint-ci', ['phplint', 'jsvalidate', 'jshint:ci', 'lesslint']);
+  grunt.registerTask('lint', ['phplint', 'jsvalidate', 'jshint:local']);
+  grunt.registerTask('lint-ci', ['phplint', 'jsvalidate', 'jshint:ci']);
 
   grunt.registerTask('local', ['lint', 'phploc', 'phpmd:local', 'phpcs:local', 'shell:phpcpd', 'phpunit', 'intern:local']);
   grunt.registerTask('ci', ['lint-ci', 'phploc', 'phpmd:ci', 'phpcs:ci', 'shell:phpcpd', 'phpunit', 'intern:ci']);
@@ -243,7 +233,8 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['local']);
 
   grunt.registerTask('css', function(target) {
-    grunt.task.run.apply(grunt.task, ['less', 'postcss'].map(function(task) {
+    var tasks = (target == "tachyons") ? ['postcss'] : ['less', 'postcss'];
+    grunt.task.run.apply(grunt.task, tasks.map(function(task) {
       return (target == null) ? task : task + ':' + target
     }));
   });

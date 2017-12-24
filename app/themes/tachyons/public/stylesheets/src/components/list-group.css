@@ -1,0 +1,61 @@
+// Base class
+//
+// Easily usable on <ul>, <ol>, or <div>.
+
+.list-group {
+  display: flex;
+  flex-direction: column;
+
+  // No need to set list-style: none; since .list-group-item is block level
+  padding-left: 0; // reset padding because ul and ol
+  margin-bottom: 0;
+}
+
+// Interactive list items
+//
+// Use anchor or button elements instead of `li`s or `div`s to create interactive
+// list items.
+
+.list-group-item-action {
+  width: 100%; // For `<button>`s (anchors become 100% by default though)
+  color: var(--black);
+  text-align: inherit; // For `<button>`s (anchors inherit)
+}
+
+// Individual list items
+//
+// Use on `li`s or `div`s within the `.list-group` parent.
+
+.list-group-item {
+  position: relative;
+  display: block;
+  padding: var(--spacing-small) var(--spacing-medium);
+  // Place the border on the list items and negative margin up for better styling
+  margin-bottom: -1px;
+  background-color: var(--white);
+  border: 1px solid var(--black-10);
+
+  // Round the first and last items
+  &:first-child {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+  }
+  &:last-child {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+
+  &.disabled,
+  &:disabled {
+    color: var(--gray);
+  }
+
+  // Include both here for `<a>`s and `<button>`s
+  &.active {
+    z-index: 2; // Place active items above their siblings for proper border styling
+    color: var(--white);
+    background-color: var(--blue);
+    border-color: var(--blue);
+  }
+}
