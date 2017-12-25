@@ -170,7 +170,7 @@ module.exports = function(grunt) {
     },
     postcss: {
       options: {
-        map: true,
+        map: {inline: false},
         parser: require("postcss-scss"),
         processors: [
           require("precss")(),
@@ -178,7 +178,7 @@ module.exports = function(grunt) {
           require("postcss-calc")(),
           require("lost")(),
           require("postcss-cssnext")(),
-          require("cssnano")({autoprefixer: false, discardComments:{removeAll:true}})
+          require("cssnano")({filterPlugins: false, autoprefixer: false, discardComments:{removeAll:true}})
         ]
       },
       "starbug-1": {

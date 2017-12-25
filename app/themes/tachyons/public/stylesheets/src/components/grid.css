@@ -80,6 +80,18 @@
   padding-right: var(--spacing-small);
 }
 
+@define-mixin make-col-default {
+  flex-basis: 0;
+  flex-grow: 1;
+  max-width: 100%;
+}
+
+@define-mixin make-col-auto {
+  flex-basis: 0;
+  flex-grow: 1;
+  max-width: 100%;
+}
+
 @define-mixin make-col $size, $columns: 12 {
   flex: 0 0 calc($size / $columns * 100)%;
   // Add a `max-width` to ensure content within each column does not blow out
@@ -101,18 +113,24 @@
   @mixin grid-column;
 }
 
-@define-mixin make-breakpoint-columns $columns: 12, $sel: .col, $order-sel: .order, $offset-sel: .offset {
+@define-mixin make-grid-columns $columns: 12, $sel: .col, $order-sel: .order, $offset-sel: .offset {
+
+  @for $i from 1 to 12 {
+    $(sel)-$(i) {
+      @extend grid-column;
+    }
+  }
+
+  $(sel), $(sel)-auto {
+    @extend grid-column;
+  }
 
   $(sel) {
-    flex-basis: 0;
-    flex-grow: 1;
-    max-width: 100%;
+    @mixin make-col-default;
   }
 
   $(sel)-auto {
-    flex-basis: 0;
-    flex-grow: 1;
-    max-width: 100%;
+    @mixin make-col-auto;
   }
 
   @for $i from 1 to 12 {
@@ -133,7 +151,7 @@
 
   // `$columns - 1` because offsetting by the width of an entire row isn't possible
   @for $i from 0 to 11 {
-    @if $infix != '' || $i > 0 { // Avoid emitting useless .offset-0
+    @if $i > 0 { // Avoid emitting useless .offset-0
       $(offset-sel)-$i {
         @mixin make-col-offset $i;
       }
@@ -142,25 +160,50 @@
 
 }
 
-@define-mixin make-grid-columns $columns: 12, $sel: .col, $order-sel: .order, $offset-sel: .offset, $breakpoint: 0 {
+@define-mixin make-breakpoint-columns $suffix, $breakpoint, $columns: 12, $sel: .col, $order-sel: .order, $offset-sel: .offset {
 
-  @for $i from 1 to 12 {
-    $(sel)-$(i) {
+    @for $i from 1 to 12 {
+      $(sel)-$(i)-$(suffix) {
+        @extend grid-column;
+      }
+    }
+
+    $(sel)-$(suffix), $(sel)-auto-$(suffix) {
       @extend grid-column;
     }
-  }
 
-  $(sel), $(sel)-auto {
-    @extend grid-column;
-  }
-
-  @if $breakpoint != 0 {
     @media ($breakpoint) {
-      @mixin make-breakpoint-columns $columns, $sel, $order-sel, $offset-sel;
+      $(sel)-$(suffix) {
+        @mixin make-col-default;
+      }
+
+      $(sel)-auto-$(suffix) {
+        @mixin make-col-auto;
+      }
+
+      @for $i from 1 to 12 {
+        $(sel)-$(i)-$(suffix) {
+          @mixin make-col $i;
+        }
+      }
+
+      $(order-sel)-first-$(suffix) {
+        order: -1;
+      }
+
+      @for $i from 1 to 12 {
+        $(order-sel)-$(i)-$(suffix) {
+          order: $i;
+        }
+      }
+
+      // `$columns - 1` because offsetting by the width of an entire row isn't possible
+      @for $i from 0 to 11 {
+        $(offset-sel)-$(i)-$(suffix) {
+          @mixin make-col-offset $i;
+        }
+      }
     }
-  } @else {
-    @mixin make-breakpoint-columns $columns, $sel, $order-sel, $offset-sel;
-  }
 
 }
 
@@ -170,8 +213,8 @@
 
 @mixin make-grid-columns;
 
-@mixin make-grid-columns 12, .col-ns, .order-ns, .offset-ns, var(--breakpoint-not-small);
+@mixin make-breakpoint-columns ns, --breakpoint-not-small;
 
-@mixin make-grid-columns 12, .col-m, .order-m, .offset-m, var(--breakpoint-medium);
+@mixin make-breakpoint-columns m, --breakpoint-medium;
 
-@mixin make-grid-columns 12, .col-l, .order-l, .offset-l, var(--breakpoint-large);
+@mixin make-breakpoint-columns l, --breakpoint-large;
