@@ -172,8 +172,8 @@ class TestsMigration extends AbstractMigration {
 		 ****************************************/
 		//store a timestamp on insert or update of a record
 		$this->schema->addTable(["hook_store_time"],
-			["creation_stamp", "type" => "datetime", "time" => "insert"],
-			["update_stamp", "type" => "datetime", "time" => "update"]
+			["creation_stamp", "type" => "datetime", "timestamp" => "insert"],
+			["update_stamp", "type" => "datetime", "timestamp" => "update"]
 		);
 
 		/*****************************************
