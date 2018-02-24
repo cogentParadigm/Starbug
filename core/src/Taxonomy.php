@@ -17,6 +17,7 @@ class Taxonomy implements TaxonomyInterface {
 		$terms = array();
 		$parents = $this->db->query("terms")->condition("taxonomy", $taxonomy)->condition("parent", $parent)->sort("position");
 		if ($taxonomy == "groups" && !$this->user->loggedIn("root")) $parents->condition("slug", "root", "!=");
+		$parents = $parents->all();
 		foreach ($parents as $idx => $term) {
 			$term['depth'] = $depth;
 			$terms[] = $term;
@@ -41,8 +42,13 @@ class Taxonomy implements TaxonomyInterface {
 		$tag = $this->filter->normalize($tag);
 		$slug = strtolower($tag);
 		//IF THE TAG IS ALREADY APPLIED, RETURN TRUE
-		$existing = $this->db->query($table)->condition($table.".id", $object_id)
-										->open("tag")->condition($table.".".$field.".id", $tag)->orCondition($table.".".$field.".slug", $tag)->orCondition($table.".".$field.".term", $tag)->close();
+		$existing = $this->db->query($table)->condition($table.".id", $object_id);
+		$existing->condition(
+			$existing->createOrCondition()
+			->condition($table.".".$field.".id", $tag)
+			->condition($table.".".$field.".slug", $tag)
+			->condition($table.".".$field.".term", $tag)
+		);
 		if ($existing->one()) return true;
 
 		//IF THE TERM DOESN'T EXIST, ADD IT
@@ -68,6 +74,8 @@ class Taxonomy implements TaxonomyInterface {
 		$column_info = $this->models->get($table)->column_info($field);
 		if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
 		$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
-		$this->db->query($tags)->condition($tags.".".$table."_id", $object_id)->open("terms")->condition($field."_id.id", $tag)->orCondition($field."_id.slug", $tag)->orCondition($field."_id.term", $tag)->close()->delete();
+		$query = $this->db->query($tags)->condition($tags.".".$table."_id", $object_id);
+		$fields = [$field."_id.id", $field."_id.slug", $field."_id.term"];
+		$query->where("(".implode("=:tag || ", $fields)."=:tag)")->bind("tag", $tag)->delete();
 	}
 }

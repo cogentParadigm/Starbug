@@ -6,7 +6,7 @@ class StoreReferencesHook extends QueryHook {
 		$this->models = $models;
 	}
 	function validate($query, $key, $value, $column, $argument) {
-		if ($query->unvalidated[$key] === "") {
+		if ($query->getUnvalidatedValue($key) === "") {
 			$this->replace = true;
 		}
 		return $value;

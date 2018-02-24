@@ -5,7 +5,7 @@ class SettingsForm extends FormDisplay {
 	public $cancel_url = "admin";
 	public $default_action = "update";
 	function build_display($options) {
-		$settings = $this->models->get("settings")->query()->select("settings.*,category.term,category.slug")->sort("settings_category.term_path, settings_category.position");
+		$settings = $this->models->get("settings")->query()->select("settings.*,category.term,category.slug")->sort("settings_category.term_path, settings_category.position")->all();
 		$this->request->setPost('settings', array());
 		$last = "";
 		foreach ($settings as $idx => $setting) {
