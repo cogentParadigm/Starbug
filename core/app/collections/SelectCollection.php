@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 class SelectCollection extends Collection {
 	public function build($query, &$ops) {
-		$query->undo("select");
+		$query->removeSelection();
 		if (empty($ops['id'])) {
 			$query->condition($query->model.".deleted", "0");
 		}

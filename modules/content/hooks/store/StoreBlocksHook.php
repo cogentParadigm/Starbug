@@ -10,10 +10,10 @@ class StoreBlocksHook extends QueryHook {
 	}
 	function validate($query, $key, $value, $column, $argument) {
 		$query->exclude($key);
-		if ($query->mode == "insert") {
+		if ($query->isInsert()) {
 			$this->db->queue("blocks", array("type" => "text",  "region" => "content",  "position" => 1, "pages_id" => "", "content" => $this->filter->html($value['content-1'])));
 		} else {
-			$blocks = $this->db->query("blocks")->select("blocks.*")->condition($query->model."_id", $query->fields["id"])->all();
+			$blocks = $this->db->query("blocks")->select("blocks.*")->condition($query->model."_id", $query->getId())->all();
 			foreach ($blocks as $block) {
 				$key = $block['region'].'-'.$block['position'];
 				if (isset($value[$key])) $this->db->queue("blocks", array("id" => $block['id'], "content" => $this->filter->html($value[$key])));

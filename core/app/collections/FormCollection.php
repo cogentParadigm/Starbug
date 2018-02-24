@@ -15,7 +15,7 @@ class FormCollection extends Collection {
 		foreach ($fields as $fieldname => $field) {
 			if ($this->models->has($field['type'])) {
 				if (empty($field['column'])) $field['column'] = "id";
-				$query->select($query->model.'.'.$fieldname.'.'.$field['column'].' as '.$fieldname);
+				$query->select("GROUP_CONCAT(".$query->model.'.'.$fieldname.'.'.$field['column'].') as '.$fieldname);
 			}
 		}
 		$parent = $model->base;
@@ -23,7 +23,7 @@ class FormCollection extends Collection {
 			foreach ($this->models->get($parent)->hooks as $column => $field) {
 				if ($this->models->has($field['type'])) {
 					if (empty($field['column'])) $field['column'] = "id";
-					$query->select($query->model.'.'.$column.'.'.$field['column'].' as '.$column);
+					$query->select("GROUP_CONCAT(".$query->model.'.'.$column.'.'.$field['column'].') as '.$column);
 				}
 			}
 			$parent = $this->models->get($parent)->base;

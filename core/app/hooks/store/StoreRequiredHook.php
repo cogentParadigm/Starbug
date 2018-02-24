@@ -15,7 +15,7 @@ class StoreRequiredHook extends QueryHook {
 		if ($argument == "always") $this->models->get($query->model)->error("This field is required.", $column);
 	}
 	function store($query, $key, $value, $column, $argument) {
-		if ($value === "" && empty($query->exclusions[$key])) $this->models->get($query->model)->error("This field is required", $column);
+		if ($value === "" && !$query->isExcluded($key)) $this->models->get($query->model)->error("This field is required", $column);
 		return $value;
 	}
 }

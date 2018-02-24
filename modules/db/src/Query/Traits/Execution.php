@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Db\Query\Traits;
 
+use ArrayIterator;
+
 trait Execution {
   public function validate() {
     return $this->executor->validate($this);
@@ -71,5 +73,9 @@ trait Execution {
    */
   public function interpolate($params = null) {
     return $this->executor->interpolate($this->query, $params);
+  }
+
+  public function getIterator() {
+    return new ArrayIterator($this->execute());
   }
 }

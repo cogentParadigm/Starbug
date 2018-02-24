@@ -12,8 +12,8 @@ class StoreSlugHook extends QueryHook {
 		$query->set($column, $this->validate($query, $column, "", $column, $argument));
 	}
 	function validate($query, $key, $value, $column, $argument) {
-		if (empty($value) && isset($query->fields[$argument])) {
-			$value = $query->fields[$argument];
+		if (empty($value) && $query->hasValue($argument)) {
+			$value = $query->getValue($argument);
 
 			$value = strtolower(str_replace(" ", "-", $this->filter->normalize($value)));
 

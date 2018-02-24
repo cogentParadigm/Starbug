@@ -1,5 +1,12 @@
 <?php
 namespace Starbug\Core;
+
+use PDO;
+use SplQueue;
+use Starbug\Db\Query\BuilderFactory;
+use Starbug\Db\Query\QueryInterface;
+use Starbug\Db\Query\CompilerInterface;
+
 abstract class AbstractDatabase implements DatabaseInterface {
 	/**
 	* @var int holds the number of records returned by last query
@@ -46,12 +53,19 @@ abstract class AbstractDatabase implements DatabaseInterface {
 	protected $config;
 	protected $params;
 	protected $models;
-	protected $hooks;
+	protected $hooks = [];
 	protected $timezone = false;
 
-	public function __construct(ModelFactoryInterface $models, HookFactoryInterface $hooks, ConfigInterface $config) {
+	const PHASE_VALIDATION = 0;
+	const PHASE_STORE = 1;
+	const PHASE_AFTER_STORE = 2;
+	const PHASE_BEFORE_DELETE = 3;
+	const PHASE_AFTER_DELETE = 4;
+
+	public function __construct(ModelFactoryInterface $models, HookFactoryInterface $hook_builder, BuilderFactory $queryBuilderFactory, ConfigInterface $config) {
 		$this->models = $models;
-		$this->hooks = $hooks;
+		$this->hook_builder = $hook_builder;
+		$this->queryBuilderFactory = $queryBuilderFactory;
 		$this->config = $config;
 		$this->queue = new QueryQueue();
 	}
@@ -116,21 +130,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
 	* @return array record or records
 	*/
 	function query($froms, $args = array(), $replacements = array()) {
-		if (!empty($args['params'])) $replacements = $args['params'];
-
-		//create query object
-		$query = new query($this, $this->models, $this->hooks, $froms);
-
-		//call functions
-		foreach ($args as $k => $v) {
-			if (method_exists($query, $k)) call_user_func(array($query, $k), $v);
-		}
-
-		//set parameters
-		$query->parameters = $replacements;
-
-		//fetch results
-		return ((!empty($args['limit'])) && ($args['limit'] == 1)) ? $query->execute() : $query;
+		return $this->queryBuilderFactory->create()->from($froms);
 	}
 
 	/**
@@ -155,8 +155,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
 	* @return array validation errors
 	*/
 	function queue($name, $fields = array(), $from = "auto", $unshift = false) {
-		$query = new query($this, $this->models, $this->hooks, $name);
-		foreach ($fields as $col => $value) $query->set($col, $value);
+		$query = $this->queryBuilderFactory->create()->from($name)->set($fields);
 
 		if ($from === "auto" && !empty($fields['id'])) $from = array("id" => $fields['id']);
 
@@ -187,7 +186,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
 	*/
 	function remove($from, $where) {
 		if (!empty($where)) {
-			$del = new query($this, $this->models, $this->hooks, $from);
+			$del = $this->queryBuilderFactory->create()->from($from);
 			$this->record_count = $del->condition($where)->delete();
 			return $this->record_count;
 		}
@@ -223,4 +222,5 @@ abstract class AbstractDatabase implements DatabaseInterface {
 	public function failure($model, $action) {
 		return (($this->models->get($model)->action == $action) && (!empty($this->errors)));
 	}
+
 }

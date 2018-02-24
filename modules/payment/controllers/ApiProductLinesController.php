@@ -28,10 +28,11 @@ class ApiProductLinesController extends ApiController {
   }
   function filterQuery($collection, $query, &$ops) {
     if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) {
-      $query->open("access");
-      $query->condition("product_lines.orders_id.token", $this->request->getCookie("cid"));
-      $query->orCondition("product_lines.orders_id.owner", $this->user->userinfo("id"));
-      $query->close();
+      $query->condition(
+        $query->createCondition()
+          ->condition("product_lines.orders_id.token", $this->request->getCookie("cid"))
+          ->orCondition("product_lines.orders_id.owner", $this->user->userinfo("id"))
+      );
     }
     return $query;
   }

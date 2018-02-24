@@ -21,8 +21,10 @@ trait Selection {
 		return $alias;
 	}
 
-	public function removeSelection($alias) {
-		if (isset($this->selection[$alias])) {
+	public function removeSelection($alias = false) {
+		if (false === $alias) {
+			$this->selection = [];
+		} elseif (isset($this->selection[$alias])) {
 			unset($this->selection[$alias]);
 		}
 	}

@@ -5,6 +5,8 @@
  * @ingroup test
  */
 namespace Starbug\Core;
+
+use PDO;
 /**
  * The Fixture class. Fixtures hold data sets used by the testing harness
  * @ingroup Fixture
@@ -25,7 +27,11 @@ abstract class DatabaseTestCase extends \PHPUnit_Extensions_Database_TestCase {
 	final public function getConnection() {
 		global $container;
 		if ($this->conn === null) {
-			$this->conn = $this->createDefaultDBConnection($container->get("databases.default"), $container->get("database_name"));
+			$config = $container->get("Starbug\Core\ConfigInterface");
+			$name = $container->get("database_name");
+			$params = $config->get("db/".$name);
+			$pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
+			$this->conn = $this->createDefaultDBConnection($pdo, $name);
 		}
 		if ($this->db === null) {
 			$this->db = $container->get("Starbug\Core\DatabaseInterface");

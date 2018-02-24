@@ -1,6 +1,9 @@
 <?php
 namespace Starbug\Db\Query;
-interface BuilderInterface {
+
+use IteratorAggregate;
+
+interface BuilderInterface extends IteratorAggregate {
 	/**
 	 * specify fields for selection
 	 * @param string $field the name of the field
