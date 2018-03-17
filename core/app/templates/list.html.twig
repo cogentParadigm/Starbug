@@ -1,0 +1,17 @@
+{% set label = helper("models").get(model).label %}
+{% if dialog is not empty %}
+  {% if grid_attributes is empty %}
+    {% set grid_attributes = {} %}
+  {% endif %}
+  {% set grid_attributes = grid_attributes|merge({"dialog": model ~ "_form"}) %}
+{% endif %}
+<div class="panel panel-default">
+  <div class="panel-heading"><strong><span>{{ label }}</span></strong></div>
+  <div class="panel-body">
+  {{ include([model ~ "/admin-toolbar.html.twig", "admin-toolbar.html.twig"]) }}
+  {{ helper("displays").render((model|title) ~ "Grid", {"attributes": grid_attributes}) }}
+  </div>
+</div>
+{% if dialog %}
+<div id="{{ model }}_dialog" data-dojo-type="starbug/form/Dialog" data-dojo-id="{{ model }}_form" data-dojo-props="url:'{{ request.getPath() }}/', callback:function(){ {{ model }}_grid.refresh()}"></div>
+{% endif %}

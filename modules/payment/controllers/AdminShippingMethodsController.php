@@ -17,15 +17,15 @@ class AdminShippingMethodsController extends Controller {
     $this->assign("cancel_url", "admin/shipping_methods");
   }
   function default_action() {
-    $this->render("admin/list");
+    $this->render("admin/list.html");
   }
   function create() {
     if ($this->db->success("shipping_methods", "create")) $this->redirect("admin/shipping_methods");
-    else $this->render("admin/create");
+    else $this->render("admin/create.html");
   }
   function update($id) {
     $this->assign("id", $id);
     if ($this->db->success("shipping_methods", "create")) $this->redirect("admin/shipping_methods");
-    else $this->render("admin/update");
+    else $this->render("admin/update.html");
   }
 }

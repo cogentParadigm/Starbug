@@ -11,19 +11,6 @@ interface TemplateInterface {
 	* @param string $value variable value
 	*/
 	public function assign($key, $value = null);
-
-	/**
-	* output a template
-	* @param string $path relative path to the template from the view directory without file extension
-	*/
-	public function output($paths = array(""), $params = array(), $options = array());
-
-	/**
-	* capture a rendered template
-	* @param string $path relative path to the template from the view directory without file extension
-	*/
-	public function get($paths = array(""), $params = array(), $options = array());
-
 	/**
 	* render a child template
 	* @param mixed $paths a path or an array of paths to try
@@ -40,27 +27,4 @@ interface TemplateInterface {
 	* @return string the output of the template
 	*/
 	public function capture($paths = array(""), $params = array(), $options = array());
-
-	/**
-	* convenience method to render a template from the views directory
-	* @copydoc render
-	*/
-	public function render_view($paths = array(""), $params = array());
-
-	/**
-	* convenience method to render a template from the layouts directory
-	* @copydoc render
-	*/
-	public function render_layout($paths = array(""), $params = array());
-
-	/**
-	* render content blocks from the database for the specified region
-	* @param string $region the region to render content for
-	*/
-	public function render_content($region = "content");
-
-	/**
-	* render all variants of {$tag}.{$topic} for each tag passed, plus 'global'
-	*/
-	public function publish($topic, $tags = array(), $params = array());
 }

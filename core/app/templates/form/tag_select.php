@@ -1,1 +1,0 @@
-<div data-dojo-type="starbug/form/TagBox" data-dojo-props="input_name:'<?php echo $attributes['name']; ?>', value:[<?php if (!empty($value) && is_array($value)) { echo "'".implode("', '", $value)."'"; } ?>]"></div>

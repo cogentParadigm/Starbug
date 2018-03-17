@@ -1,0 +1,25 @@
+{% if type == "file" %}
+  {% set files = "[]" %}
+  {% set column_info = helper("models").get(display.model).column_info(field) %}
+  {% set records = [] %}
+  {% if value is not empty %}
+    {% if value is not iterable %}
+      {% set value = value|preg_replace('/[,\\s]+/', ",")|split(",") %}
+    {% endif %}
+    {% set records = helper("db").query("files").condition("id", value).sort("FIELD(id, '" ~ (value|join("','") ~ "')")).all() %}
+  {% endif %}
+  {% if records is not empty %}
+    {% set files = records|json_encode|replace({'"': "'"}) %}
+  {% endif %}
+  {% set attrs = 'data-dojo-type="starbug/form/FileSelect" data-dojo-props="input_name:\'' ~ attributes.name ~ '\', files:' ~ files %}
+  {% if attributes.size is defined %}
+    {% set attrs = attrs ~ ', size:' ~ attributes.size %}
+  {% endif %}
+  {% set attrs = attrs ~ '"' %}
+  <div {{ attrs }}></div>
+{% else %}
+  {% if type == "checkbox" %}
+    <input {{ helper("filter").attributes({"type": "hidden", "id": attributes.id ~ "-hidden", "value": 0, "name": attributes.name})|raw }}/>
+  {% endif %}
+  <input {{ helper("filter").attributes(attributes)|raw }}/>
+{% endif %}

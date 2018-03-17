@@ -17,7 +17,7 @@ class Form extends Definition {
 		$this->setParameter("fields", $table->getColumns());
 		$this->setParameter("className", $className);
 		$this->addTemplate(
-			"generate/form/form",
+			"generate/form/form.php",
 			$this->module."/displays/".$className."Form.php"
 		);
 	}

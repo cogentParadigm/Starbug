@@ -12,7 +12,7 @@ class TermsForm extends FormDisplay {
 		$this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Parent"]'.(($ops['tab'] === "breadcrumbs") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'breadcrumbs');
 		//left
 		$this->add(["term", "pane" => "left"]);
-		if (!empty($options['new'])) $display->add(["taxonomy", "pane" => "left", "input_type" => "text"]);
+		if (!empty($options['new'])) $this->add(["taxonomy", "pane" => "left", "input_type" => "text"]);
 		else $this->add(["taxonomy", "pane" => "left", "default" => $options['taxonomy']]);
 		$this->add(["description", "pane" => "left", "class" => "rich-text"]);
 		//$display->add(["blocks", "input_type" => "blocks", "pane" => "left"]);

@@ -11,11 +11,11 @@ class AdminMediaController extends Controller {
     $this->assign("model", "files");
   }
   function default_action() {
-    $this->response->template = "media-browser";
+    $this->response->template = "media-browser.html";
   }
   function update($id) {
     $this->assign("id", $id);
     $this->assign("action", "update");
-    $this->render("admin/update");
+    $this->render("admin/update.html");
   }
 }

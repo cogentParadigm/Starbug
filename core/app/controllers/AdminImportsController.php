@@ -14,20 +14,20 @@ class AdminImportsController extends Controller {
 		$this->assign("cancel_url", "admin/imports");
 	}
 	function default_action() {
-		$this->render("admin/list");
+		$this->render("admin/list.html");
 	}
 	function create() {
 		if ($this->db->success("imports", "create")) $this->redirect("admin/imports/update/".$this->models->get("imports")->insert_id);
-		else $this->render("admin/create");
+		else $this->render("admin/create.html");
 	}
 	function update($id) {
 		$this->assign("id", $id);
 		$import = $this->models->get("imports")->load($id);
 		if ($this->db->success("imports", "create")) $this->redirect("admin/".$import['model']."/import");
-		else $this->render("admin/update");
+		else $this->render("admin/update.html");
 	}
 	function run($id) {
 		$this->assign("id", $id);
-		$this->render("admin/update", array("form_header" => "Run Import", "action" => "run"));
+		$this->render("admin/update.html", array("form_header" => "Run Import", "action" => "run"));
 	}
 }

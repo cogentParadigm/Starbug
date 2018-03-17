@@ -37,23 +37,54 @@ class ImportsForm extends FormDisplay {
   function build_run($options) {
     $this->actions->remove($this->default_action);
     $source = $this->get("source");
-    $lines = $this->count_source($source);
+    $output = $this->preparePaginatedOutput($source);
     if ($this->success("run")) {
       $this->add(["success", "input_type" => "html", "value" => '<p class="alert alert-success">Import completed</p>']);
     }
-    $this->add(["table", "input_type" => "template", "value" => "csv-table", "class" => "table table-striped", "csv" => $source]);
-    $this->add(["count", "input_type" => "html", "value" => "<p>".$lines." rows. Press import to begin.</p>"]);
+    $this->add(["table", "input_type" => "template", "value" => "csv-table.html", "class" => "table table-striped"] + $output);
+    $this->add(["count", "input_type" => "html", "value" => "<p>".$output["pager"]->count." rows. Press import to begin.</p>"]);
     $this->actions->add(["run", "label" => "Import", "class" => "btn-success"]);
   }
-  function count_source($id) {
+  function preparePaginatedOutput($id) {
+    $rows = [];
     $file = $this->models->get("files")->query()->condition("id", $id)->one();
-    $$lines = 0;
+    $count = 0;
     if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file["id"]."_".$file["filename"]))) {
       while (!feof($handle)) {
-        if (fgets($handle)) $lines++;
+        if (fgets($handle)) $count++;
       }
     }
+    $count--;
+    $size = 20;
+    $pager = new Pager($count, $size, intval($this->request->getParameter('pg')));
+    $line = 0;
+    rewind($handle);
+    $rows[] = fgetcsv($handle);
+    while ($row = fgetcsv($handle)) {
+      $line++;
+      if ($line <= $pager->start) continue;
+      if ($line > $pager->finish) break;
+      $rows[] = $row;
+    }
     fclose($handle);
-    return $lines-1;
+    $vars = $this->request->getParameters();
+    unset($vars['pg']);
+    $prefix = $this->request->getURL()->getDirectory();
+    $prefix .= $this->request->getPath()."?";
+    if (!empty($vars)) $prefix .= http_build_query($vars).'&';
+    $prefix .= "pg=";
+    $half = floor($pager->range/2);
+    //set $from to $current_page minus half of $range OR 1
+    $fromPage = ($pager->current_page > $half) ? $pager->current_page - $half : 1;
+    //set $to to the full range from from
+    $toPage = $fromPage + $pager->range;
+    //if that pushes us past the end, shift back to the end
+    if ($toPage > $pager->last) {
+      $toPage = $pager->last;
+      $fromPage = $toPage - $pager->range;
+    }
+    //if there are not enough pages, bring up $from to 1
+    if ($fromPage < 1) $fromPage = 1;
+    return ["rows" => $rows, "pager" => $pager, "url" => $prefix, "fromPage" => $fromPage, "toPage" => $toPage];
   }
 }

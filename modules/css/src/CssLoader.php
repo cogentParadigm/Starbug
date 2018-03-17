@@ -3,12 +3,15 @@ namespace Starbug\Css;
 use Starbug\Core\ResourceLocatorInterface;
 use Starbug\Core\URLInterface;
 use Starbug\Core\ResponseInterface;
+use Twig_Environment;
+
 class CssLoader {
 	protected $options = false;
-	public function __construct(ResourceLocatorInterface $locator, URLInterface $url, ResponseInterface $response, $modules) {
+	public function __construct(ResourceLocatorInterface $locator, URLInterface $url, ResponseInterface $response, Twig_Environment $twig, $modules) {
 		$this->locator = $locator;
 		$this->url = $url;
 		$this->response = $response;
+		$this->twig = $twig;
 		$this->modules = $modules;
 	}
 	public function getConfiguration($reload = false) {
@@ -30,8 +33,31 @@ class CssLoader {
 		return $stylesheets;
 	}
 	public function setTheme($name) {
+		$previous = $this->modules["Starbug\Theme"];
 		$this->modules["Starbug\Theme"] = "app/themes/".$name;
 		$this->locator->set("Starbug\Theme", "app/themes/".$name);
+		$templates = $this->twig->getLoader()->getPaths();
+		$layouts = $this->twig->getLoader()->getPaths("layouts");
+		$views = $this->twig->getLoader()->getPaths("views");
+		foreach ($templates as $idx => $path) {
+			if ($path == $previous."/templates") {
+				$templates[$idx] = "app/themes/".$name."/templates";
+			}
+		}
+		foreach ($layouts as $idx => $path) {
+			if ($path == $previous."/layouts") {
+				$layouts[$idx] = "app/themes/".$name."/layouts";
+			}
+		}
+		foreach ($views as $idx => $path) {
+			if ($path == $previous."/views") {
+				$views[$idx] = "app/themes/".$name."/views";
+			}
+		}
+		$this->twig->getLoader()->setPaths($templates);
+		$this->twig->getLoader()->setPaths(["app/themes/".$name."/templates"], "theme");
+		$this->twig->getLoader()->setPaths($layouts, "layouts");
+		$this->twig->getLoader()->setPaths($views, "views");
 		$this->response->theme = $name;
 		$this->options = false;
 	}

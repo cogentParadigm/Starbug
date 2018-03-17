@@ -1,0 +1,37 @@
+<!-- MAIN PANEL -->
+<div id="main" role="main">
+
+  <!-- RIBBON -->
+  <div id="ribbon">
+
+    <!-- collapse menu button -->
+    <span class="ribbon-button-alignment">
+      <span> <a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu" style="margin:5px 10px 0 0"><i class="fa fa-reorder" style="color:#fff"></i></a> </span>
+    </span>
+    <!-- end collapse menu -->
+
+    <!-- breadcrumb -->
+    <ol class="breadcrumb">
+      {% for crumb in helper("breadcrumbs") %}
+        <li>
+          {% if crumb.href is not defined %}
+            {{ crumb.title }}
+          {% else %}
+            <a href="{{ helper("url").build(crumb.href) }}">{{ crumb.title }}</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+    <!-- end breadcrumb -->
+
+  </div>
+  <!-- END RIBBON -->
+
+  <!-- MAIN CONTENT -->
+  <div id="content">
+    {{ include("layout.html.twig") }}
+  </div>
+  <!-- END MAIN CONTENT -->
+
+</div>
+<!-- END MAIN PANEL -->

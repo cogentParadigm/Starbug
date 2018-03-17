@@ -13,13 +13,13 @@ class AdminCategoriesController extends Controller {
 		$this->assign("model", "categories");
 	}
 	function default_action() {
-		$this->render("admin/list");
+		$this->render("admin/list.html");
 	}
 	function create() {
 		if ($this->db->success("categories", "create")) {
 			$this->redirect("admin/categories");
 		} else {
-			$this->render("admin/create");
+			$this->render("admin/create.html");
 		}
 	}
 	function update($id) {
@@ -27,10 +27,10 @@ class AdminCategoriesController extends Controller {
 		if ($this->db->success("categories", "create")) {
 			$this->redirect("admin/categories");
 		} else {
-			$this->render("admin/update");
+			$this->render("admin/update.html");
 		}
 	}
 	function import() {
-		$this->render("admin/import");
+		$this->render("admin/import.html");
 	}
 }

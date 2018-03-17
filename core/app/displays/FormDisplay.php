@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 class FormDisplay extends ItemDisplay {
 	public $type = "form";
-	public $template = "form";
+	public $template = "form.html";
 	public $collection = "Form";
 	public $input_name = false;
 
@@ -298,7 +298,7 @@ class FormDisplay extends ItemDisplay {
 		}
 		$this->assign("attributes", $field);
 		$this->assign("control", $control);
-		return $this->output->capture(array($field['model']."/form/$field[field]-$capture", "form/$field[field]-$capture", $field['model']."/form/$capture", "form/$capture"), $this->vars);
+		return $this->output->capture(array($field['model']."/form/$field[field]-$capture.html", "form/$field[field]-$capture.html", $field['model']."/form/$capture.html", "form/$capture.html"), $this->vars);
 	}
 
 	function __call($name, $arguments) {

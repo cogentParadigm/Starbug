@@ -30,15 +30,15 @@ class Model extends Definition {
 			}
 		}
 		$this->setParameter("factory", $factory);
-		$this->setParameter("use", $use);
+		$this->setParameter("useLines", $use);
 		$this->setParameter("className", $className);
 		$this->addTemplate(
-			"generate/model/base",
+			"generate/model/base.php",
 			"var/models/".$className."Model.php"
 		);
 		if (empty($options["update"])) {
 			$this->addTemplate(
-				"generate/model/model",
+				"generate/model/model.php",
 				$this->module."/models/".$className.".php"
 			);
 		}

@@ -1,0 +1,9 @@
+<table {{ helper("filter").attributes(display.attributes)|raw }}>
+<thead>
+  <tr>
+    {% for field, options in display.fields %}
+    <th {{ helper("filter").attributes(display.column_attributes(field, options))|raw }}>{{ options.label }}</th>
+    {% endfor %}
+  </tr>
+<thead>
+</table>

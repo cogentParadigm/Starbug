@@ -1,0 +1,10 @@
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+    <title>{{ response.title|striptags }} - {{ helper('settings').get('site_name') }}</title>
+    <meta name="description" content="{{ response.description }}"/>
+    {{ response.meta|raw }}
+    <base href="{{ helper('url').build('') }}"/>
+    {% if response.canonical %}
+      <link rel="canonical" href="{{ response.canonical }}"/>
+    {% endif %}
+    {{ helper('settings').get('meta')|raw }}
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>

@@ -11,7 +11,6 @@ return array(
 	'default_path' => 'home',
 	'time_zone' => 'America/Vancouver',
 	'hmac_key' => '',
-	'filesystem.tmp' => 'var/tmp',
 	'routes' => [
 		"api" => [
 			"controller" => "Starbug\\Core\\ApiRoutingController",
@@ -31,15 +30,15 @@ return array(
 		"upload" => [
 			"title" => "Starbug\\Core\\UploadController",
 			"controller" => "upload",
-			"template" => "xhr",
+			"template" => "xhr.xhr",
 			"groups" => "user"
 		],
 		"terms" => [
-			"template" => "xhr",
+			"template" => "xhr.xhr",
 			"groups" => "user"
 		],
 		"robots" => [
-			"template" => "txt"
+			"template" => "txt.txt"
 		]
 	],
 	'Starbug\Core\SettingsInterface' => DI\object('Starbug\Core\DatabaseSettings'),
@@ -50,7 +49,7 @@ return array(
 	'Starbug\Core\ErrorHandler' => DI\decorate(function ($previous, $container) {
 		$cli = $container->get("cli");
 		if (false === $cli) {
-			$previous->setTemplate("exception-html");
+			$previous->setTemplate("exception.html");
 		}
 		return $previous;
 	}),
@@ -66,17 +65,6 @@ return array(
 	'Starbug\Core\Images' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
 	'Starbug\Core\ImportsForm' => DI\object()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
 	'Starbug\Core\ImportsFieldsForm' => DI\object()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
-	'databases.default' => function (ContainerInterface $c) {
-		$config = $c->get("Starbug\Core\ConfigInterface");
-		$name = $c->get("database_name");
-		$params = $config->get("db/".$name);
-		return new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
-	},
-	'databases.test' => function (ContainerInterface $c) {
-		$config = $c->get("Starbug\Core\ConfigInterface");
-		$params = $config->get("db/test");
-		return new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
-	},
 	'db.schema.migrations' => [
 		DI\get('Starbug\Core\Migration')
 	],
@@ -101,10 +89,13 @@ return array(
 	},
 	'filesystem.adapters' => ['default', 'public', 'tmp'],
 	'filesystem.adapter.default' => 'public',
+	'filesystem.public' => 'var/public/uploads',
+	'filesystem.tmp' => 'var/tmp',
 	'filesystem.adapter.public' => function (ContainerInterface $c) {
 		$here = $c->get("Starbug\Core\URLInterface");
-		$url = (new URL($here->getHost(), $here->getDirectory()."var/public/uploads/"))->setScheme($here->getScheme());
-		$adapter = new Local($c->get("base_directory")."/var/public/uploads");
+		$public = $c->get("filesystem.public");
+		$url = (new URL($here->getHost(), $here->getDirectory().$public."/"))->setScheme($here->getScheme());
+		$adapter = new Local($c->get("base_directory")."/".$public);
 		$adapter->setURLInterface($url);
 		return $adapter;
 	},

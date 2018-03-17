@@ -12,13 +12,13 @@ class AdminImportsFieldsController extends Controller {
 		$this->assign("cancel_url", "admin/imports_fields");
 	}
 	function default_action() {
-		$this->render("admin/list");
+		$this->render("admin/list.html");
 	}
 	function create() {
-		$this->render("admin/create");
+		$this->render("admin/create.html");
 	}
 	function update($id) {
 		$this->assign("id", $id);
-		$this->render("admin/update");
+		$this->render("admin/update.html");
 	}
 }

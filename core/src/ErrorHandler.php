@@ -9,7 +9,7 @@ use Psr\Log\LogLevel;
 class ErrorHandler {
 
 	protected $out;
-	protected $exceptionTemplate = "exception-cli";
+	protected $exceptionTemplate = "exception.txt";
 	protected $logger;
 	protected $map = array(
 		E_ERROR             => LogLevel::CRITICAL,
@@ -65,7 +65,7 @@ class ErrorHandler {
 		$this->logger->error(sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($exception), $error['message'], $error['file'], $error['line']), array('exception' => $exception));
 		header("HTTP/1.1 500");
 		header('Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0');
-		$this->out->render($this->exceptionTemplate, array("error" => $error));
+		$this->out->render($this->exceptionTemplate, array("error" => $error, "handler" => $this));
 		exit(255);
 	}
 
@@ -102,7 +102,7 @@ class ErrorHandler {
 		}
 		header("HTTP/1.1 500");
 		header('Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0');
-		$this->out->render($this->exceptionTemplate, array("error" => $error));
+		$this->out->render($this->exceptionTemplate, array("error" => $error, "handler" => $this));
 		exit(1);
 	}
 

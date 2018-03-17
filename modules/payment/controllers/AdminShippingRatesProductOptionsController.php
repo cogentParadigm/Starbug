@@ -16,13 +16,13 @@ class AdminShippingRatesProductOptionsController extends Controller {
     $this->assign("model", "shipping_rates_product_options");
   }
   function default_action() {
-    $this->render("admin/list");
+    $this->render("admin/list.html");
   }
   function create() {
-    $this->render("admin/create");
+    $this->render("admin/create.html");
   }
   function update($id) {
     $this->assign("id", $id);
-    $this->render("admin/update");
+    $this->render("admin/update.html");
   }
 }

@@ -12,9 +12,9 @@ class CartController extends Controller {
   }
   function default_action() {
     if (empty($this->cart)) {
-      $this->render("cart/empty");
+      $this->render("cart/empty.html");
     } else {
-      $this->render("cart/default");
+      $this->render("cart/default.html");
     }
   }
   function add() {
@@ -24,7 +24,7 @@ class CartController extends Controller {
     } else {
       $product['description'] = '<strong>'.$product['description'].'</strong>';
       $this->assign("product", $product);
-      $this->render("cart/add");
+      $this->render("cart/add.html");
     }
   }
 }

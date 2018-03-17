@@ -1,0 +1,13 @@
+{% set new_label = "New " ~ helper("models").get(model).singular_label ~ ' <b class="fa fa-plus"></b>' %}
+{% set path = helper("url").build("admin/payment_gateway_settings/create?gateway=" ~ gateway.id) %}
+<div class="btn-group pull-right">
+  <a class="btn btn-default" href="{{ path }}">{{ new_label }}</a>
+  <a class="btn btn-default" href="javascript:window.location.href = {{ model }}_grid.collection._renderUrl().replace('json', 'csv');">
+    Export CSV <b class="fa fa-file-text-o"></b>
+  </a>
+  <a class="btn btn-default" href="{{ helper("url").build("admin/payment_gateway_settings/import") }}">
+    Import CSV <b class="fa fa-file-text-o"></b>
+  </a>
+</div>
+{{ helper("displays").render("SearchForm", {"model":model}) }}
+<br/>

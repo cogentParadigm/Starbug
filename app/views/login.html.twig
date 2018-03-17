@@ -1,0 +1,4 @@
+{% if helper("request").hasParameter("to") %}
+  {% do helper("request").setParameter("to", helper("url").build(helper("request").getParameter("to"))) %}
+{% endif %}
+{{ helper("displays").render("LoginForm", {"url":helper("request").getParameter("to")}) }}

@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 class GridDisplay extends ItemDisplay {
 	public $type = "grid";
-	public $template = "grid";
+	public $template = "grid.html";
 	public $grid_class = "starbug/grid/PagedGrid";
 	public $dnd = false;
 	public $action = "";
@@ -106,5 +106,8 @@ class GridDisplay extends ItemDisplay {
 			foreach ($params as $k => $v) $this->attributes['data-dojo-props'] .= $k.":'".$v."', ";
 			$this->attributes['data-dojo-props'] = rtrim($this->attributes['data-dojo-props'], ', ').'}';
 		}
+		$row_options = $this->fields['row_options'];
+		unset($this->fields['row_options']);
+		$this->fields['row_options'] = $row_options;
 	}
 }

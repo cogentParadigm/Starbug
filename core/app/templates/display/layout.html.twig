@@ -1,0 +1,12 @@
+<div {{ helper("filter").attributes(display.attributes) }}>
+  {% for name, field in display.fields %}
+    {% set field = field|merge({"attributes":{"class":field.attributes.class|join(" ")}}) %}
+    <div {{ helper("filter").attributes(field.attributes) }}>
+      {% for key, value in field %}
+        {% if key != "attributes" %}
+          {{ attribute(display.cells, key) }}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>

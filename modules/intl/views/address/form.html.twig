@@ -1,0 +1,8 @@
+{% if address is not empty and not edit %}
+  {{ formatted_address }}
+  <br/><br/>
+  <a href="javascript:;" class="edit btn btn-default">Edit</a>
+  <input type="hidden" class="address-value" value="{{ address.id }}"/>
+{% else %}
+  {{ helper("displays").render("AddressForm", options) }}
+{% endif %}

@@ -19,7 +19,7 @@ class AdminOrdersController extends Controller {
     $this->assign("cancel_url", "admin/orders");
   }
   function default_action() {
-    $this->render("admin/list");
+    $this->render("admin/list.html");
   }
   function details($id) {
     $this->assign("id", $id);
@@ -29,11 +29,11 @@ class AdminOrdersController extends Controller {
     $this->assign("order", $order);
     $this->assign("products", $products);
     $this->assign("shipping", $shipping);
-    $this->render("admin/orders/details");
+    $this->render("admin/orders/details.html");
   }
   function update($id) {
     $this->assign("id", $id);
     if ($this->db->success("orders", "create")) $this->redirect("admin/orders");
-    else $this->render("admin/update");
+    else $this->render("admin/update.html");
   }
 }

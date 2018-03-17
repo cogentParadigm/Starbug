@@ -1,0 +1,10 @@
+{% do response.js("storm/main") %}
+{% do response.js("bootstrap/Dropdown") %}
+{% set scripts = response.getScripts().get()|join('"' ~ ",\n\t\t\t" ~ '"') %}
+<script type="text/javascript">
+{% if scripts is not empty %}
+  require([
+    "{{ scripts|raw }}"
+  ]);
+{% endif %}
+</script>

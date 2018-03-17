@@ -1,0 +1,14 @@
+<?php
+namespace Starbug\App;
+
+use Starbug\Core\GridDisplay;
+
+class {{ className }}Grid extends GridDisplay {
+  public $model = "{{ model }}";
+  public $action = "admin";
+  function build_display($options) {
+{% for name, field in fields %}
+    $this->add(["{{ name }}"]);
+{% endfor %}
+  }
+}

@@ -17,6 +17,7 @@ class Controller {
 	 * Every controller has a default action, used when no action is specified.
 	 */
 	function default_action() {
+		$this->missing();
 	}
 
 	/**
@@ -55,7 +56,7 @@ class Controller {
 	 */
 	function forbidden() {
 		$this->response->forbidden();
-		$this->render("forbidden");
+		$this->render("forbidden.html");
 	}
 
 	/**
@@ -63,7 +64,7 @@ class Controller {
 	 */
 	function missing() {
 		$this->response->missing();
-		$this->render("missing");
+		$this->render("missing.html");
 	}
 
 	function start(RequestInterface $request, ResponseInterface $response) {

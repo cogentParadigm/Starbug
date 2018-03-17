@@ -1,5 +1,6 @@
 <?php
 namespace Starbug\Core;
+
 /**
  * Response class
  * @ingroup core
@@ -28,7 +29,7 @@ class Response implements ResponseInterface {
 	);
 
 	public $theme;
-	public $template = "html";
+	public $template = "html.html";
 	public $layout = "views";
 	public $styles;
 	public $scripts;

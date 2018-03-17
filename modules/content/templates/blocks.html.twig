@@ -1,0 +1,6 @@
+<div class="blocks {{ region }}-blocks">
+  {% set blocks = helper("db").query("blocks").condition("blocks.pages_id", id).condition("blocks.region", region).sort("position").all() %}
+  {% for item in blocks %}
+    {{ helper("displays").render("BlockDisplay", {"block": item}) }}
+  {% endfor %}
+</div>

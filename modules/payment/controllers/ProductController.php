@@ -17,6 +17,6 @@ class ProductController extends Controller {
   function details($path) {
     $product = $this->models->get("products")->load(["path" => $path]);
     $this->assign("product", $product);
-    $this->render("products/details");
+    $this->render("products/details.html");
   }
 }

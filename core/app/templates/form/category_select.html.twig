@@ -1,0 +1,5 @@
+<select {{ helper("filter").attributes(attributes) }}>
+  {% for term in terms %}
+    <option data-slug="{{ term.slug }}" value="{{ term.id }}"{% if (value is iterable and (term.id in value or term.slug in value)) or term.id == value or term.slug == value %} selected="selected"{% endif %}>{{ term.term }}</option>
+  {% endfor %}
+</select>

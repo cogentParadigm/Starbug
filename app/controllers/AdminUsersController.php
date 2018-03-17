@@ -16,17 +16,17 @@ class AdminUsersController extends Controller {
     $this->assign("cancel_url", "admin/users");
   }
   function default_action() {
-    $this->render("admin/list");
+    $this->render("admin/list.html");
   }
   function create() {
     if ($this->db->success("users", "create")) $this->redirect("admin/users");
-    else $this->render("admin/create");
+    else $this->render("admin/create.html");
   }
   function update($id) {
     $this->assign("id", $id);
-    $this->render("admin/update");
+    $this->render("admin/update.html");
   }
   function import() {
-    $this->render("admin/import");
+    $this->render("admin/import.html");
   }
 }

@@ -1,0 +1,28 @@
+<div class="panel panel-default">
+  <div class="panel-heading"><strong>Settings</strong></div>
+  <div class="panel-body">
+    <div class="col-md-3">
+      {{
+        include(
+          "menu.html.twig",
+          {
+            "attributes": {"id": "settings-menu", "class": "nav-tabs nav-stacked", "data-spy": "affix", "data-dojo-props": "offset:90", "data-dojo-type": "bootstrap/Affix", "style": "top:10px"},
+            "menu": "",
+            "taxonomy": "settings_category"
+          }
+        )
+      }}
+    </div>
+    <div class="col-md-9">
+      {{ helper("displays").render("SettingsForm", {"operation": "update"}) }}
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  require(["dojo/query", "put-selector/put"], function(query, put) {
+    query('#settings-menu > li > a').forEach(function(node) {
+      put(node, '[href="<?php echo $this->url->build("admin/settings#"); ?>'+node.innerText+'"]');
+      put(node, 'i.fa.fa-chevron-right[style="float:right;font-size:1.6em;line-height:1.4em"]');
+    });
+  });
+</script>

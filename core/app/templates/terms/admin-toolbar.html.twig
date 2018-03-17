@@ -1,0 +1,8 @@
+<div class="btn-group pull-right">
+  <a class="btn btn-default" href="javascript:window.location.href = {{ model }}_grid.collection._renderUrl().replace('json', 'csv');">
+    Export CSV <b class="fa fa-file-text-o"></b>
+  </a>
+  <a class="btn btn-default" href="{{ helper("url").build(request.getPath() ~ "/create?new=true") }}">New Taxonomy <b class="fa fa-plus"></b></a>
+</div>
+{{ helper("displays").render("SearchForm", {"model":model}) }}
+<br/>

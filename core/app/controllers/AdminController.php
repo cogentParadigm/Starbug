@@ -8,7 +8,7 @@ class AdminController extends Controller {
 	}
 	function default_action() {
 		if (count($this->request->getComponents()) == 1) {
-			return $this->render("admin");
+			return $this->render("admin.html");
 		}
 		$name = $this->request->getComponent(1);
 		$controller = $this->controllers->get("Admin".ucwords($name));

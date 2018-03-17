@@ -17,7 +17,7 @@ class Controller extends Definition {
   public function build(array $options = []) {
     parent::build($options);
     $this->addTemplate(
-      "generate/controller/controller",
+      "generate/controller/controller.php",
       $this->module."/controllers/".ucwords($options["name"])."Controller.php"
     );
   }

@@ -1,0 +1,12 @@
+{% if not nolabel %}
+<label for="{{ id }}"{% if display.horizontal %} class="col-sm-3"{% endif %}>
+  {% if control == "input" and (type == "checkbox" or type == "radio") %}
+    {% set a = model ~ "/form/" ~ field ~ "-" ~ control ~ ".html.twig" %}
+    {% set b = "form/" ~ field ~ "-" ~ control ~ ".html.twig" %}
+    {% set c = model ~ "/form/" ~ control ~ ".html.twig" %}
+    {% set d = "form/" ~ control ~ ".html.twig" %}
+    {{ include([a, b, c, d]) }}
+  {% endif %}
+  {{ label }}{% if required %}<span class="asterisk">*</span>{% endif %}
+</label>
+{% endif %}

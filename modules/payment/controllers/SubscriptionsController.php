@@ -22,7 +22,7 @@ class SubscriptionsController extends Controller {
   function default_action() {
     $subscriptions = $this->collections->get("Subscriptions")->query(["owner" => $this->user->userinfo("id")]);
     $this->assign("subscriptions", $subscriptions);
-    $this->render("subscriptions/list");
+    $this->render("subscriptions/list.html");
   }
   function update($id) {
     if ($this->models->get("subscriptions")->success("payment")) {
@@ -30,7 +30,7 @@ class SubscriptionsController extends Controller {
     }
     $subscription = $this->collections->get("Subscriptions")->one(["id" => $id]);
     $this->assign("subscription", $subscription);
-    $this->render("subscriptions/update");
+    $this->render("subscriptions/update.html");
   }
   function payment($id) {
     if ($this->models->get("subscriptions")->success("payment")) {
@@ -40,6 +40,6 @@ class SubscriptionsController extends Controller {
     $subscription = $this->collections->get("Subscriptions")->one(["id" => $bill["subscriptions_id"]]);
     $this->assign("subscription", $subscription);
     $this->assign("bill", $bill);
-    $this->render("subscriptions/payment");
+    $this->render("subscriptions/payment.html");
   }
 }

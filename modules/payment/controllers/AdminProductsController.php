@@ -19,11 +19,11 @@ class AdminProductsController extends Controller {
   }
   function create() {
     if ($this->db->success("products", "create")) $this->redirect("admin/products");
-    else $this->render("admin/create");
+    else $this->render("admin/create.html");
   }
   function update($id) {
     $this->assign("id", $id);
     if ($this->db->success("products", "create")) $this->redirect("admin/products");
-    else $this->render("admin/update");
+    else $this->render("admin/update.html");
   }
 }

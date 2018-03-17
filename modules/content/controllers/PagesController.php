@@ -6,6 +6,6 @@ class PagesController extends Controller {
 		"view" => "view/{id}"
 	];
 	function view($id) {
-		$this->render("blocks", array("region" => "content", "id" => $id), array("scope" => "templates"));
+		$this->render("blocks.html", array("region" => "content", "id" => $id), array("scope" => "templates"));
 	}
 }

@@ -15,7 +15,7 @@ class LoginController extends Controller {
       if ($this->user->loggedIn('admin') || $this->user->loggedIn('root')) $this->redirect('admin');
       else $this->redirect('');
     } else {
-      $this->render("login");
+      $this->render("login.html");
     }
   }
   function logout() {
@@ -23,6 +23,6 @@ class LoginController extends Controller {
     $this->redirect("");
   }
   function forgot_password() {
-    $this->render("forgot-password");
+    $this->render("forgot-password.html");
   }
 }

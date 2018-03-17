@@ -1,0 +1,7 @@
+{% for container in containers %}
+  <label>{{ container.region|replace({"-": " "})|title }}</label>
+  {% set bid = container.region ~ "-" ~ container.position %}
+  {% do request.setPost(bid, contanier) %}
+  {% set attributes = attributes|merge({"id": "block-" ~ bid, "name": display.get_name("blocks[" ~ bid ~ "]")}) %}
+  {{ include("form/textarea.html.twig", {"attributes": attributes, "value": container.content}) }}
+{% endfor %}

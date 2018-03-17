@@ -1,7 +1,7 @@
 {
 	"config": {
 		"platform": {
-			"php": "5.6.0"
+			"php": "7.0"
 		}
 	},
 	"require": {
@@ -14,7 +14,8 @@
 		"php-console/php-console": "^3.1",
 		"wp-cli/php-cli-tools": "^0.10.5",
 		"doctrine/dbal": "^2.5",
-		"league/flysystem": "^1.0"
+		"league/flysystem": "^1.0",
+		"twig/twig": "~2.0"
 	},
 	"require-dev": {
 		"phpunit/dbunit": "2.*",

@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------------------------------------------------------
+{{ error.message|raw }}
+---------------------------------------------------------------------------------------------------------------------------
+Stack Trace
+{% for trace in error.traces %}
+#{{ loop.index }} - {% if loop.first %}{{ error.file }}({{ error.line }}){% else %}{{ trace.file }}({{ trace.line }}){% endif %}
+{% if trace.function is defined %}
+: {% if trace.class is not empty %}{{ trace.class }}{{ trace.type|raw }}{% endif %}{{ trace.function }}({% if trace.args is not empty %}{{ handler.argumentsToString(trace.args)|raw }}{% endif %})
+{% endif %}
+{% endfor %}
+---------------------------------------------------------------------------------------------------------------------------

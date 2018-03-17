@@ -15,21 +15,21 @@ class AdminPaymentGatewaySettingsController extends Controller {
     $this->assign("model", "payment_gateway_settings");
   }
   function default_action() {
-    $this->render("admin/list");
+    $this->render("admin/list.html");
   }
   function create() {
     if ($this->db->success("payment_gateway_settings", "create")) {
       $this->redirect("admin/payment_gateways/settings/".$this->request->getParameter("gateway"));
-    } else $this->render("admin/create");
+    } else $this->render("admin/create.html");
   }
   function update($id) {
     $this->assign("id", $id);
     if ($this->db->success("payment_gateway_settings", "create")) {
       $setting = $this->db->query("payment_gateway_settings")->condition("id", $id)->one();
       $this->redirect("admin/payment_gateways/settings/".$setting["payment_gateway_id"]);
-    } else $this->render("admin/update");
+    } else $this->render("admin/update.html");
   }
   function import() {
-    $this->render("admin/import");
+    $this->render("admin/import.html");
   }
 }
