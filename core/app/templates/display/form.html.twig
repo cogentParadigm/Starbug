@@ -15,9 +15,9 @@
   <div class="form-actions">
 {% endif %}
   {% for name, field in display.actions.fields %}
-    {% set field = field|merge({'value':name, 'name':'action'}) %}
-    {% if display.model is not empty %}
-      {% set field = field|merge({'name':field.name ~ "[" ~ display.model ~ "]"}) %}
+    {% set field = field|merge({'value':name}) %}
+    {% if display.model is not empty and field.name is empty %}
+      {% set field = field|merge({'name':"action[" ~ display.model ~ "]"}) %}
     {% endif %}
     {% set label = field.label %}
     {% set ops = field %}
