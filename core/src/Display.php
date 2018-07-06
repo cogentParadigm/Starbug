@@ -24,6 +24,9 @@ class Display {
 	 */
 	function build($options = []) {
 		$this->options = $options;
+		if (!empty($options["template"])) {
+			$this->template = $options["template"];
+		}
 		$this->build_display($options);
 	}
 
