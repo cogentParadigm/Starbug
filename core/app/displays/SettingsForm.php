@@ -13,7 +13,7 @@ class SettingsForm extends FormDisplay {
 			if ($setting['term'] != $last) {
 				$last = $setting['term'];
 				$this->layout->add([$setting['slug']."-row", $setting['slug'] => "div.col-xs-12"]);
-				$this->layout->put($setting['slug'], 'h1#'.$setting['term'].'.well', $setting['term']);
+				$this->layout->put($setting['slug'], 'h1#'.$setting['slug'].'.well', $setting['term']);
 			}
 			$field = array($setting['name'], "input_type" => $setting['type'], "pane" => $setting['slug']);
 			if (!empty($setting['label'])) $field['label'] = $setting['label'];
