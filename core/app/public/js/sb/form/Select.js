@@ -9,19 +9,27 @@ define([
   "dojo/on"
 ], function (declare, lang, Widget, Templated, _DropdownListMixin, _SearchableListMixin, put, on) {
   return declare([Widget, Templated, _DropdownListMixin, _SearchableListMixin], {
+    closeOnSelect: true,
     buildRendering: function() {
       this.inherited(arguments);
       this.createSelectionNode();
+    },
+    postCreate: function() {
+      this.inherited(arguments);
+      if (this.closeOnSelect) {
+        this.selection.on('change', lang.hitch(this, 'close'));
+      } else {
+        this.selection.on('change', lang.hitch(this, 'focus'));
+      }
     },
     createSelectionNode: function() {
       this.selectionNode = this.controlNode;
     },
     renderSelection: function() {
-      this.selectionNode.value = this.get('displayedValue');
-      this.list.refresh();
-    },
-    focus: function() {
-      this.open();
+      this.selectionNode.innerHTML = this.get("displayedValue");
+      if (this.list) {
+        this.list.refresh();
+      }
     },
     _getDisplayedValueAttr: function() {
       var labels = [];

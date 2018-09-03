@@ -29,17 +29,20 @@ define([
       this.selectionParams = this.selectionParams || {};
     },
     refresh: function() {
+      this.renderValues();
+      on.emit(this.domNode, "change", {bubbles: true, cancelable: true});
+      this.renderSelection();
+      if (typeof this.updateStyles == "function") {
+        this.updateStyles();
+      }
+    },
+    renderValues: function() {
       var ids = [];
       var items = this.selection.getData();
       for (var i = 0;i<items.length;i++) {
         ids.push(this.selection.getIdentity(items[i]));
       }
       this.domNode.value = ids.join(',');
-      on.emit(this.domNode, "change", {bubbles: true, cancelable: true});
-      this.renderSelection();
-      if (typeof this.updateStyles == "function") {
-        this.updateStyles();
-      }
     },
     startup: function() {
       this.inherited(arguments);
@@ -76,6 +79,10 @@ define([
     renderSelection: function() {
       this.list.refresh();
       this.list.renderArray(this.selection.getData());
+    },
+    destroy: function() {
+      this.inherited(arguments);
+      delete this.selection;
     }
   });
 });

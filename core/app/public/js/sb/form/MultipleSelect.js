@@ -12,6 +12,7 @@ define([
     _lastSelected:false,
     _selectionMark:false,
     _selectedRows:false,
+    closeOnSelect: false,
     postCreate: function() {
       this.inherited(arguments);
       this.list.on('dgrid-select', lang.hitch(this, function(e) {
@@ -23,8 +24,10 @@ define([
       this.selectionParams.size = this.selectionParams.size || 0;
     },
     createControlNode: function() {
-      this.inherited(arguments);
-      put(this.controlNode, "[!readonly]");
+      this.controlNode = put(this.controlGroupNode, 'input[type=text][autocomplete=off].form-control');
+      if (this.domNode.getAttribute("placeholder")) {
+        this.controlNode.setAttribute('placeholder', this.domNode.getAttribute('placeholder'));
+      }
     },
     createInputNode: function() {
       this.inputNode = this.controlNode;
@@ -52,7 +55,9 @@ define([
         }
       } else if (keyCode == 27) { //ESC
         this.close();
-      } else {
+        //Stop propagation to prevent closing a parent modal.
+        e.stopPropagation();
+      } else if (keyCode != 9) {
         this.interval = setTimeout(lang.hitch(this, 'search'), 500);
       }
       if (target) {
