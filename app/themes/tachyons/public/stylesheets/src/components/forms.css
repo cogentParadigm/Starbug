@@ -36,3 +36,18 @@ label {
 .asterisk, .alert-danger {
   color: var(--dark-red);
 }
+
+.dropdown-indicator {
+  position: relative;
+}
+.dropdown-indicator:before {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: var(--spacing-small) var(--spacing-medium);
+  @extend .fa;
+  line-height: inherit;
+}
+select.form-control, .form-control.dropdown-indicator {
+  padding-right: calc(var(--spacing-medium) + var(--spacing-large));
+}

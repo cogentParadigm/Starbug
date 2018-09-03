@@ -7,12 +7,14 @@
     so that page specific styles don't break them.
     - Use in all TABLE, TR and TD tags.
   */
+  /*
   margin:0;
   border:0;
   padding:0;
   font: inherit;
   line-height:normal;
   color: inherit;
+  */
 }
 
 .dijitInline {
@@ -156,11 +158,156 @@ TABLE.dijitSelect {
 .dijitButtonNode * {
   vertical-align: middle;
 }
-.dijitSelect .dijitArrowButtonInner,
-.dijitButtonNode .dijitArrowButtonInner {
-  /* the arrow icon node */
-  background: no-repeat center;
-  width: 12px;
-  height: 12px;
-  direction: ltr; /* needed by IE/RTL */
+
+.dijitArrowButtonChar {
+	display:none !important;
+}
+
+/* Calendar */
+
+.dijitCalendarContainer {
+	width: auto;	/* in case user has specified a width for the TABLE nodes, see #10553 */
+}
+.dijitCalendarContainer th, .dijitCalendarContainer td {
+	padding: 0;
+	vertical-align: middle;
+}
+
+.dijitCalendarYearLabel {
+    white-space: nowrap;    /* make sure previous, current, and next year appear on same row */
+}
+
+.dijitCalendarNextYear {
+	margin:0 0 0 0.55em;
+}
+
+.dijitCalendarPreviousYear {
+	margin:0 0.55em 0 0;
+}
+
+.dijitCalendarIncrementControl {
+	vertical-align: middle;
+}
+
+.dijitCalendarIncrementControl,
+.dijitCalendarDateTemplate,
+.dijitCalendarMonthLabel,
+.dijitCalendarPreviousYear,
+.dijitCalendarNextYear {
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.dijitCalendarDisabledDate {
+	color: gray;
+	text-decoration: line-through;
+	cursor: default;
+}
+
+.dijitSpacer {
+	/* don't display it, but make it affect the width */
+  	position: relative;
+  	height: 1px;
+  	overflow: hidden;
+  	visibility: hidden;
+}
+
+/* Styling for month drop down list */
+
+.dijitCalendarMonthMenu .dijitCalendarMonthLabel {
+	text-align:center;
+}
+
+/* Menu */
+
+.dijitMenuTable {
+	border-collapse:collapse;
+	border-width:0;
+	background-color:white;
+}
+
+/* workaround for webkit bug #8427, remove this when it is fixed upstream */
+.dj_webkit .dijitMenuTable td[colspan="2"]{
+	border-right:hidden;
+}
+
+/*
+No need to show a focus border since it's obvious from the shading, and there's a .dj_a11y .dijitMenuItemSelected
+rule below that handles the high contrast case when there's no shading.
+Hiding the focus border also works around webkit bug https://code.google.com/p/chromium/issues/detail?id=125779.
+*/
+.dijitMenuItem:focus {
+	outline: none
+}
+
+.dijitMenuPassive .dijitMenuItemHover,
+.dijitMenuItemSelected {
+	/*
+	 * dijitMenuItemHover refers to actual mouse over
+	 * dijitMenuItemSelected is used after a menu has been "activated" by
+	 * clicking it, tabbing into it, or being opened from a parent menu,
+	 * and denotes that the menu item has focus or that focus is on a child
+	 * menu
+	 */
+	background-color:black;
+	color:white;
+}
+
+.dijitMenuItemIcon, .dijitMenuExpand {
+	background-repeat: no-repeat;
+}
+
+.dijitMenuItemDisabled * {
+	/* for a disabled menu item, just set it to mostly transparent */
+	opacity:0.5;
+	cursor:default;
+}
+.dj_ie .dj_a11y .dijitMenuItemDisabled,
+.dj_ie .dj_a11y .dijitMenuItemDisabled *,
+.dj_ie .dijitMenuItemDisabled * {
+	color: gray;
+	filter: alpha(opacity=35);
+}
+
+.dijitMenuItemLabel {
+	vertical-align: middle;
+}
+
+.dj_a11y .dijitMenuItemSelected {
+	border: 1px dotted black !important;	/* for 2.0 use outline instead, to prevent jitter */
+}
+
+.dj_a11y .dijitMenuItemSelected .dijitMenuItemLabel {
+	border-width: 1px;
+	border-style: solid;
+}
+.dj_ie8 .dj_a11y .dijitMenuItemLabel {
+	position:static;
+}
+
+.dijitMenuExpandA11y {
+	display: none;
+}
+.dj_a11y .dijitMenuExpandA11y {
+	display: inline;
+}
+
+.dijitMenuSeparator td {
+	border: 0;
+	padding: 0;
+}
+
+/* separator can be two pixels -- set border of either one to 0 to have only one */
+.dijitMenuSeparatorTop {
+	height: 50%;
+	margin: 0;
+	margin-top:3px;
+	font-size: 1px;
+}
+
+.dijitMenuSeparatorBottom {
+	height: 50%;
+	margin: 0;
+	margin-bottom:3px;
+	font-size: 1px;
 }

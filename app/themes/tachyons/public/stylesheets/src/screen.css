@@ -13,7 +13,7 @@
 // -----------------------------------------------------------
 @import "../../../../../../libraries/sanitize-css/sanitize.css";
 @import "../../../../../../libraries/font-awesome/css/font-awesome.css";
-@import "./dijit/index.css";
+@import "./dijit/dijit.css";
 
 
 // 3. Global and Component CSS
@@ -29,6 +29,7 @@
 @import "./components/input-group.css";
 @import "./components/list-group.css";
 @import "./components/animations.css";
+@import "./dijit/index.css";
 
 
 // 4. Atomic Styles

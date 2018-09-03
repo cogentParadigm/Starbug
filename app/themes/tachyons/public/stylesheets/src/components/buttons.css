@@ -14,10 +14,12 @@
 
   // Default appearance.
   color: var(--dark-gray);
-  background-color: var(--near-white);
-  border: 1px solid var(--near-white);
+  background-color: var(--white);
+  border: 1px solid var(--moon-gray);
   border-radius: .25rem;
 }
+
+// Style Variants.
 
 .btn-dark {
   color: var(--white);
