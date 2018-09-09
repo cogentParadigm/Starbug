@@ -1,8 +1,9 @@
 <?php
 namespace Starbug\Core;
+
 /**
-* task factory interface
-*/
+ * Task factory interface.
+ */
 interface TaskFactoryInterface {
-	public function get($task);
+  public function get($task);
 }

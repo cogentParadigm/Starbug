@@ -1,33 +1,34 @@
 <?php
 namespace Starbug\Core;
+
 class AdminImportsController extends Controller {
-	public $routes = array(
-		'update' => '{id}',
-		'run' => '{id}'
-	);
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
-		$this->db = $db;
-		$this->models = $models;
-	}
-	function init() {
-		$this->assign("model", "imports");
-		$this->assign("cancel_url", "admin/imports");
-	}
-	function default_action() {
-		$this->render("admin/list.html");
-	}
-	function create() {
-		if ($this->db->success("imports", "create")) $this->redirect("admin/imports/update/".$this->models->get("imports")->insert_id);
-		else $this->render("admin/create.html");
-	}
-	function update($id) {
-		$this->assign("id", $id);
-		$import = $this->models->get("imports")->load($id);
-		if ($this->db->success("imports", "create")) $this->redirect("admin/".$import['model']."/import");
-		else $this->render("admin/update.html");
-	}
-	function run($id) {
-		$this->assign("id", $id);
-		$this->render("admin/update.html", array("form_header" => "Run Import", "action" => "run"));
-	}
+  public $routes = [
+    'update' => '{id}',
+    'run' => '{id}'
+  ];
+  function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+    $this->db = $db;
+    $this->models = $models;
+  }
+  function init() {
+    $this->assign("model", "imports");
+    $this->assign("cancel_url", "admin/imports");
+  }
+  function default_action() {
+    $this->render("admin/list.html");
+  }
+  function create() {
+    if ($this->db->success("imports", "create")) $this->redirect("admin/imports/update/".$this->models->get("imports")->insert_id);
+    else $this->render("admin/create.html");
+  }
+  function update($id) {
+    $this->assign("id", $id);
+    $import = $this->models->get("imports")->load($id);
+    if ($this->db->success("imports", "create")) $this->redirect("admin/".$import['model']."/import");
+    else $this->render("admin/update.html");
+  }
+  function run($id) {
+    $this->assign("id", $id);
+    $this->render("admin/update.html", ["form_header" => "Run Import", "action" => "run"]);
+  }
 }

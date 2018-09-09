@@ -1,8 +1,9 @@
 <?php
 namespace Starbug\Core;
+
 /**
-* model factory interface
-*/
+ * Display factory interface.
+ */
 interface DisplayFactoryInterface {
-	public function get($display);
+  public function get($display);
 }

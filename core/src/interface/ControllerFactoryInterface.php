@@ -1,8 +1,9 @@
 <?php
 namespace Starbug\Core;
+
 /**
-* model factory interface
-*/
+ * Controller factory interface.
+ */
 interface ControllerFactoryInterface {
-	public function get($controller);
+  public function get($controller);
 }

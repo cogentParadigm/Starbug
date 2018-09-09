@@ -1,81 +1,82 @@
 <?php
 namespace Starbug\Core;
+
 /**
- * implementation of TaxonomyInterface
+ * Implementation of TaxonomyInterface.
  */
 class Taxonomy implements TaxonomyInterface {
-	protected $db;
-	protected $models;
-	protected $user;
-	function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user, InputFilterInterface $filter) {
-		$this->db = $db;
-		$this->models = $models;
-		$this->user = $user;
-		$this->filter = $filter;
-	}
-	function terms($taxonomy, $parent = 0, $depth = 0) {
-		$terms = array();
-		$parents = $this->db->query("terms")->condition("taxonomy", $taxonomy)->condition("parent", $parent)->sort("position");
-		if ($taxonomy == "groups" && !$this->user->loggedIn("root")) $parents->condition("slug", "root", "!=");
-		$parents = $parents->all();
-		foreach ($parents as $idx => $term) {
-			$term['depth'] = $depth;
-			$terms[] = $term;
-			$terms = array_merge($terms, $this->terms($taxonomy, $term['id'], ($depth+1)));
-		}
-		return $terms;
-	}
-	/**
-	 * apply tags
-	 * @ingroup taxonomy
-	 * @param string $taxonomy the taxonomy/classification of terms. eg. products_tags
-	 * @param int $object_id the id of the object to apply the tag to
-	 * @param string $tag the tag
-	 * @return bool returns true on success, false otherwise.
-	 */
-	function tag($table, $object_id, $field, $tag = "") {
-		$column_info = $this->models->get($table)->column_info($field);
-		if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
-		$taxonomy = $column_info['taxonomy'];
-		$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
+  protected $db;
+  protected $models;
+  protected $user;
+  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user, InputFilterInterface $filter) {
+    $this->db = $db;
+    $this->models = $models;
+    $this->user = $user;
+    $this->filter = $filter;
+  }
+  function terms($taxonomy, $parent = 0, $depth = 0) {
+    $terms = [];
+    $parents = $this->db->query("terms")->condition("taxonomy", $taxonomy)->condition("parent", $parent)->sort("position");
+    if ($taxonomy == "groups" && !$this->user->loggedIn("root")) $parents->condition("slug", "root", "!=");
+    $parents = $parents->all();
+    foreach ($parents as $idx => $term) {
+      $term['depth'] = $depth;
+      $terms[] = $term;
+      $terms = array_merge($terms, $this->terms($taxonomy, $term['id'], ($depth+1)));
+    }
+    return $terms;
+  }
+  /**
+   * apply tags
+   * @ingroup taxonomy
+   * @param string $taxonomy the taxonomy/classification of terms. eg. products_tags
+   * @param int $object_id the id of the object to apply the tag to
+   * @param string $tag the tag
+   * @return bool returns true on success, false otherwise.
+   */
+  function tag($table, $object_id, $field, $tag = "") {
+    $column_info = $this->models->get($table)->column_info($field);
+    if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
+    $taxonomy = $column_info['taxonomy'];
+    $tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
 
-		$tag = $this->filter->normalize($tag);
-		$slug = strtolower($tag);
-		//IF THE TAG IS ALREADY APPLIED, RETURN TRUE
-		$existing = $this->db->query($table)->condition($table.".id", $object_id);
-		$existing->condition(
-			$existing->createOrCondition()
-			->condition($table.".".$field.".id", $tag)
-			->condition($table.".".$field.".slug", $tag)
-			->condition($table.".".$field.".term", $tag)
-		);
-		if ($existing->one()) return true;
+    $tag = $this->filter->normalize($tag);
+    $slug = strtolower($tag);
+    //IF THE TAG IS ALREADY APPLIED, RETURN TRUE
+    $existing = $this->db->query($table)->condition($table.".id", $object_id);
+    $existing->condition(
+      $existing->createOrCondition()
+      ->condition($table.".".$field.".id", $tag)
+      ->condition($table.".".$field.".slug", $tag)
+      ->condition($table.".".$field.".term", $tag)
+    );
+    if ($existing->one()) return true;
 
-		//IF THE TERM DOESN'T EXIST, ADD IT
-		$term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->params(array("tag" => $tag, "tax" => $taxonomy))->one();
-		if (empty($term)) $this->db->store("terms", ["term" => $tag, "slug" => $slug, "taxonomy" => $taxonomy, "parent" => "0", "position" => ""]);
-		else if ($term['taxonomy'] == "groups" && !$this->user->loggedIn("root") && in_array($term['slug'], array("root"))) return false;
-		if ($this->db->errors()) return false;
+    //IF THE TERM DOESN'T EXIST, ADD IT
+    $term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->params(array("tag" => $tag, "tax" => $taxonomy))->one();
+    if (empty($term)) $this->db->store("terms", ["term" => $tag, "slug" => $slug, "taxonomy" => $taxonomy, "parent" => "0", "position" => ""]);
+    else if ($term['taxonomy'] == "groups" && !$this->user->loggedIn("root") && in_array($term['slug'], array("root"))) return false;
+    if ($this->db->errors()) return false;
 
-		//APPLY TAG
-		$term_id = (empty($term)) ? $this->models->get("terms")->insert_id : $term['id'];
-		$this->db->store($tags, array($field."_id" => $term_id, $table."_id" => $object_id));
-		return (!$this->db->errors());
-	}
-	/**
-	 * remove tags
-	 * @ingroup taxonomy
-	 * @param string $table (optional) the table to which tags are applied. This is only needed if not implied by $taxonomy
-	 * @param string $taxonomy the taxonomy/classification of terms. eg. products_tags or genres
-	 * @param int $object_id the id of the object to apply the tag to
-	 * @param string $tag the tag
-	 */
-	function untag($table, $object_id, $field, $tag = "") {
-		$column_info = $this->models->get($table)->column_info($field);
-		if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
-		$tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
-		$query = $this->db->query($tags)->condition($tags.".".$table."_id", $object_id);
-		$fields = [$field."_id.id", $field."_id.slug", $field."_id.term"];
-		$query->where("(".implode("=:tag || ", $fields)."=:tag)")->bind("tag", $tag)->delete();
-	}
+    //APPLY TAG
+    $term_id = (empty($term)) ? $this->models->get("terms")->insert_id : $term['id'];
+    $this->db->store($tags, array($field."_id" => $term_id, $table."_id" => $object_id));
+    return (!$this->db->errors());
+  }
+  /**
+   * remove tags
+   * @ingroup taxonomy
+   * @param string $table (optional) the table to which tags are applied. This is only needed if not implied by $taxonomy
+   * @param string $taxonomy the taxonomy/classification of terms. eg. products_tags or genres
+   * @param int $object_id the id of the object to apply the tag to
+   * @param string $tag the tag
+   */
+  function untag($table, $object_id, $field, $tag = "") {
+    $column_info = $this->models->get($table)->column_info($field);
+    if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
+    $tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
+    $query = $this->db->query($tags)->condition($tags.".".$table."_id", $object_id);
+    $fields = [$field."_id.id", $field."_id.slug", $field."_id.term"];
+    $query->where("(".implode("=:tag || ", $fields)."=:tag)")->bind("tag", $tag)->delete();
+  }
 }

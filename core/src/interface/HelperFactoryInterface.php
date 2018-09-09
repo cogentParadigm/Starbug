@@ -1,8 +1,9 @@
 <?php
 namespace Starbug\Core;
+
 /**
-* helper factory interface
-*/
+ * Helper factory interface.
+ */
 interface HelperFactoryInterface {
-	public function get($helper);
+  public function get($helper);
 }

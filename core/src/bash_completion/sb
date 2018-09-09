@@ -1,33 +1,33 @@
 # bash completion for sb
 _sb() {
-	local cur prev opts base
-	COMPREPLY=()
-	cur="${COMP_WORDS[COMP_CWORD]}"
-	prev="${COMP_WORDS[COMP_CWORD-1]}"
+  local cur prev opts base
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-	#
-	#  The basic options we'll complete.
-	#
-	opts=$(for x in `ls core/app/script/*.php app/script/*.php modules/*/script/*.php 2>/dev/null`; do if [[ "$x" != *:* ]]; then echo ${x:0:${#x}-4} ; fi ; done | xargs -n1 basename )
+  #
+  #  The basic options we'll complete.
+  #
+  opts=$(for x in `ls core/app/script/*.php app/script/*.php modules/*/script/*.php 2>/dev/null`; do if [[ "$x" != *:* ]]; then echo ${x:0:${#x}-4} ; fi ; done | xargs -n1 basename )
 
 
-	#
-	#  Complete the arguments to some of the basic commands.
-	#
-	case "${prev}" in
-		query | store | remove )
-			local models=$(for x in `ls var/models/*.php`; do echo ${x:0:${#x}-9} ; done | xargs -n1 basename | tr '[A-Z]' '[a-z]' )
-			COMPREPLY=( $(compgen -W "${models}" -- ${cur}) )
-			return 0
-			;;
-		* )
-			local options=$(for x in `ls core/app/script/${prev} app/script/${prev} modules/*/script/${prev} 2>/dev/null`; do if [[ "$x" != *:* ]]; then echo ${x} ; fi ; done | xargs -n1 basename )
-			COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
-			return 0
-		;;
-	esac
+  #
+  #  Complete the arguments to some of the basic commands.
+  #
+  case "${prev}" in
+    query | store | remove )
+      local models=$(for x in `ls var/models/*.php`; do echo ${x:0:${#x}-9} ; done | xargs -n1 basename | tr '[A-Z]' '[a-z]' )
+      COMPREPLY=( $(compgen -W "${models}" -- ${cur}) )
+      return 0
+      ;;
+    * )
+      local options=$(for x in `ls core/app/script/${prev} app/script/${prev} modules/*/script/${prev} 2>/dev/null`; do if [[ "$x" != *:* ]]; then echo ${x} ; fi ; done | xargs -n1 basename )
+      COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
+      return 0
+    ;;
+  esac
 
-	COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
-	return 0
+  COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+  return 0
 }
 complete -F _sb sb
