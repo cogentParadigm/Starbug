@@ -42,7 +42,7 @@ define([
       clearTimeout(this.interval);
       var shifted = e.shiftKey;
       var current = this._lastSelected;
-      if (current) current = this.list.row(current);
+      if (false !== current) current = this.list.row(current);
       this.list.clearSelection();
       var target = false;
       if (keyCode == 38) { //UP

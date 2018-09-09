@@ -59,7 +59,7 @@ define([
       this.createToggleNode();
     },
     createControlGroupNode: function() {
-      this.controlGroupNode = put(this.domNode.parentNode, ".dropdown-widget div.input-group");
+      this.controlGroupNode = put(this.domNode, "+div.input-group");
     },
     createControlNode: function() {
       this.controlNode = put(this.controlGroupNode, 'button[type=button].text-left.form-control');
