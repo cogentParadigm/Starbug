@@ -7,9 +7,9 @@ class GridDisplay extends ItemDisplay {
   public $grid_class = "starbug/grid/PagedGrid";
   public $dnd = false;
   public $action = "";
-  public $fields = array(
-    "row_options" => array("field" => "id", "label" => "Options", "class" => "field-options", "plugin" => "starbug.grid.columns.options")
-  );
+  public $fields = [
+    "row_options" => ["field" => "id", "label" => "Options", "class" => "field-options", "plugin" => "starbug.grid.columns.options"]
+  ];
   protected $request;
 
   function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, CollectionFactoryInterface $collections, HookFactoryInterface $hook_builder, RequestInterface $request) {
@@ -21,7 +21,7 @@ class GridDisplay extends ItemDisplay {
     $this->request = $request;
   }
 
-  function build($options = array()) {
+  function build($options = []) {
     //set defaults
     if ($options['attributes']) $this->attributes = $options['attributes'];
     $this->options = $options;
@@ -32,49 +32,32 @@ class GridDisplay extends ItemDisplay {
   function dnd() {
     $this->dnd = true;
     $this->grid_class = "starbug/grid/DnDGrid";
-    $this->fields = array_merge(array('dnd' => array("field" => "id", "label" => "-", "class" => "field-drag",  "plugin" => "starbug.grid.columns.handle", "sortable" => false)), $this->fields);
+    $this->fields = array_merge(['dnd' => ["field" => "id", "label" => "-", "class" => "field-drag",  "plugin" => "starbug.grid.columns.handle", "sortable" => false]], $this->fields);
   }
 
   function filter($field, $options, $column) {
-    //if no column plugin has been set, try to auto-detect the appropriate plugin
-    if (empty($options['plugin'])) {
-      if ($column['input_type'] == "select") {
-        $options['plugin'] = "starbug.grid.columns.select";
-        if (!empty($column['references'])) $options['from'] = "'".reset(explode(" ", $column['references']))."'";
-      } else if ($column['type'] == "bool") {
-        $options['plugin'] = "starbug.grid.columns.select";
-        $options['options'] = "{1:'Yes', 0:'No'}";
-      } else if ($column['type'] == "terms") {
-        $options['plugin'] = "starbug.grid.columns.terms";
-        $options['taxonomy'] = "'".$column['taxonomy']."'";
-      }
-    }
+    // Override this method to filter columns.
     return $options;
   }
 
   function column_attributes($field, $options) {
     if (empty($options["field"])) $options["field"] = $field;
-    $options['data-dgrid-column'] = array();
-    if (empty($options['plugin']) && !isset($options['readonly'])) {
-      if (empty($options['editor'])) $options['editor'] = "'text'";
-      if (empty($options['editOn'])) $options['editOn'] = "'dblclick'";
+    $options['data-dgrid-column'] = [];
+    if (!empty($options['editor']) && empty($options['editOn'])) {
+      $options['editOn'] = "'dblclick'";
     }
     foreach ($options as $k => $v) {
-      if (!in_array($k, array("id", "class", "style", "label", "data-dgrid-column", "plugin")) && $v !== "") {
+      if (!in_array($k, ["id", "class", "style", "label", "data-dgrid-column", "plugin"]) && $v !== "") {
         if ($k == "model" || $k == "field" || ($k == "default" && !is_numeric($v))) $v = "'".$v."'";
-        else if ($v === false) $v = "false";
+        elseif ($v === false) $v = "false";
         $options['data-dgrid-column'][] = $k.":".$v;
       }
-    }
-    if (isset($options['editor'])) {
-      //$options['data-dgrid-column'] = "dgrid.editor(".$options['data-dgrid-column'].", ".$options['editor'].", 'dblclick')";
     }
     $options['data-dgrid-column'] = '{'.implode(', ', $options['data-dgrid-column']).'}';
     if (isset($options['plugin']) && !isset($options['readonly'])) {
       $this->response->js(str_replace(".", "/", $options['plugin']));
       $options['data-dgrid-column'] = $options['plugin']."(".$options['data-dgrid-column'].")";
     }
-
     return $options;
   }
 
