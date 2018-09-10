@@ -3,12 +3,12 @@ namespace Starbug\Core;
 
 class ApiRequest {
 
-  protected $types = array(
+  protected $types = [
     "xml" => "text/xml",
     "json" => "application/json",
     "jsonp" => "application/x-javascript",
     "csv" => "text/csv"
-  );
+  ];
 
   protected $results = [];
   protected $time = '0000-00-00 00:00:00';
@@ -44,7 +44,7 @@ class ApiRequest {
     if (!$name) $name = $this->model;
     $options['time'] = $this->time;
 
-    //instantiate the model and collection
+    // Instantiate the model and collection.
     $instance = $this->models->get($this->model);
     if ($instance->errors()) {
       $this->results[$name] = $this->errors($this->model);
@@ -53,12 +53,12 @@ class ApiRequest {
     $collection = $this->collections->get($collection);
     $collection->setModel($this->model);
 
-    //register filters
+    // Register filters.
     foreach ($this->filters as $filter) {
       $collection->addFilter($filter);
     }
 
-    //populate default options
+    // Populate default options.
     $options = $options + $this->options + $this->request->getParameters();
     $range = $this->request->getHeader("HTTP_RANGE");
     if (!empty($range)) {
@@ -99,7 +99,7 @@ class ApiRequest {
   protected function errors($model) {
     $instance = $this->models->get($model);
     $schema = $instance->column_info();
-    if (empty($schema)) $schema = array();
+    if (empty($schema)) $schema = [];
     $json = ["errors" => []];
     $e = $instance->errors("", true);
     foreach ($instance->errors("", true) as $k => $v) {

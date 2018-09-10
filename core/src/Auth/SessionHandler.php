@@ -15,7 +15,7 @@ class SessionHandler implements SessionHandlerInterface {
     $this->user = $user;
     $this->duration = $duration;
   }
-  function startSession() {
+  public function startSession() {
     $this->user->clearUser();
     if (false !== $this->storage->load()) {
       $user = $this->user->loadUser($this->storage->get("v"));
@@ -24,55 +24,56 @@ class SessionHandler implements SessionHandlerInterface {
       }
     }
   }
-  function loggedIn() {
+  public function loggedIn() {
     return $this->user->loggedIn();
   }
-  function set($key, $value, $secure = false) {
+  public function set($key, $value, $secure = false) {
     $this->storage->set($key, $value, $secure);
   }
-  function get($key) {
+  public function get($key) {
     return $this->storage->get($key);
   }
-  function destroy() {
+  public function destroy() {
     $this->user->clearUser();
     $this->storage->destroy();
   }
-  function hashPassword($password) {
-    //hash the password using phpass
+  public function hashPassword($password) {
+    // Hash the password using phpass.
     $hasher = new PasswordHash(8, false);
     $hash = $hasher->HashPassword($password);
     unset($hasher);
 
-    //based on the length, separate the salt from the hash
-    $lengths = array(60 => 29, 34 => 12, 20 => 9);
+    // Based on the length, separate the salt from the hash.
+    $lengths = [60 => 29, 34 => 12, 20 => 9];
     $length = $lengths[strlen($hash)];
     $salt =  substr($hash, 0, $length);
     $hash = substr($hash, $length);
 
-    //build auth token
+    // Build auth token.
     $token = $salt.hash('sha256', $hash);
 
     return $token;
   }
 
   /**
-  * validate a password against the salt/authenticator token
-  *
-  * @param array/star $criteria criteria for user lookup
-  * @param string $password the users password entry
-  * @return bool Returns false if validation fails. If the password validates, true is returned
-  */
-
-  function authenticate($user, $password, $duration = 0) {
+   * Validate a password against the salt/authenticator token.
+   *
+   * @param array $user The user record, obtained from IdentityInterface.
+   * @param string $password The users password entry.
+   * @param integer $duration The valid duration of the generated session token.
+   *
+   * @return boolean Returns false if validation fails. If the password validates, true is returned.
+   */
+  public function authenticate($user, $password, $duration = 0) {
     $hash = $this->user->getHashedPassword($user);
     $id = $this->user->getIdentity($user);
     if (0 == $duration) $duration = $this->duration;
 
-    //separate salt and authenticator
+    // Separate salt and authenticator.
     $salt = substr($hash, 0, -64);
     $auth = substr($hash, -64);
 
-    //hash password
+    // Hash password.
     if (strlen($salt) == 12) {
       $hasher = new PasswordHash(8, false);
       $hash = $hasher->crypt_private($password, $salt);
@@ -81,17 +82,17 @@ class SessionHandler implements SessionHandlerInterface {
       $hash = crypt($password, $salt);
     }
 
-    //separate salt and hash
-    $lengths = array(60 => 29, 34 => 12, 20 => 9);
+    // Separate salt and hash.
+    $lengths = [60 => 29, 34 => 12, 20 => 9];
     $length = $lengths[strlen($hash)];
     $new_salt =  substr($hash, 0, $length);
     $new_hash = substr($hash, $length);
 
-    //compare values
+    // Compare values.
     if ($new_salt != $salt) return false;
     if (hash('sha256', $new_hash) != $auth) return false;
 
-    //save data securely to session - expiry, value, hash
+    // Save data securely to session - expiry, value, hash.
     $this->storage->set("e", time()+$duration, true);
     $this->storage->set("v", $id, true);
     $this->storage->set("h", $new_hash, true);
@@ -101,18 +102,18 @@ class SessionHandler implements SessionHandlerInterface {
   }
 
   /**
-  * validate active session
-  */
+   * Validate active session.
+   */
   protected function validate($user) {
-    //check expiration time
+    // Check expiration time.
     $expiry = $this->storage->get("e");
     if (empty($expiry) || $expiry < time()) return false;
 
-    //validate user
+    // Validate user.
     $hash = $this->user->getHashedPassword($user);
     if (hash("sha256", $this->storage->get("h")) != substr($hash, -64)) return false;
 
-    //we have a valid session
+    // We have a valid session.
     return true;
   }
 }

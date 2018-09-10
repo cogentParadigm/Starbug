@@ -16,7 +16,14 @@ class Application implements ApplicationInterface {
   use \Psr\Log\LoggerAwareTrait;
 
   /**
-   * constructor.
+   * All the dependencies needed to co-ordinate the application.
+   *
+   * @param ControllerFactoryInterface $controllers Factory to create controllers.
+   * @param ModelFactoryInterface $models Factory to create models.
+   * @param RouterInterface $router Router translates paths to controllers.
+   * @param SessionHandlerInterface $session Session for authenticated users.
+   * @param ResponseInterface $response Response which will be prepared and returned.
+   * @param InputFilterInterface $filter Utility for input sanitization.
    */
   public function __construct(
     ControllerFactoryInterface $controllers,
@@ -49,12 +56,12 @@ class Application implements ApplicationInterface {
       $template = $controller->routes[$route['action']];
       if (false === ($values = $this->router->validate($request, $route, $template))) {
         $route['action'] = 'missing';
-      } else if (is_array($values)) {
+      } elseif (is_array($values)) {
         $route['arguments'] = $values;
       }
     }
 
-    if (empty($route['arguments'])) $route['arguments'] = array();
+    if (empty($route['arguments'])) $route['arguments'] = [];
 
     $controller->start($request, $this->response);
     if ($permitted) $controller->action($route['action'], $route['arguments']);
@@ -63,11 +70,15 @@ class Application implements ApplicationInterface {
     return $this->response;
   }
   /**
-  * run a model action if permitted
-  * @param string $key the model name
-  * @param string $value the function name
-  */
-  protected function post_action($key, $value, $post = array()) {
+   * Run a model action if permitted.
+   *
+   * @param string $key The model name.
+   * @param string $value The function name.
+   * @param array $post The posted data.
+   *
+   * @return mixed result of function call or nothing.
+   */
+  protected function post_action($key, $value, $post = []) {
     $this->logger->addInfo("Attempting action ".$key.' -> '.$value);
     if ($object = $this->models->get($key)) {
       return $object->post($value, $post);
@@ -75,11 +86,11 @@ class Application implements ApplicationInterface {
   }
 
   /**
-  * check $_POST['action'] for posted actions and run them through post_act
-  */
+   * Check $_POST['action'] for posted actions and run them through post_action.
+   */
   protected function check_post($post, $cookies) {
     if (!empty($post['action']) && is_array($post['action'])) {
-      //validate csrf token for authenticated requests
+      // Validate csrf token for authenticated requests.
       if ($this->session->loggedIn()) {
         $validated = false;
         if (!empty($cookies['oid']) && !empty($post['oid']) && $cookies['oid'] === $post['oid']) $validated = true;
@@ -87,7 +98,7 @@ class Application implements ApplicationInterface {
           return false;
         }
       }
-      //execute post actions
+      // Execute post actions.
       foreach ($post['action'] as $key => $val) return $this->post_action($this->filter->normalize($key), $this->filter->normalize($val), $post[$key]);
     }
     return true;

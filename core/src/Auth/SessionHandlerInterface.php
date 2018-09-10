@@ -6,28 +6,30 @@ namespace Starbug\Core;
  * "Hardened Stateless Session Cookies" - http://www.cl.cam.ac.uk/~sjm217/papers/protocols08cookies.pdf
  */
 interface SessionHandlerInterface {
-  function startSession();
-  function loggedIn();
+  public function startSession();
+  public function loggedIn();
   /**
-  * provide a salt and authenticator token for a password
-  *
-  * The authenticator will be 64 characters long, with a salt prepended.
-  * The salt will be 9, 12, or 29 characters long depending on the available cryptographic functions.
-  *
-  * @param string $password
-  * @return string $token
-  */
-  function hashPassword($password);
+   * Provide a salt and authenticator token for a password.
+   *
+   * The authenticator will be 64 characters long, with a salt prepended.
+   * The salt will be 9, 12, or 29 characters long depending on the available cryptographic functions.
+   *
+   * @param string $password The password to hash.
+   *
+   * @return string The hashed password.
+   */
+  public function hashPassword($password);
   /**
-  * validate a password against the salt/authenticator token
-  *
-  * @param string $id a token identifyng the user to authenticate
-  * @param string $password the users password entry
-  * @param int $duration in seconds. 0 should be converted to a configured default length
-  * @return bool Returns false if validation fails. If the password validates, true is returned
-  */
-  function authenticate($id, $password, $duration = 0);
-  function set($key, $value, $secure = false);
-  function get($key);
-  function destroy();
+   * Validate a password against the salt/authenticator token.
+   *
+   * @param array $user The user record, obtained from IdentityInterface.
+   * @param string $password The users password entry.
+   * @param integer $duration The valid duration of the generated session token.
+   *
+   * @return boolean Returns false if validation fails. If the password validates, true is returned.
+   */
+  public function authenticate($user, $password, $duration = 0);
+  public function set($key, $value, $secure = false);
+  public function get($key);
+  public function destroy();
 }
