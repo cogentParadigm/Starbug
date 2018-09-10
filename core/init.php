@@ -1,5 +1,5 @@
 <?php
-//set the appropriate level of error reporting
+// Set the appropriate level of error reporting.
 error_reporting(E_ALL & ~E_STRICT & ~E_NOTICE | E_PARSE | E_ERROR);
 
 include("vendor/autoload.php");
