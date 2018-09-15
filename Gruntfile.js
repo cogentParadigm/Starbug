@@ -80,6 +80,7 @@ module.exports = function(grunt) {
       ci: {
         dir: '.',
         options: {
+          bin: 'vendor/bin/phpmd',
           reportFormat: 'xml',
           reportFile: 'build/logs/phpmd.xml',
           exclude: 'libraries,var,node_modules,vendor',
