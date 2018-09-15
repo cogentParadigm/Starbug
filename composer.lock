@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dffa6ba3d7b21b455fe34e075844ca74",
-    "content-hash": "e91c824d928c856b7ff3d7a2a774fe4a",
+    "hash": "440dc099bfc6d33de628388c33860651",
+    "content-hash": "bf386c471f1a46b23e3685c96c3d45b4",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -639,6 +639,47 @@
             "time": "2017-08-06 17:41:04"
         },
         {
+            "name": "litipk/flysystem-fallback-adapter",
+            "version": "0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Litipk/flysystem-fallback-adapter.git",
+                "reference": "9f3c35099a52c9f5339ab71ef6a7055fdab5243d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Litipk/flysystem-fallback-adapter/zipball/9f3c35099a52c9f5339ab71ef6a7055fdab5243d",
+                "reference": "9f3c35099a52c9f5339ab71ef6a7055fdab5243d",
+                "shasum": ""
+            },
+            "require": {
+                "league/flysystem": "~1.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Litipk\\Flysystem\\Fallback\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andrés Correa Casablanca",
+                    "email": "castarco@litipk.com"
+                }
+            ],
+            "description": "Flysystem adapter for fallback filesystems",
+            "time": "2015-10-22 21:39:15"
+        },
+        {
             "name": "masterexploder/phpthumb",
             "version": "dev-master",
             "source": {
@@ -1243,6 +1284,51 @@
                 "templating"
             ],
             "time": "2017-09-27 18:10:31"
+        },
+        {
+            "name": "twistor/flysystem-http",
+            "version": "0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twistor/flysystem-http.git",
+                "reference": "acba993b790777067d7aa405458b4e06d329a9f3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twistor/flysystem-http/zipball/acba993b790777067d7aa405458b4e06d329a9f3",
+                "reference": "acba993b790777067d7aa405458b4e06d329a9f3",
+                "shasum": ""
+            },
+            "require": {
+                "league/flysystem": "^1.0.20"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Twistor\\Flysystem\\Http\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Leppanen",
+                    "email": "chris.leppanen@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An HTTP adapter for Flysystem that uses basic PHP functions.",
+            "homepage": "https://github.com/twistor/flysystem-http",
+            "keywords": [
+                "Flysystem",
+                "http"
+            ],
+            "time": "2016-11-19 00:21:12"
         },
         {
             "name": "wp-cli/php-cli-tools",

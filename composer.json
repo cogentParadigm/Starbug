@@ -15,7 +15,9 @@
 		"wp-cli/php-cli-tools": "^0.10.5",
 		"doctrine/dbal": "^2.5",
 		"league/flysystem": "^1.0",
-		"twig/twig": "~2.0"
+		"twig/twig": "~2.0",
+		"litipk/flysystem-fallback-adapter": "^0.1.2",
+		"twistor/flysystem-http": "^0.2.0"
 	},
 	"require-dev": {
 		"phpunit/dbunit": "2.*",
