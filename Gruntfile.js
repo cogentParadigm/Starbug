@@ -59,7 +59,6 @@ module.exports = function(grunt) {
         countTests: true,
         reportFileCSV: 'build/logs/phploc.csv',
         reportFileXML: 'build/logs/phploc.xml',
-        progress: true,
         quiet: false
       }
     },
@@ -102,6 +101,7 @@ module.exports = function(grunt) {
       ci: {
         dir: ['core', 'app', 'modules'],
         options: {
+          bin: 'vendor/bin/phpcs',
           extensions: 'php',
           ignore: 'views,templates,layouts,forms',
           standard: 'etc/phpcs.xml',
