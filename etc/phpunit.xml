@@ -33,7 +33,6 @@
     </testsuite>
     <testsuite name="dbmodule">
       <directory>../modules/db/tests/</directory>
-      <exclude>../modules/db/tests/QueryTest.php</exclude>
     </testsuite>
     <testsuite name="content">
       <directory>../modules/content/tests/</directory>
