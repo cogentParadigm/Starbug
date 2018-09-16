@@ -2,8 +2,8 @@
 namespace Starbug\Core;
 
 /**
-* URLBuilder class. generate absolute URLs from relative paths and modifiers
-*/
+ * URLBuilder class. generate absolute URLs from relative paths and modifiers
+ */
 class URL implements URLInterface {
   protected $scheme;
   protected $host;
@@ -18,7 +18,7 @@ class URL implements URLInterface {
   protected $fragment;
   protected $absolute = false;
 
-  public function __construct($host = "", $base_directory = "/", $options = array()) {
+  public function __construct($host = "", $base_directory = "/", $options = []) {
     $this->host = $host;
     $this->dir = $base_directory;
   }
@@ -123,7 +123,7 @@ class URL implements URLInterface {
     return $this;
   }
 
-  public function setParameters($parameters = array()) {
+  public function setParameters($parameters = []) {
     foreach ($parameters as $key => $value) {
       $this->setParameter($key, $value);
     }
@@ -148,7 +148,7 @@ class URL implements URLInterface {
   }
 
   public function clearParameters() {
-    $this->parameters = array();
+    $this->parameters = [];
     return $this;
   }
 
@@ -202,6 +202,15 @@ class URL implements URLInterface {
     return $url;
   }
 
+  /**
+   * Factory method to create an instance from PHP super globals.
+   *
+   * @param string $base_directory The base_directory parameter passed to the constructor.
+   *
+   * @return Starbug\Core\URLInterface An instance of this class, matching the HTTP_HOST, REQUEST_URI, and HTTPS values from $_SERVER.
+   *
+   * @SuppressWarnings(PHPMD.Superglobals)
+   */
   public static function createFromSuperGlobals($base_directory = "/") {
     $url = new static($_SERVER['HTTP_HOST'], $base_directory);
     $url->setPath(substr($_SERVER['REQUEST_URI'], strlen($base_directory)));
