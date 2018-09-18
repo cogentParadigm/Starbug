@@ -10,68 +10,92 @@ define([
 ], function (declare, Evented, lang, on, domclass, attr, query, registry) {
   return declare([Evented], {
     scope:'default',
+    saveScope: false,
     query:null,
     resetQuery:null,
-    resetting:false,
     constructor:function(kwArgs) {
       lang.mixin(this, kwArgs);
       this.query = this.query || {};
       this.resetQuery = this.resetQuery || lang.clone(this.query);
+      this.savedQuery = (this.saveScope && localStorage.getItem(this.saveScope)) ? JSON.parse(localStorage.getItem(this.saveScope)) : {};
+      if (this.saveScope) {
+        var savedScopes = localStorage.getItem("savedScopes") || [];
+        if (savedScopes.indexOf(this.saveScope) < 0) {
+          savedScopes.push(this.saveScope);
+          localStorage.setItem("savedScopes", JSON.stringify(savedScopes));
+        }
+      }
       this.listen();
     },
 
     listen: function(callback) {
       var self = this;
       //LISTEN TO FILTERS
-      query('[data-refresh=' + self.scope + ']').forEach(function(btn) {
+      query('[data-refresh=' + this.scope + ']').forEach(function(btn) {
           domclass.remove(btn, 'hidden');
         });
-      on(window.document, '[data-filter=' + self.scope + ']:change,[data-filter=' + self.scope + ']:input,[data-refresh=' + self.scope + ']:click', function(e) {
-        if (self.resetting) return;
-        query('[data-reset=' + self.scope + ']').forEach(function(btn) {
+      this.changeListener = on.pausable(window.document, '[data-filter=' + this.scope + ']:change,[data-filter=' + this.scope + ']:input,[data-refresh=' + this.scope + ']:click', lang.hitch(this, function(e) {
+        if (e.target.tagName == "INPUT" && e.target.getAttribute("type") == "text" && e.target.getAttribute("name") && e.type == "change") {
+          //ignore change events from text inputs since the input event will do what we need
+          //and the change event will fire undesirably when changing focus
+          return;
+        }
+        query('[data-reset=' + this.scope + ']').forEach(function(btn) {
           domclass.remove(btn, 'hidden');
         });
-        self.applyFilterFromInput(e.target, callback);
-      });
+        this.applyFilterFromInput(e.target, callback);
+      }));
       //SAVE VALUES FOR RESETTING
-      query('[data-filter=' + self.scope + ']').forEach(function(input) {
-        var value = attr.get(input, 'value');
-        if (attr.has(input, 'data-save')) {
-          var saveScope = attr.get(input, 'data-save');
+      query('[data-filter=' + this.scope + ']').forEach(lang.hitch(this, function(input) {
+        var value = this.getInputValue(input);
+        attr.set(input, 'data-reset-value', value);
+        this.resetQuery[name] = value;
+        if (this.saveScope) {
           var name = attr.get(input, 'name');
-          var saveKey = saveScope + '_' + self.scope + '_' + name;
-          if (localStorage.getItem(saveKey)) {
-            value = localStorage.getItem(saveKey);
-            attr.set(input, 'value', value);
-            self.query[name] = value;
-            self.resetQuery[name] = value;
+          if (typeof this.savedQuery[name] !== "undefined") {
+            value = this.savedQuery[name];
+            this.setInputValue(input, value);
+            this.query[name] = value;
           }
         }
-        attr.set(input, 'data-reset-value', value);
-      });
+      }));
       //ATTACH RESET
       on(window.document, '[data-reset=' + self.scope + ']:click', function(e) {
-        self.resetting = true;
+        self.changeListener.pause();
         query('[data-filter=' + self.scope + '][data-reset-value]').forEach(function(input) {
           var name = self.getInputName(input);
           var value = attr.get(input, 'data-reset-value');
           self.setInputValue(input, value);
         });
+        if (this.saveScope) {
+          localStorage.removeItem(this.saveScope);
+        }
         self.query = lang.clone(self.resetQuery);
         domclass.add(this, 'hidden');
+        self.changeListener.resume();
         self.emit('reset', {query:self.query});
-        self.resetting = false;
+        self.emit('change', {query:self.query});
       });
+    },
+
+    save: function(key, value) {
+      this.savedQuery[key] = value;
+      localStorage.setItem(this.saveScope, JSON.stringify(this.savedQuery));
+    },
+
+    read: function(key) {
+      return this.savedQuery[key];
+    },
+
+    remove: function(key) {
+      delete this.savedQuery[key];
+      localStorage.setItem(this.saveScope, JSON.stringify(this.savedQuery));
     },
 
     applyFilterFromInput: function(node) {
       var name = this.getInputName(node);
       var value = this.getInputValue(node);
-      if (attr.has(node, 'data-save')) {
-        var saveScope = attr.get(node, 'data-save');
-        var saveKey = saveScope + '_' + this.scope + '_' + name;
-        localStorage.setItem(saveKey, value);
-      }
+      this.save(name, value);
       var filters = {};
       if (name.substr(-2) == '[]') {
         filters[name.substr(0, name.length-2)] = [value];
