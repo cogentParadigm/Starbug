@@ -19,7 +19,7 @@ define([
       this.resetQuery = this.resetQuery || lang.clone(this.query);
       this.savedQuery = (this.saveScope && localStorage.getItem(this.saveScope)) ? JSON.parse(localStorage.getItem(this.saveScope)) : {};
       if (this.saveScope) {
-        var savedScopes = localStorage.getItem("savedScopes") || [];
+        var savedScopes = localStorage.getItem("savedScopes") ? JSON.parse(localStorage.getItem("savedScopes")) || [];
         if (savedScopes.indexOf(this.saveScope) < 0) {
           savedScopes.push(this.saveScope);
           localStorage.setItem("savedScopes", JSON.stringify(savedScopes));
