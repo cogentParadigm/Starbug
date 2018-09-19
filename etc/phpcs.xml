@@ -1,5 +1,6 @@
 <ruleset name="starbug-project-coding-standard">
     <description>Starbug Project Coding Standard</description>
+    <arg name="tab-width" value="2"/>
 
     <!-- USE PSR2 as a baseline -->
     <rule ref="PSR2">
@@ -57,6 +58,10 @@
       <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamName"/>
     </rule>
     <rule ref="Squiz.Commenting.FunctionCommentThrowTag"/>
-    <rule ref="Squiz.Commenting.InlineComment"/>
+    <rule ref="Squiz.Commenting.InlineComment">
+      <exclude name="Squiz.Commenting.InlineComment.NotCapital"/>
+      <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
+      <exclude name="Squiz.Commenting.InlineComment.SpacingAfter"/>
+    </rule>
 
 </ruleset>
