@@ -10,7 +10,7 @@ class ApiTermsController extends ApiController {
     $this->api->render("AdminTerms");
   }
   function select() {
-    $this->api->render("Select");
+    $this->api->render("SelectTerms");
   }
   function index() {
     $this->api->render("TermsList");
