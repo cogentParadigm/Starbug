@@ -19,44 +19,44 @@ class QueryCompilerHook implements CompilerHookInterface {
   }
 
   protected function parse(QueryInterface $query) {
-		if ($query->hasTag("Starbug\Db\Schema\QueryCompilerHook")) {
-			return;
-		}
-		$query->addTag("Starbug\Db\Schema\QueryCompilerHook");
-		$selection = $query->getSelection();
-		foreach ($selection as $alias => $clause) {
-			$query->removeSelection($alias);
-			$alias = ($alias == $clause) ? false : $alias;
-			$query->addSelection($this->parseColumns($query, $clause), $alias);
-		}
-		$condition = $query->getCondition();
-		$conditions = $condition->getConditions();
-		$this->parseCondition($query, $condition);
-		$groups = $query->getGroup();
-		$query->setGroup([]);
-		foreach ($groups as $group => $value) {
-			$query->addGroup($this->parseColumns($query, $group));
-		}
-		$values = $query->getValues();
-		$query->setValues([]);
-		foreach ($values as $key => $value) {
-			$query->setValue($this->parseColumn($query, $key), $value);
-		}
-	}
+    if ($query->hasTag("Starbug\Db\Schema\QueryCompilerHook")) {
+      return;
+    }
+    $query->addTag("Starbug\Db\Schema\QueryCompilerHook");
+    $selection = $query->getSelection();
+    foreach ($selection as $alias => $clause) {
+      $query->removeSelection($alias);
+      $alias = ($alias == $clause) ? false : $alias;
+      $query->addSelection($this->parseColumns($query, $clause), $alias);
+    }
+    $condition = $query->getCondition();
+    $conditions = $condition->getConditions();
+    $this->parseCondition($query, $condition);
+    $groups = $query->getGroup();
+    $query->setGroup([]);
+    foreach ($groups as $group => $value) {
+      $query->addGroup($this->parseColumns($query, $group));
+    }
+    $values = $query->getValues();
+    $query->setValues([]);
+    foreach ($values as $key => $value) {
+      $query->setValue($this->parseColumn($query, $key), $value);
+    }
+  }
 
-	protected function parseCondition(QueryInterface $query, ConditionInterface $condition) {
-		$conditions = $condition->getConditions();
-		foreach ($conditions as &$c) {
-			if (!empty($c["condition"])) {
-				if ($c["condition"] instanceof ConditionInterface) {
-					$this->parseCondition($query, $c["condition"]);
-				} else {
-					$c["condition"] = $this->parseColumns($query, $c["condition"]);
-				}
-			} elseif (!empty($c["field"]) && is_string($c["field"])) {
-				$c["field"] = $this->parseColumn($query, $c["field"]);
-			}
-		}
-		$condition->setConditions($conditions);
-	}
+  protected function parseCondition(QueryInterface $query, ConditionInterface $condition) {
+    $conditions = $condition->getConditions();
+    foreach ($conditions as &$c) {
+      if (!empty($c["condition"])) {
+        if ($c["condition"] instanceof ConditionInterface) {
+          $this->parseCondition($query, $c["condition"]);
+        } else {
+          $c["condition"] = $this->parseColumns($query, $c["condition"]);
+        }
+      } elseif (!empty($c["field"]) && is_string($c["field"])) {
+        $c["field"] = $this->parseColumn($query, $c["field"]);
+      }
+    }
+    $condition->setConditions($conditions);
+  }
 }
