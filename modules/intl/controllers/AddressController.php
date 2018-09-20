@@ -16,14 +16,14 @@ class AddressController extends Controller {
   }
   public function init() {
     $this->assign("model", "address");
-    $this->response->setTemplate("xhr");
+    $this->response->setTemplate("xhr.xhr");
   }
   public function create() {
-    $this->render("admin/create");
+    $this->render("admin/create.html");
   }
   public function update($id) {
     $this->assign("id", $id);
-    $this->render("admin/update");
+    $this->render("admin/update.html");
   }
   public function form($locale = "US") {
     $address = [];
@@ -50,6 +50,6 @@ class AddressController extends Controller {
       $options["input_name"] = $this->request->getParameter("keys");
     }
     $this->assign("options", $options);
-    $this->render("address/form");
+    $this->render("address/form.html");
   }
 }
