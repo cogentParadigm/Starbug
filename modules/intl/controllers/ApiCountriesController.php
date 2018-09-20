@@ -1,20 +1,22 @@
 <?php
 namespace Starbug\Intl;
+
 use Starbug\Core\ApiController;
 use Starbug\Core\IdentityInterface;
+
 class ApiCountriesController extends ApiController {
-	public $model = "countries";
-	function __construct(IdentityInterface $user) {
-		$this->user = $user;
-	}
-	function admin() {
-		$this->api->render("Admin");
-	}
-	function select() {
-		$this->api->render("Select");
-	}
-	function filterQuery($collection, $query, &$ops) {
-		if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
-		return $query;
-	}
+  public $model = "countries";
+  public function __construct(IdentityInterface $user) {
+    $this->user = $user;
+  }
+  public function admin() {
+    $this->api->render("Admin");
+  }
+  public function select() {
+    $this->api->render("Select");
+  }
+  public function filterQuery($collection, $query, &$ops) {
+    if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
+    return $query;
+  }
 }
