@@ -50,13 +50,15 @@
     <!-- Commenting -->
     <rule ref="Generic.Commenting"/>
     <rule ref="Squiz.Commenting.BlockComment"/>
-    <rule ref="Squiz.Commenting.ClassComment"/>
+    <!--<rule ref="Squiz.Commenting.ClassComment"/>-->
     <rule ref="Squiz.Commenting.DocCommentAlignment"/>
     <rule ref="Squiz.Commenting.EmptyCatchComment"/>
+    <!--
     <rule ref="Squiz.Commenting.FunctionComment">
       <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType"/>
       <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamName"/>
     </rule>
+    -->
     <rule ref="Squiz.Commenting.FunctionCommentThrowTag"/>
     <rule ref="Squiz.Commenting.InlineComment">
       <exclude name="Squiz.Commenting.InlineComment.NotCapital"/>
