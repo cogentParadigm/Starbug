@@ -6,7 +6,7 @@ trait ValidationState {
   protected $raw = false;
   protected $errorsPreventSaving = true;
 
-  function isValidated() {
+  public function isValidated() {
     return $this->validated;
   }
 
@@ -18,7 +18,7 @@ trait ValidationState {
     return $this->errorsPreventSaving;
   }
 
-  function setValidated($validated = true) {
+  public function setValidated($validated = true) {
     $this->validated = $validated;
   }
 

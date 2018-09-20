@@ -5,16 +5,16 @@ use Starbug\Core\DatabaseInterface;
 
 class MockDatabase implements DatabaseInterface {
   protected $prefix = "test_";
-  function get($collection, $conditions = array(), $options = array()) {
+  public function get($collection, $conditions = [], $options = []) {
     // Empty function.
   }
   public function query($collection) {
     // Empty function.
   }
-  public function store($name, $fields = array(), $from = "auto") {
+  public function store($name, $fields = [], $from = "auto") {
     // Empty function.
   }
-  public function queue($name, $fields = array(), $from = "auto", $unshift = false) {
+  public function queue($name, $fields = [], $from = "auto", $unshift = false) {
     // Empty function.
   }
   public function store_queue() {

@@ -23,12 +23,12 @@ class Builder implements BuilderInterface {
   }
 
   public function subquery($field, $callable = false) {
-    //split the column into parts
+    // split the column into parts
     $parts = explode(".", $field);
-    //the first token is either a table alias or the name of a column that references another table
-    //if it's a column, then we'll assume it's a column of our base table
+    // the first token is either a table alias or the name of a column that references another table
+    // if it's a column, then we'll assume it's a column of our base table
     $alias = $this->query->getAlias();
-    //if it's a collection, we'll use it
+    // if it's a collection, we'll use it
     if ($this->query->hasTable($parts[0])) {
       $alias = array_shift($parts);
     }

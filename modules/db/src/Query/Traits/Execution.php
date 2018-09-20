@@ -46,16 +46,16 @@ trait Execution {
     }
     return $this;
   }
-  function unsafe_truncate() {
+  public function unsafe_truncate() {
     $this->executor->getConnection()->exec("SET FOREIGN_KEY_CHECKS=0");
     $result = $this->truncate();
     $this->executor->getConnection()->exec("SET FOREIGN_KEY_CHECKS=1");
     return $result;
   }
-  function count(array $params = []) {
+  public function count(array $params = []) {
     return $this->executor->count($this, $params);
   }
-  function getId() {
+  public function getId() {
     if ($this->query->isInsert()) return $this->query->getValue("id");
     elseif ($this->query->isUpdate()) {
       if ($this->query->hasValue("id")) return $this->query->getValue("id");

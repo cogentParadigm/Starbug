@@ -8,29 +8,29 @@ use Starbug\Db\Schema\QueryCompilerHook;
 use PHPUnit_Framework_TestCase;
 class QueryBuilderTestBase extends PHPUnit_Framework_TestCase {
 
-  function setUp() {
+  public function setUp() {
     $this->compiler = $this->createCompiler();
   }
 
-  function createCompiler() {
+  protected function createCompiler() {
     $compiler = new Compiler(new MockDatabase());
     $compiler->addHook(new QueryCompilerHook($this->createSchema()));
     return $compiler;
   }
 
-  function createQuery() {
+  protected function createQuery() {
     $this->builder = new Builder(new MockExecutor());
     $this->builder->setSchema($this->createSchema());
     return $this->builder;
   }
 
-  function compile(Builder $builder = null) {
+  protected function compile(Builder $builder = null) {
     if (is_null($builder)) $builder = $this->builder;
     $query = $builder->getQuery();
     return $this->compiler->build($query)->getSql();
   }
 
-  function createSchema() {
+  protected function createSchema() {
     $schema = new Schema();
     $schema->addTable("files",
       ["filename", "type" => "string"],
