@@ -16,15 +16,15 @@ class Admin{{ className }}Controller extends Controller {
     $this->assign("cancel_url", "admin/{{ model }}");
   }
   function default_action() {
-    $this->render("admin/list");
+    $this->render("admin/list.html");
   }
   function create() {
     if ($this->db->success("{{ model }}", "create")) $this->redirect("admin/{{ model }}");
-    else $this->render("admin/create");
+    else $this->render("admin/create.html");
   }
   function update($id) {
     $this->assign("id", $id);
     if ($this->db->success("{{ model }}", "create")) $this->redirect("admin/{{ model }}");
-    else $this->render("admin/update");
+    else $this->render("admin/update.html");
   }
 }
