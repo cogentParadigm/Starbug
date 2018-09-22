@@ -2,33 +2,33 @@
 namespace Starbug\Core;
 
 class StoreTermsHook extends QueryHook {
-  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, TaxonomyInterface $taxonomy) {
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, TaxonomyInterface $taxonomy) {
     $this->db = $db;
     $this->models = $models;
     $this->taxonomy = $taxonomy;
   }
-  function afterStore($query, $key, $value, $column, $argument) {
+  public function afterStore($query, $key, $value, $column, $argument) {
     $name = $query->model;
     $id = $query->getId();
     $category_column_info = $this->models->get($name)->hooks[$column];
     if (empty($category_column_info['taxonomy'])) $category_column_info['taxonomy'] = $name."_".$column;
     $tags = empty($category_column_info['table']) ? $name."_".$column : $category_column_info['table'];
-    $mentioned_tags = array();
+    $mentioned_tags = [];
     $remove_unmentioned_tags = true;
     if (!is_array($value)) $value = explode(",", preg_replace("/[,]+[,\s]*/", ",", $value));
     foreach ($value as $tag) {
       if (0 === strpos($tag, "-")) {
-        //remove tag
+        // remove tag
         $this->taxonomy->untag($name, $id, $column, substr($tag, 1));
         $mentioned_tags[] = substr($tag, 1);
         $remove_unmentioned_tags = false;
       } else {
-        //add tag
+        // add tag
         if (0 === strpos($tag, "+")) {
           $tag = substr($tag, 1);
           $remove_unmentioned_tags = false;
         }
-        //echo "tag('".$name."', ".$id.", '".$column."', '".$tag."')";
+        // echo "tag('".$name."', ".$id.", '".$column."', '".$tag."')";
         $this->taxonomy->tag($name, $id, $column, $tag);
         $mentioned_tags[] = $tag;
       }

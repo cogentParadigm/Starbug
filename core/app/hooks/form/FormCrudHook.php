@@ -5,7 +5,7 @@ class FormCrudHook extends FormHook {
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }
-  function build($form, &$control, &$field) {
+  public function build($form, &$control, &$field) {
     $var = $form->get($field['name']);
     if (!empty($var)) {
       if (is_array($var)) {
@@ -21,7 +21,7 @@ class FormCrudHook extends FormHook {
     unset($field['class']);
     if (empty($field['data-dojo-type'])) $field['data-dojo-type'] = 'starbug/form/CRUDSelect';
     if (!is_array($field['data-dojo-props'])) {
-      $field['data-dojo-props'] = array();
+      $field['data-dojo-props'] = [];
     }
     $field['data-dojo-props']['input_name'] = "'".$form->get_name($field['name'])."'";
     $field['data-dojo-props']['model'] = "'".$field['table']."'";
@@ -31,7 +31,7 @@ class FormCrudHook extends FormHook {
       $value = is_array($field['value']) ? implode(",", $field['value']) : $field['value'];
       $field['data-dojo-props']['value'] = '['.str_replace('#', '', $value).']';
     }
-    $props = array();
+    $props = [];
     foreach ($field['data-dojo-props'] as $k => $v) {
       $props[] = $k.':'.$v;
     }

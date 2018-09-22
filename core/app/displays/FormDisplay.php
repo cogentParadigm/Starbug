@@ -39,13 +39,13 @@ class FormDisplay extends ItemDisplay {
       $this->schema = $this->models->get($this->model)->hooks;
     }
 
-    //create layout display
+    // create layout display
     $this->layout = $this->displays->get("LayoutDisplay");
-    //create actions display
+    // create actions display
     $this->actions = $this->displays->get("ItemDisplay");
     $this->actions->add([$this->default_action, "label" => $this->submit_label, "class" => "btn-success"]);
 
-    //run query
+    // run query
     $this->before_query($options);
     $this->query();
     $this->build_display($options);

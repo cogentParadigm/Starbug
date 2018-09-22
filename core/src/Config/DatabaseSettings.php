@@ -15,10 +15,11 @@ class DatabaseSettings implements SettingsInterface {
   }
 
   /**
-  * get a configuration value
-  * @param string $name the name of the configuration entry, such as 'site_name'
-  * @param string $scope the scope/category of the configuration item
-  */
+   * Get a configuration value.
+   *
+   * @param string $name the name of the configuration entry, such as 'site_name'
+   * @param string $scope the scope/category of the configuration item
+   */
   public function get($key) {
     $item = $this->db->query("settings")->condition("name", $key)->one();
     return $item ? $item['value'] : false;

@@ -426,14 +426,14 @@ class QueryCompilerTest extends PHPUnit_Framework_TestCase {
     // For illustrative purposes we'll create the nested condition first
     // the nested condition is an AND between B and C
     // $recent represents (B AND C)
-    $recent = $this->query->createCondition(); //create AND condition
-    $recent->condition("created", date("Y-m-d")." 00:00:00", ">="); //add B
-    $recent->condition("taxonomy", "statuses"); //add C
+    $recent = $this->query->createCondition(); // create AND condition
+    $recent->condition("created", date("Y-m-d")." 00:00:00", ">="); // add B
+    $recent->condition("taxonomy", "statuses"); // add C
 
     // Now we create the outer condition which is an OR between A and (B AND C)
-    $condition = $this->query->createOrCondition(); //create OR condition
-    $condition->condition("taxonomy", "groups"); //add A
-    $condition->condition($recent); //add (B AND C)
+    $condition = $this->query->createOrCondition(); // create OR condition
+    $condition->condition("taxonomy", "groups"); // add A
+    $condition->condition($recent); // add (B AND C)
 
     $this->query->setTable("terms");
 

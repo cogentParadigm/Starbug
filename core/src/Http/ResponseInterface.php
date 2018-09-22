@@ -6,11 +6,11 @@ namespace Starbug\Core;
  */
 interface ResponseInterface {
   public function getHeaders();
-  public function setHeaders($headers = array());
+  public function setHeaders($headers = []);
   public function getHeader($name);
   public function setHeader($name, $value = null);
   public function getCookies();
-  public function setCookies($cookies = array());
+  public function setCookies($cookies = []);
   public function getCookie($name);
   public function setCookie($name, $value = null);
   public function getCode();
@@ -30,18 +30,18 @@ interface ResponseInterface {
   public function getLayout();
   public function setLayout($layout);
   public function getStyles();
-  public function setStyles($styles = array());
+  public function setStyles($styles = []);
   public function getStyle($name);
   public function setStyle($name, $value = null);
   public function getScripts();
-  public function setScripts($scripts = array());
+  public function setScripts($scripts = []);
   public function getScript($name);
   public function setScript($name, $value = null);
   public function assign($key, $value = "");
   public function send();
   public function missing();
   public function forbidden();
-  function redirect($url);
-  public function capture($template, $params = array(), $options = array());
+  public function redirect($url);
+  public function capture($template, $params = [], $options = []);
   public function js($mid);
 }

@@ -17,13 +17,13 @@ class Search {
    */
   public function search(BuilderInterface $builder, array $arguments) {
     list($keywords, $fields) = $arguments;
-    //if there are no search terms or fields to search, there's nothing to do
+    // if there are no search terms or fields to search, there's nothing to do
     if (!empty($keywords) && !empty($fields)) {
-      //split tokens (allowing escaped commas)
+      // split tokens (allowing escaped commas)
       $search_fields = preg_split('~(?<!\\\)' . preg_quote(",", '~') . '~', $fields);
-      //unescape those commas
+      // unescape those commas
       foreach ($search_fields as $sfk => $sfv) $search_fields[$sfk] = str_replace("\,", ",", $sfv);
-      //generate the conditions
+      // generate the conditions
       $builder->where($this->createSearchClause($keywords, $search_fields));
     }
   }
@@ -43,16 +43,16 @@ class Search {
    */
   protected function createSearchClause($text, $fields) {
     $text = strtolower(trim(str_replace("\\\"", "&quot;", $text)));
-    //tokenize the text
-    $output = array();
-    $output2 = array();
+    // tokenize the text
+    $output = [];
+    $output2 = [];
     $arr = explode("&quot;", $text);
     for ($i = 0; $i < count($arr); $i++) {
       if ($i % 2 == 0) $output = array_merge($output, explode(" ", $arr[$i]));
       else $output[] = $arr[$i];
     }
     foreach ($output as $token) if (trim($token) != "") $words[] = $token;
-    //generate condition string
+    // generate condition string
     $conditions = "(";
     for ($word = 0; $word < count($words); $word++) {
       $w = $words[$word];

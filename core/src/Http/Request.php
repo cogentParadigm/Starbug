@@ -70,22 +70,22 @@ class Request implements RequestInterface {
   }
   public function setPost($post) {
     $args = func_get_args();
-    call_user_func_array(array($this->post, 'set'), $args);
+    call_user_func_array([$this->post, 'set'], $args);
     return $this;
   }
   public function getPost() {
     $args = func_get_args();
-    return call_user_func_array(array($this->post, 'get'), $args);
+    return call_user_func_array([$this->post, 'get'], $args);
   }
   public function hasPost($post) {
     $args = func_get_args();
-    return call_user_func_array(array($this->post, 'has'), $args);
+    return call_user_func_array([$this->post, 'has'], $args);
   }
   public function setHeader($header, $value) {
     $this->headers->set($header, $value);
     return $this;
   }
-  public function setHeaders($headers = array()) {
+  public function setHeaders($headers = []) {
     $this->headers->set($headers);
     return $this;
   }
@@ -110,7 +110,7 @@ class Request implements RequestInterface {
     $value = $this->cookies->get($name);
     return $this->cookies->get($name);
   }
-  public function setCookies($cookies = array()) {
+  public function setCookies($cookies = []) {
     $this->cookies->set($cookies);
     return $this;
   }

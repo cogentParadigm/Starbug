@@ -3,10 +3,10 @@ namespace Starbug\Core;
 
 class FormCategorySelectHook extends FormHook {
   protected $taxonomy;
-  function __construct(TaxonomyInterface $taxonomy) {
+  public function __construct(TaxonomyInterface $taxonomy) {
     $this->taxonomy = $taxonomy;
   }
-  function build($form, &$control, &$field) {
+  public function build($form, &$control, &$field) {
     $value_name = $field['name'];
     if (isset($field['multiple'])) {
       $field['multiple'] = "multiple";
@@ -22,9 +22,9 @@ class FormCategorySelectHook extends FormHook {
     if (empty($field['taxonomy'])) $field['taxonomy'] = ((empty($form->model)) ? "" : $form->model."_").$field['name'];
     if (empty($field['parent'])) $field['parent'] = 0;
     $terms = $this->taxonomy->terms($field['taxonomy'], $field['parent']);
-    $options = array();
+    $options = [];
     foreach ($terms as $term) $options[str_pad($term['term'], strlen($term['term'])+$term['depth'], "-", STR_PAD_LEFT)] = $term['slug'];
-    if (isset($field['optional'])) array_unshift($terms, array("term" => $field['optional'], "id" => 0));
+    if (isset($field['optional'])) array_unshift($terms, ["term" => $field['optional'], "id" => 0]);
     $field['value'] = $form->get($value_name);
     $form->assign("options", $options);
     $field["terms"] = $terms;

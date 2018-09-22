@@ -3,6 +3,7 @@
  * An implementation of the ConfigInterface which reads json files from the filesystem
  */
 namespace Starbug\Core;
+
 class Config implements ConfigInterface {
 
   private $locator;
@@ -16,11 +17,12 @@ class Config implements ConfigInterface {
   }
 
   /**
-  * get a configuration value
-  * @param string $name the name of the configuration entry, such as 'themes' or 'fixtures.base'
-  * @param string $scope the scope/category of the configuration item
-  * providing first.second.third will open up the file first.json and look for the key "second" and within that, a key "third"
-  */
+   * Get a configuration value
+   *
+   * @param string $name the name of the configuration entry, such as 'themes' or 'fixtures.base'
+   * @param string $scope the scope/category of the configuration item
+   * providing first.second.third will open up the file first.json and look for the key "second" and within that, a key "third"
+   */
   public function get($key, $scope = "etc") {
     if (isset($this->providers[$scope])) return $this->providers[$scope]->get($key, $scope);
 

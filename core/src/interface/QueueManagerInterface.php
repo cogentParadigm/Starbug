@@ -6,15 +6,17 @@ namespace Starbug\Core;
  */
 interface QueueManagerInterface {
   /**
-   * put a job into a queue
+   * Put a job into a queue
+   *
    * @param string $queue the name of the queue
    * @param array $job the job data
    */
-  function put($queue, $data = array(), $status = "pending");
+  public function put($queue, $data = [], $status = "pending");
   /**
-   * process jobs in a queue
+   * Process jobs in a queue
+   *
    * @param string $queue the name of the queue
    * @param int $duration how long to process items
    */
-  function process($queue, $duration = 600);
+  public function process($queue, $duration = 600);
 }

@@ -91,7 +91,7 @@ class Executor implements ExecutorInterface {
     foreach ($model->hooks as $column => $hooks) {
       if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) $hooks['required'] = "";
       foreach ($hooks as $hook => $argument) {
-        $this->invoke_hook($builder, $phase, $column, $hook, $argument);
+        $this->invokeHook($builder, $phase, $column, $hook, $argument);
       }
     }
     if ($phase == self::PHASE_VALIDATION) $query->setValidated(true);
@@ -133,7 +133,7 @@ class Executor implements ExecutorInterface {
     return $interpolation;
   }
 
-  protected function invoke_hook(BuilderInterface $builder, $phase, $column, $hook, $argument) {
+  protected function invokeHook(BuilderInterface $builder, $phase, $column, $hook, $argument) {
     $query = $builder->getQuery();
     $key = false;
     $model = $query->getTable()->getName();

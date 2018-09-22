@@ -7,11 +7,10 @@ use Starbug\Core\GridDisplay;
 class ShippingMethodsGrid extends GridDisplay {
   public $model = "shipping_methods";
   public $action = "admin";
-  function build_display($options) {
+  public function build_display($options) {
     $this->dnd();
     $this->add("position");
     $this->add("name");
     $this->add("description");
   }
 }
-?>

@@ -2,10 +2,10 @@
 namespace Starbug\Core;
 
 class AdminSettingsController extends Controller {
-  function init() {
+  public function init() {
     $this->assign("model", "settings");
   }
-  function default_action() {
+  public function default_action() {
     $this->render("settings.html");
   }
 }

@@ -58,7 +58,7 @@ class ItemDisplay extends Display {
       if (empty($this->fields[$field])) $options = $this->filter($field, $options, $column);
       else $options = $this->filter($field, array_merge($this->fields[$field], $options), $column);
       foreach ($column as $hook => $value) {
-        $this->invoke_hook(self::HOOK_PHASE_BUILD, $hook, $field, $options, $column);
+        $this->invokeHook(self::HOOK_PHASE_BUILD, $hook, $field, $options, $column);
       }
       $this->fields[$field] = $options;
     }
@@ -91,7 +91,7 @@ class ItemDisplay extends Display {
     unset($this->fields[$field]);
   }
 
-  public function invoke_hook($phase, $hook, $field, &$options, $column) {
+  public function invokeHook($phase, $hook, $field, &$options, $column) {
 
     if (!isset($this->hooks[$field."_".$hook])) $this->hooks[$field."_".$hook] = $this->hook_builder->get("display/".$hook);
 

@@ -17,7 +17,7 @@ class MemoryRouteStorage implements RouteStorageInterface {
     }
   }
   public function getRoute(RequestInterface $request) {
-    $route = array("controller" => "main", "action" => "missing", "arguments" => array());
+    $route = ["controller" => "main", "action" => "missing", "arguments" => []];
     $paths = $this->expand($request->getPath());
     foreach ($paths as $path) {
       if (!empty($this->routes[$path])) {
@@ -25,14 +25,14 @@ class MemoryRouteStorage implements RouteStorageInterface {
         if ($this->access->hasAccess($route)) {
           return $route;
         } else {
-          $route = array("controller" => "main", "action" => "forbidden", "arguments" => array());
+          $route = ["controller" => "main", "action" => "forbidden", "arguments" => []];
         }
       }
     }
     return $route;
   }
   protected function expand($path) {
-    $expanded = array();
+    $expanded = [];
     $parts = explode("/", $path);
     foreach ($parts as $idx => $part) {
       if ($idx) $part = $expanded[0].'/'.$part;

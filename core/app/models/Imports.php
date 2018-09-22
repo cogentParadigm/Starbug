@@ -1,19 +1,20 @@
 <?php
 namespace Starbug\Core;
+
 class Imports extends ImportsModel {
 
-  function create($import) {
+  public function create($import) {
     $this->store($import);
   }
 
-  function run($import) {
+  public function run($import) {
     $index = $created = $updated = 0;
-    $errors = array();
+    $errors = [];
     $import = $this->db->query("imports")->condition("id", $import['id'])->one();
     if (empty($import['action'])) $import['action'] = "create";
     $file = $this->db->query("files")->condition("id", $import['source'])->one();
     $fields = $this->db->query("imports_fields")->condition("imports_id", $import['id'])->sort("position")->all();
-    $keys = $head = array();
+    $keys = $head = [];
     foreach ($fields as $field) {
       if ($field['update_key']) $keys[] = $field['destination'];
     }
@@ -22,7 +23,7 @@ class Imports extends ImportsModel {
       foreach ($row as $idx => $column) $head[$column] = $idx;
       while (false !== ($row = fgetcsv($handle))) {
         $index++;
-        $record = array();
+        $record = [];
         $updating = false;
         foreach ($fields as $field) {
           $record[$field['destination']] = $row[$head[$field['source']]];
@@ -39,8 +40,8 @@ class Imports extends ImportsModel {
         $this->models->get($import['model'])->{$import['action']}($record);
         if ($this->models->get($import['model'])->errors()) {
           $errors[$index] = $this->models->get($import['model'])->errors(false, true);
-          $this->db->errors = array();
-        } else if ($updating) {
+          $this->db->errors = [];
+        } elseif ($updating) {
           $updated++;
         } else {
           $created++;

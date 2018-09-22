@@ -64,29 +64,29 @@ class Migration extends AbstractMigration {
 
     $this->schema->addRow("users", ["email" => "root"], ["groups" => "root,admin"]);
 
-    //admin menu
+    // admin menu
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/users"], ["content" => "Users", "icon" => "fa-users"]);
     $configuration = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Configuration"], ["icon" => "fa-cogs"]);
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/menus"], ["parent" => $configuration, "content" => "Menus", "icon" => "fa-list"]);
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/emails"], ["parent" => $configuration, "content" => "Email Templates", "icon" => "fa-envelope"]);
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/settings"], ["parent" => $configuration, "content" => "Settings", "icon" => "fa-cog"]);
 
-    //groups
+    // groups
     $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Root"]);
     $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "User"]);
     $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Admin"]);
 
-    //settings categories
+    // settings categories
     $this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "General"]);
     $this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "SEO"]);
     $this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "Email"]);
 
-    //general settings
+    // general settings
     $this->schema->addRow("settings", ["name" => "site_name"], ["category" => "settings_category general", "type" => "text", "label" => "Site Name", "autoload" => "1", "value" => "Starbug"]);
-    //seo settings
+    // seo settings
     $this->schema->addRow("settings", ["name" => "meta"], ["category" => "settings_category seo", "type" => "textarea", "label" => "Custom Analytics, etc..", "autoload" => "1"]);
     $this->schema->addRow("settings", ["name" => "seo_hide"], ["category" => "settings_category seo", "type" => "checkbox", "value" => "1", "label" => "Hide from search engines", "autoload" => "1"]);
-    //email settings
+    // email settings
     $this->schema->addRow("settings", ["name" => "email_address"], ["category" => "settings_category email", "type" => "text", "label" => "Email Address"]);
     $this->schema->addRow("settings", ["name" => "email_host"], ["category" => "settings_category email", "type" => "text", "label" => "Email Host"]);
     $this->schema->addRow("settings", ["name" => "email_port"], ["category" => "settings_category email", "type" => "text", "label" => "Email Port"]);
@@ -94,15 +94,15 @@ class Migration extends AbstractMigration {
     $this->schema->addRow("settings", ["name" => "email_password"], ["category" => "settings_category email", "type" => "text", "label" => "Email Password"]);
     $this->schema->addRow("settings", ["name" => "email_secure"], ["category" => "settings_category email", "type" => "select", "options" => "{\"options\":\",ssl,tls\"}", "label" => "Secure SMTP"]);
 
-    //LOGGING TABLES
-    //ERROR LOG
+    // LOGGING TABLES
+    // ERROR LOG
     $this->schema->addTable(["errors"],
       ["type", "type" => "string", "length" => "64"],
       ["action", "type" => "string", "length" => "64", "default" => ""],
       ["field", "type" => "string", "length" => "64"],
       ["message", "type" => "text", "length" => "512"]
     );
-    //SQL TRANSACTION LOG
+    // SQL TRANSACTION LOG
     /*
       $schema->addTable("log",
         ["table_name", "type" => "string", "length" => "100"],

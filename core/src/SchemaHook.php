@@ -14,13 +14,13 @@ class SchemaHook implements HookInterface {
     if ($column['type'] == "category") {
       $table->set($name, "references", "terms id");
       $table->set($name, "alias", "%taxonomy% %slug%");
-    } else if ($column["type"] == "path") {
+    } elseif ($column["type"] == "path") {
       $table->set($name, "references", "aliases id");
     }
     $access_col = false;
     if ($table->getName() !== "permits" && isset($column['user_access'])) {
       $access_col = ["user_".$name];
-    } else if ($table->getName() !== "permits" && isset($column['object_access'])) {
+    } elseif ($table->getName() !== "permits" && isset($column['object_access'])) {
       $access_col = ["object_".$name];
     }
     if ($access_col) {
@@ -52,7 +52,7 @@ class SchemaHook implements HookInterface {
   }
   public function addTable(SchemaTable $table, array $options, SchemaInterface $schema) {
     if ($table->hasOption('base') && $table->getOption('base') !== $table->getName()) {
-      //find the root
+      // find the root
       $base = $schema->getTable($table->getOption('base'));
       while ($base->hasOption('base')) {
         $base = $schema->getTable($base->getOption("base"));
@@ -99,13 +99,13 @@ class SchemaHook implements HookInterface {
     foreach ($search_cols as $colname_index => $colname_value) {
       if ($schema->hasTable($columns[$colname_value]["type"]) || $this->models->has($columns[$colname_value]["type"])) unset($search_cols[$colname_index]);
     }
-    $defaults = array(
+    $defaults = [
       "name" => $model,
-      "label" => ucwords(str_replace(array("-", "_"), array(" ", " "), $model)),
+      "label" => ucwords(str_replace(["-", "_"], [" ", " "], $model)),
       "singular" => rtrim($model, 's'),
       "search" => $model.'.'.implode(",$model.", $search_cols)
-    );
-    $defaults["singular_label"] = ucwords(str_replace(array("-", "_"), array(" ", " "), $defaults["singular"]));
+    ];
+    $defaults["singular_label"] = ucwords(str_replace(["-", "_"], [" ", " "], $defaults["singular"]));
     foreach ($defaults as $key => $value) {
       if (!$table->hasOption($key)) {
         $table->setOption($key, $value);

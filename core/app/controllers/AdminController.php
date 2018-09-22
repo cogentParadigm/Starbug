@@ -4,11 +4,11 @@ namespace Starbug\Core;
 use Starbug\Core\Routing\RouterInterface;
 
 class AdminController extends Controller {
-  function __construct(ControllerFactoryInterface $controllers, RouterInterface $router) {
+  public function __construct(ControllerFactoryInterface $controllers, RouterInterface $router) {
     $this->controllers = $controllers;
     $this->router = $router;
   }
-  function default_action() {
+  public function default_action() {
     if (count($this->request->getComponents()) == 1) {
       return $this->render("admin.html");
     }

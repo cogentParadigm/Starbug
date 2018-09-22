@@ -4,12 +4,12 @@ namespace Starbug\Core;
 use Starbug\Core\Routing\RouterInterface;
 
 class ApiRoutingController extends Controller {
-  function __construct(ControllerFactoryInterface $controllers, RouterInterface $router, ApiRequest $api) {
+  public function __construct(ControllerFactoryInterface $controllers, RouterInterface $router, ApiRequest $api) {
     $this->controllers = $controllers;
     $this->router = $router;
     $this->api = $api;
   }
-  function response() {
+  public function response() {
     if (count($this->request->getComponents()) == 1) {
       $this->response = "[]";
       return;
@@ -22,9 +22,9 @@ class ApiRoutingController extends Controller {
     $arguments = [];
     if (isset($controller->routes[$action])) {
       $template = $controller->routes[$action];
-      if (false === ($values = $this->router->validate($this->request, array('path' => 'api/'.$name.'/'.$action), $template))) {
+      if (false === ($values = $this->router->validate($this->request, ['path' => 'api/'.$name.'/'.$action], $template))) {
         $action = 'missing';
-      } else if (is_array($values)) {
+      } elseif (is_array($values)) {
         $arguments = $values;
       }
     }
