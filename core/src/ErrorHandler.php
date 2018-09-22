@@ -12,7 +12,7 @@ class ErrorHandler {
   protected $out;
   protected $exceptionTemplate = "exception.txt";
   protected $logger;
-  protected $map = array(
+  protected $map = [
     E_ERROR             => LogLevel::CRITICAL,
     E_WARNING           => LogLevel::WARNING,
     E_PARSE             => LogLevel::ALERT,
@@ -28,10 +28,10 @@ class ErrorHandler {
     E_RECOVERABLE_ERROR => LogLevel::ERROR,
     E_DEPRECATED        => LogLevel::NOTICE,
     E_USER_DEPRECATED   => LogLevel::NOTICE,
-  );
-  protected $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
+  ];
+  protected $fatalErrors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
 
-  function __construct(TemplateInterface $out, LoggerInterface $logger) {
+  public function __construct(TemplateInterface $out, LoggerInterface $logger) {
     $this->out = $out;
     $this->logger = $logger;
   }
@@ -41,38 +41,38 @@ class ErrorHandler {
   }
 
   public function register() {
-    set_exception_handler(array($this,'handle_exception'));
-    set_error_handler(array($this,'handle_error'), error_reporting());
-    register_shutdown_function(array($this, 'handle_shutdown'));
+    set_exception_handler([$this, 'handle_exception']);
+    set_error_handler([$this, 'handle_error'], error_reporting());
+    register_shutdown_function([$this, 'handle_shutdown']);
   }
 
   /**
-   * exception handler
+   * Exception handler
    */
-  function handle_exception($exception) {
+  public function handle_exception($exception) {
     restore_error_handler();
     restore_exception_handler();
 
     ob_end_clean();
 
-    $error = array(
+    $error = [
       "message" => $exception->getMessage(),
       "file" => $exception->getFile(),
       "line" => $exception->getLine()
-    );
+    ];
 
     $error['traces'] = $exception->getTrace();
 
-    $this->logger->error(sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($exception), $error['message'], $error['file'], $error['line']), array('exception' => $exception));
+    $this->logger->error(sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($exception), $error['message'], $error['file'], $error['line']), ['exception' => $exception]);
     header("HTTP/1.1 500");
     header('Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0');
-    $this->out->render($this->exceptionTemplate, array("error" => $error, "handler" => $this));
+    $this->out->render($this->exceptionTemplate, ["error" => $error, "handler" => $this]);
     exit(255);
   }
 
   /**
-  * error handler
-  */
+   * Error handler.
+   */
   function handle_error($errno, $errstr, $errfile, $errline) {
     if (0 == error_reporting()) {
       return;
@@ -87,12 +87,12 @@ class ErrorHandler {
     if (count($trace)>2) $trace = array_slice($trace, 2);
 
     $type = self::codeToString($errno).": ";
-    $error = array(
+    $error = [
       'code' => $errno,
       'message'=>$type.$errstr,
       'file'=>$errfile,
       'line'=>$errline
-    );
+    ];
 
     $error['traces'] = $trace;
 
@@ -103,16 +103,16 @@ class ErrorHandler {
     }
     header("HTTP/1.1 500");
     header('Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0');
-    $this->out->render($this->exceptionTemplate, array("error" => $error, "handler" => $this));
+    $this->out->render($this->exceptionTemplate, ["error" => $error, "handler" => $this]);
     exit(1);
   }
 
-  function handle_shutdown() {
+  public function handle_shutdown() {
     if (is_null($lastError = error_get_last()) === false) {
       if (in_array($lastError['type'], $this->fatalErrors, true)) {
         $this->logger->alert(
           'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
-          array('code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'])
+          ['code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line']]
         );
       }
       ob_end_flush();
@@ -120,10 +120,10 @@ class ErrorHandler {
   }
 
   /**
-  * renders source around an line. used for exception and error output details
-  */
+   * Renders source around an line. used for exception and error output details
+   */
   public static function render_source($file, $line, $max) {
-    $line--;	// adjust line number to 0-based from 1-based
+    $line--; // adjust line number to 0-based from 1-based
     if ($line<0 || ($lines=@file($file))===false || ($count=count($lines))<=$line) return '';
 
     $half = (int)($max/2);
@@ -143,8 +143,8 @@ class ErrorHandler {
   }
 
   /**
-  * converts function arguments from a trace into a readable string
-  */
+   * Converts function arguments from a trace into a readable string
+   */
   public static function argumentsToString($args) {
     $count=0;
 

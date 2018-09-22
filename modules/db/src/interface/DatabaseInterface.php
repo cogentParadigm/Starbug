@@ -3,48 +3,55 @@ namespace Starbug\Core;
 
 interface DatabaseInterface {
   /**
-   * get records or columns
-   * @ingroup data
+   * Get records or columns.
+   *
    * @param string $model the name of the model
    * @param mixed $id/$conditions the id or an array of conditions
    * @param string $column optional column name
    */
-  function get($collection, $conditions = array(), $options = array());
+  public function get($collection, $conditions = [], $options = []);
   /**
-   * query the database
+   * Query the database.
+   *
    * @param string $froms comma delimeted list of tables to join. 'users' or 'users,permits'
    * @param string $args starbug query string for params: select, where, limit, and action/priv_type
    * @param bool $mine optional. if true, joining models will be checked for relationships and ON statements will be added
+   *
    * @return array record or records
    */
-  function query($collection);
+  public function query($collection);
   /**
-   * store data in the database
+   * Store data in the database.
+   *
    * @param string $name the name of the table
    * @param string/array $fields keypairs of columns/values to be stored
    * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
+   *
    * @return array validation errors
    */
-  function store($name, $fields = array(), $from = "auto");
+  public function store($name, $fields = [], $from = "auto");
   /**
-   * queue data to be stored in the database pending validation of other data
+   * Queue data to be stored in the database pending validation of other data.
+   *
    * @param string $name the name of the table
    * @param string/array $fields keypairs of columns/values to be stored
    * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
+   *
    * @return array validation errors
    */
-  function queue($name, $fields = array(), $from = "auto", $unshift = false);
+  public function queue($name, $fields = [], $from = "auto", $unshift = false);
   /**
-   * proccess the queue of data for storage
+   * Proccess the queue of data for storage
    */
-  function store_queue();
+  public function store_queue();
   /**
-   * remove from the database
+   * Remove from the database.
+   *
    * @param string $from the name of the table
    * @param string $where the WHERE conditions on the DELETE
    */
-  function remove($from, $where);
-  function prefix($table);
+  public function remove($from, $where);
+  public function prefix($table);
   public function setDatabase($name);
   public function exec($statement);
   public function prepare($statement);

@@ -1,5 +1,6 @@
 <?php
 namespace Starbug\Core;
+
 class FormDisplay extends ItemDisplay {
   public $type = "form";
   public $template = "form.html";
@@ -17,7 +18,7 @@ class FormDisplay extends ItemDisplay {
   protected $vars = [];
   public $horizontal = false;
 
-  function __construct(TemplateInterface $output, ResponseInterface $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, DatabaseInterface $db, ModelFactoryInterface $models, CollectionFactoryInterface $collections) {
+  public function __construct(TemplateInterface $output, ResponseInterface $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, DatabaseInterface $db, ModelFactoryInterface $models, CollectionFactoryInterface $collections) {
     $this->output = $output;
     $this->response = $response;
     $this->hook_builder = $hooks;
@@ -28,7 +29,7 @@ class FormDisplay extends ItemDisplay {
     $this->collections = $collections;
   }
 
-  function build($options = []) {
+  public function build($options = []) {
     $this->options = $options;
     if (empty($this->model) && !empty($this->options['model'])) $this->model = $this->options['model'];
     if (!empty($options["input_name"])) $this->input_name = $options["input_name"];
@@ -51,16 +52,18 @@ class FormDisplay extends ItemDisplay {
   }
 
   /**
+   * This method is called before the query method.
+   *
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
   protected function before_query($options) {
-    //override this method if needed
+    // override this method if needed
   }
 
   /**
-   * filter columns to set the input type and some other defaults
+   * Filter columns to set the input type and some other defaults.
    */
-  function filter($field, $options, $column) {
+  public function filter($field, $options, $column) {
     if (empty($options['input_type'])) {
       if ($column["type"] == "text") $options["input_type"] = "textarea";
       elseif ($column['type'] == "password") $options['input_type'] = "password";
@@ -96,10 +99,10 @@ class FormDisplay extends ItemDisplay {
   }
 
   /**
-   * override query function to only query with id
+   * Override query function to only query with id.
    */
-  function query($options = null) {
-    //set options
+  public function query($options = null) {
+    // set options
     if (is_null($options)) $options = $this->options;
 
     if (empty($options['id'])) $this->items = [];
@@ -113,7 +116,7 @@ class FormDisplay extends ItemDisplay {
       }
     }
 
-    //load POST data
+    // load POST data
     if (!empty($this->items)) {
       if (!$this->hasPost()) $this->setPost([]);
       foreach ($this->items[0] as $k => $v) {
@@ -122,7 +125,7 @@ class FormDisplay extends ItemDisplay {
     }
   }
 
-  function before_render() {
+  protected function before_render() {
     // set form attributes
     $this->attributes["action"] = $this->url;
     $this->attributes["method"] = $this->method;
@@ -142,7 +145,7 @@ class FormDisplay extends ItemDisplay {
     }
   }
 
-  function render($query = false) {
+  public function render($query = false) {
     parent::render($query);
   }
 
@@ -187,13 +190,15 @@ class FormDisplay extends ItemDisplay {
   }
 
   /**
-   * get the full name attribute
+   * Get the full name attribute
    * eg. name becomes users[name]
    * eg. name[] becomes users[name][]
+   *
    * @param string $name the relative name
+   *
    * @return the full name
    */
-  function get_name($name) {
+  public function get_name($name) {
     $key = $this->input_name;
     if (empty($key) || $this->method == "get") return $name;
     else {
@@ -211,11 +216,13 @@ class FormDisplay extends ItemDisplay {
   }
 
   /**
-   * get the POST or GET value from the relative name
+   * Get the POST or GET value from the relative name.
+   *
    * @param string $name the relative name
+   *
    * @return string the GET or POST value
    */
-  function get($name) {
+  public function get($name) {
     $keys = $this->input_name;
     $parts = explode("[", $name);
     $var = ($this->method == "post") ? $this->getPost() : $this->request->getParameters();
@@ -225,11 +232,12 @@ class FormDisplay extends ItemDisplay {
   }
 
   /**
-   * set the GET or POST value
+   * Set the GET or POST value.
+   *
    * @param string $name the relative name
    * @param string $value the value
    */
-  function set($name, $value) {
+  public function set($name, $value) {
     $parts = explode("[", $name);
     $key = array_pop($parts);
     $data = ($this->method == "post") ? $this->getPost() : $this->request->getParameters();
@@ -247,15 +255,16 @@ class FormDisplay extends ItemDisplay {
   }
 
   /**
-   * converts the option string given to form elements into an array and sets up default values
+   * Converts the option string given to form elements into an array and sets up default values
+   *
    * @param star $ops the option string
    */
-  function fill_ops(&$ops, $control = "") {
+  public function fill_ops(&$ops, $control = "") {
     $name = array_shift($ops);
     if (empty($ops['name'])) $ops['name'] = $name;
-    //model
+    // model
     if (empty($ops['model'])) $ops['model'] = $this->model;
-    //id, label, and class
+    // id, label, and class
     if (empty($ops['id'])) $ops['id'] = $ops['name'];
     $ops['nolabel'] = (isset($ops['nolabel'])) ? true : false;
     if (empty($ops['label'])) $ops['label'] = ucwords(str_replace("_", " ", $ops['name']));
@@ -263,7 +272,7 @@ class FormDisplay extends ItemDisplay {
     if (in_array($control, ["autocomplete", "category_select", "file_select", "select", "tag_select", "textarea", "file", "input", "password", "text"])) $ops['class'] .= " form-control";
   }
 
-  function assign($key, $value = null) {
+  public function assign($key, $value = null) {
     if (is_array($key)) {
       foreach ($key as $k => $v) $this->assign($k, $v);
     } else {
@@ -279,10 +288,10 @@ class FormDisplay extends ItemDisplay {
    *                  name: the relative name, eg. 'group[]' might become 'users[group][]'
    * @param bool $self if true, will use a self closing tag. If false, will use an opening tag and a closing tag (default is false)
    */
-  function form_control($control, $field) {
+  public function form_control($control, $field) {
     $this->vars = ["display" => $this];
     $this->fill_ops($field, $control);
-    //run filters
+    // run filters
     $hooks = $this->hook_builder->get("form/".$control);
     foreach ($hooks as $hook) {
       $hook->build($this, $control, $field);
@@ -301,7 +310,7 @@ class FormDisplay extends ItemDisplay {
     return $this->output->capture([$field['model']."/form/$field[field]-$capture.html", "form/$field[field]-$capture.html", $field['model']."/form/$capture.html", "form/$capture.html"], $this->vars);
   }
 
-  function __call($name, $arguments) {
+  public function __call($name, $arguments) {
     if (empty($arguments[1])) $arguments[1] = [];
     return $this->form_control($name, $arguments[0], $arguments[1]);
   }

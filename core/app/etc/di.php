@@ -75,7 +75,6 @@ return [
   'Starbug\Core\Database' => DI\object()
     ->method('setTimeZone', DI\get('time_zone'))
     ->method('setDatabase', DI\get('database_name')),
-  'Starbug\Core\Template' => DI\object()->constructorParameter('helpers', DI\get('Starbug\Core\HelperFactoryInterface')),
   'Starbug\Core\GenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\Application' => DI\object()->method('setLogger', DI\get('Psr\Log\LoggerInterface')),
   'Starbug\Core\SetupCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
