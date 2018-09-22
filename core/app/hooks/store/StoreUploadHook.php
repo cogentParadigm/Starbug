@@ -11,7 +11,7 @@ class StoreUploadHook extends QueryHook {
     $this->models = $models;
     $this->files = $models->get("files");
   }
-  function empty_validate($query, $column, $argument) {
+  function emptyValidate($query, $column, $argument) {
     $files = $this->request->getFiles();
     if (!empty($files[$column]["name"])) $query->set($column, $this->store($query, $column, "", $column, $argument));
   }

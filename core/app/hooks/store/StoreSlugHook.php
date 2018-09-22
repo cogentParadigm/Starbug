@@ -1,18 +1,17 @@
 <?php
 namespace Starbug\Core;
-//stores a URL path slug
 
 class StoreSlugHook extends QueryHook {
-  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, MacroInterface $macro, InputFilterInterface $filter) {
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, MacroInterface $macro, InputFilterInterface $filter) {
     $this->db = $db;
     $this->macro = $macro;
     $this->models = $models;
     $this->filter = $filter;
   }
-  function empty_before_insert($query, $column, $argument) {
+  public function emptyBeforeInsert($query, $column, $argument) {
     $query->set($column, $this->validate($query, $column, "", $column, $argument));
   }
-  function validate($query, $key, $value, $column, $argument) {
+  public function validate($query, $key, $value, $column, $argument) {
     if (empty($value) && $query->hasValue($argument)) {
       $value = $query->getValue($argument);
 
@@ -20,7 +19,7 @@ class StoreSlugHook extends QueryHook {
 
       if (!empty($this->models->get($query->model)->hooks[$column]["pattern"])) {
         $pattern = $this->models->get($query->model)->hooks[$column]["pattern"];
-        $data = array($query->model => array_merge($query->fields, array($column => $value)));
+        $data = [$query->model => array_merge($query->fields, [$column => $value])];
         $value = $this->macro->replace($pattern, $data);
       }
 
@@ -36,7 +35,7 @@ class StoreSlugHook extends QueryHook {
     return $value;
   }
 
-  function exists($query, $column, $value) {
+  public function exists($query, $column, $value) {
     $exists = $this->db->query($query->model)->condition($query->model.".".$column, $value);
     $id = 0;
     if ($query->mode == "update") {

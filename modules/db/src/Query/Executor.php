@@ -150,12 +150,12 @@ class Executor implements ExecutorInterface {
       // 2 = after
       if ($phase == self::PHASE_VALIDATION) {
         if ($key == false) {
-          if ($query->isInsert()) $hook->empty_before_insert($builder, $column, $argument);
-          elseif ($query->isUpdate()) $hook->empty_before_update($builder, $column, $argument);
-          $hook->empty_validate($builder, $column, $argument);
+          if ($query->isInsert()) $hook->emptyBeforeInsert($builder, $column, $argument);
+          elseif ($query->isUpdate()) $hook->emptyBeforeUpdate($builder, $column, $argument);
+          $hook->emptyValidate($builder, $column, $argument);
         } else {
-          if ($query->isInsert()) $query->setValue($key, $hook->before_insert($builder, $key, $query->getValue($key), $column, $argument));
-          elseif ($query->isUpdate()) $query->setValue($key, $hook->before_update($builder, $key, $query->getValue($key), $column, $argument));
+          if ($query->isInsert()) $query->setValue($key, $hook->beforeInsert($builder, $key, $query->getValue($key), $column, $argument));
+          elseif ($query->isUpdate()) $query->setValue($key, $hook->beforeUpdate($builder, $key, $query->getValue($key), $column, $argument));
           $query->setValue($key, $hook->validate($builder, $key, $query->getValue($key), $column, $argument));
         }
       } elseif ($phase == self::PHASE_STORE && $key != false) {
@@ -163,13 +163,13 @@ class Executor implements ExecutorInterface {
         elseif ($query->isUpdate()) $query->setValue($key, $hook->update($builder, $key, $query->getValue($key), $column, $argument));
         $query->setValue($key, $hook->store($builder, $key, $query->getValue($key), $column, $argument));
       } elseif ($phase == self::PHASE_AFTER_STORE && $key != false) {
-        if ($query->isInsert()) $hook->after_insert($builder, $key, $query->getValue($key), $column, $argument);
-        elseif ($query->isUpdate()) $hook->after_update($builder, $key, $query->getValue($key), $column, $argument);
-        $hook->after_store($builder, $key, $query->getValue($key), $column, $argument);
+        if ($query->isInsert()) $hook->afterInsert($builder, $key, $query->getValue($key), $column, $argument);
+        elseif ($query->isUpdate()) $hook->afterUpdate($builder, $key, $query->getValue($key), $column, $argument);
+        $hook->afterStore($builder, $key, $query->getValue($key), $column, $argument);
       } elseif ($phase == self::PHASE_BEFORE_DELETE) {
-        $hook->before_delete($builder, $column, $argument);
+        $hook->beforeDelete($builder, $column, $argument);
       } elseif ($phase == self::PHASE_AFTER_DELETE) {
-        $hook->after_delete($builder, $column, $argument);
+        $hook->afterDelete($builder, $column, $argument);
       }
     }
   }

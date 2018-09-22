@@ -498,9 +498,9 @@ class StoreTest extends DatabaseTestCase {
     sleep(1);
 
     // update the record
-    $before_update = time();
+    $beforeUpdate = time();
     $this->db->store("hook_store_time", ["id" => $id]);
-    $after_update = time();
+    $afterUpdate = time();
 
     // retrieve the record
     $record = $this->db->get("hook_store_time", $id);
@@ -510,7 +510,7 @@ class StoreTest extends DatabaseTestCase {
     $update = strtotime($record['update_stamp']);
     $this->assertTrue(($create >= $before && $create <= $after));
     $this->assertFalse(($update >= $before && $update <= $after));
-    $this->assertTrue(($update >= $before_update && $update <= $after_update));
+    $this->assertTrue(($update >= $beforeUpdate && $update <= $afterUpdate));
   }
 
   /**

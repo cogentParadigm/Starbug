@@ -14,21 +14,21 @@ class QueryHook {
    *
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  public function empty_before_insert($query, $column, $argument) {
+  public function emptyBeforeInsert($query, $column, $argument) {
   }
   /**
    * This hook is invoked when updating and the field has not been specified.
    *
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  public function empty_before_update($query, $column, $argument) {
+  public function emptyBeforeUpdate($query, $column, $argument) {
   }
   /**
    * This hook is invoked when inserting or updating and the field has not been specified.
    *
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  public function empty_validate($query, $column, $argument) {
+  public function emptyValidate($query, $column, $argument) {
   }
   /**
    * This hook is invoked when inserting and a value has been specified.
@@ -36,7 +36,7 @@ class QueryHook {
    *
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  public function before_insert($query, $key, $value, $column, $argument) {
+  public function beforeInsert($query, $key, $value, $column, $argument) {
     return $value;
   }
   /**
@@ -45,7 +45,7 @@ class QueryHook {
    *
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  public function before_update($query, $key, $value, $column, $argument) {
+  public function beforeUpdate($query, $key, $value, $column, $argument) {
     return $value;
   }
   /**
@@ -53,7 +53,7 @@ class QueryHook {
    *
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  public function before_delete($query, $column, $argument) {
+  public function beforeDelete($query, $column, $argument) {
   }
   /**
    * This hook is invoked when inserting or updating and a value has been specified.
@@ -97,7 +97,7 @@ class QueryHook {
    *
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  public function after_insert($query, $key, $value, $column, $argument) {
+  public function afterInsert($query, $key, $value, $column, $argument) {
     return $value;
   }
   /**
@@ -106,7 +106,7 @@ class QueryHook {
    *
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  public function after_update($query, $key, $value, $column, $argument) {
+  public function afterUpdate($query, $key, $value, $column, $argument) {
     return $value;
   }
   /**
@@ -115,7 +115,7 @@ class QueryHook {
    *
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  public function after_store($query, $key, $value, $column, $argument) {
+  public function afterStore($query, $key, $value, $column, $argument) {
     return $value;
   }
   /**
@@ -123,6 +123,6 @@ class QueryHook {
    *
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  public function after_delete($query, $column, $argument) {
+  public function afterDelete($query, $column, $argument) {
   }
 }

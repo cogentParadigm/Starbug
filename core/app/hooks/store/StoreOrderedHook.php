@@ -33,7 +33,7 @@ class StoreOrderedHook extends QueryHook {
       }
     }
   }
-  public function empty_before_insert($query, $column, $argument) {
+  public function emptyBeforeInsert($query, $column, $argument) {
     $query->set($column, $this->insert($query, $column, "", $column, $argument));
   }
   public function insert($query, $key, $value, $column, $argument) {
@@ -46,7 +46,7 @@ class StoreOrderedHook extends QueryHook {
     $this->set_conditions($query, $column, $argument, $value);
     return $value;
   }
-  public function after_store($query, $key, $value, $column, $argument) {
+  public function afterStore($query, $key, $value, $column, $argument) {
     if (false !== $this->value) $value = $this->value;
     if (empty($value)) return;
     $select = ["id", $column];

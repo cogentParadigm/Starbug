@@ -23,7 +23,7 @@ class StoreBlocksHook extends QueryHook {
     }
     return $value;
   }
-  public function before_delete($query, $column, $argument) {
+  public function beforeDelete($query, $column, $argument) {
     $id = $query->getId();
     $this->db->query("blocks")->condition($query->model."_id", $id)->delete();
   }
