@@ -24,7 +24,7 @@ interface URLInterface {
   public function setFormat($format);
   public function getFormat();
   public function setParameter($name, $value);
-  public function setParameters($parameters = array());
+  public function setParameters($parameters = []);
   public function hasParameter($name);
   public function getParameter($name);
   public function getParameters();

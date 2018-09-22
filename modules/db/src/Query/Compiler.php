@@ -38,7 +38,7 @@ class Compiler implements CompilerInterface {
     unset($sql['ORDER BY']);
     if (!empty($components['HAVING'])) {
       $sqlCountQuery = "SELECT COUNT(*) as count FROM (".implode(' ', $sql).") as c";
-    } else if (!empty($components['GROUP BY'])) {
+    } elseif (!empty($components['GROUP BY'])) {
       $sql['SELECT'] = "SELECT COUNT(DISTINCT ".$components['GROUP BY'].") as count";
       unset($sql['GROUP BY']);
       $sqlCountQuery = implode(' ', $sql);

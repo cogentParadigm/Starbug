@@ -27,16 +27,16 @@ class Action {
     $user_columns = $this->schema->getColumn("users");
 
     if ($join) {
-      //join permits - match table and action
+      // join permits - match table and action
       if (!$query->has("permits")) $query->innerJoin("permits")->on("'".$type."' LIKE permits.related_table && '".$action."' LIKE permits.action");
-      //global or object permit
+      // global or object permit
       $query->where("('global' LIKE permits.priv_type || (permits.priv_type='object' && permits.related_id=".$collection.".id))");
 
-      //determine what relationships the object must bear - defined by object_access fields
+      // determine what relationships the object must bear - defined by object_access fields
       foreach ($columns as $cname => $column) {
         if (isset($column['object_access'])) {
           if ($this->schema->hasTable($column['type'])) {
-            //multiple reference
+            // multiple reference
             $object_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
             $permit_field = "object_".$cname;
             $ref = $cname."_id";
@@ -52,7 +52,7 @@ class Action {
                 )
             );
           } else {
-            //single reference
+            // single reference
             $object_field = $cname;
             $permit_field = "object_".$cname;
             $query->where("(permits.".$permit_field." is null || permits.".$permit_field."=".$collection.".".$object_field.")");
@@ -60,18 +60,18 @@ class Action {
         }
       }
     } else {
-      //table permit
+      // table permit
       $query->where("'table' LIKE permits.priv_type && '".$type."' LIKE permits.related_table && '".$action."' LIKE permits.action");
     }
 
-    //determine what relationships the user must bear - defined by user_access fields
+    // determine what relationships the user must bear - defined by user_access fields
     foreach ($user_columns as $cname => $column) {
       if (isset($column['user_access'])) {
         $permit_field = "user_".$cname;
         if (!$this->user->loggedIn()) {
           $query->condition("permits.".$permit_field, "NULL");
         } elseif ($this->schema->hasTable($column['type'])) {
-          //multiple reference
+          // multiple reference
           $user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
           $ref = $cname."_id";
           $query->condition(
@@ -84,7 +84,7 @@ class Action {
               )
           );
         } else {
-          //single reference
+          // single reference
           $user_field = $cname;
           $query->condition(
             $query->createOrCondition()
@@ -99,23 +99,23 @@ class Action {
       }
     }
 
-    //generate a condition for each role a permit can have. One of these must be satisfied
+    // generate a condition for each role a permit can have. One of these must be satisfied
     $roleConditions = $query->createOrCondition();
-    //everyone - no restriction
+    // everyone - no restriction
     $roleConditions->where("permits.role='everyone'");
-    //user - a specific user
+    // user - a specific user
     $roleConditions->where("permits.role='user' && permits.who='".$this->user->userinfo("id")."'");
 
     if ($join) {
-      //self - permit for user actions
+      // self - permit for user actions
       if ($type == "users") $roleConditions->where("permits.role='self' && ".$collection.".id='".$this->user->userinfo("id")."'");
-      //owner - grant access to owner of object
+      // owner - grant access to owner of object
       $roleConditions->where("permits.role='owner' && ".$collection.".owner='".$this->user->userinfo("id")."'");
-      //[user_access field] - requires users and objects to share the same terms for the given relationship
+      // [user_access field] - requires users and objects to share the same terms for the given relationship
       foreach ($user_columns as $cname => $column) {
         if (isset($column['user_access']) && isset($columns[$cname])) {
           if ($this->schema->hasTable($column['type'])) {
-            //multiple reference
+            // multiple reference
             $user_table = empty($column['table']) ? $column['entity']."_".$cname : $column['table'];
             $object_table = empty($columns[$cname]['table']) ? $columns[$cname]['entity']."_".$cname : $columns[$cname]['table'];
             $ref = $cname."_id";
@@ -159,10 +159,10 @@ class Action {
                     "NOT EXISTS"
                   )
               );
-              //$query->orWhere("permits.role='".$cname."' && NOT EXISTS (SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target.")");
+              // $query->orWhere("permits.role='".$cname."' && NOT EXISTS (SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target.")");
             }
           } else {
-            //single reference
+            // single reference
             if ($this->user->loggedIn()) {
               $roleConditions->condition(
                 $query->createCondition()

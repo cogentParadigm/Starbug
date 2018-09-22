@@ -25,7 +25,7 @@ class Address extends AddressModel {
     $this->store($address);
   }
 
-  function format($address, $country = false) {
+  public function format($address, $country = false) {
     if (is_numeric($address)) $address = $this->query("address")->condition("id", $address)->one();
     if (!$country) $country = $this->query("countries")->condition("id", $address['country'])->one();
     if (is_numeric($address['administrative_area'])) {

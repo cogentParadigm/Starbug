@@ -73,7 +73,7 @@ class ErrorHandler {
   /**
    * Error handler.
    */
-  function handle_error($errno, $errstr, $errfile, $errline) {
+  public function handle_error($errno, $errstr, $errfile, $errline) {
     if (0 == error_reporting()) {
       return;
     }

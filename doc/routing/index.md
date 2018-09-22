@@ -9,12 +9,12 @@ The routing process starts with routes, which map a URL patterns to controllers.
 ```php
 <?php
 return [
-	'routes' => DI\add([
-		'news' => [ // <------- 'news' is the path
-			'title' => 'News',
-			'controller' => 'Starbug\App\NewsController'
-		]
-	])
+  'routes' => DI\add([
+    'news' => [ // <------- 'news' is the path
+      'title' => 'News',
+      'controller' => 'Starbug\App\NewsController'
+    ]
+  ])
 ];
 ```
 
@@ -42,10 +42,10 @@ Let's take the route below.
 ```php
 <?php
 // ...
-	'photos' => [
-		'title' => 'Photos',
-		'controller' => 'Starbug\App\PhotosController'
-	]
+  'photos' => [
+    'title' => 'Photos',
+    'controller' => 'Starbug\App\PhotosController'
+  ]
 // ...
 ```
 
@@ -56,22 +56,22 @@ Here is the corresponding controller.
 namespace Starbug\App;
 use Starbug\Core\Controller;
 class PhotosController extends Controller {
-	public $routes = [
-		'update' => 'update/{id}'
-	];
-	public function init() {
-		$this->assign("model", "photos");
-	}
-	public function default_action() {
-		$this->render("admin/list");
-	}
-	public function create() {
-		$this->render("admin/create");
-	}
-	public function update($id) {
-		$this->assign("id", $id);
-		$this->render("admin/update");
-	}
+  public $routes = [
+    'update' => 'update/{id}'
+  ];
+  public function init() {
+    $this->assign("model", "photos");
+  }
+  public function default_action() {
+    $this->render("admin/list.html");
+  }
+  public function create() {
+    $this->render("admin/create.html");
+  }
+  public function update($id) {
+    $this->assign("id", $id);
+    $this->render("admin/update.html");
+  }
 }
 ```
 This produces the following paths.

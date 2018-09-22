@@ -24,6 +24,12 @@
       <exclude name="PSR2.Methods.FunctionCallSignature.ContentAfterOpenBracket"/>
     </rule>
 
+    <rule ref="PSR2.ControlStructures.SwitchDeclaration">
+      <properties>
+        <property name="indent" value="2"/>
+      </properties>
+    </rule>
+
     <rule ref="Squiz.Functions.MultiLineFunctionDeclaration">
       <properties>
         <property name="indent" value="2"/>

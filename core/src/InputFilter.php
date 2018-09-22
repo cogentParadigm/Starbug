@@ -5,55 +5,59 @@ class InputFilter implements InputFilterInterface {
   public function __construct() {
   }
   /**
-   * normalize a string
+   * Normalize a string.
+   *
    * @param string $raw the raw string
    * @param string $valid_chars valid characters. default is 'a-zA-Z0-9'
+   *
    * @return string the normalized version of $raw
    */
-  function normalize($raw, $valid_chars = 'a-zA-Z0-9 \-_') {
+  public function normalize($raw, $valid_chars = 'a-zA-Z0-9 \-_') {
     return preg_replace("/[^".$valid_chars."]/", "", $raw);
   }
-  function boolean($boolean) {
+  public function boolean($boolean) {
     return filter_var($boolean, FILTER_VALIDATE_BOOLEAN);
   }
-  function int($int) {
+  public function int($int) {
     return filter_var($int, FILTER_VALIDATE_INT);
   }
-  function float($int) {
+  public function float($int) {
     return filter_var($int, FILTER_VALIDATE_FLOAT);
   }
-  function string($string) {
+  public function string($string) {
     return preg_replace('/  +/', ' ', strip_tags($string));
   }
-  function url($url) {
+  public function url($url) {
     return filter_var($url, FILTER_VALIDATE_URL);
   }
-  function email($email) {
+  public function email($email) {
     return filter_var($email, FILTER_VALIDATE_EMAIL);
   }
-  function plain($content) {
+  public function plain($content) {
     return htmlentities(preg_replace('/  +/', ' ', $content), ENT_QUOTES, 'UTF-8');
   }
   /**
-   * convert an array to an HTML attribute string
-   * @ingroup strings
+   * Convert an array to an HTML attribute string.
+   *
    * @param array $attributes an associative array
+   *
    * @return string the HTML attribute string
    */
-  function attributes($attributes) {
-    $valid = array("abbr", "accept-charset", "accept", "accesskey", "action", "align", "alink", "alt", "archive", "autocomplete", "axis", "background", "bgcolor", "cellpadding", "cellspacing", "char", "charoff", "charset", "checked", "cite", "class", "classid", "clear", "code", "codebase", "codetype", "color", "cols", "colspan", "compact", "content", "contenteditable", "contextmenu", "coords", "datetime", "declare", "defer", "dir", "disabled", "draggable", "dropzone", "enctype", "face", "for", "frame", "frameborder", "headers", "height", "hidden", "href", "hreflang", "hspace", "http-equiv", "id", "ismap", "label", "lang", "language", "link", "longdesc", "marginheight", "marginwidth", "maxlength", "media", "method", "multiple", "name", "nohref", "noresize", "noshade", "nowrap", "object", "placeholder", "profile", "prompt", "readonly", "rel", "rev", "rows", "rowspan", "rules", "scheme", "scope", "scrolling", "selected", "shape", "size", "span", "spellcheck", "src", "standby", "start", "style", "summary", "tabindex", "target", "text", "title", "type", "usemap", "valign", "value", "valuetype", "version", "vlink", "vspace", "width");
+  public function attributes($attributes) {
+    $valid = ["abbr", "accept-charset", "accept", "accesskey", "action", "align", "alink", "alt", "archive", "autocomplete", "axis", "background", "bgcolor", "cellpadding", "cellspacing", "char", "charoff", "charset", "checked", "cite", "class", "classid", "clear", "code", "codebase", "codetype", "color", "cols", "colspan", "compact", "content", "contenteditable", "contextmenu", "coords", "datetime", "declare", "defer", "dir", "disabled", "draggable", "dropzone", "enctype", "face", "for", "frame", "frameborder", "headers", "height", "hidden", "href", "hreflang", "hspace", "http-equiv", "id", "ismap", "label", "lang", "language", "link", "longdesc", "marginheight", "marginwidth", "maxlength", "media", "method", "multiple", "name", "nohref", "noresize", "noshade", "nowrap", "object", "placeholder", "profile", "prompt", "readonly", "rel", "rev", "rows", "rowspan", "rules", "scheme", "scope", "scrolling", "selected", "shape", "size", "span", "spellcheck", "src", "standby", "start", "style", "summary", "tabindex", "target", "text", "title", "type", "usemap", "valign", "value", "valuetype", "version", "vlink", "vspace", "width"];
     $validate = true;
     $filtered = "";
     foreach ($attributes as $k => $v) if (!is_array($v) && (!$validate || (in_array($k, $valid) || (0===strpos($k, "on")) || (0===strpos($k, "data"))))) $filtered .= " $k=\"$v\"";
     return $filtered;
   }
-  function html($content, $allowed = array()) {
+
+  public function html($content, $allowed = []) {
     $purifier = $this->createHtmlPurifier($allowed);
     return $purifier->purify($content);
   }
-  protected function createHtmlPurifier($allowed = array()) {
+  protected function createHtmlPurifier($allowed = []) {
     if (empty($allowed)) {
-      $allowed = array(
+      $allowed = [
         'img[src|alt|title|width|height|style|data-mce-src|data-mce-json]',
         'figure', 'figcaption',
         'video[src|type|width|height|poster|preload|controls]', 'source[src|type]',
@@ -67,7 +71,7 @@ class InputFilter implements InputFilterInterface {
         'table[width|height|border|style]', 'th[width|height|border|style]',
         'tr[width|height|border|style]', 'td[width|height|border|style]',
         'hr'
-      );
+      ];
     }
     $config = \HTMLPurifier_Config::createDefault();
     $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
@@ -104,7 +108,7 @@ class InputFilter implements InputFilterInterface {
       $def->addElement('figcaption', 'Inline', 'Flow', 'Common');
 
       // http://developers.whatwg.org/the-video-element.html#the-video-element
-      $def->addElement('video', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common', array(
+      $def->addElement('video', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common', [
         'src' => 'URI',
         'type' => 'Text',
         'width' => 'Length',
@@ -112,11 +116,11 @@ class InputFilter implements InputFilterInterface {
         'poster' => 'URI',
         'preload' => 'Enum#auto,metadata,none',
         'controls' => 'Bool',
-      ));
-      $def->addElement('source', 'Block', 'Flow', 'Common', array(
+      ]);
+      $def->addElement('source', 'Block', 'Flow', 'Common', [
         'src' => 'URI',
         'type' => 'Text',
-      ));
+      ]);
 
       // http://developers.whatwg.org/text-level-semantics.html
       $def->addElement('s', 'Inline', 'Inline', 'Common');
@@ -127,8 +131,8 @@ class InputFilter implements InputFilterInterface {
       $def->addElement('wbr', 'Inline', 'Empty', 'Core');
 
       // http://developers.whatwg.org/edits.html
-      $def->addElement('ins', 'Block', 'Flow', 'Common', array('cite' => 'URI', 'datetime' => 'CDATA'));
-      $def->addElement('del', 'Block', 'Flow', 'Common', array('cite' => 'URI', 'datetime' => 'CDATA'));
+      $def->addElement('ins', 'Block', 'Flow', 'Common', ['cite' => 'URI', 'datetime' => 'CDATA']);
+      $def->addElement('del', 'Block', 'Flow', 'Common', ['cite' => 'URI', 'datetime' => 'CDATA']);
 
       // TinyMCE
       $def->addAttribute('img', 'data-mce-src', 'Text');

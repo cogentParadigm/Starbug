@@ -8,13 +8,13 @@ class Taxonomy implements TaxonomyInterface {
   protected $db;
   protected $models;
   protected $user;
-  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user, InputFilterInterface $filter) {
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user, InputFilterInterface $filter) {
     $this->db = $db;
     $this->models = $models;
     $this->user = $user;
     $this->filter = $filter;
   }
-  function terms($taxonomy, $parent = 0, $depth = 0) {
+  public function terms($taxonomy, $parent = 0, $depth = 0) {
     $terms = [];
     $parents = $this->db->query("terms")->condition("taxonomy", $taxonomy)->condition("parent", $parent)->sort("position");
     if ($taxonomy == "groups" && !$this->user->loggedIn("root")) $parents->condition("slug", "root", "!=");
@@ -27,14 +27,15 @@ class Taxonomy implements TaxonomyInterface {
     return $terms;
   }
   /**
-   * apply tags
-   * @ingroup taxonomy
+   * Apply tags
+   *
    * @param string $taxonomy the taxonomy/classification of terms. eg. products_tags
    * @param int $object_id the id of the object to apply the tag to
    * @param string $tag the tag
+   *
    * @return bool returns true on success, false otherwise.
    */
-  function tag($table, $object_id, $field, $tag = "") {
+  public function tag($table, $object_id, $field, $tag = "") {
     $column_info = $this->models->get($table)->column_info($field);
     if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
     $taxonomy = $column_info['taxonomy'];
@@ -42,7 +43,7 @@ class Taxonomy implements TaxonomyInterface {
 
     $tag = $this->filter->normalize($tag);
     $slug = strtolower($tag);
-    //IF THE TAG IS ALREADY APPLIED, RETURN TRUE
+    // IF THE TAG IS ALREADY APPLIED, RETURN TRUE
     $existing = $this->db->query($table)->condition($table.".id", $object_id);
     $existing->condition(
       $existing->createOrCondition()
@@ -52,26 +53,26 @@ class Taxonomy implements TaxonomyInterface {
     );
     if ($existing->one()) return true;
 
-    //IF THE TERM DOESN'T EXIST, ADD IT
-    $term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->params(array("tag" => $tag, "tax" => $taxonomy))->one();
+    // IF THE TERM DOESN'T EXIST, ADD IT
+    $term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->params(["tag" => $tag, "tax" => $taxonomy])->one();
     if (empty($term)) $this->db->store("terms", ["term" => $tag, "slug" => $slug, "taxonomy" => $taxonomy, "parent" => "0", "position" => ""]);
-    else if ($term['taxonomy'] == "groups" && !$this->user->loggedIn("root") && in_array($term['slug'], array("root"))) return false;
+    elseif ($term['taxonomy'] == "groups" && !$this->user->loggedIn("root") && in_array($term['slug'], ["root"])) return false;
     if ($this->db->errors()) return false;
 
-    //APPLY TAG
+    // APPLY TAG
     $term_id = (empty($term)) ? $this->models->get("terms")->insert_id : $term['id'];
-    $this->db->store($tags, array($field."_id" => $term_id, $table."_id" => $object_id));
+    $this->db->store($tags, [$field."_id" => $term_id, $table."_id" => $object_id]);
     return (!$this->db->errors());
   }
   /**
-   * remove tags
-   * @ingroup taxonomy
+   * Remove tags
+   *
    * @param string $table (optional) the table to which tags are applied. This is only needed if not implied by $taxonomy
    * @param string $taxonomy the taxonomy/classification of terms. eg. products_tags or genres
    * @param int $object_id the id of the object to apply the tag to
    * @param string $tag the tag
    */
-  function untag($table, $object_id, $field, $tag = "") {
+  public function untag($table, $object_id, $field, $tag = "") {
     $column_info = $this->models->get($table)->column_info($field);
     if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
     $tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];

@@ -38,5 +38,4 @@ class MockExecutor implements ExecutorInterface {
   public function interpolate(QueryInterface $query, $params = null) {
     // Empty method.
   }
-
 }

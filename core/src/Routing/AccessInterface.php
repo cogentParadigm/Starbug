@@ -2,5 +2,5 @@
 namespace Starbug\Core\Routing;
 
 interface AccessInterface {
-  function hasAccess($route);
+  public function hasAccess($route);
 }

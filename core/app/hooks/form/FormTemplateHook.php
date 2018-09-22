@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 
 class FormTemplateHook extends FormHook {
-  function build($form, &$control, &$field) {
+  public function build($form, &$control, &$field) {
     $field['nofield'] = true;
   }
 }

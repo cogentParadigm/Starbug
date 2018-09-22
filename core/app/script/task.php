@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 
 class TaskCommand {
-  function __construct(QueueManagerInterface $queues) {
+  public function __construct(QueueManagerInterface $queues) {
     $this->queues = $queues;
   }
   public function run($argv) {

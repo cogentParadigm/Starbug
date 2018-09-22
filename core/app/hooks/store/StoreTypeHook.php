@@ -6,29 +6,29 @@ class StoreTypeHook extends QueryHook {
     $this->db = $db;
     $this->models = $models;
   }
-  function empty_validate($query, $column, $argument) {
+  public function empty_validate($query, $column, $argument) {
     if ($this->models->has($argument)) $query->exclude($column);
   }
-  function validate($query, $key, $value, $column, $argument) {
+  public function validate($query, $key, $value, $column, $argument) {
     if ($this->models->has($argument)) $query->exclude($key);
     return $value;
   }
-  function after_store($query, $key, $value, $column, $argument) {
+  public function after_store($query, $key, $value, $column, $argument) {
     if ($argument == "terms" || $argument == "blocks" || !$this->models->has($argument)) return;
 
-    //vars
+    // vars
     $model = $query->model;
     $model_id = $query->getId();
     $hooks = $this->models->get($model)->hooks[$column];
     $target = (empty($hooks['table'])) ? $model."_".$column : $hooks['table'];
     $type = $argument;
-    $type_ids = array();
-    $ids = array();
+    $type_ids = [];
+    $ids = [];
     $clean = true;
 
-    //loop through values
+    // loop through values
     if (empty($value)) $value = [];
-    else if (!is_array($value)) $value = explode(",", preg_replace("/[,\s]+/", ",", $value));
+    elseif (!is_array($value)) $value = explode(",", preg_replace("/[,\s]+/", ",", $value));
     foreach ($value as $position => $type_id) {
       $remove = false;
       $value_type = ($type == $target) ? "id" : $column."_id";
@@ -39,7 +39,7 @@ class StoreTypeHook extends QueryHook {
           $remove = true;
           $clean = false;
           $type_id = substr($type_id, 1);
-        } else if (0 === strpos($type_id, "+")) {
+        } elseif (0 === strpos($type_id, "+")) {
           $clean = false;
           $type_id = substr($type_id, 1);
         }
@@ -54,7 +54,7 @@ class StoreTypeHook extends QueryHook {
           $entry = $this->db->query($target)->condition("id", $type_id['id']);
           $ids[] = $type_id['id'];
         } else {
-          $entry = $this->db->query($target)->conditions(array($model."_id" => $model_id, $column."_id" => $type_id[$column."_id"]));
+          $entry = $this->db->query($target)->conditions([$model."_id" => $model_id, $column."_id" => $type_id[$column."_id"]]);
           $type_ids[] = $type_id[$column."_id"];
         }
         $entry->set($model."_id", $model_id);
@@ -62,24 +62,24 @@ class StoreTypeHook extends QueryHook {
         $entry->set("position", intval($position)+1);
         if (isset($type_id['id']) || $entry->one()) $entry->update();
         else $entry->insert();
-      } else if ($value_type === "id") {
+      } elseif ($value_type === "id") {
         $entry = $this->db->query($target)->condition("id", $type_id);
         if ($remove) {
           $entry->delete();
         } else {
-          //update
+          // update
           $entry->set($model."_id", $model_id);
           $entry->set("position", intval($position)+1);
           $entry->update();
           $ids[] = $type_id;
         }
       } else {
-        $entry = $this->db->query($target)->conditions(array($model."_id" => $model_id, $column."_id" => $type_id));
+        $entry = $this->db->query($target)->conditions([$model."_id" => $model_id, $column."_id" => $type_id]);
         if ($remove) {
-          //remove
+          // remove
           $entry->delete();
         } else {
-          //add
+          // add
           $entry->set($model."_id", $model_id);
           $entry->set($column."_id", $type_id);
           $entry->set("position", intval($position)+1);
@@ -90,7 +90,7 @@ class StoreTypeHook extends QueryHook {
       }
     }
 
-    //clean
+    // clean
     if ($clean) {
       $query = $this->db->query($target)->condition($model."_id", $model_id);
       if (!empty($type_ids)) {

@@ -39,5 +39,4 @@ class QueryBuilderActionExtensionTest extends QueryBuilderTestBase {
     $this->assertSame("groups", $this->builder->getQuery()->getParameter("default1"));
     $this->assertSame(2, $this->builder->getQuery()->getParameter("default2"));
   }
-
 }

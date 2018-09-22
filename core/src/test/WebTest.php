@@ -5,7 +5,7 @@ use \Etc;
 
 class WebTest extends \PHPUnit_Extensions_Selenium2TestCase {
 
-  function setUp() {
+  public function setUp() {
     $this->setBrowser('chrome');
     $this->setBrowserUrl(Etc::DEFAULT_HOST.Etc::WEBSITE_URL);
   }

@@ -9,29 +9,41 @@ use Starbug\Db\Query\CompilerInterface;
 
 abstract class AbstractDatabase implements DatabaseInterface {
   /**
-  * @var int holds the number of records returned by last query
-  */
+   * Holds the number of records returned by last query.
+   *
+   * @var int
+   */
   public $record_count;
   /**
-  * @var int holds the id of the last inserted record
-  */
+   * Holds the id of the last inserted record.
+   *
+   * @var int
+   */
   public $insert_id;
   /**
-  * @var string holds the active scope (usually 'global' or a model name)
-  */
+   * Holds the active scope (usually 'global' or a model name).
+   *
+   * @var string
+   */
   public $active_scope = "global";
   /**
-  * @var string prefix
-  */
+   * Table prefix.
+   *
+   * @var string
+   */
   public $prefix;
   /**
-  * @var string database_name
-  */
+   * Name of database.
+   *
+   * @var string
+   */
   public $database_name;
   /**#@-*/
   /**
-  * @var array holds records waiting to be stored
-  */
+   * Holds records waiting to be stored
+   *
+   * @var QueryQueue
+   */
   public $queue;
 
   public $errors = [];
@@ -85,18 +97,18 @@ abstract class AbstractDatabase implements DatabaseInterface {
     $args = func_get_args();
     $query = $conditions = $arg = [];
 
-    //loop through the input arguments
+    // loop through the input arguments
     foreach ($args as $idx => $a) {
-      if ($idx == 0) $collection = $a; //first argument is the collection
-      elseif ($idx == 1) $conditions = $a; //second argument are the conditions
+      if ($idx == 0) $collection = $a; // first argument is the collection
+      elseif ($idx == 1) $conditions = $a; // second argument are the conditions
       else {
         $arg = $a;
-        if (!empty($arg['orderby'])) $arg['sort'] = $arg['orderby']; //DEPRECATED: use sort
+        if (!empty($arg['orderby'])) $arg['sort'] = $arg['orderby']; // DEPRECATED: use sort
       }
     }
     $args = $arg;
 
-    //apply conditions
+    // apply conditions
     $query = $this->query($collection);
     if (!is_array($conditions)) $conditions = [$conditions];
     foreach ($conditions as $k => $v) {
@@ -104,7 +116,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
         $query->conditions($v, $k);
       } else {
         $col = ($k === 0) ? "id" : $k;
-        //if id is compared for equality, set the limit to 1
+        // if id is compared for equality, set the limit to 1
         if ($col === "id" && !is_array($v)) $args['limit'] = 1;
         $query->condition($col, $v);
       }
@@ -117,7 +129,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
     if (!empty($args['skip'])) $query->skip($args['skip']);
 
 
-    //obtain query result
+    // obtain query result
     $result = $query->execute();
     return $result;
   }
@@ -146,8 +158,8 @@ abstract class AbstractDatabase implements DatabaseInterface {
    */
   public function store($name, $fields = [], $from = "auto") {
     $this->queue($name, $fields, $from, true);
-    //$last = array_pop($this->to_store);
-    //$this->to_store = array_merge(array($last), $this->to_store);
+    // $last = array_pop($this->to_store);
+    // $this->to_store = array_merge(array($last), $this->to_store);
     $this->store_queue();
   }
 
@@ -229,5 +241,4 @@ abstract class AbstractDatabase implements DatabaseInterface {
   public function failure($model, $action) {
     return (($this->models->get($model)->action == $action) && (!empty($this->errors)));
   }
-
 }

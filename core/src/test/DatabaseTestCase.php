@@ -10,10 +10,10 @@ abstract class DatabaseTestCase extends \PHPUnit_Extensions_Database_TestCase {
 
   public function getSetUpOperation() {
     $cascadeTruncates = false; // If you want cascading truncates, false otherwise. If unsure choose false.
-    return new \PHPUnit_Extensions_Database_Operation_Composite(array(
+    return new \PHPUnit_Extensions_Database_Operation_Composite([
       new TruncateOperation($cascadeTruncates),
       \PHPUnit_Extensions_Database_Operation_Factory::INSERT()
-    ));
+    ]);
   }
 
   final public function getConnection() {

@@ -8,9 +8,9 @@ trait Parsing {
    * Parse an expression containing a table name and associated clauses
    * 'users as people on people.id=pages.owner' becomes:
    * [
-   * 	"name" => "users",
-   * 	"alias" => "people",
-   * 	"on" => "people.id=pages.owner"
+   *   "name" => "users",
+   *   "alias" => "people",
+   *   "on" => "people.id=pages.owner"
    * ]
    */
   protected function parseName($name) {
@@ -30,7 +30,7 @@ trait Parsing {
       $count -= 2;
     }
     $name = implode(' ', $parts);
-    return array("name" => $name, "alias" => $alias, "on" => $on);
+    return ["name" => $name, "alias" => $alias, "on" => $on];
   }
   /**
    * Parse an expression that contains one or more column references
@@ -42,7 +42,7 @@ trait Parsing {
    *
    * "pages.owner.first_name=pages.owner.last_name"                =>  "`pages_owner`.first_name=`pages_owner`.last_name"
    */
-  function parseColumns(QueryInterface $query, $fields) {
+  public function parseColumns(QueryInterface $query, $fields) {
     preg_match_all('/[a-zA-Z_\.\*]+/', $fields, $matches, PREG_OFFSET_CAPTURE);
     $offset = 0;
     foreach ($matches[0] as $match) {
@@ -64,16 +64,16 @@ trait Parsing {
    * examples: pages.owner, pages.comments, pages.comments.owner
    */
   public function parseColumn(QueryInterface $query, $field) {
-    //split the column into parts
+    // split the column into parts
     $parts = explode(".", $field);
     if (count($parts) > 1) {
       $token = array_pop($parts);
       $alias = $this->expand($query, implode(".", $parts), true);
-      //get the field string and table name
+      // get the field string and table name
       $field = "`".$alias."`.".$token;
       $table = $query->getTable($alias);
       if (!empty($table)) {
-        //otherwise we look at the field schema if we recognize the table
+        // otherwise we look at the field schema if we recognize the table
         $table = $table->getName();
         if ($this->schema->hasColumn($table, $token)) {
           $schema = $this->schema->getColumn($table, $token);
@@ -99,20 +99,20 @@ trait Parsing {
    * examples: pages.owner, pages.comments, pages.comments.owner
    */
   public function expand(QueryInterface $query, $column, $returnAlias = false) {
-    //split the column into parts
+    // split the column into parts
     $parts = explode(".", $column);
-    //the first token is either a table alias or the name of a column that references another table
-    //if it's a column, then we'll assume it's a column of our base table
+    // the first token is either a table alias or the name of a column that references another table
+    // if it's a column, then we'll assume it's a column of our base table
     $alias = $query->getAlias();
-    //if it's a collection, we'll use it
+    // if it's a collection, we'll use it
     if ($query->hasTable($parts[0])) {
       $alias = array_shift($parts);
     }
-    //now we start a loop to process the remaining tokens
+    // now we start a loop to process the remaining tokens
     while (!empty($parts)) {
-      //shift off the first token
+      // shift off the first token
       $token = array_shift($parts);
-      //parse and join this reference
+      // parse and join this reference
       $parsed = $this->parseName($token);
       $table = $query->getTable($alias)->getName();
       $schema = $this->schema->getColumn($table, $parsed["name"]);
@@ -147,5 +147,4 @@ trait Parsing {
     }
     return $returnAlias ? $alias : $this;
   }
-
 }

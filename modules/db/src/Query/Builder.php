@@ -64,5 +64,4 @@ class Builder implements BuilderInterface {
     if ($table) $builder->from($table);
     return $builder;
   }
-
 }

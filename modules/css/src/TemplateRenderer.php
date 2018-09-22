@@ -19,13 +19,13 @@ class TemplateRenderer implements TemplateInterface {
   protected $helpers;
   protected $hooks = [];
 
-  function __construct(Twig_Environment $twig) {
+  public function __construct(Twig_Environment $twig) {
     $this->twig = $twig;
     $this->twig->addGlobal("this", $this);
   }
 
   /**
-   * @copydoc TemplateInterface::assign
+   * Assign variables to be available for templates.
    */
   public function assign($key, $value = "") {
     if (is_array($key)) {
@@ -35,16 +35,13 @@ class TemplateRenderer implements TemplateInterface {
     }
   }
 
-  /**
-   * @copydoc TemplateInterface::output
-   */
-  function output($paths = array(), $params = array(), $options = array()) {
-    if (!is_array($paths)) $paths = array($paths);
+  public function output($paths = [], $params = [], $options = []) {
+    if (!is_array($paths)) $paths = [$paths];
     $options = $options + $this->defaults;
 
     // Apply the correct namespace if needed.
     if ($options["scope"] != "templates") {
-      $paths = array_map(function($path) {
+      $paths = array_map(function ($path) {
         return "@".$options["scope"]."/".$path;
       }, $paths);
     }
@@ -63,51 +60,43 @@ class TemplateRenderer implements TemplateInterface {
         }
       }
     }
-
   }
 
-  /**
-   * @copydoc TemplateInterface::render
-   */
-  function render($paths = array(""), $params = array(), $options = array()) {
-    if (!is_array($paths)) $paths = array($paths);
+  public function render($paths = [""], $params = [], $options = []) {
+    if (!is_array($paths)) $paths = [$paths];
     $options = $options + $this->defaults;
 
     // Apply the correct namespace if needed.
     if ($options["scope"] != "templates") {
-      $paths = array_map(function($path) use ($options) {
+      $paths = array_map(function ($path) use ($options) {
         return "@".$options["scope"]."/".$path;
       }, $paths);
     }
 
     // Apply extension.
-    $paths = array_map(function($path) {
+    $paths = array_map(function ($path) {
       return $path.".twig";
     }, $paths);
 
     $this->twig->resolveTemplate($paths)->display($params);
   }
 
-  /**
-   * @copydoc TemplateInterface::capture
-   */
-  function capture($paths = array(""), $params = array(), $options = array()) {
-    if (!is_array($paths)) $paths = array($paths);
+  public function capture($paths = [""], $params = [], $options = []) {
+    if (!is_array($paths)) $paths = [$paths];
     $options = $options + $this->defaults;
 
     // Apply the correct namespace if needed.
     if ($options["scope"] != "templates") {
-      $paths = array_map(function($path) use ($options) {
+      $paths = array_map(function ($path) use ($options) {
         return "@".$options["scope"]."/".$path;
       }, $paths);
     }
 
     // Apply extension.
-    $paths = array_map(function($path) {
+    $paths = array_map(function ($path) {
       return $path.".twig";
     }, $paths);
 
     return $this->twig->resolveTemplate($paths)->render($params);
   }
-
 }

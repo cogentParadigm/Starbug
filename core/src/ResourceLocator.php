@@ -6,7 +6,7 @@ class ResourceLocator implements ResourceLocatorInterface {
   private $base_directory;
   private $modules;
 
-  function __construct($base_directory = "", $modules = []) {
+  public function __construct($base_directory = "", $modules = []) {
     $this->base_directory = $base_directory;
     $this->modules = $modules;
   }
@@ -20,13 +20,12 @@ class ResourceLocator implements ResourceLocatorInterface {
   }
 
   /**
-  * get module path chain
-  * @ingroup modules
-  * @param string $name the filename
-  * @param string $dir the directory within app/ core/app/ or module dir to look in. default is templates/
-  * @TODO allow boolean return
-  */
-  function locate($name, $scope = "templates") {
+   * Get module path chain
+   *
+   * @param string $name the filename
+   * @param string $dir the directory within app/ core/app/ or module dir to look in. default is templates/
+   */
+  public function locate($name, $scope = "templates") {
     if (!empty($scope)) $scope .= "/";
     $path = $scope.$name;
     $paths = [];
@@ -37,7 +36,7 @@ class ResourceLocator implements ResourceLocatorInterface {
     return $paths;
   }
 
-  function className($class, $suffix = false) {
+  public function className($class, $suffix = false) {
     if (false === strpos($class, "\\")) {
       if (false !== $suffix) {
         $class = $class.$suffix;
@@ -53,9 +52,11 @@ class ResourceLocator implements ResourceLocatorInterface {
   }
 
   /**
-   * convert a name with underscores to camel case format
-   * @param  string $className the name of a class
-   * @return string            the camel case converted name
+   * Convert a name with underscores to camel case format
+   *
+   * @param string $className the name of a class
+   *
+   * @return string the camel case converted name
    */
   protected function formatClassName($className) {
     return str_replace(" ", "", ucwords(str_replace("_", " ", $className)));

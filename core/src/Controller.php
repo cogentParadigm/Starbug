@@ -9,73 +9,74 @@ class Controller {
   public $auto_render = true;
   public $request;
   public $response;
-  public $routes = array();
+  public $routes = [];
 
 
-  function init() {
+  public function init() {
   }
 
   /**
    * Every controller has a default action, used when no action is specified.
    */
-  function default_action() {
+  public function default() {
     $this->missing();
   }
 
   /**
-   * run a controller action
+   * Run a controller action.
+   *
    * @param string $action - the action to run, an empty string will run default_action
    * @param string $arguments - arguments to pass to the action
    */
-  function action($action = "", $arguments = array()) {
+  public function action($action = "", $arguments = []) {
     if (empty($action)) $action = "default_action";
-    $args = array();
+    $args = [];
     if (method_exists($this, $action)) {
       $reflection = new ReflectionMethod($this, $action);
       $parameters = $reflection->getParameters();
       foreach ($parameters as $parameter) {
         $name = $parameter->getName();
         if (isset($arguments[$name])) $args[] = $arguments[$name];
-        else if ($parameter->isDefaultValueAvailable()) $args[] = $parameter->getDefaultValue();
+        elseif ($parameter->isDefaultValueAvailable()) $args[] = $parameter->getDefaultValue();
       }
     }
-    call_user_func_array(array($this, $action), $args);
+    call_user_func_array([$this, $action], $args);
   }
 
-  function assign($key, $value = null) {
+  public function assign($key, $value = null) {
     $this->response->assign($key, $value);
   }
 
   /**
-   * set the view to render for this request
+   * Set the view to render for this request.
    */
-  function render($path = "", $params = array(), $options = array("scope" => "views")) {
+  public function render($path = "", $params = [], $options = ["scope" => "views"]) {
     $this->response->capture($path, $params, $options);
   }
 
   /**
-   * return a forbidden response
+   * Return a forbidden response.
    */
-  function forbidden() {
+  public function forbidden() {
     $this->response->forbidden();
     $this->render("forbidden.html");
   }
 
   /**
-   * return a missing response
+   * Return a missing response.
    */
-  function missing() {
+  public function missing() {
     $this->response->missing();
     $this->render("missing.html");
   }
 
-  function start(RequestInterface $request, ResponseInterface $response) {
+  public function start(RequestInterface $request, ResponseInterface $response) {
     $this->request = $request;
     $this->response = $response;
     $this->init();
   }
 
-  function finish() {
+  public function finish() {
     return $this->response;
   }
 
@@ -83,19 +84,19 @@ class Controller {
     return $this->request->getURL()->build($path, $absolute);
   }
   /**
-   * redirect to another page
-   * @ingroup routing
+   * Redirect to another page.
+   *
    * @param string $url the url to redirect to
    * @param int $delay number of seconds to wait before redirecting (default 0)
    */
-  function redirect($url) {
+  public function redirect($url) {
     $this->response->redirect($this->url($url, true));
   }
 
   /**
-   * if an unknown action is called, trigger a missing response
+   * If an unknown action is called, trigger a missing response.
    */
-  function __call($name, $arguments) {
+  public function __call($name, $arguments) {
     $this->missing();
   }
 }
