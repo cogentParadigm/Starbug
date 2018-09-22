@@ -68,9 +68,6 @@ trait Execution {
     }
   }
 
-  /**
-   * @see Starbug\Db\Query\ExecutorInterface
-   */
   public function interpolate($params = null) {
     return $this->executor->interpolate($this->query, $params);
   }

@@ -35,5 +35,4 @@ class CompiledQuery {
   public function setExecutable($executable = true) {
     $this->executable = $executable;
   }
-
 }

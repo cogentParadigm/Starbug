@@ -258,7 +258,7 @@ class QueryBuilderTest extends QueryBuilderTestBase {
    * @return void
    */
   public function testConditionExpansionMany() {
-    $this->createQuery()->from("pages")->subquery("images.mime_type", function($sub, $query) {
+    $this->createQuery()->from("pages")->subquery("images.mime_type", function ($sub, $query) {
       $query->condition($sub, "image/png");
     });
 
@@ -331,7 +331,7 @@ class QueryBuilderTest extends QueryBuilderTestBase {
    * @return void
    */
   public function testConditionExpansionTermsSubquery() {
-    $this->createQuery()->from("users")->subquery("users.groups.slug", function($sub, $query) {
+    $this->createQuery()->from("users")->subquery("users.groups.slug", function ($sub, $query) {
       $query->condition($sub, "user", "!=");
     });
 

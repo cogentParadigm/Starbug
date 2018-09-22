@@ -3,7 +3,7 @@ namespace Starbug\Core;
 
 class Terms extends TermsModel {
 
-  function create($term) {
+  public function create($term) {
     if (!empty($term['term'])) {
       $term['term'] = $this->filter->normalize($term['term']);
       $term['slug'] = strtolower(str_replace(" ", "-", $term['term']));
@@ -13,17 +13,15 @@ class Terms extends TermsModel {
     if ($this->errors('slug') && !empty($term['term'])) foreach ($this->errors("slug", true) as $e) $this->error(str_replace("slug", "term", $e), "term");
   }
 
-  function delete($term) {
+  public function delete($term) {
     try {
       $this->db->query("terms")->condition("id", $term['id'])->delete();
     } catch (Exception $e) {
-      //TODO: handle this if it's a foreign key constraint
+      $this->error("This term must be detached from all entities before it can be deleted.", "global");
     }
-    $term = $this->db->query("terms")->condition("id", $term['id'])->one();
-    if ($term) $this->error("This term must be detached from all entities before it can be deleted.", "global");
   }
 
-  function delete_taxonomy($term) {
+  public function delete_taxonomy($term) {
     $tax = $term['taxonomy'];
     $this->db->query("terms")->condition("taxonomy", $tax)->delete();
   }
