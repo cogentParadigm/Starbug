@@ -49,7 +49,7 @@
     <rule ref="Generic.PHP.DeprecatedFunctions"/>
     <!-- Commenting -->
     <rule ref="Generic.Commenting"/>
-    <rule ref="Squiz.Commenting.BlockComment"/>
+    <!--<rule ref="Squiz.Commenting.BlockComment"/>-->
     <!--<rule ref="Squiz.Commenting.ClassComment"/>-->
     <rule ref="Squiz.Commenting.DocCommentAlignment"/>
     <rule ref="Squiz.Commenting.EmptyCatchComment"/>
