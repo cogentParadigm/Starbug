@@ -5,23 +5,23 @@ use Starbug\Core\Controller;
 use Starbug\Core\DatabaseInterface;
 
 class AdminProductTypesController extends Controller {
-  public $routes = array(
+  public $routes = [
     'update' => '{id}'
-  );
-  function __construct(DatabaseInterface $db) {
+  ];
+  public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }
-  function init() {
+  public function init() {
     $this->assign("model", "product_types");
   }
-  function default_action() {
+  public function default_action() {
     $this->render("admin/list.html");
   }
-  function create() {
+  public function create() {
     if ($this->db->success("product_types", "create")) $this->redirect("admin/product_types");
     else $this->render("admin/create.html");
   }
-  function update($id) {
+  public function update($id) {
     $this->assign("id", $id);
     if ($this->db->success("product_types", "create")) $this->redirect("admin/product_types");
     else $this->render("admin/product_types/update.html");

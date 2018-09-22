@@ -9,19 +9,19 @@ class AdminShippingRatesProductOptionsController extends Controller {
   public $routes = [
     'update' => '{id}'
   ];
-  function __construct(DatabaseInterface $db) {
+  public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }
-  function init() {
+  public function init() {
     $this->assign("model", "shipping_rates_product_options");
   }
-  function default_action() {
+  public function default_action() {
     $this->render("admin/list.html");
   }
-  function create() {
+  public function create() {
     $this->render("admin/create.html");
   }
-  function update($id) {
+  public function update($id) {
     $this->assign("id", $id);
     $this->render("admin/update.html");
   }
