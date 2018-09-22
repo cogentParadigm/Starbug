@@ -4,7 +4,7 @@ namespace Starbug\Core;
 class MenusForm extends FormDisplay {
   public $model = "menus";
   public $cancel_url = "admin/menus";
-  function build_display($ops) {
+  public function build_display($ops) {
     $this->layout->add(["top", "tl" => "div.col-md-6", "tr" => "div.col-md-6"]);
     $this->layout->add(["middle", "ml" => "div.col-md-6", "mr" => "div.col-md-6"]);
     $this->layout->add(["bottom", "bl" => "div.col-md-6", "br" => "div.col-md-6"]);

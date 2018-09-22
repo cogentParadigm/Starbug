@@ -1,6 +1,7 @@
 <?php
 use \Interop\Container\ContainerInterface;
-return array(
+
+return [
   'routes' => DI\add([
     "cart" => ["controller" => "cart", "title" => "Shopping Cart"],
     "checkout" => ["controller" => "checkout", "title" => "Checkout"],
@@ -52,4 +53,4 @@ return array(
     return $gateway;
   },
   'Starbug\Payment\ProductOptionsForm' => DI\object()->method('setTableSchema', DI\get('Starbug\Db\Schema\SchemerInterface'))
-);
+];
