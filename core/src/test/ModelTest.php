@@ -13,23 +13,23 @@ class ModelTest extends \PHPUnit_Framework_TestCase {
     $this->models = $container->get("Starbug\Core\ModelFactoryInterface");
   }
 
-  protected function get() {
+  public function get() {
     $args = array_merge([$this->model], func_get_args());
     return call_user_func_array([$this->db, "get"], $args);
   }
 
-  protected function query() {
+  public function query() {
     $args = array_merge([$this->model], func_get_args());
     return call_user_func_array([$this->db, "query"], $args);
   }
 
-  protected function action() {
+  public function action() {
     $args = func_get_args();
     $method = array_shift($args);
     return call_user_func_array([$this->models->get($this->model), $method], $args);
   }
 
-  protected function __get($name) {
+  public function __get($name) {
     return $this->models->get($this->model)->$name;
   }
 }
