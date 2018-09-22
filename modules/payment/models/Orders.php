@@ -5,14 +5,14 @@ use Starbug\Core\OrdersModel;
 
 class Orders extends OrdersModel {
 
-  function create($order) {
+  public function create($order) {
     if (empty($order["id"])) {
       $order["token"] = $this->request->getCookie("cid");
     }
     $this->store($order);
   }
 
-  function checkout($order) {
+  public function checkout($order) {
     $target = ["id" => $this->cart->get("id"), "billing_same" => $order["billing_same"]];
     if (isset($order['shipping_address'])) {
       $target['shipping_address'] = $order['shipping_address'];
@@ -27,7 +27,7 @@ class Orders extends OrdersModel {
     }
   }
 
-  function payment($payment) {
+  public function payment($payment) {
     if (empty($payment['id'])) {
       $order = $this->cart->getOrder();
     } else {
@@ -35,7 +35,7 @@ class Orders extends OrdersModel {
     }
     $this->request->setPost('orders', 'id', $order['id']);
 
-    //populate the billing address
+    // populate the billing address
     $billing_address = $order["billing_same"] ? $order["shipping_address"] : $order["billing_address"];
     $address = $this->query("address")->condition("address.id", $billing_address)->select("address.*,address.country.name as country")->one();
     $payment['country'] = $address['country'];
@@ -49,13 +49,13 @@ class Orders extends OrdersModel {
       $payment['state'] = $state['name'];
     }
 
-    //prepare details to be added to the order
+    // prepare details to be added to the order
     $order_total = 0;
-    $ammend = array("id" => $order['id'], "email" => $payment['email'], "phone" => $payment['phone']);
+    $ammend = ["id" => $order['id'], "email" => $payment['email'], "phone" => $payment['phone']];
     if ($this->user->loggedIn()) $ammend['owner'] = $this->user->userinfo('id');
 
-    //determine single payment amount
-    //TODO: validate prices, lines could be stale
+    // determine single payment amount
+    // TODO: validate prices, lines could be stale
     $lines = $this->query("product_lines")
       ->condition("orders_id", $order['id'])
       ->condition("product_lines.product.payment_type", "single")
@@ -67,7 +67,7 @@ class Orders extends OrdersModel {
       $this->purchase($payment + ["amount" => $total, "orders_id" => $order["id"]]);
     }
 
-    //determine recurring payment amounts
+    // determine recurring payment amounts
     $lines = $this->query("product_lines")
       ->condition("orders_id", $order['id'])
       ->condition("product_lines.product.payment_type", "recurring")->all();
@@ -82,13 +82,13 @@ class Orders extends OrdersModel {
 
     $this->store($ammend);
     if (!$this->errors()) {
-      $this->store(array("id" => $order['id'], "order_status" => "pending"));
+      $this->store(["id" => $order['id'], "order_status" => "pending"]);
       $lines = $this->query("product_lines")->condition("orders_id", $order["id"])->all();
       $order["description"] = $lines[0]["description"];
       $count = count($lines) - 1;
       if ($count > 1) {
         $order["description"] .= " and ".$count." other items";
-      } else if ($count > 0) {
+      } elseif ($count > 0) {
         $order["description"] .= " and 1 other item";
       }
       $rows = [];
@@ -119,7 +119,7 @@ class Orders extends OrdersModel {
     }
   }
 
-  public function post($action, $data = array()) {
+  public function post($action, $data = []) {
     $this->action = $action;
     if (in_array($action, ["checkout", "payment"]) && isset($data["id"]) && $this->cart->get("id") == $data["id"]) {
       $this->$action($data);

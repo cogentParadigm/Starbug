@@ -5,7 +5,7 @@ use League\Flysystem\Filesystem as ParentFilesystem;
 use League\Flysystem\Util;
 
 class Filesystem extends ParentFilesystem implements FilesystemInterface {
-  //override constructor to enforce Starbug\Core\Storage\AdapterInterface
+  // override constructor to enforce Starbug\Core\Storage\AdapterInterface
   public function __construct(AdapterInterface $adapter, $config = null) {
     parent::__construct($adapter, $config);
   }

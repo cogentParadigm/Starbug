@@ -26,7 +26,7 @@ class Files extends FilesModel {
     if (!empty($file['name'])) {
       if ($file["error"] > 0) $this->error($file["error"], "filename");
       $record['filename'] = str_replace(" ", "_", $file['name']);
-      $record['mime_type'] = $this->get_mime($file['tmp_name']);
+      $record['mime_type'] = $this->getMime($file['tmp_name']);
       $record['size'] = filesize($file['tmp_name']);
       if (empty($record['category'])) $record['category'] = "files_category uncategorized";
       $this->store($record);
@@ -58,7 +58,7 @@ class Files extends FilesModel {
     return [];
   }
 
-  public function get_mime($file_path) {
+  public function getMime($file_path) {
     $output = exec("file --mime-type -b {$file_path}");
     return $output;
   }

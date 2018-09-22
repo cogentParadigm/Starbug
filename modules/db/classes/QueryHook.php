@@ -1,5 +1,6 @@
 <?php
 namespace Starbug\Core;
+
 class QueryHook {
   /**
    * This hook is invoked when called as a function on a query.

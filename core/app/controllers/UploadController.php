@@ -5,17 +5,17 @@ use League\Flysystem\MountManager;
 use Exception;
 
 class UploadController extends Controller {
-  function __construct(ModelFactoryInterface $models, MountManager $filesystems, ImagesInterface $images, IdentityInterface $user) {
+  public function __construct(ModelFactoryInterface $models, MountManager $filesystems, ImagesInterface $images, IdentityInterface $user) {
     $this->models = $models;
     $this->filesystems = $filesystems;
     $this->images = $images;
     $this->user = $user;
   }
-  function default_action() {
-    $_post = array();
-    $htmldata = array();
-    $record = array("filename" => "", "mime_type" => "", "caption" => "uploaded file", "category" => $this->request->getPost('category'));
-    $files = array();
+  public function default_action() {
+    $_post = [];
+    $htmldata = [];
+    $record = ["filename" => "", "mime_type" => "", "caption" => "uploaded file", "category" => $this->request->getPost('category')];
+    $files = [];
 
     foreach ($this->request->getFiles()->get('uploadedfiles') as $key => $arr) {
       foreach ($arr as $idx => $value) {
@@ -32,12 +32,12 @@ class UploadController extends Controller {
         $_post['original_name'] = str_replace(" ", "_", $file['name']);
         $_post['name'] = $id."_".$_post['original_name'];
         $_post['url'] = $this->filesystems->getFilesystem("default")->getURL($_post['name']);
-        $_post['mime_type'] = $this->models->get("files")->get_mime($file['tmp_name']);
-        try{
+        $_post['mime_type'] = $this->models->get("files")->getMime($file['tmp_name']);
+        try {
           list($width, $height) = getimagesize($file['tmp_name']);
           $image = true;
           $_post['thumbnail'] = $this->images->thumb("default://".$_post['name'], ["w" => 100, "w" => 100, "a" => 1]);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
           $width=0;
           $height=0;
           $image = false;
@@ -50,7 +50,7 @@ class UploadController extends Controller {
         $_post['owner'] = $this->user->userinfo("id");
         $htmldata[] = $_post;
       } else {
-        $htmldata[] = array("ERROR" => "File could not be moved: ".$file['name']);
+        $htmldata[] = ["ERROR" => "File could not be moved: ".$file['name']];
       }
     }
     $this->response->content = $htmldata;

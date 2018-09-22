@@ -1,37 +1,39 @@
 <?php
 namespace Starbug\App;
+
 use Starbug\Core\Controller;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\InputFilterInterface;
+
 class AdminTaxonomiesController extends Controller {
-  public $routes = array(
+  public $routes = [
     'update' => '{id}',
     'taxonomy' => '{taxonomy}'
-  );
-  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, InputFilterInterface $filter) {
+  ];
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, InputFilterInterface $filter) {
     $this->db = $db;
     $this->terms = $models->get("terms");
     $this->filter = $filter;
   }
-  function init() {
+  public function init() {
     $this->assign("model", "terms");
     if ($this->request->hasParameter('taxonomy')) $this->assign("taxonomy", $this->filter->normalize($this->request->getParameter('taxonomy')));
   }
-  function default_action() {
+  public function default_action() {
     $this->render("admin/list.html");
   }
-  function add() {
+  public function add() {
     $this->assign("form", "taxonomy");
     $this->create();
   }
-  function create() {
+  public function create() {
     if ($this->db->success("terms", "create") && $this->request->getFormat() != "xhr") {
       $term = $this->db->get("terms", $this->terms->insert_id);
       $this->redirect("admin/taxonomies/taxonomy/".$term['taxonomy']);
     } else $this->render("admin/create.html");
   }
-  function update($id) {
+  public function update($id) {
     $this->assign("id", $id);
     $term = $this->db->get("terms", $id);
     $this->assign("taxonomy", $term['taxonomy']);
@@ -39,11 +41,11 @@ class AdminTaxonomiesController extends Controller {
       $this->redirect("admin/taxonomies/taxonomy/".$term['taxonomy']);
     } else $this->render("admin/update.html");
   }
-  function taxonomy($taxonomy) {
+  public function taxonomy($taxonomy) {
     $this->assign("taxonomy", $taxonomy);
     $this->render("admin/taxonomies/taxonomy.html");
   }
-  function import() {
+  public function import() {
     $this->render("admin/import.html");
   }
 }

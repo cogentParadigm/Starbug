@@ -38,17 +38,19 @@ REGEX;
     return $this->filterRoute(["controller" => "main", "action" => "missing", "arguments" => []], $request);
   }
   /**
-   * a router must identify a controller from a Request
+   * A router must identify a controller from a Request
+   *
    * @param Request $request the request object
+   *
    * @return array the controller information using the following keys:
-   *										- controller: the controller name
-   *										- action: the action name
-   *										- arguments: the arguments
+   *                    - controller: the controller name
+   *                    - action: the action name
+   *                    - arguments: the arguments
    */
   public function route(RequestInterface $request) {
     $route = $this->getRoute($request);
     if (empty($route['controller']) && !empty($route['type'])) {
-      $route = array_replace(array('controller' => $route['type'], 'action' => 'show'), $route);
+      $route = array_replace(['controller' => $route['type'], 'action' => 'show'], $route);
       $route['controller'] = $route['type'];
       if (empty($route['action'])) $route['action'] = 'show';
     }
@@ -72,7 +74,7 @@ REGEX;
       if (!preg_match($regex, $path, $matches)) {
         continue;
       }
-      $values = array();
+      $values = [];
       $idx = 1;
       foreach ($variables as $name) {
         $values[$name] = $matches[$idx];
@@ -97,7 +99,7 @@ REGEX;
   }
   public function build_regex($routeData) {
     $regex = '';
-    $variables = array();
+    $variables = [];
     foreach ($routeData as $part) {
       if (is_string($part)) {
         $regex .= str_replace('/', '\/', preg_quote($part, '~'));
@@ -107,7 +109,7 @@ REGEX;
       $variables[$varName] = $varName;
       $regex .= '(' . $regexPart . ')';
     }
-    return array('/'.$regex.'/', $variables);
+    return ['/'.$regex.'/', $variables];
   }
   public function parse($route) {
     $routeWithoutClosingOptionals = rtrim($route, ']');
@@ -137,18 +139,18 @@ REGEX;
    */
   public function parsePlaceholders($route) {
     if (!preg_match_all('~' . self::VARIABLE_REGEX . '~x', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
-      return array($route);
+      return [$route];
     }
     $offset = 0;
-    $routeData = array();
+    $routeData = [];
     foreach ($matches as $set) {
       if ($set[0][1] > $offset) {
         $routeData[] = substr($route, $offset, $set[0][1] - $offset);
       }
-      $routeData[] = array(
+      $routeData[] = [
         $set[1][0],
         isset($set[2]) ? trim($set[2][0]) : self::DEFAULT_DISPATCH_REGEX
-      );
+      ];
       $offset = $set[0][1] + strlen($set[0][0]);
     }
     if ($offset != strlen($route)) {

@@ -7,29 +7,29 @@ class ModelTest extends \PHPUnit_Framework_TestCase {
   protected $db;
   protected $models;
 
-  function setUp() {
+  public function setUp() {
     global $container;
     $this->db = $container->get("Starbug\Core\DatabaseInterface");
     $this->models = $container->get("Starbug\Core\ModelFactoryInterface");
   }
 
-  function get() {
-    $args = array_merge(array($this->model), func_get_args());
-    return call_user_func_array(array($this->db, "get"), $args);
+  protected function get() {
+    $args = array_merge([$this->model], func_get_args());
+    return call_user_func_array([$this->db, "get"], $args);
   }
 
-  function query() {
-    $args = array_merge(array($this->model), func_get_args());
-    return call_user_func_array(array($this->db, "query"), $args);
+  protected function query() {
+    $args = array_merge([$this->model], func_get_args());
+    return call_user_func_array([$this->db, "query"], $args);
   }
 
-  function action() {
+  protected function action() {
     $args = func_get_args();
     $method = array_shift($args);
-    return call_user_func_array(array($this->models->get($this->model), $method), $args);
+    return call_user_func_array([$this->models->get($this->model), $method], $args);
   }
 
-  function __get($name) {
+  protected function __get($name) {
     return $this->models->get($this->model)->$name;
   }
 }

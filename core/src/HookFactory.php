@@ -10,7 +10,7 @@ use Exception;
 class HookFactory implements HookFactoryInterface {
   private $hooks;
   private $container;
-  private $classes = array();
+  private $classes = [];
   public function __construct(ContainerInterface $container, ResourceLocatorInterface $locator) {
     $this->container = $container;
     $this->locator = $locator;

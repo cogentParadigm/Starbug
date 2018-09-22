@@ -14,42 +14,42 @@ class CheckoutController extends Controller {
     $this->user = $user;
     $this->db = $db;
   }
-  function init() {
+  public function init() {
     $this->assign("model", "orders");
     $this->assign("cart", $this->cart);
   }
-  function default_action() {
+  public function default_action() {
     if ($this->db->success("orders", "checkout")) {
       $this->redirect("checkout/payment");
-    } else if (empty($this->cart)) {
+    } elseif (empty($this->cart)) {
       $this->render("cart/empty.html");
-    } else if ($this->user->loggedIn()) {
+    } elseif ($this->user->loggedIn()) {
       $this->render("checkout/default.html");
     } else {
       $this->render("checkout/login.html");
     }
   }
-  function guest() {
+  public function guest() {
     if ($this->db->success("orders", "checkout")) {
       $this->redirect("checkout/payment");
-    } else if ($this->user->loggedIn()) {
+    } elseif ($this->user->loggedIn()) {
       $this->redirect("checkout");
-    } else if (empty($this->cart)) {
+    } elseif (empty($this->cart)) {
       $this->render("cart/empty.html");
     } else {
       $this->render("checkout/default.html");
     }
   }
-  function payment() {
+  public function payment() {
     if ($this->db->success("orders", "payment")) {
       $this->redirect("checkout/success/".$this->request->getPost('orders', 'id'));
-    } else if (empty($this->cart)) {
+    } elseif (empty($this->cart)) {
       $this->render("cart/empty.html");
     } else {
       $this->render("checkout/payment.html");
     }
   }
-  function success($id) {
+  public function success($id) {
     $this->assign("id", $id);
     $this->render("checkout/success.html");
   }

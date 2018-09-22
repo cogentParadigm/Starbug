@@ -10,7 +10,7 @@ class Images implements ImagesInterface {
     $this->filesystems = $filesystems;
     $this->base_directory = $base_directory;
   }
-  function info($file) {
+  public function info($file) {
     if (!is_file($file)) return false;
 
     $details = false;
@@ -18,18 +18,18 @@ class Images implements ImagesInterface {
     $file_size = @filesize($file);
 
     if (isset($data) && is_array($data)) {
-      $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
+      $extensions = ['1' => 'gif', '2' => 'jpg', '3' => 'png'];
       $extension = array_key_exists($data[2], $extensions) ?  $extensions[$data[2]] : '';
-      $details = array('width'=> $data[0],
-                      'height' 		=> $data[1],
+      $details = ['width'=> $data[0],
+                      'height' => $data[1],
                       'extension' => $extension,
                       'file_size' => $file_size,
-                      'mime_type' => $data['mime']);
+                      'mime_type' => $data['mime']];
     }
 
     return $details;
   }
-  function create($width, $height) {
+  public function create($width, $height) {
     if (class_exists("Imagick")) {
       $image = new Imagick();
       $image->newImage($width, $height, "none");
@@ -45,7 +45,7 @@ class Images implements ImagesInterface {
       return $image;
     }
   }
-  function open($path) {
+  public function open($path) {
     if (class_exists("Imagick")) {
       $image = new Imagick();
       $image->readImage($path);
@@ -58,7 +58,7 @@ class Images implements ImagesInterface {
       return $open_func($path);
     }
   }
-  function save($image, $path, $format = "auto") {
+  public function save($image, $path, $format = "auto") {
     if ($format == "auto") $format = end(explode(".", $path));
     $format = str_replace('jpg', 'jpeg', $format);
     switch (gettype($image)) {
@@ -72,9 +72,9 @@ class Images implements ImagesInterface {
         else return $close_func($image, $path);
     }
   }
-  function thumb($url, $dimensions = [], $absolute = false) {
+  public function thumb($url, $dimensions = [], $absolute = false) {
     list($filesystem, $filename) = explode("://", $url);
-    $dimensions = array_merge(array('w' => 0, 'h' => 0, 'a' => false), $dimensions);
+    $dimensions = array_merge(['w' => 0, 'h' => 0, 'a' => false], $dimensions);
     $dir = $dimensions['w']."x".$dimensions['h']."a".$dimensions['a'];
     $target = $dir."/".$filename;
     if (!$this->filesystems->has($filesystem."://thumbnails/".$target) || $dimensions['f']) {
@@ -85,9 +85,9 @@ class Images implements ImagesInterface {
         if (!empty($exif['Orientation'])) {
           if ($exif['Orientation'] === 3) {
             $thumb->rotateImageNDegrees(180);
-          } else if ($exif['Orientation'] === 6) {
+          } elseif ($exif['Orientation'] === 6) {
             $thumb->rotateImageNDegrees(-90);
-          } else if ($exif['Orientation'] === 8) {
+          } elseif ($exif['Orientation'] === 8) {
             $thumb->rotateImageNDegrees(90);
           }
         }
@@ -100,7 +100,7 @@ class Images implements ImagesInterface {
     }
     return $this->filesystems->getFilesystem($filesystem)->getURL("thumbnails/".$target, $absolute);
   }
-  function composite($dest, $composite, $x, $y) {
+  public function composite($dest, $composite, $x, $y) {
     switch (gettype($dest)) {
       case "object":
         return $dest->compositeImage($composite, imagick::COMPOSITE_DEFAULT, $x, $y);

@@ -33,5 +33,4 @@ trait Set {
     if (isset($this->unvalidatedValues[$field])) return $this->unvalidatedValues[$field];
     return $this->getValue($field);
   }
-
 }

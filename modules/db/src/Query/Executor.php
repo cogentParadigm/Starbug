@@ -51,9 +51,9 @@ class Executor implements ExecutorInterface {
         return $this->record_count;
       }
     } else {
-      //only reason to get here should be an update query
-      //with only 'virtual' fields, which will be very rare
-      //since most tables will have a modified flag
+      // only reason to get here should be an update query
+      // with only 'virtual' fields, which will be very rare
+      // since most tables will have a modified flag
       $this->record_count = 0;
       if (!$query->isRaw() && $query->isUpdate()) $this->validate($builder, self::PHASE_AFTER_STORE);
       return $this->record_count;
@@ -110,10 +110,10 @@ class Executor implements ExecutorInterface {
   public function interpolate(QueryInterface $query, $params = null) {
     $result = $this->compiler->build($query);
     if (is_null($params)) $params = $query->getParameters();
-    $keys = array();
+    $keys = [];
     $values = $params;
 
-      # build a regular expression for each parameter
+    // build a regular expression for each parameter
     foreach ($params as $key => $value) {
       if (is_string($key)) {
         $keys[] = '/'.$key.'/';
@@ -144,10 +144,10 @@ class Executor implements ExecutorInterface {
     if (!isset($this->hooks["store_".$column."_".$hook])) $this->hooks["store_".$column."_".$hook] = $this->hookFactory->get("store/".$hook);
     $wasHook = $hook;
     foreach ($this->hooks["store_".$column."_".$hook] as $hook) {
-      //hooks are invoked in 3 phases
-      //0 = validate (before)
-      //1 = store (during)
-      //2 = after
+      // hooks are invoked in 3 phases
+      // 0 = validate (before)
+      // 1 = store (during)
+      // 2 = after
       if ($phase == self::PHASE_VALIDATION) {
         if ($key == false) {
           if ($query->isInsert()) $hook->empty_before_insert($builder, $column, $argument);

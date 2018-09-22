@@ -12,7 +12,7 @@ class GridDisplay extends ItemDisplay {
   ];
   protected $request;
 
-  function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, CollectionFactoryInterface $collections, HookFactoryInterface $hook_builder, RequestInterface $request) {
+  public function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, CollectionFactoryInterface $collections, HookFactoryInterface $hook_builder, RequestInterface $request) {
     $this->output = $output;
     $this->response = $response;
     $this->models = $models;
@@ -21,26 +21,26 @@ class GridDisplay extends ItemDisplay {
     $this->request = $request;
   }
 
-  function build($options = []) {
-    //set defaults
+  public function build($options = []) {
+    // set defaults
     if ($options['attributes']) $this->attributes = $options['attributes'];
     $this->options = $options;
     if ($options['dnd']) $this->dnd();
     $this->build_display($options);
   }
 
-  function dnd() {
+  public function dnd() {
     $this->dnd = true;
     $this->grid_class = "starbug/grid/DnDGrid";
     $this->fields = array_merge(['dnd' => ["field" => "id", "label" => "-", "class" => "field-drag",  "plugin" => "starbug.grid.columns.handle", "sortable" => false]], $this->fields);
   }
 
-  function filter($field, $options, $column) {
+  public function filter($field, $options, $column) {
     // Override this method to filter columns.
     return $options;
   }
 
-  function column_attributes($field, $options) {
+  public function column_attributes($field, $options) {
     if (empty($options["field"])) $options["field"] = $field;
     $options['data-dgrid-column'] = [];
     if (!empty($options['editor']) && empty($options['editOn'])) {
@@ -61,28 +61,28 @@ class GridDisplay extends ItemDisplay {
     return $options;
   }
 
-  function query($options = null) {
-    //defer query responsibilities to dgrid
+  public function query($options = null) {
+    // defer query responsibilities to dgrid
   }
 
-  function before_render() {
+  public function before_render() {
     $this->attributes['model'] = $this->model;
     $this->attributes['class'][] = "dgrid-autoheight dbootstrap-grid";
     if (empty($this->attributes['id'])) $this->attributes['id'] = $this->model."_grid";
     if (empty($this->attributes['data-dojo-id'])) $this->attributes['data-dojo-id'] = $this->attributes['id'];
     $this->attributes['action'] = $this->action;
 
-    //build data-dojo-props attribute
+    // build data-dojo-props attribute
     foreach ($this->attributes as $k => $v) {
-      if (!in_array($k, array("id", "class", "style", "data-dojo-type", "data-dojo-props", "data-dojo-id"))) {
+      if (!in_array($k, ["id", "class", "style", "data-dojo-type", "data-dojo-props", "data-dojo-id"])) {
         $this->attributes['data-dojo-props'][$k] = $v;
       }
     }
     $this->response->js($this->grid_class);
     $this->attributes['data-dojo-type'] = $this->grid_class;
-    //convert from array to string
+    // convert from array to string
     $this->attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($this->attributes['data-dojo-props'])), '{}');
-    //add query params
+    // add query params
     $params = array_merge($this->request->getParameters(), $this->options);
     foreach ($params as $key => $value) if (is_array($value)) $params[$key] = implode(",", $value);
     if (!empty($params)) {

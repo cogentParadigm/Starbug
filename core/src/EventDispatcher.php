@@ -3,7 +3,7 @@ namespace Starbug\Core;
 
 class EventDispatcher {
 
-  private $subscribers = array();
+  private $subscribers = [];
 
   public function subscribe($event, $callable) {
     $this->subscribers[$event][] = $callable;

@@ -35,7 +35,7 @@ class Response implements ResponseInterface {
 
   protected $output;
 
-  public function __construct(TemplateInterface $output, $status_code = 200, $headers = array()) {
+  public function __construct(TemplateInterface $output, $status_code = 200, $headers = []) {
     $this->output = $output;
     $this->code = $status_code;
     $this->headers = new Bundle($headers);
@@ -48,7 +48,7 @@ class Response implements ResponseInterface {
   public function getHeaders() {
     return $this->headers;
   }
-  public function setHeaders($headers = array()) {
+  public function setHeaders($headers = []) {
     foreach ($headers as $name => $value) {
       $this->setHeader($name, $value);
     }
@@ -64,7 +64,7 @@ class Response implements ResponseInterface {
   public function getCookies() {
     return $this->cookies;
   }
-  public function setCookies($cookies = array()) {
+  public function setCookies($cookies = []) {
     foreach ($cookies as $name => $value) {
       $this->setCookie($name, $value);
     }
@@ -136,7 +136,7 @@ class Response implements ResponseInterface {
   public function getStyles() {
     return $this->styles;
   }
-  public function setStyles($styles = array()) {
+  public function setStyles($styles = []) {
     foreach ($styles as $name => $style) {
       $this->setStyle($name, $style);
     }
@@ -152,7 +152,7 @@ class Response implements ResponseInterface {
   public function getScripts() {
     return $this->scripts;
   }
-  public function setScripts($scripts = array()) {
+  public function setScripts($scripts = []) {
     foreach ($scripts as $name => $script) {
       $this->setScript($name, $script);
     }
@@ -199,29 +199,29 @@ class Response implements ResponseInterface {
   }
 
   /**
-   * sends a 404 and sets the payload, path, and uri
+   * Sends a 404 and sets the payload, path, and uri
    */
   public function missing() {
     $this->code = 404;
   }
 
   /**
-   * sends a 403 and sets the payload, path, and uri
+   * Sends a 403 and sets the payload, path, and uri
    */
   public function forbidden() {
     $this->code = 403;
   }
 
-  function redirect($url) {
+  public function redirect($url) {
     $this->headers['location'] = $url;
     $this->content = '<script type="text/JavaScript">setTimeout("location.href = \''.$url.'\';");</script>';
   }
 
   /**
-   * capture a rendered view and save it as the response output
+   * Capture a rendered view and save it as the response output
    */
-  public function capture($template, $params = array(), $options = array()) {
-    $options = $options + array("scope" => "views");
+  public function capture($template, $params = [], $options = []) {
+    $options = $options + ["scope" => "views"];
     $this->content = $this->output->capture($template, $params, $options);
   }
 

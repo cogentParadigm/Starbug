@@ -11,14 +11,14 @@ class ImportsForm extends FormDisplay {
   public function setFilesystems(MountManager $filesystems) {
     $this->filesystems = $filesystems;
   }
-  function build_display($options) {
+  public function build_display($options) {
     if ($options['operation'] == "run") {
-      $this->build_run($options);
+      $this->buildRun($options);
     } else {
-      $this->build_default($options);
+      $this->buildDefault($options);
     }
   }
-  function build_default($options) {
+  protected function buildDefault($options) {
     $source = $this->get("source");
     $model = $this->get("model");
     $this->add("name");
@@ -34,7 +34,7 @@ class ImportsForm extends FormDisplay {
       ]);
     }
   }
-  function build_run($options) {
+  protected function buildRun($options) {
     $this->actions->remove($this->default_action);
     $source = $this->get("source");
     $output = $this->preparePaginatedOutput($source);
@@ -45,7 +45,7 @@ class ImportsForm extends FormDisplay {
     $this->add(["count", "input_type" => "html", "value" => "<p>".$output["pager"]->count." rows. Press import to begin.</p>"]);
     $this->actions->add(["run", "label" => "Import", "class" => "btn-success"]);
   }
-  function preparePaginatedOutput($id) {
+  protected function preparePaginatedOutput($id) {
     $rows = [];
     $file = $this->models->get("files")->query()->condition("id", $id)->one();
     $count = 0;
@@ -74,16 +74,16 @@ class ImportsForm extends FormDisplay {
     if (!empty($vars)) $prefix .= http_build_query($vars).'&';
     $prefix .= "pg=";
     $half = floor($pager->range/2);
-    //set $from to $current_page minus half of $range OR 1
+    // set $from to $current_page minus half of $range OR 1
     $fromPage = ($pager->current_page > $half) ? $pager->current_page - $half : 1;
-    //set $to to the full range from from
+    // set $to to the full range from from
     $toPage = $fromPage + $pager->range;
-    //if that pushes us past the end, shift back to the end
+    // if that pushes us past the end, shift back to the end
     if ($toPage > $pager->last) {
       $toPage = $pager->last;
       $fromPage = $toPage - $pager->range;
     }
-    //if there are not enough pages, bring up $from to 1
+    // if there are not enough pages, bring up $from to 1
     if ($fromPage < 1) $fromPage = 1;
     return ["rows" => $rows, "pager" => $pager, "url" => $prefix, "fromPage" => $fromPage, "toPage" => $toPage];
   }
