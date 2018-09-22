@@ -21,7 +21,7 @@ class Migration extends AbstractMigration {
       ["live_mode_value", "type" => "text", "default" => ""],
       ["description", "type" => "text", "default" => ""]
     );
-    //store payment gateways
+    // store payment gateways
     $this->schema->addRow("payment_gateways",
       ["name" => "Authorize.Net", "description" => "Purchase with credit card using Authorize.net"],
       ["is_test_mode" => "1", "is_active" => "1"]

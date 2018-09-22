@@ -4,7 +4,7 @@ namespace Starbug\Payment;
 use Starbug\Core\CollectionFactoryInterface;
 
 class ProcessSubscriptionsCommand {
-  function __construct(TokenGatewayInterface $gateway, CollectionFactoryInterface $collections) {
+  public function __construct(TokenGatewayInterface $gateway, CollectionFactoryInterface $collections) {
     $this->gateway = $gateway;
     $this->collections = $collections;
   }
