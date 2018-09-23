@@ -88,7 +88,7 @@ class FormDisplay extends ItemDisplay {
       $default = isset($column['default']);
       $optional = isset($column['optional']);
       $nullable = isset($column['null']);
-      $not_optional_update = (!isset($column['optional_update']) || empty($object_id));
+      $not_optional_update = (!isset($column['optional_update']) || empty($this->options["id"]));
       if (!$default && !$optional && !$nullable && $not_optional_update) {
           $options['required'] = true;
       } else {
@@ -223,8 +223,10 @@ class FormDisplay extends ItemDisplay {
    * @return string the GET or POST value
    */
   public function get($name) {
-    $keys = $this->input_name;
     $parts = explode("[", $name);
+    if (!empty($this->input_name)) {
+      $parts = array_merge($this->input_name, $parts);
+    }
     $var = ($this->method == "post") ? $this->getPost() : $this->request->getParameters();
     foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")];
     if (is_array($var)) return $var;

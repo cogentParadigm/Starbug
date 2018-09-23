@@ -35,33 +35,6 @@ class TemplateRenderer implements TemplateInterface {
     }
   }
 
-  public function output($paths = [], $params = [], $options = []) {
-    if (!is_array($paths)) $paths = [$paths];
-    $options = $options + $this->defaults;
-
-    // Apply the correct namespace if needed.
-    if ($options["scope"] != "templates") {
-      $paths = array_map(function ($path) {
-        return "@".$options["scope"]."/".$path;
-      }, $paths);
-    }
-
-    // Render all or render one.
-    $results = [];
-    if ($options["all"]) {
-      $namespaces = $this->twig->getLoader()->getNamespaces();
-      foreach ($namespaces as $namespace) {
-        if ($namespace !== Twig_Loader_Filesystem::MAIN_NAMESPACE) {
-          $result = twig_include($env, $context, "@".$namespace."/".$template, $variables, $withContext, $ignoreMissing, $sandboxed);
-          $result = $twig->resolveTemplate("@".$namespace."/".$path)->render($params);
-          if ($result) {
-            $results[] = $result;
-          }
-        }
-      }
-    }
-  }
-
   public function render($paths = [""], $params = [], $options = []) {
     if (!is_array($paths)) $paths = [$paths];
     $options = $options + $this->defaults;

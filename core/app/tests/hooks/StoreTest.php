@@ -54,10 +54,10 @@ class StoreTest extends DatabaseTestCase {
     $this->assertSame("User", $abdul['last_name']);
 
     // store record
-    $q = $this->db->query("hook_store_alias");
-    $q->set("by_email", "admin@localhost");
-    $q->set("by_name", "Abdul User");
-    $q->insert();
+    $query = $this->db->query("hook_store_alias");
+    $query->set("by_email", "admin@localhost");
+    $query->set("by_name", "Abdul User");
+    $query->insert();
 
     // retrieve the record
     $id = $this->models->get("hook_store_alias")->insert_id;
@@ -191,51 +191,51 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_materialized_path", []);
 
     // retrieve the record
-    $l1 = $this->models->get("hook_store_materialized_path")->insert_id;
-    $l1_record = $this->db->get("hook_store_materialized_path", $l1);
+    $l1_id = $this->models->get("hook_store_materialized_path")->insert_id;
+    $l1_record = $this->db->get("hook_store_materialized_path", $l1_id);
 
     // the materialized path field should be empty for top level items
     $this->assertEmpty($l1_record["value_field"]);
 
     // store record 2, child of record 1
-    $this->db->store("hook_store_materialized_path", ["parent" => $l1]);
+    $this->db->store("hook_store_materialized_path", ["parent" => $l1_id]);
 
     // retrieve the record
-    $l2 = $this->models->get("hook_store_materialized_path")->insert_id;
-    $l2_record = $this->db->get("hook_store_materialized_path", $l2);
+    $l2_id = $this->models->get("hook_store_materialized_path")->insert_id;
+    $l2_record = $this->db->get("hook_store_materialized_path", $l2_id);
 
     // the materialized path field should show the correct ancestry
-    $this->assertSame("-".$l1."-", $l2_record["value_field"]);
+    $this->assertSame("-".$l1_id."-", $l2_record["value_field"]);
 
     // store record 3, child of record 2
-    $this->db->store("hook_store_materialized_path", ["parent" => $l2]);
+    $this->db->store("hook_store_materialized_path", ["parent" => $l2_id]);
 
     // retrieve the record
-    $l3 = $this->models->get("hook_store_materialized_path")->insert_id;
-    $l3_record = $this->db->get("hook_store_materialized_path", $l3);
+    $l3_id = $this->models->get("hook_store_materialized_path")->insert_id;
+    $l3_record = $this->db->get("hook_store_materialized_path", $l3_id);
 
     // the materialized path field should show the correct ancestry
-    $this->assertSame("-".$l1."-".$l2."-", $l3_record["value_field"]);
+    $this->assertSame("-".$l1_id."-".$l2_id."-", $l3_record["value_field"]);
 
     // store record 4, child of record 3
-    $this->db->store("hook_store_materialized_path", ["parent" => $l3]);
+    $this->db->store("hook_store_materialized_path", ["parent" => $l3_id]);
 
     // retrieve the record
-    $l4 = $this->models->get("hook_store_materialized_path")->insert_id;
-    $l4_record = $this->db->get("hook_store_materialized_path", $l4);
+    $l4_id = $this->models->get("hook_store_materialized_path")->insert_id;
+    $l4_record = $this->db->get("hook_store_materialized_path", $l4_id);
 
     // the materialized path field should show the correct ancestry
-    $this->assertSame("-".$l1."-".$l2."-".$l3."-", $l4_record["value_field"]);
+    $this->assertSame("-".$l1_id."-".$l2_id."-".$l3_id."-", $l4_record["value_field"]);
 
     // store record 5, child of record 4
-    $this->db->store("hook_store_materialized_path", ["parent" => $l4]);
+    $this->db->store("hook_store_materialized_path", ["parent" => $l4_id]);
 
     // retrieve the record
-    $l5 = $this->models->get("hook_store_materialized_path")->insert_id;
-    $l5_record = $this->db->get("hook_store_materialized_path", $l5);
+    $l5_id = $this->models->get("hook_store_materialized_path")->insert_id;
+    $l5_record = $this->db->get("hook_store_materialized_path", $l5_id);
 
     // the materialized path field should show the correct ancestry
-    $this->assertSame("-".$l1."-".$l2."-".$l3."-".$l4."-", $l5_record["value_field"]);
+    $this->assertSame("-".$l1_id."-".$l2_id."-".$l3_id."-".$l4_id."-", $l5_record["value_field"]);
   }
 
   /**
@@ -286,26 +286,26 @@ class StoreTest extends DatabaseTestCase {
     // store 5 items
     $this->db->store("hook_store_ordered", []);
     $id1 = $this->models->get("hook_store_ordered")->insert_id;
-    $r1 = $this->db->get("hook_store_ordered", $id1);
+    $record1 = $this->db->get("hook_store_ordered", $id1);
     $this->db->store("hook_store_ordered", []);
     $id2 = $this->models->get("hook_store_ordered")->insert_id;
-    $r2 = $this->db->get("hook_store_ordered", $id2);
+    $record2 = $this->db->get("hook_store_ordered", $id2);
     $this->db->store("hook_store_ordered", []);
     $id3 = $this->models->get("hook_store_ordered")->insert_id;
-    $r3 = $this->db->get("hook_store_ordered", $id3);
+    $record3 = $this->db->get("hook_store_ordered", $id3);
     $this->db->store("hook_store_ordered", []);
     $id4 = $this->models->get("hook_store_ordered")->insert_id;
-    $r4 = $this->db->get("hook_store_ordered", $id4);
+    $record4 = $this->db->get("hook_store_ordered", $id4);
     $this->db->store("hook_store_ordered", []);
     $id5 = $this->models->get("hook_store_ordered")->insert_id;
-    $r5 = $this->db->get("hook_store_ordered", $id5);
+    $record5 = $this->db->get("hook_store_ordered", $id5);
 
     // assert that they have incrementing values
-    $this->assertSame("1", $r1['value']);
-    $this->assertSame("2", $r2['value']);
-    $this->assertSame("3", $r3['value']);
-    $this->assertSame("4", $r4['value']);
-    $this->assertSame("5", $r5['value']);
+    $this->assertSame("1", $record1['value']);
+    $this->assertSame("2", $record2['value']);
+    $this->assertSame("3", $record3['value']);
+    $this->assertSame("4", $record4['value']);
+    $this->assertSame("5", $record5['value']);
   }
 
   /**
@@ -421,7 +421,7 @@ class StoreTest extends DatabaseTestCase {
     $row = $this->db->get("hook_store_required", $id);
 
     // assert that the value is what we stored
-    $this->assertSame("changed", $record['value']);
+    $this->assertSame("changed", $row['value']);
   }
 
   /**
