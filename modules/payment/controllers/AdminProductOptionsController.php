@@ -26,4 +26,3 @@ class AdminProductOptionsController extends Controller {
     $this->render("admin/update.html");
   }
 }
-?>

@@ -7,7 +7,7 @@ use Starbug\Core\GridDisplay;
 class ProductOptionsGrid extends GridDisplay {
   public $model = "product_options";
   public $action = "admin";
-  function build_display($options) {
+  public function build_display($options) {
     $this->dnd();
     $this->insert(0, ["tree", "field" => "id", "plugin" => "starbug.grid.columns.tree", "sortable" => false]);
     $this->add(["id", "label" => "ID"]);
