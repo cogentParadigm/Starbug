@@ -4,7 +4,7 @@ namespace Starbug\Core;
 class Bundle implements \IteratorAggregate, \Countable, \ArrayAccess {
   protected $data;
 
-  public function __construct(array $data = array()) {
+  public function __construct(array $data = []) {
     $this->data = $data;
   }
   public function get() {
@@ -35,7 +35,7 @@ class Bundle implements \IteratorAggregate, \Countable, \ArrayAccess {
     $target = &$this->data;
     $value = array_pop($args);
     foreach ($args as $arg) {
-      if (!is_array($target)) $target = array();
+      if (!is_array($target)) $target = [];
       $target = &$target[$arg];
     }
     $target = $value;

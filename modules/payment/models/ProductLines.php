@@ -4,7 +4,7 @@ namespace Starbug\Payment;
 use Starbug\Core\ProductLinesModel;
 
 class ProductLines extends ProductLinesModel {
-  function update($lines) {
+  public function update($lines) {
     if (count($this->cart)) {
       foreach ($lines as $id => $qty) {
         $line = $this->query()->condition("product_lines.id", $id)
@@ -17,7 +17,7 @@ class ProductLines extends ProductLinesModel {
       $this->error("You have no items in your cart", "global");
     }
   }
-  function delete($line) {
+  public function delete($line) {
     if (count($this->cart)) {
       $line = $this->query()->condition("product_lines.id", $line['id'])
         ->condition("product_lines.orders_id", $this->cart->get('id'))->one();
@@ -28,7 +28,7 @@ class ProductLines extends ProductLinesModel {
       $this->error("You have no items in your cart", "global");
     }
   }
-  public function post($action, $data = array()) {
+  public function post($action, $data = []) {
     $this->action = $action;
     if ($action == "update" || $action == "delete") {
       $this->$action($data);

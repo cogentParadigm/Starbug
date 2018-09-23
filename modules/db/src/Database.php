@@ -30,7 +30,7 @@ class Database extends AbstractDatabase {
   }
 
   public function __call($method, $args) {
-    if (method_exists($this->pdo, $method)) return call_user_func_array(array($this->pdo, $method), $args);
+    if (method_exists($this->pdo, $method)) return call_user_func_array([$this->pdo, $method], $args);
     throw new Exception('Call to undefined method/class function: ' . $method);
   }
 }

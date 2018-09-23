@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Intl;
+
 use Starbug\Core\DatabaseInterface;
+
 class AddressFormatter {
   protected $map = [
     'N' => 'recipient',

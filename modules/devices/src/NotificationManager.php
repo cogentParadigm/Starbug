@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Devices;
+
 use Starbug\Core\DatabaseInterface;
+
 class NotificationManager implements NotificationManagerInterface {
   protected $handlers = [];
   public function __construct(DatabaseInterface $db) {
@@ -56,7 +58,7 @@ class NotificationManager implements NotificationManagerInterface {
       foreach ($user["notifications"] as $batch_key => $notifications) {
         if (!empty($batch_key) && $batchable) {
           if ($batch) {
-            //it's time to batch
+            // it's time to batch
             $body = [];
             foreach ($notifications as $notification) {
               $body[] = $notification["body"];

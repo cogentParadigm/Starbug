@@ -1,11 +1,13 @@
 <?php
 namespace Starbug\Db\Tests;
+
 use Starbug\Db\Query\Query;
 use Starbug\Db\Query\Builder;
 use Starbug\Db\Query\Compiler;
 use Starbug\Db\Schema\Schema;
 use Starbug\Db\Schema\QueryCompilerHook;
 use PHPUnit_Framework_TestCase;
+
 class QueryBuilderTestBase extends PHPUnit_Framework_TestCase {
 
   public function setUp() {

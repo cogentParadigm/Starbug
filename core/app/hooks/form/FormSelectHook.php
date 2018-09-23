@@ -5,7 +5,7 @@ class FormSelectHook extends FormHook {
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }
-  function build($form, &$control, &$field) {
+  public function build($form, &$control, &$field) {
     $name = $field['name'];
     $value = $form->get($field['name']);
     if ((empty($value)) && (!empty($field['default']))) {
@@ -30,8 +30,8 @@ class FormSelectHook extends FormHook {
       if (!empty($field['from'])) {
         $list = $options;
         $options = $this->db->query($field['from'], $field)->all();
-      } else $list = array();
-      $keys = array();
+      } else $list = [];
+      $keys = [];
       if (!empty($options)) foreach ($options[0] as $k => $v) if (false !== strpos($field['caption'], "%$k%")) $keys[] = $k;
       foreach ($options as $o) {
         $cap = $field['caption'];
@@ -41,11 +41,11 @@ class FormSelectHook extends FormHook {
       $options = $list;
       unset($field['caption']);
       unset($field['value']);
-    } else if (!empty($field['options'])) {
+    } elseif (!empty($field['options'])) {
       $keys = is_array($field['options']) ? $field['options'] : explode(",", $field['options']);
       $values = (!empty($field['values'])) ? $field['values'] : $keys;
       $values = (is_array($values)) ? $values : explode(",", $field['values']);
-      $options = array();
+      $options = [];
       foreach ($keys as $i => $k) $options[$k] = $values[$i];
       unset($field['options']);
       unset($field['values']);

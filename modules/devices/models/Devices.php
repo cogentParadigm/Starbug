@@ -1,9 +1,11 @@
 <?php
 namespace Starbug\Devices;
+
 use Starbug\Core\DevicesModel;
+
 class Devices extends DevicesModel {
 
-  function register($device) {
+  public function register($device) {
     $token = $device['token'];
     $platform = $device['platform'];
     $environment = $device['environment'];

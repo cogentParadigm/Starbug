@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Devices;
+
 use Starbug\Core\MailerInterface;
+
 class PushNotificationHandler implements NotificationHandlerInterface {
   public function __construct(ApplePushNotificationHandler $apple) {
     $this->apple = $apple;

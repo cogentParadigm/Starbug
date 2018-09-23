@@ -19,7 +19,7 @@ class AdminController extends Controller {
     $arguments = [];
     if (isset($controller->routes[$action])) {
       $template = $controller->routes[$action];
-      if (false === ($values = $this->router->validate($this->request, array('path' => 'admin/'.$name.'/'.$action), $template))) {
+      if (false === ($values = $this->router->validate($this->request, ['path' => 'admin/'.$name.'/'.$action], $template))) {
         $action = 'missing';
       } elseif (is_array($values)) {
         $arguments = $values;

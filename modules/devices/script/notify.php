@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Devices;
+
 use Starbug\Core\IdentityInterface;
+
 class NotifyCommand {
   public function __construct(NotificationManagerInterface $notifications, IdentityInterface $user) {
     $this->notifications = $notifications;
