@@ -3,11 +3,11 @@ namespace Starbug\Core;
 
 class StoreOperationHook extends QueryHook {
   protected $replace = false;
-  function __construct(ModelFactoryInterface $models, DatabaseInterface $db) {
+  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db) {
     $this->models = $models;
     $this->db = $db;
   }
-  function validate($query, $key, $value, $column, $argument) {
+  public function validate($query, $key, $value, $column, $argument) {
     if (is_array($value)) {
       $hooks = $this->models->get($query->model)->hooks[$column];
       if ($this->models->has($hooks["type"])) {

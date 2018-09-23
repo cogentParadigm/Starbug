@@ -2,11 +2,11 @@
 namespace Starbug\Core;
 
 class StoreUniqueHook extends QueryHook {
-  function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
     $this->db = $db;
     $this->models = $models;
   }
-  function validate($query, $key, $value, $column, $argument) {
+  public function validate($query, $key, $value, $column, $argument) {
     $argument = explode(" ", $argument);
     $existing = $this->db->query($query->model)->select("id")->select($column)->condition($column, $value);
     foreach ($argument as $c) if (!empty($c)) $existing->condition($c, $query->fields[$c]);

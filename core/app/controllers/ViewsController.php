@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 
 class ViewsController extends Controller {
-  function show() {
+  public function show() {
     $this->render($this->response->path.".html");
   }
 }

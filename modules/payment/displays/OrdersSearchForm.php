@@ -4,7 +4,7 @@ namespace Starbug\Payment;
 use Starbug\Core\SearchForm;
 
 class OrdersSearchForm extends SearchForm {
-  function build_display($options) {
+  public function build_display($options) {
     $this->attributes['class'][] = 'form-inline';
     $this->add(["keywords", "input_type" => "text", "nolabel"  => true]);
     $this->add([

@@ -2,10 +2,10 @@
 namespace Starbug\Core;
 
 class FormMultipleSelectHook extends FormHook {
-  function __construct(ModelFactoryInterface $models) {
+  public function __construct(ModelFactoryInterface $models) {
     $this->models = $models;
   }
-  function build($form, &$control, &$field) {
+  public function build($form, &$control, &$field) {
     $value = $form->get($field['name']);
     if ((empty($value)) && (!empty($field['default']))) {
       $form->set($field['name'], $field['default']);

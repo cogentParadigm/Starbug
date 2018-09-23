@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 #
 # Portable PHP password hashing framework.
 #

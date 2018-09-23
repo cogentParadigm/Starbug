@@ -8,7 +8,7 @@ class PaymentForm extends FormDisplay {
   public $collection = "OrdersForm";
   public $default_action = "payment";
   public $submit_label = "Place Order";
-  function build_display($options) {
+  public function build_display($options) {
     $this->layout->add(["a", "top" => "div", "middle" => "div", "bottom" => "div"]);
     $this->add(["email", "input_type" => "text", "pane" => "top", "div" => "col-xs-12"]);
     $this->add(["phone", "label" => "Phone Number", "input_type" => "text", "pane" => "top", "div" => "col-xs-12"]);

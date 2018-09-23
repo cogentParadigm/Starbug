@@ -2,9 +2,9 @@
 namespace Starbug\Core;
 
 class FormFileHook extends FormHook {
-  function build($form, &$control, &$field) {
+  public function build($form, &$control, &$field) {
     $field['type'] = 'file';
-    //POSTed or default value
+    // POSTed or default value
     $var = $form->get($field['name']);
     if (!empty($var)) {
       if (is_array($var)) {

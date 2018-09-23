@@ -11,7 +11,7 @@ class ProductOptionsForm extends FormDisplay {
   public function setTableSchema(SchemerInterface $schemer) {
     $this->tableSchema = $schemer->getSchema();
   }
-  function build_display($options) {
+  public function build_display($options) {
     $tree = $this->getOptionsTree($options["product_types_id"]);
     $this->add("name");
     $this->add("slug");

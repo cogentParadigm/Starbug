@@ -6,7 +6,7 @@ class BillPaymentForm extends PaymentForm {
   public $collection = "BillPaymentForm";
   public $default_action = "payment";
   public $submit_label = "Submit Payment";
-  function build_display($options) {
+  public function build_display($options) {
     parent::build_display($options);
     $this->remove("email");
     $this->remove("phone");

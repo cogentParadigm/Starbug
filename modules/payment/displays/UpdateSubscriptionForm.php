@@ -6,7 +6,7 @@ class UpdateSubscriptionForm extends PaymentForm {
   public $collection = "Form";
   public $default_action = "update";
   public $submit_label = "Update";
-  function build_display($options) {
+  public function build_display($options) {
     parent::build_display($options);
     $this->remove("email");
     $this->remove("phone");

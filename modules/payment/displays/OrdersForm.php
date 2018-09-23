@@ -7,7 +7,7 @@ class OrdersForm extends FormDisplay {
   public $model = "orders";
   public $cancel_url = "admin/orders";
   public $collection = "OrdersForm";
-  function build_display($options) {
+  public function build_display($options) {
     $this->layout->add(["top", "top" => "div.col-xs-12"]);
     $this->layout->add(["bottom", "left" => "div.col-sm-6", "right" => "div.col-sm-6"]);
     $this->add(["email", "pane" => "top"]);

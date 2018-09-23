@@ -89,12 +89,12 @@ class URL implements URLInterface {
   }
 
   public function setPath($path) {
-    //if the path contains a query string, split it off
+    // if the path contains a query string, split it off
     if (false !== strpos($path, "?")) {
       list($path, $query) = explode("?", $path, 2);
     }
 
-    //if the path includes a format (such as .html, .json, .xml etc..) split it off and set the format for this url
+    // if the path includes a format (such as .html, .json, .xml etc..) split it off and set the format for this url
     $file = end(explode("/", $path));
     if (false !== strpos($file, ".")) {
       $this->format = end(explode(".", $file));

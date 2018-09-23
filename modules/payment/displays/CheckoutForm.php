@@ -8,7 +8,7 @@ class CheckoutForm extends FormDisplay {
   public $collection = "OrdersForm";
   public $default_action = "checkout";
   public $submit_label = "Contintue to Payment";
-  function build_display($options) {
+  public function build_display($options) {
     $this->layout->add(["a", "left" => "div.col-sm-6", "right" => "div.col-sm-6"]);
     $this->add([
       "shipping_panel_top",
