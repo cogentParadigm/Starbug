@@ -21,7 +21,7 @@ class Terms extends TermsModel {
     }
   }
 
-  public function delete_taxonomy($term) {
+  public function deleteTaxonomy($term) {
     $tax = $term['taxonomy'];
     $this->db->query("terms")->condition("taxonomy", $tax)->delete();
   }

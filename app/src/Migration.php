@@ -13,7 +13,7 @@ class Migration extends AbstractMigration {
     $this->schema->addRow("permits", ["related_table" => "users", "action" => "login", "role" => "everyone", "priv_type" => "table"]);
     $this->schema->addRow("permits", ["related_table" => "users", "action" => "logout", "role" => "everyone", "priv_type" => "table"]);
     $this->schema->addRow("permits", ["related_table" => "users", "action" => "register", "role" => "everyone", "priv_type" => "table"]);
-    $this->schema->addRow("permits", ["related_table" => "users", "action" => "update_profile", "role" => "self", "priv_type" => "global"]);
-    $this->schema->addRow("permits", ["related_table" => "users", "action" => "reset_password", "role" => "everyone", "priv_type" => "table"]);
+    $this->schema->addRow("permits", ["related_table" => "users", "action" => "updateProfile", "role" => "self", "priv_type" => "global"]);
+    $this->schema->addRow("permits", ["related_table" => "users", "action" => "resetPassword", "role" => "everyone", "priv_type" => "table"]);
   }
 }

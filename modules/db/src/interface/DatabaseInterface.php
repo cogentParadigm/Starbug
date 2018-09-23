@@ -43,7 +43,7 @@ interface DatabaseInterface {
   /**
    * Proccess the queue of data for storage
    */
-  public function store_queue();
+  public function storeQueue();
   /**
    * Remove from the database.
    *

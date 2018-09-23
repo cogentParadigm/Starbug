@@ -17,7 +17,7 @@ class MockDatabase implements DatabaseInterface {
   public function queue($name, $fields = [], $from = "auto", $unshift = false) {
     // Empty function.
   }
-  public function store_queue() {
+  public function storeQueue() {
     // Empty function.
   }
   public function remove($from, $where) {

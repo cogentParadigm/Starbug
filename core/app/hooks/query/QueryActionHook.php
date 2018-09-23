@@ -22,8 +22,8 @@ class QueryActionHook extends QueryHook {
     $users = $this->models->get("users");
     $instance = $this->models->get($type);
     $base_type = $instance->root();
-    $columns = $instance->column_info();
-    $user_columns = $users->column_info();
+    $columns = $instance->columnInfo();
+    $user_columns = $users->columnInfo();
 
     if ($join) {
       // join permits - match table and action

@@ -70,7 +70,7 @@ REGEX;
     $data = $this->parse($template);
     $values = false;
     foreach ($data as $i => $routeData) {
-      list($regex, $variables) = $this->build_regex($data[$i]);
+      list($regex, $variables) = $this->buildRegex($data[$i]);
       if (!preg_match($regex, $path, $matches)) {
         continue;
       }
@@ -97,7 +97,7 @@ REGEX;
     }
     return $route;
   }
-  public function build_regex($routeData) {
+  public function buildRegex($routeData) {
     $regex = '';
     $variables = [];
     foreach ($routeData as $part) {

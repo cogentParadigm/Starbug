@@ -377,7 +377,7 @@ class StoreTest extends DatabaseTestCase {
     $this->assertSame($uid, $record['value']);
 
     // remove uri and truncate table
-    $this->db->query("hook_store_references")->unsafe_truncate();
+    $this->db->query("hook_store_references")->unsafeTruncate();
     $this->db->query("users")->condition("email", "hook_store_references")->delete();
   }
 

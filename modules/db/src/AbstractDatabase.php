@@ -160,7 +160,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
     $this->queue($name, $fields, $from, true);
     // $last = array_pop($this->to_store);
     // $this->to_store = array_merge(array($last), $this->to_store);
-    $this->store_queue();
+    $this->storeQueue();
   }
 
   /**
@@ -193,7 +193,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
   /**
    * Proccess the queue of data for storage
    */
-  public function store_queue() {
+  public function storeQueue() {
     $this->queue->execute();
   }
 

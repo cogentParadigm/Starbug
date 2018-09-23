@@ -23,7 +23,7 @@ class ImportsFieldsForm extends FormDisplay {
     if (method_exists($model, "import_fields")) {
       $dest_ops = array_merge($dest_ops, $model->import_fields($options));
     } else {
-      $dest_ops['options'] = array_keys($this->models->get($options['model'])->column_info());
+      $dest_ops['options'] = array_keys($this->models->get($options['model'])->columnInfo());
     }
     $this->add($dest_ops);
     $this->add(["update_key", "input_type" => "checkbox", "label" => "Use this field as a key to update records"]);

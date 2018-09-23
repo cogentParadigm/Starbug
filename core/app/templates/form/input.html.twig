@@ -1,6 +1,6 @@
 {% if type == "file" %}
   {% set files = "[]" %}
-  {% set column_info = helper("models").get(display.model).column_info(field) %}
+  {% set columnInfo = helper("models").get(display.model).columnInfo(field) %}
   {% set records = [] %}
   {% if value is not empty %}
     {% if value is not iterable %}

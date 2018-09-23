@@ -3,7 +3,7 @@ namespace Starbug\Core;
 
 class ProfileForm extends FormDisplay {
   public $model = "users";
-  public $defaultAction = "update_profile";
+  public $defaultAction = "updateProfile";
   public function buildDisplay($options) {
     $this->add(["current_password", "input_type" => "password", "label" => "Current Password", "info" => "To change your email address or password, you must enter your current password."]);
     $this->add("email");

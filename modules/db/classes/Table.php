@@ -134,7 +134,7 @@ class Table implements CollectionFilterInterface {
    * @param string $entity entity name
    * @param string $column column name
    */
-  public function column_info($column = "", $entity = "") {
+  public function columnInfo($column = "", $entity = "") {
     if (empty($entity)) $entity = $this->type;
     $info = [];
     if (!$this->models->has($entity)) return $info;

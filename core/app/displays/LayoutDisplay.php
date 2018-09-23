@@ -47,7 +47,7 @@ class LayoutDisplay extends ItemDisplay {
     $this->cells[$parent]->appendChild($html);
   }
 
-  public function is_empty() {
+  public function isEmpty() {
     return empty($this->cells);
   }
 

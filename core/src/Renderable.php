@@ -16,7 +16,7 @@ class Renderable {
 
   public function __construct($selector, $children = [], $content = "") {
     // get tag name and attributes
-    if (!is_array($selector)) $selector = $this->parse_selector($selector);
+    if (!is_array($selector)) $selector = $this->parseSelector($selector);
     if (!empty($selector['tag'])) $this->tagName = $selector['tag'];
     if (!empty($selector['attributes'])) $this->attributes = $selector['attributes'];
     // get content
@@ -139,7 +139,7 @@ class Renderable {
    *
    * @return string regex pattern
    */
-  public static function parse_selector($selector) {
+  public static function parseSelector($selector) {
     $pattern = '/^(?P<type>[\*|\w|\-]+)?(?P<id>#[\w|\-]+)?(?P<classes>\.[\w|\-|\.]+)*(?P<data>\[.+\])*$/';
     preg_match($pattern, $selector, $matches);
     $tag = $matches['type'];
@@ -169,7 +169,7 @@ class Renderable {
       $parent = null;
     }
 
-    $selector = Renderable::parse_selector($selector);
+    $selector = Renderable::parseSelector($selector);
     if (empty($selector['tag'])) {
       $node = $parent;
       $node->attributes = array_merge($node->attributes, $selector['attributes']);

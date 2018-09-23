@@ -36,10 +36,10 @@ class Taxonomy implements TaxonomyInterface {
    * @return bool returns true on success, false otherwise.
    */
   public function tag($table, $object_id, $field, $tag = "") {
-    $column_info = $this->models->get($table)->column_info($field);
-    if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
-    $taxonomy = $column_info['taxonomy'];
-    $tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
+    $columnInfo = $this->models->get($table)->columnInfo($field);
+    if (empty($columnInfo['taxonomy'])) $columnInfo['taxonomy'] = $table."_".$field;
+    $taxonomy = $columnInfo['taxonomy'];
+    $tags = empty($columnInfo['table']) ? $table."_".$field : $columnInfo['table'];
 
     $tag = $this->filter->normalize($tag);
     $slug = strtolower($tag);
@@ -54,7 +54,7 @@ class Taxonomy implements TaxonomyInterface {
     if ($existing->one()) return true;
 
     // IF THE TERM DOESN'T EXIST, ADD IT
-    $term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->params(["tag" => $tag, "tax" => $taxonomy])->one();
+    $term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->bind(["tag" => $tag, "tax" => $taxonomy])->one();
     if (empty($term)) $this->db->store("terms", ["term" => $tag, "slug" => $slug, "taxonomy" => $taxonomy, "parent" => "0", "position" => ""]);
     elseif ($term['taxonomy'] == "groups" && !$this->user->loggedIn("root") && in_array($term['slug'], ["root"])) return false;
     if ($this->db->errors()) return false;
@@ -73,9 +73,9 @@ class Taxonomy implements TaxonomyInterface {
    * @param string $tag the tag
    */
   public function untag($table, $object_id, $field, $tag = "") {
-    $column_info = $this->models->get($table)->column_info($field);
-    if (empty($column_info['taxonomy'])) $column_info['taxonomy'] = $table."_".$field;
-    $tags = empty($column_info['table']) ? $table."_".$field : $column_info['table'];
+    $columnInfo = $this->models->get($table)->columnInfo($field);
+    if (empty($columnInfo['taxonomy'])) $columnInfo['taxonomy'] = $table."_".$field;
+    $tags = empty($columnInfo['table']) ? $table."_".$field : $columnInfo['table'];
     $query = $this->db->query($tags)->condition($tags.".".$table."_id", $object_id);
     $fields = [$field."_id.id", $field."_id.slug", $field."_id.term"];
     $query->where("(".implode("=:tag || ", $fields)."=:tag)")->bind("tag", $tag)->delete();

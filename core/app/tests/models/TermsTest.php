@@ -36,7 +36,7 @@ class TermsTest extends ModelTest {
     $this->assertEquals(3, $count);
 
     // delete taxonomy
-    $this->action("delete_taxonomy", ["taxonomy" => "phpunit"]);
+    $this->action("deleteTaxonomy", ["taxonomy" => "phpunit"]);
     // we should now have none
     $count = $this->query()->condition("taxonomy", "phpunit")->count();
     $this->assertEquals(0, $count);

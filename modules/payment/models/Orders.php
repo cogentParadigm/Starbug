@@ -55,7 +55,7 @@ class Orders extends OrdersModel {
     if ($this->user->loggedIn()) $ammend['owner'] = $this->user->userinfo('id');
 
     // determine single payment amount
-    // TODO: validate prices, lines could be stale
+    // WARN: prices not validated, lines could be stale
     $lines = $this->query("product_lines")
       ->condition("orders_id", $order['id'])
       ->condition("product_lines.product.payment_type", "single")

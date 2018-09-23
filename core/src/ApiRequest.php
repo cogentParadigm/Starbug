@@ -98,7 +98,7 @@ class ApiRequest {
 
   protected function errors($model) {
     $instance = $this->models->get($model);
-    $schema = $instance->column_info();
+    $schema = $instance->columnInfo();
     if (empty($schema)) $schema = [];
     $json = ["errors" => []];
     $e = $instance->errors("", true);

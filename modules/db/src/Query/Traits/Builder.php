@@ -244,16 +244,6 @@ trait Builder {
     return $this;
   }
 
-  public function param($name, $value = null) {
-    // TODO: throw deprecation error.
-    return $this->bind($name, $value = null);
-  }
-
-  public function params($name, $value = null) {
-    // TODO: throw deprecation error.
-    return $this->bind($name, $value = null);
-  }
-
   /**
    * Add a field or fields to group by.
    *

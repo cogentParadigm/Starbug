@@ -5,8 +5,8 @@
 {% endif %}
 {% block title %}{{ form_header }}{% endblock %}
 {% block body %}
-  {% if helper("db").success("users", "update_profile") %}
+  {% if helper("db").success("users", "updateProfile") %}
     <div class="alert alert-success">You profile has been updated successfully.</div>
   {% endif %}
-  {{ helper("displays").render("ProfileForm", request.getParameters()|merge({"operation": action ?? "update_profile", "id": id})) }}
+  {{ helper("displays").render("ProfileForm", request.getParameters()|merge({"operation": action ?? "updateProfile", "id": id})) }}
 {% endblock %}

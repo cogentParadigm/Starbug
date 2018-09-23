@@ -2,7 +2,7 @@
 {% if item_id is not empty %}
   <input id="id" name="{{ display.getName("id") }}" type="hidden" value="{{ item_id }}" />
 {% endif %}
-{% if display.layout.is_empty() %}
+{% if display.layout.isEmpty() %}
   {% for name, field in display.fields %}
     {{ display.formControl(field.input_type, [name]|merge(field))|raw }}
   {% endfor %}

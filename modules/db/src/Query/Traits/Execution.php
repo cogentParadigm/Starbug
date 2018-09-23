@@ -46,7 +46,7 @@ trait Execution {
     }
     return $this;
   }
-  public function unsafe_truncate() {
+  public function unsafeTruncate() {
     $this->executor->getConnection()->exec("SET FOREIGN_KEY_CHECKS=0");
     $result = $this->truncate();
     $this->executor->getConnection()->exec("SET FOREIGN_KEY_CHECKS=1");

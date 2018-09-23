@@ -36,7 +36,7 @@ class MenusTest extends ModelTest {
     $this->assertEquals(3, $count);
 
     // delete taxonomy
-    $this->action("delete_menu", ["menu" => "phpunit"]);
+    $this->action("deleteMenu", ["menu" => "phpunit"]);
     // we should now have none
     $count = $this->query()->condition("menu", "phpunit")->count();
     $this->assertEquals(0, $count);

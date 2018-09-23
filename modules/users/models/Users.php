@@ -35,7 +35,7 @@ class Users extends UsersModel {
   /**
    * A function for current users to update their profile
    */
-  public function update_profile($profile) {
+  public function updateProfile($profile) {
     // force the user to enter their current password to update their profile
     // validate it by authenticating the sessiong against the entry
     if ($this->session->authenticate($profile['id'], $profile['current_password'])) {
@@ -74,7 +74,7 @@ class Users extends UsersModel {
   /**
    * Resets a users password and emails it to them
    */
-  public function reset_password($fields) {
+  public function resetPassword($fields) {
     $email_address = trim($fields['email']);
     if (empty($email_address)) $this->error("Please enter your email address.", "email");
     else {
