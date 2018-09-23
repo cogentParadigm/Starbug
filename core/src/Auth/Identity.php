@@ -58,6 +58,7 @@ class Identity implements IdentityInterface {
    */
   public function loadUser($id) {
     $user = $this->models->get("users")->query()
+      ->condition("users.deleted", "0")
       ->select("GROUP_CONCAT(users.groups.slug) as groups");
     if (is_array($id)) $user->conditions($id);
     else $user->condition("users.id", $id);

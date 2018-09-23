@@ -40,11 +40,6 @@ class Users extends UsersModel {
     // validate it by authenticating the sessiong against the entry
     if ($this->session->authenticate($profile['id'], $profile['current_password'])) {
       $this->store(["id" => $profile['id'], "email" => $profile['email'], "password" => $profile['password'], "password_confirm" => $profile['password_confirm']]);
-      if (!$this->errors() && !empty($profile['password'])) {
-        // changing your password will invalidate your current session
-        // so we need to re-authenticate using the new password
-        $this->session->authenticate($profile['id'], $profile['password']);
-      }
     } else {
       $this->error("Your credentials could not be authenticated.", "current_password");
     }
@@ -56,6 +51,7 @@ class Users extends UsersModel {
   public function login($login) {
     $user = $this->user->loadUser(["email" => $login['email']]);
     if ($this->session->authenticate($user, $login['password'])) {
+      $this->session->createSession($user);
       $this->user->setUser($user);
       $this->store(["id" => $user['id'], "last_visit" => date("Y-m-d H:i:s")]);
     } else {

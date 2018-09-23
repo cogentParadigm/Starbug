@@ -13,6 +13,11 @@ class Migration extends AbstractMigration {
       ["password", "type" => "password", "confirm" => "password_confirm", "optional_update" => ""],
       ["last_visit", "type" => "datetime", "default" => "0000-00-00 00:00:00", "list" => "true", "display" => "false"]
     );
+    $this->schema->addTable(["sessions"],
+      ["users_id", "type" => "int", "references" => "users id"],
+      ["token", "type" => "string"],
+      ["expires", "type" => "datetime"]
+    );
     $this->schema->addTable(["terms", "label_select" => "terms.term"],
       ["term", "type" => "string", "length" => "128"],
       ["slug", "type" => "string", "length" => "128", "unique" => "taxonomy parent", "display" => "false", "default" => "", "slug" => "term"],

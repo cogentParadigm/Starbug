@@ -1,35 +1,67 @@
 <?php
 namespace Starbug\Core;
 
-/**
- * Stateless session manager based on methodology outlined in this paper by Steven J. Murdoch
- * "Hardened Stateless Session Cookies" - http://www.cl.cam.ac.uk/~sjm217/papers/protocols08cookies.pdf
- */
 interface SessionHandlerInterface {
-  public function startSession();
-  public function loggedIn();
   /**
-   * Provide a salt and authenticator token for a password.
+   * Start the session. Called early to see if there's an active session and load it.
    *
-   * The authenticator will be 64 characters long, with a salt prepended.
-   * The salt will be 9, 12, or 29 characters long depending on the available cryptographic functions.
+   * @return void
+   */
+  public function startSession();
+  /**
+   * Create a session for the given user.
    *
-   * @param string $password The password to hash.
+   * @param array $user The user to create the session for. This should have come from the IdentityInterface.
+   * @param integer $duration The session duration. Leave off to use the default duration.
+   *
+   * @return void
+   */
+  public function createSession($user, $duration = 0);
+  /**
+   * Hash a password.
+   *
+   * @param string $password The plain text password to hash.
    *
    * @return string The hashed password.
    */
   public function hashPassword($password);
   /**
-   * Validate a password against the salt/authenticator token.
+   * Validate a password against the saved hash.
    *
    * @param array $user The user record, obtained from IdentityInterface.
    * @param string $password The users password entry.
-   * @param integer $duration The valid duration of the generated session token.
    *
    * @return boolean Returns false if validation fails. If the password validates, true is returned.
    */
-  public function authenticate($user, $password, $duration = 0);
-  public function set($key, $value, $secure = false);
-  public function get($key);
+  public function authenticate($user, $password);
+  /**
+   * Destroy the session.
+   *
+   * @return void
+   */
   public function destroy();
+  /**
+   * Check if a user is logged in. Session must be started first.
+   *
+   * @return void
+   */
+  public function loggedIn();
+  /**
+   * Save a value in the client session.
+   *
+   * @param string $key A lookup name for the value.
+   * @param string $value The value.
+   * @param boolean $secure True to store encrypted.
+   *
+   * @return void
+   */
+  public function set($key, $value, $secure = false);
+  /**
+   * Get a value stored in the client session.
+   *
+   * @param string $key The property name.
+   *
+   * @return void
+   */
+  public function get($key);
 }

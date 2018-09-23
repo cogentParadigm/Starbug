@@ -104,7 +104,7 @@ class Migrator extends AbstractMigration {
       $options["autoincrement"] = $column["auto_increment"];
     }
     if ($column["type"] == "password") {
-      $options["length"] = 100;
+      $options["length"] = 255;
     }
     if ($column["type"] == "string" && empty($column["length"])) {
       $options["length"] = 64;

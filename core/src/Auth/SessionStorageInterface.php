@@ -3,6 +3,15 @@ namespace Starbug\Core;
 
 interface SessionStorageInterface {
   /**
+   * Create a session for the given user.
+   *
+   * @param array $user The user to create the session for. This should have come from the IdentityInterface.
+   * @param integer $duration The session duration.
+   *
+   * @return void
+   */
+  public function createSession($id, $duration);
+  /**
    * Obtain the users active session claim.
    * Simply retrieves the token provided by the request.
    *
