@@ -355,7 +355,7 @@ class StoreTest extends DatabaseTestCase {
     $record = $this->db->get("hook_store_password", $id);
 
     // Assert that the hashed password was stored.
-    $this->assertTrue(strlen($record['value']) > 64);
+    $this->assertTrue(password_verify($pass, $record["value"]));
   }
 
   /**
