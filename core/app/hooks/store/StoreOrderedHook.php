@@ -39,8 +39,8 @@ class StoreOrderedHook extends QueryHook {
   public function insert($query, $key, $value, $column, $argument) {
     $this->setConditions($query, $column, $argument, "insert");
     if (!empty($value) && is_numeric($value)) $this->value = $value;
-    $h = $this->db->query($query->model)->select("MAX(".$query->model.".$column) as highest")->conditions($this->conditions)->condition($query->model.".deleted", "0")->one();
-    return $h['highest']+1;
+    $highest = $this->db->query($query->model)->select("MAX(".$query->model.".$column) as highest")->conditions($this->conditions)->condition($query->model.".deleted", "0")->one();
+    return $highest['highest']+1;
   }
   public function update($query, $key, $value, $column, $argument) {
     $this->setConditions($query, $column, $argument, $value);
