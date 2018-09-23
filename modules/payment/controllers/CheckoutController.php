@@ -18,7 +18,7 @@ class CheckoutController extends Controller {
     $this->assign("model", "orders");
     $this->assign("cart", $this->cart);
   }
-  public function default_action() {
+  public function defaultAction() {
     if ($this->db->success("orders", "checkout")) {
       $this->redirect("checkout/payment");
     } elseif (empty($this->cart)) {

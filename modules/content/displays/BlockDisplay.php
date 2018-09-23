@@ -12,7 +12,7 @@ class BlockDisplay extends Display {
     $this->output = $output;
     $this->macro = $macro;
   }
-  public function build_display($options) {
+  public function buildDisplay($options) {
     $this->options["block"]["content"] = $this->macro->replace($this->options["block"]["content"]);
   }
 }

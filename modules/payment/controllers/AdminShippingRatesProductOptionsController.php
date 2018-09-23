@@ -15,7 +15,7 @@ class AdminShippingRatesProductOptionsController extends Controller {
   public function init() {
     $this->assign("model", "shipping_rates_product_options");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("admin/list.html");
   }
   public function create() {

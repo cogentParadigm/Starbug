@@ -41,15 +41,15 @@ class ErrorHandler {
   }
 
   public function register() {
-    set_exception_handler([$this, 'handle_exception']);
-    set_error_handler([$this, 'handle_error'], error_reporting());
-    register_shutdown_function([$this, 'handle_shutdown']);
+    set_exception_handler([$this, 'handleException']);
+    set_error_handler([$this, 'handleError'], error_reporting());
+    register_shutdown_function([$this, 'handleShutdown']);
   }
 
   /**
    * Exception handler
    */
-  public function handle_exception($exception) {
+  public function handleException($exception) {
     restore_error_handler();
     restore_exception_handler();
 
@@ -73,7 +73,7 @@ class ErrorHandler {
   /**
    * Error handler.
    */
-  public function handle_error($errno, $errstr, $errfile, $errline) {
+  public function handleError($errno, $errstr, $errfile, $errline) {
     if (0 == error_reporting()) {
       return;
     }
@@ -107,7 +107,7 @@ class ErrorHandler {
     exit(1);
   }
 
-  public function handle_shutdown() {
+  public function handleShutdown() {
     if (is_null($lastError = error_get_last()) === false) {
       if (in_array($lastError['type'], $this->fatalErrors, true)) {
         $this->logger->alert(
@@ -122,7 +122,7 @@ class ErrorHandler {
   /**
    * Renders source around an line. used for exception and error output details
    */
-  public static function render_source($file, $line, $max) {
+  public static function renderSource($file, $line, $max) {
     $line--; // adjust line number to 0-based from 1-based
     if ($line<0 || ($lines=@file($file))===false || ($count=count($lines))<=$line) return '';
 

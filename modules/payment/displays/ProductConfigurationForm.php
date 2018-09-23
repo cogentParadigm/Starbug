@@ -5,10 +5,10 @@ use Starbug\Core\FormDisplay;
 
 class ProductConfigurationForm extends FormDisplay {
   public $model = "products";
-  public $default_action = "add";
+  public $defaultAction = "add";
   public $submit_label = "Add To Cart";
   public $collection = "ProductConfigurationForm";
-  public function build_display($ops) {
+  public function buildDisplay($ops) {
     $options = $this->db->query("product_options")->condition("product_types_id", $ops["type"])
       ->sort("product_options.tree_path, product_options.position")->all();
     $items = $children = [];

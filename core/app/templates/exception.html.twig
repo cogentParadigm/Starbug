@@ -163,7 +163,7 @@ pre span.error-ln {
 
   <div class="source">
     <p class="file">{{ error.file ~ "(" ~ error.line ~ ")" }}</p>
-    {{ handler.render_source(error.file, error.line, 10)|raw }}
+    {{ handler.renderSource(error.file, error.line, 10)|raw }}
   </div>
 
   <div class="traces">
@@ -188,7 +188,7 @@ pre span.error-ln {
           {% endif %}
         </div>
         {% if hasCode %}
-          {{ handler.render_source(trace.file, trace.line, 10)|raw }}
+          {{ handler.renderSource(trace.file, trace.line, 10)|raw }}
         {% endif %}
       </td>
     </tr>

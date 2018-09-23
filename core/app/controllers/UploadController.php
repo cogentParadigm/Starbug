@@ -11,7 +11,7 @@ class UploadController extends Controller {
     $this->images = $images;
     $this->user = $user;
   }
-  public function default_action() {
+  public function defaultAction() {
     $_post = [];
     $htmldata = [];
     $record = ["filename" => "", "mime_type" => "", "caption" => "uploaded file", "category" => $this->request->getPost('category')];

@@ -1,14 +1,14 @@
 {% set item_id = display.get("id") %}
 {% if item_id is not empty %}
-  <input id="id" name="{{ display.get_name("id") }}" type="hidden" value="{{ item_id }}" />
+  <input id="id" name="{{ display.getName("id") }}" type="hidden" value="{{ item_id }}" />
 {% endif %}
 {% if display.layout.is_empty() %}
   {% for name, field in display.fields %}
-    {{ display.form_control(field.input_type, [name]|merge(field))|raw }}
+    {{ display.formControl(field.input_type, [name]|merge(field))|raw }}
   {% endfor %}
 {% else %}
   {% for name, field in display.fields %}
-    {% do display.layout.append(field.pane, display.form_control(field.input_type, [name]|merge(field))) %}
+    {% do display.layout.append(field.pane, display.formControl(field.input_type, [name]|merge(field))) %}
   {% endfor %}
   {{ display.layout.render()|raw }}
 {% endif %}

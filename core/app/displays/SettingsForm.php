@@ -4,8 +4,8 @@ namespace Starbug\Core;
 class SettingsForm extends FormDisplay {
   public $model = "settings";
   public $cancel_url = "admin";
-  public $default_action = "update";
-  public function build_display($options) {
+  public $defaultAction = "update";
+  public function buildDisplay($options) {
     $settings = $this->models->get("settings")->query()->select("settings.*,category.term,category.slug")->sort("settings_category.term_path, settings_category.position")->all();
     $this->request->setPost('settings', []);
     $last = "";

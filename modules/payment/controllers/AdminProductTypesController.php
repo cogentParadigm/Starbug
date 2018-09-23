@@ -14,7 +14,7 @@ class AdminProductTypesController extends Controller {
   public function init() {
     $this->assign("model", "product_types");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("admin/list.html");
   }
   public function create() {

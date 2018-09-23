@@ -4,10 +4,10 @@ namespace Starbug\Payment;
 class UpdateSubscriptionForm extends PaymentForm {
   public $model = "subscriptions";
   public $collection = "Form";
-  public $default_action = "update";
+  public $defaultAction = "update";
   public $submit_label = "Update";
-  public function build_display($options) {
-    parent::build_display($options);
+  public function buildDisplay($options) {
+    parent::buildDisplay($options);
     $this->remove("email");
     $this->remove("phone");
   }

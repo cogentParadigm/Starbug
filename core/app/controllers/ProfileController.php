@@ -8,7 +8,7 @@ class ProfileController extends Controller {
   public function init() {
     $this->assign("model", "users");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->assign("id", $this->user->userinfo("id"));
     $this->render("profile.html");
   }

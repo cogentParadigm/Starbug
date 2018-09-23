@@ -6,7 +6,7 @@ use Starbug\Core\FormDisplay;
 class TagsForm extends FormDisplay {
   public $model = "tags";
   public $cancel_url = "admin/tags";
-  public function build_display($options) {
+  public function buildDisplay($options) {
     // layout
     $this->layout->add(["top", "left" => "div.col-md-9", "right" => "div.col-md-3"]);
     $this->layout->add(["bottom", "tabs" => "div.col-sm-12"]);

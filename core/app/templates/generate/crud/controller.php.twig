@@ -15,7 +15,7 @@ class Admin{{ className }}Controller extends Controller {
     $this->assign("model", "{{ model }}");
     $this->assign("cancel_url", "admin/{{ model }}");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("admin/list.html");
   }
   public function create() {

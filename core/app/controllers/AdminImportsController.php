@@ -14,7 +14,7 @@ class AdminImportsController extends Controller {
     $this->assign("model", "imports");
     $this->assign("cancel_url", "admin/imports");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("admin/list.html");
   }
   public function create() {

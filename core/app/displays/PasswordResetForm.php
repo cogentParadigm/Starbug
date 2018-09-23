@@ -3,8 +3,8 @@ namespace Starbug\Core;
 
 class PasswordResetForm extends FormDisplay {
   public $model = "users";
-  public $default_action = "reset_password";
-  public function build_display($options) {
+  public $defaultAction = "reset_password";
+  public function buildDisplay($options) {
     $this->add("email");
   }
 }

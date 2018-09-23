@@ -20,7 +20,7 @@ class AdminTaxonomiesController extends Controller {
     $this->assign("model", "terms");
     if ($this->request->hasParameter('taxonomy')) $this->assign("taxonomy", $this->filter->normalize($this->request->getParameter('taxonomy')));
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("admin/list.html");
   }
   public function add() {

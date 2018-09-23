@@ -8,7 +8,7 @@ class AdminController extends Controller {
     $this->controllers = $controllers;
     $this->router = $router;
   }
-  public function default_action() {
+  public function defaultAction() {
     if (count($this->request->getComponents()) == 1) {
       return $this->render("admin.html");
     }

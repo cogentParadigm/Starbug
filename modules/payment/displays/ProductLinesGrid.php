@@ -6,7 +6,7 @@ use Starbug\Core\GridDisplay;
 class ProductLinesGrid extends GridDisplay {
   public $model = "product_lines";
   public $action = "order";
-  public function build_display($options) {
+  public function buildDisplay($options) {
     $this->add(["description", "plugin" => "starbug.grid.columns.html", "label" => "Product"]);
     $this->add(["price_formatted", "label" => "Price"]);
     $this->add(["qty", "label" => "Quantity"]);

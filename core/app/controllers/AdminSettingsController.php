@@ -5,7 +5,7 @@ class AdminSettingsController extends Controller {
   public function init() {
     $this->assign("model", "settings");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("settings.html");
   }
 }

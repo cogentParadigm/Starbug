@@ -19,7 +19,7 @@ class SubscriptionsController extends Controller {
   public function init() {
     $this->assign("model", "orders");
   }
-  public function default_action() {
+  public function defaultAction() {
     $subscriptions = $this->collections->get("Subscriptions")->query(["owner" => $this->user->userinfo("id")]);
     $this->assign("subscriptions", $subscriptions);
     $this->render("subscriptions/list.html");

@@ -10,7 +10,7 @@ class CartController extends Controller {
   public function init() {
     $this->assign("model", "orders");
   }
-  public function default_action() {
+  public function defaultAction() {
     if (empty($this->cart)) {
       $this->render("cart/empty.html");
     } else {

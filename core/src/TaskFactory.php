@@ -17,7 +17,7 @@ class TaskFactory implements TaskFactoryInterface {
   public function get($task) {
     if (!isset($this->tasks[$task])) {
       $class = ucwords($task)."Task";
-      $namespace = end($this->locator->get_namespaces($class, "tasks"));
+      $namespace = end($this->locator->getNamespaces($class, "tasks"));
       $this->tasks[$task] = $this->container->build($namespace.$class);
     }
     return $this->tasks[$task];

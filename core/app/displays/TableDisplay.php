@@ -10,6 +10,6 @@ class TableDisplay extends ItemDisplay {
     $this->attributes["class"][] = "table-bordered";
     $this->attributes["class"][] = "table-striped";
     $this->attributes["class"][] = "table-hover";
-    $this->build_display($options);
+    $this->buildDisplay($options);
   }
 }

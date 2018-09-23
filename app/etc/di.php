@@ -17,7 +17,7 @@ return [
     $routes["forgot-password"] = [
       "title" => "Forgot Password",
       "controller" => "login",
-      "action" => "forgot_password"
+      "action" => "forgotPassword"
     ];
     return $routes;
   }),

@@ -6,7 +6,7 @@ use Starbug\Core\GridDisplay;
 class {{ className }}Grid extends GridDisplay {
   public $model = "{{ model }}";
   public $action = "admin";
-  function build_display($options) {
+  function buildDisplay($options) {
     $this->add(["id", "label" => "ID"]);
   }
 }

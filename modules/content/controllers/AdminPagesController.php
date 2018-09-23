@@ -14,7 +14,7 @@ class AdminPagesController extends Controller {
   public function init() {
     $this->assign("model", "pages");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("admin/list.html");
   }
   public function create() {

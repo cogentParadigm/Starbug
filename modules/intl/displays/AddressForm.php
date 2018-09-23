@@ -6,7 +6,7 @@ use Starbug\Core\FormDisplay;
 class AddressForm extends FormDisplay {
   public $model = "address";
   public $cancel_url = "address";
-  public function build_display($ops) {
+  public function buildDisplay($ops) {
     if ($this->success("create") && !$this->request->hasPost($this->model, "id")) $this->request->setPost($this->model, "id", $this->models->get($this->model)->insert_id);
     if (!empty($ops["input_name"])) $this->template = "fields";
     if (empty($ops['code'])) $ops['code'] = "US";

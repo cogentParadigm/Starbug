@@ -11,7 +11,7 @@ class ImportsFieldsForm extends FormDisplay {
   public function setFilesystems(MountManager $filesystems) {
     $this->filesystems = $filesystems;
   }
-  public function build_display($options) {
+  public function buildDisplay($options) {
     $data = $this->request->getPost();
     if ($this->success("create") && empty($data['imports_fields']['id'])) {
       $this->request->setPost('imports_fields', 'id', $this->models->get($this->model)->insert_id);

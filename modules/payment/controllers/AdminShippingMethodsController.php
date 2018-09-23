@@ -16,7 +16,7 @@ class AdminShippingMethodsController extends Controller {
     $this->assign("model", "shipping_methods");
     $this->assign("cancel_url", "admin/shipping_methods");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("admin/list.html");
   }
   public function create() {

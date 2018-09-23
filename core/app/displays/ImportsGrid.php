@@ -4,7 +4,7 @@ namespace Starbug\Core;
 class ImportsGrid extends GridDisplay {
   public $model = "imports";
   public $action = "admin";
-  public function build_display($options) {
+  public function buildDisplay($options) {
     $this->attr("base_url", "admin/imports");
     $this->add(["name", "readonly" => true]);
     if (empty($options['model'])) {

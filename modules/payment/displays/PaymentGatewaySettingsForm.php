@@ -6,7 +6,7 @@ use Starbug\Core\FormDisplay;
 class PaymentGatewaySettingsForm extends FormDisplay {
   public $model = "payment_gateway_settings";
   public $cancel_url = "admin/payment_gateway_settings";
-  public function build_display($options) {
+  public function buildDisplay($options) {
     $this->add(["payment_gateway_id", "input_type" => "hidden", "default" => $this->request->getParameter("gateway")]);
     $this->add("name");
     $this->add([

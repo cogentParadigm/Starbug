@@ -14,7 +14,7 @@ class AdminPaymentGatewaySettingsController extends Controller {
   public function init() {
     $this->assign("model", "payment_gateway_settings");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("admin/list.html");
   }
   public function create() {

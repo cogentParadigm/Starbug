@@ -6,7 +6,7 @@ use Starbug\Core\GridDisplay;
 class CountriesGrid extends GridDisplay {
   public $model = "countries";
   public $action = "admin";
-  public function build_display($options) {
+  public function buildDisplay($options) {
     $this->add("name");
     $this->add("code");
   }

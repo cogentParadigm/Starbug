@@ -25,11 +25,15 @@ class Controller {
   /**
    * Run a controller action.
    *
-   * @param string $action - the action to run, an empty string will run default_action
+   * @param string $action - the action to run, an empty string will run defaultAction
    * @param string $arguments - arguments to pass to the action
    */
   public function action($action = "", $arguments = []) {
-    if (empty($action)) $action = "default_action";
+    if (empty($action)) {
+      $action = "defaultAction";
+    } else {
+      $action = $this->formatActionName($action);
+    }
     $args = [];
     if (method_exists($this, $action)) {
       $reflection = new ReflectionMethod($this, $action);
@@ -98,5 +102,16 @@ class Controller {
    */
   public function __call($name, $arguments) {
     $this->missing();
+  }
+
+  /**
+   * Convert a URL component with dashes to camel case format.
+   *
+   * @param string $segment the path segment.
+   *
+   * @return string the camel case converted name
+   */
+  protected function formatActionName($segment) {
+    return str_replace(" ", "", ucwords(str_replace("-", " ", $segment)));
   }
 }

@@ -6,9 +6,9 @@ use Starbug\Core\FormDisplay;
 class CheckoutForm extends FormDisplay {
   public $model = "orders";
   public $collection = "OrdersForm";
-  public $default_action = "checkout";
+  public $defaultAction = "checkout";
   public $submit_label = "Contintue to Payment";
-  public function build_display($options) {
+  public function buildDisplay($options) {
     $this->layout->add(["a", "left" => "div.col-sm-6", "right" => "div.col-sm-6"]);
     $this->add([
       "shipping_panel_top",
@@ -55,6 +55,6 @@ class CheckoutForm extends FormDisplay {
       "input_type" => "html",
       "value" => '</div></div>'
     ]);
-    $this->actions->add([$this->default_action, "class" => "btn-primary"]);
+    $this->actions->add([$this->defaultAction, "class" => "btn-primary"]);
   }
 }

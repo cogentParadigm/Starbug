@@ -2,7 +2,7 @@
 <thead>
   <tr>
     {% for field, options in display.fields %}
-    <th {{ helper("filter").attributes(display.column_attributes(field, options))|raw }}>{{ options.label }}</th>
+    <th {{ helper("filter").attributes(display.columnAttributes(field, options))|raw }}>{{ options.label }}</th>
     {% endfor %}
   </tr>
 <thead>

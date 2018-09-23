@@ -6,7 +6,7 @@ use Starbug\Core\FormDisplay;
 class CountriesForm extends FormDisplay {
   public $model = "countries";
   public $cancel_url = "admin/countries";
-  public function build_display($options) {
+  public function buildDisplay($options) {
     $this->add("name");
     $this->add("code");
     $this->add("format");

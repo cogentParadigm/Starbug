@@ -3,9 +3,9 @@ namespace Starbug\Core;
 
 class SearchForm extends FormDisplay {
   public $method = "get";
-  public $default_action = "search";
+  public $defaultAction = "search";
   public $submit_label = "Search";
-  public function build_display($options) {
+  public function buildDisplay($options) {
     $this->attributes['class'][] = 'form-inline';
     $this->add(["keywords", "input_type" => "text", "nolabel"  => true, "data-filter" => $this->model]);
     $this->actions->add(["search", "class" => "btn-default"]);

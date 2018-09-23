@@ -24,7 +24,7 @@ return [
     "admin" => [
       "title" => "Admin",
       "controller" => "Starbug\\Core\\AdminController",
-      "action" => "default_action",
+      "action" => "defaultAction",
       "groups" => "admin",
       "theme" => "storm"
     ],

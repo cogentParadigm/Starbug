@@ -6,7 +6,7 @@ use Starbug\Core\FormDisplay;
 class ProductsForm extends FormDisplay {
   public $model = "products";
   public $cancel_url = "admin/products";
-  public function build_display($options) {
+  public function buildDisplay($options) {
     $this->layout->add(["top", "left" => "div.col-md-9", "right" => "div.col-md-3"]);
     $this->layout->add(["bottom", "tabs" => "div.col-sm-12"]);
     $this->layout->put("tabs", 'div[data-dojo-type="dijit/layout/TabContainer"][data-dojo-props="doLayout:false, tabPosition:\'left-h\'"][style="width:100%;height:100%"]', '', 'tc');

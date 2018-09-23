@@ -16,7 +16,7 @@ class AdminEmailsController extends Controller {
     $this->assign("cancel_url", "admin/emails");
     if ($this->db->success("email_templates", "create")) $this->redirect("admin/emails");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("admin/list.html");
   }
   public function create() {

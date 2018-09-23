@@ -26,7 +26,7 @@ class GridDisplay extends ItemDisplay {
     if ($options['attributes']) $this->attributes = $options['attributes'];
     $this->options = $options;
     if ($options['dnd']) $this->dnd();
-    $this->build_display($options);
+    $this->buildDisplay($options);
   }
 
   public function dnd() {
@@ -40,7 +40,7 @@ class GridDisplay extends ItemDisplay {
     return $options;
   }
 
-  public function column_attributes($field, $options) {
+  public function columnAttributes($field, $options) {
     if (empty($options["field"])) $options["field"] = $field;
     $options['data-dgrid-column'] = [];
     if (!empty($options['editor']) && empty($options['editOn'])) {
@@ -65,7 +65,7 @@ class GridDisplay extends ItemDisplay {
     // defer query responsibilities to dgrid
   }
 
-  public function before_render() {
+  public function beforeRender() {
     $this->attributes['model'] = $this->model;
     $this->attributes['class'][] = "dgrid-autoheight dbootstrap-grid";
     if (empty($this->attributes['id'])) $this->attributes['id'] = $this->model."_grid";

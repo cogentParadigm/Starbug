@@ -11,7 +11,7 @@ class FormDisplay extends ItemDisplay {
   public $method = "post";
   public $errors = [];
   public $layout;
-  public $default_action = "create";
+  public $defaultAction = "create";
   public $submit_label = "Save";
   public $cancel_url = "";
   public $actions;
@@ -43,12 +43,12 @@ class FormDisplay extends ItemDisplay {
     $this->layout = $this->displays->get("LayoutDisplay");
     // create actions display
     $this->actions = $this->displays->get("ItemDisplay");
-    $this->actions->add([$this->default_action, "label" => $this->submit_label, "class" => "btn-success"]);
+    $this->actions->add([$this->defaultAction, "label" => $this->submit_label, "class" => "btn-success"]);
 
     // run query
-    $this->before_query($options);
+    $this->beforeQuery($options);
     $this->query();
-    $this->build_display($options);
+    $this->buildDisplay($options);
   }
 
   /**
@@ -56,7 +56,7 @@ class FormDisplay extends ItemDisplay {
    *
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  protected function before_query($options) {
+  protected function beforeQuery($options) {
     // override this method if needed
   }
 
@@ -106,11 +106,11 @@ class FormDisplay extends ItemDisplay {
     if (is_null($options)) $options = $this->options;
 
     if (empty($options['id'])) $this->items = [];
-    else parent::query(["action" => $this->default_action] + $options);
+    else parent::query(["action" => $this->defaultAction] + $options);
 
     if ($this->request->hasParameter('copy') && is_numeric($this->request->getParameter('copy')) && empty($this->items)) {
       $options['id'] = $this->request->getParameter('copy');
-      parent::query(["action" => $this->default_action] + $options);
+      parent::query(["action" => $this->defaultAction] + $options);
       if (!empty($this->items)) {
         unset($this->items[0]['id']);
       }
@@ -125,14 +125,14 @@ class FormDisplay extends ItemDisplay {
     }
   }
 
-  protected function before_render() {
+  protected function beforeRender() {
     // set form attributes
     $this->attributes["action"] = $this->url;
     $this->attributes["method"] = $this->method;
     $this->attributes["accept-charset"] = "UTF-8";
-    if (!empty($this->model) && !empty($this->default_action)) {
-      if ($this->success($this->default_action)) $this->attributes['class'][] = "submitted";
-      elseif ($this->failure($this->default_action)) $this->attributes['class'][] = "errors";
+    if (!empty($this->model) && !empty($this->defaultAction)) {
+      if ($this->success($this->defaultAction)) $this->attributes['class'][] = "submitted";
+      elseif ($this->failure($this->defaultAction)) $this->attributes['class'][] = "errors";
     }
     // grab errors and update schema
     $this->errors = [];
@@ -198,7 +198,7 @@ class FormDisplay extends ItemDisplay {
    *
    * @return the full name
    */
-  public function get_name($name) {
+  public function getName($name) {
     $key = $this->input_name;
     if (empty($key) || $this->method == "get") return $name;
     else {
@@ -259,7 +259,7 @@ class FormDisplay extends ItemDisplay {
    *
    * @param star $ops the option string
    */
-  public function fill_ops(&$ops, $control = "") {
+  public function fillOps(&$ops, $control = "") {
     $name = array_shift($ops);
     if (empty($ops['name'])) $ops['name'] = $name;
     // model
@@ -288,9 +288,9 @@ class FormDisplay extends ItemDisplay {
    *                  name: the relative name, eg. 'group[]' might become 'users[group][]'
    * @param bool $self if true, will use a self closing tag. If false, will use an opening tag and a closing tag (default is false)
    */
-  public function form_control($control, $field) {
+  public function formControl($control, $field) {
     $this->vars = ["display" => $this];
-    $this->fill_ops($field, $control);
+    $this->fillOps($field, $control);
     // run filters
     $hooks = $this->hook_builder->get("form/".$control);
     foreach ($hooks as $hook) {
@@ -299,7 +299,7 @@ class FormDisplay extends ItemDisplay {
 
     $capture = "field";
     if (empty($field['field'])) $field['field'] = reset(explode("[", $field['name']));
-    $field['name'] = $this->get_name($field['name']);
+    $field['name'] = $this->getName($field['name']);
     foreach ($field as $k => $v) $this->assign($k, $v);
     if (isset($field['nofield'])) {
       unset($field['nofield']);
@@ -312,6 +312,6 @@ class FormDisplay extends ItemDisplay {
 
   public function __call($name, $arguments) {
     if (empty($arguments[1])) $arguments[1] = [];
-    return $this->form_control($name, $arguments[0], $arguments[1]);
+    return $this->formControl($name, $arguments[0], $arguments[1]);
   }
 }

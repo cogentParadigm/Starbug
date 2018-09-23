@@ -62,7 +62,7 @@ class PhotosController extends Controller {
   public function init() {
     $this->assign("model", "photos");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("admin/list.html");
   }
   public function create() {
@@ -78,6 +78,6 @@ This produces the following paths.
 
 | path | method |
 |------|--------|
-| photos | default_action() |
+| photos | defaultAction() |
 | photos/create | create() |
 | photos/update/{id} | update($id) |

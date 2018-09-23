@@ -4,7 +4,7 @@ namespace Starbug\Core;
 class DropdownDisplay extends ItemDisplay {
   public $type = "list";
   public $template = "select.html";
-  public function build_display($options) {
+  public function buildDisplay($options) {
     $this->attributes['class'][] = $this->template;
     if (!empty($options['attributes'])) {
       if (!empty($options['attributes']['class']) && !is_array($options['attributes']['class'])) $options['attributes']['class'] = [$options['attributes']['class']];

@@ -15,7 +15,7 @@ class AdminUsersController extends Controller {
     $this->assign("model", "users");
     $this->assign("cancel_url", "admin/users");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("admin/list.html");
   }
   public function create() {

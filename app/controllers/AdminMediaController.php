@@ -10,7 +10,7 @@ class AdminMediaController extends Controller {
   public function init() {
     $this->assign("model", "files");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->response->template = "media-browser.html";
   }
   public function update($id) {

@@ -43,7 +43,7 @@ class Application implements ApplicationInterface {
 
   public function handle(RequestInterface $request) {
     $this->session->startSession();
-    $permitted = $this->check_post($request->getPost(), $request->getCookies());
+    $permitted = $this->checkPost($request->getPost(), $request->getCookies());
     $this->response->assign("request", $request);
     $route = $this->router->route($request);
     foreach ($route as $k => $v) {
@@ -78,7 +78,7 @@ class Application implements ApplicationInterface {
    *
    * @return mixed result of function call or nothing.
    */
-  protected function post_action($key, $value, $post = []) {
+  protected function postAction($key, $value, $post = []) {
     $this->logger->addInfo("Attempting action ".$key.' -> '.$value);
     if ($object = $this->models->get($key)) {
       return $object->post($value, $post);
@@ -86,9 +86,9 @@ class Application implements ApplicationInterface {
   }
 
   /**
-   * Check $_POST['action'] for posted actions and run them through post_action.
+   * Check $_POST['action'] for posted actions and run them through postAction.
    */
-  protected function check_post($post, $cookies) {
+  protected function checkPost($post, $cookies) {
     if (!empty($post['action']) && is_array($post['action'])) {
       // Validate csrf token for authenticated requests.
       if ($this->session->loggedIn()) {
@@ -99,7 +99,7 @@ class Application implements ApplicationInterface {
         }
       }
       // Execute post actions.
-      foreach ($post['action'] as $key => $val) return $this->post_action($this->filter->normalize($key), $this->filter->normalize($val), $post[$key]);
+      foreach ($post['action'] as $key => $val) return $this->postAction($this->filter->normalize($key), $this->filter->normalize($val), $post[$key]);
     }
     return true;
   }

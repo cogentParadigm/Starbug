@@ -18,7 +18,7 @@ class AdminOrdersController extends Controller {
     $this->assign("model", "orders");
     $this->assign("cancel_url", "admin/orders");
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->render("admin/list.html");
   }
   public function details($id) {

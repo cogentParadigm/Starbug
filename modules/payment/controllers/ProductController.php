@@ -11,7 +11,7 @@ class ProductController extends Controller {
   public function __construct(ModelFactoryInterface $models) {
     $this->models = $models;
   }
-  public function default_action() {
+  public function defaultAction() {
     $this->missing();
   }
   public function details($path) {

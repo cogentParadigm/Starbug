@@ -11,7 +11,7 @@ class ImportsForm extends FormDisplay {
   public function setFilesystems(MountManager $filesystems) {
     $this->filesystems = $filesystems;
   }
-  public function build_display($options) {
+  public function buildDisplay($options) {
     if ($options['operation'] == "run") {
       $this->buildRun($options);
     } else {
@@ -35,7 +35,7 @@ class ImportsForm extends FormDisplay {
     }
   }
   protected function buildRun($options) {
-    $this->actions->remove($this->default_action);
+    $this->actions->remove($this->defaultAction);
     $source = $this->get("source");
     $output = $this->preparePaginatedOutput($source);
     if ($this->success("run")) {

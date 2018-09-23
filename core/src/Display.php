@@ -29,10 +29,10 @@ class Display {
     if (!empty($options["template"])) {
       $this->template = $options["template"];
     }
-    $this->build_display($options);
+    $this->buildDisplay($options);
   }
 
-  protected function build_display($options) {
+  protected function buildDisplay($options) {
     // override this function
   }
 
@@ -66,7 +66,7 @@ class Display {
     }
   }
 
-  protected function before_render() {
+  protected function beforeRender() {
     // extendable function
   }
 
@@ -74,7 +74,7 @@ class Display {
    * Render the display with the specified items
    */
   public function render() {
-    $this->before_render();
+    $this->beforeRender();
     $this->attributes["class"] = implode(" ", $this->attributes["class"]);
     $this->output->render("display/".$this->template, ["display" => $this] + $this->options);
   }
