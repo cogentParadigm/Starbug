@@ -18,7 +18,6 @@ class SessionHandlerTest extends \PHPUnit_Framework_TestCase {
   }
 
   public function testLoggedIn() {
-    // Fake up a logged in user in the mocks.
     $id = rand(1, 100);
     $this->user->addUser(["id" => $id]);
     $this->storage->createSession($id, 0);
@@ -77,5 +76,10 @@ class SessionHandlerTest extends \PHPUnit_Framework_TestCase {
     $this->assertFalse($this->session->loggedIn());
     $this->assertEmpty($this->storage->get("v"));
     $this->assertEmpty($this->user->userinfo("id"));
+  }
+
+  public function testSetAndGet() {
+    $this->session->set("key", "value");
+    $this->assertEquals($this->session->get("key"), "value");
   }
 }
