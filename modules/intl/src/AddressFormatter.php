@@ -8,6 +8,7 @@ class AddressFormatter {
     'N' => 'recipient',
     'O' => 'organization',
     'A' => 'address1',
+    'B' => 'address2',
     'D' => 'district',
     'C' => 'locality',
     'S' => 'administrative_area',
@@ -26,6 +27,7 @@ class AddressFormatter {
     }
     $text = $country['format'];
 
+    if (trim($address["address2"]) == "") str_replace("%B%n", "", $text);
     $text = str_replace("%n", "<br/>", $text);
 
     $search = [];
