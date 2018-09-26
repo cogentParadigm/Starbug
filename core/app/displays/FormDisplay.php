@@ -224,9 +224,6 @@ class FormDisplay extends ItemDisplay {
    */
   public function get($name) {
     $parts = explode("[", $name);
-    if (!empty($this->input_name)) {
-      $parts = array_merge($this->input_name, $parts);
-    }
     $var = ($this->method == "post") ? $this->getPost() : $this->request->getParameters();
     foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")];
     if (is_array($var)) return $var;
