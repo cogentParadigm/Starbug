@@ -1,15 +1,15 @@
 {
-	"prefixes": [
-		["dijit", "../dijit"],
-		["dojox", "../dojox"],
-		["dstore", "../dstore"],
-		["dgrid", "../dgrid"],
-		["put-selector", "../put-selector"],
-		["xstyle", "../xstyle"],
-		["dbootstrap", "../dbootstrap"],
-		["bootstrap", "../dojo-bootstrap"],
-		["sb", "../../core/app/public/js/sb"],
-		["starbug", "../../core/app/public/js/starbug"],
-		["app", "../../app/public/js"]
-	]
+  "prefixes": [
+    ["dijit", "../dijit"],
+    ["dojox", "../dojox"],
+    ["dstore", "../dstore"],
+    ["dgrid", "../dgrid"],
+    ["put-selector", "../put-selector"],
+    ["xstyle", "../xstyle"],
+    ["dbootstrap", "../dbootstrap"],
+    ["bootstrap", "../dojo-bootstrap"],
+    ["sb", "../../core/app/public/js/sb"],
+    ["starbug", "../../core/app/public/js/starbug"],
+    ["app", "../../app/public/js"]
+  ]
 }
