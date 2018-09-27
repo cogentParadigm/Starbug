@@ -30,7 +30,7 @@ class ErrorHandler {
     E_USER_DEPRECATED   => LogLevel::NOTICE,
   ];
   protected $fatalErrors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
-  protected $contentOnly = false;
+  protected $contentOnly = true;
 
   public function __construct(ResponseInterface $response, LoggerInterface $logger) {
     $this->response = $response;

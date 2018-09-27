@@ -51,7 +51,7 @@ return [
     $cli = $container->get("cli");
     if (false === $cli) {
       $previous->setTemplate("exception.html");
-      $previous->setContentOnly(true);
+      $previous->setContentOnly(false);
     }
     return $previous;
   }),
