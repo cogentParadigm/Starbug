@@ -77,6 +77,7 @@ class ErrorHandler {
     } else {
       $this->response->send();
     }
+    exit();
   }
 
   /**
@@ -117,6 +118,7 @@ class ErrorHandler {
     } else {
       $this->response->send();
     }
+    exit();
   }
 
   public function handleShutdown() {
