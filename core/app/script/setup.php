@@ -27,7 +27,7 @@ class SetupCommand {
       fwrite(STDOUT, "\nusername: root");
       fwrite(STDOUT, "\npassword: $admin_pass\n\n");
       // UPDATE PASSWORD
-      $errors = $this->db->store("users", ["id" => $root_user["id"], "password" => $admin_pass, "groups" => "root,admin"]);
+      $this->db->store("users", ["id" => $root_user["id"], "password" => $admin_pass]);
     }
   }
 }
