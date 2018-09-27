@@ -68,12 +68,12 @@ class Migration extends AbstractMigration {
     );
 
     // groups
-    $groups[] = $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Root"]);
-    $groups[] = $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "User"]);
-    $groups[] = $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Admin"]);
+    $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Root"]);
+    $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "User"]);
+    $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Admin"]);
 
     // root user
-    $this->schema->addRow("users", ["email" => "root"], ["groups" => $groups]);
+    $this->schema->addRow("users", ["email" => "root"], ["groups" => "root,admin,user"]);
 
     // admin menu
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/users"], ["content" => "Users", "icon" => "fa-users"]);
