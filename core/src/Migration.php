@@ -67,7 +67,13 @@ class Migration extends AbstractMigration {
       ["message", "type" => "text", "default" => ""]
     );
 
-    $this->schema->addRow("users", ["email" => "root"], ["groups" => "root,admin"]);
+    // groups
+    $groups[] = $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Root"]);
+    $groups[] = $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "User"]);
+    $groups[] = $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Admin"]);
+
+    // root user
+    $this->schema->addRow("users", ["email" => "root"], ["groups" => $groups]);
 
     // admin menu
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/users"], ["content" => "Users", "icon" => "fa-users"]);
@@ -75,11 +81,6 @@ class Migration extends AbstractMigration {
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/menus"], ["parent" => $configuration, "content" => "Menus", "icon" => "fa-list"]);
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/emails"], ["parent" => $configuration, "content" => "Email Templates", "icon" => "fa-envelope"]);
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/settings"], ["parent" => $configuration, "content" => "Settings", "icon" => "fa-cog"]);
-
-    // groups
-    $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Root"]);
-    $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "User"]);
-    $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Admin"]);
 
     // settings categories
     $this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "General"]);
