@@ -30,6 +30,7 @@ class ErrorHandler {
     E_USER_DEPRECATED   => LogLevel::NOTICE,
   ];
   protected $fatalErrors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
+  protected $contentOnly = false;
 
   public function __construct(ResponseInterface $response, LoggerInterface $logger) {
     $this->response = $response;
@@ -38,6 +39,10 @@ class ErrorHandler {
 
   public function setTemplate($template) {
     $this->exceptionTemplate = $template;
+  }
+
+  public function setContentOnly($contentOnly) {
+    $this->contentOnly = $contentOnly;
   }
 
   public function register() {
@@ -67,7 +72,11 @@ class ErrorHandler {
     $this->response->setCode(500);
     $this->response->setHeader("Cache-Control", "no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");
     $this->response->capture($this->exceptionTemplate, ["error" => $error, "handler" => $this], ["scope" => "templates"]);
-    $this->response->send();
+    if ($this->contentOnly) {
+      $this->response->sendContent();
+    } else {
+      $this->response->send();
+    }
   }
 
   /**
@@ -104,7 +113,11 @@ class ErrorHandler {
     $this->response->setCode(500);
     $this->response->setHeader("Cache-Control", "no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");
     $this->response->capture($this->exceptionTemplate, ["error" => $error, "handler" => $this], ["scope" => "templates"]);
-    $this->response->send();
+    if ($this->contentOnly) {
+      $this->response->sendContent();
+    } else {
+      $this->response->send();
+    }
   }
 
   public function handleShutdown() {
