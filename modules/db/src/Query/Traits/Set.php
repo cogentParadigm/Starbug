@@ -10,7 +10,7 @@ trait Set {
   }
 
   public function getValue($field) {
-    return $this->values[$field];
+    return isset($this->values[$field]) ? $this->values[$field] : null;
   }
 
   public function hasValue($field) {

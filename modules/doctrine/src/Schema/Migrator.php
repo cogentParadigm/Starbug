@@ -139,7 +139,9 @@ class Migrator extends AbstractMigration {
     foreach ($values as $k => $v) {
       if ($v instanceof Bundle) {
         $ref = $this->db->query($v->get("table"))->conditions($v->get("keys"))->one();
-        $values[$k] = $ref["id"];
+        if ($ref) {
+          $values[$k] = $ref["id"];
+        }
       }
     }
     return $values;

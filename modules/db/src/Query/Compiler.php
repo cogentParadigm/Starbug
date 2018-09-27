@@ -193,7 +193,7 @@ class Compiler implements CompilerInterface {
         if (!is_null($condition['value'])) {
           if (is_array($condition['value'])) {
             $condition['operator'] = str_replace(['!', '='], ["NOT ", "IN"], $condition['operator']);
-            if ($condition['invert']) {
+            if (!empty($condition['invert'])) {
               $conditions .= "(";
               foreach ($condition['value'] as $vdx => $condition_value) {
                 $index = $this->incrementParameterIndex();

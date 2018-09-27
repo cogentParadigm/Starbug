@@ -134,7 +134,7 @@ trait Parsing {
           $ref = explode(" ", $schema["references"]);
           $query->addJoinOne($alias.".".$parsed["name"], $ref[0], $nextAlias);
         } elseif ($this->schema->hasTable($schema["type"])) {
-          if ($schema["table"] == $schema["type"]) {
+          if (!empty($schema["table"]) && $schema["table"] == $schema["type"]) {
             $query->addJoinMany($alias, $schema["type"], $nextAlias);
           } else {
             if (empty($schema["table"])) $schema["table"] = $schema["entity"]."_".$parsed["name"];
