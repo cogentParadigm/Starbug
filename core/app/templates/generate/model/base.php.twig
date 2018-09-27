@@ -28,13 +28,13 @@ class {{ className }}Model extends Table {
     $this->init();
   }
 
-  public $hooks = array(
+  public $hooks = [
 {% for column, field in fields %}
 {% if field is not empty %}
-    "{{ column }}" => array({% for k, v in field %}"{{ k }}" => "{{ v }}"{% if not loop.last %}, {% endif %}{% endfor %}){% if not loop.last %},{% endif %}
+    "{{ column }}" => [{% for k, v in field %}"{{ k }}" => "{{ v }}"{% if not loop.last %}, {% endif %}{% endfor %}]{% if not loop.last %},{% endif %}
 
 {% endif %}
 {% endfor %}
-  );
+  ];
 
 }
