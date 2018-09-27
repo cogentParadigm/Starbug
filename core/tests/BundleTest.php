@@ -3,7 +3,20 @@ namespace Starbug\Core\Tests;
 
 use Starbug\Core\Bundle;
 
+/**
+ * Tests for Bundle.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class BundleTest extends \PHPUnit_Framework_TestCase {
+  public function testEmpty() {
+    $bundle = new Bundle();
+    $this->assertTrue($bundle->isEmpty());
+  }
+  public function testNotEmpty() {
+    $bundle = new Bundle(["key" => "value"]);
+    $this->assertFalse($bundle->isEmpty());
+  }
   public function testHas() {
     $bundle = new Bundle(['key' => 'value']);
     $this->assertTrue($bundle->has('key'));

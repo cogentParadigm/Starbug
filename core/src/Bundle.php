@@ -27,7 +27,7 @@ class Bundle implements \IteratorAggregate, \Countable, \ArrayAccess {
         return false;
       }
     }
-    return true;
+    return !empty($target);
   }
 
   public function set($value) {
@@ -68,5 +68,9 @@ class Bundle implements \IteratorAggregate, \Countable, \ArrayAccess {
 
   public function offsetUnset($offset) {
     unset($this->data[$offset]);
+  }
+
+  public function isEmpty() {
+    return empty($this->data);
   }
 }
