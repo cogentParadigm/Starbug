@@ -49,7 +49,7 @@ class Table {
     $this->options[$name] = $value;
   }
   public function getOption($name) {
-    return $this->options[$name];
+    return isset($this->options[$name]) ? $this->options[$name] : null;
   }
   public function getOptions() {
     return $this->options;
