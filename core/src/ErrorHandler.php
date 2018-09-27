@@ -105,7 +105,6 @@ class ErrorHandler {
 
     $error['traces'] = $trace;
 
-    if (!headers_sent()) header("HTTP/1.0 500 PHP Error");
     if (!in_array($errno, $this->fatalErrors, true)) {
       $level = isset($this->map[$errno]) ? $this->map[$errno] : LogLevel::CRITICAL;
       $this->logger->log($level, $error['message'], $error);
