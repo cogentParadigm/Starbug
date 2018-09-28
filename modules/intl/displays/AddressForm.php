@@ -8,7 +8,7 @@ class AddressForm extends FormDisplay {
   public $cancel_url = "address";
   public function buildDisplay($ops) {
     if ($this->success("create") && !$this->request->hasPost($this->model, "id")) $this->request->setPost($this->model, "id", $this->models->get($this->model)->insert_id);
-    if (!empty($ops["input_name"])) $this->template = "fields";
+    if (!empty($ops["input_name"])) $this->template = "fields.html";
     if (empty($ops['code'])) $ops['code'] = "US";
     $country = $this->models->get("countries")->query()->condition("code", $ops['code'])->orCondition("id", $ops["code"])->one();
     // $country['province_label'] = t($country['province_label']);
