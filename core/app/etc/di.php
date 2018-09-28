@@ -52,8 +52,6 @@ return [
     if (false === $cli) {
       $previous->setTemplate("exception.html");
       $previous->setContentOnly(false);
-    } else {
-      $container->get("Starbug\Core\ResponseInterface")->setTemplate("txt.txt");
     }
     return $previous;
   }),

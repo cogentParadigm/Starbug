@@ -70,6 +70,7 @@ class ErrorHandler {
 
     $this->logger->error(sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($exception), $error['message'], $error['file'], $error['line']), ['exception' => $exception]);
     $this->response->setCode(500);
+    $this->response->setTemplate("txt.txt");
     $this->response->setHeader("Cache-Control", "no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");
     $this->response->capture($this->exceptionTemplate, ["error" => $error, "handler" => $this], ["scope" => "templates"]);
     if ($this->contentOnly) {
@@ -111,6 +112,7 @@ class ErrorHandler {
       $this->logger->log($level, $error['message'], $error);
     }
     $this->response->setCode(500);
+    $this->response->setTemplate("txt.txt");
     $this->response->setHeader("Cache-Control", "no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");
     $this->response->capture($this->exceptionTemplate, ["error" => $error, "handler" => $this], ["scope" => "templates"]);
     if ($this->contentOnly) {
