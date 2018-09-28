@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Users;
 
-use Starbug\Core\Collection;
+use Starbug\Core\AdminCollection;
 
-class AdminUsersCollection extends Collection {
+class AdminUsersCollection extends AdminCollection {
   public $model = "users";
   public function build($query, &$ops) {
     $query->select("users.*");
