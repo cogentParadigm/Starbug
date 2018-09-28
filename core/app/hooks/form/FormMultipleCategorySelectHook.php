@@ -2,9 +2,8 @@
 namespace Starbug\Core;
 
 class FormMultipleCategorySelectHook extends FormHook {
-  protected $taxonomy;
-  public function __construct(TaxonomyInterface $taxonomy) {
-    $this->taxonomy = $taxonomy;
+  public function __construct(CollectionFactoryInterface $collections) {
+    $this->collections = $collections;
   }
   public function build($form, &$control, &$field) {
     $value = $form->get($field['name']);
@@ -14,7 +13,8 @@ class FormMultipleCategorySelectHook extends FormHook {
     }
     if (empty($field['taxonomy'])) $field['taxonomy'] = ((empty($form->model)) ? "" : $form->model."_").$field['name'];
     if (empty($field['parent'])) $field['parent'] = 0;
-    $terms = $this->taxonomy->terms($field['taxonomy'], $field['parent']);
+    if (empty($field["query"])) $field["query"] = [];
+    $terms = $this->collections->get("TermsTree")->query($field["query"] + ["taxonomy" => $field['taxonomy'], "parent" => $field['parent']]);
     $value = $form->get($field['name']);
     if (!is_array($value)) $value = explode(",", $value);
     foreach ($value as $idx => $v) {
