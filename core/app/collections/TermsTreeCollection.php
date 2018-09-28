@@ -10,6 +10,9 @@ class TermsTreeCollection extends TermsCollection {
     $query->select("terms.*,(SELECT COUNT(*) FROM ".$this->db->prefix("terms")." as t WHERE t.parent=terms.id) as children");
     if (!empty($ops['parent'])) $query->condition("parent", $ops['parent']);
     else $query->condition("terms.parent", 0);
+    if (!empty($ops["exclude"])) {
+      $query->condition("terms.slug", explode(",", $ops["exclude"]), "!=");
+    }
     $query->sort("terms.position");
     return $query;
   }
