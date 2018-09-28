@@ -6,6 +6,9 @@ use Starbug\Core\AdminCollection;
 class AdminUsersCollection extends AdminCollection {
   public $model = "users";
   public function build($query, &$ops) {
+    if (empty($ops["sort"])) {
+      $ops["sort"] = "last_visit DESC";
+    }
     $query->select("users.*");
     $query->select("GROUP_CONCAT(users.groups.term SEPARATOR ', ') as groups");
     $query->select("IF(users.deleted=1, 'Deleted', 'Active') as deleted");
