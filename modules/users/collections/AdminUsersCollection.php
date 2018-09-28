@@ -14,12 +14,7 @@ class AdminUsersCollection extends Collection {
     } elseif (!empty($ops["groups"])) {
       $query->condition("users.groups.id", explode(",", $ops['groups']));
     }
-    if (isset($ops['deleted'])) {
-      $query->condition("users.deleted", explode(",", $ops['deleted']));
-    } else {
-      $query->condition("users.deleted", "0");
-    }
     $query->group("users.id");
-    return $query;
+    return parent::build($query, $ops);
   }
 }
