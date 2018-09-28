@@ -2,6 +2,7 @@
 namespace Starbug\Core;
 
 class TermsTreeCollection extends TermsCollection {
+  protected $model = "terms";
   public function __construct(ModelFactoryInterface $models, DatabaseInterface $db) {
     $this->models = $models;
     $this->db = $db;
