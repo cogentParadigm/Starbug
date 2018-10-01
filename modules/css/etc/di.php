@@ -2,10 +2,7 @@
 use Interop\Container\ContainerInterface;
 
 return [
-  'routes' => DI\add([
-    "styleguide" => ["title" => "Styleguide", "controller" => "Starbug\\Css\\StyleguideController"]
-  ]),
-  'theme' => 'starbug-1',
+  'theme' => 'tachyons',
   'Starbug\Css\CssLoader' => DI\object()
     ->constructorParameter('modules', DI\get('modules')),
   'Starbug\Css\RouteFilter' => DI\object()->constructorParameter('theme', DI\get('theme')),

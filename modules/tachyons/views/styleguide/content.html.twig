@@ -1,0 +1,69 @@
+<article class="mt5">
+  <h3 class="f6 ttu fw6 mt0 mb3 bb pb2">Headings</h3>
+  <div class="row">
+    <div class="col-2 mb3">
+      Element
+    </div>
+    <div class="col-2 mb3">
+      Size
+    </div>
+    <div class="col mb3">
+      Example
+    </div>
+  </div>
+  {% set rows = {"h1":"f1", "h2":"f2", "h3":"f3", "h4":"f4", "h5":"f5", "h6":"f6"} %}
+  {% for element, size in rows %}
+  <div class="row items-center">
+    <div class="col-2 mb3">
+      <code class="f6 truncate mid-gray">{{ element }}</code>
+    </div>
+    <div class="col-2 mb3">
+      <code class="f6 truncate mid-gray">{{ size }}</code>
+    </div>
+    <div class="col mb3">
+      <{{ element }}>Heading element</{{ element }}>
+    </div>
+  </div>
+  {% endfor %}
+</article>
+
+<article class="mt5">
+  <h3 class="f6 ttu fw6 mt0 mb3 bb pb2">Paragraphs &amp; Lists</h3>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tincidunt egestas dui in pharetra. Fusce congue nulla a neque convallis, sit amet rutrum leo feugiat. Curabitur ac nibh eros. Ut imperdiet purus quis quam bibendum, in ultricies mauris rutrum. Aenean mattis ipsum et erat rutrum dictum. Mauris in nisl ac ante convallis vulputate. Maecenas suscipit ligula non rutrum molestie. Curabitur tristique erat et luctus lobortis. Mauris vel tellus sed enim luctus sollicitudin a eget dolor. Etiam non dui est. Quisque ipsum magna, elementum et accumsan in, eleifend efficitur augue. Integer congue arcu vel pharetra tincidunt. Curabitur sit amet placerat libero, a malesuada nulla.</p>
+  <p>Ut dapibus, tellus ac malesuada mattis, sapien arcu scelerisque mi, ut scelerisque massa purus at libero. Maecenas non ultrices urna, facilisis dignissim nisi. Integer nulla ex, vestibulum vel accumsan in, convallis vel odio. Ut pulvinar ut diam sit amet hendrerit. Aliquam ornare, urna et placerat finibus, sapien diam rutrum massa, maximus consequat nisl quam eget orci. Cras sed convallis sapien, et posuere est. In vel diam iaculis, dapibus arcu sit amet, dignissim erat. Pellentesque ut ornare velit, eu interdum quam.</p>
+  <ul>
+    <li>Lorem ipsum dolor sit amet</li>
+    <li>Consectetur adipiscing elit</li>
+    <li>Integer molestie lorem at massa</li>
+    <li>Facilisis in pretium nisl aliquet</li>
+    <li>Nulla volutpat aliquam velit
+      <ul>
+        <li>Phasellus iaculis neque</li>
+        <li>Purus sodales ultricies</li>
+        <li>Vestibulum laoreet porttitor sem</li>
+        <li>Ac tristique libero volutpat at</li>
+      </ul>
+    </li>
+    <li>Faucibus porta lacus fringilla vel</li>
+    <li>Aenean sit amet erat nunc</li>
+    <li>Eget porttitor lorem</li>
+  </ul>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tincidunt egestas dui in pharetra. Fusce congue nulla a neque convallis, sit amet rutrum leo feugiat. Curabitur ac nibh eros. Ut imperdiet purus quis quam bibendum, in ultricies mauris rutrum. Aenean mattis ipsum et erat rutrum dictum. Mauris in nisl ac ante convallis vulputate. Maecenas suscipit ligula non rutrum molestie. Curabitur tristique erat et luctus lobortis. Mauris vel tellus sed enim luctus sollicitudin a eget dolor. Etiam non dui est. Quisque ipsum magna, elementum et accumsan in, eleifend efficitur augue. Integer congue arcu vel pharetra tincidunt. Curabitur sit amet placerat libero, a malesuada nulla.</p>
+  <ol>
+    <li>Lorem ipsum dolor sit amet</li>
+    <li>Consectetur adipiscing elit</li>
+    <li>Integer molestie lorem at massa</li>
+    <li>Facilisis in pretium nisl aliquet</li>
+    <li>Nulla volutpat aliquam velit
+      <ol>
+        <li>Phasellus iaculis neque</li>
+        <li>Purus sodales ultricies</li>
+        <li>Vestibulum laoreet porttitor sem</li>
+        <li>Ac tristique libero volutpat at</li>
+      </ol>
+    </li>
+    <li>Faucibus porta lacus fringilla vel</li>
+    <li>Aenean sit amet erat nunc</li>
+    <li>Eget porttitor lorem</li>
+  </ol>
+</article>

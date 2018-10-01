@@ -14,8 +14,9 @@ return [
     "Starbug\Comments" => "modules/comments",
     "Starbug\Css" => "modules/css",
     "Starbug\Js" => "modules/js",
+    "Starbug\Tachyons" => "modules/tachyons",
     "Starbug\Content" => "modules/content",
-    "Starbug\Theme" => "app/themes/starbug-1",
+    "Starbug\Theme" => "app/themes/tachyons",
     "Starbug\Var" => "var",
     "Starbug\App" => "app"
   ],
