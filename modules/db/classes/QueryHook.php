@@ -1,6 +1,11 @@
 <?php
 namespace Starbug\Core;
 
+/**
+ * Hook interface for Starbug\Db\Query\Executor
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class QueryHook {
   /**
    * This hook is invoked when called as a function on a query.
