@@ -11,14 +11,12 @@ class Controller {
 
 
 	function init() {
-
 	}
 
 	/**
 	 * Every controller has a default action, used when no action is specified.
 	 */
 	function default_action() {
-
 	}
 
 	/**
@@ -41,7 +39,7 @@ class Controller {
 		call_user_func_array(array($this, $action), $args);
 	}
 
-	function assign($key, $value=null) {
+	function assign($key, $value = null) {
 		$this->response->assign($key, $value);
 	}
 
@@ -81,15 +79,15 @@ class Controller {
 	public function url($path = "", $absolute = false) {
 		return $this->request->getURL()->build($path, $absolute);
 	}
-/**
- * redirect to another page
- * @ingroup routing
- * @param string $url the url to redirect to
- * @param int $delay number of seconds to wait before redirecting (default 0)
- */
-function redirect($url) {
-	$this->response->redirect($this->url($url, true));
-}
+	/**
+	 * redirect to another page
+	 * @ingroup routing
+	 * @param string $url the url to redirect to
+	 * @param int $delay number of seconds to wait before redirecting (default 0)
+	 */
+	function redirect($url) {
+		$this->response->redirect($this->url($url, true));
+	}
 
 	/**
 	 * if an unknown action is called, trigger a missing response
@@ -97,6 +95,4 @@ function redirect($url) {
 	function __call($name, $arguments) {
 		$this->missing();
 	}
-
 }
-?>

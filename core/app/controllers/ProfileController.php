@@ -12,4 +12,3 @@ class ProfileController extends Controller {
 		$this->render("profile");
 	}
 }
-?>

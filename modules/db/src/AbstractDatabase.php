@@ -223,6 +223,4 @@ abstract class AbstractDatabase implements DatabaseInterface {
 	public function failure($model, $action) {
 		return (($this->models->get($model)->action == $action) && (!empty($this->errors)));
 	}
-
 }
-?>

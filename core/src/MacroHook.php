@@ -9,4 +9,3 @@ class MacroHook {
 		return $token;
 	}
 }
-?>

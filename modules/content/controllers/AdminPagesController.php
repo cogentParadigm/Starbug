@@ -28,4 +28,3 @@ class AdminPagesController extends Controller {
 		$this->render("admin/import");
 	}
 }
-?>

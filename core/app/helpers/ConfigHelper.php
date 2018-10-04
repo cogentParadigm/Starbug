@@ -8,4 +8,3 @@ class ConfigHelper {
 		return $this->config;
 	}
 }
-?>

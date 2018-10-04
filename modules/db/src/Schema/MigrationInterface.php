@@ -5,4 +5,3 @@ interface MigrationInterface {
 	public function down();
 	public function migrate();
 }
-?>

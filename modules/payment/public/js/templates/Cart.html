@@ -1,5 +1,5 @@
 <div class="cart clearfix">
-	<table data-dojo-attach-point="gridNode" class="dgrid-autoheight">
+	<table data-dojo-attach-point="gridNode" class="dgrid-autoheight clearfix">
 		<thead>
 			<tr>
 				<th data-dgrid-column="starbug.grid.columns.html({ field: 'description' })">Product</th>
@@ -28,9 +28,9 @@
 			</tr>
 		</thead>
 	</table>
-	<div class="actions" style="margin-top:20px">
+	<div class="actions" style="margin-top:20px" data-dojo-attach-point="actionsNode">
 		<button class="btn btn-default" data-dojo-attach-event="onClick:update">Update Cart</button>
 	</div>
-
+	<div class="shipping-methods" style="margin-top:20px" data-dojo-attach-point="shippingMethodsNode"></div>
 	<div class="totals" data-dojo-attach-point="totalsNode" style="margin:20px 0"></div>
 </div>

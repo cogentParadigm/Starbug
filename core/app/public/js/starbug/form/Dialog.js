@@ -18,8 +18,6 @@ define([
 		callback:null,
 		form:null,
 		item_id: 0,
-		post_data:{},
-		get_data:{},
 		crudSuffixes:true,
 		format:"xhr",
 		doLayout:false,
@@ -28,12 +26,13 @@ define([
 		draggable:false,
 		postCreate: function() {
 			this.inherited(arguments);
+			this.get_data = this.get_data || {};
+			this.post_data = this.post_data || {};
 			var layoutDefaults = {width:'90%', height:'90%', position:'fixed', top:'0', left:'0', right:'0', bottom:'0', margin:'auto', overflow:'auto'};
 			for (var i in layoutDefaults) if (typeof this.layoutParams[i] == "undefined") this.layoutParams[i] = layoutDefaults[i];
 			domstyle.set(this.domNode, this.layoutParams);
-			if (this.showTitle == false) domstyle.set(this.titleBar, 'display', 'none');
+			if (this.showTitle === false) domstyle.set(this.titleBar, 'display', 'none');
 			this.set('content', '');
-
 		},
 		_position: function() {},
 		resize: function(dim) {
@@ -65,9 +64,10 @@ define([
 				request_url += token+i+'='+this.get_data[i];
 				token = '&';
 			}
-			iframe(
+			xhr(
 			request_url,
 			{
+				method: 'POST',
 				data: data,
 				handleAs:'html'
 			}).then(lang.hitch(this, 'load'));
@@ -80,7 +80,7 @@ define([
 			delete this.post_data['action[files]'];
 		},
 		load: function(data) {
-			this.loadForm(data.body.innerHTML);
+			this.loadForm(data);
 			if (domclass.contains(this.form, 'submitted')) {
 				if (this.callback != null) this.callback(data, this);
 				this.hide();
@@ -128,7 +128,7 @@ define([
 			query('form', this.domNode).on('submit', function(evt) {evt.preventDefault();});
 			query('.submit, [type=\"submit\"]', this.form).attr('onclick', '').on('click', lang.hitch(this, '_onSubmit'));
 			query('.cancel', this.form).attr('onclick', '').on('click', lang.hitch(this, 'hide'));
-			query('input[type="file"]', this.form).on('change', lang.hitch(this, 'upload'));
+			//query('input[type="file"]', this.form).on('change', lang.hitch(this, 'upload'));
 			sb.editable();
 			behavior.apply();
 		}

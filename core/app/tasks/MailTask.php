@@ -13,4 +13,3 @@ class MailTask implements TaskInterface {
 		}
 	}
 }
-?>

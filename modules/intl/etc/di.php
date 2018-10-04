@@ -8,5 +8,4 @@ return [
 	'db.schema.migrations' => DI\add([
 		DI\get('Starbug\Intl\Migration')
 	])
-]
-?>
+];

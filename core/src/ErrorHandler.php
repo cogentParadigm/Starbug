@@ -1,13 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/lib/ErrorHandler.php
- * error handler
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup core
- */
 namespace Starbug\Core;
 use \Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -18,7 +9,7 @@ use Psr\Log\LogLevel;
 class ErrorHandler {
 
 	protected $out;
-	protected $exceptionTemplate;
+	protected $exceptionTemplate = "exception-cli";
 	protected $logger;
 	protected $map = array(
 		E_ERROR             => LogLevel::CRITICAL,
@@ -39,10 +30,13 @@ class ErrorHandler {
 	);
 	protected $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
 
-	function __construct(TemplateInterface $out, LoggerInterface $logger, $exceptionTemplate = "exception-html") {
+	function __construct(TemplateInterface $out, LoggerInterface $logger) {
 		$this->out = $out;
 		$this->logger = $logger;
-		$this->exceptionTemplate = $exceptionTemplate;
+	}
+
+	public function setTemplate($template) {
+		$this->exceptionTemplate = $template;
 	}
 
 	public function register() {
@@ -163,19 +157,27 @@ class ErrorHandler {
 				continue;
 			}
 
-			if (is_object($value)) $args[$key] = get_class($value);
-			else if (is_bool($value)) $args[$key] = $value ? 'true' : 'false';
-			else if (is_string($value)) {
-				if (strlen($value)>64) $args[$key] = '"'.substr($value, 0, 64).'..."';
-				else $args[$key] = '"'.$value.'"';
+			if (is_object($value)) {
+				$args[$key] = get_class($value);
+			} elseif (is_bool($value)) {
+				$args[$key] = $value ? 'true' : 'false';
+			} elseif (is_string($value)) {
+				if (strlen($value)>64) {
+					$args[$key] = '"'.substr($value, 0, 64).'..."';
+				} else {
+					$args[$key] = '"'.$value.'"';
+				}
+			} elseif (is_array($value)) {
+				$args[$key] = 'array('.ErrorHandler::argumentsToString($value).')';
+			} elseif ($value === null) {
+				$args[$key] = 'null';
+			} elseif (is_resource($value)) {
+				$args[$key] = 'resource';
 			}
-			else if (is_array($value)) $args[$key] = 'array('.ErrorHandler::argumentsToString($value).')';
-			else if ($value===null) $args[$key] = 'null';
-			else if (is_resource($value)) $args[$key] = 'resource';
 
 			if (is_string($key)) {
 				$args[$key] = '"'.$key.'" => '.$args[$key];
-			} else if ($isAssoc) {
+			} elseif ($isAssoc) {
 				$args[$key] = $key.' => '.$args[$key];
 			}
 		}
@@ -187,35 +189,35 @@ class ErrorHandler {
 	private static function codeToString($code) {
 		switch ($code) {
 			case E_ERROR:
-			return 'E_ERROR';
+				return 'E_ERROR';
 			case E_WARNING:
-			return 'E_WARNING';
+				return 'E_WARNING';
 			case E_PARSE:
-			return 'E_PARSE';
+				return 'E_PARSE';
 			case E_NOTICE:
-			return 'E_NOTICE';
+				return 'E_NOTICE';
 			case E_CORE_ERROR:
-			return 'E_CORE_ERROR';
+				return 'E_CORE_ERROR';
 			case E_CORE_WARNING:
-			return 'E_CORE_WARNING';
+				return 'E_CORE_WARNING';
 			case E_COMPILE_ERROR:
-			return 'E_COMPILE_ERROR';
+				return 'E_COMPILE_ERROR';
 			case E_COMPILE_WARNING:
-			return 'E_COMPILE_WARNING';
+				return 'E_COMPILE_WARNING';
 			case E_USER_ERROR:
-			return 'E_USER_ERROR';
+				return 'E_USER_ERROR';
 			case E_USER_WARNING:
-			return 'E_USER_WARNING';
+				return 'E_USER_WARNING';
 			case E_USER_NOTICE:
-			return 'E_USER_NOTICE';
+				return 'E_USER_NOTICE';
 			case E_STRICT:
-			return 'E_STRICT';
+				return 'E_STRICT';
 			case E_RECOVERABLE_ERROR:
-			return 'E_RECOVERABLE_ERROR';
+				return 'E_RECOVERABLE_ERROR';
 			case E_DEPRECATED:
-			return 'E_DEPRECATED';
+				return 'E_DEPRECATED';
 			case E_USER_DEPRECATED:
-			return 'E_USER_DEPRECATED';
+				return 'E_USER_DEPRECATED';
 		}
 		return 'Unknown PHP error';
 	}

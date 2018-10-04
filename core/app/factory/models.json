@@ -1,5 +1,8 @@
 {
 	"terms": {
 		"filter": "InputFilterInterface"
+	},
+	"imports": {
+		"filesystems": "League\\Flysystem\\MountManager"
 	}
 }

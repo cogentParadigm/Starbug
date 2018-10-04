@@ -1,13 +1,7 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
-* This file is part of StarbugPHP
-* @file modules/db/src/QueryBuilderFactory.php
-* @author Ali Gangji <ali@neonrain.com>
-*/
 namespace Starbug\Core;
-use \Interop\Container\ContainerInterface;
+use Interop\Container\ContainerInterface;
+use Exception;
 /**
 * an implementation of ModelFactoryInterface
 */
@@ -22,26 +16,18 @@ class ModelFactory implements ModelFactoryInterface {
 		$this->objects = array();
 	}
 	public function has($collection) {
-		return (!empty($collection) && (($this->objects[$collection]) || (file_exists($this->base_directory."/var/models/".ucwords($collection)."Model.php"))));
+		return (!empty($collection) && (($this->objects[$collection]) || (file_exists($this->base_directory."/var/models/".str_replace(" ", "", ucwords(str_replace("_", " ", $collection)))."Model.php"))));
 	}
-	public function get($collection) {
-		if (!isset($this->objects[$collection])) {
-			$class = ucwords($collection);
-			$locations = $this->locator->locate($class.".php", "models");
-			end($locations);
-			$namespace = key($locations);
-			if (empty($namespace)) {
-				$namespace = "Starbug\Core";
-				if ($this->has($collection)) {
-					$class .= "Model";
-				} else {
-					$class = "Table";
-				}
-			}
-			$this->objects[$collection] = $this->container->get($namespace."\\".$class);
+	public function get($model) {
+		$className = $this->locator->className($model);
+		if (false === $className) {
+			$className = "Starbug\\Core\\".str_replace(" ", "", ucwords(str_replace("_", " ", $model)))."Model";
 		}
-		//return the saved object
-		return $this->objects[$collection];
+		$object = $this->container->get($className);
+		if ($object instanceof Table) {
+			return $object;
+		} else {
+			throw new Exception("ModelFactoryInterface contract violation. ".$model." is not an instance of Starbug\Core\Table.");
+		}
 	}
 }
-?>

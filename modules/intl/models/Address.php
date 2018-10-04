@@ -23,12 +23,12 @@ class Address extends AddressModel {
 		$this->store($address);
 	}
 
-	function format($address, $country=false) {
+	function format($address, $country = false) {
 		if (is_numeric($address)) $address = $this->query("address")->condition("id", $address)->one();
 		if (!$country) $country = $this->query("countries")->condition("id", $address['country'])->one();
 		if (is_numeric($address['administrative_area'])) {
-			$aa = $this->query("provinces")->condition("id", $address['administrative_area'])->one();
-				$address['administrative_area'] = $aa['name'];
+			$region = $this->query("provinces")->condition("id", $address['administrative_area'])->one();
+				$address['administrative_area'] = $region['name'];
 		}
 		$text = $country['format'];
 
@@ -44,6 +44,4 @@ class Address extends AddressModel {
 		$text = str_replace(array("<br/><br/>", "  "), array("<br/>", " "), $text);
 		return $text."<br/>".$country['name'];
 	}
-
 }
-?>

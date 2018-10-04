@@ -40,7 +40,7 @@ class Migration extends AbstractMigration {
 			$this->schema->addColumn($m, ["source", "type" => "int", "references" => "$m id", "null" => "", "index" => "", "constraint" => false, "default" => "NULL", "display" => false]);
 		}
 
-		$this->schema->addTable(["address", "groups" => false],
+		$this->schema->addTable(["address", "groups" => false, "singular" => "address"],
 			["country", "type" => "int", "references" => "countries id", "alias" => "%code%"],
 			["administrative_area", "type" => "string", "default" => ""],
 			["locality", "type" => "string", "default" => ""],
@@ -52,6 +52,11 @@ class Migration extends AbstractMigration {
 			["organization", "type" => "string", "length" => "128"],
 			["recipient", "type" => "string", "length" => "128"]
 		);
+
+		$this->schema->addTable("users",
+			["addresses", "type" => "address", "optional" => true]
+		);
+
+		$this->schema->addRow("permits", ["related_table" => "address", "action" => "read", "role" => "owner", "priv_type" => "global"]);
 	}
 }
-?>

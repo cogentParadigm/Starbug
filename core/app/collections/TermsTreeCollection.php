@@ -1,14 +1,5 @@
 <?php
-# Copyright (C) 2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/app/collections/TermsTreeCollection.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup db
- */
 namespace Starbug\Core;
-
 class TermsTreeCollection extends TermsCollection {
 	public function __construct(ModelFactoryInterface $models, DatabaseInterface $db) {
 		$this->models = $models;
@@ -33,4 +24,3 @@ class TermsTreeCollection extends TermsCollection {
 		return $rows;
 	}
 }
-?>

@@ -9,4 +9,3 @@ class MigrateCommand {
 		$this->schemer->migrate();
 	}
 }
-?>

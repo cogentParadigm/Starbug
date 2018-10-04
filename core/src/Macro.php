@@ -1,11 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/src/Macro.php
- * @author Ali Gangji <ali@neonrain.com>
- */
 namespace Starbug\Core;
 /**
  * an implementation of MacroInteface
@@ -42,9 +35,9 @@ class Macro implements MacroInterface {
 		// $tokens grouped by $types, pointing to the version of the token found in
 		// the source text. For example, $results['user']['email'] = '[user:email]';
 		$results = array();
-	 for ($i = 0; $i < count($tokens); $i++) {
-		 $results[$types[$i]][$tokens[$i]] = $matches[0][$i];
-	 }
+		for ($i = 0; $i < count($tokens); $i++) {
+			$results[$types[$i]][$tokens[$i]] = $matches[0][$i];
+		}
 
 		return $results;
 	}
@@ -93,11 +86,11 @@ class Macro implements MacroInterface {
 			}
 		}
 		//populate overrides from data
-	 if (!empty($data[$type]) && is_array($data[$type])) {
-	  foreach ($tokens as $index => $token) {
-		  if (!empty($data[$type][$index])) $replacements[$token] = $data[$type][$index];
-	  }
-	 }
+		if (!empty($data[$type]) && is_array($data[$type])) {
+			foreach ($tokens as $index => $token) {
+				if (!empty($data[$type][$index])) $replacements[$token] = $data[$type][$index];
+			}
+		}
 		//return replacements
 		return $replacements;
 	}

@@ -4,6 +4,7 @@ use Starbug\Db\Schema\AbstractMigration;
 class Migration extends AbstractMigration {
 	public function up() {
 		$this->schema->addTable(["files", "list" => "all"],
+			["location", "type" => "string", "length" => "128", "default" => "default"],
 			["filename", "type" => "string", "length" => "128"],
 			["category", "type" => "category", "null" => ""],
 			["mime_type", "type" => "string", "length" => "128", "display" => false],
@@ -18,4 +19,3 @@ class Migration extends AbstractMigration {
 		$this->schema->addRow("terms", ["taxonomy" => "files_category", "term" => "Uncategorized"]);
 	}
 }
-?>

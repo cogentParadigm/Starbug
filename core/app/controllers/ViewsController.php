@@ -5,4 +5,3 @@ class ViewsController extends Controller {
 		$this->render($this->response->path);
 	}
 }
-?>

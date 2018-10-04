@@ -20,7 +20,7 @@ class Table {
 		$args = func_get_args();
 		foreach ($args as $column) {
 			$name = array_shift($column);
-			$this->columns[$name] = $column + ["dropped" => false];
+			$this->columns[$name] = $column + ["dropped" => false, "entity" => $this->name];
 		}
 	}
 	public function get($column, $key) {
@@ -37,7 +37,7 @@ class Table {
 	}
 	public function getColumns() {
 		$columns = $this->columns;
-		$primary = array();
+		$primary = [];
 		foreach ($columns as $column => $options) {
 			if ((isset($options['key'])) && ("primary" == $options['key'])) $primary[] = $column;
 		}
@@ -78,4 +78,3 @@ class Table {
 		return $this->dropped;
 	}
 }
-?>

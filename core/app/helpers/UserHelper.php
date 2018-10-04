@@ -8,4 +8,3 @@ class UserHelper {
 		return $this->target;
 	}
 }
-?>

@@ -1,16 +1,5 @@
 <?php
-# Copyright (C) 2008-2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * @file core/src/ApiRequest.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup core
- */
 namespace Starbug\Core;
-/**
- * ApiRequest
- * @ingroup core
- */
 class ApiRequest {
 
 	protected $types = array(

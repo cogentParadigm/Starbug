@@ -1,12 +1,4 @@
 <?php
-# Copyright (C) 2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/src/interface/ResponseInterface.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup core
- */
 namespace Starbug\Core;
 /**
  * ResponseInterface class
@@ -27,6 +19,10 @@ interface ResponseInterface {
 	public function setContentType($type);
 	public function getCharset();
 	public function setCharset($charset);
+	public function getContent();
+	public function setContent($content);
+	public function getCallable();
+	public function setCallable(callable $callable);
 	public function getTheme();
 	public function setTheme($theme);
 	public function getTemplate();
@@ -46,6 +42,6 @@ interface ResponseInterface {
 	public function missing();
 	public function forbidden();
 	function redirect($url);
-	public function capture($template, $params=array(), $options = array());
+	public function capture($template, $params = array(), $options = array());
 	public function js($mid);
 }

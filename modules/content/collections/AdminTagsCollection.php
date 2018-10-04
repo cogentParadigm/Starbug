@@ -27,4 +27,3 @@ class AdminTagsCollection extends Collection {
 		return $rows;
 	}
 }
-?>

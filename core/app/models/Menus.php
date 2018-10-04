@@ -1,8 +1,4 @@
 <?php
-/**
- * menus model
- * @ingroup models
- */
 namespace Starbug\Core;
 class Menus extends MenusModel {
 
@@ -22,6 +18,4 @@ class Menus extends MenusModel {
 	function delete_menu($menu) {
 		$this->db->query("menus")->condition("menu", $menu['menu'])->delete();
 	}
-
 }
-?>

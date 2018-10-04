@@ -7,4 +7,3 @@ return [
 		DI\get('Starbug\Doctrine\Schema\Migrator')
 	])
 ];
-?>

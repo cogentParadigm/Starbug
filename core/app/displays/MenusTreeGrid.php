@@ -11,4 +11,3 @@ class MenusTreeGrid extends GridDisplay {
 		$this->add(["position", "sortable" => "false"]);
 	}
 }
-?>

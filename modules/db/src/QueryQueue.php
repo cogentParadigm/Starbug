@@ -1,14 +1,5 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file modules/db/src/QueryQueue.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup db
- */
 namespace Starbug\Core;
-
 use \SplQueue;
 /**
  * usage:
@@ -18,7 +9,6 @@ use \SplQueue;
  * $queue->execute();
  * @ingroup db
  */
-
 class QueryQueue extends SplQueue {
 	public $active;
 	/**
@@ -47,4 +37,3 @@ class QueryQueue extends SplQueue {
 		}
 	}
 }
-?>

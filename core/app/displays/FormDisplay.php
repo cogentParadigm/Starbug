@@ -28,7 +28,7 @@ class FormDisplay extends ItemDisplay {
 		$this->collections = $collections;
 	}
 
-	function build($options) {
+	function build($options = []) {
 		$this->options = $options;
 		if (empty($this->model) && !empty($this->options['model'])) $this->model = $this->options['model'];
 		if (!empty($options["input_name"])) $this->input_name = $options["input_name"];
@@ -146,12 +146,12 @@ class FormDisplay extends ItemDisplay {
 		parent::render($query);
 	}
 
-	public function errors($key = "", $values = false, $model="") {
+	public function errors($key = "", $values = false, $model = "") {
 		if (empty($model)) $model = $this->model;
 		return $this->models->get($model)->errors($key, $values);
 	}
 
-	public function error($error, $field = "global", $model="") {
+	public function error($error, $field = "global", $model = "") {
 		if (empty($model)) $model = $this->model;
 		$this->models->get($model)->error($error, $field);
 	}
@@ -306,4 +306,3 @@ class FormDisplay extends ItemDisplay {
 		return $this->form_control($name, $arguments[0], $arguments[1]);
 	}
 }
-?>

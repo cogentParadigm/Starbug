@@ -1,14 +1,5 @@
 <?php
-# Copyright (C) 2008-2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/app/collections/FormCollection.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup db
- */
 namespace Starbug\Core;
-
 class FormCollection extends Collection {
 	public $copying = false;
 	public function build($query, &$ops) {
@@ -19,7 +10,7 @@ class FormCollection extends Collection {
 		$fields = $model->hooks;
 		if (!empty($model->base)) {
 			unset($fields["id"]);
-			foreach($model->chain($model->base) as $b) unset($fields[$b."_id"]);
+			foreach ($model->chain($model->base) as $b) unset($fields[$b."_id"]);
 		}
 		foreach ($fields as $fieldname => $field) {
 			if ($this->models->has($field['type'])) {
@@ -47,4 +38,3 @@ class FormCollection extends Collection {
 		return $query;
 	}
 }
-?>

@@ -6,7 +6,6 @@ class DisplayHook {
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 */
 	function build($display, $field, &$options, $column) {
-
 	}
 
 	/**
@@ -14,7 +13,5 @@ class DisplayHook {
 	* @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 */
 	function render($display, $field, &$options, $column) {
-
 	}
 }
-?>

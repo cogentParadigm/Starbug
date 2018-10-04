@@ -24,4 +24,3 @@ class ApiController extends Controller implements CollectionFilterInterface {
 		return $row;
 	}
 }
-?>

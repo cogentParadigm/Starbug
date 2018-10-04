@@ -22,4 +22,3 @@ class ApiTermsController extends ApiController {
 		return $query;
 	}
 }
-?>

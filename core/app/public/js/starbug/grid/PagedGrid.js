@@ -32,15 +32,22 @@ var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard,
 			this.query = args.query;
 			this.collection = (new api({model:args.model, action:args.action})).filter(args.query);
 		}
+		if (localStorage.getItem('rowsPerPage')) {
+			this.rowsPerPage = parseInt(localStorage.getItem('rowsPerPage'));
+		}
 	},
 	startup: function() {
 		this.inherited(arguments);
 		var grid = this;
 		for (var i in this.columns) if (typeof this.columns[i]['editor'] != "undefined") this.columns[i].autoSave = true;
 		//filter
-		on(window.document, '[data-filter='+this.model+']:change', function(e) {
+		on(window.document, '[data-filter='+this.model+']:change,[data-filter='+this.model+']:input', function(e) {
 			grid.applyFilterFromInput(e.target);
 		});
+	},
+	_setRowsPerPage: function(value) {
+		localStorage.setItem('rowsPerPage', value);
+		this.inherited(arguments);
 	},
 	save: function () {
 

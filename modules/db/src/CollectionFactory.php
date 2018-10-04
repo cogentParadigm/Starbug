@@ -1,15 +1,8 @@
 <?php
-# Copyright (C) 2008-2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
-* This file is part of StarbugPHP
-* @file modules/db/src/QueryBuilderFactory.php
-* @author Ali Gangji <ali@neonrain.com>
-*/
 namespace Starbug\Core;
 use \Interop\Container\ContainerInterface;
 /**
-* an implementation of ModelFactoryInterface
+* an implementation of CollectionFactoryInterface
 */
 class CollectionFactory implements CollectionFactoryInterface {
 	protected $locator;
@@ -19,16 +12,15 @@ class CollectionFactory implements CollectionFactoryInterface {
 		$this->container = $container;
 	}
 	public function get($collection) {
-		$collection = ucwords($collection)."Collection";
-		$locations = $this->locator->locate($collection.".php", "collections");
-		end($locations);
-		$namespace = key($locations);
-		if (empty($namespace)) {
-			$namespace = "Starbug\Core";
-			$collection = "Collection";
+		$className = $this->locator->className($collection, "Collection");
+		if (false === $className) {
+			$className = "Starbug\\Core\\Collection";
 		}
-		$object = $this->container->get($namespace."\\".$collection);
-		return $object;
+		$object = $this->container->get($className);
+		if ($object instanceof Collection) {
+			return $object;
+		} else {
+			throw new Exception("CollectionFactoryInterface contract violation. ".$className." is not an instance of Starbug\Core\Collection.");
+		}
 	}
 }
-?>

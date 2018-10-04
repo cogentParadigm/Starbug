@@ -1,23 +1,17 @@
 <?php
-# Copyright (C) 2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/src/Images.php
- * @author Ali Gangji <ali@neonrain.com>
- */
 namespace Starbug\Core;
+use League\Flysystem\MountManager;
 class Images implements ImagesInterface {
-	protected $url;
+	protected $filesystems;
 	protected $base_directory;
-	public function __construct(URLInterface $url, $base_directory) {
-		$this->url = $url;
+	public function __construct(MountManager $filesystems, $base_directory) {
+		$this->filesystems = $filesystems;
 		$this->base_directory = $base_directory;
 	}
 	function info($file) {
-		if (!is_file($file)) return FALSE;
+		if (!is_file($file)) return false;
 
-		$details = FALSE;
+		$details = false;
 		$data = @getimagesize($file);
 		$file_size = @filesize($file);
 
@@ -76,16 +70,16 @@ class Images implements ImagesInterface {
 				else return $close_func($image, $path);
 		}
 	}
-	function thumb($current_file, $dimensions = array(), $absolute = false) {
+	function thumb($url, $dimensions = [], $absolute = false) {
+		list($filesystem, $filename) = explode("://", $url);
 		$dimensions = array_merge(array('w' => 0, 'h' => 0, 'a' => false), $dimensions);
-		$filename = basename($current_file);
-		$dir = "var/public/thumbnails/".$dimensions['w']."x".$dimensions['h']."a".$dimensions['a'];
+		$dir = $dimensions['w']."x".$dimensions['h']."a".$dimensions['a'];
 		$target = $dir."/".$filename;
-		if (!file_exists($this->base_directory."/".$target) || $dimensions['f']) {
-			if (!file_exists($this->base_directory."/".$dir)) mkdir($this->base_directory."/".$dir);
-			$thumb = new \PHPThumb\GD($this->base_directory."/".$current_file);
+		if (!$this->filesystems->has($filesystem."://thumbnails/".$target) || $dimensions['f']) {
+			$this->filesystems->put("tmp://images/".$filename, $this->filesystems->read($url));
+			$thumb = new \PHPThumb\GD($this->base_directory."/var/tmp/images/".$filename);
 			if (function_exists("exif_read_data")) {
-				$exif = @exif_read_data($this->base_directory."/".$current_file);
+				$exif = @exif_read_data($this->base_directory."/var/tmp/images/".$filename);
 				if (!empty($exif['Orientation'])) {
 					if ($exif['Orientation'] === 3) {
 						$thumb->rotateImageNDegrees(180);
@@ -98,9 +92,11 @@ class Images implements ImagesInterface {
 			}
 			if ($dimensions['a']) $thumb->adaptiveResize($dimensions['w'], $dimensions['h']);
 			else $thumb->resize($dimensions['w'], $dimensions['h']);
-			$thumb->save($this->base_directory."/".$target);
+			if (!$this->filesystems->has("tmp://thumbnails/".$dir)) $this->filesystems->createDir("tmp://thumbnails/".$dir);
+			$thumb->save($this->base_directory."/var/tmp/thumbnails/".$target);
+			$this->filesystems->move("tmp://thumbnails/".$target, $filesystem."://thumbnails/".$target);
 		}
-		return $this->url->build($target, $absolute);
+		return $this->filesystems->getFilesystem($filesystem)->getURL("thumbnails/".$target, $absolute);
 	}
 	function composite($dest, $composite, $x, $y) {
 		switch (gettype($dest)) {
@@ -114,4 +110,3 @@ class Images implements ImagesInterface {
 		return false;
 	}
 }
-?>

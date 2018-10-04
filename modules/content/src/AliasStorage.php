@@ -23,4 +23,3 @@ class AliasStorage implements AliasStorageInterface {
 		return false;
 	}
 }
-?>

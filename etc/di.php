@@ -1,7 +1,7 @@
 <?php
-use \Interop\Container\ContainerInterface;
-use \Monolog\Handler\StreamHandler;
-use \Monolog\Handler\PHPConsoleHandler;
+use Interop\Container\ContainerInterface;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\PHPConsoleHandler;
 return array(
 	'modules' => array(
 		"Starbug\Core" => "core/app",

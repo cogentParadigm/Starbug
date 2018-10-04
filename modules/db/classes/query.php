@@ -1,12 +1,4 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/db/query.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup db
- */
 /**
  * The query class. provides a generic query representation
  * usage:
@@ -983,8 +975,8 @@ class query implements IteratorAggregate, ArrayAccess {
 						//foreach ($schema as $n => $f) {
 							//if ($f['type'] == "terms" || $f['type'] == "category") $this->select($collection.".".$n);
 						//}
-					} else {
-						//otherwise we look at the field schema
+					} else if (!empty($table)) {
+						//otherwise we look at the field schema if we recognize the table
 						$schema = $this->models->get($table)->column_info($token);
 						if (!empty($schema)) {
 							if ($schema['entity'] !== $table) {
@@ -1182,7 +1174,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		return $this->db->errors($key, $values);
 	}
 
-	public function error($error, $field = "global", $model="") {
+	public function error($error, $field = "global", $model = "") {
 		if (empty($model)) $model = $this->model;
 		$this->db->error($error, $field, $model);
 	}
@@ -1260,7 +1252,7 @@ class query implements IteratorAggregate, ArrayAccess {
 		if ($this->mode != "delete") $this->dirty();
 		$this->mode = "delete";
 		if ($run) return $this->execute();
-	  else return $this;
+		else return $this;
 	}
 
 	function insert($run = true) {
@@ -1334,7 +1326,7 @@ class query implements IteratorAggregate, ArrayAccess {
 	 */
 	function pager($page, $force = false) {
 		if ($force || is_null($this->pager)) {
-			$this->pager = new pager($this->count(), $this->query['limit'], $page);
+			$this->pager = new Pager($this->count(), $this->query['limit'], $page);
 			$this->skip($this->pager->start);
 		}
 		return $this->pager;

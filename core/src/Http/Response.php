@@ -1,12 +1,4 @@
 <?php
-# Copyright (C) 2015-2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/src/Response.php
- * @author Ali Gangji <ali@neonrain.com>
- * @ingroup core
- */
 namespace Starbug\Core;
 /**
  * Response class
@@ -19,6 +11,7 @@ class Response implements ResponseInterface {
 	protected $code;
 	protected $content_type = "text/html";
 	protected $charset = "UTF-8";
+	protected $callable = false;
 
 	protected $codes = array(
 		200 => 'OK',
@@ -105,6 +98,20 @@ class Response implements ResponseInterface {
 		$this->charset = $charset;
 		return $this;
 	}
+	public function getContent() {
+		return $this->content;
+	}
+	public function setContent($content) {
+		$this->content = $content;
+		return $this;
+	}
+	public function getCallable() {
+		return $this->callable;
+	}
+	public function setCallable(callable $callable) {
+		$this->callable = $callable;
+		return $this;
+	}
 	public function getTheme() {
 		return $this->theme;
 	}
@@ -173,9 +180,9 @@ class Response implements ResponseInterface {
 	}
 
 	public function sendCookies() {
-	 foreach ($this->cookies as $name => $cookie) {
-		 setcookie($name, $cookie['value'], $cookie['expires'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
-	 }
+		foreach ($this->cookies as $name => $cookie) {
+			setcookie($name, $cookie['value'], $cookie['expires'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+		}
 	}
 
 	public function sendContent() {
@@ -186,8 +193,9 @@ class Response implements ResponseInterface {
 		ob_start();
 		$this->sendHeaders();
 		$this->sendCookies();
-		$this->sendContent();
+		if (false === $this->callable) $this->sendContent();
 		ob_end_flush();
+		if (false !== $this->callable) call_user_func($this->callable);
 	}
 
 	/**
@@ -204,7 +212,7 @@ class Response implements ResponseInterface {
 		$this->code = 403;
 	}
 
-	function redirect($url){
+	function redirect($url) {
 		$this->headers['location'] = $url;
 		$this->content = '<script type="text/JavaScript">setTimeout("location.href = \''.$url.'\';");</script>';
 	}
@@ -212,7 +220,7 @@ class Response implements ResponseInterface {
 	/**
 	 * capture a rendered view and save it as the response output
 	 */
-	public function capture($template, $params=array(), $options = array()) {
+	public function capture($template, $params = array(), $options = array()) {
 		$options = $options + array("scope" => "views");
 		$this->content = $this->output->capture($template, $params, $options);
 	}

@@ -8,4 +8,3 @@ class FilterHelper {
 		return $this->target;
 	}
 }
-?>

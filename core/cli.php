@@ -1,7 +1,5 @@
 <?php
-if (!defined("SB_CLI")) define("SB_CLI", true);
-
-$args = array();
+$args = array('cli' => true);
 foreach ($argv as $i => $arg) {
 	if (0 === strpos($arg, "-")) {
 		$arg = str_replace("-", "", $arg);
@@ -18,4 +16,3 @@ $request->setHeaders($_SERVER);
 $container->set("Starbug\Core\RequestInterface", $request);
 $user = $container->get("Starbug\Core\IdentityInterface");
 $user->setUser(array("id" => "NULL", "groups" => array("root")));
-?>

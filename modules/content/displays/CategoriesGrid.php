@@ -11,4 +11,3 @@ class CategoriesGrid extends GridDisplay {
 		$this->add(["position", "sortable" => "false"]);
 	}
 }
-?>

@@ -20,7 +20,7 @@ class GridDisplay extends ItemDisplay {
 		$this->request = $request;
 	}
 
-	function build($options=array()) {
+	function build($options = array()) {
 		//set defaults
 		if ($options['attributes']) $this->attributes = $options['attributes'];
 		$this->options = $options;
@@ -77,13 +77,13 @@ class GridDisplay extends ItemDisplay {
 		return $options;
 	}
 
-	function query() {
+	function query($options = null) {
 		//defer query responsibilities to dgrid
 	}
 
 	function before_render() {
 		$this->attributes['model'] = $this->model;
-		$this->attributes['class'][] = "dgrid-autoheight";
+		$this->attributes['class'][] = "dgrid-autoheight dbootstrap-grid";
 		if (empty($this->attributes['id'])) $this->attributes['id'] = $this->model."_grid";
 		if (empty($this->attributes['data-dojo-id'])) $this->attributes['data-dojo-id'] = $this->attributes['id'];
 		$this->attributes['action'] = $this->action;
@@ -108,4 +108,3 @@ class GridDisplay extends ItemDisplay {
 		}
 	}
 }
-?>

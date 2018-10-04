@@ -7,4 +7,3 @@ class UsersGrid extends GridDisplay {
 		$this->add("first_name", "last_name", "email", "last_visit", "groups", ["status", "label" => "Status", "readonly" => true]);
 	}
 }
-?>

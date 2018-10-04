@@ -19,4 +19,3 @@ class ApiImportsController extends ApiController {
 		return $query;
 	}
 }
-?>

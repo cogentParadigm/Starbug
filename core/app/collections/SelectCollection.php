@@ -11,4 +11,3 @@ class SelectCollection extends Collection {
 		return $query;
 	}
 }
-?>

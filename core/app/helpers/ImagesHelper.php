@@ -8,4 +8,3 @@ class ImagesHelper {
 		return $this->target;
 	}
 }
-?>

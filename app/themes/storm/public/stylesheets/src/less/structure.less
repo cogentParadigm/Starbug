@@ -1,0 +1,546 @@
+html {
+	margin: 0;
+	padding: 0;
+	min-height: 100%;
+	position: relative;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	min-height: 100%;
+	direction: ltr;
+}
+
+/* when mobile menu is active */
+body.mobile-view-activated.hidden-menu {
+	overflow-x: hidden;
+}
+
+body.modal-open {
+	overflow: hidden !important;
+}
+
+/*
+ * IE FIX for tap delay
+ */
+a, input, button {
+	-ms-touch-action: none !important;
+}
+
+.no-space {
+	margin: 0;
+}
+
+.no-space > [class*="col-"] {
+	margin: 0 !important;
+	padding-right: 0;
+	padding-left: 0;
+}
+
+#content {
+	padding: 10px 14px;
+	position: relative;
+}
+
+body.container {
+	position: absolute;
+	left: 0;
+	right: 0;
+	padding: 0;
+	border-left: 1px solid @gray-mid-light;
+	border-right: 1px solid @gray-mid-light;
+	box-shadow: 0 2px 70px rgba(red(@black), green(@black), blue(@black), 0.45);
+}
+
+body.container.hidden-menu:not(.mobile-view-activated) {
+	overflow:hidden;
+}
+
+body.container.modal-open {
+	padding:0px !important;
+}
+/*
+ * ***************************************************
+ * MAIN LAYOUT START
+ * ***************************************************
+ */
+
+aside {
+	display: block;
+	/*overflow: hidden;*/
+	background: @asideColor-end;
+	background: -moz-linear-gradient(left, @asideColor-end 93%, @asideColor-start 100%);
+	background: -webkit-gradient(linear, left top, right top, color-stop(93%, @asideColor-end), color-stop(100%, @asideColor-start));
+	background: -webkit-linear-gradient(left, @asideColor-end 93%, @asideColor-start 100%);
+	background: -o-linear-gradient(left, @asideColor-end 93%, @asideColor-start 100%);
+	background: -ms-linear-gradient(left, @asideColor-end 93%, @asideColor-start 100%);
+	background: linear-gradient(to right, @asideColor-end 93%, @asideColor-start 100%);
+	min-height: 100%;
+}
+
+/*
+ * LEFT PANEL
+ */
+
+ aside {width:@asideWidth}
+
+#left-panel {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: @left-panel-zindex;
+}
+
+/*
+ * Login info
+ */
+
+.login-info {
+	border-bottom: 1px solid #D8D4D4;
+	display: block;
+	font-size: 12px;
+	height: 39px;
+	color: @white;
+	border: solid transparent;
+	border-width: 1px 0px 1px 0px;
+	box-shadow: inset 1px 1px 0 rgba(red(@black), green(@black), blue(@black), 0.1), inset 0 -1px 0 rgba(red(@black), green(@black), blue(@black), 0.07);
+	width: 100%;
+	margin: 0px !important;
+	border-bottom: 1px solid #525151;
+}
+
+.login-info a {
+	text-decoration: none !important;
+	color: @asideLinkColor;
+	display: inline-block;
+	margin-top: 6px;
+}
+
+.login-info a span {
+	text-transform: capitalize;
+	font-size: @font-size-base  + 1px; /* 14px~ */
+	display: inline-block;
+	text-decoration: none;
+	max-width: 150px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+}
+.login-info a span + i {
+	vertical-align: middle;
+}
+
+.login-info a:hover {
+	color: @white;
+}
+
+.login-info > span {
+	height: 38px;
+	display: block;
+	padding: 0 10px;
+	border-bottom: 1px solid #1A1817;
+}
+
+.login-info img {
+	width: 25px;
+	height: auto;
+	display: inline-block;
+	vertical-align: middle;
+	margin-top: 1px;
+	margin-right: 5px;
+	margin-left: 0px;
+	border-left: 3px solid @white;
+}
+
+/*
+ * MAIN PANEL
+ */
+
+#main {
+	margin-left: @asideWidth;
+	padding: 0;
+	min-height: 500px;
+	position: relative;
+}
+
+/*
+ * RIBBON
+ */
+
+#ribbon {
+	min-height: @ribbon-height;
+	background: @ribbonBGColor;
+	padding: 0 13px;
+	position: relative;
+}
+
+#ribbon .breadcrumb {
+	display: inline-block;
+	margin: 0;
+	padding: 11px 34px 11px 0 !important;
+	background: none;
+	vertical-align: top;
+}
+
+#ribbon .breadcrumb a, #ribbon .breadcrumb {
+	color: #BBB !important;
+	text-decoration: none !Important;
+}
+
+#ribbon .breadcrumb > .active, #ribbon .breadcrumb li:last-child {
+	color: #E4E4E4;
+}
+
+.fixed-ribbon #ribbon {
+	position: fixed;
+	right: 0;
+	left: @asideWidth;
+	top: @smart-navbar-height;
+	z-index: @fixed-ribbon-zindex;
+}
+
+.container.fixed-ribbon #ribbon {
+	width: 944px;
+	left: 590px;
+}
+
+.fixed-ribbon #content {
+	padding-top: @smart-navbar-height  + 1;
+}
+
+.minified.fixed-ribbon #ribbon {
+	left: 45px;
+}
+
+.hidden-menu.fixed-ribbon #ribbon {
+	left: 10px;
+}
+
+/*
+ * NAV
+ * Menu CSS is learnt from: http://experiments.wemakesites.net/css3-treeview.html
+ */
+
+.fixed-navigation #left-panel {
+	height: 100%;
+	position: fixed;
+	/*z-index: @fixed-navigation-zindex; */
+}
+
+.fixed-navigation nav {
+	-webkit-overflow-scrolling: touch;
+	overflow-y: auto;
+	height: 100%;
+	padding-bottom: 49px;
+}
+
+.fixed-navigation nav > ul {
+	padding-right: 15px;
+	position: relative;
+	height: 100%;
+	width: 114%;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+.mobile-detected.fixed-navigation nav > ul {
+	padding-right: 30px !important;
+}
+
+.minified.fixed-navigation nav {
+	-webkit-overflow-scrolling: none;
+	overflow: visible;
+	height: auto;
+	padding-bottom: 0px;
+}
+
+.minified.fixed-navigation nav > ul {
+	overflow: visible;
+	padding-right: 0px;
+	width: 100%;
+}
+
+/* All levels */
+nav ul li a:active {
+	background: @asideNavActiveBGColor !important;
+}
+
+/* All levels */
+nav ul {
+	width: 100%;
+	padding: 40px 28px 25px 0;
+	padding: 0;
+	margin: 0;
+	font-size: 13px;
+	line-height: 0.5em;
+	list-style: none;
+	position: relative;
+}
+
+/* All levels */
+nav ul .active > a {
+	color: #fff !important;
+	position: relative;
+}
+
+/* All levels */
+nav ul li.active > a:before {
+	content: "\f0d9";
+	font-family: FontAwesome;
+	display: block;
+	height: 27px;
+	line-height: normal;
+	width: 27px;
+	position: absolute;
+	right: -21px;
+	font-size: 20px;
+	color: @gray-lighter;
+}
+
+nav ul li.active.open > a:before {
+	content: "";
+}
+
+nav > ul > li:last-child.open {
+	border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+/* All levels
+nav ul li {
+	overflow: hidden;
+}*/
+
+/* All levels */
+nav ul li a {
+	line-height: normal;
+	font-size: @asideNavFontSize;
+	padding: 10px 10px 10px 11px;
+	color: @asideLinkColor;
+	display: block;
+	font-weight: normal;
+	text-decoration: none !important;
+	position: relative;
+}
+
+/* Second level */
+nav > ul > li > ul > li > a {
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+
+/* Third Level */
+nav > ul > li > ul > li > ul > li > a {
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+
+/* All levels */
+nav ul li a:focus {
+	color: @asideLinkColorFocus;
+}
+
+/* All levels */
+nav ul li a:hover {
+	color: @asideLinkColorHover;
+	text-decoration: none;
+}
+
+nav ul li a.inactive,
+nav ul li a.inactive:hover {
+	opacity: .5;
+	cursor: not-allowed;
+	color: @asideLinkColor;
+}
+
+/* All levels */
+nav ul b {
+	float: right;
+	font-size: @asideExpanIconSize;
+	margin-top: @asideExpanIconMT;
+}
+
+/* All levels */
+nav ul span.menu-item-parent {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+}
+
+/* First level: A, Second level: LI Open */
+nav ul li.open > a, nav ul li.open > a b {
+	color: #fff !important;
+}
+
+/* First level: Icon */
+nav > ul > li > a b {
+	position: absolute !important;
+	right: @asideNavExpanIconPush-x;
+	top: @asideNavExpanIconPush-y;
+}
+
+nav > ul > li > a > i {
+	/*font-size: 121%; fa-lg overrides this so..  */
+	margin-right: 5px;
+	width: 15px;
+	display: inline-block;
+	text-align: center;
+	position: relative;
+}
+/* First level icon */
+nav > ul > li > a > i > em {
+	font-size: 9px;
+	display: block;
+	padding: 2px;
+	position: absolute;
+	top: -8px;
+	right: -6px;
+	text-decoration: none;
+	font-style: normal;
+	background: #ED1C24;
+	color: @white;
+	min-width: 13px;
+	border-radius: 50%;
+	max-height: 13px;
+	line-height: 8px;
+	font-weight: bold;
+	vertical-align: baseline;
+	white-space: nowrap;
+	text-align: center;
+	border: 1px solid rgba(red(@white), green(@white), blue(@white), 0.1);
+}
+
+/* Second level switched to relative */
+nav ul li li {
+	border-bottom: none;
+	position: relative;
+}
+
+/* Second level: UL */
+nav > ul > li > ul::before {
+	content: "";
+	display: block;
+	position: absolute;
+	z-index: 1;
+	left: 23px;
+	top: 0;
+	bottom: 0;
+	border-left: 1px solid #7A7A7A;
+}
+
+/* Second level: UL LI */
+nav > ul ul li::before {
+	content: "";
+	display: block;
+	position: absolute;
+	width: 8px;
+	left: 23px;
+	top: 16px;
+	border-top: 1px solid #7A7A7A;
+	z-index: 1;
+}
+
+/* Third level: UL LI */
+nav > ul ul ul li::before {
+	content: "";
+	display: block;
+	position: absolute;
+	width: 18px;
+	left: 10px;
+	top: 17px;
+	border-top: 1px solid transparent;
+}
+
+/* Second level and onwards > */
+nav > ul ul li a i, {
+font-size: @asideNavFontSize !important;
+width: 18px !important;
+text-align: center !important;
+vertical-align:0 !important;
+line-height:1 !important;
+}
+
+/* Second and Third level line color */
+nav > ul > li:hover > ul::before, nav > ul > li:hover > ul > li::before {
+	border-color: #ACACAC !important;
+}
+
+/* Second Level: UL */
+nav ul ul {
+	margin: 0;
+	padding: 0;
+	background: rgba(69, 69, 69,.6);
+}
+
+nav ul ul {
+	padding: 7px 0;
+}
+
+/* Third Level: UL */
+nav ul ul ul {
+	background: transparent;
+	padding: 0;
+}
+
+/* Third Level: LI */
+nav ul ul li {
+	margin: 0;
+	padding: 0;
+}
+
+/* Second Level: A */
+nav ul ul li > a {
+	padding-left: 42px;
+	font-size: @asideNavFontSizeSecondLevel;
+	font-weight: normal;
+	outline: 0;
+}
+
+/* Second Level: A:hover */
+nav ul ul li > a:hover {
+	background-color: rgba(69, 69, 69,.8);
+	color: @white;
+}
+
+/* Third Level: A */
+nav ul ul ul li a {
+	color: @gray-mid-light;
+	padding: 8px 10px 8px 60px;
+	font-size: @asideNavFontSizeThirdLevel;
+}
+
+/* Third Level: A:hover */
+nav ul ul ul li a:hover {
+	color: @white;
+}
+
+/* Fourth Level: A */
+nav ul ul ul ul li a {
+	padding-left: 80px;
+}
+
+/* Fifth Level: A */
+nav ul ul ul ul ul li a {
+	padding-left: 100px;
+}
+
+/* Sixth Level: A */
+nav ul ul ul ul ul ul li a {
+	padding-left: 120px;
+}
+
+/* Second level: B */
+nav ul ul b {
+	color: #B3B3B3;
+}
+
+/* Second level: LI:hover B */
+nav ul ul > li:hover b {
+	color: #D5D9E2;
+}
+
+/* This issue relates to container + toggle menu with a result of overflow. */
+html.hidden-menu-mobile-lock {
+	overflow-x:hidden;
+}

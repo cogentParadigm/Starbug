@@ -55,15 +55,13 @@ define([
 					var node = put('div.media');
 
 
-					if (object.mime_type.split('/')[0] == 'image') {
+					if (object.thumbnail) {
 						var anchorNode = put(
 							node,
 							'a[href="javascript:;"][group="files"]',
-							put('img.media-object[src="'+WEBSITE_URL+'var/public/thumbnails/100x100a1/'+object.id+'_'+object.filename+'"]')
+							put('img.media-object[src="'+object.thumbnail+'"]')
 						);
 						put(anchorNode, 'div.name', object.filename);
-						//var lb = new dojox.image.Lightbox({href:WEBSITE_URL+'app/public/uploads/'+object.id+'_'+object.filename, group:'files'}, anchorNode);
-						//lb.startup();
 					} else {
 						var anchorNode = put(
 							node,
@@ -75,7 +73,7 @@ define([
 
 					on(anchorNode, 'click', function() {
 						if (self.modal) {
-							window.opener.SetUrl(WEBSITE_URL+'app/public/uploads/'+object.id+'_'+object.filename, object);
+							window.opener.SetUrl(object.url, object);
 							self.close();
 							return;
 						}
@@ -93,7 +91,7 @@ define([
 							/*
 							self.selection.innerHTML = '';
 							put(self.selection, 'h3', object.filename);
-							put(self.selection, 'img.media-object[src="'+WEBSITE_URL+'app/public/uploads/'+object.id+'_'+object.filename+'"]');
+							put(self.selection, 'img.media-object[src="'+object.url+'"]');
 							*/
 						}
 					});

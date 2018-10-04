@@ -23,7 +23,7 @@ define([
 			query('input, select, textarea', this.domNode.parentNode).removeAttr('disabled');
 			//this.domNode.removeAttribute('disabled');
 		},
-		toggle:function(dependency) {
+		toggleDependency: function(dependency) {
 			if (this.values.indexOf(dependency) > -1) {
 				this.enable();
 			} else {

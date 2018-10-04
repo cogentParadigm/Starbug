@@ -4,28 +4,34 @@ define([
 	"dojo/query",
 	"dojo/on",
 	"dijit/_WidgetBase",
-	"dijit/registry"
-], function(declare, lang, query, on, Widget, registry){
+	"dojo/dom-attr",
+	"dijit/registry",
+	"dojo/ready"
+], function(declare, lang, query, on, Widget, attr, registry, ready){
 	return declare([Widget], {
-		key:"",
-		value:false,
+		key:false,
 		dependents:null,
-		postCreate: function() {
+		constructor: function() {
 			this.dependents = [];
+		},
+		postCreate: function() {
+			this.inherited(arguments);
+			if (false === this.key) this.key = this.domNode.getAttribute("name");
 			on(this.domNode, 'change', lang.hitch(this, 'execute'));
 		},
 		startup: function() {
-			var self = this;
-			query('[data-depend='+this.key+']').forEach(function(node) {
-				self.dependents.push(registry.byNode(node));
-			});
-			this.execute();
+			this.inherited(arguments);
+			ready(lang.hitch(this, function() {
+				query('[data-depend='+this.key+']').forEach(lang.hitch(this, function(node) {
+					this.dependents.push(registry.byNode(node));
+				}));
+				this.execute();
+			}));
 		},
 		execute: function() {
-			this.value = false;
-			if (this.domNode.options[this.domNode.selectedIndex]) this.value = this.domNode.options[this.domNode.selectedIndex].value;
+			this.value = attr.get(this.domNode, 'value');
 			for (var i in this.dependents) {
-				this.dependents[i].toggle(this.value);
+				this.dependents[i].toggleDependency(this.get('value'));
 			}
 		}
 	});

@@ -1,8 +1,4 @@
 <?php
-/**
- * terms model
- * @ingroup models
- */
 namespace Starbug\Core;
 class Terms extends TermsModel {
 
@@ -11,7 +7,7 @@ class Terms extends TermsModel {
 			$term['term'] = $this->filter->normalize($term['term']);
 			$term['slug'] = strtolower(str_replace(" ", "-", $term['term']));
 		}
-		if(empty($term['id']) && empty($term['position'])) $term['position'] = '';
+		if (empty($term['id']) && empty($term['position'])) $term['position'] = '';
 		$this->store($term);
 		if ($this->errors('slug') && !empty($term['term'])) foreach ($this->errors("slug", true) as $e) $this->error(str_replace("slug", "term", $e), "term");
 	}
@@ -30,6 +26,4 @@ class Terms extends TermsModel {
 		$tax = $term['taxonomy'];
 		$this->db->query("terms")->condition("taxonomy", $tax)->delete();
 	}
-
 }
-?>

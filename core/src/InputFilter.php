@@ -1,11 +1,4 @@
 <?php
-# Copyright (C) 2016 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/src/InputFilter.php
- * @author Ali Gangji <ali@neonrain.com>
- */
 namespace Starbug\Core;
 class InputFilter implements InputFilterInterface {
 	public function __construct() {
@@ -153,4 +146,3 @@ class InputFilter implements InputFilterInterface {
 		return new \HTMLPurifier($config);
 	}
 }
-?>

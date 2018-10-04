@@ -5,13 +5,9 @@ class AbstractMigration implements MigrationInterface {
 		$this->schema = $schema;
 	}
 	public function up() {
-
 	}
 	public function down() {
-
 	}
 	public function migrate() {
-		
 	}
 }
-?>

@@ -9,4 +9,3 @@ class CountriesGrid extends GridDisplay {
 		$this->add("code");
 	}
 }
-?>

@@ -1,18 +1,4 @@
 {
-	"layers": [
-		{
-			"name": "dojo.js",
-			"dependencies": [
-				"dbootstrap",
-				"sb",
-				"dojo/selector/acme",
-				"dojo/query",
-				"dojo/parser",
-				"bootstrap/Dropdown",
-				"bootstrap/Carousel"
-			]
-		}
-	],
 	"prefixes": [
 		["dijit", "../dijit"],
 		["dojox", "../dojox"],

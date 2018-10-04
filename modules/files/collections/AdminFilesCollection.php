@@ -11,4 +11,3 @@ class AdminFilesCollection extends Collection {
 		return $query;
 	}
 }
-?>

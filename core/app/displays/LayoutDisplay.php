@@ -61,4 +61,3 @@ class LayoutDisplay extends ItemDisplay {
 		}
 	}
 }
-?>

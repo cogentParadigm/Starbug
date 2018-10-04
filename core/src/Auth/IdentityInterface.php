@@ -1,19 +1,66 @@
 <?php
-# Copyright (C) 2008-2010 Ali Gangji
-# Distributed under the terms of the GNU General Public License v3
-/**
- * This file is part of StarbugPHP
- * @file core/src/interface/IdentityInterface.php
- * @author Ali Gangji <ali@neonrain.com>
- */
+
 namespace Starbug\Core;
+
 interface IdentityInterface {
-	public function loggedIn($group = "");
-	public function userinfo($field = "");
-	public function getUser();
-	public function loadUser($id);
-	public function setUser($user);
-	public function clearUser();
-	public function getHashedPassword($user);
-	public function getIdentity($user);
+  /**
+   * Determine if the current user is logged in or logged in with a specific group(s).
+   *
+   * @param string|array $group A specific group or groups to check for.
+   *
+   * @return bool True if user is logged in and group conditions match. False otherwise.
+   */
+  public function loggedIn($group = "");
+  /**
+   * Get a field from the current user.
+   *
+   * @param string $field The name of the field.
+   *
+   * @return mixed The value of the aforementioned field.
+   */
+  public function userinfo($field = "");
+  /**
+   * Get the current user.
+   *
+   * @return array The current user.
+   */
+  public function getUser();
+  /**
+   * Load a user by id.
+   *
+   * @param integer $id The user ID.
+   *
+   * @return array The user record.
+   */
+  public function loadUser($id);
+  /**
+   * Set the current user.
+   *
+   * @param array $user The user record as loaded by loadUser.
+   *
+   * @return void
+   */
+  public function setUser(array $user);
+  /**
+   * Clear the current user.
+   *
+   * @return void
+   */
+  public function clearUser();
+  /**
+   * Get the hashed password.
+   *
+   * @param integer|array $user The user ID or user record.
+   *
+   * @return string The hashed password.
+   */
+  public function getHashedPassword($user);
+  /**
+   * Get the ID.
+   *
+   * @param integer|array $user The user ID or user record.
+   *
+   * @return integer The user ID.
+   */
+  public function getIdentity($user);
 }

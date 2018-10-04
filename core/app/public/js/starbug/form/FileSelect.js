@@ -81,7 +81,7 @@ define([
 			for (var i in files) {
 				var object = files[i];
 				if (files[i].filename[0] != "<") {
-					var full_path = WEBSITE_URL+'var/public/thumbnails/100x100a1/'+object.id+'_'+object.filename;
+					var full_path = object.thumbnail;
 					var div = put('div');
 					if (object.mime_type.split('/')[0] == "image") {
 						var img = put(div, 'img');

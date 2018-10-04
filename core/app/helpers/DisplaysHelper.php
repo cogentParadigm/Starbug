@@ -51,4 +51,3 @@ class DisplaysHelper {
 		return $display->capture();
 	}
 }
-?>

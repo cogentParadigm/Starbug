@@ -27,4 +27,3 @@ class AdminController extends Controller {
 		$this->response = $controller->finish();
 	}
 }
-?>

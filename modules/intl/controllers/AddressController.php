@@ -5,6 +5,7 @@ use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ModelFactoryInterface;
 class AddressController extends Controller {
 	public $routes = [
+		"update" => "update/{id}",
 		"form" => "form/[{locale}]"
 	];
 	public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
@@ -14,6 +15,13 @@ class AddressController extends Controller {
 	public function init() {
 		$this->assign("model", "address");
 		$this->response->setTemplate("xhr");
+	}
+	public function create() {
+		$this->render("admin/create");
+	}
+	public function update($id) {
+		$this->assign("id", $id);
+		$this->render("admin/update");
 	}
 	public function form($locale = "US") {
 		$address = array();
@@ -43,4 +51,3 @@ class AddressController extends Controller {
 		$this->render("address/form");
 	}
 }
-?>
