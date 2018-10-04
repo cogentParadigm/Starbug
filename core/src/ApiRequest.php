@@ -71,7 +71,15 @@ class ApiRequest {
       $options['id'] = $id;
     }
 
-    $this->results[$name] = $collection->query($options);
+    $results = $collection->query($options);
+    if ($this->request->getFormat() == "csv" && !empty($results)) {
+      $headers = $results[0];
+      foreach ($headers as $key => $value) {
+        $headers[$key] = ucwords(str_replace("_", " ", $key));
+      }
+      array_unshift($results, $headers);
+    }
+    $this->results[$name] = $results;
 
     if ($pager = $collection->getPager()) {
       $this->response->setHeader("Content-Range", "items ".$pager->start.'-'.$pager->finish.'/'.$pager->count);
