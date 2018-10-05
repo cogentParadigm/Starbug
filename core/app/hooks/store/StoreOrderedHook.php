@@ -14,7 +14,7 @@ class StoreOrderedHook extends QueryHook {
       if (!empty($argument)) {
         $fields = explode(" ", $argument);
         if ($value === "insert") {
-          foreach ($fields as $field) if (isset($query->fields[$field])) $this->conditions[$query->model.".".$field] = $query->fields[$field];
+          foreach ($fields as $field) if ($query->hasValue($field)) $this->conditions[$query->model.".".$field] = $query->getValue($field);
         } else {
           $id = $query->getId();
           $row = $this->db->query($query->model)->select($query->model.".*")->condition("id", $id)->one();
@@ -66,5 +66,6 @@ class StoreOrderedHook extends QueryHook {
       $ids[] = $row['id'];
       $value += $this->increment;
     }
+    $this->conditions = [];
   }
 }
