@@ -1,7 +1,9 @@
 <?php
 namespace Starbug\Core;
 
-class ModelTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class ModelTest extends TestCase {
 
   public $model;
   protected $db;

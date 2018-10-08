@@ -10,7 +10,7 @@ class StoreTest extends DatabaseTestCase {
     return $this->createMySQLXMLDataSet(dirname(__FILE__).'/../fixture.xml');
   }
 
-  public function setUp() {
+  public function setUp() : void {
     parent::setUp();
     global $container;
     $this->db = $container->get("Starbug\Core\DatabaseInterface");

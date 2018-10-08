@@ -1,18 +1,24 @@
 <?php
 namespace Starbug\Core;
 
+use PHPUnit\Framework\TestCase;
+use PHPUnit\DbUnit\TestCaseTrait;
+use PHPUnit\DbUnit\Operation\Composite;
+use PHPunit\DbUnit\Operation\Factory;
 use PDO;
 
-abstract class DatabaseTestCase extends \PHPUnit_Extensions_Database_TestCase {
+abstract class DatabaseTestCase extends TestCase {
+
+  use TestCaseTrait;
 
   protected $conn = null;
   protected $db = null;
 
   public function getSetUpOperation() {
     $cascadeTruncates = false; // If you want cascading truncates, false otherwise. If unsure choose false.
-    return new \PHPUnit_Extensions_Database_Operation_Composite([
+    return new Composite([
       new TruncateOperation($cascadeTruncates),
-      \PHPUnit_Extensions_Database_Operation_Factory::INSERT()
+      Factory::INSERT()
     ]);
   }
 

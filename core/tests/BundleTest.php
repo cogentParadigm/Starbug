@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Core\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Starbug\Core\Bundle;
 
 /**
@@ -8,7 +9,7 @@ use Starbug\Core\Bundle;
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class BundleTest extends \PHPUnit_Framework_TestCase {
+class BundleTest extends TestCase {
   public function testEmpty() {
     $bundle = new Bundle();
     $this->assertTrue($bundle->isEmpty());

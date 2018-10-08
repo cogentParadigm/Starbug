@@ -38,7 +38,6 @@ abstract class AbstractDatabase implements DatabaseInterface {
    * @var string
    */
   public $database_name;
-  /**#@-*/
   /**
    * Holds records waiting to be stored
    *

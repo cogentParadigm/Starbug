@@ -1,9 +1,10 @@
 <?php
 namespace Starbug\Core\Tests\Auth;
 
+use PHPUnit\Framework\TestCase;
 use Starbug\Core\SessionHandler;
 
-class SessionHandlerTest extends \PHPUnit_Framework_TestCase {
+class SessionHandlerTest extends TestCase {
   public function setUp() {
     $this->storage = new MockSessionStorage();
     $this->user = new MockIdentity();

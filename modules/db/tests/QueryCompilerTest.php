@@ -3,9 +3,9 @@ namespace Starbug\Db\Tests;
 
 use Starbug\Db\Query\Query;
 use Starbug\Db\Query\Compiler;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class QueryCompilerTest extends PHPUnit_Framework_TestCase {
+class QueryCompilerTest extends TestCase {
 
   public function setUp() {
     $this->query = $this->createQuery();

@@ -6,9 +6,9 @@ use Starbug\Db\Query\Builder;
 use Starbug\Db\Query\Compiler;
 use Starbug\Db\Schema\Schema;
 use Starbug\Db\Schema\QueryCompilerHook;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class QueryBuilderTestBase extends PHPUnit_Framework_TestCase {
+class QueryBuilderTestBase extends TestCase {
 
   public function setUp() {
     $this->compiler = $this->createCompiler();
