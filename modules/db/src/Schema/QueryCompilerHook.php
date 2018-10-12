@@ -25,9 +25,11 @@ class QueryCompilerHook implements CompilerHookInterface {
     $query->addTag("Starbug\Db\Schema\QueryCompilerHook");
     $selection = $query->getSelection();
     foreach ($selection as $alias => $clause) {
-      $query->removeSelection($alias);
-      $alias = ($alias == $clause) ? false : $alias;
-      $query->addSelection($this->parseColumns($query, $clause), $alias);
+      if (is_string($clause)) {
+        $query->removeSelection($alias);
+        $alias = ($alias == $clause) ? false : $alias;
+        $query->addSelection($this->parseColumns($query, $clause), $alias);
+      }
     }
     $condition = $query->getCondition();
     $conditions = $condition->getConditions();
