@@ -6,7 +6,7 @@ use Starbug\Db\Schema\AbstractMigration;
 class TestsMigration extends AbstractMigration {
   public function up() {
     /*****************************************
-     * addslashes
+     * Table for testing addslashes
      ****************************************/
     // run the text through the addslashes function to escape quotes
     $this->schema->addTable(["hook_store_addslashes"],
@@ -14,7 +14,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * alias
+     * Table for testing alias
      ****************************************/
     // allow a reference field to be set by an alias
     $this->schema->addTable(["hook_store_alias"],
@@ -23,7 +23,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * category
+     * Table for testing category
      ****************************************/
     // category field type
     // you can optionally specify taxonomy:taxonomy_name
@@ -33,7 +33,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * confirm
+     * Table for testing confirm
      ****************************************/
     // will require value and value_confirm fields to be equal.
     // A more realistic example would be password and password_confirm
@@ -42,7 +42,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * datetime
+     * Table for testing datetime
      ****************************************/
     // datetime field type
     $this->schema->addTable(["hook_store_datetime"],
@@ -50,7 +50,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * default
+     * Table for testing default
      ****************************************/
     // set a default value
     // often used to make values optional
@@ -61,7 +61,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * length
+     * Table for testing length
      ****************************************/
     // set the field length
     $this->schema->addTable(["hook_store_length"],
@@ -69,7 +69,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * materialized_path
+     * Table for testing materialized_path
      ****************************************/
     // a materialized path is a string representing a records ancestry
     // use with a parent id reference field
@@ -79,7 +79,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * md5
+     * Table for testing md5
      ****************************************/
     // md5 encode the value
     $this->schema->addTable(["hook_store_md5"],
@@ -87,7 +87,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * optional_update
+     * Table for testing optional_update
      ****************************************/
     // prevent updating the record when the update value is empty
     // only real use case is for password field -
@@ -97,7 +97,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * ordered
+     * Table for testing ordered
      ****************************************/
     // keep a field ordered numerically
     // if there are records with values 1, 2, and 3, the next record
@@ -108,7 +108,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * owner
+     * Table for testing owner
      ****************************************/
     // store the logged in users id to this field or 1 if not logged in
     $this->schema->addTable(["hook_store_owner"],
@@ -116,7 +116,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * password
+     * Table for testing password
      ****************************************/
     // password field type
     // the password field results in generating a value combining:
@@ -128,7 +128,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * references
+     * Table for testing references
      ****************************************/
     // reference another table (creates foreign key unless you specify constraint:false)
     $this->schema->addTable(["hook_store_references"],
@@ -136,7 +136,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * required
+     * Table for testing required
      ****************************************/
     // without specifying this hook, a field will only be required if it is specified empty and has no default value.
     // to require the field whether it is part of the store operation or not, you can use
@@ -149,7 +149,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * slug
+     * Table for testing slug
      ****************************************/
     // maintain a URL friendly copy of a field (called a slug).
     // specify the field name to store the slug.
@@ -159,7 +159,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * terms
+     * Table for testing terms
      ****************************************/
     // you can store terms by id, slug or title
     // you can comma separate multiple terms - published,pending
@@ -170,7 +170,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * time
+     * Table for testing time
      ****************************************/
     // store a timestamp on insert or update of a record
     $this->schema->addTable(["hook_store_time"],
@@ -179,7 +179,7 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * unique
+     * Table for testing unique
      ****************************************/
     // require a field to be unique.
     // you can specify a set of fields to scope the uniqueness to, eg. unique:other_field
