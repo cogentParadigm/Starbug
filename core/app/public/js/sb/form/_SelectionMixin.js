@@ -23,7 +23,9 @@ define([
       this.inherited(arguments);
       this.createSelectionParams();
       this.selection = new Selection(this.selectionParams);
-      this.selection.on('change', lang.hitch(this, 'refresh'));
+      this.signals = [
+        this.selection.on('change', lang.hitch(this, 'refresh'))
+      ];
     },
     createSelectionParams: function() {
       this.selectionParams = this.selectionParams || {};
@@ -47,7 +49,7 @@ define([
     startup: function() {
       this.inherited(arguments);
       var self = this;
-      if (false !== this.collection && this.domNode.value !== "") {
+      if (false !== this.collection && this.domNode.hasAttribute("value")) {
         this.collection.filter({id:this.domNode.value}).fetch().then(function(results) {
           if (results.length && self.domNode) {
             self.selection.add(results);
@@ -82,7 +84,9 @@ define([
     },
     destroy: function() {
       this.inherited(arguments);
-      delete this.selection;
+      this.signals.forEach(function(signal) {
+        signal.remove();
+      });
     }
   });
 });

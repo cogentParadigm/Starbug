@@ -32,7 +32,7 @@ class Collection {
     return $rows;
   }
   public function filterQuery($query, &$ops) {
-    if (!empty($ops['id'])) {
+    if (isset($ops['id'])) {
       $query->condition($this->model.".id", explode(",", $ops['id']));
     }
     if (!empty($ops['keywords']) && $this->search_fields) $query->search($ops['keywords'], $this->search_fields);

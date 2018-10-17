@@ -31,7 +31,7 @@ define([
 		execute: function() {
 			this.value = attr.get(this.domNode, 'value');
 			for (var i in this.dependents) {
-				this.dependents[i].toggleDependency(this.get('value'));
+				this.dependents[i].toggleDependency(this.get('value'), this);
 			}
 		}
 	});
