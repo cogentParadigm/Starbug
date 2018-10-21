@@ -9,7 +9,7 @@ class AdminOrdersCollection extends AdminCollection {
     $this->models = $models;
     $this->formatter = $formatter;
   }
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     // add payments, subscriptions, and lines
     $query->leftJoin("payments")->on("payments.orders_id=orders.id");
     $query->leftJoin("subscriptions")->on("subscriptions.orders_id=orders.id");

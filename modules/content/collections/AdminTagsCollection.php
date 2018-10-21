@@ -10,7 +10,7 @@ class AdminTagsCollection extends Collection {
     $this->models = $models;
     $this->db = $db;
   }
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $query->select("tags.*,(SELECT COUNT(*) FROM ".$this->db->prefix("tags")." as c WHERE c.parent=tags.id) as children");
     if (!empty($ops['parent'])) $query->condition("parent", $ops['parent']);
     else $query->condition("tags.parent", 0);

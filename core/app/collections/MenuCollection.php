@@ -7,7 +7,7 @@ class MenuCollection extends Collection {
     $this->models = $models;
     $this->db = $db;
   }
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $query->condition("menus.menu", $ops['menu']);
     $query->sort("menus.menu_path ASC, menus.position ASC");
     return $query;

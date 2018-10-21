@@ -12,7 +12,7 @@ class ApiImportsController extends ApiController {
   public function select() {
     $this->api->render("Select");
   }
-  public function filterQuery($collection, $query, &$ops) {
+  public function filterQuery($collection, $query, $ops) {
     if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
     if (!empty($ops['model'])) {
       $query->condition("imports.model", $ops['model']);

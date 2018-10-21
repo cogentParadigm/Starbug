@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 
 class AdminTermsCollection extends TermsCollection {
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $query->removeSelection();
     $query->select("DISTINCT terms.taxonomy");
     return $query;

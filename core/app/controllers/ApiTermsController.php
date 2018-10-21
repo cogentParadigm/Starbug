@@ -18,7 +18,7 @@ class ApiTermsController extends ApiController {
   public function tree() {
     $this->api->render("TermsTree");
   }
-  public function filterQuery($collection, $query, &$ops) {
+  public function filterQuery($collection, $query, $ops) {
     if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
     return $query;
   }

@@ -12,7 +12,7 @@ class SelectShippingMethodsCollection extends SelectCollection {
     $this->collections = $collections;
     $this->priceFormatter = $priceFormatter;
   }
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $this->order = $ops["order"];
     $query = parent::build($query, $ops);
     $query->select(["name", "description"], "shipping_methods");

@@ -321,7 +321,7 @@ class Table implements CollectionFilterInterface {
     }
   }
 
-  public function filterQuery($collection, $query, &$ops) {
+  public function filterQuery($collection, $query, $ops) {
     return $query;
   }
   public function filterRows($collection, $rows) {

@@ -3,7 +3,7 @@ namespace Starbug\Core;
 
 class FormCollection extends Collection {
   public $copying = false;
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $model = $this->models->get($this->model);
     if (empty($ops['action'])) $ops['action'] = "create";
     $query->action($ops['action'], $query->model);
@@ -31,7 +31,7 @@ class FormCollection extends Collection {
     }
     return $query;
   }
-  public function filterQuery($query, &$ops) {
+  public function filterQuery($query, $ops) {
     if (!empty($ops['copy'])) {
       $this->copying = true;
     }

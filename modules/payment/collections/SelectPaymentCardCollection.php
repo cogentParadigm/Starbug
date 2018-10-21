@@ -11,7 +11,7 @@ class SelectPaymentCardCollection extends Collection {
     $this->models = $models;
     $this->user = $user;
   }
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $query->condition("payment_cards.owner", $this->user->userinfo("id"));
     return $query;
   }

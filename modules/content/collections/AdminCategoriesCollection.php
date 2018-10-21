@@ -10,7 +10,7 @@ class AdminCategoriesCollection extends Collection {
     $this->models = $models;
     $this->db = $db;
   }
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $query->select("categories.*,(SELECT COUNT(*) FROM ".$this->db->prefix("categories")." as c WHERE c.parent=categories.id) as children");
     if (!empty($ops['parent'])) $query->condition("parent", $ops['parent']);
     else $query->condition("categories.parent", 0);

@@ -7,7 +7,7 @@ class TermsTreeCollection extends TermsCollection {
     $this->models = $models;
     $this->db = $db;
   }
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $query->select("terms.*,(SELECT COUNT(*) FROM ".$this->db->prefix("terms")." as t WHERE t.parent=terms.id) as children");
     if (!empty($ops['parent'])) $query->condition("parent", $ops['parent']);
     else $query->condition("terms.parent", 0);

@@ -5,7 +5,7 @@ use Starbug\Core\AdminCollection;
 
 class AdminUsersCollection extends AdminCollection {
   public $model = "users";
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     if (empty($ops["sort"])) {
       $ops["sort"] = "last_visit DESC";
     }

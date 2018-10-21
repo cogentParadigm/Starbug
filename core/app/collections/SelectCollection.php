@@ -3,7 +3,7 @@ namespace Starbug\Core;
 
 class SelectCollection extends Collection {
   protected $optional = false;
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $query->removeSelection();
     if (empty($ops['id'])) {
       $query->condition($query->model.".deleted", "0");

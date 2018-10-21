@@ -22,16 +22,16 @@ class Collection {
   public function addFilter(CollectionFilterInterface $filter) {
     $this->filters[] = $filter;
   }
-  public function prepare($query, &$ops) {
+  public function prepare($query, $ops) {
     return $query;
   }
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     return $query;
   }
   public function filterRows($rows) {
     return $rows;
   }
-  public function filterQuery($query, &$ops) {
+  public function filterQuery($query, $ops) {
     if (isset($ops['id'])) {
       $query->condition($this->model.".id", explode(",", $ops['id']));
     }

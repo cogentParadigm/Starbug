@@ -11,7 +11,7 @@ class AdminProductOptionsCollection extends Collection {
     $this->models = $models;
     $this->db = $db;
   }
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     if (!empty($ops["product_types_id"])) {
       $query->condition("product_options.product_types_id", $ops["product_types_id"]);
     }

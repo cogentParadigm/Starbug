@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 
 class AdminCollection extends Collection {
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     if (isset($ops["deleted"])) {
       $query->condition($query->model.".deleted", explode(",", $ops['deleted']));
     } else {

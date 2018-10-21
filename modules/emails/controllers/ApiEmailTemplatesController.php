@@ -13,7 +13,7 @@ class ApiEmailTemplatesController extends ApiController {
 	function select() {
 		$this->api->render("Select");
 	}
-	function filterQuery($collection, $query, &$ops) {
+	function filterQuery($collection, $query, $ops) {
 		if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
 		return $query;
 	}

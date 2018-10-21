@@ -5,7 +5,7 @@ use Starbug\Core\Collection;
 
 class ExpiredSubscriptionsCollection extends Collection {
   protected $model = "bills";
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     if (!empty($ops["id"])) {
       $query->condition("bills.id", $ops["id"]);
     } else {

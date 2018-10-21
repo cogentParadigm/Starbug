@@ -26,7 +26,7 @@ class ApiShippingLinesController extends ApiController {
   public function order() {
     $this->api->render("ShippingLines");
   }
-  public function filterQuery($collection, $query, &$ops) {
+  public function filterQuery($collection, $query, $ops) {
     if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) {
       $query->condition(
         $query->createCondition()

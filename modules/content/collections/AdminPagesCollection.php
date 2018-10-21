@@ -4,7 +4,7 @@ namespace Starbug\Content;
 use Starbug\Core\Collection;
 
 class AdminPagesCollection extends Collection {
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     if (!empty($ops['type'])) {
       $query->condition($query->model.".type", $ops['type']);
     }

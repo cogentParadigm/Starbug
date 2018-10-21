@@ -4,7 +4,7 @@ namespace Starbug\Content;
 use Starbug\Core\MenusTreeCollection as ParentCollection;
 
 class MenusTreeCollection extends ParentCollection {
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $query->select("menus.pages_id.title");
     return parent::build($query, $ops);
   }

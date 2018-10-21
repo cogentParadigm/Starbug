@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 
 class AdminMenusCollection extends Collection {
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $query->removeSelection();
     $query->select("DISTINCT menu");
     return $query;

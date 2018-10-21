@@ -19,7 +19,7 @@ class ApiFilesController extends ApiController {
   public function select() {
     $this->api->render("Select");
   }
-  public function filterQuery($collection, $query, &$ops) {
+  public function filterQuery($collection, $query, $ops) {
     if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
     return $query;
   }

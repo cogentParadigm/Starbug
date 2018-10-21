@@ -4,7 +4,7 @@ namespace Starbug\Content;
 use Starbug\Core\FormCollection;
 
 class PagesFormCollection extends FormCollection {
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $query->select("path.alias as path");
     return parent::build($query, $ops);
   }

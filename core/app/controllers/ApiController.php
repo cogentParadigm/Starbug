@@ -12,7 +12,7 @@ class ApiController extends Controller implements CollectionFilterInterface {
   public function getApi() {
     return $this->api;
   }
-  public function filterQuery($collection, $query, &$ops) {
+  public function filterQuery($collection, $query, $ops) {
     return $query;
   }
   public function filterRows($collection, $rows) {
