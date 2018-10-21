@@ -11,7 +11,7 @@ class Database extends AbstractDatabase {
   public function setDatabase($name) {
     $db = $this->config->get("db/".$name);
     $params = [
-      "url" => $db["type"]."://".urlencode($db["username"]).":".$db["password"].'@'.$db["host"].'/'.$db["db"].'?charset=utf8'
+      "url" => $db["type"]."://".urlencode($db["username"]).":".urlencode($db["password"]).'@'.$db["host"].'/'.$db["db"].'?charset=utf8'
     ];
     $this->connection = DriverManager::getConnection($params, new Configuration());
     $this->database_name = $db['db'];
