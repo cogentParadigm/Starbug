@@ -74,7 +74,7 @@ module.exports = function(grunt) {
           bin: 'vendor/bin/phpmd',
           reportFormat: 'text',
           exclude:'libraries,var,node_modules,vendor',
-          rulesets:'etc/phpmd.xml'
+          rulesets:'vendor/starbug/standard/phpmd.xml'
         }
       },
       ci: {
@@ -84,7 +84,7 @@ module.exports = function(grunt) {
           reportFormat: 'xml',
           reportFile: 'build/logs/phpmd.xml',
           exclude: 'libraries,var,node_modules,vendor',
-          rulesets: 'etc/phpmd.xml'
+          rulesets: 'vendor/starbug/standard/phpmd.xml'
         }
       }
     },
@@ -95,7 +95,7 @@ module.exports = function(grunt) {
           bin: 'vendor/bin/phpcs',
           extensions: 'php',
           ignore: 'views,templates,layouts',
-          standard: 'etc/phpcs.xml',
+          standard: 'vendor/starbug/standard/phpcs.xml',
           ignoreExitCode: true
         }
       },
@@ -105,7 +105,7 @@ module.exports = function(grunt) {
           bin: 'vendor/bin/phpcs',
           extensions: 'php',
           ignore: 'views,templates,layouts,forms',
-          standard: 'etc/phpcs.xml',
+          standard: 'vendor/starbug/standard/phpcs.xml',
           ignoreExitCode: true,
           report: 'checkstyle',
           reportFile: 'build/logs/checkstyle.xml'
