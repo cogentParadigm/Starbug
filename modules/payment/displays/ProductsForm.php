@@ -30,7 +30,7 @@ class ProductsForm extends FormDisplay {
       "data-dojo-type" => "starbug/form/Dependency",
       "data-dojo-props" => "key:'payment_type'"
     ]);
-    $this->add(["price", "pane" => "right", "info" => "Enter price in cents. For example $50 should be entered as 5000"]);
+    $this->add(["price", "pane" => "right", "data-dojo-type" => "sb/form/Currency"]);
     $this->add([
       "unit",
       "label" => "Recurrence Unit",
