@@ -15,7 +15,7 @@ class AdminProductsController extends Controller {
     $this->assign("model", "products");
   }
   public function defaultAction() {
-    $this->render("admin/list");
+    $this->render("admin/list.html");
   }
   public function create() {
     if ($this->db->success("products", "create")) $this->redirect("admin/products");
