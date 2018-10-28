@@ -32,8 +32,9 @@ class ErrorHandler {
   protected $fatalErrors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
   protected $contentOnly = true;
 
-  public function __construct(ResponseInterface $response, LoggerInterface $logger) {
+  public function __construct(ResponseInterface $response, TemplateInterface $output, LoggerInterface $logger) {
     $this->response = $response;
+    $this->output = $output;
     $this->logger = $logger;
   }
 
@@ -72,7 +73,7 @@ class ErrorHandler {
     $this->response->setCode(500);
     $this->response->setTemplate("txt.txt");
     $this->response->setHeader("Cache-Control", "no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");
-    $this->response->capture($this->exceptionTemplate, ["error" => $error, "handler" => $this], ["scope" => "templates"]);
+    $this->response->setContent($this->output->capture($this->exceptionTemplate, ["error" => $error, "handler" => $this]));
     if ($this->contentOnly) {
       $this->response->sendContent();
     } else {
@@ -114,7 +115,7 @@ class ErrorHandler {
     $this->response->setCode(500);
     $this->response->setTemplate("txt.txt");
     $this->response->setHeader("Cache-Control", "no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");
-    $this->response->capture($this->exceptionTemplate, ["error" => $error, "handler" => $this], ["scope" => "templates"]);
+    $this->response->setContent($this->output->capture($this->exceptionTemplate, ["error" => $error, "handler" => $this]));
     if ($this->contentOnly) {
       $this->response->sendContent();
     } else {
