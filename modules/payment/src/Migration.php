@@ -53,7 +53,7 @@ class Migration extends AbstractMigration {
       ["name", "type" => "string"],
       ["path", "type" => "string", "length" => "128", "unique" => "", "default" => "", "slug" => "name"],
       ["payment_type", "type" => "string", "default" => "single"],
-      ["price", "type" => "int", "default" => "0"],
+      ["price", "type" => "int", "default" => "0", "filter_var" => FILTER_SANITIZE_NUMBER_FLOAT],
       ["interval", "type" => "int"],
       ["unit", "type" => "string"],
       ["limit", "type" => "int", "default" => 0],
