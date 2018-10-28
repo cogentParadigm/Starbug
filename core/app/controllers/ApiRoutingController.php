@@ -17,7 +17,7 @@ class ApiRoutingController extends Controller {
     $name = $this->request->getComponent(1);
     $controller = $this->controllers->get("Api".ucwords($name));
     $controller->setApi($this->api);
-    $controller->start($this->request, $this->response);
+    $controller->start($this->output, $this->request, $this->response);
     $action = $this->request->getComponent(2);
     $arguments = [];
     if (isset($controller->routes[$action])) {

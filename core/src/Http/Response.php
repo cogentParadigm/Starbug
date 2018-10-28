@@ -42,7 +42,6 @@ class Response implements ResponseInterface {
     $this->cookies = new Bundle();
     $this->styles = new Bundle();
     $this->scripts = new Bundle();
-    $this->assign("response", $this);
   }
 
   public function getHeaders() {
@@ -112,41 +111,11 @@ class Response implements ResponseInterface {
     $this->callable = $callable;
     return $this;
   }
-  public function getTheme() {
-    return $this->theme;
-  }
-  public function setTheme($theme) {
-    $this->theme = $theme;
-    return $this;
-  }
   public function getTemplate() {
     return $this->template;
   }
   public function setTemplate($template) {
     $this->template = $template;
-    return $this;
-  }
-  public function getLayout() {
-    return $this->layout;
-  }
-  public function setLayout($layout) {
-    $this->layout = $layout;
-    return $this;
-  }
-  public function getStyles() {
-    return $this->styles;
-  }
-  public function setStyles($styles = []) {
-    foreach ($styles as $name => $style) {
-      $this->setStyle($name, $style);
-    }
-    return $this;
-  }
-  public function getStyle($name) {
-    return $this->styles->get($name);
-  }
-  public function setStyle($name, $value = null) {
-    $this->styles->set($name, $value);
     return $this;
   }
   public function getScripts() {
@@ -164,9 +133,6 @@ class Response implements ResponseInterface {
   public function setScript($name, $value = null) {
     $this->scripts->set($name, $value);
     return $this;
-  }
-  public function assign($key, $value = "") {
-    $this->output->assign($key, $value);
   }
   public function sendHeaders() {
     $code = $this->code;
@@ -210,19 +176,6 @@ class Response implements ResponseInterface {
    */
   public function forbidden() {
     $this->code = 403;
-  }
-
-  public function redirect($url) {
-    $this->headers['location'] = $url;
-    $this->content = '<script type="text/JavaScript">setTimeout("location.href = \''.$url.'\';");</script>';
-  }
-
-  /**
-   * Capture a rendered view and save it as the response output
-   */
-  public function capture($template, $params = [], $options = []) {
-    $options = $options + ["scope" => "views"];
-    $this->content = $this->output->capture($template, $params, $options);
   }
 
   public function js($mid) {

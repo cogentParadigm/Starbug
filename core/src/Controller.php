@@ -10,6 +10,7 @@ class Controller {
   public $request;
   public $response;
   public $routes = [];
+  protected $output;
 
 
   public function init() {
@@ -48,14 +49,15 @@ class Controller {
   }
 
   public function assign($key, $value = null) {
-    $this->response->assign($key, $value);
+    $this->output->assign($key, $value);
   }
 
   /**
    * Set the view to render for this request.
    */
-  public function render($path = "", $params = [], $options = ["scope" => "views"]) {
-    $this->response->capture($path, $params, $options);
+  public function render($path = "", $params = [], $options = []) {
+    $options = $options + ["scope" => "views"];
+    $this->response->setContent($this->output->capture($path, $params, $options));
   }
 
   /**
@@ -74,7 +76,8 @@ class Controller {
     $this->render("missing.html");
   }
 
-  public function start(RequestInterface $request, ResponseInterface $response) {
+  public function start(TemplateInterface $output, RequestInterface $request, ResponseInterface $response) {
+    $this->output = $output;
     $this->request = $request;
     $this->response = $response;
     $this->init();
@@ -94,7 +97,9 @@ class Controller {
    * @param int $delay number of seconds to wait before redirecting (default 0)
    */
   public function redirect($url) {
-    $this->response->redirect($this->url($url, true));
+    $url = $this->url($url, true);
+    $this->response->setHeader('Location', $url);
+    $this->response->setContent('<script>setTimeout("location.href = \''.$url.'\';");</script>');
   }
 
   /**

@@ -9,6 +9,7 @@ class Application implements ApplicationInterface {
   protected $models;
   protected $router;
   protected $request;
+  protected $output;
   protected $response;
   protected $config;
   protected $session;
@@ -22,6 +23,7 @@ class Application implements ApplicationInterface {
    * @param ModelFactoryInterface $models Factory to create models.
    * @param RouterInterface $router Router translates paths to controllers.
    * @param SessionHandlerInterface $session Session for authenticated users.
+   * @param TemplateInterface $output The output rendering interface.
    * @param ResponseInterface $response Response which will be prepared and returned.
    * @param InputFilterInterface $filter Utility for input sanitization.
    */
@@ -30,6 +32,7 @@ class Application implements ApplicationInterface {
     ModelFactoryInterface $models,
     RouterInterface $router,
     SessionHandlerInterface $session,
+    TemplateInterface $output,
     ResponseInterface $response,
     InputFilterInterface $filter
   ) {
@@ -37,6 +40,7 @@ class Application implements ApplicationInterface {
     $this->models = $models;
     $this->router = $router;
     $this->session = $session;
+    $this->output = $output;
     $this->response = $response;
     $this->filter = $filter;
   }
@@ -44,7 +48,8 @@ class Application implements ApplicationInterface {
   public function handle(RequestInterface $request) {
     $this->session->startSession();
     $permitted = $this->checkPost($request->getPost(), $request->getCookies());
-    $this->response->assign("request", $request);
+    $this->output->assign("request", $request);
+    $this->output->assign("response", $this->response);
     $route = $this->router->route($request);
     foreach ($route as $k => $v) {
       if (!empty($v)) $this->response->{$k} = $v;
@@ -63,7 +68,7 @@ class Application implements ApplicationInterface {
 
     if (empty($route['arguments'])) $route['arguments'] = [];
 
-    $controller->start($request, $this->response);
+    $controller->start($this->output, $request, $this->response);
     if ($permitted) $controller->action($route['action'], $route['arguments']);
     else $controller->forbidden();
     $this->response = $controller->finish();
