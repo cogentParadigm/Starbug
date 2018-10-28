@@ -75,8 +75,7 @@ trait Parsing {
       if (!empty($table)) {
         // otherwise we look at the field schema if we recognize the table
         $table = $table->getName();
-        if ($this->schema->hasColumn($table, $token)) {
-          $schema = $this->schema->getColumn($table, $token);
+        if ($schema = $this->schema->getColumn($table, $token)) {
           if ($schema['entity'] !== $table) {
             $entity_alias = $alias."_".$schema['entity'];
             if (!$query->hasTable($entity_alias)) {
