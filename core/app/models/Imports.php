@@ -40,7 +40,7 @@ class Imports extends ImportsModel {
         $this->models->get($import['model'])->{$import['action']}($record);
         if ($this->models->get($import['model'])->errors()) {
           $errors[$index] = $this->models->get($import['model'])->errors(false, true);
-          $this->db->errors = [];
+          $this->db->errors->set([]);
         } elseif ($updating) {
           $updated++;
         } else {

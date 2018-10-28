@@ -118,7 +118,7 @@ class StoreTest extends DatabaseTestCase {
     $this->assertSame("Your value fields do not match", $this->db->errors["hook_store_confirm"]["value"][0]);
 
     // clear errors
-    $this->db->errors = [];
+    $this->db->errors->set([]);
 
     // store with matching values
     $this->db->store("hook_store_confirm", ["value" => "one", "value_confirm" => "one"]);
@@ -174,7 +174,7 @@ class StoreTest extends DatabaseTestCase {
     $this->assertSame("This field must be between 0 and 128 characters long.", $this->db->errors["hook_store_length"]["value"][0]);
 
     // clear errors
-    $this->db->errors = [];
+    $this->db->errors->set([]);
 
     // store with matching values
     $this->db->store("hook_store_length", ["value" => $under]);
@@ -392,7 +392,7 @@ class StoreTest extends DatabaseTestCase {
     $this->assertSame("This field is required.", $this->db->errors["hook_store_required"]["value"][0]);
 
     // clear errors
-    $this->db->errors = [];
+    $this->db->errors->set([]);
 
     // store a record
     $this->db->store("hook_store_required", ["value" => "value"]);
@@ -411,7 +411,7 @@ class StoreTest extends DatabaseTestCase {
     $this->assertSame("This field is required.", $this->db->errors["hook_store_required"]["value"][0]);
 
     // clear errors
-    $this->db->errors = [];
+    $this->db->errors->set([]);
 
     // do a successful update
     $record['value'] = "changed";
@@ -530,6 +530,6 @@ class StoreTest extends DatabaseTestCase {
     $this->assertSame("That value already exists.", $this->db->errors["hook_store_unique"]["value"][0]);
 
     // clear errors
-    $this->db->errors = [];
+    $this->db->errors->set([]);
   }
 }

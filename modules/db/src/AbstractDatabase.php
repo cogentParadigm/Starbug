@@ -45,7 +45,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
    */
   public $queue;
 
-  public $errors = [];
+  public $errors;
 
   public $operators = [
     '=' => 1,
@@ -79,6 +79,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
     $this->queryBuilderFactory = $queryBuilderFactory;
     $this->config = $config;
     $this->queue = new QueryQueue();
+    $this->errors = new Bundle();
   }
 
   public function setTimeZone($timezone) {
@@ -220,24 +221,25 @@ abstract class AbstractDatabase implements DatabaseInterface {
       $values = $key;
       $key = "";
     }
-    $parts = explode(".", $key, 2);
-    $errors = $this->errors;
-    if (!empty($key)) foreach ($parts as $p) $errors = $errors[$p];
-    if ($values) return $errors;
-    else return (!empty($errors));
+    $parts = empty($key) ? [] : explode(".", $key);
+    if ($values) return $this->errors->get(...$parts);
+    elseif (!empty($parts)) return $this->errors->has(...$parts);
+    else return !$this->errors->isEmpty();
   }
 
   public function error($error, $field = "global", $scope = "global") {
-    $this->errors[$scope][$field][] = $error;
+    $parts = array_merge([$scope], explode(".", $field));
+    $parts[] = is_array($error) ? $error : [$error];
+    $this->errors->set(...$parts);
     $statement = $this->prepare("INSERT INTO ".$this->prefix."errors (type, field, message, action, created, modified) VALUES (?, ?, ?, ?, NOW(), NOW())");
     $statement->execute([$scope, $field, $error, $this->models->get($scope)->action]);
   }
 
   public function success($model, $action) {
-    return (($this->models->get($model)->action == $action) && (empty($this->errors)));
+    return (($this->models->get($model)->action == $action) && $this->errors->isEmpty());
   }
 
   public function failure($model, $action) {
-    return (($this->models->get($model)->action == $action) && (!empty($this->errors)));
+    return (($this->models->get($model)->action == $action) && !$this->errors->isEmpty());
   }
 }
