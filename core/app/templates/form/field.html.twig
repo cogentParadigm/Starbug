@@ -15,7 +15,9 @@
 {% if attribute(form.errors, field) is not empty %}
   {% set attributes = attributes|merge({"class":attributes.class ~ " form-error"}) %}
   {% for error, message in attribute(form.errors, field) %}
-    {{ include("form/error.html.twig", {"error": message, 'atttributes': attributes}) }}
+    {% if message is not iterable %}
+      {{ include("form/error.html.twig", {"error": message, 'atttributes': attributes}) }}
+    {% endif %}
   {% endfor %}
 {% endif %}
 {% if control == "input" and (type == "checkbox" or type == "radio") %}
