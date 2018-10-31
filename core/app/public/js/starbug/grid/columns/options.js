@@ -67,7 +67,13 @@ function(dojo, strings, put, on){
               grid.editor.remove(row.id);
             } else {
               var d = grid.collection.remove(row.id);
-              d.then(function() {grid.refresh();});
+              d.then(function(result) {
+                if (result.errors) {
+                  alert(result.errors[0].errors[0]);
+                } else {
+                  grid.refresh();
+                }
+              });
             }
           }
         });
