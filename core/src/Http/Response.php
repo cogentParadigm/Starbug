@@ -152,7 +152,7 @@ class Response implements ResponseInterface {
   }
 
   public function sendContent() {
-    $this->output->render($this->template);
+    $this->output->render($this->template, ["response" => $this]);
   }
 
   public function send() {
