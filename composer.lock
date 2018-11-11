@@ -1720,6 +1720,56 @@
             "time": "2018-06-29 15:13:57"
         },
         {
+            "name": "fzaninotto/faker",
+            "version": "v1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fzaninotto/Faker.git",
+                "reference": "f72816b43e74063c8b10357394b6bba8cb1c10de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/f72816b43e74063c8b10357394b6bba8cb1c10de",
+                "reference": "f72816b43e74063c8b10357394b6bba8cb1c10de",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0"
+            },
+            "require-dev": {
+                "ext-intl": "*",
+                "phpunit/phpunit": "^4.8.35 || ^5.7",
+                "squizlabs/php_codesniffer": "^1.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "time": "2018-07-12 10:23:15"
+        },
+        {
             "name": "guzzlehttp/guzzle",
             "version": "6.3.3",
             "source": {
@@ -3812,17 +3862,58 @@
             "time": "2018-09-23 23:08:17"
         },
         {
-            "name": "starbug/devel",
-            "version": "v1.0",
+            "name": "starbug/behat-starbug-extension",
+            "version": "v0.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/cogentParadigm/starbug-devel.git",
-                "reference": "f10fcd7212e185295e259d99e5b5f6aa6ec41c71"
+                "url": "https://github.com/cogentParadigm/behat-starbug-extension.git",
+                "reference": "f7e59d0d7557dafe28117186cc133a2611d5d68c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-devel/zipball/f10fcd7212e185295e259d99e5b5f6aa6ec41c71",
-                "reference": "f10fcd7212e185295e259d99e5b5f6aa6ec41c71",
+                "url": "https://api.github.com/repos/cogentParadigm/behat-starbug-extension/zipball/f7e59d0d7557dafe28117186cc133a2611d5d68c",
+                "reference": "f7e59d0d7557dafe28117186cc133a2611d5d68c",
+                "shasum": ""
+            },
+            "require": {
+                "behat/behat": "*",
+                "behat/mink": "*",
+                "behat/mink-extension": "*",
+                "behat/mink-goutte-driver": "*",
+                "behat/mink-selenium2-driver": "*",
+                "fzaninotto/faker": "*"
+            },
+            "require-dev": {
+                "starbug/standard": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Behat\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug Extension for Behat",
+            "time": "2018-11-11 21:05:47"
+        },
+        {
+            "name": "starbug/devel",
+            "version": "v1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-devel.git",
+                "reference": "8b243588f8b5ded97db03abce95dcc2ad0e52acc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-devel/zipball/8b243588f8b5ded97db03abce95dcc2ad0e52acc",
+                "reference": "8b243588f8b5ded97db03abce95dcc2ad0e52acc",
                 "shasum": ""
             },
             "require": {
@@ -3835,12 +3926,13 @@
                 "phpspec/phpspec": "*",
                 "phpunit/dbunit": "*",
                 "phpunit/phpunit": "*",
+                "starbug/behat-starbug-extension": "*",
                 "starbug/standard": "*"
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "description": "Starbug development and testing tools.",
-            "time": "2018-11-11 20:35:38"
+            "time": "2018-11-11 21:15:46"
         },
         {
             "name": "starbug/standard",
