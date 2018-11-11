@@ -20,7 +20,7 @@
 		"twistor/flysystem-http": "^0.2.0"
 	},
 	"require-dev": {
-		"starbug/standard": "dev-master"
+		"starbug/devel": "*"
 	},
 	"autoload": {
 		"classmap":["core", "app", "modules", "var"]
