@@ -25,7 +25,11 @@ class Model extends Definition {
     foreach ($factory as $n => $t) {
       if (false != strpos($t, "\\")) {
         $use[] = "use ".$t.";";
-        $parts = explode("\\", $t);
+        if (false != strpos($t, " as ")) {
+          $parts = explode(" as ", $t);
+        } else {
+          $parts = explode("\\", $fullname);
+        }
         $factory[$n] = end($parts);
       }
     }
