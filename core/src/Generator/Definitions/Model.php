@@ -28,7 +28,7 @@ class Model extends Definition {
         if (false != strpos($t, " as ")) {
           $parts = explode(" as ", $t);
         } else {
-          $parts = explode("\\", $fullname);
+          $parts = explode("\\", $t);
         }
         $factory[$n] = end($parts);
       }
