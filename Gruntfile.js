@@ -156,63 +156,11 @@ module.exports = function(grunt) {
           delete:true
         }
       }
-    },
-    less: {
-      "starbug-1": {
-        files: {
-          "app/themes/starbug-1/public/stylesheets/dist/screen.css": "app/themes/starbug-1/public/stylesheets/src/screen.less"
-        }
-      },
-      storm: {
-        files: {
-          "app/themes/storm/public/stylesheets/dist/screen.css": "app/themes/storm/public/stylesheets/src/screen.less"
-        }
-      }
-    },
-    postcss: {
-      options: {
-        map: {inline: false},
-        parser: require("postcss-scss"),
-        processors: [
-          require("precss")(),
-          require('postcss-url')({url: 'rebase'}),
-          require("postcss-calc")(),
-          require("lost")(),
-          require("postcss-cssnext")(),
-          require("cssnano")({filterPlugins: false, autoprefixer: false, discardComments:{removeAll:true}})
-        ]
-      },
-      "starbug-1": {
-        src: "app/themes/starbug-1/public/stylesheets/dist/*.css"
-      },
-      storm: {
-        src: "app/themes/storm/public/stylesheets/dist/*.css"
-      },
-      tachyons: {
-        src: "app/themes/tachyons/public/stylesheets/src/screen.css",
-        dest: "app/themes/tachyons/public/stylesheets/dist/screen.css"
-      }
-    },
-    watch: {
-      "starbug-1": {
-        files: ["app/themes/starbug-1/public/stylesheets/src/**/*"],
-        tasks: ["css:starbug-1"]
-      },
-      storm: {
-        files: ["app/themes/storm/public/stylesheets/src/**/*"],
-        tasks: ["css:storm"]
-      },
-      tachyons: {
-        files: ["app/themes/tachyons/public/stylesheets/src/**/*"],
-        tasks: ["css:tachyons"]
-      }
     }
   });
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-less');
-  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-deployments');
   grunt.loadNpmTasks('grunt-jsvalidate');
   grunt.loadNpmTasks('grunt-phpcs');
@@ -221,7 +169,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-phpmd');
   grunt.loadNpmTasks('grunt-phpunit');
-  grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-rsync');
   grunt.loadNpmTasks('intern');
 
@@ -232,16 +179,4 @@ module.exports = function(grunt) {
   grunt.registerTask('ci', ['lint-ci', 'phploc', 'phpmd:ci', 'phpcs:ci', 'shell:phpcpd', 'phpunit', 'intern:ci']);
 
   grunt.registerTask('default', ['local']);
-
-  grunt.registerTask('css', function(target) {
-    var tasks = (target == "tachyons") ? ['postcss'] : ['less', 'postcss'];
-    grunt.task.run.apply(grunt.task, tasks.map(function(task) {
-      return (target == null) ? task : task + ':' + target
-    }));
-  });
-  grunt.registerTask('build', function(target) {
-    grunt.task.run.apply(grunt.task, ['css'].map(function(task) {
-      return (target == null) ? task : task + ':' + target
-    }));
-  });
 };
