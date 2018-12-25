@@ -12,7 +12,7 @@
   {% endif %}
   {{ include("display/fields.html.twig") }}
 {% if display.actions.template != "inline" %}
-  <div class="form-actions">
+  <div {{ helper("filter").attributes(display.actions.attributes)|raw }}>
 {% endif %}
   {% for name, field in display.actions.fields %}
     {% set field = field|merge({'value':field.value|default(name)}) %}

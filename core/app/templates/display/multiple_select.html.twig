@@ -1,7 +1,7 @@
 <div {{ helper("filter").attributes(display.attributes) }}>
   {% set name = display.options.name %}
   {% set found = [] %}
-  {% for item in dislay.items %}
+  {% for item in display.items %}
     {% if item.depth is empty %}
       {% set item = item|merge({"depth":0}) %}
     {% endif %}
