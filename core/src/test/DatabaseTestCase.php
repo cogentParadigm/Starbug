@@ -15,9 +15,8 @@ abstract class DatabaseTestCase extends TestCase {
   protected $db = null;
 
   public function getSetUpOperation() {
-    $cascadeTruncates = false; // If you want cascading truncates, false otherwise. If unsure choose false.
     return new Composite([
-      new TruncateOperation($cascadeTruncates),
+      Factory::TRUNCATE(true),
       Factory::INSERT()
     ]);
   }
