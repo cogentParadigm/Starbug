@@ -15,7 +15,9 @@ class FormMultipleSelectHook extends FormHook {
     foreach ($value as $idx => $v) {
       if (empty($v) || substr($v, 0, 1) == "-") unset($value[$idx]);
     }
-
+    if (empty($field["displayType"])) {
+      $field["displayType"] = "CheckboxDisplay";
+    }
     $info = $form->schema[$field['name']];
     if ($this->models->has($info['type'])) {
       if (empty($field['from'])) $field['from'] = $info['type'];
