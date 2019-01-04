@@ -22,7 +22,6 @@ class PagesForm extends FormDisplay {
     // right
     $this->add(["published", "pane" => "right"]);
     $this->add(["categories", "pane" => "right"]);
-    $this->add(["tags", "input_type" => "tag_select", "pane" => "right"]);
     // tabs
     $this->add(["path", "label" => "URL path", "info" => "Leave empty to generate automatically", "input_type" => "text", "pane" => "path"]);
     $this->add(["description", "label" => "Meta Description", "input_type" => "textarea", "class" => "plain", "style" => "width:100%", "data-dojo-type" => "dijit/form/Textarea", "pane" => "meta"]);
