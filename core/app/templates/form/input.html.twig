@@ -19,7 +19,7 @@
   <div {{ attrs }}></div>
 {% else %}
   {% if type == "checkbox" %}
-    <input {{ helper("filter").attributes({"type": "hidden", "id": attributes.id ~ "-hidden", "value": 0, "name": attributes.name})|raw }}/>
+    <input {{ helper("filter").attributes({"type": "hidden", "id": attributes.id ~ "-hidden", "value": unchecked, "name": attributes.name})|raw }}/>
   {% endif %}
   <input {{ helper("filter").attributes(attributes)|raw }}/>
 {% endif %}

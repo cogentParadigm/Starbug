@@ -47,7 +47,7 @@ class StorePathHook extends QueryHook {
 
   public function generate($query, $column, $path = false) {
     $pattern = $this->models->get($query->model)->hooks[$column]["pattern"];
-    $data = [$query->model => $query->fields];
+    $data = [$query->model => $query->getValues()];
     $value = $this->macro->replace($pattern, $data);
     $value = strtolower(str_replace(" ", "-", $this->filter->normalize($value, 'a-zA-Z0-9 \-_\/')));
 

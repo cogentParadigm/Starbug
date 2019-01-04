@@ -20,7 +20,7 @@ class PagesForm extends FormDisplay {
     $this->add(["blocks", "input_type" => "blocks", "pane" => "left"]);
     $this->add(["images", "pane" => "left", "input_type" => "file_select", "size" => "0"]);
     // right
-    $this->add(["groups", "taxonomy" => "groups", "input_type" => "multiple_category_select", "pane" => "right"]);
+    $this->add(["published", "pane" => "right"]);
     $this->add(["categories", "pane" => "right"]);
     $this->add(["tags", "input_type" => "tag_select", "pane" => "right"]);
     // tabs
