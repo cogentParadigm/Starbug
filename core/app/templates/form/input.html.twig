@@ -15,6 +15,9 @@
   {% if attributes.size is defined %}
     {% set attrs = attrs ~ ', size:' ~ attributes.size %}
   {% endif %}
+  {% if attributes.browseEnabled is defined %}
+    {% set attrs = attrs ~ ', browseEnabled:' ~ attributes.browseEnabled %}
+  {% endif %}
   {% set attrs = attrs ~ '"' %}
   <div {{ attrs }}></div>
 {% else %}

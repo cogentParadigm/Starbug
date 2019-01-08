@@ -30,6 +30,7 @@ define([
 		input_name:'file',
 		size:1,
 		store:null,
+		browseEnabled: true,
 		postCreate:function() {
 			var self = this;
 			this.store = new TrackableMemory({data: []});
@@ -48,10 +49,14 @@ define([
 			});
 			this.uploader.onComplete = lang.hitch(this, 'onUpload');
 			this.uploader.onAbort = lang.hitch(this, 'onCancelUpload');
+			this.uploader.onError = lang.hitch(this, 'onError');
 			this.grid.set('collection', this.store);
 			setTimeout(function() {
 				if (self.files.length > 0) self.add(self.files);
 			}, 100);
+			if (!this.browseEnabled) {
+				this.browseButton.style.display = 'none';
+			}
 		},
 		browse:function(){
 			var win = dojo.global;
@@ -123,6 +128,10 @@ define([
 			}else this.statusNode.innerHTML = value;
 		},
 		onUpload: function(files) {
+			if (files.length && typeof files[0].ERROR != "undefined") {
+				this.set_status('<p class="alert alert-danger">The selected file could not be uploaded.</p>');
+				return;
+			}
 			/**
 			 * upload handler. adds the file to the list once it has been uploaded.
 			 */
@@ -133,6 +142,9 @@ define([
 		},
 		onCancelUpload: function() {
 			this.set_status();
+		},
+		onError: function(e) {
+			console.log(e);
 		},
 		reset: function() {
 			this.store.setData([]);
