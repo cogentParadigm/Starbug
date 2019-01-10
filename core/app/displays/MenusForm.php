@@ -14,7 +14,7 @@ class MenusForm extends FormDisplay {
     $this->add(["href", "pane" => "mr", "label" => "URL", "info" => "Enter a URL manually."]);
     $this->add(["content", "pane" => "bl", "info" => "Override the link text."]);
     $this->add(["icon", "label" => "Icon class", "pane" => "bl"]);
-    $this->add(["target", "pane" => "br", "input_type" => "checkbox", "label" => "Open in new tab/window", "value" => "_blank", "uchecked" => ""]);
-    $this->add(["template", "pane" => "br", "input_type" => "checkbox", "label" => "Divider", "value" => "divider", "uchecked" => ""]);
+    $this->add(["target", "pane" => "br", "input_type" => "checkbox", "label" => "Open in new tab/window", "value" => "_blank", "unchecked" => ""]);
+    $this->add(["template", "pane" => "br", "input_type" => "checkbox", "label" => "Divider", "value" => "divider", "unchecked" => ""]);
   }
 }
