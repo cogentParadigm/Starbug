@@ -45,7 +45,7 @@ define([
       data.title = data.title || this.options.title;
       data.url = data.url || this.options.url;
       if (data.title) {
-        this.titleNode.innerHTML = data.title;
+        this.titleNode.innerHTML = (typeof data.title == "function") ? data.title(this, data, params) : data.title;
       }
       if (data.url) {
         var query = lang.mixin(lang.clone(this.options.urlParams), params);
