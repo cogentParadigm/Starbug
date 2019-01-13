@@ -1,12 +1,18 @@
 <div {{ helper("filter").attributes(display.attributes) }}>
-  {% for name, field in display.fields %}
-    {% set field = field|merge({"attributes":{"class":field.attributes.class|join(" ")}}) %}
-    <div {{ helper("filter").attributes(field.attributes) }}>
-      {% for key, value in field %}
-        {% if key != "attributes" %}
-          {{ attribute(display.cells, key) }}
-        {% endif %}
-      {% endfor %}
-    </div>
-  {% endfor %}
+  {% if display.fields is empty %}
+    {% for cell in display.cells %}
+      {{ cell }}
+    {% endfor %}
+  {% else %}
+    {% for name, field in display.fields %}
+      {% set field = field|merge({"attributes":{"class":field.attributes.class|join(" ")}}) %}
+      <div {{ helper("filter").attributes(field.attributes) }}>
+        {% for key, value in field %}
+          {% if key != "attributes" %}
+            {{ attribute(display.cells, key) }}
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endfor %}
+  {% endif %}
 </div>

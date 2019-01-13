@@ -7,7 +7,7 @@ class LayoutDisplay extends ItemDisplay {
 
   public $cells = [];
 
-  public $default_cell = false;
+  public $lastCell = false;
 
   public function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, CollectionFactoryInterface $collections, HookFactoryInterface $hook_builder, InputFilterInterface $filter) {
     $this->output = $output;
@@ -24,7 +24,10 @@ class LayoutDisplay extends ItemDisplay {
    */
   public function filter($field, $options, $column) {
     foreach ($options as $k => $v) {
-      if ($k !== 'attributes') $this->cells[$k] = Renderable::create($v);
+      if ($k !== 'attributes') {
+        $this->cells[$k] = Renderable::create($v);
+        $this->lastCell = $k;
+      }
     }
     if (!isset($options['attributes']['class'])) $options['attributes']['class'] = ['row'];
     elseif (!in_array('row', $options['attributes']['class'])) $options['attributes']['class'][] = 'row';
@@ -36,29 +39,29 @@ class LayoutDisplay extends ItemDisplay {
   }
 
   public function put($parent, $selector, $content = "", $key = "") {
-    $node = Renderable::create($this->cells[$parent], $selector, $content);
-    if (!empty($key)) $this->cells[$key] = $node;
+    if (!isset($this->cells[$parent])) {
+      $key = $content;
+      $content = $selector;
+      $selector = $parent;
+      $parent = null;
+      $node = Renderable::create($selector, $content);
+    } else {
+      $node = Renderable::create($this->cells[$parent], $selector, $content);
+    }
+    if (!empty($key)) {
+      $this->cells[$key] = $node;
+      $this->lastCell = $key;
+    }
     return $node;
   }
 
   public function append($parent, $html) {
-    if (empty($parent)) $parent = $this->default_cell;
-    elseif (!$this->default_cell) $this->default_cell = $parent;
+    if (empty($parent)) $parent = $this->lastCell;
+    else $this->lastCell = $parent;
     $this->cells[$parent]->appendChild($html);
   }
 
   public function isEmpty() {
     return empty($this->cells);
-  }
-
-  public function output($match = "") {
-    foreach ($this->fields as $name => $field) {
-      if (!empty($match) && substr($name, 0, strlen($match)) != $match) continue;
-      $field['attributes']['class'] = implode(' ', $field['attributes']['class']);
-      $node = '<div '.$this->filter->attributes($field['attributes']).'>';
-      foreach ($field as $key => $value) if ($key != 'attributes') $node .= (string) $this->cells[$key];
-      $node .= '</div>';
-      echo $node;
-    }
   }
 }
