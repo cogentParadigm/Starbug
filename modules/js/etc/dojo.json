@@ -11,5 +11,11 @@
     ["sb", "../../core/app/public/js/sb"],
     ["starbug", "../../core/app/public/js/starbug"],
     ["app", "../../app/public/js"]
-  ]
+  ],
+  "config": {
+    "async": true,
+    "parseOnLoad" :true,
+    "serverTime":"{{ 'now'|date('Y-m-d H:i:s') }}",
+    "theme": "{{ response.theme }}"
+  }
 }

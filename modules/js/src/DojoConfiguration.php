@@ -36,6 +36,9 @@ class DojoConfiguration {
       }
     }
   }
+  public function getDojoConfig() {
+    return json_encode($this->get("config"));
+  }
   protected function load() {
     if (false === $this->options) {
       $this->options = $this->config->get("dojo");

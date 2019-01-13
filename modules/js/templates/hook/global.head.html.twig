@@ -1,9 +1,5 @@
   <script type="text/javascript">
-    var dojoConfig = {
-      async:true,
-      parseOnLoad:true,
-      serverTime:'{{ "now"|date("Y-m-d H:i:s") }}'
-    };
+    var dojoConfig = {{ include(template_from_string(helper("dojo").getDojoConfig())) }}
   </script>
 <!--[if lt IE 9]>
   <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
