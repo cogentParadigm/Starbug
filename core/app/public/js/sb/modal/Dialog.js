@@ -16,7 +16,7 @@ define([
       constructor: "manual"
     },
     autoRender: true,
-    constructor: function(element, options) {
+    constructor: function(options, element) {
       if (!element) element = put(window.document.body, "div");
       this.domNode = element;
       this.build();
