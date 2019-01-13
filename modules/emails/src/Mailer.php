@@ -34,9 +34,11 @@ class Mailer implements MailerInterface {
     if ($this->host) {
       $mailer->IsSMTP(); // send via SMTP
       $mailer->Host     = $this->host;
-      $mailer->SMTPAuth = true;  // turn on SMTP authentication
-      $mailer->Username = $this->username;    // SMTP username
-      $mailer->Password = $this->password;    // SMTP password
+      if (!empty($this->username)) {
+        $mailer->SMTPAuth = true;  // turn on SMTP authentication
+        $mailer->Username = $this->username;    // SMTP username
+        $mailer->Password = $this->password;    // SMTP password
+      }
     }
     if ($this->from_email) $mailer->From = $this->from_email;
     if ($this->from_name) $mailer->FromName = $this->from_name;
