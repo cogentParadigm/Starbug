@@ -35,7 +35,7 @@ class Config implements ConfigInterface {
       $result = [];
       foreach ($resources as $resource) {
         $data = $this->decode(file_get_contents($resource));
-        $result = array_merge_recursive($result, $data);
+        $result = $this->merge($result, $data);
       }
       $this->configs[$key] = $result;
     }
@@ -61,5 +61,21 @@ class Config implements ConfigInterface {
       if (!(in_array($first, ['"', '{', '}', '[', ']']) || is_numeric($first))) unset($raw[$idx]);
     }
     return json_decode(join("\n", $raw), true);
+  }
+
+  private function merge(array &$array1, array &$array2) {
+    $merged = $array1;
+    if (isset($merged[0]) && isset($array2[0])) {
+      $merged = array_merge($merged, $array2);
+    } else {
+      foreach ($array2 as $key => &$value) {
+        if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+          $merged[$key] = $this->merge($merged[$key], $value);
+        } else {
+          $merged[$key] = $value;
+        }
+      }
+    }
+    return $merged;
   }
 }
