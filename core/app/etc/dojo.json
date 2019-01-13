@@ -1,0 +1,9 @@
+{
+  "config": {
+    "map": {
+      "*" : {
+        "sb/modal/theme": "sb/modal/theme/bootstrap"
+      }
+    }
+  }
+}
