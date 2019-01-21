@@ -1,10 +1,11 @@
 <?php
-namespace Starbug\Devices;
+namespace Starbug\Devices\Notification\Handler;
 
+use Starbug\Devices\Notification\HandlerInterface;
 use Starbug\Core\MailerInterface;
 
-class PushNotificationHandler implements NotificationHandlerInterface {
-  public function __construct(ApplePushNotificationHandler $apple) {
+class Push implements HandlerInterface {
+  public function __construct(ApplePush $apple) {
     $this->apple = $apple;
   }
   public function deliver($owner, $type, $subject, $body, $data = []) {

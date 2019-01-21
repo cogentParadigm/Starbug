@@ -1,11 +1,12 @@
 <?php
-namespace Starbug\Devices;
+namespace Starbug\Devices\Notification\Handler;
 
+use Starbug\Devices\Notification\HandlerInterface;
 use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\SettingsInterface;
 use Psr\Log\LoggerInterface;
 
-class ApplePushNotificationHandler implements NotificationHandlerInterface {
+class ApplePush implements HandlerInterface {
   protected $environments = [
     "production" => "ssl://gateway.push.apple.com:2195",
     "development" => "ssl://gateway.sandbox.push.apple.com:2195"

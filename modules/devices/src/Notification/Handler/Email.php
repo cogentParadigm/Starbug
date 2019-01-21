@@ -1,9 +1,10 @@
 <?php
-namespace Starbug\Devices;
+namespace Starbug\Devices\Notification\Handler;
 
+use Starbug\Devices\Notification\HandlerInterface;
 use Starbug\Core\MailerInterface;
 
-class EmailNotificationHandler implements NotificationHandlerInterface {
+class Email implements HandlerInterface {
   public function __construct(MailerInterface $mailer) {
     $this->mailer = $mailer;
   }

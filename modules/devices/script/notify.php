@@ -11,6 +11,6 @@ class NotifyCommand {
   public function run($argv) {
     $uid = $argv[0];
     $user = $this->user->loadUser($uid);
-    $this->notifications->deliver($user, "test", "Hello World", "This is a test message.");
+    $this->notifications->deliver($user, "system", "Hello World", "This is a test message.");
   }
 }

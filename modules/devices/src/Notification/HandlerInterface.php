@@ -1,6 +1,6 @@
 <?php
-namespace Starbug\Devices;
+namespace Starbug\Devices\Notification;
 
-interface NotificationHandlerInterface {
+interface HandlerInterface {
   public function deliver($owner, $type, $subject, $body, $data = []);
 }

@@ -2,13 +2,21 @@
 namespace Starbug\Devices;
 
 use Starbug\Core\DatabaseInterface;
+use Psr\Log\LoggerAwareTrait;
+use Exception;
+use Starbug\Devices\Notification\HandlerInterface;
+use Starbug\Devices\Notification\ChannelInterface;
 
 class NotificationManager implements NotificationManagerInterface {
   protected $handlers = [];
+  protected $channels = [];
+
+  use LoggerAwareTrait;
+
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }
-  public function addHandler($name, NotificationHandlerInterface $handler) {
+  public function addHandler($name, HandlerInterface $handler) {
     $this->handlers[$name] = $handler;
   }
   public function getHandler($name) {
@@ -16,6 +24,15 @@ class NotificationManager implements NotificationManagerInterface {
   }
   public function getHandlers() {
     return $this->handlers;
+  }
+  public function addChannel($name, ChannelInterface $channel) {
+    $this->channels[$name] = $channel;
+  }
+  public function getChannel($name) {
+    return $this->channels[$name];
+  }
+  public function getChannels() {
+    return $this->channels;
   }
   public function deliver($owner, $type, $subject, $body, $data = []) {
     $this->queue($owner, $type, $subject, $body, $data);
@@ -28,7 +45,12 @@ class NotificationManager implements NotificationManagerInterface {
       }
     }
     // store notification
-    $notification = ["users_id" => $owner['id'], "type" => $type, "subject" => $subject, "body" => $body, "send_date" => $now] + $data;
+    $notification = ["type" => $type, "subject" => $subject, "body" => $body, "send_date" => $now] + $data;
+    if (!empty($owner["id"])) {
+      $notification["users_id"] = $owner['id'];
+    } elseif (!empty($owner["email"])) {
+      $notification["email"] = $owner["email"];
+    }
     $this->db->store("notifications", $notification);
   }
   public function process() {
@@ -38,10 +60,10 @@ class NotificationManager implements NotificationManagerInterface {
     $results = $this->db->query("notifications")->condition("send_date", $now, "<=")->condition("sent", "0000-00-00 00:00:00")->all();
     $user_notifications = [];
     foreach ($results as $result) {
-      $uid = $result["users_id"];
+      $uid = empty($result["users_id"]) ? $result["email"] : $result["users_id"];
       if (!isset($user_notifications[$uid])) {
         $user_notifications[$uid] = [
-          "user" => $this->db->get("users", $uid),
+          "user" => is_numeric($uid) ? $this->db->get("users", $uid) : false,
           "notifications" => []
         ];
       }
@@ -50,7 +72,7 @@ class NotificationManager implements NotificationManagerInterface {
     foreach ($user_notifications as $uid => $user) {
       $owner = $user["user"];
       $batch = $batchable = false;
-      if (!empty($owner["notification_batch_frequency"])) {
+      if ($owner && !empty($owner["notification_batch_frequency"])) {
         $batchable = true;
         $freq = intval($owner["notification_batch_frequency"]);
         if ($hour % $freq == 0 && $minute == 0) $batch = true;
@@ -65,25 +87,48 @@ class NotificationManager implements NotificationManagerInterface {
               $this->db->store("notifications", ["id" => $notification["id"], "sent" => date("Y-m-d H:i:s")]);
             }
             foreach ($this->handlers as $handlerName => $handler) {
-              if ($owner[$type."_".$handlerName]) {
+              if ($owner[$notification["type"]."_".$handlerName]) {
                 $data = empty($notification[$handlerName."_data"]) ? [] : json_decode($notification[$handlerName."_data"], true);
-                $handler->deliver($owner, $notification["type"], $notification["subject"], implode("\n<br/><hr><br/>\n", $body), $data);
+                try {
+                  $handler->deliver($owner, $notification["type"], $notification["subject"], implode("\n<br/><hr><br/>\n", $body), $data);
+                } catch (Exception $e) {
+                  $this->error($e->getMessage());
+                }
               }
             }
           }
           continue;
         }
         foreach ($notifications as $notification) {
-          // Send notification for each handler.
-          foreach ($this->handlers as $handlerName => $handler) {
-            if ($owner[$type."_".$handlerName]) {
-              $data = empty($notification[$handlerName."_data"]) ? [] : json_decode($notification[$handlerName."_data"], true);
-              $handler->deliver($owner, $notification["type"], $notification["subject"], $notification["body"], $data);
+          if ($owner) {
+            // Send notification for each handler.
+            foreach ($this->handlers as $handlerName => $handler) {
+              if ($owner[$notification["type"]."_".$handlerName]) {
+                $data = empty($notification[$handlerName."_data"]) ? [] : json_decode($notification[$handlerName."_data"], true);
+                try {
+                  $handler->deliver($owner, $notification["type"], $notification["subject"], $notification["body"], $data);
+                } catch (Exception $e) {
+                  $this->error($e->getMessage());
+                }
+              }
+            }
+          } else {
+            // Anonymous users can only get unbatched emails
+            $data = empty($notification["email_data"]) ? [] : json_decode($notification["email_data"], true);
+            try {
+              $this->handlers["email"]->deliver($uid, $notification["type"], $notification["subject"], $notification["body"], $data);
+            } catch (Exception $e) {
+              $this->error($e->getMessage());
             }
           }
           $this->db->store("notifications", ["id" => $notification["id"], "sent" => date("Y-m-d H:i:s")]);
         }
       }
+    }
+  }
+  protected function error($message) {
+    if (!is_null($this->logger)) {
+      $this->logger->error($message);
     }
   }
 }
