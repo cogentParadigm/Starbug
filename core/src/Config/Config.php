@@ -50,6 +50,20 @@ class Config implements ConfigInterface {
     return $value;
   }
 
+  public function set($key, $value) {
+    $parts = explode(".", $key);
+    $configs = &$this->configs;
+    $key = array_shift($parts);
+    while (!empty($parts)) {
+      if (!isset($configs[$key])) {
+        $configs[$key] = [];
+      }
+      $configs = &$configs[$key];
+      $key = array_shift($parts);
+    }
+    $configs[$key] = $value;
+  }
+
   public function provide($scope, ConfigInterface $provider) {
     $this->providers[$scope] = $provider;
   }
