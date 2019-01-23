@@ -1,4 +1,4 @@
-{% if helper("config").get("notification.handler.web.registration.enabled") %}
+{% if helper("config").get("notification.handler.web.registration.enabled") and helper("user").loggedIn() %}
 <script>
   var sw;
   require(["devices/sw/Manager", "dojo/on"], function(Manager, on) {

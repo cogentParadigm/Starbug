@@ -46,5 +46,8 @@ class Migration extends AbstractMigration {
         );
       }
     }
+
+    $user = new Bundle(["table" => "terms", "keys" => ["taxonomy" => "groups", "slug" => "user"]]);
+    $this->schema->addRow("permits", ["related_table" => "devices", "action" => "register", "role" => "everyone", "priv_type" => "table", "user_groups" => $user]);
   }
 }
