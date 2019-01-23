@@ -4,7 +4,7 @@
   require(["devices/sw/Manager", "dojo/on"], function(Manager, on) {
     sw = new Manager({
       serviceWorkerUrl: "{{ helper("url").build("modules/devices/public/js/sw/sw.js") }}",
-      publicKey: "{{ helper("config").get("notification.handler.push.web.public_key") }}"
+      publicKey: "{{ helper("config").get("notification.handler.web.publicKey") }}"
     });
     on(sw, 'registered', function() {
       if (sw.isPushSupported && !sw.isSubscribed) {
