@@ -15,7 +15,7 @@ class WebPush implements HandlerInterface {
     $devices = $this->db->query("devices")->condition("owner", $owner["id"])->condition("platform", "web")->all();
     foreach ($devices as $device) {
       $result = $this->webpush->sendNotification(
-        Subscription::create(json_decode($device["token"])),
+        Subscription::create(json_decode($device["token"], true)),
         json_encode(["subject" => $subject, "body" => $body] + $data),
         true
       );
