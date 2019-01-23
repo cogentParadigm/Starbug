@@ -2,8 +2,7 @@
 namespace Starbug\Devices\Notification\Handler;
 
 use Starbug\Devices\Notification\HandlerInterface;
-use Starbug\Core\ModelFactoryInterface;
-use Starbug\Core\SettingsInterface;
+use Starbug\Core\DatabaseInterface;
 use Psr\Log\LoggerInterface;
 
 class ApplePush implements HandlerInterface {
@@ -11,19 +10,19 @@ class ApplePush implements HandlerInterface {
     "production" => "ssl://gateway.push.apple.com:2195",
     "development" => "ssl://gateway.sandbox.push.apple.com:2195"
   ];
-  protected $certificate_directory;
+  protected $certificateDirectory;
   protected $passphrase;
-  public function __construct(ModelFactoryInterface $models, SettingsInterface $settings, LoggerInterface $logger) {
-    $this->models = $models;
-    $this->settings = $settings;
+  public function __construct(DatabaseInterface $db, LoggerInterface $logger, $certificateDirectory, $passphrase = false) {
+    $this->db = $db;
     $this->logger = $logger;
-    $this->certificate_directory = $this->settings->get("apn_cert_path");
-    // $this->passphrase = $this->settings->get("apn_cert_pass");
+    $this->certificateDirectory = $certificateDirectory;
+    $this->passphrase = $passphrase;
   }
 
   public function deliver($owner, $type, $subject, $body, $data = []) {
-    $devices = $this->models->get("devices")->query()
-                  ->condition("platform", "ios")->condition("owner", $owner['id'])->all();
+    $devices = $this->db->query("devices")
+      ->condition("platform", "ios")
+      ->condition("owner", $owner['id'])->all();
     foreach ($devices as $device) {
       $this->push($device['token'], $subject, $data, $device['environment']);
     }
@@ -31,22 +30,22 @@ class ApplePush implements HandlerInterface {
 
   public function push($tokens, $message, $data = [], $environment = "production") {
     // open a connection
-    $fp = $this->openConnection($environment);
+    $handle = $this->openConnection($environment);
     // iterate over tokens
     if (!is_array($tokens)) $tokens = [$tokens];
     foreach ($tokens as $token) {
       // encode the message
       $message = $this->encodeMessage($token, $message, $data);
       // transmit it to the server
-      $result = fwrite($fp, $message, strlen($message));
+      fwrite($handle, $message, strlen($message));
       // check for errors
-      $fail = $this->checkAppleErrorResponse($fp);
+      $fail = $this->checkAppleErrorResponse($handle);
       if (!$fail) {
         $this->logger->info("Push notification sent", ["tokens" => $tokens, "message" => $message]);
       }
     }
     // close the connection
-    fclose($fp);
+    fclose($handle);
   }
 
   protected function encodeMessage($deviceToken, $message, $data = []) {
@@ -59,20 +58,22 @@ class ApplePush implements HandlerInterface {
   }
 
   protected function openConnection($environment = "production") {
-    $cert_path = $this->certificate_directory . $environment . '.pem';
+    $cert_path = $this->certificateDirectory . $environment . '.pem';
     $ctx = stream_context_create();
     stream_context_set_option($ctx, 'ssl', 'local_cert', $cert_path);
-    // stream_context_set_option($ctx, 'ssl', 'passphrase', $this->passphrase);
-    $fp = stream_socket_client($this->environments[$environment], $err, $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
-    stream_set_blocking($fp, 0);
-    if (!$fp) $this->logger->error("Failed to connect: $err $errstr" . PHP_EOL);
-    return $fp;
+    if (false !== $this->passphrase) {
+      stream_context_set_option($ctx, 'ssl', 'passphrase', $this->passphrase);
+    }
+    $handle = stream_socket_client($this->environments[$environment], $err, $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
+    stream_set_blocking($handle, 0);
+    if (!$handle) $this->logger->error("Failed to connect: $err $errstr" . PHP_EOL);
+    return $handle;
   }
 
-  protected function checkAppleErrorResponse($fp) {
+  protected function checkAppleErrorResponse($handle) {
     // byte1=always 8, byte2=StatusCode, bytes3,4,5,6=identifier(rowID). Should return nothing if OK.
-    $apple_error_response = fread($fp, 6);
-    // NOTE: Make sure you set stream_set_blocking($fp, 0) or else fread will pause your script and wait forever when there is no response to be sent.
+    $apple_error_response = fread($handle, 6);
+    // NOTE: Make sure you set stream_set_blocking($handle, 0) or else fread will pause your script and wait forever when there is no response to be sent.
     if ($apple_error_response) {
       // unpack the error response (first byte 'command" should always be 8)
       $error_response = unpack('Ccommand/Cstatus_code/Nidentifier', $apple_error_response);

@@ -1,0 +1,22 @@
+{% if helper("config").get("notification.handler.push.web.registration.enabled") %}
+<script>
+  var sw;
+  require(["devices/sw/Manager", "dojo/on"], function(Manager, on) {
+    sw = new Manager({
+      serviceWorkerUrl: "{{ helper("url").build("modules/devices/public/js/sw/sw.js") }}",
+      publicKey: "{{ helper("config").get("notification.handler.push.web.public_key") }}"
+    });
+    on(sw, 'registered', function() {
+      if (sw.isPushSupported && !sw.isSubscribed) {
+        // replace this with code that
+        // enables or presents a subscribe button
+        // and attach it to sw.subscribe().
+        // /*
+        sw.subscribe();
+        // */
+      }
+    });
+    sw.register();
+  });
+</script>
+{% endif %}
