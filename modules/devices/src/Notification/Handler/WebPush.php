@@ -6,7 +6,7 @@ use Minishlink\WebPush\WebPush as WebPushClient;
 use Starbug\Core\DatabaseInterface;
 
 class WebPush implements HandlerInterface {
-  public function __construct(WebPush $webpush, DatabaseInterface $db) {
+  public function __construct(WebPushClient $webpush, DatabaseInterface $db) {
     $this->webpush = $webpush;
     $this->db = $db;
   }
