@@ -7,7 +7,8 @@ define([
   return declare([Evented], {
     publicKey: null,
     serviceWorkerUrl: null,
-    constructor: function() {
+    constructor: function(args) {
+      lang.mixin(this, args);
       this.isSubscribed = false;
       this.isSupported = 'serviceWorker' in navigator;
       this.isPushSupported = 'PushManager' in window;
