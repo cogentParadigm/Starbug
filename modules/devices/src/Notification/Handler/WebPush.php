@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\App;
+namespace Starbug\Devices\Notification\Handler;
 
 use Starbug\Devices\Notification\HandlerInterface;
 use Minishlink\WebPush\WebPush as WebPushClient;
