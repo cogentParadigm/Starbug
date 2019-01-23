@@ -4,6 +4,7 @@ namespace Starbug\Devices\Notification\Handler;
 use Starbug\Devices\Notification\HandlerInterface;
 
 class Aggregate implements HandlerInterface {
+  protected $handlers = [];
   public function addHandler($name, HandlerInterface $handler) {
     $this->handlers[$name] = $handler;
   }
