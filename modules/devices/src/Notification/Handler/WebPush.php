@@ -18,7 +18,7 @@ class WebPush implements HandlerInterface {
       foreach ($token->keys as $k => $v) $push_data[$k] = $v;
       $result = $this->webpush->sendNotification(
         $token->endpoint,
-        $body,
+        json_encode(["subject" => $subject, "body" => $body] + $data),
         $token->keys->p256dh,
         $token->keys->auth,
         true

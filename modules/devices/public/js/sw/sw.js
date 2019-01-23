@@ -8,19 +8,15 @@ self.addEventListener('push', function(e) {
     data = e.data.json();
   }
   data.url = data.url || false;
-  var options = {
-    body: data.body,
-  };
   e.waitUntil(
     self.registration.showNotification(data.subject, data)
   );
 });
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-  if (URL) {
+  if (data.url) {
     event.waitUntil(
-      clients.openWindow(URL)
+      clients.openWindow(data.url)
     );
-    URL = false;
   }
 });
