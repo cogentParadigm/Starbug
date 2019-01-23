@@ -5,8 +5,8 @@ AddOutputFilterByType DEFLATE text/html
 </files>
 
 # cache for 2 weeks by default
-ExpiresActive On
-ExpiresDefault A1209600
+Header append Cache-control ""
+Header edit Cache-control "^(?!.*max-age.*)(.*)" "max-age=1209600,$1"
 
 RewriteEngine On
 
