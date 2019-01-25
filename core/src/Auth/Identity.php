@@ -57,12 +57,15 @@ class Identity implements IdentityInterface {
    * @return array The user record.
    */
   public function loadUser($id) {
-    $user = $this->models->get("users")->query()
+    $query = $this->models->get("users")->query()
       ->condition("users.deleted", "0")
       ->select("GROUP_CONCAT(users.groups.slug) as groups");
-    if (is_array($id)) $user->conditions($id);
-    else $user->condition("users.id", $id);
-    return $user->one();
+    if (is_array($id)) $query->conditions($id);
+    else $query->condition("users.id", $id);
+    $user = $query->one();
+    unset($user['password']);
+    if (!is_array($user['groups'])) $user['groups'] = is_null($user['groups']) ? [] : explode(",", $user['groups']);
+    return $user;
   }
   /**
    * Set the current user.
@@ -72,8 +75,6 @@ class Identity implements IdentityInterface {
    * @return void
    */
   public function setUser(array $user) {
-    unset($user['password']);
-    if (!is_array($user['groups'])) $user['groups'] = is_null($user['groups']) ? [] : explode(",", $user['groups']);
     $this->user = $user;
   }
   /**
