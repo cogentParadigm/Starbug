@@ -16,4 +16,10 @@ class System implements ChannelInterface {
   public function hasAccess($user) {
     return true;
   }
+  public function isConfigurable($user) {
+    return false;
+  }
+  public function isEnabled($user) {
+    return true;
+  }
 }
