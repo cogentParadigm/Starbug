@@ -5,4 +5,5 @@ interface ChannelInterface {
   public function getLabel();
   public function canBatchMessages();
   public function batchMessages($messages);
+  public function hasAccess();
 }
