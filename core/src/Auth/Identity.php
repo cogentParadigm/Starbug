@@ -63,7 +63,6 @@ class Identity implements IdentityInterface {
     if (is_array($id)) $query->conditions($id);
     else $query->condition("users.id", $id);
     $user = $query->one();
-    unset($user['password']);
     if (!is_array($user['groups'])) $user['groups'] = is_null($user['groups']) ? [] : explode(",", $user['groups']);
     return $user;
   }
@@ -75,6 +74,7 @@ class Identity implements IdentityInterface {
    * @return void
    */
   public function setUser(array $user) {
+    unset($user['password']);
     $this->user = $user;
   }
   /**
