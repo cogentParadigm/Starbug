@@ -1,4 +1,4 @@
-define(["dojo", "sb/strings", "put-selector/put", "dojo/on"],
+define(["dojo", "dojo/string", "put-selector/put", "dojo/on"],
 function(dojo, strings, put, on){
   dojo.global.starbug.grid.columns = dojo.global.starbug.grid.columns || {};
   dojo.global.starbug.grid.columns.options = function(column){
