@@ -26,6 +26,9 @@ function(dojo, strings, put, on){
         if (typeof grid['dialog'] == 'string') column.editUrl = 'javascript:'+grid['dialog']+'.show('+row.id+')';
         else if (typeof grid['dialog'] == 'undefined') column.editUrl = column.editUrl || base_url+'/update/${id}'+dojo.global.location.search;
         var edit = put(div, 'a.Edit.btn.btn-default[title=Edit][href='+strings.substitute(column.editUrl, row)+']', put('div.fa.fa-edit'));
+        if (column.editTarget) {
+          edit.setAttribute("target", column.editTarget);
+        }
         if (typeof grid['dialog'] == "object") {
           on(edit, 'click', function(evt) {
             grid.dialog.show(row.id);
