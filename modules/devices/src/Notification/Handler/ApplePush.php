@@ -20,11 +20,13 @@ class ApplePush implements HandlerInterface {
   }
 
   public function deliver($owner, $type, $subject, $body, $data = []) {
-    $devices = $this->db->query("devices")
-      ->condition("platform", "ios")
-      ->condition("owner", $owner['id'])->all();
+    $devices = $this->db->query("devices")->condition("platform", "ios")->condition("owner", $owner['id'])->all();
+    $environments = [];
     foreach ($devices as $device) {
-      $this->push($device['token'], $subject, $data, $device['environment']);
+      $environments[$device["environment"]][] = $device["token"];
+    }
+    foreach ($environments as $environment => $tokens) {
+      $this->push($tokens, $subject, $data, $environment);
     }
   }
 
