@@ -920,16 +920,16 @@
         },
         {
             "name": "starbug/bundle",
-            "version": "v1.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-bundle.git",
-                "reference": "ccc41af23006de3b4e507c36d61d647e778b6d2b"
+                "reference": "ab566f39dbf34437a77a3feb3e77d05b9382c8b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-bundle/zipball/ccc41af23006de3b4e507c36d61d647e778b6d2b",
-                "reference": "ccc41af23006de3b4e507c36d61d647e778b6d2b",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-bundle/zipball/ab566f39dbf34437a77a3feb3e77d05b9382c8b1",
+                "reference": "ab566f39dbf34437a77a3feb3e77d05b9382c8b1",
                 "shasum": ""
             },
             "require-dev": {
@@ -949,7 +949,7 @@
                 }
             ],
             "description": "A simple object abstraction for working with nested array structures.",
-            "time": "2019-01-27 17:58:35"
+            "time": "2019-01-28 15:27:20"
         },
         {
             "name": "starbug/http",
