@@ -953,16 +953,16 @@
         },
         {
             "name": "starbug/http",
-            "version": "v0.9",
+            "version": "v0.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-http.git",
-                "reference": "e836e440b592159f3d7645be4a485bcc8b6b3bda"
+                "reference": "c9462e55f82d6b5e3dc8e38d19ff19ae97437810"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/e836e440b592159f3d7645be4a485bcc8b6b3bda",
-                "reference": "e836e440b592159f3d7645be4a485bcc8b6b3bda",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/c9462e55f82d6b5e3dc8e38d19ff19ae97437810",
+                "reference": "c9462e55f82d6b5e3dc8e38d19ff19ae97437810",
                 "shasum": ""
             },
             "require": {
@@ -985,7 +985,7 @@
                 }
             ],
             "description": "Simple abstractions for handling incoming HTTP requests and generating a response.",
-            "time": "2019-01-27 20:03:18"
+            "time": "2019-01-28 02:01:24"
         },
         {
             "name": "symfony/polyfill-mbstring",
