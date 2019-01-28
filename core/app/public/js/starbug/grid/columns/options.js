@@ -22,7 +22,6 @@ function(dojo, strings, put, on){
 
       //edit button
       if (column.canEdit) {
-        column.editUrl = column.editUrl || "javascript:;";
         if (typeof grid['dialog'] == 'string') column.editUrl = 'javascript:'+grid['dialog']+'.show('+row.id+')';
         else if (typeof grid['dialog'] == 'undefined') column.editUrl = column.editUrl || base_url+'/update/${id}'+dojo.global.location.search;
         var edit = put(div, 'a.Edit.btn.btn-default[title=Edit][href='+strings.substitute(column.editUrl, row)+']', put('div.fa.fa-edit'));
