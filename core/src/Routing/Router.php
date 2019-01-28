@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core\Routing;
 
-use Starbug\Core\RequestInterface;
+use Starbug\Http\RequestInterface;
 
 class Router implements RouterInterface {
   // eg. "/user/{name}[/{id:[0-9]+}]"

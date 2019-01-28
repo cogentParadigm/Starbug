@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Http\RequestInterface;
+
 class StoreUploadHook extends QueryHook {
   protected $uploaded = false;
   protected $request;

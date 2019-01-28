@@ -9,8 +9,8 @@ class Filesystem extends ParentFilesystem implements FilesystemInterface {
   public function __construct(AdapterInterface $adapter, $config = null) {
     parent::__construct($adapter, $config);
   }
-  public function getURL($path, $absolute = false) {
+  public function getUrl($path, $absolute = false) {
     $path = Util::normalizePath($path);
-    return $this->getAdapter()->getURL($path, $absolute);
+    return $this->getAdapter()->getUrl($path, $absolute);
   }
 }

@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Http\ResponseInterface;
+
 class LayoutDisplay extends ItemDisplay {
   public $type = "layout";
   public $template = "layout.html";

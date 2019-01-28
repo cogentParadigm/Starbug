@@ -3,7 +3,7 @@ namespace Starbug\Content;
 
 use Starbug\Core\FormHook;
 use Starbug\Core\DatabaseInterface;
-use Starbug\Core\RequestInterface;
+use Starbug\Http\RequestInterface;
 
 class FormBlocksHook extends FormHook {
   public function __construct(DatabaseInterface $db, RequestInterface $request) {

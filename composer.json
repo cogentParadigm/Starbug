@@ -5,6 +5,8 @@
 		}
 	},
 	"require": {
+		"starbug/bundle": "^1.0",
+		"starbug/http": "*",
 		"php-di/php-di": "^5.1",
 		"phpmailer/phpmailer": "dev-master",
 		"masterexploder/phpthumb": "dev-master",

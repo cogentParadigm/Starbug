@@ -27,7 +27,7 @@ class ApiFilesController extends ApiController {
     if (reset(explode("/", $file['mime_type'])) == "image") {
       $file["thumbnail"] = $this->images->thumb($file["location"]."://".$file['id']."_".$file['filename'], ["w" => 100, "h" => 100, "a" => 1]);
     }
-    $file["url"] = $this->filesystems->getFilesystem($file["location"])->getURL($file["id"]."_".$file["filename"]);
+    $file["url"] = $this->filesystems->getFilesystem($file["location"])->getUrl($file["id"]."_".$file["filename"]);
     return $file;
   }
 }

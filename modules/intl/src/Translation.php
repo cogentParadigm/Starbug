@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Intl;
 
+use Starbug\Http\RequestInterface;
+
 class Translation {
   public function __construct(RequestInterface $request, DatabaseInterface $db) {
     $this->request = $request;

@@ -2,6 +2,8 @@
 namespace Starbug\Core;
 
 use \ReflectionMethod;
+use Starbug\Http\RequestInterface;
+use Starbug\Http\ResponseInterface;
 
 class Controller {
 
@@ -88,7 +90,7 @@ class Controller {
   }
 
   public function url($path = "", $absolute = false) {
-    return $this->request->getURL()->build($path, $absolute);
+    return $this->request->getUrl()->build($path, $absolute);
   }
   /**
    * Redirect to another page.

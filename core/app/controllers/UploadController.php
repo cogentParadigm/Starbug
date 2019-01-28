@@ -31,7 +31,7 @@ class UploadController extends Controller {
         $_post['id'] = $id;
         $_post['original_name'] = str_replace(" ", "_", $file['name']);
         $_post['name'] = $id."_".$_post['original_name'];
-        $_post['url'] = $this->filesystems->getFilesystem("default")->getURL($_post['name']);
+        $_post['url'] = $this->filesystems->getFilesystem("default")->getUrl($_post['name']);
         $_post['mime_type'] = $this->models->get("files")->getMime($file['tmp_name']);
         try {
           list($width, $height) = getimagesize($file['tmp_name']);

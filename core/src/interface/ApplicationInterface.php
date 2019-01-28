@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Http\RequestInterface;
+
 interface ApplicationInterface {
   /**
    * An application must simply handle requests by returning a response object.

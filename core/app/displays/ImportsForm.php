@@ -69,7 +69,7 @@ class ImportsForm extends FormDisplay {
     fclose($handle);
     $vars = $this->request->getParameters();
     unset($vars['pg']);
-    $prefix = $this->request->getURL()->getDirectory();
+    $prefix = $this->request->getUrl()->getDirectory();
     $prefix .= $this->request->getPath()."?";
     if (!empty($vars)) $prefix .= http_build_query($vars).'&';
     $prefix .= "pg=";

@@ -1,9 +1,11 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Http\UrlInterface;
+
 class MacroUrlHook extends MacroHook {
   protected $url;
-  public function __construct(URLInterface $url) {
+  public function __construct(UrlInterface $url) {
     $this->url = $url;
   }
   public function replace($macro, $name, $token, $data) {

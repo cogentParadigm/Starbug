@@ -12,8 +12,8 @@ return [
     DI\get('Starbug\Payment\Migration')
   ]),
   'cart_token' => function (ContainerInterface $c) {
-    $request = $c->get("Starbug\Core\RequestInterface");
-    $url = $c->get("Starbug\Core\URLInterface");
+    $request = $c->get("Starbug\Http\RequestInterface");
+    $url = $c->get("Starbug\Http\UrlInterface");
     $cid = $request->getCookie("cid");
     if (!$cid) {
       $cid = md5(uniqid(mt_rand(), true));

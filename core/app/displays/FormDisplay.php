@@ -1,6 +1,9 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Http\RequestInterface;
+use Starbug\Http\ResponseInterface;
+
 class FormDisplay extends ItemDisplay {
   public $type = "form";
   public $template = "form.html";

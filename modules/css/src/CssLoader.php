@@ -2,13 +2,13 @@
 namespace Starbug\Css;
 
 use Starbug\Core\ResourceLocatorInterface;
-use Starbug\Core\URLInterface;
-use Starbug\Core\ResponseInterface;
+use Starbug\Http\UrlInterface;
+use Starbug\Http\ResponseInterface;
 use Twig_Environment;
 
 class CssLoader {
   protected $options = false;
-  public function __construct(ResourceLocatorInterface $locator, URLInterface $url, ResponseInterface $response, Twig_Environment $twig, $modules) {
+  public function __construct(ResourceLocatorInterface $locator, UrlInterface $url, ResponseInterface $response, Twig_Environment $twig, $modules) {
     $this->locator = $locator;
     $this->url = $url;
     $this->response = $response;

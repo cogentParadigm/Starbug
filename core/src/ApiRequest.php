@@ -1,6 +1,9 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Http\RequestInterface;
+use Starbug\Http\ResponseInterface;
+
 class ApiRequest {
 
   protected $types = [

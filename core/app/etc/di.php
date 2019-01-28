@@ -4,7 +4,7 @@ use Monolog\Logger;
 use League\Flysystem\MountManager;
 use Starbug\Core\Storage\Filesystem;
 use Starbug\Core\Storage\Adapter\Local;
-use Starbug\Core\URL;
+use Starbug\Http\Url;
 
 return [
   'environment' => 'development',
@@ -44,6 +44,7 @@ return [
   ],
   'Starbug\Core\SettingsInterface' => DI\object('Starbug\Core\DatabaseSettings'),
   'Starbug\Core\*Interface' => DI\object('Starbug\Core\*'),
+  'Starbug\Http\*Interface' => DI\object('Starbug\Http\*'),
   'Starbug\Core\ResourceLocator' => DI\object()->constructor(DI\get('base_directory'), DI\get('modules')),
   'Starbug\Core\ModelFactory' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\CssGenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
@@ -56,9 +57,9 @@ return [
     return $previous;
   }),
   'Starbug\Core\SessionStorage' => DI\object()->constructorParameter('key', DI\get('hmac_key')),
-  'Starbug\Core\URLInterface' => function (ContainerInterface $c) {
-    $request = $c->get("Starbug\Core\RequestInterface");
-    return $request->getURL();
+  'Starbug\Http\UrlInterface' => function (ContainerInterface $c) {
+    $request = $c->get("Starbug\Http\RequestInterface");
+    return $request->getUrl();
   },
   'Starbug\Core\Routing\RouterInterface' => DI\object('Starbug\Core\Routing\Router')
     ->method('addStorage', DI\get('Starbug\Core\Routing\MemoryRouteStorage')),
@@ -93,19 +94,19 @@ return [
   'filesystem.public' => 'var/public/uploads',
   'filesystem.tmp' => 'var/tmp',
   'filesystem.adapter.public' => function (ContainerInterface $c) {
-    $here = $c->get("Starbug\Core\URLInterface");
+    $here = $c->get("Starbug\Http\UrlInterface");
     $public = $c->get("filesystem.public");
-    $url = (new URL($here->getHost(), $here->getDirectory().$public."/"))->setScheme($here->getScheme());
+    $url = (new Url($here->getHost(), $here->getDirectory().$public."/"))->setScheme($here->getScheme());
     $adapter = new Local($c->get("base_directory")."/".$public);
-    $adapter->setURLInterface($url);
+    $adapter->setUrlInterface($url);
     return $adapter;
   },
   'filesystem.adapter.tmp' => function (ContainerInterface $c) {
-    $here = $c->get("Starbug\Core\URLInterface");
+    $here = $c->get("Starbug\Http\UrlInterface");
     $tmp = $c->get("filesystem.tmp");
-    $url = (new URL($here->getHost(), $here->getDirectory().$tmp."/"))->setScheme($here->getScheme());
+    $url = (new Url($here->getHost(), $here->getDirectory().$tmp."/"))->setScheme($here->getScheme());
     $adapter = new Local($c->get("base_directory")."/".$tmp);
-    $adapter->setURLInterface($url);
+    $adapter->setUrlInterface($url);
     return $adapter;
   },
   'League\Flysystem\MountManager' => function (ContainerInterface $c) {

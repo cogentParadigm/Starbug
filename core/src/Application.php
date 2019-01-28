@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Http\RequestInterface;
+use Starbug\Http\ResponseInterface;
 use Starbug\Core\Routing\RouterInterface;
 
 class Application implements ApplicationInterface {

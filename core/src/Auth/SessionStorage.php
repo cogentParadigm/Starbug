@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Http\RequestInterface;
+
 /**
  * Cookie based implementation of SessionStorageInterface
  */
@@ -104,7 +106,7 @@ class SessionStorage implements SessionStorageInterface {
     // Append digest.
     $session .= '&d='.urlencode(hash_hmac("sha256", $session, $this->key));
     // Write cookies.
-    $url = $this->request->getURL();
+    $url = $this->request->getUrl();
     $oid = md5(uniqid(mt_rand(), true));
     setcookie("sid", $session, $this->data['e'], $url->build(""), null, false, true);
     setcookie("oid", $oid, $this->data['e'], $url->build(""), null, false, false);
@@ -121,7 +123,7 @@ class SessionStorage implements SessionStorageInterface {
       $this->db->query("sessions")->condition("id", $this->data["s"])->delete();
     }
     $this->data = [];
-    $url = $this->request->getURL();
+    $url = $this->request->getUrl();
     setcookie("sid", null, time(), $url->build(""), null, false, true);
   }
 }

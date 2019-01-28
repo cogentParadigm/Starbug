@@ -98,7 +98,7 @@ class Images implements ImagesInterface {
       $thumb->save($this->base_directory."/var/tmp/thumbnails/".$target);
       $this->filesystems->move("tmp://thumbnails/".$target, $filesystem."://thumbnails/".$target);
     }
-    return $this->filesystems->getFilesystem($filesystem)->getURL("thumbnails/".$target, $absolute);
+    return $this->filesystems->getFilesystem($filesystem)->getUrl("thumbnails/".$target, $absolute);
   }
   public function composite($dest, $composite, $x, $y) {
     switch (gettype($dest)) {

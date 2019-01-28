@@ -3,7 +3,7 @@ namespace Starbug\Content;
 
 use Starbug\Core\Routing\AliasStorageInterface;
 use Starbug\Core\DatabaseInterface;
-use Starbug\Core\RequestInterface;
+use Starbug\Http\RequestInterface;
 
 class AliasStorage implements AliasStorageInterface {
   public function __construct(DatabaseInterface $db) {

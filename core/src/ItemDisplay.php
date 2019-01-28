@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Http\ResponseInterface;
+
 class ItemDisplay extends Display {
 
   const HOOK_PHASE_BUILD = 0;

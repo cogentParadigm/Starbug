@@ -2,7 +2,7 @@
 namespace Starbug\Css;
 
 use Starbug\Core\Routing\RouteFilterInterface;
-use Starbug\Core\RequestInterface;
+use Starbug\Http\RequestInterface;
 
 class RouteFilter implements RouteFilterInterface {
   public function __construct(CssLoader $css, $theme) {

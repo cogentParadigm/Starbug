@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core\Routing;
 
-use Starbug\Core\RequestInterface;
+use Starbug\Http\RequestInterface;
 
 interface RouteStorageInterface {
   public function addRoute($path, $route);

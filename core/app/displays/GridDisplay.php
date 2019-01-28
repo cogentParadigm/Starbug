@@ -1,6 +1,9 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Http\RequestInterface;
+use Starbug\Http\ResponseInterface;
+
 class GridDisplay extends ItemDisplay {
   public $type = "grid";
   public $template = "grid.html";

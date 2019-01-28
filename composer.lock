@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1b6742c7a2c29787593db34b346fec97",
-    "content-hash": "6811f38de5332bf961dd70a37ad2df11",
+    "hash": "832432b4d057595e6939161f8d524f0a",
+    "content-hash": "a5c93e9f719dc736fa407892129780d7",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -917,6 +917,75 @@
                 "psr-3"
             ],
             "time": "2016-10-10 12:19:37"
+        },
+        {
+            "name": "starbug/bundle",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-bundle.git",
+                "reference": "ccc41af23006de3b4e507c36d61d647e778b6d2b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-bundle/zipball/ccc41af23006de3b4e507c36d61d647e778b6d2b",
+                "reference": "ccc41af23006de3b4e507c36d61d647e778b6d2b",
+                "shasum": ""
+            },
+            "require-dev": {
+                "starbug/devel": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Bundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "A simple object abstraction for working with nested array structures.",
+            "time": "2019-01-27 17:58:35"
+        },
+        {
+            "name": "starbug/http",
+            "version": "v0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-http.git",
+                "reference": "e836e440b592159f3d7645be4a485bcc8b6b3bda"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/e836e440b592159f3d7645be4a485bcc8b6b3bda",
+                "reference": "e836e440b592159f3d7645be4a485bcc8b6b3bda",
+                "shasum": ""
+            },
+            "require": {
+                "starbug/bundle": "^1.0"
+            },
+            "require-dev": {
+                "starbug/devel": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Http\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Simple abstractions for handling incoming HTTP requests and generating a response.",
+            "time": "2019-01-27 20:03:18"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -2771,6 +2840,7 @@
                 "testing",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2018-02-07 06:47:59"
         },
         {

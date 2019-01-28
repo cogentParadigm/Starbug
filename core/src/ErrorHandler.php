@@ -1,7 +1,8 @@
 <?php
 namespace Starbug\Core;
 
-use \Psr\Log\LoggerInterface;
+use Starbug\Http\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 /**
