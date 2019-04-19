@@ -24,13 +24,6 @@ class MockExecutor implements ExecutorInterface {
   /**
    * {@inheritDoc}
    */
-  public function getConnection() {
-    // Empty method.
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public function validate(BuilderInterface $builder, $phase = self::PHASE_VALIDATION) {
     // Empty method.
   }

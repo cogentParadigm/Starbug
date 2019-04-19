@@ -3,6 +3,10 @@ namespace Starbug\Db\Query;
 
 class Query implements QueryInterface {
 
+  public function __construct($prefix = "") {
+    $this->prefix = $prefix;
+  }
+
   use Traits\Mode;
   use Traits\ValidationState;
   use Traits\Selection;

@@ -2,6 +2,7 @@
 namespace Starbug\Db\Query;
 
 use Starbug\Db\Schema\Schema;
+use Starbug\Core\DatabaseInterface;
 
 class Builder implements BuilderInterface {
 
@@ -13,7 +14,8 @@ class Builder implements BuilderInterface {
 
   protected $schema;
 
-  public function __construct(ExecutorInterface $executor) {
+  public function __construct(DatabaseInterface $db, ExecutorInterface $executor) {
+    $this->db = $db;
     $this->executor = $executor;
     $this->reset();
   }
@@ -59,7 +61,7 @@ class Builder implements BuilderInterface {
   }
 
   public function query($table = false) {
-    $builder = new static($this->executor);
+    $builder = new static($this->db, $this->executor);
     $builder->setSchema($this->schema);
     if ($table) $builder->from($table);
     return $builder;

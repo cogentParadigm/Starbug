@@ -5,6 +5,9 @@ interface QueryInterface {
   public function addSelection($field, $alias = false);
   public function getSelection();
   public function removeSelection($alias);
+  public function getPrefix();
+  public function setPrefix($prefix);
+  public function prefix($table);
   public function setTable($table, $alias = false);
   public function getTable($alias = false);
   public function hasTable($alias = false);

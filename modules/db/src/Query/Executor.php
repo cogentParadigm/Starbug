@@ -10,8 +10,7 @@ class Executor implements ExecutorInterface {
 
   protected $hooks = [];
 
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, HookFactoryInterface $hookFactory, CompilerInterface $compiler) {
-    $this->db = $db;
+  public function __construct(ModelFactoryInterface $models, HookFactoryInterface $hookFactory, CompilerInterface $compiler) {
     $this->models = $models;
     $this->hookFactory = $hookFactory;
     $this->compiler = $compiler;
@@ -21,6 +20,7 @@ class Executor implements ExecutorInterface {
    * {@inheritDoc}
    */
   public function execute(BuilderInterface $builder) {
+    $db = $builder->getDatabase();
     $query = $builder->getQuery();
     if (!$query->isRaw() && $query->isInsert() || $query->isUpdate()) {
       if (!$query->isValidated()) $this->validate($builder, self::PHASE_VALIDATION);
@@ -29,11 +29,11 @@ class Executor implements ExecutorInterface {
 
     $result = $this->compiler->build($query);
 
-    if ($this->db->errors() && !$query->isSelect() && $query->errorsPreventSaving()) return false;
+    if ($db->errors() && !$query->isSelect() && $query->errorsPreventSaving()) return false;
 
     if ($query->isDelete()) $this->validate($builder, self::PHASE_BEFORE_DELETE);
     if ($result->isExecutable()) {
-      $records = $this->db->prepare($result->getSql());
+      $records = $db->prepare($result->getSql());
       $records->execute($query->getParameters());
       if ($query->isSelect()) {
         $rows = $records->fetchAll(PDO::FETCH_ASSOC);
@@ -41,8 +41,8 @@ class Executor implements ExecutorInterface {
       } else {
         $this->record_count = $records->rowCount();
         if ($query->isInsert()) {
-          $query->setValue("id", $this->db->lastInsertId());
-          $this->models->get($query->getTable()->getName())->insert_id = $this->db->lastInsertId();
+          $query->setValue("id", $db->lastInsertId());
+          $this->models->get($query->getTable()->getName())->insert_id = $db->lastInsertId();
         }
         if (!$query->isRaw()) {
           if ($query->isDelete()) $this->validate($builder, self::PHASE_AFTER_DELETE);
@@ -64,11 +64,12 @@ class Executor implements ExecutorInterface {
    * {@inheritDoc}
    */
   public function count(BuilderInterface $builder, array $params = []) {
+    $db = $builder->getDatabase();
     $query = $builder->getQuery();
     $result = $this->compiler->build($query);
-    if ($this->db->errors()) return false;
+    if ($db->errors()) return false;
     if (empty($params)) $params = $query->getParameters();
-    $records = $this->db->prepare($result->getCountSql());
+    $records = $db->prepare($result->getCountSql());
     $records->execute($params);
     $count = $records->fetchColumn();
     return $count;
@@ -77,21 +78,17 @@ class Executor implements ExecutorInterface {
   /**
    * {@inheritDoc}
    */
-  public function getConnection() {
-    return $this->db;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public function validate(BuilderInterface $builder, $phase = self::PHASE_VALIDATION) {
     $query = $builder->getQuery();
     if ($phase == self::PHASE_VALIDATION && !$query->isValidated()) $query->beginValidation();
-    $model = $this->models->get($query->getTable()->getName());
-    foreach ($model->hooks as $column => $hooks) {
-      if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) $hooks['required'] = "";
-      foreach ($hooks as $hook => $argument) {
-        $this->invokeHook($builder, $phase, $column, $hook, $argument);
+    $tableName = $query->getTable()->getName();
+    if ($this->models->has($tableName)) {
+      $model = $this->models->get($tableName);
+      foreach ($model->hooks as $column => $hooks) {
+        if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) $hooks['required'] = "";
+        foreach ($hooks as $hook => $argument) {
+          $this->invokeHook($builder, $phase, $column, $hook, $argument);
+        }
       }
     }
     if ($phase == self::PHASE_VALIDATION) $query->setValidated(true);

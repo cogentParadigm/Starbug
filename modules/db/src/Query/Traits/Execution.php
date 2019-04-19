@@ -4,6 +4,9 @@ namespace Starbug\Db\Query\Traits;
 use ArrayIterator;
 
 trait Execution {
+  public function getDatabase() {
+    return $this->db;
+  }
   public function validate() {
     return $this->executor->validate($this);
   }
@@ -47,9 +50,9 @@ trait Execution {
     return $this;
   }
   public function unsafeTruncate() {
-    $this->executor->getConnection()->exec("SET FOREIGN_KEY_CHECKS=0");
+    $this->db->exec("SET FOREIGN_KEY_CHECKS=0");
     $result = $this->truncate();
-    $this->executor->getConnection()->exec("SET FOREIGN_KEY_CHECKS=1");
+    $this->db->exec("SET FOREIGN_KEY_CHECKS=1");
     return $result;
   }
   public function count(array $params = []) {

@@ -23,6 +23,9 @@ class MockDatabase implements DatabaseInterface {
   public function remove($from, $where) {
     // Empty function.
   }
+  public function getPrefix() {
+    return $this->prefix;
+  }
   public function prefix($table) {
     return $this->prefix.$table;
   }

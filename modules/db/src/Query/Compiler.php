@@ -8,18 +8,6 @@ class Compiler implements CompilerInterface {
   protected $prefix;
   protected $hooks = [];
 
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
-  }
-
-  public function setPrefix($prefix) {
-    $this->prefix = $prefix;
-  }
-
-  public function getPrefix() {
-    return $this->db->prefix("");
-  }
-
   public function build(QueryInterface $query, $reset = true) {
     if ($reset) $this->parameterCount = [];
 
@@ -137,11 +125,11 @@ class Compiler implements CompilerInterface {
     $baseTableName = $baseTable->getName();
     $baseTableAlias = $baseTable->getAlias();
     $tables = $query->getTables();
-    $from = "`".$this->prefix($baseTableName)."`";
+    $from = "`".$query->prefix($baseTableName)."`";
     if (!$query->isInsert() && !$query->isTruncate()) $from .= " AS `".$baseTableAlias."`";
     foreach ($tables as $alias => $table) {
       if ($alias == $baseTableAlias) continue;
-      $tableSegment = ("(" === substr($table->getName(), 0, 1)) ? $table->getName() : "`".$this->prefix($table->getName())."`";
+      $tableSegment = ("(" === substr($table->getName(), 0, 1)) ? $table->getName() : "`".$query->prefix($table->getName())."`";
       $joinType = $table->getJoinType();
       $joinType = $joinType ? " ".$joinType : "";
       $segment = $joinType." JOIN ".$tableSegment." AS `".$alias."`";
@@ -278,10 +266,6 @@ class Compiler implements CompilerInterface {
   protected function incrementParameterIndex($set = "default") {
     if (!isset($this->parameterCount[$set])) $this->parameterCount[$set] = 0;
     return $this->parameterCount[$set]++;
-  }
-
-  protected function prefix($table) {
-    return $this->db->prefix($table);
   }
 
   public function addHook(CompilerHookInterface $hook) {

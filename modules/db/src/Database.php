@@ -12,7 +12,6 @@ class Database extends AbstractDatabase {
     $this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
     $this->database_name = $params['db'];
     $this->prefix = $params['prefix'];
-    $this->compiler->setPrefix($this->prefix);
     $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     if (false !== $this->timezone) $this->exec("SET TIME_ZONE='".$this->timezone."'");
   }

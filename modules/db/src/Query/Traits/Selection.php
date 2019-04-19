@@ -37,6 +37,6 @@ trait Selection {
   }
 
   public function createSubquery() {
-    return new static();
+    return new static($this->prefix);
   }
 }

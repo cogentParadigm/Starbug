@@ -82,6 +82,10 @@ abstract class AbstractDatabase implements DatabaseInterface {
     $this->errors = new Bundle();
   }
 
+  public function getPrefix() {
+    return $this->prefix;
+  }
+
   public function setTimeZone($timezone) {
     $this->timezone = $timezone;
   }
@@ -144,7 +148,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
    * @return array record or records
    */
   public function query($froms, $args = [], $replacements = []) {
-    return $this->queryBuilderFactory->create()->from($froms);
+    return $this->queryBuilderFactory->create($this)->from($froms);
   }
 
   /**
@@ -173,7 +177,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
    * @return array validation errors
    */
   public function queue($name, $fields = [], $from = "auto", $unshift = false) {
-    $query = $this->queryBuilderFactory->create()->from($name)->set($fields);
+    $query = $this->queryBuilderFactory->create($this)->from($name)->set($fields);
 
     if ($from === "auto" && !empty($fields['id'])) $from = ["id" => $fields['id']];
 
@@ -205,7 +209,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
    */
   public function remove($from, $where) {
     if (!empty($where)) {
-      $del = $this->queryBuilderFactory->create()->from($from);
+      $del = $this->queryBuilderFactory->create($this)->from($from);
       $this->record_count = $del->condition($where)->delete();
       return $this->record_count;
     }

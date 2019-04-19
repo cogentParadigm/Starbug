@@ -46,11 +46,4 @@ interface ExecutorInterface {
    * @return string The interpolated query
    */
   public function interpolate(QueryInterface $query, $params = null);
-
-  /**
-   * Return the database connection being used.
-   *
-   * @return Starbug\Core\DatabaseInterface The connection.
-   */
-  public function getConnection();
 }

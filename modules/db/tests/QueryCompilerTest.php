@@ -18,11 +18,11 @@ class QueryCompilerTest extends TestCase {
   }
 
   protected function createQuery() {
-    return new Query();
+    return new Query("test_");
   }
 
   protected function createCompiler() {
-    return new Compiler(new MockDatabase());
+    return new Compiler();
   }
 
   /**

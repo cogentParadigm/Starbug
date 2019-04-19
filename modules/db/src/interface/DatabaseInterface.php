@@ -51,6 +51,7 @@ interface DatabaseInterface {
    * @param string $where the WHERE conditions on the DELETE
    */
   public function remove($from, $where);
+  public function getPrefix();
   public function prefix($table);
   public function setDatabase($name);
   public function exec($statement);

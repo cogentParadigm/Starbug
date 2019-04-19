@@ -319,6 +319,6 @@ trait Builder {
   }
 
   protected function createQuery() {
-    return new Query();
+    return new Query($this->db->getPrefix());
   }
 }

@@ -15,13 +15,13 @@ class QueryBuilderTestBase extends TestCase {
   }
 
   protected function createCompiler() {
-    $compiler = new Compiler(new MockDatabase());
+    $compiler = new Compiler();
     $compiler->addHook(new QueryCompilerHook($this->createSchema()));
     return $compiler;
   }
 
   protected function createQuery() {
-    $this->builder = new Builder(new MockExecutor());
+    $this->builder = new Builder(new MockDatabase(), new MockExecutor());
     $this->builder->setSchema($this->createSchema());
     return $this->builder;
   }

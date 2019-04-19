@@ -7,6 +7,20 @@ trait Tables {
   protected $tables = [];
   protected $baseTable;
   protected $baseTableAlias;
+  protected $prefix;
+
+  public function getPrefix() {
+    return $this->prefix;
+  }
+
+  public function setPrefix($prefix) {
+    $this->prefix = $prefix;
+  }
+
+  public function prefix($table) {
+    if (substr($table, 0, 1) == "(") return $table;
+    return $this->prefix.$table;
+  }
 
   public function getTable($alias = false) {
     if (false === $alias) $alias = $this->baseTableAlias;
