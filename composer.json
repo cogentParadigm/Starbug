@@ -25,7 +25,7 @@
 		"starbug/devel": "*"
 	},
 	"autoload": {
-		"classmap":["core", "app", "modules", "var"]
+		"classmap":["core", "app", "modules", "var", "features"]
 	},
 	"scripts": {
 		"pre-install-cmd": "mkdir -p var",
