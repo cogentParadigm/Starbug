@@ -26,6 +26,7 @@ define([
       return this.valuePrefix + this.selection.getIdentity(item);
     },
     add:function(items) {
+      var data = lang.clone(this.selection.data);
       var target_size = this.selection.data.length + items.length;
       if (this.size === 0) {
         //unlimited
@@ -38,15 +39,17 @@ define([
       for (var i = 0;i < items.length;i++) {
         this.selection.put(items[i]);
       }
-      this.emit('change', {selection:this.selection.data});
+      this.emit('change', {selection:this.selection.data, previous: data});
     },
     remove: function(id) {
+      var data = lang.clone(this.selection.data);
       this.selection.remove(id);
-      this.emit('change', {selection:this.selection.data});
+      this.emit('change', {selection:this.selection.data, previous: data});
     },
     reset: function() {
+      var data = lang.clone(this.selection.data);
       this.selection.setData([]);
-      this.emit('change', {selection:this.selection.data});
+      this.emit('change', {selection:this.selection.data, previous: data});
     }
   });
 });

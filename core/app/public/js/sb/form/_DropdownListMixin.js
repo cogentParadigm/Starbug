@@ -40,6 +40,19 @@ define([
     open: function() {
       this.inherited(arguments);
       this.list.set('collection', this.collection.filter(this.query.query));
+    },
+    refresh: function(event) {
+      this.inherited(arguments);
+      if (event && this.list && this.list.collection) {
+        if (this.list.collection.emit == undefined) {
+          this.list.refresh();
+        } else {
+          var target = (event.selection.length > event.previous.length) ? event.selection : event.previous;
+          for (var i in target) {
+            this.list.collection.emit("update", {target:target[i]});
+          }
+        }
+      }
     }
   });
 });

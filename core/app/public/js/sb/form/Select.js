@@ -18,8 +18,6 @@ define([
       this.inherited(arguments);
       if (this.closeOnSelect) {
         this.selection.on('change', lang.hitch(this, 'close'));
-      } else {
-        this.selection.on('change', lang.hitch(this, 'focus'));
       }
     },
     createSelectionNode: function() {
@@ -27,9 +25,6 @@ define([
     },
     renderSelection: function() {
       this.selectionNode.innerHTML = this.get("displayedValue");
-      if (this.list) {
-        this.list.refresh();
-      }
     },
     _getDisplayedValueAttr: function() {
       var labels = [];

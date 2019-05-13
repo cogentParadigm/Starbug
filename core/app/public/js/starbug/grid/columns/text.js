@@ -13,19 +13,21 @@ function(dojo, on, sb, put, marked){
 		column.renderCell = function(object, value, cell, options, header){
 			if (!column.loaded) {
 				column.loaded = true;
-				var editor = column.grid._editorInstances[column.id];
-				on(editor, "keydown", function(evt) {
-					var key = evt.keyCode || evt.which;
-					if (key == 17) column.ctrlDown = true;
-				});
-				on(editor, "keyup", function(evt) {
-					var key = evt.keyCode || evt.which;
-					if (key == 17) column.ctrlDown = false;
-					else if (column.ctrlDown && key == 13) {
-						editor.blur();
-						column.ctrlDown = false;
-					}
-				});
+				if (column.editor) {
+					var editor = column.grid._editorInstances[column.id];
+					on(editor, "keydown", function(evt) {
+						var key = evt.keyCode || evt.which;
+						if (key == 17) column.ctrlDown = true;
+					});
+					on(editor, "keyup", function(evt) {
+						var key = evt.keyCode || evt.which;
+						if (key == 17) column.ctrlDown = false;
+						else if (column.ctrlDown && key == 13) {
+							editor.blur();
+							column.ctrlDown = false;
+						}
+					});
+				}
 			}
 
 			put(parent && parent.contents ? parent : cell, ".dgrid-textarea");
@@ -33,9 +35,6 @@ function(dojo, on, sb, put, marked){
 			//node = put(cell, 'pre');
 			cell.innerHTML = marked(value);//sb.strings.htmlentities(value);
 		};
-
-		column.editor = 'textarea';
-		column.editOn = column.editOn || "dblclick";
 
 		return column;
 	};

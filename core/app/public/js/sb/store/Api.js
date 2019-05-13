@@ -9,8 +9,10 @@ define([
 	'dojo/cookie',
 	'dstore/Request', /*=====, './Store' =====*/
 	'dstore/QueryResults',
-	'dstore/Tree'
-], function (request, when, lang, arrayUtil, JSON, ioQuery, declare, cookie, Request /*=====, Store =====*/, QueryResults, Tree) {
+	'dstore/Tree',
+	'dstore/SimpleQuery',
+	'dstore/Trackable'
+], function (request, when, lang, arrayUtil, JSON, ioQuery, declare, cookie, Request /*=====, Store =====*/, QueryResults, Tree, SimpleQuery, Trackable) {
 
 	/*=====
 	var __HeaderOptions = {
@@ -20,7 +22,7 @@ define([
 		__PutDirectives = declare(Store.PutDirectives, __HeaderOptions),
 	=====*/
 
-	return declare([Request, Tree], {
+	var Api = declare([Request, Tree], {
 
 		// stringify: Function
 		//		This function performs the serialization of the data for requests to the server. This
@@ -271,5 +273,7 @@ define([
 			}
 		}
 	});
+
+	return declare([Api, SimpleQuery, Trackable]);
 
 });

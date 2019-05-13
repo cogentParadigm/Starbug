@@ -27,10 +27,12 @@ define([
 
       // The toggleNode is removed from the tabindex so we are only concerned with click events.
       // Putting focus on the controlNode is the one true trigger event
-      on(this.toggleNode, 'click', lang.hitch(this.controlNode, 'focus'));
+      if (this.toggleNode) {
+        on(this.toggleNode, 'click', lang.hitch(this.controlNode, 'focus'));
+      }
       // The controlNode remains in the tabindex so we attach the focus event.
       // Note that the controlNode will receive focus on mousedown.
-      on(this.controlNode, 'focus,click', lang.hitch(this, 'open'));
+      on(this.controlNode, 'focus,click', lang.hitch(this, 'onFocus'));
       // Closing of the dropdown is tied to blurring of the focus target.
       on(this.focusTargetNode, 'blur', lang.hitch(this, function() {
         //Delay 10 milliseconds to allow focus to move first. Otherwise,
@@ -77,7 +79,6 @@ define([
       this.dropdownNode = put(this.domNode.parentNode, 'div.select-list.hidden');
     },
     open: function() {
-      var self = this;
       this.updateStyles();
       domclass.remove(this.dropdownNode, 'hidden');
       this.focusTargetNode.focus();
@@ -115,6 +116,9 @@ define([
     },
     focus: function() {
       this.controlNode.focus();
+    },
+    onFocus: function() {
+      this.open();
     }
   });
 });

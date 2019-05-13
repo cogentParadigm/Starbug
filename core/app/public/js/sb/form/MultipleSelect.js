@@ -54,9 +54,12 @@ define([
           target = current ? this.list.down(current) : query(".dgrid-row", this.list.domNode)[0];
         }
       } else if (keyCode == 27) { //ESC
-        this.close();
-        //Stop propagation to prevent closing a parent modal.
-        e.stopPropagation();
+        if (!domclass.contains(this.dropdownNode, "hidden")) {
+          this.close();
+          //Stop propagation to prevent closing a parent modal.
+          e.stopPropagation();
+          this.toggleNode.focus();
+        }
       } else if (keyCode != 9) {
         this.interval = setTimeout(lang.hitch(this, 'search'), 500);
       }
@@ -98,7 +101,6 @@ define([
         var button = put(this.selectionNode, 'button[type=button].btn.btn-primary.btn-xs[style=margin:0 5px 5px 0] $ span.fa.fa-times<', items[i].label + ' ');
         this.attachDeselection(button, items[i].id);
       }
-      this.list.refresh();
     },
     attachDeselection: function(button, id) {
       on(button, 'click', lang.hitch(this, function() {

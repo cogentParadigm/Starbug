@@ -31,12 +31,10 @@ define([
       var keywords = this.inputNode.value.replace(',','');
       if(keywords.length >= this.searchThreshold) {
         this.query.query[this.filterAttrName] = keywords;
-        domclass.remove(this.dropdownNode, 'hidden');
+        this.open();
       } else {
-        this.query.query[this.filterAttrName] = null;
-        domclass.add(self.dropdownNode,'hidden');
+        delete this.query.query[this.filterAttrName];
       }
-      this.list.set('collection', this.collection.filter(this.query.query));
     },
     close: function() {
       clearTimeout(this.interval);
@@ -49,7 +47,7 @@ define([
     onInput: function(e) {
       var keyCode = (window.event) ? e.which : e.keyCode;
       if (e.ctrlKey || keyCode == 16) return;
-      clearTimeout(self.interval);
+      clearTimeout(this.interval);
       var shifted = e.shiftKey;
       var current = this._lastSelected;
       if (false !== current) current = this.list.row(current);
@@ -64,9 +62,12 @@ define([
           target = current ? this.list.down(current) : query(".dgrid-row", this.list.domNode)[0];
         }
       } else if (keyCode == 27) { //ESC
-        this.close();
-        //Stop propagation to prevent closing a parent modal.
-        e.stopPropagation();
+        if (!domclass.contains(this.dropdownNode, "hidden")) {
+          this.close();
+          //Stop propagation to prevent closing a parent modal.
+          e.stopPropagation();
+          this.toggleNode.focus();
+        }
       } else if (keyCode != 9) {
         this.interval = setTimeout(lang.hitch(this, 'search'), 500);
       }
