@@ -27,7 +27,7 @@ class AddressFormatter {
     }
     $text = $country['format'];
 
-    if (trim($address["address2"]) == "") str_replace("%B%n", "", $text);
+    if (trim($address["address2"]) != "") $text = str_replace("%A%n", "%A%n%B%n", $text);
     $text = str_replace("%n", "<br/>", $text);
 
     $search = [];
@@ -37,7 +37,8 @@ class AddressFormatter {
       $replace[] = $address[$v];
     }
     $text = str_replace($search, $replace, $text);
-    $text = str_replace(["<br/><br/>", "  "], ["<br/>", " "], $text);
+    $text = implode("<br/>", array_filter(explode("<br/>", $text)));
+    $text = implode(" ", array_filter(explode(" ", $text)));
     return $text."<br/>".$country['name'];
   }
 }
