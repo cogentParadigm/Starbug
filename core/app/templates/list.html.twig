@@ -13,5 +13,8 @@
   </div>
 </div>
 {% if dialog %}
-<div id="{{ model }}_dialog" data-dojo-type="starbug/form/Dialog" data-dojo-id="{{ model }}_form" data-dojo-props="url:'{{ request.getPath() }}/', callback:function(){ {{ model }}_grid.refresh()}"></div>
+  {% if form_header is empty and model is not empty %}
+    {% set form_header = "New " ~ helper("models").get(model).singular_label %}
+  {% endif %}
+  <div id="{{ model }}_dialog" data-dojo-type="sb/modal/Form" data-dojo-id="{{ model }}_form" data-dojo-props="url:'{{ request.getPath() }}/', title:'{{ form_header }}', callback:function(){ {{ model }}_grid.refresh()}"></div>
 {% endif %}

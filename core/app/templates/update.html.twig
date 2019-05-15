@@ -1,4 +1,4 @@
-{% extends "panel.html.twig" %}
+{% extends "panel." ~ request.getFormat()|default("html") ~ ".twig" %}
 
 {% if form_header is empty and model is not empty %}
   {% set form_header = "Update " ~ helper("models").get(model).singular_label %}
