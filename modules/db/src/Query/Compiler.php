@@ -176,7 +176,7 @@ class Compiler implements CompilerInterface {
           $condition["field"] = "(".$this->buildSubquery($condition["field"], $query)->getSql().")";
           $condition["invert"] = true;
         }
-        if (!empty($condition['ornull']) && $condition['operator'] === "!=") $conditions .= "(".$condition['field']." is NULL || ";
+        if (!empty($condition['ornull'])) $conditions .= "(".$condition['field']." is NULL || ";
         if (empty($condition['invert'])) $conditions .= $condition['field'];
         if (!is_null($condition['value'])) {
           if (is_array($condition['value'])) {
@@ -226,7 +226,7 @@ class Compiler implements CompilerInterface {
             if (!$unary) $query->setParameter("default".$index, $condition['value']);
           }
         }
-        if (!empty($condition['ornull']) && $condition['operator'] === "!=") $conditions .= ")";
+        if (!empty($condition['ornull'])) $conditions .= ")";
         $set[$idx] = $conditions;
       }
       if (!empty($segments)) {
