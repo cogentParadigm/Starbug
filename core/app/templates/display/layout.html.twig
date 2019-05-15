@@ -5,7 +5,9 @@
     {% endfor %}
   {% else %}
     {% for name, field in display.fields %}
-      {% set field = field|merge({"attributes":{"class":field.attributes.class|join(" ")}}) %}
+      {% if field.attributes is not empty and field.attributes.class is not empty and field.attributes.class is iterable %}
+        {% set field = field|merge({"attributes":field.attributes|merge({"class":field.attributes.class|join(" ")})}) %}
+      {% endif %}
       <div {{ helper("filter").attributes(field.attributes) }}>
         {% for key, value in field %}
           {% if key != "attributes" %}

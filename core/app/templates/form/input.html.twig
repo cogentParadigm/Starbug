@@ -7,9 +7,19 @@
       {% set value = value|preg_replace('/[,\\s]+/', ",")|split(",") %}
     {% endif %}
     {% set records = helper("db").query("files").condition("id", value).sort("FIELD(id, '" ~ (value|join("','") ~ "')")).all() %}
-  {% endif %}
-  {% if records is not empty %}
-    {% set files = records|json_encode|replace({'"': "'"}) %}
+    {% set files = [] %}
+    {% for record in records %}
+      {% if record.mime_type|split("/")|first == "image" %}
+        {% set record = record|merge({
+          "thumbnail": helper("images").thumb(record.location ~ "://" ~ record.id ~ "_" ~ record.filename, {"w": 168, "h": 168, "a": 1}),
+          "url": helper("filesystems").getFilesystem(record.location).getUrl(record.id ~ "_" ~ record.filename)
+        }) %}
+      {% endif %}
+      {% set files = files|merge([record]) %}
+    {% endfor %}
+    {% if files is not empty %}
+      {% set files = files|json_encode|replace({'"': "'"}) %}
+    {% endif %}
   {% endif %}
   {% set attrs = 'data-dojo-type="starbug/form/FileSelect" data-dojo-props="input_name:\'' ~ attributes.name ~ '\', files:' ~ files %}
   {% if attributes.size is defined %}
