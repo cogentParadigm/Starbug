@@ -68,9 +68,15 @@ class Gateway implements GatewayInterface {
     // strip dashes from card number
     $payment['number'] = str_replace("-", "", $payment['card_number']);
     // build expiration field
-    if ((int) $payment['expiration_date']['month'] < 10) $payment['expiration_date']['month'] = '0'.$payment['expiration_date']['month'];
-    $payment['expiryYear'] = $payment['expiration_date']['year'];
-    $payment['expiryMonth'] = $payment['expiration_date']['month'];
+    if (is_array($payment["expiration_date"])) {
+      if ((int) $payment['expiration_date']['month'] < 10) $payment['expiration_date']['month'] = '0'.$payment['expiration_date']['month'];
+      $payment['expiryYear'] = $payment['expiration_date']['year'];
+      $payment['expiryMonth'] = $payment['expiration_date']['month'];
+    } else {
+      $expiration = explode("/", $payment["expiration_date"]);
+      $payment['expiryYear'] = $expiration[1];
+      $payment['expiryMonth'] = $expiration[0];
+    }
     // postCode
     $payment['postCode'] = $payment['zip'];
     return $payment;
