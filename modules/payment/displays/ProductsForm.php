@@ -20,7 +20,7 @@ class ProductsForm extends FormDisplay {
     $this->add(["description", "pane" => "bottom"]);
     $this->add(["content", "pane" => "bottom"]);
     $this->add(["thumbnail", "input_type" => "file_select", "pane" => "bottom"]);
-    $this->add(["photos", "input_type" => "file_select", "pane" => "bottom"]);
+    $this->add(["photos", "input_type" => "file_select", "pane" => "bottom", "size" => "0"]);
 
     $this->add([
       "payment_type",
