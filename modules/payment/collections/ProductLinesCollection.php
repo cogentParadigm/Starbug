@@ -26,7 +26,6 @@ class ProductLinesCollection extends Collection {
       foreach ($options as $option) {
         $item["options"][$option["slug"]] = $option["value"];
       }
-      $item['description'] = (string) '<strong>'.$item['description'].'</strong>';
       $item['total'] = $item['price'] * $item['qty'];
       $item['total_formatted'] = $this->formatter->format($item['total']);
       $item['price_formatted'] = $this->formatter->format($item['price']);

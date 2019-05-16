@@ -76,19 +76,21 @@ define([
 				}
 				put(put(self.totalsNode, 'div.total', 'Total: '), 'strong', '$'+((total + shipping_total)/100).toFixed(2));
 
-				self.shippingMethods.filter(self.query).fetch().then(lang.hitch(self, function(results) {
-					if (shippingLines.length == 0 && this.refreshCount < 2) {
-						this.selectShippingMethod(results[0].id);
-					} else {
-						put(this.shippingMethodsNode, {innerHTML: ''});
-						for (var m = 0; m < results.length; m++) {
-							var method = results[m];
-							var group = put(this.shippingMethodsNode, 'div.radio label.f6.b input.mr2[type=radio][name=shipping_method][value=$]'+(shippingLines[0].method == method.id ? '[checked=checked]' : '')+'+$<', method.id, method.label);
-							put(group, 'span.help-block', method.description);
+				if (self.mode != "payment") {
+					self.shippingMethods.filter(self.query).fetch().then(lang.hitch(self, function(results) {
+						if (shippingLines.length == 0 && this.refreshCount < 2) {
+							this.selectShippingMethod(results[0].id);
+						} else {
+							put(this.shippingMethodsNode, {innerHTML: ''});
+							for (var m = 0; m < results.length; m++) {
+								var method = results[m];
+								var group = put(this.shippingMethodsNode, 'div.radio label.f6.b input.mr2[type=radio][name=shipping_method][value=$]'+(shippingLines[0].method == method.id ? '[checked=checked]' : '')+'+$<', method.id, method.label);
+								put(group, 'span.help-block', method.description);
+							}
 						}
-					}
-					this.refreshCount++;
-				}));
+						this.refreshCount++;
+					}));
+				}
 			});
 		},
 		remove:function(id, type) {

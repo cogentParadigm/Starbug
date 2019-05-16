@@ -159,6 +159,10 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     return $line;
   }
 
+  public function getShippingMethod() {
+    return empty($this->lines["shipping"]) ? false : $this->lines["shipping"][0];
+  }
+
   public function addHook(CartHookInterface $hook) {
     $this->hooks[] = $hook;
   }
