@@ -164,7 +164,11 @@ class Migration extends AbstractMigration {
       ["bills", "type" => "bills", "table" => "bills"]
     );
 
-    $this->schema->addRow("permits", ["related_table" => "users", "action" => "login", "role" => "everyone", "priv_type" => "table"]);
+    $this->schema->addTable("address",
+      ["order_token", "type" => "string", "default" => ""]
+    );
+
+    $this->schema->addRow("permits", ["related_table" => "shipping_methods", "action" => "add", "role" => "everyone", "priv_type" => "global"]);
     $this->schema->addRow("permits", ["related_table" => "orders", "action" => "checkout", "role" => "owner", "priv_type" => "global"]);
     $this->schema->addRow("permits", ["related_table" => "orders", "action" => "payment", "role" => "owner", "priv_type" => "global"]);
     $this->schema->addRow("permits", ["related_table" => "subscriptions", "action" => "update", "role" => "owner", "priv_type" => "global"]);

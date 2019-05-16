@@ -21,8 +21,4 @@ class ApiShippingMethodsController extends ApiController {
     }
     $this->api->render("SelectShippingMethods", $params);
   }
-  public function filterQuery($collection, $query, $ops) {
-    if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
-    return $query;
-  }
 }

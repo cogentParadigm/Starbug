@@ -15,6 +15,7 @@ function(lang, on, put){
 
 		column.editor = 'text';
 		//column.editOn = column.editOn || "dblclick";
+		column.editorArgs = {className: "dgrid-input w3"};
 
 		return column;
 	};

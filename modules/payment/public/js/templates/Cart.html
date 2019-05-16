@@ -1,12 +1,12 @@
 <div class="cart clearfix">
-	<table data-dojo-attach-point="gridNode" class="dgrid-autoheight clearfix">
+	<table data-dojo-attach-point="gridNode" class="dgrid-autoheight dbootstrap-grid">
 		<thead>
 			<tr>
 				<th data-dgrid-column="starbug.grid.columns.html({ field: 'description' })">Product</th>
-				<th data-dgrid-column="{ field: 'price_formatted'}">Price</th>
-				<th data-dgrid-column="app.shop.columns.quantity({ field: 'qty'})">Quantity</th>
-				<th data-dgrid-column="app.shop.columns.remove({ field: 'id'})">Remove</th>
-				<th data-dgrid-column="{ field: 'total_formatted'}">Total</th>
+				<th data-dgrid-column="{ field: 'price_formatted', className: 'w4'}">Price</th>
+				<th data-dgrid-column="app.shop.columns.quantity({ field: 'qty', className: 'w4'})">Quantity</th>
+				<th data-dgrid-column="app.shop.columns.remove({ field: 'id', className: 'w4'})">Remove</th>
+				<th data-dgrid-column="{ field: 'total_formatted', className: 'w4'}">Total</th>
 			</tr>
 		</thead>
 	</table>
@@ -31,6 +31,6 @@
 	<div class="actions" style="margin-top:20px" data-dojo-attach-point="actionsNode">
 		<button class="btn btn-default" data-dojo-attach-event="onClick:update">Update Cart</button>
 	</div>
-	<div class="shipping-methods" style="margin-top:20px" data-dojo-attach-point="shippingMethodsNode"></div>
-	<div class="totals" data-dojo-attach-point="totalsNode" style="margin:20px 0"></div>
+	<div style="margin-top:20px" data-dojo-attach-point="shippingMethodsNode"></div>
+	<div class="tr" data-dojo-attach-point="totalsNode" style="margin:20px 0"></div>
 </div>

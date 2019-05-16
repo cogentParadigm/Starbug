@@ -14,12 +14,16 @@ class Orders extends OrdersModel {
 
   public function checkout($order) {
     $target = ["id" => $this->cart->get("id"), "billing_same" => $order["billing_same"]];
-    if (isset($order['shipping_address'])) {
+    if (empty($order['shipping_address'])) {
+      $this->error("Please enter a shipping address", "shipping_address");
+    } else {
       $target['shipping_address'] = $order['shipping_address'];
     }
     if ($target["billing_same"]) {
       $target["billing_address"] = "NULL";
-    } elseif (isset($order['billing_address'])) {
+    } elseif (empty($order["billing_address"])) {
+      $this->error("Please enter a billing address", "billing_address");
+    } else {
       $target['billing_address'] = $order['billing_address'];
     }
     if ($target['id']) {

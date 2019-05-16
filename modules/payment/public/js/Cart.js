@@ -83,7 +83,7 @@ define([
 						put(this.shippingMethodsNode, {innerHTML: ''});
 						for (var m = 0; m < results.length; m++) {
 							var method = results[m];
-							var group = put(this.shippingMethodsNode, 'div.radio label input[type=radio][name=shipping_method][value=$]'+(shippingLines[0].method == method.id ? '[checked=checked]' : '')+'+$<', method.id, method.label);
+							var group = put(this.shippingMethodsNode, 'div.radio label.f6.b input.mr2[type=radio][name=shipping_method][value=$]'+(shippingLines[0].method == method.id ? '[checked=checked]' : '')+'+$<', method.id, method.label);
 							put(group, 'span.help-block', method.description);
 						}
 					}
