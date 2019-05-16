@@ -1,9 +1,6 @@
 {% set other_id = helper("filter").normalize(name) ~ "_other" %}
 {% set found = false %}
 <select {{ helper("filter").attributes(display.attributes) }}{% if display.options.other_option %} onchange="var text = document.getElementById('{{ other_id }}_text'); if (this.options[this.selectedIndex].hasAttribute('data-other')) text.style.display = 'block'; else text.style.display='none';"{% endif %}>
-  {% if false is not same as(display.options.optional) %}
-    <option value="">{{ display.options.optional }}</option>
-  {% endif %}
   {% for item in display.items %}
     {% set selected = "" %}
     {% if (display.options.value is iterable and item.id in display.options.value) or item.id == display.options.value %}

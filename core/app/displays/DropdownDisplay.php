@@ -14,6 +14,9 @@ class DropdownDisplay extends ItemDisplay {
       $this->model = $options['model'];
       $this->collection = $options['collection'];
     } elseif (!empty($options['options'])) {
+      if (isset($options["optional"])) {
+        $this->items[] = ["id" => "", "label" => $options["optional"]];
+      }
       foreach ($options['options'] as $option) {
         $this->items[] = is_array($option) ? $option : ["id" => $option, "label" => $option];
       }
