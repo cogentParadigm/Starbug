@@ -51,6 +51,7 @@ class Migration extends AbstractMigration {
       ["type", "type" => "int", "references" => "product_types id", "alias" => "%slug%", "null" => ""],
       ["sku", "type" => "string", "unique" => ""],
       ["name", "type" => "string"],
+      ["options", "type" => "product_options", "exclude" => "always"],
       ["path", "type" => "string", "length" => "128", "unique" => "", "default" => "", "slug" => "name"],
       ["payment_type", "type" => "string", "default" => "single"],
       ["price", "type" => "int", "default" => "0", "filter_var" => FILTER_SANITIZE_NUMBER_FLOAT],
@@ -69,6 +70,11 @@ class Migration extends AbstractMigration {
       ["meta_keywords", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
       ["meta_description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
       ["sorting_weight", "type" => "int", "default" => "0"]
+    );
+
+    $this->schema->addTable(["products_options"],
+      ["options_id", "type" => "int", "references" => "product_options id", "update" => "cascade", "delete" => "cascade", "alias" => "%slug%"],
+      ["value", "type" => "string", "length" => "255", "default" => ""]
     );
 
     // Shipping methods and rates.

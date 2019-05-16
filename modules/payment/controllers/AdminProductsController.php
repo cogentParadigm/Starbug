@@ -1,16 +1,15 @@
 <?php
 namespace Starbug\Payment;
 
-use Starbug\Core\Controller;
+use Starbug\Core\WizardController;
 use Starbug\Core\DatabaseInterface;
 
-class AdminProductsController extends Controller {
+class AdminProductsController extends WizardController {
+  protected $model = "products";
+  protected $formTemplate = "admin/products/form.html";
   public $routes = [
     'update' => '{id}'
   ];
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
-  }
   public function init() {
     $this->assign("model", "products");
   }
@@ -19,11 +18,11 @@ class AdminProductsController extends Controller {
   }
   public function create() {
     if ($this->db->success("products", "create")) $this->redirect("admin/products");
-    else $this->render("admin/create.html");
+    else $this->render("admin/products/wizard.html", ["options" => $this->getDisplayOptions()]);
   }
   public function update($id) {
     $this->assign("id", $id);
     if ($this->db->success("products", "create")) $this->redirect("admin/products");
-    else $this->render("admin/update.html");
+    else $this->render("admin/products/wizard.html", ["options" => $this->getDisplayOptions(["id" => $id])]);
   }
 }
