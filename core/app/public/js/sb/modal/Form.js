@@ -74,6 +74,8 @@ define([
     buildUrl: function(url) {
       if (this.options.crudSuffixes) {
         url += this.itemId ? "update/" + this.itemId : "create";
+      } else if (this.itemId) {
+        url += "/" + this.itemId;
       }
       if (this.options.format) {
         url += "." + this.options.format;
