@@ -5,7 +5,7 @@ use Starbug\Core\ProductsModel;
 
 class Products extends ProductsModel {
   public function create($product) {
-    $options = $product["options"];
+    $options = $product["options"] ?: [];
     unset($product["options"]);
     $this->store($product);
     if (!$this->errors()) {
