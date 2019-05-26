@@ -154,7 +154,7 @@ class Action {
                 $query->createCondition()
                   ->condition("permits.role", $cname)
                   ->condition(
-                    $query->query($object_table." o")->select($ref)->where("o.".$columns[$cname]['entity']."_id=".$collection.".".$target),
+                    $query->query($object_table." as o")->select($ref)->where("o.".$columns[$cname]['entity']."_id=".$collection.".".$target),
                     "",
                     "NOT EXISTS"
                   )
