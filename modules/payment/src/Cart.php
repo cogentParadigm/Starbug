@@ -116,15 +116,23 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
   }
 
   public function addProduct($input) {
+    $this->init();
+    if (empty($input["qty"])) {
+      $input["qty"] = 1;
+    }
+    foreach ($this->lines["product"] as $line) {
+      if ($line["product"] == $input["id"] && empty($line["options"]) && empty($input["options"])) {
+        // Product is in cart without options and is being added without options.
+        return $this->models->get("product_lines")->update([$line["id"] => $line["qty"] + $input["qty"]]);
+      }
+    }
     $product = $this->models->get("products")->query()->condition("products.id", $input['id'])->one();
     $line = [
       "product" => $product['id'],
       "description" => $product['name'],
-      "price" => $product['price']
+      "price" => $product['price'],
+      "qty" => $input["qty"]
     ];
-    $this->init();
-    // pass id and qty
-    $line['qty'] = 1;
     $this->invokeHooks("addProduct", [$product, &$line, &$input]);
     $this->add("product_lines", $line);
     $line['id'] = $this->models->get("product_lines")->insert_id;
