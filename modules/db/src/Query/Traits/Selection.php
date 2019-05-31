@@ -7,6 +7,7 @@ trait Selection {
 
   protected $distinct = false;
   protected $selection = [];
+  protected $forUpdate = false;
 
   public function getSelection() {
     return $this->selection;
@@ -38,5 +39,13 @@ trait Selection {
 
   public function createSubquery() {
     return new static($this->prefix);
+  }
+
+  public function setForUpdate($forUpdate = true) {
+    $this->forUpdate = $forUpdate;
+  }
+
+  public function isForUpdate() {
+    return $this->forUpdate;
   }
 }

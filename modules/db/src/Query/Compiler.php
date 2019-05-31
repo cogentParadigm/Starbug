@@ -17,7 +17,11 @@ class Compiler implements CompilerInterface {
 
     $sql = [];
     foreach ($components as $key => $clause) {
-      $sql[$key] = $key." ".$clause;
+      if (true === $clause) {
+        $sql[$key] = $key;
+      } else {
+        $sql[$key] = $key." ".$clause;
+      }
     }
     $sqlQuery = implode(' ', $sql);
     $sqlCountQuery = "";
@@ -98,6 +102,10 @@ class Compiler implements CompilerInterface {
     elseif ($query->isInsert()) $components['INSERT INTO'] = $this->buildFrom($query);
     elseif ($query->isUpdate()) $components['UPDATE'] = $this->buildFrom($query);
     elseif ($query->isTruncate()) $components['TRUNCATE TABLE'] = $this->buildFrom($query);
+
+    if ($query->isSelect() && $query->isForUpdate()) {
+      $components["FOR UPDATE"] = true;
+    }
 
     foreach ($components as $key => $clause) if (empty($clause)) unset($components[$key]);
 

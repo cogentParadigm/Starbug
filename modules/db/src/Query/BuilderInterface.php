@@ -111,6 +111,7 @@ interface BuilderInterface extends IteratorAggregate {
    */
   public function skip($skip);
   public function mode($mode);
+  public function forUpdate($forUpdate = true);
   public function reset();
   public function getQuery();
 }

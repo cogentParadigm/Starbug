@@ -309,6 +309,11 @@ trait Builder {
     return $this;
   }
 
+  public function forUpdate($forUpdate = true) {
+    $this->query->setForUpdate($forUpdate);
+    return $this;
+  }
+
   public function reset() {
     $this->query = $this->createQuery();
     return $this;
