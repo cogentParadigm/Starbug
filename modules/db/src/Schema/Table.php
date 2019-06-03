@@ -57,10 +57,14 @@ class Table {
   public function hasOption($name) {
     return isset($this->options[$name]);
   }
-  public function addIndex($columns) {
+  public function addIndex($columns, $options = []) {
     $key = implode("_", $columns);
     $this->indexes[$key]["columns"] = $columns;
     $this->indexes[$key]["dropped"] = false;
+    $this->indexes[$key] += $options;
+  }
+  public function addUniqueIndex($columns, $options = []) {
+    $this->addIndex($columns, $options + ["unique" => true]);
   }
   public function dropIndex($columns) {
     $key = implode("_", $columns);

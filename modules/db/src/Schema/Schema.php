@@ -135,8 +135,12 @@ class Schema implements SchemaInterface {
     $this->tables[$table]->dropColumn($column);
     return $this;
   }
-  public function addIndex($table, $columns) {
-    $this->tables[$table]->addIndex($columns);
+  public function addIndex($table, $columns, $options = []) {
+    $this->tables[$table]->addIndex($columns, $options);
+    return $this;
+  }
+  public function addUniqueIndex($table, $columns, $options = []) {
+    $this->tables[$table]->addUniqueIndex($columns, $options);
     return $this;
   }
   public function dropIndex($table, $columns) {

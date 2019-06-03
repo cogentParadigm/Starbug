@@ -53,7 +53,11 @@ class Migrator extends AbstractMigration {
       }
       $t->setPrimaryKey($primary);
       foreach ($indexes as $index) {
-        $t->addIndex($index["columns"]);
+        if ($index["unique"]) {
+          $t->addUniqueIndex($index["columns"]);
+        } else {
+          $t->addIndex($index["columns"]);
+        }
       }
     }
     $diff = $comparator->compare($from, $to);

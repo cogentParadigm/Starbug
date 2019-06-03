@@ -14,7 +14,8 @@ interface SchemaInterface {
   public function hasColumn($table, $column);
   public function dropTable($table);
   public function dropColumn($table, $column);
-  public function addIndex($table, $columns);
+  public function addIndex($table, $columns, $options = []);
+  public function addUniqueIndex($table, $columns, $options = []);
   public function dropIndex($table, $columns);
   public function clean();
 }
