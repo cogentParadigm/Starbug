@@ -113,13 +113,19 @@ define([
 				var qty = query('.field-qty .dgrid-input', row.element).attr('value')[0];
 				data[row.data.id] = qty;
 			}
-			this.products.put(data, {action:'update'}).then(function() {
+			this.products.put(data, {action:'update'}).then(function(results) {
 					self.refresh();
+					if (results.errors) {
+						alert(results.errors[0].errors[0]);
+					}
 			});
 		},
 		selectShippingMethod: function(id) {
-			this.shippingMethods.put({id:id}, {action:'add'}).then(lang.hitch(this, function() {
+			this.shippingMethods.put({id:id}, {action:'add'}).then(lang.hitch(this, function(results) {
 				this.refresh();
+				if (results.errors) {
+					alert(results.errors[0].errors[0]);
+				}
 			}));
 		}
 	});

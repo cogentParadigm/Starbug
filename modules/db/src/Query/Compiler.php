@@ -150,10 +150,14 @@ class Compiler implements CompilerInterface {
   }
 
   protected function buildSet($query) {
+    $baseTableAlias = $query->getTable()->getAlias();
     $set = [];
     $values = $query->getValues();
     foreach ($values as $name => $value) {
       if (!$query->isExcluded($name)) {
+        if (false === strpos($name, ".") && $query->isUpdate()) {
+          $name = $baseTableAlias . "." . $name;
+        }
         if ($value == "NULL") $value = null;
         $idx = $this->incrementParameterIndex("set");
         $set[] = "`".str_replace(".", "`.`", str_replace('`', '', $name))."` = :set".$idx;
