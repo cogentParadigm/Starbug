@@ -79,12 +79,11 @@ class StoreTypeHook extends QueryHook {
           // remove
           $entry->delete();
         } else {
-          // add
-          $entry->set($model."_id", $model_id);
-          $entry->set($column."_id", $type_id);
-          $entry->set("position", intval($position)+1);
-          if ($entry->one()) $entry->update();
-          else $entry->insert();
+          $record = [$model."_id" => $model_id, $column."_id" => $type_id, "position" => intval($position)+1];
+          if ($row = $entry->one()) {
+            $record["id"] = $row["id"];
+          }
+          $this->db->store($target, $record);
           $type_ids[] = $type_id;
         }
       }
