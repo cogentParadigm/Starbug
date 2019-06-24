@@ -649,7 +649,7 @@ class QueryBuilderTest extends QueryBuilderTestBase {
     $this->createQuery()->from("users")->condition("email", "phpunit")->set("first_name", "PHPUnit")->mode("update");
 
     // Expected output.
-    $expected = "UPDATE `test_users` AS `users` SET `first_name` = :set0 WHERE email = :default0";
+    $expected = "UPDATE `test_users` AS `users` SET `users`.`first_name` = :set0 WHERE email = :default0";
 
     // Compare.
     $actual = $this->compile();

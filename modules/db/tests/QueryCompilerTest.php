@@ -485,7 +485,7 @@ class QueryCompilerTest extends TestCase {
     $this->query->setMode("update");
 
     // expected output
-    $expected = "UPDATE `test_users` AS `users` SET `first_name` = :set0 WHERE email = :default0";
+    $expected = "UPDATE `test_users` AS `users` SET `users`.`first_name` = :set0 WHERE email = :default0";
 
     // compare
     $actual = $this->compile();
