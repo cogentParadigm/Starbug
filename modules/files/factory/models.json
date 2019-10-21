@@ -1,6 +1,6 @@
 {
 	"files": {
-		"filesystem": "Starbug\\Core\\Storage\\FilesystemInterface",
+		"filesystems": "League\\Flysystem\\MountManager",
 		"images": "ImagesInterface"
 	}
 }

@@ -29,14 +29,15 @@ class Files extends FilesModel {
       $record['mime_type'] = $this->getMime($file['tmp_name']);
       $record['size'] = filesize($file['tmp_name']);
       if (empty($record['category'])) $record['category'] = "files_category uncategorized";
+      if (empty($record["location"])) $record["location"] = "default";
       $this->store($record);
       if ((!$this->errors()) && (!empty($record['filename']))) {
         $id = (empty($record['id'])) ? $this->insert_id : $record['id'];
         $stream = fopen($file["tmp_name"], "r+");
-        $success = $this->filesystem->writeStream($id."_".$record["filename"], $stream);
+        $success = $this->filesystems->getFilesystem($record["location"])->writeStream($id."_".$record["filename"], $stream);
         if (is_resource($stream)) fclose($stream);
         if ($success) {
-          if (reset(explode("/", $record['mime_type'])) == "image") $this->images->thumb("default://".$id."_".$record['filename'], ["w" => 100, "h" => 100, "a" => 1]);
+          if (in_array($record['mime_type'], ["image/gif", "image/jpeg", "image/png"])) $this->images->thumb($record["location"]."://".$id."_".$record['filename'], ["w" => 100, "h" => 100, "a" => 1]);
           return true;
         } else {
           return false;
