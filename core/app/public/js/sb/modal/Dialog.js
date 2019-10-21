@@ -27,6 +27,7 @@ define([
       on(this.domNode, "hidden.bs.modal", lang.hitch(this, function() {
         this.setContent("");
       }));
+      this.body.startup();
     },
     build: function() {
       this.dialog = put(this.domNode, theme.selector("dialog"));
