@@ -66,6 +66,6 @@ class StoreOrderedHook extends QueryHook {
       $ids[] = $row['id'];
       $value += $this->increment;
     }
-    $this->conditions = [];
+    $this->conditions = false;
   }
 }
