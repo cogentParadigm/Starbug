@@ -59,6 +59,6 @@ class ResourceLocator implements ResourceLocatorInterface {
    * @return string the camel case converted name
    */
   protected function formatClassName($className) {
-    return str_replace(" ", "", ucwords(str_replace("_", " ", $className)));
+    return str_replace(" ", "", ucwords(str_replace(["_", "-"], " ", $className)));
   }
 }
