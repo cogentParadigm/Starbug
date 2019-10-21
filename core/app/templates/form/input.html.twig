@@ -9,10 +9,12 @@
     {% set records = helper("db").query("files").condition("id", value).sort("FIELD(id, '" ~ (value|join("','") ~ "')")).all() %}
     {% set files = [] %}
     {% for record in records %}
+      {% set record = record|merge({
+        "url": helper("filesystems").getFilesystem(record.location).getUrl(record.id ~ "_" ~ record.filename)
+      }) %}
       {% if record.mime_type|split("/")|first == "image" %}
         {% set record = record|merge({
           "thumbnail": helper("images").thumb(record.location ~ "://" ~ record.id ~ "_" ~ record.filename, {"w": 168, "h": 168, "a": 1}),
-          "url": helper("filesystems").getFilesystem(record.location).getUrl(record.id ~ "_" ~ record.filename)
         }) %}
       {% endif %}
       {% set files = files|merge([record]) %}
@@ -27,6 +29,9 @@
   {% endif %}
   {% if attributes.browseEnabled is defined %}
     {% set attrs = attrs ~ ', browseEnabled:' ~ attributes.browseEnabled %}
+  {% endif %}
+  {% if attributes.location is defined %}
+    {% set attrs = attrs ~ ', location:' ~ "'" ~ attributes.location ~ "'" %}
   {% endif %}
   {% set attrs = attrs ~ '"' %}
   <div {{ attrs }}></div>
