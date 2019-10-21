@@ -1,7 +1,8 @@
 <?php
 namespace Starbug\Core;
 
-use \Interop\Container\ContainerInterface;
+use Interop\Container\ContainerInterface;
+use Exception;
 
 class HelperFactory implements HelperFactoryInterface {
   protected $locator;
