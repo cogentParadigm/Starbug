@@ -7,6 +7,7 @@ define([
 	return declare("starbug.form.Uploader", [dojox.form.Uploader], {
 		templateString:template,
 		category:null,
+		location: "default",
 		_createInput: function(){
 			this.inherited(arguments);
 			domstyle.set(this.inputNode, 'left', '5px');
@@ -18,6 +19,7 @@ define([
 		upload: function(formData) {
 			if (typeof formData == "undefined") return false;
 			if (this.category != null) formData.category = this.category;
+			formData.location = this.location;
 			this.inherited(arguments);
 		}
 	});

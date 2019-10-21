@@ -31,6 +31,7 @@ define([
 		size:1,
 		store:null,
 		browseEnabled: true,
+		location: "default",
 		postCreate:function() {
 			var self = this;
 			this.store = new TrackableMemory({data: []});
@@ -43,6 +44,7 @@ define([
 			this.uploader.startup();
 			this.grid.editor = self;
 			//initialize the uploader
+			this.uploader.location = this.location;
 			this.uploader.url = WEBSITE_URL+'upload';
 			this.uploader.onBegin = lang.hitch(this, function() {
 				self.set_status('loading');
@@ -86,7 +88,7 @@ define([
 			for (var i in files) {
 				var object = files[i];
 				if (files[i].filename[0] != "<") {
-					var full_path = object.thumbnail;
+					var full_path = object.url;
 					var div = put('div');
 					if (object.mime_type.split('/')[0] == "image") {
 						var img = put(div, 'img.img-responsive');
