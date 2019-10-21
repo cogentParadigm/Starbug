@@ -14,7 +14,13 @@ class UploadController extends Controller {
   public function defaultAction() {
     $_post = [];
     $htmldata = [];
-    $record = ["filename" => "", "mime_type" => "", "caption" => "uploaded file", "category" => $this->request->getPost('category')];
+    $record = [
+      "filename" => "",
+      "mime_type" => "",
+      "caption" => "uploaded file",
+      "category" => $this->request->getPost("category"),
+      "location" => $this->request->hasPost("location") ? $this->request->getPost("location") : "default"
+    ];
     $files = [];
 
     foreach ($this->request->getFiles()->get('uploadedfiles') as $key => $arr) {
@@ -24,28 +30,30 @@ class UploadController extends Controller {
     }
 
     foreach ($files as $file) {
+      try {
+        list($width, $height) = getimagesize($file['tmp_name']);
+      } catch (Exception $e) {
+        $width = 0;
+        $height = 0;
+      }
       if (!empty($file['category'])) $record['category'] = $file['category'];
       $moved = $this->models->get("files")->upload($record, $file);
       if ($moved) {
         $id = $this->models->get('files')->insert_id;
+        $record = $this->models->get("files")->load($id);
         $_post['id'] = $id;
-        $_post['original_name'] = str_replace(" ", "_", $file['name']);
-        $_post['name'] = $id."_".$_post['original_name'];
-        $_post['url'] = $this->filesystems->getFilesystem("default")->getUrl($_post['name']);
-        $_post['mime_type'] = $this->models->get("files")->getMime($file['tmp_name']);
-        try {
-          list($width, $height) = getimagesize($file['tmp_name']);
-          $image = true;
-          $_post['thumbnail'] = $this->images->thumb("default://".$_post['name'], ["w" => 100, "w" => 100, "a" => 1]);
-        } catch (Exception $e) {
-          $width=0;
-          $height=0;
-          $image = false;
+        $_post['original_name'] = $record["filename"];
+        $_post['name'] = $id."_".$record["filename"];
+        $_post['url'] = $this->filesystems->getFilesystem($record["location"])->getUrl($_post['name']);
+        $_post['mime_type'] = $record["mime_type"];
+        $image = in_array($record["mime_type"], ["image/gif", "image/jpeg", "image/png"]);
+        if  ($image) {
+          $_post['thumbnail'] = $this->images->thumb($record["location"]."://".$_post['name'], ["w" => 100, "w" => 100, "a" => 1]);
         }
         $_post['width'] = $width;
         $_post['height'] = $height;
         $_post['type'] = end(explode(".", $_post['name']));
-        $_post['size'] = filesize($file['tmp_name']);
+        $_post['size'] = $this->filesystems->getFilesystem($record["location"])->getSize($_post['name']);
         $_post['image'] = $image;
         $_post['owner'] = $this->user->userinfo("id");
         $htmldata[] = $_post;
