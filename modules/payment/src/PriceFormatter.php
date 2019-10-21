@@ -1,6 +1,6 @@
 <?php
-//quick and dirty price formatter
-//we will implement https://github.com/moneyphp/money when possible
+// quick and dirty price formatter
+// we will implement https://github.com/moneyphp/money when possible
 namespace Starbug\Payment;
 
 class PriceFormatter implements PriceFormatterInterface {

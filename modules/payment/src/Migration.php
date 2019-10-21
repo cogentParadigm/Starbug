@@ -21,7 +21,7 @@ class Migration extends AbstractMigration {
       ["live_mode_value", "type" => "text", "default" => ""],
       ["description", "type" => "text", "default" => ""]
     );
-    //store payment gateways
+    // store payment gateways
     $this->schema->addRow("payment_gateways",
       ["name" => "Authorize.Net", "description" => "Purchase with credit card using Authorize.net"],
       ["is_test_mode" => "1", "is_active" => "1"]
@@ -51,9 +51,10 @@ class Migration extends AbstractMigration {
       ["type", "type" => "int", "references" => "product_types id", "alias" => "%slug%", "null" => ""],
       ["sku", "type" => "string", "unique" => ""],
       ["name", "type" => "string"],
+      ["options", "type" => "product_options", "exclude" => "always"],
       ["path", "type" => "string", "length" => "128", "unique" => "", "default" => "", "slug" => "name"],
       ["payment_type", "type" => "string", "default" => "single"],
-      ["price", "type" => "int", "default" => "0"],
+      ["price", "type" => "int", "default" => "0", "filter_var" => FILTER_SANITIZE_NUMBER_FLOAT],
       ["interval", "type" => "int"],
       ["unit", "type" => "string"],
       ["limit", "type" => "int", "default" => 0],
@@ -69,6 +70,11 @@ class Migration extends AbstractMigration {
       ["meta_keywords", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
       ["meta_description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
       ["sorting_weight", "type" => "int", "default" => "0"]
+    );
+
+    $this->schema->addTable(["products_options"],
+      ["options_id", "type" => "int", "references" => "product_options id", "update" => "cascade", "delete" => "cascade", "alias" => "%slug%"],
+      ["value", "type" => "string", "length" => "255", "default" => ""]
     );
 
     // Shipping methods and rates.
@@ -164,7 +170,11 @@ class Migration extends AbstractMigration {
       ["bills", "type" => "bills", "table" => "bills"]
     );
 
-    $this->schema->addRow("permits", ["related_table" => "users", "action" => "login", "role" => "everyone", "priv_type" => "table"]);
+    $this->schema->addTable("address",
+      ["order_token", "type" => "string", "default" => ""]
+    );
+
+    $this->schema->addRow("permits", ["related_table" => "shipping_methods", "action" => "add", "role" => "everyone", "priv_type" => "global"]);
     $this->schema->addRow("permits", ["related_table" => "orders", "action" => "checkout", "role" => "owner", "priv_type" => "global"]);
     $this->schema->addRow("permits", ["related_table" => "orders", "action" => "payment", "role" => "owner", "priv_type" => "global"]);
     $this->schema->addRow("permits", ["related_table" => "subscriptions", "action" => "update", "role" => "owner", "priv_type" => "global"]);

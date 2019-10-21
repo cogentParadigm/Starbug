@@ -1,0 +1,36 @@
+<form {{ helper("filter").attributes(display.attributes)|raw }}>
+  {% if display.model is not empty and display.defaultAction is not empty and display.success(display.defaultAction) %}
+    <p class="alert alert-success">Saved</p>
+  {% endif %}
+  {% if display.errors("global") %}
+    {% for value in display.errors("global", true) %}
+      <p class="alert alert-danger">{{ value }}</p>
+    {% endfor %}
+  {% endif %}
+  {% if display.method == "post" %}
+    <input name="oid" type="hidden" value="{{ request.getCookie('oid') }}"/>
+  {% endif %}
+  {{ include("display/fields.html.twig") }}
+{% if display.actions.template != "inline" %}
+  <div {{ helper("filter").attributes(display.actions.attributes)|raw }}>
+{% endif %}
+  {% for name, field in display.actions.fields %}
+    {% set field = field|merge({'value':field.value|default(name)}) %}
+    {% if display.model is not empty and field.name is empty %}
+      {% set field = field|merge({'name':"action[" ~ display.model ~ "]"}) %}
+    {% endif %}
+    {% set label = field.label %}
+    {% set ops = field %}
+    {% if ops.type is empty %}
+      {% set ops = ops|merge({'type':'submit'}) %}
+    {% endif %}
+    {% set ops = ops|merge({'class':((ops.class is empty) ? "" : ops.class ~ " ") ~ "btn"}) %}
+    <button {{ helper("filter").attributes(ops)|raw }}>{{ label }}</button>
+    {% if display.cancel_url is not empty %}
+      <button type="button" class="cancel btn btn-danger" onclick="window.location='{{ helper("url").build(display.cancel_url) }}'">Cancel</button>
+    {% endif %}
+  {% endfor %}
+{% if display.actions.template != "inline" %}
+  </div>
+{% endif %}
+</form>

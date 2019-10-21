@@ -1,0 +1,4 @@
+{% set regions = helper('config').get('info.regions', ('themes/' ~ response.theme)) %}
+{% for region in regions %}
+  {{ include('region.html.twig', {'region': region}) }}
+{% endfor %}

@@ -1,0 +1,11 @@
+<div class="container">
+  <a id="logo" href="./"><img src="{{ helper("url").build("app/themes/starbug-1/public/images/logo.png") }}" title="{{ helper("settings").get("site_name") }}"/></a>
+  <ul id="nav" class="pull-right hnav">
+    <li><a class="active" href="{{ helper("url").build("") }}">Home</a></li>
+    {% if helper("user").loggedIn() %}
+      <li><a href="{{ helper("url").build("logout") }}">Log Out</a></li>
+    {% else %}
+      <li><a href="{{ helper("url").build("login") }}">Log In</a></li>
+    {% endif %}
+  </ul>
+</div>

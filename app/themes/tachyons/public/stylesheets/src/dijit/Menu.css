@@ -1,0 +1,92 @@
+.dijitMenu {
+	background: var(--white);
+	border: 1px solid var(--moon-gray);
+}
+
+.dijitMenuItem {
+	padding: var(--spacing-small) var(--spacing-medium);
+}
+
+.dijitMenuItemHover,
+.dijitMenuItemSelected,
+.dijitMenuItemActive {
+	background-color: var(--near-white);
+}
+
+.dijitMenuBar .dijitMenuItemDisabled {
+	color: var(--silver);
+}
+
+/* this prevents jiggling upon hover of a menu item */
+.dijitMenuTable {
+	border-collapse:separate;
+	border-spacing:0 0;
+	padding:0;
+}
+
+.claro .dijitMenu .dijitMenuItemHover td,
+.claro .dijitMenu .dijitMenuItemSelected td,
+.claro .dijitMenuItemHover,
+.claro .dijitComboBoxMenu .dijitMenuItemHover,
+.claro .dijitMenuItemSelected {
+	background-color: var(--near-white);
+}
+
+// Menu
+.dijitMenu {
+    z-index: 1000;
+    padding: 5px 0;
+    margin: 2px 0 0; // override default ul
+    background-color: var(--white);
+    border: 1px solid var(--moon-gray);
+    border-radius: 6px;
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    border-collapse: separate;
+}
+
+.dijitMenuItem {
+  color: var(--dark-gray);
+  font-weight: normal;
+  white-space: nowrap;
+  padding: var(--spacing-small) var(--spacing-medium);
+  cursor:pointer;
+	-webkit-tap-highlight-color: transparent;
+}
+
+td.dijitMenuItemLabel {
+    padding: 6px 0.3em;
+}
+
+tr.dijitMenuItem td:first-child {
+    padding-left: 20px;
+}
+
+tr.dijitMenuItem td:last-child {
+    padding-right: 20px;
+}
+
+// Separator
+.dijitMenuSeparator {
+    //margin: (($baseLineHeight / 2) - 1) 1px;
+}
+
+.dijitMenuSeparatorTop {
+    //border-bottom: 1px solid $dropdownDividerTop;
+    height: auto;
+}
+
+.dijitMenuSeparatorBottom {
+    height: auto;
+}
+
+// Icon
+.dijitMenuItemIcon,
+.dijitMenuExpand  {
+    // Keep in line with labels
+    //line-height: $baseLineHeight * 0.65;
+}
+
+.dijitMenuArrowCell .dijitMenuExpand:before {
+    @extend .dijitIcon;
+    @extend .fa-caret-right:before;
+}

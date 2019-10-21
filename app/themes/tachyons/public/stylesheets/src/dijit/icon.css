@@ -1,0 +1,272 @@
+// General
+// -------------------
+
+.dijitIcon:before {
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    text-decoration: inherit;
+    line-height:1;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+}
+
+.dijitNoIcon {
+    display: none;
+}
+
+
+// Icons
+// Backwards compatibility for those not using the newer style icon classes.
+// For example: dijitIconCut instead of icon-cut
+// -------------------
+
+.dijitIconSave:before {
+	@extend .fa-floppy-o:before;
+}
+.dijitIconPrint:before {
+	@extend .fa-print:before;
+}
+.dijitIconCut:before {
+	@extend .fa-scissors:before;
+}
+.dijitIconCopy:before {
+	@extend .fa-files-o:before;
+}
+.dijitIconPaste:before {
+	@extend .fa-clipboard:before;
+}
+.dijitIconClear:before {
+    // &:extend(.icon-);
+}
+.dijitIconDelete:before {
+	@extend .fa-times:before;
+}
+.dijitIconUndo:before {
+	@extend .fa-undo:before;
+}
+.dijitIconEdit:before {
+	@extend .fa-pencil-square-o:before;
+}
+.dijitIconNewTask:before {
+	@extend .fa-plus:before;
+}
+.dijitIconEditTask:before {
+    // &:extend(.fa-);
+}
+.dijitIconEditProperty:before {
+    // &:extend(.fa-);
+}
+.dijitIconTask:before {
+	@extend .fa-tasks:before;
+}
+.dijitIconFilter:before {
+	@extend .fa-filter:before;
+}
+.dijitIconConfigure:before {
+	@extend .fa-cog:before;
+}
+.dijitIconSearch:before {
+	@extend .fa-search:before;
+}
+.dijitIconApplication:before {
+    // &:extend(.fa-);
+}
+.dijitIconBookmark:before {
+	@extend .fa-bookmark:before;
+}
+.dijitIconChart:before {
+	@extend .fa-bar-chart-o:before;
+}
+.dijitIconConnector:before {
+    // &:extend(.fa-);
+}
+.dijitIconDatabase:before {
+    // &:extend(.fa-);
+}
+.dijitIconDocuments:before {
+    // &:extend(.fa-);
+}
+.dijitIconMail:before {
+	@extend .fa-envelope:before;
+}
+.dijitLeaf:before {
+	@extend .fa-file:before;
+}
+.dijitIconFile:before {
+	@extend .fa-file:before;
+}
+.dijitIconFunction:before {
+    // &:extend(.fa-);
+}
+.dijitIconKey:before {
+	@extend .fa-key:before;
+}
+.dijitIconPackage:before {
+    // &:extend(.fa-);
+}
+.dijitIconSample:before {
+    // &:extend(.fa-);
+}
+.dijitIconTable:before {
+	@extend .fa-table:before;
+}
+.dijitIconUsers:before {
+	@extend .fa-users:before;
+}
+.dijitFolderClosed:before {
+	@extend .fa-folder:before;
+}
+.dijitIconFolderClosed:before {
+	@extend .fa-folder:before;
+}
+.dijitFolderOpened:before {
+	@extend .fa-folder-open:before;
+}
+.dijitIconFolderOpen:before {
+	@extend .fa-folder-open:before;
+}
+.dijitIconError:before {
+	@extend .fa-exclamation:before;
+}
+
+// Editor
+.dijitEditorIcon {
+}
+
+.dijitEditorIconSave:before {
+	@extend .fa-floppy-o:before;
+}
+.dijitEditorIconPrint:before {
+	@extend .fa-print:before;
+}
+.dijitEditorIconCut:before {
+	@extend .fa-scissors:before;
+}
+.dijitEditorIconCopy:before {
+	@extend .fa-files-o:before;
+}
+.dijitEditorIconPaste:before {
+	@extend .fa-clipboard:before;
+}
+.dijitEditorIconDelete:before {
+	@extend .fa-trash-o:before;
+}
+.dijitEditorIconCancel:before {
+	@extend .fa-ban:before;
+}
+.dijitEditorIconUndo:before {
+	@extend .fa-undo:before;
+}
+.dijitEditorIconRedo:before {
+	@extend .fa-repeat:before;
+}
+.dijitEditorIconSelectAll:before {
+    // &:extend(.fa-;
+}
+.dijitEditorIconBold:before {
+	@extend .fa-bold:before;
+}
+.dijitEditorIconItalic:before {
+	@extend .fa-italic:before;
+}
+.dijitEditorIconUnderline:before {
+	@extend .fa-underline:before;
+}
+.dijitEditorIconStrikethrough:before {
+	@extend .fa-strikethrough:before;
+}
+.dijitEditorIconSuperscript:before {
+    // &:extend(.fa);
+}
+.dijitEditorIconSubscript:before {
+    // &:extend(.fa);
+}
+.dijitEditorIconJustifyCenter:before {
+	@extend .fa-align-center:before;
+}
+.dijitEditorIconJustifyFull:before {
+	@extend .fa-align-justify:before;
+}
+.dijitEditorIconJustifyLeft:before {
+	@extend .fa-align-left:before;
+}
+.dijitEditorIconJustifyRight:before {
+	@extend .fa-align-right:before;
+}
+.dijitEditorIconIndent:before {
+	@extend .fa-indent:before;
+}
+.dijitEditorIconOutdent:before {
+	@extend .fa-outdent:before;
+}
+.dijitEditorIconListBulletIndent:before {
+	@extend .fa-list-ul:before;
+}
+.dijitEditorIconListBulletOutdent:before {
+	@extend .fa-list-ul:before;
+}
+.dijitEditorIconListNumIndent:before {
+	@extend .fa-list-ol:before;
+}
+.dijitEditorIconListNumOutdent:before {
+	@extend .fa-list-ol:before;
+}
+.dijitEditorIconTabIndent:before {
+    // &:extend(.fa);
+}
+.dijitEditorIconLeftToRight:before {
+    // &:extend(.fa);
+}
+.dijitEditorIconRightToLeft:before,
+.dijitEditorIconToggleDir:before {
+}
+.dijitEditorIconBackColor:before {
+    // &:extend(.fa);
+}
+.dijitEditorIconForeColor:before {
+    // &:extend(.fa);
+}
+.dijitEditorIconHiliteColor:before {
+    // &:extend(.fa);
+}
+.dijitEditorIconNewPage:before {
+	@extend .fa-file:before;
+}
+.dijitEditorIconInsertImage:before {
+	@extend .fa-picture-o:before;
+}
+.dijitEditorIconInsertTable:before {
+	@extend .fa-table:before;
+}
+.dijitEditorIconSpace:before {
+    // &:extend(.fa);
+}
+.dijitEditorIconInsertHorizontalRule:before {
+    // &:extend(.fa);
+}
+.dijitEditorIconInsertOrderedList:before {
+	@extend .fa-list-ol:before;
+}
+.dijitEditorIconInsertUnorderedList:before {
+	@extend .fa-list-ul:before;
+}
+.dijitEditorIconCreateLink:before {
+	@extend .fa-link:before;
+}
+.dijitEditorIconUnlink:before {
+	@extend .fa-chain-broken:before;
+}
+.dijitEditorIconViewSource:before {
+    // &:extend(.fa);
+}
+.dijitEditorIconRemoveFormat:before {
+    // &:extend(.fa);
+}
+.dijitEditorIconFullScreen:before {
+	@extend .fa-arrows-alt:before;
+}
+.dijitEditorIconWikiword:before {
+    // &:extend(.fa);
+}

@@ -8,13 +8,6 @@ define([
   "starbug/grid/columns/html",
   "starbug/grid/columns/options"
 ], function (declare, lang, _SelectionMixin, put, List) {
-
-  var defaultColumns = [
-    starbug.grid.columns.handle({field: 'id', label: '-', className: 'field-drag'}),
-    starbug.grid.columns.html({field: 'label', label: ''}),
-    starbug.grid.columns.options({field: 'id', label: 'Options'})
-  ];
-
   return declare([_SelectionMixin], {
     columns: false,
     postMixInProperties: function() {
@@ -24,7 +17,11 @@ define([
       this.listParams.collection = this.selection.selection;
       this.listParams.editor = this;
       this.listParams.deselectOnRefresh = (this.selection.size == 1);
-      this.listParams.columns = this.columns || defaultColumns;
+      this.listParams.columns = this.columns || [
+        starbug.grid.columns.handle({field: 'id', label: '-', className: 'field-drag'}),
+        starbug.grid.columns.html({field: 'label', label: ''}),
+        starbug.grid.columns.options({field: 'id', label: 'Options'})
+      ];
       if (typeof this.listParams.columns == "string") {
         this.listParams.columns = require(this.listParams.columns);
       }

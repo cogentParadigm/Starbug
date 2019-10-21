@@ -1,0 +1,16 @@
+<?php
+namespace Starbug\App;
+
+use Starbug\Core\Controller;
+
+/**
+ * {{ name|title }} Controller.
+ */
+class {{ name|title }}Controller extends Controller {
+  public function init() {
+    //perform any common startup here
+  }
+  public function defaultAction() {
+    $this->render("{{ name }}/default.html");
+  }
+}

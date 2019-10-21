@@ -1,9 +1,10 @@
 define([
 	"dojo",
+	"dojo/_base/lang",
 	"dojo/on",
 	"starbug",
 	"sb",
-	"sb/data",
+	"sb/data/Query",
 	"sb/store/Api",
 	"dgrid/GridFromHtml",
 	"dgrid/Grid",
@@ -13,9 +14,8 @@ define([
 	"dgrid/Editor",
 	"dojo/_base/Deferred",
 	"dojo/dom-attr"
-], function(dojo, on, starbug, sb, data, api, GridFromHtml, List, Keyboard, Selector, Pagination, Editor, Deferred, attr){
-window.dgrid = window.dgrid || {GridFromHtml:GridFromHtml};
-var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard, Selector, Pagination, Editor], {
+], function(dojo, lang, on, starbug, sb, Query, Api, GridFromHtml, List, Keyboard, Selector, Pagination, Editor, Deferred, attr){
+return dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard, Selector, Pagination, Editor], {
 	pagingLinks: 2,
 	firstLastArrows: true,
 	previousNextArrows: true,
@@ -26,28 +26,41 @@ var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard,
 	query:{},
 	deselectOnRefresh:false,
 	allowSelectAll:true,
-	constructor: function(args) {
-		if (args.model && args.action) {
-			args.query = args.query || {};
-			this.query = args.query;
-			this.collection = (new api({model:args.model, action:args.action})).filter(args.query);
+	postCreate: function() {
+		this.query = this.query || {};
+		this.query = new Query({scope: this.model, saveScope: this.model + "Query", query: this.query});
+		this.query.on("change", lang.hitch(this, function(e) {
+			this.set('collection', this.collection.root.filter(e.query));
+		}));
+		this.query.on("reset", lang.hitch(this, function() {
+			if (this.query.read("currentPage")) {
+				this.query.remove("currentPage");
+				this.gotoPage(1);
+			}
+		}));
+		if (this.model && this.action) {
+			this.collection = (new Api({model:this.model, action:this.action})).filter(this.query.query);
 		}
-		if (localStorage.getItem('rowsPerPage')) {
-			this.rowsPerPage = parseInt(localStorage.getItem('rowsPerPage'));
+		if (this.query.read('rowsPerPage')) {
+			this.rowsPerPage = parseInt(this.query.read('rowsPerPage'));
 		}
 	},
 	startup: function() {
 		this.inherited(arguments);
-		var grid = this;
 		for (var i in this.columns) if (typeof this.columns[i]['editor'] != "undefined") this.columns[i].autoSave = true;
-		//filter
-		on(window.document, '[data-filter='+this.model+']:change,[data-filter='+this.model+']:input', function(e) {
-			grid.applyFilterFromInput(e.target);
-		});
+		if (this.query.read("currentPage")) {
+			this.gotoPage(this.query.read("currentPage"));
+		}
 	},
 	_setRowsPerPage: function(value) {
 		localStorage.setItem('rowsPerPage', value);
 		this.inherited(arguments);
+	},
+	_updateNavigation: function() {
+		this.inherited(arguments);
+		if (this._currentPage != this.query.read("currentPage")) {
+			this.query.save('currentPage', this._currentPage);
+		}
 	},
 	save: function () {
 
@@ -113,16 +126,6 @@ var Grid = dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard,
 			// save will stop at the first error it encounters.
 			dfd.resolve();
 			return promise;
-		},
-		applyFilterFromInput:function(node) {
-			var name = (typeof node.get == "undefined") ? attr.get(node, 'name') : node.get('name');
-			var value = (typeof node.get == "undefined") ? attr.get(node, 'value') : node.get('value');
-			if (typeof value == "object" && typeof node.serialize == "function") {
-				value = node.serialize(value);
-			}
-			this.query[name] = value;
-			this.set('collection', this.collection.root.filter(this.query));
 		}
 });
-return Grid;
 });

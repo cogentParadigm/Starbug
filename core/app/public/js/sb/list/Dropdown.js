@@ -18,9 +18,9 @@ define([
 		renderRow: function(object, options) {
 			var self = this;
 			var label = object.label.length ? {innerHTML: object.label} : {innerHTML: "&nbsp;"};
-			var node = put('a.list-group-item', label);
+			var node = put('a.list-group-item.list-group-item-action', label);
 			this.delegate.get(object.id).then(function(selected) {
-				if (selected) put(node, 'span.pull-right span.fa.fa-check.text-success');
+				if (selected) put(node, 'span.pull-right span.fa.fa-check.text-success.green');
 				on(node, 'click', function(e) {
 					if (!selected) self.delegate.add([object]);
 					else if (self.delegate.size != 1) self.delegate.remove(object.id);

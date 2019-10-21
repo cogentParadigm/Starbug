@@ -1,0 +1,4 @@
+<h2>Checkout</h2>
+<div data-dojo-type="payment/Cart" data-dojo-props="mode:'checkout', target:'{{ helper("url").build("checkout/payment") }}', order:{{ cart.getOrder()|json_encode|replace('"', "'") }}"></div>
+<div style="clear:both"></div>
+{{ helper("displays").render("CheckoutForm", {"id": cart.get("id")}) }}

@@ -1,8 +1,9 @@
 <?php
 namespace Starbug\Core;
+
 /**
-* hook factory interface
-*/
+ * Hook factory interface.
+ */
 interface HookFactoryInterface {
-	public function get($hook);
+  public function get($hook);
 }

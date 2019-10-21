@@ -10,16 +10,16 @@ use Starbug\Core\CollectionFactoryInterface;
 class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
 
   protected $order = false;
-  protected $lines = array(
-    "product" => array(),
-    "shipping" => array()
-  );
-  protected $hooks = array();
+  protected $lines = [
+    "product" => [],
+    "shipping" => []
+  ];
+  protected $hooks = [];
 
-  protected $conditions = array();
+  protected $conditions = [];
 
   /**
-   * constructor.
+   * Constructor.
    */
   public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, $conditions) {
     $this->models = $models;
@@ -31,7 +31,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     if (!empty($this->order)) return;
     $this->load();
     if (empty($this->order) && $create) {
-      $this->models->get("orders")->create(array());
+      $this->models->get("orders")->create([]);
       $this->load();
     }
   }
@@ -47,7 +47,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     $this->conditions = $conditions;
   }
 
-  public function load($conditions = array()) {
+  public function load($conditions = []) {
     if (empty($conditions)) $conditions = $this->conditions;
     if (empty($conditions['order_status'])) $conditions['order_status'] = 'cart';
     $order = $this->models->get("orders")->query()->conditions($conditions)->one();
@@ -73,7 +73,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     return empty($this->order) ? null : $this->order[$property];
   }
 
-  public function add($type, $options = array()) {
+  public function add($type, $options = []) {
     $this->init(false);
     $options['orders_id'] = $this->order['id'];
     $this->models->get($type)->create($options);
@@ -115,16 +115,24 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     return $count;
   }
 
-  function addProduct($input) {
+  public function addProduct($input) {
+    $this->init();
+    if (empty($input["qty"])) {
+      $input["qty"] = 1;
+    }
+    foreach ($this->lines["product"] as $line) {
+      if ($line["product"] == $input["id"] && empty($line["options"]) && empty($input["options"])) {
+        // Product is in cart without options and is being added without options.
+        return $this->models->get("product_lines")->update([$line["id"] => $line["qty"] + $input["qty"]]);
+      }
+    }
     $product = $this->models->get("products")->query()->condition("products.id", $input['id'])->one();
-    $line = array(
+    $line = [
       "product" => $product['id'],
       "description" => $product['name'],
-      "price" => $product['price']
-    );
-    $this->init();
-    //pass id and qty
-    $line['qty'] = 1;
+      "price" => $product['price'],
+      "qty" => $input["qty"]
+    ];
     $this->invokeHooks("addProduct", [$product, &$line, &$input]);
     $this->add("product_lines", $line);
     $line['id'] = $this->models->get("product_lines")->insert_id;
@@ -159,6 +167,10 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     return $line;
   }
 
+  public function getShippingMethod() {
+    return empty($this->lines["shipping"]) ? false : $this->lines["shipping"][0];
+  }
+
   public function addHook(CartHookInterface $hook) {
     $this->hooks[] = $hook;
   }
@@ -176,5 +188,4 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     }
     return $result;
   }
-
 }

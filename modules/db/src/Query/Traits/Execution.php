@@ -1,9 +1,17 @@
 <?php
 namespace Starbug\Db\Query\Traits;
 
+use ArrayIterator;
+
 trait Execution {
+  public function getDatabase() {
+    return $this->db;
+  }
+  public function validate() {
+    return $this->executor->validate($this);
+  }
   public function execute() {
-    return $this->db->execute($this->query);
+    return $this->executor->execute($this);
   }
   public function one() {
     return $this->limit(1)->execute();
@@ -41,13 +49,33 @@ trait Execution {
     }
     return $this;
   }
-  function unsafe_truncate() {
+  public function unsafeTruncate() {
     $this->db->exec("SET FOREIGN_KEY_CHECKS=0");
     $result = $this->truncate();
     $this->db->exec("SET FOREIGN_KEY_CHECKS=1");
     return $result;
   }
-  function count(array $params = []) {
-    return $this->db->count($this->query, $params);
+  public function count(array $params = []) {
+    return $this->executor->count($this, $params);
+  }
+  public function getId() {
+    if ($this->query->isInsert()) return $this->query->getValue("id");
+    elseif ($this->query->isUpdate()) {
+      if ($this->query->hasValue("id")) return $this->query->getValue("id");
+      else {
+        $record = $this->query($this->model)->condition($this->query->getCondition())->one();
+        return $record['id'];
+      }
+    } elseif ($this->mode == "delete") {
+      return $this->query->getValue("id");
+    }
+  }
+
+  public function interpolate($params = null) {
+    return $this->executor->interpolate($this->query, $params);
+  }
+
+  public function getIterator() {
+    return new ArrayIterator($this->execute());
   }
 }

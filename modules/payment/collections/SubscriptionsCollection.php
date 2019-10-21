@@ -5,7 +5,7 @@ use Starbug\Core\Collection;
 
 class SubscriptionsCollection extends Collection {
   protected $model = "subscriptions";
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     if (!empty($ops["owner"])) {
       $query->condition("subscriptions.owner", $ops["owner"]);
     }

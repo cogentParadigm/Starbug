@@ -1,43 +1,37 @@
 <?php
 namespace Starbug\Core;
-/**
- * @defgroup ModelTest
- * the base test class for models
- * @ingroup test
- */
-/**
- * The Fixture class. Fixtures hold data sets used by the testing harness
- * @ingroup Fixture
- */
-class ModelTest extends \PHPUnit_Framework_TestCase {
 
-	public $model;
-	protected $db;
-	protected $models;
+use PHPUnit\Framework\TestCase;
 
-	function setUp() {
-		global $container;
-		$this->db = $container->get("Starbug\Core\DatabaseInterface");
-		$this->models = $container->get("Starbug\Core\ModelFactoryInterface");
-	}
+class ModelTest extends TestCase {
 
-	function get() {
-		$args = array_merge(array($this->model), func_get_args());
-		return call_user_func_array(array($this->db, "get"), $args);
-	}
+  public $model;
+  protected $db;
+  protected $models;
 
-	function query() {
-		$args = array_merge(array($this->model), func_get_args());
-		return call_user_func_array(array($this->db, "query"), $args);
-	}
+  public function setUp() {
+    global $container;
+    $this->db = $container->get("Starbug\Core\DatabaseInterface");
+    $this->models = $container->get("Starbug\Core\ModelFactoryInterface");
+  }
 
-	function action() {
-		$args = func_get_args();
-		$method = array_shift($args);
-		return call_user_func_array(array($this->models->get($this->model), $method), $args);
-	}
+  public function get() {
+    $args = array_merge([$this->model], func_get_args());
+    return call_user_func_array([$this->db, "get"], $args);
+  }
 
-	function __get($name) {
-		return $this->models->get($this->model)->$name;
-	}
+  public function query() {
+    $args = array_merge([$this->model], func_get_args());
+    return call_user_func_array([$this->db, "query"], $args);
+  }
+
+  public function action() {
+    $args = func_get_args();
+    $method = array_shift($args);
+    return call_user_func_array([$this->models->get($this->model), $method], $args);
+  }
+
+  public function __get($name) {
+    return $this->models->get($this->model)->$name;
+  }
 }

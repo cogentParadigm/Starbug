@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Listen for XDebug",
+      "type": "php",
+      "request": "launch",
+      "port": 9000
+    },
+    {
+      "name": "PHPUnit",
+      "type": "php",
+      "request": "launch",
+      "program": "${workspaceRoot}/vendor/phpunit/phpunit/phpunit",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "-c", "etc/phpunit.xml"
+      ]
+    }
+  ]
+}

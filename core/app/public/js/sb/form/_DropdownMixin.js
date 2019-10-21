@@ -21,8 +21,34 @@ define([
     },
     postCreate:function() {
       this.inherited(arguments);
-      on(this.toggleNode, 'click', lang.hitch(this, 'toggle'));
-      on(this.controlNode, 'click', lang.hitch(this, 'toggle'));
+      // The toggleNode and controlNode are two separate elements but sematically
+      // they behave as one. Consider a select input - it is just a single element.
+      // The dropdown indicator (the toggleNode) is not a separate element.
+
+      // The toggleNode is removed from the tabindex so we are only concerned with click events.
+      // Putting focus on the controlNode is the one true trigger event
+      if (this.toggleNode) {
+        on(this.toggleNode, 'click', lang.hitch(this.controlNode, 'focus'));
+      }
+      // The controlNode remains in the tabindex so we attach the focus event.
+      // Note that the controlNode will receive focus on mousedown.
+      on(this.controlNode, 'focus,click', lang.hitch(this, 'onFocus'));
+      // Closing of the dropdown is tied to blurring of the focus target.
+      on(this.focusTargetNode, 'blur', lang.hitch(this, function() {
+        //Delay 10 milliseconds to allow focus to move first. Otherwise,
+        //we might hide the focusTargetNode if it's inside the dropdown.
+        setTimeout(lang.hitch(this, 'close'), 10);
+      }));
+
+      // The blur event above will cause the dropdown to close before click events
+      // inside the dropdown can fire. We can interrupt that blur by preventing
+      // the mousedown event on the dropdown.
+      on(this.dropdownNode, 'mousedown', lang.hitch(this, function(e) {
+        // This condition avoids interrupting mouse events on the actual focus target.
+        if (e.target !== this.focusTargetNode) {
+          e.preventDefault();
+        }
+      }));
     },
     startup: function() {
       this.inherited(arguments);
@@ -31,38 +57,40 @@ define([
     createControlGroup: function() {
       this.createControlGroupNode();
       this.createControlNode();
+      this.createFocusNode();
       this.createToggleNode();
     },
     createControlGroupNode: function() {
-      this.controlGroupNode = put(this.domNode.parentNode, ".dropdown-widget div.input-group");
+      this.controlGroupNode = put(this.domNode, "+div.input-group");
     },
     createControlNode: function() {
-      this.controlNode = put(this.controlGroupNode, 'input[type=text][autocomplete=off][readonly].form-control');
+      this.controlNode = put(this.controlGroupNode, 'button[type=button].text-left.form-control');
       if (this.domNode.getAttribute("placeholder")) {
-        put(this.controlNode, '[placeholder='+this.domNode.getAttribute('placeholder')+']');
+        put(this.controlNode, {innerHTML: this.domNode.getAttribute('placeholder')});
       }
     },
+    createFocusNode: function() {
+      this.focusTargetNode = this.controlNode;
+    },
     createToggleNode: function() {
-      this.toggleNode = put(this.controlGroupNode, 'span.input-group-btn button[type=button].btn.btn-default span.caret+span.sr-only $<', 'Toggle Dropdown');
+      this.toggleNode = put(this.controlGroupNode, 'span.input-group-btn button[type=button][tabindex=-1].btn.btn-default span.fa.fa-caret-down+span.sr-only $<', 'Toggle Dropdown');
     },
     createDropdownNode: function() {
       this.dropdownNode = put(this.domNode.parentNode, 'div.select-list.hidden');
     },
     open: function() {
-      var self = this;
       this.updateStyles();
       domclass.remove(this.dropdownNode, 'hidden');
-      this.closeHandler = on(document, 'click', function(e) {
-        if (!dom.isDescendant(e.target, self.dropdownNode)) {
-          e.preventDefault();
-          e.stopPropagation();
-          self.close();
-        }
-      });
+      this.focusTargetNode.focus();
+      if (this.focusTargetNode != this.controlNode) {
+        this.controlNode.tabIndex = -1;
+      }
     },
     close: function() {
       domclass.add(this.dropdownNode, 'hidden');
-      this.closeHandler.remove();
+      if (this.controlNode.tabIndex == -1) {
+        this.controlNode.removeAttribute('tabindex');
+      }
     },
     toggle: function(e) {
       if (e) {
@@ -82,8 +110,15 @@ define([
       this.dropdownNode.style.zIndex = 10;
     },
     updateStyles: function() {
-      var box = geometry.getMarginBox(this.controlNode.parentNode);
-      this.dropdownNode.style.top = box.t + box.h + "px";
+      var box = geometry.position(this.controlGroupNode);
+      var parent = geometry.position(this.domNode.parentNode);
+      this.dropdownNode.style.top = (box.y - parent.y) + box.h + "px";
     },
+    focus: function() {
+      this.controlNode.focus();
+    },
+    onFocus: function() {
+      this.open();
+    }
   });
 });

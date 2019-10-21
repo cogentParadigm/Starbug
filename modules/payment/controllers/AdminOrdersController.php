@@ -6,22 +6,22 @@ use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ModelFactoryInterface;
 
 class AdminOrdersController extends Controller {
-  public $routes = array(
+  public $routes = [
     "update" => "{id}",
     "details" => "{id}"
-  );
-  function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+  ];
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
     $this->db = $db;
     $this->models = $models;
   }
-  function init() {
+  public function init() {
     $this->assign("model", "orders");
     $this->assign("cancel_url", "admin/orders");
   }
-  function default_action() {
-    $this->render("admin/list");
+  public function defaultAction() {
+    $this->render("admin/list.html");
   }
-  function details($id) {
+  public function details($id) {
     $this->assign("id", $id);
     $order = $this->models->get("orders")->load($id);
     $products = $this->models->get("product_lines")->query()->condition("orders_id", $order['id'])->select("SUM(price*qty) as total")->one();
@@ -29,11 +29,11 @@ class AdminOrdersController extends Controller {
     $this->assign("order", $order);
     $this->assign("products", $products);
     $this->assign("shipping", $shipping);
-    $this->render("admin/orders/details");
+    $this->render("admin/orders/details.html");
   }
-  function update($id) {
+  public function update($id) {
     $this->assign("id", $id);
     if ($this->db->success("orders", "create")) $this->redirect("admin/orders");
-    else $this->render("admin/update");
+    else $this->render("admin/update.html");
   }
 }

@@ -1,0 +1,102 @@
+
+    <article class="mt5">
+      <h3 class="f6 ttu fw6 mt0 mb3 bb pb2">Buttons</h3>
+      <div style="overflow-x:auto" class="nl2 nr2">
+        <div style="min-width:80rem" class="pa2">
+          <div class="row">
+            <div class="col-2 mb3">
+            </div>
+            <div class="col-2 mb3">
+              <code class="f6 truncate mid-gray">link</code>
+            </div>
+            <div class="col-2 mb3">
+              <code class="f6 truncate mid-gray">btn</code>
+            </div>
+            <div class="col-2 mb3">
+              <code class="f6 truncate mid-gray">btn btn-dark</code>
+            </div>
+            <div class="col-2 mb3">
+              <code class="f6 truncate mid-gray">btn btn-success</code>
+            </div>
+            <div class="col-2 mb3">
+              <code class="f6 truncate mid-gray">btn btn-danger</code>
+            </div>
+          </div>
+          {% set rows = ["", "pointer underline", "pointer underline-hover", "pointer dim", "pointer o-50 glow", "pointer grow", "pointer grow-large", "pointer shadow-hover"] %}
+          {% for row in rows %}
+          <div class="row">
+            <div class="col-2 mb3">
+              {% if row is not empty %}
+                <code class="f6 truncate mid-gray">{{ row }}</code>
+              {% endif %}
+            </div>
+            <div class="col-2 mb3">
+              <a class="link {{ row }}">Link</a>
+            </div>
+            <div class="col-2 mb3">
+              <button class="btn {{ row }}">Default</button>
+            </div>
+            <div class="col-2 mb3">
+              <button class="btn btn-dark {{ row }}">Dark</button>
+            </div>
+            <div class="col-2 mb3">
+              <button class="btn btn-success {{ row }}">Success</button>
+            </div>
+            <div class="col-2 mb3">
+              <button class="btn btn-danger {{ row }}">Danger</button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </article>
+
+    <article class="mt5">
+      <h3 class="f6 ttu fw6 mt0 mb3 bb pb2">Forms</h3>
+      <div class="measure-wide">
+
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" class="form-control"/>
+          <div class="pv2 gray f7">This is a textbox.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Gender</label>
+          <div class="dropdown-indicator fa-caret-down">
+            <select class="form-control">
+              <option value=""></option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            <div class="pv2 gray f7">This is a native select element.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Gender</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/Select" data-dojo-props="collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})"/>
+           <div class="pv2 gray f7">This is a select widget.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Gender</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/Select" data-dojo-props="searchable: true, collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})"/>
+           <div class="pv2 gray f7">This is a select widget with searching enabled.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Gender</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/MultipleSelect" data-dojo-props="collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})"/>
+           <div class="pv2 gray f7">This is a multiple select widget.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input type="text" class="form-control" data-dojo-type="starbug/form/DateTextBox" value="0000-00-00"/>
+           <div class="pv2 gray f7">This is a date picker.</div>
+        </div>
+
+      </div>
+    </article>

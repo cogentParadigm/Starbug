@@ -1,0 +1,105 @@
+input.dijitReset, select.dijitReset {
+  @extend .input-reset;
+}
+// TextBox
+.dijitTextBox {
+  @extend .form-control;
+  padding:0;
+}
+
+.dijitTextBoxFocused {
+  @extend .form-control:focus;
+}
+
+.dijitInputContainer {
+  padding: var(--spacing-small) var(--spacing-medium);
+}
+
+.dijitInputField .dijitInputInner {
+  font-size: var(--base-font-size);
+  line-height: var(--base-line-height);
+}
+
+.dijitPlaceHolder {
+  font-style: normal;
+  font-size: var(--base-font-size);
+  line-height: var(--base-line-height);
+  padding: var(--spacing-small) var(--spacing-medium);
+}
+
+.dijitTextBoxDisabled, .dijitTextBoxReadOnly {
+  @extend .form-control[disabled];
+}
+
+.dj_webkit .dijitTextBoxDisabled input,
+.dj_webkit textarea.dijitTextAreaDisabled,
+.dijitTextBoxDisabled,
+.dijitTextBoxReadOnly {
+  //color: $inputDisabledColor;
+}
+
+// TextArea
+.dijitTextArea {
+  @extend .form-control;
+  @extend textarea.form-control;
+  padding: var(--spacing-small) var(--spacing-medium);
+  line-height: var(--base-line-height);
+}
+
+// ComboBox
+.dijitComboBox .dijitButtonNode {
+  @extend .dijitComboButton .dijitButtonNode;
+}
+
+.dijitComboBox .dijitButtonNode.dijitArrowButton {
+  @extend .dijitComboButton .dijitArrowButton;
+}
+
+.dijitComboBox input.dijitArrowButtonInner {
+  display: none;
+}
+
+.dijitComboBoxDisabled .dijitButtonNode {
+  @extend .dijitComboButtonDisabled .dijitButtonNode;
+  //background-color: $inputDisabledBackground;
+}
+
+.dijitComboBox .dijitArrowButtonContainer {
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+
+// Validation
+.dijitTextBoxError {
+  @extend .alert;
+  @extend .alert-danger;
+}
+
+.dijitTextBoxError.dijitTextBoxFocused {
+  //box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px lighten($errorText, 20%);
+}
+
+.dijitValidationContainer {
+  display: none;
+}
+
+.dijitUpArrowButton .dijitArrowButtonInner:before{
+  @extend .fa-caret-up:before;
+}
+.dijitDownArrowButton .dijitArrowButtonInner:before{
+  @extend .fa-caret-down:before;
+}
+
+.dijitSpinnerButtonContainer.dijitButtonNode {
+  @extend .dijitComboBox .dijitButtonNode;
+  @extend .dijitComboBox .dijitButtonNode.dijitArrowButton;
+}
+
+.dijitSpinnerDisabled .dijitButtonNode {
+  @extend .dijitComboBoxDisabled .dijitButtonNode;
+}
+
+.dj_webkit .dijitSpinnerButtonContainer.dijitButtonNode {
+  padding: 4px 10px !important
+}

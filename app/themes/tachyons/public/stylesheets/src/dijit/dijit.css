@@ -1,0 +1,313 @@
+/****
+    GENERIC PIECES
+ ****/
+
+.dijitReset {
+  /* Use this style to null out padding, margin, border in your template elements
+    so that page specific styles don't break them.
+    - Use in all TABLE, TR and TD tags.
+  */
+  /*
+  margin:0;
+  border:0;
+  padding:0;
+  font: inherit;
+  line-height:normal;
+  color: inherit;
+  */
+}
+
+.dijitInline {
+  /*  To inline block elements.
+    Similar to InlineBox below, but this has fewer side-effects in Moz.
+    Also, apparently works on a DIV as well as a FIELDSET.
+  */
+  display:inline-block;			/* webkit and FF3 */
+  #zoom: 1; /* set hasLayout:true to mimic inline-block */
+  #display:inline; /* don't use .dj_ie since that increases the priority */
+  border:0;
+  padding:0;
+  vertical-align:middle;
+  #vertical-align: auto;	/* makes TextBox,Button line up w/native counterparts on IE6 */
+}
+
+table.dijitInline {
+  /* To inline tables with a given width set */
+  display:inline-table;
+  box-sizing: content-box; -moz-box-sizing: content-box;
+}
+
+.dijitHidden {
+  /* To hide unselected panes in StackContainer etc. */
+  display: none !important;
+}
+
+.dijitVisible {
+  /* To show selected pane in StackContainer etc. */
+  display: block !important;	/* override user's display:none setting via style setting or indirectly via class */
+  position: relative;			/* to support setting width/height, see #2033 */
+}
+
+.dijitInputContainer {
+  /* for positioning of placeHolder */
+  #zoom: 1;
+  overflow: hidden;
+  float: none !important; /* needed to squeeze the INPUT in */
+  position: relative;
+}
+
+.dj_ie .dijitSelect input,
+.dj_ie input.dijitTextBox,
+.dj_ie .dijitTextBox input {
+  font-size: 100%;
+}
+.dijitSelect .dijitButtonText {
+  float: left;
+  vertical-align: top;
+}
+TABLE.dijitSelect {
+  padding: 0 !important; /* messes up border alignment */
+  border-collapse: separate; /* so jsfiddle works with Normalized CSS checked */
+}
+.dijitTextBox .dijitSpinnerButtonContainer,
+.dijitTextBox .dijitArrowButtonContainer,
+.dijitValidationTextBox .dijitValidationContainer {
+  float: right;
+  text-align: center;
+}
+.dijitSelect input.dijitInputField,
+.dijitTextBox input.dijitInputField {
+  /* override unreasonable user styling of buttons and icons */
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.dijitValidationTextBox .dijitValidationContainer {
+  display: none;
+}
+
+.dijitTeeny {
+  font-size:1px;
+  line-height:1px;
+}
+
+.dijitOffScreen { /* these class attributes should supersede any inline positioning style */
+  position: absolute !important;
+  left: -10000px !important;
+  top: -10000px !important;
+}
+
+/*
+ * Popup items have a wrapper div (dijitPopup)
+ * with the real popup inside, and maybe an iframe too
+ */
+.dijitPopup {
+  position: absolute;
+  background-color: transparent;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dijitPositionOnly {
+  /* Null out all position-related properties */
+  padding: 0 !important;
+  border: 0 !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+.dijitNonPositionOnly {
+  /* Null position-related properties */
+  float: none !important;
+  position: static !important;
+  margin: 0 0 0 0 !important;
+  vertical-align: middle !important;
+}
+
+.dijitBackgroundIframe {
+  /* iframe used to prevent problems with PDF or other applets overlaying menus etc */
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.dijitDisplayNone {
+  /* hide something.  Use this as a class rather than element.style so another class can override */
+  display:none !important;
+}
+
+.dijitContainer {
+  /* for all layout containers */
+  overflow: hidden;	/* need on IE so something can be reduced in size, and so scrollbars aren't temporarily displayed when resizing */
+}
+
+.dijitSpinner div.dijitArrowButtonInner {
+  display: block; /* override previous rule */
+}
+
+/* button inner contents - labels, icons etc. */
+.dijitButtonNode * {
+  vertical-align: middle;
+}
+
+.dijitArrowButtonChar {
+	display:none !important;
+}
+
+/* Calendar */
+
+.dijitCalendarContainer {
+	width: auto;	/* in case user has specified a width for the TABLE nodes, see #10553 */
+}
+.dijitCalendarContainer th, .dijitCalendarContainer td {
+	padding: 0;
+	vertical-align: middle;
+}
+
+.dijitCalendarYearLabel {
+    white-space: nowrap;    /* make sure previous, current, and next year appear on same row */
+}
+
+.dijitCalendarNextYear {
+	margin:0 0 0 0.55em;
+}
+
+.dijitCalendarPreviousYear {
+	margin:0 0.55em 0 0;
+}
+
+.dijitCalendarIncrementControl {
+	vertical-align: middle;
+}
+
+.dijitCalendarIncrementControl,
+.dijitCalendarDateTemplate,
+.dijitCalendarMonthLabel,
+.dijitCalendarPreviousYear,
+.dijitCalendarNextYear {
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.dijitCalendarDisabledDate {
+	color: gray;
+	text-decoration: line-through;
+	cursor: default;
+}
+
+.dijitSpacer {
+	/* don't display it, but make it affect the width */
+  	position: relative;
+  	height: 1px;
+  	overflow: hidden;
+  	visibility: hidden;
+}
+
+/* Styling for month drop down list */
+
+.dijitCalendarMonthMenu .dijitCalendarMonthLabel {
+	text-align:center;
+}
+
+/* Menu */
+
+.dijitMenuTable {
+	border-collapse:collapse;
+	border-width:0;
+	background-color:white;
+}
+
+/* workaround for webkit bug #8427, remove this when it is fixed upstream */
+.dj_webkit .dijitMenuTable td[colspan="2"]{
+	border-right:hidden;
+}
+
+/*
+No need to show a focus border since it's obvious from the shading, and there's a .dj_a11y .dijitMenuItemSelected
+rule below that handles the high contrast case when there's no shading.
+Hiding the focus border also works around webkit bug https://code.google.com/p/chromium/issues/detail?id=125779.
+*/
+.dijitMenuItem:focus {
+	outline: none
+}
+
+.dijitMenuPassive .dijitMenuItemHover,
+.dijitMenuItemSelected {
+	/*
+	 * dijitMenuItemHover refers to actual mouse over
+	 * dijitMenuItemSelected is used after a menu has been "activated" by
+	 * clicking it, tabbing into it, or being opened from a parent menu,
+	 * and denotes that the menu item has focus or that focus is on a child
+	 * menu
+	 */
+	background-color:black;
+	color:white;
+}
+
+.dijitMenuItemIcon, .dijitMenuExpand {
+	background-repeat: no-repeat;
+}
+
+.dijitMenuItemDisabled * {
+	/* for a disabled menu item, just set it to mostly transparent */
+	opacity:0.5;
+	cursor:default;
+}
+.dj_ie .dj_a11y .dijitMenuItemDisabled,
+.dj_ie .dj_a11y .dijitMenuItemDisabled *,
+.dj_ie .dijitMenuItemDisabled * {
+	color: gray;
+	filter: alpha(opacity=35);
+}
+
+.dijitMenuItemLabel {
+	vertical-align: middle;
+}
+
+.dj_a11y .dijitMenuItemSelected {
+	border: 1px dotted black !important;	/* for 2.0 use outline instead, to prevent jitter */
+}
+
+.dj_a11y .dijitMenuItemSelected .dijitMenuItemLabel {
+	border-width: 1px;
+	border-style: solid;
+}
+.dj_ie8 .dj_a11y .dijitMenuItemLabel {
+	position:static;
+}
+
+.dijitMenuExpandA11y {
+	display: none;
+}
+.dj_a11y .dijitMenuExpandA11y {
+	display: inline;
+}
+
+.dijitMenuSeparator td {
+	border: 0;
+	padding: 0;
+}
+
+/* separator can be two pixels -- set border of either one to 0 to have only one */
+.dijitMenuSeparatorTop {
+	height: 50%;
+	margin: 0;
+	margin-top:3px;
+	font-size: 1px;
+}
+
+.dijitMenuSeparatorBottom {
+	height: 50%;
+	margin: 0;
+	margin-bottom:3px;
+	font-size: 1px;
+}

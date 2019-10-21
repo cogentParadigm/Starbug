@@ -1,0 +1,3 @@
+{% set hide = helper("settings").get("seo_hide") %}
+User-agent: *
+Disallow: {% if hide %}/{% endif %}

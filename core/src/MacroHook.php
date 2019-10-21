@@ -1,11 +1,13 @@
 <?php
 namespace Starbug\Core;
+
 class MacroHook {
-	/**
-	 * set options when adding/updating fields fields
-	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-	 */
-	function replace($macro, $name, $token, $data) {
-		return $token;
-	}
+  /**
+   * Get options when adding/updating fields fields.
+   *
+   * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+   */
+  public function replace($macro, $name, $token, $data) {
+    return $token;
+  }
 }

@@ -1,0 +1,36 @@
+<table {{ helper("filter").attributes(attributes) }}>
+{% for row in rows %}
+{% if loop.first %}
+  <thead>
+{% endif %}
+    <tr>
+    {% if loop.first %}
+      <th>#</th>{% for column in row %}<th>{{ column }}</th>{% endfor %}
+    {% else %}
+      <td>{{ pager.start + loop.index0 }}</td>{% for column in row %}<td>{{ column }}</td>{% endfor %}
+    {% endif %}
+    </tr>
+{% if loop.first %}
+  <thead>
+{% endif %}
+{% endfor %}
+</table>
+{% if pager.count > pager.per %}
+  <ul class="pagination">
+    {% if pager.current_page > 1 %}
+      <li class="back"><a href="{{ url }}{{ pager.current_page - 1 }}{{ suffix }}">Back</a></li>
+    {% endif %}
+    {% if fromPage > 1 %}
+      <li class="first"><a href="{{ url ~ "1" ~ suffix }}">1</a><div style="padding-top:18px;float:left">...</div></li>
+    {% endif %}
+    {% for i in fromPage..toPage %}
+      <li class="pagination-item{% if pager.current_page == i %} active{% endif %}"><a href="{{ url }}{{ i }}{{ suffix }}">{{ i }}</a></li>
+    {% endfor %}
+    {% if toPage < pager.last %}
+      <li class="last"><div style="padding:18px 8px 0px 0px;float:left">...</div><a class="button" href="{{ url }}{{ pager.last }}{{ suffix }}">{{ pager.last }}</a></li>
+    {% endif %}
+    {% if pager.current_page < pager.last %}
+      <li class="next"><a href="{{ url }}{{ pager.current_page + 1 }}{{ suffix }}">Next</a></li>
+    {% endif %}
+  </ul>
+{% endif %}

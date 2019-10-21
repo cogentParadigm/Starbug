@@ -23,7 +23,16 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/query", "dojo/NodeList-
 			//attach click event
 			query("li a", this.domNode).on('click', function() {
 				var parent = query(this).parent();
-				if (parent.query("ul").length !== 0) {
+				if (parent.query("ul").length == 0) {
+					var savedScopes = localStorage.getItem("savedScopes");
+					if (savedScopes) {
+						savedScopes = JSON.parse(savedScopes);
+						for (var savedScope in savedScopes) {
+							localStorage.removeItem(savedScopes[savedScope]);
+						}
+						localStorage.removeItem("savedScopes");
+					}
+				} else {
 					if (self.accordion) {
 						//Do nothing when the list is open
 						if (parent.query("ul").style('display')[0] != 'block') {

@@ -4,7 +4,7 @@ namespace Starbug\Payment;
 use Starbug\Core\FormCollection;
 
 class ProductConfigurationFormCollection extends FormCollection {
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     $this->ops = $ops;
     return parent::build($query, $ops);
   }

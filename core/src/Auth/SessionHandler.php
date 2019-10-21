@@ -1,119 +1,105 @@
 <?php
 namespace Starbug\Core;
-/**
- * @defgroup Session
- * stateless session manager based on methodology outlined in this paper by Steven J. Murdoch
- * "Hardened Stateless Session Cookies" - http://www.cl.cam.ac.uk/~sjm217/papers/protocols08cookies.pdf
- * @ingroup lib
- */
+
 class SessionHandler implements SessionHandlerInterface {
-	protected $user;
-	protected $storage;
-	protected $duration;
+  protected $user;
+  protected $storage;
+  protected $duration;
 
-	public function __construct(SessionStorageInterface $storage, IdentityInterface $user, $duration = 2592000) {
-		$this->storage = $storage;
-		$this->user = $user;
-		$this->duration = $duration;
-	}
-	function startSession() {
-		$this->user->clearUser();
-		if (false !== $this->storage->load()) {
-			$user = $this->user->loadUser($this->storage->get("v"));
-			if (false !== $this->validate($user)) {
-				$this->user->setUser($user);
-			}
-		}
-	}
-	function loggedIn() {
-		return $this->user->loggedIn();
-	}
-	function set($key, $value, $secure = false) {
-		$this->storage->set($key, $value, $secure);
-	}
-	function get($key) {
-		return $this->storage->get($key);
-	}
-	function destroy() {
-		$this->user->clearUser();
-		$this->storage->destroy();
-	}
-	function hashPassword($password) {
-		//hash the password using phpass
-		$hasher = new PasswordHash(8, false);
-		$hash = $hasher->HashPassword($password);
-		unset($hasher);
+  public function __construct(SessionStorageInterface $storage, IdentityInterface $user, $duration = 2592000) {
+    $this->storage = $storage;
+    $this->user = $user;
+    $this->duration = $duration;
+  }
+  /**
+   * Start the session. Called early to see if there's an active session and load it.
+   *
+   * @return void
+   */
+  public function startSession() {
+    $this->user->clearUser();
+    if (false !== $this->storage->load() && $user = $this->user->loadUser($this->storage->get("v"))) {
+      $this->user->setUser($user);
+    }
+  }
+  /**
+   * Create a session for the given user.
+   *
+   * @param array $user The user to create the session for. This should have come from the IdentityInterface.
+   * @param integer $duration The session duration. Leave off to use the default duration.
+   *
+   * @return void
+   */
+  public function createSession($user, $duration = 0) {
+    $id = $this->user->getIdentity($user);
+    if (0 == $duration) $duration = $this->duration;
+    $this->storage->createSession($id, $duration);
+  }
 
-		//based on the length, separate the salt from the hash
-		$lengths = array(60 => 29, 34 => 12, 20 => 9);
-		$length = $lengths[strlen($hash)];
-		$salt =  substr($hash, 0, $length);
-		$hash = substr($hash, $length);
+  /**
+   * Hash a password.
+   *
+   * @param string $password The plain text password to hash.
+   *
+   * @return string The hashed password.
+   */
+  public function hashPassword($password) {
+    return password_hash($password, PASSWORD_DEFAULT);
+  }
 
-		//build auth token
-		$token = $salt.hash('sha256', $hash);
+  /**
+   * Validate a password against the saved hash.
+   *
+   * @param array $user The user record, obtained from IdentityInterface.
+   * @param string $password The users password entry.
+   *
+   * @return boolean Returns false if validation fails. If the password validates, true is returned.
+   */
+  public function authenticate($user, $password) {
+    $hash = $this->user->getHashedPassword($user);
+    return password_verify($password, $hash);
+  }
 
-		return $token;
-	}
+  /**
+   * Destroy the session.
+   *
+   * @return void
+   */
+  public function destroy() {
+    $this->user->clearUser();
+    $this->storage->destroy();
+  }
 
-	/**
-	* validate a password against the salt/authenticator token
-	*
-	* @param array/star $criteria criteria for user lookup
-	* @param string $password the users password entry
-	* @return bool Returns false if validation fails. If the password validates, true is returned
-	*/
+  /**
+   * Check if a user is logged in. Session must be started first.
+   *
+   * @return void
+   */
+  public function loggedIn() {
+    return $this->user->loggedIn();
+  }
 
-	function authenticate($user, $password, $duration = 0) {
-		$hash = $this->user->getHashedPassword($user);
-		$id = $this->user->getIdentity($user);
-		if (0 == $duration) $duration = $this->duration;
+  /**
+   * Save a value in the client session.
+   *
+   * @param string $key A lookup name for the value.
+   * @param string $value The value.
+   * @param boolean $secure True to store encrypted.
+   *
+   * @return void
+   */
+  public function set($key, $value, $secure = false) {
+    $this->storage->set($key, $value, $secure);
+  }
 
-		//separate salt and authenticator
-		$salt = substr($hash, 0, -64);
-		$auth = substr($hash, -64);
-
-		//hash password
-		if (strlen($salt) == 12) {
-			$hasher = new PasswordHash(8, false);
-			$hash = $hasher->crypt_private($password, $salt);
-			unset($hasher);
-		} else {
-			$hash = crypt($password, $salt);
-		}
-
-		//separate salt and hash
-		$lengths = array(60 => 29, 34 => 12, 20 => 9);
-		$length = $lengths[strlen($hash)];
-		$new_salt =  substr($hash, 0, $length);
-		$new_hash = substr($hash, $length);
-
-		//compare values
-		if ($new_salt != $salt) return false;
-		if (hash('sha256', $new_hash) != $auth) return false;
-
-		//save data securely to session - expiry, value, hash
-		$this->storage->set("e", time()+$duration, true);
-		$this->storage->set("v", $id, true);
-		$this->storage->set("h", $new_hash, true);
-
-		$this->storage->save();
-		return true;
-	}
-
-	/**
-	* validate active session
-	*/
-	protected function validate($user) {
-		//check expiration time
-		$expiry = $this->storage->get("e");
-		if (empty($expiry) || $expiry < time()) return false;
-
-		//validate user
-		$hash = $this->user->getHashedPassword($user);
-		if (hash("sha256", $this->storage->get("h")) != substr($hash, -64)) return false;
-
-		//we have a valid session
-		return true;
-	}
+  /**
+   * Get a value stored in the client session.
+   *
+   * @param string $key The property name.
+   *
+   * @return void
+   */
+  public function get($key) {
+    return $this->storage->get($key);
+  }
 }

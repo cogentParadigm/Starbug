@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit backupGlobals="false"
-	backupStaticAttributes="false"
-	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	processIsolation="false"
-	stopOnFailure="false"
-	syntaxCheck="false"
-	bootstrap="../core/test.php"
+  backupStaticAttributes="false"
+  colors="true"
+  convertErrorsToExceptions="true"
+  convertNoticesToExceptions="true"
+  convertWarningsToExceptions="true"
+  processIsolation="false"
+  stopOnFailure="false"
+  bootstrap="../core/test.php"
 >
-<filter>
-	<blacklist>
-		<directory suffix=".php">../util/phpmailer</directory>
-    <directory suffix=".php">../util/phpthumb</directory>
-    <directory suffix=".php">../util/htmlpurifier</directory>
-	</blacklist>
-</filter>
-	<logging>
-		<log type="coverage-html" target="../build/coverage"/>
-		<log type="coverage-clover" target="../build/logs/clover.xml"/>
-		<log type="coverage-crap4j" target="../build/logs/crap4j.xml"/>
-		<log type="junit" target="../build/logs/junit.xml" logIncompleteSkipped="false"/>
-	</logging>
-	<testsuites>
-		<testsuite name="core">
-			<directory>../core/tests/</directory>
-			<directory>../core/app/tests/</directory>
-		</testsuite>
-		<testsuite name="dbmodule">
-			<directory>../modules/db/tests/</directory>
-		</testsuite>
-		<testsuite name="content">
-			<directory>../modules/content/tests/</directory>
-		</testsuite>
-	</testsuites>
-
+  <filter>
+    <whitelist>
+      <directory suffix=".php">../</directory>
+      <exclude>
+        <directory suffix=".php">../libraries/</directory>
+        <directory suffix=".php">../vendor/</directory>
+        <directory suffix=".php">../node_modules/</directory>
+      </exclude>
+    </whitelist>
+  </filter>
+  <logging>
+    <log type="coverage-clover" target="../build/logs/clover.xml"/>
+  </logging>
+  <testsuites>
+    <testsuite name="core">
+      <directory>../core/tests/</directory>
+      <directory>../core/app/tests/</directory>
+    </testsuite>
+    <testsuite name="dbmodule">
+      <directory>../modules/db/tests/</directory>
+    </testsuite>
+    <testsuite name="content">
+      <directory>../modules/content/tests/</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>

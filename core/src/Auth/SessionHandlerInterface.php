@@ -1,34 +1,67 @@
 <?php
 namespace Starbug\Core;
-/**
- * @defgroup Session
- * stateless session manager based on methodology outlined in this paper by Steven J. Murdoch
- * "Hardened Stateless Session Cookies" - http://www.cl.cam.ac.uk/~sjm217/papers/protocols08cookies.pdf
- * @ingroup lib
- */
+
 interface SessionHandlerInterface {
-	function startSession();
-	function loggedIn();
-	/**
-	* provide a salt and authenticator token for a password
-	*
-	* The authenticator will be 64 characters long, with a salt prepended.
-	* The salt will be 9, 12, or 29 characters long depending on the available cryptographic functions.
-	*
-	* @param string $password
-	* @return string $token
-	*/
-	function hashPassword($password);
-	/**
-	* validate a password against the salt/authenticator token
-	*
-	* @param string $id a token identifyng the user to authenticate
-	* @param string $password the users password entry
-	* @param int $duration in seconds. 0 should be converted to a configured default length
-	* @return bool Returns false if validation fails. If the password validates, true is returned
-	*/
-	function authenticate($id, $password, $duration = 0);
-	function set($key, $value, $secure = false);
-	function get($key);
-	function destroy();
+  /**
+   * Start the session. Called early to see if there's an active session and load it.
+   *
+   * @return void
+   */
+  public function startSession();
+  /**
+   * Create a session for the given user.
+   *
+   * @param array $user The user to create the session for. This should have come from the IdentityInterface.
+   * @param integer $duration The session duration. Leave off to use the default duration.
+   *
+   * @return void
+   */
+  public function createSession($user, $duration = 0);
+  /**
+   * Hash a password.
+   *
+   * @param string $password The plain text password to hash.
+   *
+   * @return string The hashed password.
+   */
+  public function hashPassword($password);
+  /**
+   * Validate a password against the saved hash.
+   *
+   * @param array $user The user record, obtained from IdentityInterface.
+   * @param string $password The users password entry.
+   *
+   * @return boolean Returns false if validation fails. If the password validates, true is returned.
+   */
+  public function authenticate($user, $password);
+  /**
+   * Destroy the session.
+   *
+   * @return void
+   */
+  public function destroy();
+  /**
+   * Check if a user is logged in. Session must be started first.
+   *
+   * @return void
+   */
+  public function loggedIn();
+  /**
+   * Save a value in the client session.
+   *
+   * @param string $key A lookup name for the value.
+   * @param string $value The value.
+   * @param boolean $secure True to store encrypted.
+   *
+   * @return void
+   */
+  public function set($key, $value, $secure = false);
+  /**
+   * Get a value stored in the client session.
+   *
+   * @param string $key The property name.
+   *
+   * @return void
+   */
+  public function get($key);
 }

@@ -1,5 +1,5 @@
 **/*.min.js
 var
 libraries
-util
+vendor
 node_modules

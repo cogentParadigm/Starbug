@@ -1,5 +1,5 @@
 {
   "devices": {
-    "request": "RequestInterface"
+    "request": "Starbug\\Http\\RequestInterface"
   }
 }

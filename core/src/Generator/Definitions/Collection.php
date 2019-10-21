@@ -17,7 +17,7 @@ class Collection extends Definition {
   public function build(array $options = []) {
     parent::build($options);
     $this->addTemplate(
-      "generate/collection/collection",
+      "generate/collection/collection.php",
       $this->module."/collections/".ucwords($options["name"])."Controller.php"
     );
   }

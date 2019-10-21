@@ -9,7 +9,7 @@
  */
 	$vars = $this->request->getParameters();
 	unset($vars['page']);
-	$prefix = $request->getURL()->getDirectory();
+	$prefix = $request->getUrl()->getDirectory();
 	$prefix .= $request->getPath()."?";
 	if (!empty($vars)) $prefix .= http_build_query($vars).'&';
 	$prefix .= "page=";

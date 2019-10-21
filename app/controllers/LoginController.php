@@ -10,19 +10,19 @@ class LoginController extends Controller {
     $this->session = $session;
     $this->user = $user;
   }
-  function default_action() {
+  public function defaultAction() {
     if ($this->user->loggedIn()) {
       if ($this->user->loggedIn('admin') || $this->user->loggedIn('root')) $this->redirect('admin');
       else $this->redirect('');
     } else {
-      $this->render("login");
+      $this->render("login.html");
     }
   }
-  function logout() {
+  public function logout() {
     $this->session->destroy();
     $this->redirect("");
   }
-  function forgot_password() {
-    $this->render("forgot-password");
+  public function forgotPassword() {
+    $this->render("forgot-password.html");
   }
 }

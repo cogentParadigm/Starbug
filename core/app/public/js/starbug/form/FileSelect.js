@@ -30,6 +30,8 @@ define([
 		input_name:'file',
 		size:1,
 		store:null,
+		browseEnabled: true,
+		location: "default",
 		postCreate:function() {
 			var self = this;
 			this.store = new TrackableMemory({data: []});
@@ -42,16 +44,21 @@ define([
 			this.uploader.startup();
 			this.grid.editor = self;
 			//initialize the uploader
+			this.uploader.location = this.location;
 			this.uploader.url = WEBSITE_URL+'upload';
 			this.uploader.onBegin = lang.hitch(this, function() {
 				self.set_status('loading');
 			});
 			this.uploader.onComplete = lang.hitch(this, 'onUpload');
 			this.uploader.onAbort = lang.hitch(this, 'onCancelUpload');
+			this.uploader.onError = lang.hitch(this, 'onError');
 			this.grid.set('collection', this.store);
 			setTimeout(function() {
 				if (self.files.length > 0) self.add(self.files);
 			}, 100);
+			if (!this.browseEnabled) {
+				this.browseButton.style.display = 'none';
+			}
 		},
 		browse:function(){
 			var win = dojo.global;
@@ -81,13 +88,13 @@ define([
 			for (var i in files) {
 				var object = files[i];
 				if (files[i].filename[0] != "<") {
-					var full_path = object.thumbnail;
+					var full_path = object.url;
 					var div = put('div');
 					if (object.mime_type.split('/')[0] == "image") {
-						var img = put(div, 'img');
+						var img = put(div, 'img.img-responsive');
 						img.src = full_path;
 					}
-					put(div, 'a.filename[href="'+full_path+'"][target="_blank"]', object.filename);
+					put(div, 'a.filename[href="'+full_path+'"][target="_blank"][style="word-wrap:break-word"]', object.filename);
 					files[i].filename = div.innerHTML;
 				}
 				this.store.put(files[i]);
@@ -123,6 +130,10 @@ define([
 			}else this.statusNode.innerHTML = value;
 		},
 		onUpload: function(files) {
+			if (files.length && typeof files[0].ERROR != "undefined") {
+				this.set_status('<p class="alert alert-danger">The selected file could not be uploaded.</p>');
+				return;
+			}
 			/**
 			 * upload handler. adds the file to the list once it has been uploaded.
 			 */
@@ -133,6 +144,9 @@ define([
 		},
 		onCancelUpload: function() {
 			this.set_status();
+		},
+		onError: function(e) {
+			console.log(e);
 		},
 		reset: function() {
 			this.store.setData([]);

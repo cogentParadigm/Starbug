@@ -1,10 +1,11 @@
 <?php
 namespace Starbug\Core;
+
 class ModelsHelper {
-	public function __construct(ModelFactoryInterface $models) {
-		$this->target = $models;
-	}
-	public function helper() {
-		return $this->target;
-	}
+  public function __construct(ModelFactoryInterface $models) {
+    $this->target = $models;
+  }
+  public function helper() {
+    return $this->target;
+  }
 }

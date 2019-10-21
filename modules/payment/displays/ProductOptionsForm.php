@@ -11,12 +11,12 @@ class ProductOptionsForm extends FormDisplay {
   public function setTableSchema(SchemerInterface $schemer) {
     $this->tableSchema = $schemer->getSchema();
   }
-  function build_display($options) {
+  public function buildDisplay($options) {
     $tree = $this->getOptionsTree($options["product_types_id"]);
     $this->add("name");
     $this->add("slug");
     $this->add(["description", "input_type" => "textarea"]);
-    $this->add(["type", "input_type" => "select", "options" => "Fieldset,Text,Textarea,Select List,Value,File,Reference,Hidden", "data-dojo-type" => "starbug/form/Dependency", "data-dojo-props" => "key:'type'"]);
+    $this->add(["type", "input_type" => "select", "options" => "Fieldset,Text,Textarea,Checkbox,Select List,Value,File,Reference,Hidden", "data-dojo-type" => "starbug/form/Dependency", "data-dojo-props" => "key:'type'"]);
     $this->add(["reference_type", "input_type" => "select", "options" => $this->getReferenceTypes(), "data-dojo-type" => "starbug/form/Dependent", "data-dojo-props" => "key:'type',values:['Reference']"]);
     $this->add("required");
     $this->add(["parent", "input_type" => "select"] + $tree);

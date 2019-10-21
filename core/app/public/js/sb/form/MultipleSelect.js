@@ -12,6 +12,7 @@ define([
     _lastSelected:false,
     _selectionMark:false,
     _selectedRows:false,
+    closeOnSelect: false,
     postCreate: function() {
       this.inherited(arguments);
       this.list.on('dgrid-select', lang.hitch(this, function(e) {
@@ -23,8 +24,10 @@ define([
       this.selectionParams.size = this.selectionParams.size || 0;
     },
     createControlNode: function() {
-      this.inherited(arguments);
-      put(this.controlNode, "[!readonly]");
+      this.controlNode = put(this.controlGroupNode, 'input[type=text][autocomplete=off].form-control');
+      if (this.domNode.getAttribute("placeholder")) {
+        this.controlNode.setAttribute('placeholder', this.domNode.getAttribute('placeholder'));
+      }
     },
     createInputNode: function() {
       this.inputNode = this.controlNode;
@@ -39,7 +42,7 @@ define([
       clearTimeout(this.interval);
       var shifted = e.shiftKey;
       var current = this._lastSelected;
-      if (current) current = this.list.row(current);
+      if (false !== current) current = this.list.row(current);
       this.list.clearSelection();
       var target = false;
       if (keyCode == 38) { //UP
@@ -51,8 +54,13 @@ define([
           target = current ? this.list.down(current) : query(".dgrid-row", this.list.domNode)[0];
         }
       } else if (keyCode == 27) { //ESC
-        this.close();
-      } else {
+        if (!domclass.contains(this.dropdownNode, "hidden")) {
+          this.close();
+          //Stop propagation to prevent closing a parent modal.
+          e.stopPropagation();
+          this.toggleNode.focus();
+        }
+      } else if (keyCode != 9) {
         this.interval = setTimeout(lang.hitch(this, 'search'), 500);
       }
       if (target) {
@@ -93,7 +101,6 @@ define([
         var button = put(this.selectionNode, 'button[type=button].btn.btn-primary.btn-xs[style=margin:0 5px 5px 0] $ span.fa.fa-times<', items[i].label + ' ');
         this.attachDeselection(button, items[i].id);
       }
-      this.list.refresh();
     },
     attachDeselection: function(button, id) {
       on(button, 'click', lang.hitch(this, function() {

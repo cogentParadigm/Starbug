@@ -10,7 +10,7 @@ class ShippingLinesCollection extends Collection {
     $this->models = $models;
     $this->formatter = $formatter;
   }
-  public function build($query, &$ops) {
+  public function build($query, $ops) {
     if (!empty($ops["order"])) {
       $query->condition("shipping_lines.orders_id", $ops["order"]);
     }
@@ -20,7 +20,6 @@ class ShippingLinesCollection extends Collection {
   }
   public function filterRows($rows) {
     foreach ($rows as $idx => $item) {
-      $item['description'] = (string) '<strong>'.$item['description'].'</strong>';
       $item['total'] = $item['price'] * $item['qty'];
       $item['total_formatted'] = $this->formatter->format($item['total']);
       $item['price_formatted'] = $this->formatter->format($item['price']);

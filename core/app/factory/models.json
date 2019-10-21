@@ -1,8 +1,8 @@
 {
-	"terms": {
-		"filter": "InputFilterInterface"
-	},
-	"imports": {
-		"filesystems": "League\\Flysystem\\MountManager"
-	}
+  "terms": {
+    "filter": "InputFilterInterface"
+  },
+  "imports": {
+    "filesystems": "League\\Flysystem\\MountManager"
+  }
 }

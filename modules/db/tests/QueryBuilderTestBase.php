@@ -1,36 +1,38 @@
 <?php
 namespace Starbug\Db\Tests;
+
 use Starbug\Db\Query\Query;
 use Starbug\Db\Query\Builder;
 use Starbug\Db\Query\Compiler;
 use Starbug\Db\Schema\Schema;
 use Starbug\Db\Schema\QueryCompilerHook;
-use PHPUnit_Framework_TestCase;
-class QueryBuilderTestBase extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
 
-  function setUp() {
+class QueryBuilderTestBase extends TestCase {
+
+  public function setUp() {
     $this->compiler = $this->createCompiler();
   }
 
-  function createCompiler() {
-    $compiler = new Compiler("test_");
+  protected function createCompiler() {
+    $compiler = new Compiler();
     $compiler->addHook(new QueryCompilerHook($this->createSchema()));
     return $compiler;
   }
 
-  function createQuery() {
-    $this->builder = new Builder();
+  protected function createQuery() {
+    $this->builder = new Builder(new MockDatabase(), new MockExecutor());
     $this->builder->setSchema($this->createSchema());
     return $this->builder;
   }
 
-  function compile(Builder $builder = null) {
+  protected function compile(Builder $builder = null) {
     if (is_null($builder)) $builder = $this->builder;
     $query = $builder->getQuery();
     return $this->compiler->build($query)->getSql();
   }
 
-  function createSchema() {
+  protected function createSchema() {
     $schema = new Schema();
     $schema->addTable("files",
       ["filename", "type" => "string"],

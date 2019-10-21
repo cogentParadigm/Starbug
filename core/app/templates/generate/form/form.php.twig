@@ -1,0 +1,14 @@
+<?php
+namespace Starbug\App;
+
+use Starbug\Core\FormDisplay;
+
+class {{ className }}Form extends FormDisplay {
+  public $model = "{{ model }}";
+  public $cancel_url = "admin/{{ model }}";
+  function buildDisplay($options) {
+{% for name, field in fields %}
+    $this->add(["{{ name }}"]);
+{% endfor %}
+  }
+}

@@ -1,0 +1,29 @@
+{% if attributes.multiple %}
+  {% set attributes = attributes|merge({"name": attributes.name ~ "[]"}) %}
+{% endif %}
+{% if mode == "display" %}
+  {{ helper("displays").render("DropdownDisplay", {"value": value, "attributes": attributes, "model": from, "collection": query, "optional": optional, "other_option": other_option}) }}
+{% else %}
+  {% set other_id = helper("filter").normalize(name) ~ "_other" %}
+<select {{ helper("filter").attributes(attributes) }}{% if other_option %} onchange="var text = document.getElementById('{{ other_id }}_text'); if (this.options[this.selectedIndex].hasAttribute('data-other')) text.style.display = 'block'; else text.style.display='none';"{% endif %}>
+  {% set found = false %}
+  {% for caption, val in options %}
+    {% set selected = "" %}
+    {% if (value is iterable and val in value) or val == value %}
+      {% set found = true %}
+      {% set selected = ' selected="selected"' %}
+    {% endif %}
+    <option value="{{ val }}"{{ selected|raw }}>{{ caption }}</option>
+  {% endfor %}
+  {% if other_option is not empty %}
+    {% set other_value = "" %}
+    {% if not found %}
+      {% set other_value = value %}
+    {% endif %}
+      <option id="{{ other_id }}" data-other value="{{ other_value }}"{% if other_value is not empty %} selected="selected"{% endif %}>{{ other_option }}</option>
+  {% endif %}
+</select>
+  {% if other_option is not empty %}
+    <input id="{{ other_id }}_text" type="text" style="margin-top:5px;{% if other_value is not empty %}display:none{% endif %}" value="{{ other_value }}" oninput="var op = document.getElementById('{{ other_id }}');op.value = this.value;op.parent.selectedIndex = op.parent.options.indexOf(op);" class="form-control"/>
+  {% endif %}
+{% endif %}

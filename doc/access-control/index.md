@@ -28,7 +28,7 @@ Permits are grants that you can query against. For example, you can create a per
 |------|-------------|
 | `everyone` | This means everyone. If you set `user_groups`, it's everyone within the group |
 | `owner` | The owner role is fulfilled when a users id is in the owner field of the target record or records |
-| `self` | This would only apply to a user operating on themselves. For example, doing an `update_profile` |
+| `self` | This would only apply to a user operating on themselves. For example, doing an `updateProfile` |
 | `groups` | This would apply between users and objects that share the same groups |
 
 ### Model and action
@@ -83,7 +83,7 @@ $this->schema->addRow(
 	"permits",
 	[
 		"related_table" => "users",
-		"action" => "update_profile",
+		"action" => "updateProfile",
 		"role" => "self",
 		"priv_type" => "global"
 	]
@@ -94,7 +94,7 @@ The priv_type is global and the POST data includes an id:
 
 ```json
 {
-  "action[users]":"update_profile",
+  "action[users]":"updateProfile",
   "users[id]":"5",
   "users[first_name]":"Ali",
   "users[last_name]":"Gangji"

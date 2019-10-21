@@ -6,7 +6,7 @@ use Starbug\Core\FormDisplay;
 class PaymentGatewaysForm extends FormDisplay {
   public $model = "payment_gateways";
   public $cancel_url = "admin/payment_gateways";
-  function build_display($options) {
+  public function buildDisplay($options) {
     $this->add("name");
     $this->add("description");
     $this->add("is_active");

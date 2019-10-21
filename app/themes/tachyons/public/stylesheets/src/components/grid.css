@@ -1,0 +1,220 @@
+// Grids
+// -------------------------
+
+// CSS Grid Display
+// -------------------------
+
+.dg-2, .dg-3 {
+  display: grid;
+  grid-column-gap: var(--spacing-medium);
+  grid-row-gap: var(--spacing-large);
+}
+
+.dg-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.dg-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (--breakpoint-not-small) {
+  .dg-2-ns {
+    @extend .dg-2;
+  }
+  .dg-3-ns {
+    @extend .dg-3;
+  }
+}
+
+@media (--breakpoint-medium) {
+  .dg-2-m {
+    @extend .dg-2;
+  }
+  .dg-3-m {
+    @extend .dg-3;
+  }
+}
+
+@media (--breakpoint-large) {
+  .dg-2-l {
+    @extend .dg-2;
+  }
+  .dg-3-l {
+    @extend .dg-3;
+  }
+}
+
+// Flexbox grid system a la Bootstrap 4
+// ---------------------------------------------
+
+:root {
+  --container-width: 1170px;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-large);
+  padding-right: var(--spacing-large);
+  @media (--breakpoint-large) {
+    max-width: var(--container-width);
+  }
+}
+
+@define-mixin grid-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -var(--spacing-small);
+  margin-right: -var(--spacing-small);
+}
+
+@define-mixin grid-column {
+  position: relative;
+  // Prevent columns from becoming too narrow when at smaller grid tiers by
+  // always setting `width: 100%;`. This works because we use `flex` values
+  // later on to override this initial width.
+  width: 100%;
+  min-height: 1px; // Prevent collapsing
+  padding-left: var(--spacing-small);
+  padding-right: var(--spacing-small);
+}
+
+@define-mixin make-col-default {
+  flex-basis: 0;
+  flex-grow: 1;
+  max-width: 100%;
+}
+
+@define-mixin make-col-auto {
+  flex-basis: 0;
+  flex-grow: 1;
+  max-width: 100%;
+}
+
+@define-mixin make-col $size, $columns: 12 {
+  flex: 0 0 calc($size / $columns * 100)%;
+  // Add a `max-width` to ensure content within each column does not blow out
+  // the width of the column. Applies to IE10+ and Firefox. Chrome and Safari
+  // do not appear to require this.
+  max-width: calc($size / $columns * 100)%;
+}
+
+@define-mixin make-col-offset $size, $columns: 12 {
+  $num: $size / $columns;
+  @if $num == 0 {
+    margin-left: 0;
+  } @else {
+    margin-left: $(num)%;
+  }
+}
+
+@define-extend grid-column {
+  @mixin grid-column;
+}
+
+@define-mixin make-grid-columns $columns: 12, $sel: .col, $order-sel: .order, $offset-sel: .offset {
+
+  @for $i from 1 to 12 {
+    $(sel)-$(i) {
+      @extend grid-column;
+    }
+  }
+
+  $(sel), $(sel)-auto {
+    @extend grid-column;
+  }
+
+  $(sel) {
+    @mixin make-col-default;
+  }
+
+  $(sel)-auto {
+    @mixin make-col-auto;
+  }
+
+  @for $i from 1 to 12 {
+    $(sel)-$i {
+      @mixin make-col $i;
+    }
+  }
+
+  $(order-sel)-first {
+    order: -1;
+  }
+
+  @for $i from 1 to 12 {
+    $(order-sel)-$i {
+      order: $i;
+    }
+  }
+
+  // `$columns - 1` because offsetting by the width of an entire row isn't possible
+  @for $i from 0 to 11 {
+    @if $i > 0 { // Avoid emitting useless .offset-0
+      $(offset-sel)-$i {
+        @mixin make-col-offset $i;
+      }
+    }
+  }
+
+}
+
+@define-mixin make-breakpoint-columns $suffix, $breakpoint, $columns: 12, $sel: .col, $order-sel: .order, $offset-sel: .offset {
+
+    @for $i from 1 to 12 {
+      $(sel)-$(i)-$(suffix) {
+        @extend grid-column;
+      }
+    }
+
+    $(sel)-$(suffix), $(sel)-auto-$(suffix) {
+      @extend grid-column;
+    }
+
+    @media ($breakpoint) {
+      $(sel)-$(suffix) {
+        @mixin make-col-default;
+      }
+
+      $(sel)-auto-$(suffix) {
+        @mixin make-col-auto;
+      }
+
+      @for $i from 1 to 12 {
+        $(sel)-$(i)-$(suffix) {
+          @mixin make-col $i;
+        }
+      }
+
+      $(order-sel)-first-$(suffix) {
+        order: -1;
+      }
+
+      @for $i from 1 to 12 {
+        $(order-sel)-$(i)-$(suffix) {
+          order: $i;
+        }
+      }
+
+      // `$columns - 1` because offsetting by the width of an entire row isn't possible
+      @for $i from 0 to 11 {
+        $(offset-sel)-$(i)-$(suffix) {
+          @mixin make-col-offset $i;
+        }
+      }
+    }
+
+}
+
+.row {
+  @mixin grid-row;
+}
+
+@mixin make-grid-columns;
+
+@mixin make-breakpoint-columns ns, --breakpoint-not-small;
+
+@mixin make-breakpoint-columns m, --breakpoint-medium;
+
+@mixin make-breakpoint-columns l, --breakpoint-large;

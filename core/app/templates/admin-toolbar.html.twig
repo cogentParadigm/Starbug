@@ -1,0 +1,20 @@
+{% set new_label = "New " ~ helper("models").get(model).singular_label ~ " <b class=\"fa fa-plus\"></b>" %}
+
+<div class="btn-group pull-right">
+  {% if dialog is not empty %}
+    {% set path = "javascript:(function(){" ~ model ~ "_form.show();return false;})()" %}
+  {% elseif base_url is not empty %}
+    {% set path = helper("url").build(base_url ~ "/create") %}
+  {% else %}
+    {% set path = helper("url").build(request.getPath() ~ "/create") %}
+  {% endif %}
+  <a class="btn btn-default" href="{{ path }}">{{ new_label }}</a>
+  <a class="btn btn-default" href="javascript:window.location.href = {{ model }}_grid.collection._renderUrl().replace('json', 'csv');">
+    Export CSV <b class="fa fa-file-text-o"></b>
+  </a>
+  <a class="btn btn-default" href="{{ helper("url").build(request.getPath() ~ "/import") }}">
+    Import CSV <b class="fa fa-file-text-o"></b>
+  </a>
+</div>
+{{ helper("displays").render([(model|title) ~ "SearchForm", "SearchForm"], {"model": model}) }}
+<br/>

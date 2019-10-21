@@ -1,7 +1,9 @@
 <?php
 namespace Starbug\Intl;
+
 use Starbug\Core\Collection;
 use Starbug\Core\ModelFactoryInterface;
+
 class SelectAddressCollection extends Collection {
   public function __construct(ModelFactoryInterface $models, AddressFormatter $address) {
     $this->models = $models;

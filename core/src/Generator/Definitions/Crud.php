@@ -32,11 +32,11 @@ class Crud extends CompositeDefinition {
     $className = str_replace(" ", "", ucwords(str_replace("_", " ", $options["model"])));
     $this->setParameter("className", $className);
     $this->addTemplate(
-      "generate/crud/controller",
+      "generate/crud/controller.php",
       $this->module."/controllers/Admin".$className."Controller.php"
     );
     $this->addTemplate(
-      "generate/crud/api",
+      "generate/crud/api.php",
       $this->module."/controllers/Api".$className."Controller.php"
     );
   }

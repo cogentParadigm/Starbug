@@ -13,7 +13,7 @@ class PaymentSettings implements PaymentSettingsInterface {
 
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
-    $this->settings = array();
+    $this->settings = [];
   }
 
   public function testMode($gateway) {
@@ -26,10 +26,11 @@ class PaymentSettings implements PaymentSettingsInterface {
   }
 
   /**
-  * get a configuration value
-  * @param string $name the name of the configuration entry, such as 'site_name'
-  * @param string $scope the scope/category of the configuration item
-  */
+   * Get a configuration value
+   *
+   * @param string $name the name of the configuration entry, such as 'site_name'
+   * @param string $scope the scope/category of the configuration item
+   */
   public function get($gateway, $setting, $reset = false) {
     $field_name = (is_numeric($gateway)) ? "id" : "name";
     $item = false;

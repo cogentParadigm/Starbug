@@ -5,9 +5,9 @@ use Starbug\Core\SubscriptionsModel;
 
 class Subscriptions extends SubscriptionsModel {
 
-  function update($subscription, $email = true) {
+  public function update($subscription, $email = true) {
     if (empty($subscription["card"])) {
-      //populate the billing address
+      // populate the billing address
       $address = $this->query()->condition("subscriptions.id", $subscription["id"])
         ->select("subscriptions.orders_id.email as email")
         ->select(["*", "country.name as country"], "subscriptions.orders_id.billing_address")->one();
@@ -45,11 +45,11 @@ class Subscriptions extends SubscriptionsModel {
     }
   }
 
-  function cancel($subscription) {
+  public function cancel($subscription) {
     $this->gateway->cancelSubscription($subscription);
   }
 
-  function payment($data) {
+  public function payment($data) {
     $this->update($data, false);
     $subscription = $this->collections->get("ExpiredSubscriptions")->one(["id" => $data["bill"]]);
     $this->gateway->processSubscription($subscription);

@@ -1,0 +1,18 @@
+default:
+  suites:
+    default:
+      contexts:
+        - Starbug\Behat\Context\StarbugContext
+        - Starbug\Behat\Context\MinkContext
+        - Starbug\Behat\Context\ShellContext
+        - Starbug\Behat\Context\MailContext
+        - Starbug\Behat\Context\CsvContext
+        - Starbug\Features\FeatureContext
+  extensions:
+    Behat\MinkExtension:
+      base_url: 'http://localhost'
+      goutte: ~
+      selenium2:
+        browser: chrome
+    Alex\MailCatcher\Behat\MailCatcherExtension\Extension: ~
+    Starbug\Behat\ServiceContainer\StarbugExtension: ~

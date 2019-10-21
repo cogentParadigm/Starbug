@@ -1,6 +1,7 @@
 <?php
 use \Interop\Container\ContainerInterface;
-return array(
+
+return [
   'routes' => DI\add([
     "cart" => ["controller" => "cart", "title" => "Shopping Cart"],
     "checkout" => ["controller" => "checkout", "title" => "Checkout"],
@@ -11,10 +12,10 @@ return array(
     DI\get('Starbug\Payment\Migration')
   ]),
   'cart_token' => function (ContainerInterface $c) {
-    $request = $c->get("Starbug\Core\RequestInterface");
-    $url = $c->get("Starbug\Core\URLInterface");
-    if ($cid = $request->getCookie("cid")) {
-    } else {
+    $request = $c->get("Starbug\Http\RequestInterface");
+    $url = $c->get("Starbug\Http\UrlInterface");
+    $cid = $request->getCookie("cid");
+    if (!$cid) {
       $cid = md5(uniqid(mt_rand(), true));
       setcookie("cid", $cid, 0, $url->build(""), null, false, false);
       $request->setCookie("cid", $cid);
@@ -52,4 +53,4 @@ return array(
     return $gateway;
   },
   'Starbug\Payment\ProductOptionsForm' => DI\object()->method('setTableSchema', DI\get('Starbug\Db\Schema\SchemerInterface'))
-);
+];

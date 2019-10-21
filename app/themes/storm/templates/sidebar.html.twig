@@ -1,0 +1,28 @@
+<aside id="left-panel">
+
+  -	<!-- User info -->
+  <div class="login-info">
+    <span>
+      {% if helper("user").userinfo("photo") is not empty %}
+      <img src="{{ helper("images").thumb(helper("user").userinfo("photo"), {"w": 64, "h": 64}) }}" alt="me" class="online" />
+      {% endif %}
+      <span class="username">
+        <a href="{{ helper("url").build("profile") }}">{{ helper("user").userinfo("first_name") ~ " " ~ helper("user").userinfo("last_name") }}</a>
+      </span>
+    </span>
+  </div>
+  <!-- end user info -->
+
+  <!-- NAVIGATION -->
+  <nav>
+    {{ include("menu.html.twig", {"attributes":[], "menu":"admin"}) }}
+  </nav>
+
+  <span class="minifyme" data-action="minifyMenu">
+    <i class="fa fa-arrow-circle-left hit"></i>
+  </span>
+
+  <a style="position:absolute;left:0;right:0;bottom:20px;display;block;margin:0 auto;max-width:80%" href="{{ helper("url").build("") }}"><img style="max-width:100%" src="{{ helper("url").build("app/themes/storm/public/images/logo.png") }}" alt="{{ helper("settings").get("site_name") }}"/></a>
+
+</aside>
+<!-- END NAVIGATION -->

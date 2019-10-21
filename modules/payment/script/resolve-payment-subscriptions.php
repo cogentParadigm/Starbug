@@ -4,7 +4,7 @@ namespace Starbug\Payment;
 use Starbug\Core\ModelFactoryInterface;
 
 class ResolvePaymentSubscriptionsCommand {
-  function __construct(Authnet $authnet, ModelFactoryInterface $models) {
+  public function __construct(Authnet $authnet, ModelFactoryInterface $models) {
     $this->authnet = $authnet;
     $this->models = $models;
   }
@@ -18,13 +18,13 @@ class ResolvePaymentSubscriptionsCommand {
     }
     $this->authnet->GetSettledBatchListRequest($args);
     if ($this->authnet->success()) {
-      //We have settled batches, let's loop through them and retrieve the transactions
+      // We have settled batches, let's loop through them and retrieve the transactions
       $batches = $this->authnet->response->batchList->batch;
       foreach ($batches as $batch) {
         $bid = $batch->batchId;
         $this->authnet->GetTransactionListRequest(["batchId" => $bid]);
         if ($this->authnet->success()) {
-          //We have the transactions for this batch, let's loop through them and check for subscriptions
+          // We have the transactions for this batch, let's loop through them and check for subscriptions
           $transactions = $this->authnet->response->transactions->transaction;
           foreach ($transactions as $transaction) {
             echo $transaction->transactionStatus."\n";

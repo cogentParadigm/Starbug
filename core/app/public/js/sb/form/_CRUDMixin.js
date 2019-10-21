@@ -5,7 +5,7 @@ define([
   "dojo/on",
   "dojo/query",
   "sb/store/Api",
-  "starbug/form/Dialog"
+  "sb/modal/Form"
 ], function (declare, lang, put, on, query, Api, Dialog) {
   return declare(null, {
     model: false,
@@ -16,6 +16,8 @@ define([
     postMixInProperties: function() {
       this.inherited(arguments);
       this.dialogClass = this.dialogClass || Dialog;
+      this.dialogParams = this.dialogParams || {};
+      this.dialogParams.url = this.dialogParams.url || WEBSITE_URL + 'admin/' + this.model + '/';
       if (false == this.collection && false !== this.model) {
         this.collectionParams = this.collectionParams || {};
         this.collectionParams.model = this.collectionParams.model || this.model;
@@ -33,10 +35,7 @@ define([
     },
     postCreate:function() {
       this.inherited(arguments);
-      this.get_data = this.get_data || {};
-      this.post_data = this.post_data || {};
-      this.url = this.url || '/admin/' + this.model + '/';
-      this.dialog = new this.dialogClass({url:this.url, get_data:this.get_data, post_data:this.post_data, callback:lang.hitch(this, function(data) {
+      this.dialogParams.callback = lang.hitch(this, function(data) {
         var object_id = query('input[name="'+this.model+'[id]"]').attr('value')[0];
         if (false !== this.editing) {
           //allow replacement of an edited object
@@ -48,8 +47,8 @@ define([
         this.collection.filter({'id':object_id}).fetch().then(lang.hitch(this, function(data) {
           this.selection.add(data);
         }));
-      })});
-      this.dialog.startup();
+      });
+      this.dialog = new this.dialogClass(this.dialogParams);
       on(this.addButton, 'click', lang.hitch(this, function() {
         this.dialog.show();
       }));

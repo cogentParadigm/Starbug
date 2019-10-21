@@ -1,8 +1,9 @@
 <?php
 namespace Starbug\Core;
+
 /**
- * a simple interface for a queue
+ * A simple interface for a task in a queue.
  */
 interface TaskInterface {
-	function process($item, QueueInterface $queue);
+  public function process($item, QueueInterface $queue);
 }

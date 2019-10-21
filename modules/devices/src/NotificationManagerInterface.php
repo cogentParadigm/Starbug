@@ -1,7 +1,9 @@
 <?php
 namespace Starbug\Devices;
 
-interface NotificationManagerInterface extends NotificationHandlerInterface {
+use Starbug\Devices\Notification\HandlerInterface;
+
+interface NotificationManagerInterface extends HandlerInterface {
   public function queue($owner, $type, $subject, $body, $data = []);
   public function process();
 }

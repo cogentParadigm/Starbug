@@ -1,0 +1,30 @@
+<?php
+namespace Starbug\App;
+
+use Starbug\Core\Controller;
+use Starbug\Core\DatabaseInterface;
+
+class Admin{{ className }}Controller extends Controller {
+  public $routes = [
+    'update' => '{id}'
+  ];
+  public function __construct(DatabaseInterface $db) {
+    $this->db = $db;
+  }
+  public function init() {
+    $this->assign("model", "{{ model }}");
+    $this->assign("cancel_url", "admin/{{ model }}");
+  }
+  public function defaultAction() {
+    $this->render("admin/list.html");
+  }
+  public function create() {
+    if ($this->db->success("{{ model }}", "create")) $this->redirect("admin/{{ model }}");
+    else $this->render("admin/create.html");
+  }
+  public function update($id) {
+    $this->assign("id", $id);
+    if ($this->db->success("{{ model }}", "create")) $this->redirect("admin/{{ model }}");
+    else $this->render("admin/update.html");
+  }
+}

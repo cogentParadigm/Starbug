@@ -1,7 +1,9 @@
 define([
 	'dojo/_base/declare',
-	'dgrid/_StoreMixin'
-], function (declare, _StoreMixin) {
+	'dgrid/_StoreMixin',
+	"dojo/on",
+	"put-selector/put"
+], function (declare, _StoreMixin, on, put) {
 	return declare(_StoreMixin, {
 		// summary:
 		// dgrid mixin which implements the refresh method to
@@ -27,7 +29,13 @@ define([
 					// Record total so it can be retrieved later via get('total')
 					self._total = total;
 				});
-				return self.renderQueryResults(queryResults);
+				return self.renderQueryResults(queryResults).then(function() {
+					on.emit(self.domNode, 'dgrid-refresh-complete', {
+						bubbles: true,
+						cancelable: false,
+						grid: self
+					});
+				});
 			});
 		},
 
@@ -37,6 +45,11 @@ define([
 			// Clear _lastCollection which is ordinarily only used for
 			// store-less grids
 			this._lastCollection = null;
+
+			if (rows.length == 0) {
+				this.noDataNode = put(this.contentNode, 'div.dgrid-no-data');
+				this.noDataNode.innerHTML = this.noDataMessage;
+			}
 
 			return rows;
 		}

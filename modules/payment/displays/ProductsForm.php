@@ -6,20 +6,21 @@ use Starbug\Core\FormDisplay;
 class ProductsForm extends FormDisplay {
   public $model = "products";
   public $cancel_url = "admin/products";
-  function build_display($options) {
-    $this->layout->add(["top", "left" => "div.col-md-9", "right" => "div.col-md-3"]);
-    $this->layout->add(["bottom", "tabs" => "div.col-sm-12"]);
+  public $collection = "ProductsForm";
+  public function buildDisplay($options) {
+    $this->layout->add(["top", "right" => "div.col-md-3.pull-right", "left" => "div.col-md-9", "center" => "div.col-md-9", "bottom" => "div.col-md-9"]);
+    $this->layout->add(["footer", "tabs" => "div.col-sm-12"]);
     $this->layout->put("tabs", 'div[data-dojo-type="dijit/layout/TabContainer"][data-dojo-props="doLayout:false, tabPosition:\'left-h\'"][style="width:100%;height:100%"]', '', 'tc');
     $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="URL path"]'.((empty($ops['tab'])) ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'path');
     $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Meta tags"]'.(($ops['tab'] === "meta") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'meta');
     $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Publishing options"]'.(($ops['tab'] === "breadcrumbs") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'publishing');
-    $this->add(["type", "input_type" => "select", "from" => "product_types", "pane" => "left"]);
+    $this->add(["type", "input_type" => "select", "from" => "product_types", "optional" => "", "pane" => "left", "data-submit" => "change"]);
     $this->add(["sku", "label" => "SKU", "pane" => "left"]);
     $this->add(["name", "pane" => "left"]);
-    $this->add(["description", "pane" => "left"]);
-    $this->add(["content", "pane" => "left"]);
-    $this->add(["thumbnail", "input_type" => "file_select", "pane" => "left"]);
-    $this->add(["photos", "input_type" => "file_select", "pane" => "left"]);
+    $this->add(["description", "pane" => "bottom"]);
+    $this->add(["content", "pane" => "bottom"]);
+    $this->add(["thumbnail", "input_type" => "file_select", "pane" => "bottom"]);
+    $this->add(["photos", "input_type" => "file_select", "pane" => "bottom", "size" => "0"]);
 
     $this->add([
       "payment_type",
@@ -30,7 +31,7 @@ class ProductsForm extends FormDisplay {
       "data-dojo-type" => "starbug/form/Dependency",
       "data-dojo-props" => "key:'payment_type'"
     ]);
-    $this->add(["price", "pane" => "right", "info" => "Enter price in cents. For example $50 should be entered as 5000"]);
+    $this->add(["price", "pane" => "right", "data-dojo-type" => "sb/form/Currency"]);
     $this->add([
       "unit",
       "label" => "Recurrence Unit",
@@ -65,5 +66,57 @@ class ProductsForm extends FormDisplay {
     $this->add(["meta_keywords", "label" => "Meta Keywords", "input_type" => "textarea", "class" => "plain", "style" => "width:100%", "data-dojo-type" => "dijit/form/Textarea", "pane" => "meta"]);
     $this->add(["published", "pane" => "publishing", "value" => "1"]);
     $this->add(["hidden", "pane" => "publishing", "value" => "1"]);
+
+    $options = $this->db->query("product_options")->condition("product_types_id", $this->get("type"))
+      ->sort("product_options.tree_path, product_options.position")->all();
+    $items = $children = [];
+    foreach ($options as $option) {
+      if (empty($option["parent"])) {
+        $items[] = $option;
+      } else {
+        $children[$option["parent"]][] = $option;
+      }
+    }
+    $this->layout->put("center", "div.row", "", "container");
+    $this->addOptions($items, $children);
+    $this->actions->update([$this->defaultAction, "data-submit" => "finish"]);
+  }
+  protected function addOptions($items, $children) {
+    foreach ($items as $item) {
+      $input_name = "options[".$item["slug"]."]";
+      $target = empty($item["parent"]) ? "container" : $item["parent"];
+      $field = [$input_name, "label" => $item["name"], "pane" => $target, "div" => "col-xs-12 col-sm-".$item["columns"], "required" => (bool) $item["required"]];
+      if ($item["type"] == "Fieldset") {
+        $this->layout->put($target, "div.col-xs-12.col-sm-".$item["columns"], "", $item["id"]."FieldsetCol");
+        $this->layout->put($item["id"]."FieldsetCol", "div.panel.panel-default", "", $item["id"]."FieldsetPanel");
+        $this->layout->put($item["id"]."FieldsetPanel", "div.panel-heading", $item["name"]);
+        $this->layout->put($item["id"]."FieldsetPanel", "div.panel-body", "", $item["id"]."PanelBody");
+        $this->layout->put($item["id"]."PanelBody", "div.row", "", $item["id"]);
+        if (!empty($children[$item["id"]])) {
+          $this->addOptions($children[$item["id"]], $children);
+        }
+      } elseif ($item["type"] == "Text") {
+        $this->add($field + ["input_type" => "text"]);
+      } elseif ($item["type"] == "Textarea") {
+        $this->add($field + ["input_type" => "textarea"]);
+      } elseif ($item["type"] == "Checkbox") {
+        $this->add($field + ["input_type" => "checkbox", "value" => "1"]);
+      } elseif ($item["type"] == "Select List") {
+        $options = $values = [""];
+        if (!empty($children[$item["id"]])) {
+          foreach ($children[$item["id"]] as $option) {
+            $options[] = $option["name"];
+            $values[] = $option["slug"];
+          }
+        }
+        $this->add($field + ["input_type" => "select", "options" => $options, "values" => $values]);
+      } elseif ($item["type"] == "Reference") {
+        $this->add($field + ["input_type" => "text", "data-dojo-type" => "sb/form/Select", "data-dojo-props" => "model:'".$item["reference_type"]."'"]);
+      } elseif ($item["type"] == "Hidden") {
+        $this->add($field + ["input_type" => "hidden"]);
+      } elseif ($item["type"] == "File") {
+        $this->add($field + ["input_type" => "file_select"]);
+      }
+    }
   }
 }

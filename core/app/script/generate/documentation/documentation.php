@@ -1,2 +1,2 @@
 <?php
-	passthru("doxygen doc/doxyfile");
+  passthru("doxygen doc/doxyfile");

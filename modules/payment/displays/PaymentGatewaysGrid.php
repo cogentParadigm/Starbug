@@ -6,7 +6,7 @@ use Starbug\Core\GridDisplay;
 class PaymentGatewaysGrid extends GridDisplay {
   public $model = "payment_gateways";
   public $action = "admin";
-  function build_display($options) {
+  public function buildDisplay($options) {
     $this->add("name");
     $this->add("description");
     $this->add("is_active");

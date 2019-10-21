@@ -1,0 +1,12 @@
+{% extends "panel.html.twig" %}
+
+{% if form_header is empty %}
+  {% set form_header = "Update Profile" %}
+{% endif %}
+{% block title %}{{ form_header }}{% endblock %}
+{% block body %}
+  {% if helper("db").success("users", "updateProfile") %}
+    <div class="alert alert-success">You profile has been updated successfully.</div>
+  {% endif %}
+  {{ helper("displays").render("ProfileForm", request.getParameters()|merge({"operation": action ?? "updateProfile", "id": id})) }}
+{% endblock %}

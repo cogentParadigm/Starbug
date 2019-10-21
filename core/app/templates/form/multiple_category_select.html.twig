@@ -1,0 +1,14 @@
+<div class="multiple_category_select">
+  {% if value is empty %}
+    {% set value = [] %}
+  {% endif %}
+  {% for term in terms %}
+    <div class="form-group checkbox" style="padding-left:{{ term.depth * 15 }}px">
+      {% set attrs = {"type": "checkbox", "class": "left checkbox", "name": name ~ "[]", "value": term.id} %}
+      {% if term.id in value %}
+        {% set attrs = attrs|merge({"checked":"checked"}) %}
+      {% endif %}
+      <label><input {{ helper("filter").attributes(attrs) }}/>{{ term.term }}</label>
+    </div>
+  {% endfor %}
+</div>

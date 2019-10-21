@@ -25,7 +25,7 @@ function(dojo, strings, put, on){
 			remove = put(div, 'a.Delete.btn.btn-default[title=Delete][href='+remove+']', put('div.fa.fa-times'));
 			on(remove, 'click', function() {
 				if (confirm('Are you sure you want to delete this item?')) {
-					var d = grid.collection.put({taxonomy:row.id}, 'delete_taxonomy');
+					var d = grid.collection.put({taxonomy:row.id}, 'deleteTaxonomy');
 					d.then(function() {grid.refresh();});
 				}
 			});

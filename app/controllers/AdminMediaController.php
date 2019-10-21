@@ -7,15 +7,15 @@ class AdminMediaController extends Controller {
   public $routes = [
     'update' => '{id}'
   ];
-  function init() {
+  public function init() {
     $this->assign("model", "files");
   }
-  function default_action() {
-    $this->response->template = "media-browser";
+  public function defaultAction() {
+    $this->response->template = "media-browser.html";
   }
-  function update($id) {
+  public function update($id) {
     $this->assign("id", $id);
     $this->assign("action", "update");
-    $this->render("admin/update");
+    $this->render("admin/update.html");
   }
 }

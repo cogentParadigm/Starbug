@@ -17,18 +17,18 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
       $card = $this->createCard($subscription);
       $subscription["card"] = $card["id"];
     }
-    foreach (array('amount', 'unit', 'interval') as $field) {
+    foreach (['amount', 'unit', 'interval'] as $field) {
       if (empty($subscription[$field])) $this->models->get("orders")->error('This field is required', $field);
     }
     if (empty($subscription["start_date"])) $subscription["start_date"] = date("Y-m-d");
     if (!$this->models->get("orders")->errors()) {
-      //prevent attempts to update subscriptions using this method
+      // prevent attempts to update subscriptions using this method
       unset($subscription["id"]);
       $next_billing = strtotime($subscription["start_date"] . "+ " . $subscription["interval"] . " " . $subscription["unit"]);
       $subscription["expiration_date"] = date("Y-m-d 00:00:00", $next_billing + 86400);
       $this->saveSubscription($subscription);
       if (!$this->models->get("subscriptions")->errors()) {
-        //create a bill for the next payment
+        // create a bill for the next payment
         $this->models->get("bills")->store([
           "amount" => $subscription["amount"],
           "due_date" => $subscription["expiration_date"],
@@ -49,7 +49,7 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
   }
   public function processSubscription($subscription) {
     $complete = false;
-    //we will assume the subscription is neither canceled, completed, or up to date
+    // we will assume the subscription is neither canceled, completed, or up to date
     $purchase = [
       "card" => $subscription["card"],
       "orders_id" => $subscription["orders_id"],
@@ -68,11 +68,11 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
         $update["active"] = "0";
       }
       $this->models->get("subscriptions")->store($update);
-      //the payment succeeded so add it to the bill and mark it as paid
+      // the payment succeeded so add it to the bill and mark it as paid
       $payment = $this->models->get("payments")->insert_id;
       $this->models->get("bills")->store(["id" => $subscription["bill"], "payments" => "+".$payment, "paid" => "1"]);
       if (!$complete && $subscription["active"] && !$subscription["canceled"]) {
-        //create a bill for the next payment
+        // create a bill for the next payment
         $this->models->get("bills")->store([
           "amount" => $subscription["amount"],
           "due_date" => $subscription["expiration_date"],
@@ -83,7 +83,7 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
       }
     } else {
       if (isset($this->models->get("payments")->insert_id)) {
-        //the payment was decline so add it to the bill and unschedule it
+        // the payment was decline so add it to the bill and unschedule it
         $payment = $this->models->get("payments")->insert_id;
         $this->models->get("bills")->store(["id" => $subscription["bill"], "payments" => "+".$payment, "scheduled" => "0"]);
       }
@@ -92,7 +92,7 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
   }
   protected function saveSubscription($subscription) {
     $record = [];
-    foreach (array('id', 'orders_id', 'product', 'amount', 'start_date', 'unit', 'interval', 'limit', 'card', 'canceled', 'completed', 'expiration_date') as $field) {
+    foreach (['id', 'orders_id', 'product', 'amount', 'start_date', 'unit', 'interval', 'limit', 'card', 'canceled', 'completed', 'expiration_date'] as $field) {
       if (!empty($subscription[$field])) $record[$field] = $subscription[$field];
     }
     $this->models->get("subscriptions")->store($record);
@@ -105,7 +105,7 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
   }
   public function createCard($options) {
     $options = $this->validateCard($options);
-    //if we have all the fields, continue processing
+    // if we have all the fields, continue processing
     if (!$this->models->get("orders")->errors()) {
       $card = new CreditCard($options);
       $response = $this->gateway->createCard(["card" => $card, "forceCardUpdate" => true] + $options)->send();
@@ -135,10 +135,10 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
       $payment["cardReference"] = json_encode(["customerPaymentProfileId" => $card["card_reference"], "customerProfileId" => $card["customer_reference"]]);
     }
     // check for required fields
-    foreach (array('cardReference', 'amount') as $field) {
+    foreach (['cardReference', 'amount'] as $field) {
       if (empty($payment[$field])) $this->models->get("orders")->error('This field is required', $field);
     }
-    //if we have all the fields, continue processing
+    // if we have all the fields, continue processing
     if (!$this->models->get("orders")->errors()) {
       $response = $this->gateway->purchase(["amount" => floatval($payment["amount"]/100), "cardReference" => $payment["cardReference"]])->send();
       if (!$response->isSuccessful()) {

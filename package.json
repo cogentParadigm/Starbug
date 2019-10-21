@@ -1,25 +1,16 @@
 {
   "devDependencies": {
-    "cssnano": "^3.10.0",
     "grunt": "^0.4.5",
     "grunt-contrib-jshint": "^0.11.3",
-    "grunt-contrib-less": "^1.4.0",
-    "grunt-contrib-watch": "^1.0.0",
     "grunt-deployments": "^0.2.0",
     "grunt-jsvalidate": "^0.2.2",
-    "grunt-lesslint": "^1.4.1",
     "grunt-phpcs": "^0.2.3",
     "grunt-phplint": "0.0.5",
     "grunt-phploc": "^0.1.3",
     "grunt-phpmd": "^0.1.1",
     "grunt-phpunit": "^0.3.6",
-    "grunt-postcss": "^0.8.0",
     "grunt-rsync": "^0.6.2",
     "grunt-shell": "^1.3.1",
-    "intern": "^2.2.2",
-    "lost": "^8.0.0",
-    "postcss-cssnext": "^2.9.0",
-    "postcss-import": "^9.1.0",
-    "postcss-url": "^5.1.2"
+    "intern": "^2.2.2"
   }
 }

@@ -1,0 +1,54 @@
+:root {
+  --input-border-radius: 0.25rem;
+}
+
+.input-reset, .form-control {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  border-radius: 0;
+}
+
+.button-reset::-moz-focus-inner,
+.input-reset::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+.form-group {
+  margin-bottom: var(--spacing-medium);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-small) var(--spacing-medium);
+  background: var(--white);
+  border: 1px solid var(--moon-gray);
+  border-radius: var(--input-border-radius);
+}
+
+label {
+  display: inline-block;
+  margin-bottom: var(--spacing-small);
+}
+
+.asterisk, .alert-danger {
+  color: var(--dark-red);
+}
+
+.dropdown-indicator {
+  position: relative;
+}
+.dropdown-indicator:before {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: var(--spacing-small) var(--spacing-medium);
+  @extend .fa;
+  line-height: inherit;
+  pointer-events: none;
+}
+select.form-control, .form-control.dropdown-indicator {
+  padding-right: calc(var(--spacing-medium) + var(--spacing-large));
+}

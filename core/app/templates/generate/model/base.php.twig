@@ -1,0 +1,40 @@
+<?php
+namespace Starbug\Core;
+
+{% if useLines is not empty %}{{ useLines|join("\n") }}{% endif %}
+
+/**
+ * {{ name }} model base
+ * @ingroup models
+ */
+class {{ className }}Model extends Table {
+
+  public $type = "{{ name }}";
+  public $base = "{{ base }}";
+  public $label = "{{ label }}";
+  public $singular = "{{ singular }}";
+  public $singular_label = "{{ singular|replace({"-":" ", "_":" "})|title }}";
+  public $label_select = "{{ label_select ? label_select : name ~ ".id" }}";
+  public $search_fields = "{{ search }}";
+
+
+  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user{% for varname, typehint in factory %}, {{ typehint }} ${{ varname }}{% endfor %}) {
+    $this->db = $db;
+    $this->models = $models;
+    $this->user = $user;
+{% for varname, typehint in factory %}
+    $this->{{ varname }} = ${{ varname }};
+{% endfor %}
+    $this->init();
+  }
+
+  public $hooks = [
+{% for column, field in fields %}
+{% if field is not empty %}
+    "{{ column }}" => [{% for k, v in field %}"{{ k }}" => "{{ v }}"{% if not loop.last %}, {% endif %}{% endfor %}]{% if not loop.last %},{% endif %}
+
+{% endif %}
+{% endfor %}
+  ];
+
+}
