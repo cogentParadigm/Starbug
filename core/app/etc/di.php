@@ -1,10 +1,6 @@
 <?php
 use Interop\Container\ContainerInterface;
 use Monolog\Logger;
-use League\Flysystem\MountManager;
-use Starbug\Core\Storage\Filesystem;
-use Starbug\Core\Storage\Adapter\Local;
-use Starbug\Http\Url;
 
 return [
   'environment' => 'development',
@@ -27,12 +23,6 @@ return [
       "action" => "defaultAction",
       "groups" => "admin",
       "theme" => "storm"
-    ],
-    "upload" => [
-      "title" => "Starbug\\Core\\UploadController",
-      "controller" => "upload",
-      "template" => "xhr.xhr",
-      "groups" => "user"
     ],
     "terms" => [
       "template" => "xhr.xhr",
@@ -88,39 +78,5 @@ return [
       $logger->pushHandler($handler);
     }
     return $logger;
-  },
-  'filesystem.adapters' => ['default', 'public', 'tmp'],
-  'filesystem.adapter.default' => 'public',
-  'filesystem.public' => 'var/public/uploads',
-  'filesystem.tmp' => 'var/tmp',
-  'filesystem.adapter.public' => function (ContainerInterface $c) {
-    $here = $c->get("Starbug\Http\UrlInterface");
-    $public = $c->get("filesystem.public");
-    $url = (new Url($here->getHost(), $here->getDirectory().$public."/"))->setScheme($here->getScheme());
-    $adapter = new Local($c->get("base_directory")."/".$public);
-    $adapter->setUrlInterface($url);
-    return $adapter;
-  },
-  'filesystem.adapter.tmp' => function (ContainerInterface $c) {
-    $here = $c->get("Starbug\Http\UrlInterface");
-    $tmp = $c->get("filesystem.tmp");
-    $url = (new Url($here->getHost(), $here->getDirectory().$tmp."/"))->setScheme($here->getScheme());
-    $adapter = new Local($c->get("base_directory")."/".$tmp);
-    $adapter->setUrlInterface($url);
-    return $adapter;
-  },
-  'League\Flysystem\MountManager' => function (ContainerInterface $c) {
-    $manager = new MountManager();
-    $adapters = $c->get("filesystem.adapters");
-    foreach ($adapters as $prefix) {
-      $adapter = $c->get('filesystem.adapter.'.$prefix);
-      if (is_string($adapter)) $adapter = $c->get("filesystem.adapter.".$adapter);
-      $manager->mountFilesystem($prefix, new Filesystem($adapter));
-    }
-    return $manager;
-  },
-  'Starbug\Core\Storage\FilesystemInterface' => function (ContainerInterface $c) {
-    $manager = $c->get("League\Flysystem\MountManager");
-    return $manager->getFilesystem("default");
   }
 ];
