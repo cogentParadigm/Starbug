@@ -1,7 +1,11 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Files;
 
+use Starbug\Core\Controller;
+use Starbug\Core\ModelFactoryInterface;
 use League\Flysystem\MountManager;
+use Starbug\Core\ImagesInterface;
+use Starbug\Core\IdentityInterface;
 use Exception;
 
 class UploadController extends Controller {
