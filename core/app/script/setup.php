@@ -11,7 +11,7 @@ class SetupCommand {
   }
   public function run($argv) {
     // CREATE FOLDERS & SET FILE PERMISSIONS
-    $dirs = ["var", "var/models", "var/tmp", "var/public", "var/log", "var/public/uploads"];
+    $dirs = ["var", "var/models", "var/tmp", "var/public", "var/private", "var/log", "var/public/uploads", "var/private/uploads"];
     foreach ($dirs as $dir) if (!file_exists($this->base_directory."/".$dir)) exec("mkdir ".$this->base_directory."/".$dir);
     exec("chmod -R a+w ".$this->base_directory."/var");
 
