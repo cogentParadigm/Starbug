@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core;
 
-class Collection {
+class Collection implements CollectionInterface {
   protected $model;
   protected $search_fields = false;
   public $results = [];
@@ -16,7 +16,7 @@ class Collection {
   public function setModel($model) {
     $this->model = $model;
   }
-  public function getPager() {
+  public function getPager() : ?Pager {
     return $this->pager;
   }
   public function addFilter(CollectionFilterInterface $filter) {

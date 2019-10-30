@@ -1,7 +1,8 @@
 <?php
 namespace Starbug\Core;
 
-use \Interop\Container\ContainerInterface;
+use Interop\Container\ContainerInterface;
+use Exception;
 
 class CollectionFactory implements CollectionFactoryInterface {
   protected $locator;
@@ -16,7 +17,7 @@ class CollectionFactory implements CollectionFactoryInterface {
       $className = "Starbug\\Core\\Collection";
     }
     $object = $this->container->get($className);
-    if ($object instanceof Collection) {
+    if ($object instanceof CollectionInterface) {
       return $object;
     } else {
       throw new Exception("CollectionFactoryInterface contract violation. ".$className." is not an instance of Starbug\Core\Collection.");
