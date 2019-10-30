@@ -54,7 +54,9 @@ class ApiRequest {
       return;
     }
     $collection = $this->collections->get($collection);
-    $collection->setModel($this->model);
+    if (method_exists($collection, "setModel")) {
+      $collection->setModel($this->model);
+    }
 
     // Register filters.
     foreach ($this->filters as $filter) {
