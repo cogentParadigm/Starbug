@@ -48,10 +48,12 @@ class ApiRequest {
     $options['time'] = $this->time;
 
     // Instantiate the model and collection.
-    $instance = $this->models->get($this->model);
-    if ($instance->errors()) {
-      $this->results[$name] = $this->errors($this->model);
-      return;
+    if (!is_null($this->model)) {
+      $instance = $this->models->get($this->model);
+      if ($instance->errors()) {
+        $this->results[$name] = $this->errors($this->model);
+        return;
+      }
     }
     $collection = $this->collections->get($collection);
     if (method_exists($collection, "setModel")) {
@@ -114,7 +116,6 @@ class ApiRequest {
     $schema = $instance->columnInfo();
     if (empty($schema)) $schema = [];
     $json = ["errors" => []];
-    $e = $instance->errors("", true);
     foreach ($instance->errors("", true) as $k => $v) {
       if (!empty($schema[$k]) && !empty($schema[$k]['label'])) $k = $schema[$k]['label'];
       $json['errors'][] = ["field" => $k, "errors" => $v];
