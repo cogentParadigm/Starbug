@@ -1,0 +1,17 @@
+.column-count-2 { column-count:2; }
+.column-count-3 { column-count:3; }
+
+@media (--breakpoint-not-small) {
+  .column-count-2-ns { column-count:2; }
+  .column-count-3-ns { column-count:3; }
+}
+
+@media (--breakpoint-medium) {
+  .column-count-2-m { column-count:2; }
+  .column-count-3-m { column-count:3; }
+}
+
+@media (--breakpoint-large) {
+  .column-count-2-l { column-count:2; }
+  .column-count-3-l { column-count:3; }
+}

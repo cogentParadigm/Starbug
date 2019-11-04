@@ -56,46 +56,104 @@
       <div class="measure-wide">
 
         <div class="form-group">
-          <label>First Name</label>
+          <label class="mb2">Textbox</label>
           <input type="text" class="form-control"/>
-          <div class="pv2 gray f7">This is a textbox.</div>
+          <div class="pv2 gray f7">This is a plain textbox.</div>
         </div>
 
         <div class="form-group">
-          <label>Gender</label>
+          <label class="mb2">Number</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/Number"/>
+          <div class="pv2 gray f7">This is a numeric input textbox.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="mb2">Phone Number</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/PhoneNumber"/>
+          <div class="pv2 gray f7">This is a phone number input textbox.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="mb2">Currency</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/Currency"/>
+          <div class="pv2 gray f7">This is a currency input textbox.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="mb2">Native Select</label>
           <div class="dropdown-indicator fa-caret-down">
             <select class="form-control">
               <option value=""></option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
+              <option value="1">Yes</option>
+              <option value="0">No</option>
             </select>
             <div class="pv2 gray f7">This is a native select element.</div>
           </div>
         </div>
 
         <div class="form-group">
-          <label>Gender</label>
+          <label class="mb2">Dynamic Select</label>
           <input type="text" class="form-control" data-dojo-type="sb/form/Select" data-dojo-props="collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})"/>
-           <div class="pv2 gray f7">This is a select widget.</div>
+           <div class="pv2 gray f7">This is a dynamic selection widget.</div>
         </div>
 
         <div class="form-group">
-          <label>Gender</label>
+          <label class="mb2">Dynamic Select</label>
           <input type="text" class="form-control" data-dojo-type="sb/form/Select" data-dojo-props="searchable: true, collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})"/>
-           <div class="pv2 gray f7">This is a select widget with searching enabled.</div>
+           <div class="pv2 gray f7">This is a dynamic selection widget with searching enabled.</div>
         </div>
 
         <div class="form-group">
-          <label>Gender</label>
+          <label class="mb2">Gender</label>
           <input type="text" class="form-control" data-dojo-type="sb/form/MultipleSelect" data-dojo-props="collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})"/>
            <div class="pv2 gray f7">This is a multiple select widget.</div>
         </div>
 
         <div class="form-group">
-          <label>Date of Birth</label>
+          <label class="mb2">Date of Birth</label>
           <input type="text" class="form-control" data-dojo-type="starbug/form/DateTextBox" value="0000-00-00"/>
            <div class="pv2 gray f7">This is a date picker.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="mb2">Date</label>
+          <input type="text" name="date" data-dojo-type="sb/form/DatePicker"/>
+          <div class="pv2 gray f7">This is an inline date picker.</div>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <input class="checkbox" type="checkbox" name="checkbox" value="1"/>
+            <span class="checkbox-label">Checkbox</span>
+          </label>
+        </div>
+
+        <label class="mb2">Radio Buttons</label>
+        <div class="form-group">
+          <div class="mb1">
+            <label><input type="radio" name="radio1" value="1" class="radio"/><span class="radio-label">Yes</span></label>
+          </div>
+          <div class="mb1">
+            <label><input type="radio" name="radio1" value="2" class="radio"/><span class="radio-label">No</span></label>
+          </div>
+          <div class="mb1">
+            <label><input type="radio" name="radio1" value="3" class="radio"/><span class="radio-label">Maybe</span></label>
+          </div>
+        </div>
+
+        <label class="mb2">Radio Button Group</label>
+        <div class="form-group">
+          <div class="list-group">
+            <div class="list-group-item list-group-item-action">
+              <label><input type="radio" name="radio2" value="1" class="radio"/><span class="radio-label">Yes</span></label>
+            </div>
+            <div class="list-group-item list-group-item-action">
+              <label><input type="radio" name="radio2" value="2" class="radio"/><span class="radio-label">No</span></label>
+            </div>
+            <div class="list-group-item list-group-item-action">
+              <label><input type="radio" name="radio2" value="3" class="radio"/><span class="radio-label">Maybe</span></label>
+            </div>
+          </div>
         </div>
 
       </div>

@@ -1,0 +1,17 @@
+.translateX-100 { transform: translateX(100%); }
+.translateX-0 { transform: translateX(0); }
+
+@media (--breakpoint-not-small){
+  .translateX-100-ns { transform: translateX(100%); }
+  .translateX-0-ns { transform: translateX(0); }
+}
+
+@media (--breakpoint-medium){
+  .translateX-100-m { transform: translateX(100%); }
+  .translateX-0-m { transform: translateX(0); }
+}
+
+@media (--breakpoint-large){
+  .translateX-100-l { transform: translateX(100%); }
+  .translateX-0-l { transform: translateX(0); }
+}

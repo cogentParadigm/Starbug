@@ -1,0 +1,53 @@
+@define-mixin dropdown-menu {
+  position: absolute;
+  top: 100%;
+  z-index: 5;
+  display: none;
+  min-width: 160px;
+  width: max-content;
+}
+
+.dropdown-menu {
+  @mixin dropdown-menu;
+}
+
+.open > .dropdown-menu {
+  display: block;
+}
+
+@media (--breakpoint-not-small) {
+  .dropdown-menu-ns {
+    @mixin dropdown-menu;
+  }
+  .open > .dropdown-menu-ns,
+  .open-ns > .dropdown-menu-ns,
+  .open-ns > .dropdown-menu {
+    display: block;
+  }
+}
+
+@media (--breakpoint-medium) {
+  .dropdown-menu-m {
+    @mixin dropdown-menu;
+  }
+  .open > .dropdown-menu-m,
+  .open-ns > .dropdown-menu-m,
+  .open-m > .dropdown-menu-m,
+  .open-m > .dropdown-menu,
+  .open-m > .dropdown-menu-ns {
+    display: block;
+  }
+}
+
+@media (--breakpoint-large) {
+  .dropdown-menu-l {
+    @mixin dropdown-menu;
+  }
+  .open > .dropdown-menu-l,
+  .open-ns > .dropdown-menu-l,
+  .open-l > .dropdown-menu-l,
+  .open-l > .dropdown-menu,
+  .open-l > .dropdown-menu-ns {
+    display: block;
+  }
+}

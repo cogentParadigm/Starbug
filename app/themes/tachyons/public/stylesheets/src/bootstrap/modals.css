@@ -1,0 +1,120 @@
+//
+// Modals
+// --------------------------------------------------
+
+// .modal-open      - body class for killing the scroll
+// .modal           - container to scroll within
+// .modal-dialog    - positioning shell for the actual modal
+// .modal-content   - actual modal w/ bg and corners and shit
+
+:root {
+  --modal-content-background-color: var(--white);
+  --modal-section-border: var(--input-border);
+  --modal-section-spacing: var(--spacing-medium);
+}
+
+// Kill the scroll on the body
+.modal-open {
+  overflow: hidden;
+}
+
+// Container that the modal scrolls within
+.modal {
+  display: none;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  -webkit-overflow-scrolling: touch;
+
+  // Prevent Chrome on Windows from adding a focus outline. For details, see
+  // https://github.com/twbs/bootstrap/pull/10951.
+  outline: 0;
+
+  // When fading in the modal, animate it to slide down
+  &.fade .modal-dialog {
+    transform: translate(0, -25%);
+    transition: transform 0.3s ease-out;
+  }
+  &.in .modal-dialog { transform: translate(0, 0) }
+}
+.modal-open .modal {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+// Shell div to position the modal with bottom padding
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 10px;
+}
+
+// Actual modal
+.modal-content {
+  position: relative;
+  background-color: var(--modal-content-background-color);
+  border-radius: .5rem;
+  box-shadow:0 3px 9px rgba(0,0,0,.5);
+  background-clip: padding-box;
+  // Remove focus outline from opened modal
+  outline: 0;
+}
+
+// Modal background
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1040;
+  background-color: var(--black);
+  // Fade for backdrop
+  &.fade { opacity:0; }
+  &.in { opacity:0.5; }
+}
+
+// Modal header
+// Top section of the modal w/ title and dismiss
+.modal-header {
+  padding: var(--modal-section-spacing);
+  border-bottom: var(--modal-section-border);
+}
+
+// Modal body
+// Where all modal content resides (sibling of .modal-header and .modal-footer)
+.modal-body {
+  position: relative;
+  padding: var(--modal-section-spacing);
+}
+
+// Footer (for actions)
+.modal-footer {
+  padding: var(--modal-section-spacing);
+  text-align: right; // right align buttons
+  border-top: var(--modal-section-border);
+}
+
+// Measure scrollbar width for padding body during modal show/hide
+.modal-scrollbar-measure {
+  position: absolute;
+  top: -9999px;
+  width: 50px;
+  height: 50px;
+  overflow: scroll;
+}
+
+
+@media (--breakpoint-not-small) {
+  .modal-dialog {
+    max-width: 32rem;
+    margin: var(--spacing-large) auto;
+  }
+  .modal-content {
+    box-shadow:0 5px 15px var(--black-50);
+  }
+}

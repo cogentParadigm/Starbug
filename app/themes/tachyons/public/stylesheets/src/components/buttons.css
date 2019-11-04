@@ -1,3 +1,25 @@
+:root {
+  --btn-padding-vertical: var(--spacing-small);
+  --btn-padding-horizontal: var(--spacing-medium);
+  --btn-padding: var(--btn-padding-vertical) var(--btn-padding-horizontal);
+
+  --btn-default-color: var(--dark-gray);
+  --btn-default-bg: var(--white);
+  --btn-default-border-color: var(--moon-gray);
+
+  --btn-gray-color: var(--white);
+  --btn-gray-bg: var(--gray);
+  --btn-gray-border-color: var(--gray);
+
+  --btn-success-color: var(--white);
+  --btn-success-bg: var(--green);
+  --btn-success-border-color: var(--green);
+
+  --btn-danger-color: var(--white);
+  --btn-danger-bg: var(--red);
+  --btn-danger-border-color: var(--red);
+}
+
 .btn {
   // A button should display inline but allow vertical padding.
   display: inline-block;
@@ -8,33 +30,35 @@
   white-space: nowrap;
 
   // Similarly, the padding and height should be equal.
-  padding: var(--spacing-small) var(--spacing-medium);
+  padding: var(--btn-padding);
   line-height: var(--base-line-height);
   font-size: var(--base-font-size);
 
   // Default appearance.
-  color: var(--dark-gray);
-  background-color: var(--white);
-  border: 1px solid var(--moon-gray);
   border-radius: .25rem;
+  border: none;
 }
 
 // Style Variants.
 
-.btn-dark {
-  color: var(--white);
-  background-color: var(--gray);
-  border-color: var(--gray);
+@define-mixin btn-variant $fg, $bg, $border {
+  color: $fg;
+  background-color: $bg;
+  border: 1px solid $border;
+}
+
+.btn-default {
+  @mixin btn-variant var(--btn-default-color), var(--btn-default-bg), var(--btn-default-border-color);
+}
+
+.btn-gray {
+  @mixin btn-variant var(--btn-gray-color), var(--btn-gray-bg), var(--btn-gray-border-color);
 }
 
 .btn-success {
-  color: var(--white);
-  background-color: var(--green);
-  border-color: var(--green);
+  @mixin btn-variant var(--btn-success-color), var(--btn-success-bg), var(--btn-success-border-color);
 }
 
 .btn-danger {
-  color: var(--white);
-  background-color: var(--red);
-  border-color: var(--red);
+  @mixin btn-variant var(--btn-danger-color), var(--btn-danger-bg), var(--btn-danger-border-color);
 }

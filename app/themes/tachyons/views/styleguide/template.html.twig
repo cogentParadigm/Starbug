@@ -1,5 +1,5 @@
 {% macro tab(path, label, active) %}
-  <a href="{{ helper("url").build("styleguide/" ~ path) }}" class="btn br--top link{% if active %} b--black z-1{% endif %}" style="margin-right:-1px">{{ label }}</a>
+  <a href="{{ helper("url").build("styleguide/" ~ path) }}" class="btn btn-default br--top link{% if active %} b--black z-1{% else %} z-2-focus{% endif %}" style="margin-right:-1px">{{ label }}</a>
 {% endmacro %}
 
 {% import _self as macros %}
@@ -8,7 +8,7 @@
   <p class="lh-copy measure"><!-- text here --></p>
 
   <div class="flex">
-    {% for path, label in {"colors":"Colors", "type":"Type", "scales":"Scales", "content":"Content", "controls":"Controls"} %}
+    {% for path, label in {"colors":"Colors", "type":"Type", "scales":"Scales", "content":"Content", "controls":"Controls", "dgrid":"Data Grid"} %}
       {{ macros.tab(path, label, (page == path)) }}
     {% endfor %}
     <div class="w-100 bb b--moon-gray"></div>

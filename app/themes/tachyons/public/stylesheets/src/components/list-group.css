@@ -1,3 +1,10 @@
+:root {
+  --list-group-disabled-color: var(--gray);
+  --list-group-active-color: var(--white);
+  --list-group-active-bg: var(--link-color);
+  --list-group-active-border-color: var(--link-color);
+}
+
 // Base class
 //
 // Easily usable on <ul>, <ol>, or <div>.
@@ -18,7 +25,7 @@
 
 .list-group-item-action {
   width: 100%; // For `<button>`s (anchors become 100% by default though)
-  color: var(--black);
+  color: inherit;
   text-align: inherit; // For `<button>`s (anchors inherit)
 }
 
@@ -29,11 +36,11 @@
 .list-group-item {
   position: relative;
   display: block;
-  padding: var(--spacing-small) var(--spacing-medium);
+  padding: var(--input-padding);
   // Place the border on the list items and negative margin up for better styling
   margin-bottom: -1px;
-  background-color: var(--white);
-  border: 1px solid var(--black-10);
+  background-color: var(--input-bg);
+  border: var(--input-border);
 
   // Round the first and last items
   &:first-child {
@@ -48,14 +55,14 @@
 
   &.disabled,
   &:disabled {
-    color: var(--gray);
+    color: var(--list-group-disabled-color);
   }
 
   // Include both here for `<a>`s and `<button>`s
   &.active {
     z-index: 2; // Place active items above their siblings for proper border styling
-    color: var(--white);
-    background-color: var(--blue);
-    border-color: var(--blue);
+    color: var(--list-group-active-color);
+    background-color: var(--list-group-active-bg);
+    border-color: var(--list-group-active-border-color);
   }
 }
