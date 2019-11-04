@@ -2,6 +2,16 @@
 // Normalization
 // --------------------------------------------------
 
+:root {
+  --link-color: var(--dark-green);
+  --link-text-decoration: none;
+  --paragraph-margin: var(--spacing-medium);
+  --focus-shadow: 0 0 2px 5px var(--gray);
+}
+
+// Document
+// -------------------------
+
 html {
   line-height: var(--base-line-height);
 }
@@ -16,8 +26,8 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-weight: var(--headings-font-weight);
   &, p {
-    margin-top: var(--spacing-medium);
-    margin-bottom: var(--spacing-medium);
+    margin-top: var(--paragraph-margin);
+    margin-bottom: var(--paragraph-margin);
   }
 }
 
@@ -33,5 +43,18 @@ h6 { font-size: var(--font-size-h6); }
 // -------------------------
 
 a {
-  color: var(--dark-green);
+  color: var(--link-color);
+  text-decoration: var(--link-text-decoration);
+}
+
+// Focus
+// -------------------------
+
+@define-mixin focus {
+  outline: none;
+  box-shadow: var(--focus-shadow);
+}
+
+:focus {
+  @mixin focus;
 }

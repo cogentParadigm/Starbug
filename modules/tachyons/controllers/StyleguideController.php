@@ -84,4 +84,9 @@ class StyleguideController extends Controller {
   public function controls() {
     $this->render("styleguide/template.html", ["page" => "controls"]);
   }
+  public function dgrid() {
+    $this->response->js("starbug/grid/PagedGrid");
+    $this->response->js("starbug/grid/columns/options");
+    $this->render("styleguide/template.html", ["page" => "dgrid"]);
+  }
 }

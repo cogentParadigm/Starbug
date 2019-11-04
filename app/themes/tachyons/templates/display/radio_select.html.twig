@@ -1,0 +1,31 @@
+<div {{ helper("filter").attributes(display.attributes) }}>
+  {% set name = display.options.name %}
+  {% set found = false %}
+  {% for item in display.items %}
+    {% if item.depth is empty %}
+      {% set item = item|merge({"depth":0}) %}
+    {% endif %}
+    <div class="form-group" style="padding-left:{{ item.depth * 15 }}px">
+      {% set attrs = {"type":"radio", "name":name, "value":item.id, "class": "radio"} %}
+      {% if item.id == display.options.value %}
+        {% set found = true %}
+        {% set attrs = attrs|merge({"checked":"checked"}) %}
+      {% endif %}
+      <label><input {{ helper("filter").attributes(attrs) }}/><span class="radio-label">{{ item.label }}</span></label>
+    </div>
+  {% endfor %}
+  {% if display.options.other_option %}
+    {% set other_id = helper("filter").normalize(name) ~ "_other" %}
+    {% set other_value = "" %}
+    {% if not found %}
+      {% set other_value = display.options.value %}
+    {% endif %}
+    {% set other_attrs = {"id":other_id, "type":"radio", "name":name, "style":"margin-top:10.5px", "value":other_value, "class":"radio"} %}
+    {% if other_value is not empty %}
+      {% set other_attrs = other_attrs|merge({"checked":"checked"}) %}
+    {% endif %}
+    <div class="form-group">
+      <label><input {{ helper("filter").attributes(other_attrs) }}/><span class="radio-label">{{ display.options.other_option }}</span> <input type="text" style="width:150px;display:inline-block" value="{{ other_value }}" oninput="var rb = document.getElementById('{{ other_id }}');rb.value = this.value;rb.checked=true;" class="form-control"/></label>
+    </div>
+  {% endif %}
+</div>

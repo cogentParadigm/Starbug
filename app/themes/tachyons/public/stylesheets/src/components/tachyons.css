@@ -26,13 +26,13 @@
 @import '../../../../../../../libraries/tachyons/src/_heights';
 @import '../../../../../../../libraries/tachyons/src/_letter-spacing';
 @import '../../../../../../../libraries/tachyons/src/_line-height';
-@import '../../../../../../../libraries/tachyons/src/_links';
+//@import '../../../../../../../libraries/tachyons/src/_links';
 @import '../../../../../../../libraries/tachyons/src/_lists';
 @import '../../../../../../../libraries/tachyons/src/_max-widths';
 @import '../../../../../../../libraries/tachyons/src/_widths';
 @import '../../../../../../../libraries/tachyons/src/_overflow';
 @import '../../../../../../../libraries/tachyons/src/_position';
-@import '../../../../../../../libraries/tachyons/src/_opacity';
+//@import '../../../../../../../libraries/tachyons/src/_opacity';
 @import '../../../../../../../libraries/tachyons/src/_rotations';
 @import '../../../../../../../libraries/tachyons/src/_skins';
 @import '../../../../../../../libraries/tachyons/src/_skins-pseudo';

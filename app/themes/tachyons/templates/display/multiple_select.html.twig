@@ -1,0 +1,34 @@
+<div {{ helper("filter").attributes(display.attributes) }}>
+  {% set name = display.options.name %}
+  {% set found = [] %}
+  {% for item in display.items %}
+    {% if item.depth is empty %}
+      {% set item = item|merge({"depth":0}) %}
+    {% endif %}
+    <div class="form-group" style="padding-left:{{ item.depth * 15 }}px">
+      {% set attrs = {"type": "checkbox", "class": "left checkbox", "name": name ~ "[]", "value": item.id} %}
+      {% if item.id in display.options.value %}
+        {% set found = found|merge([item.id]) %}
+        {% set attrs = attrs|merge({"checked":"checked"}) %}
+      {% endif %}
+      <label><input {{ helper("filter").attributes(attrs) }}/><span class="checkbox-label">{{ item.label }}</span></label>
+    </div>
+  {% endfor %}
+  {% if display.options.other_option %}
+    {% set other_id = helper("filter").normalize(name) ~ "_other" %}
+    {% set other_value = "" %}
+    {% for v in display.options.value %}
+      {% if v not in found %}
+        {# this value is not from the defined list #}
+        {% set other_value = v %}
+      {% endif %}
+    {% endfor %}
+    {% set other_attrs = {"id": other_id, "type": "checkbox", "class": "left checkbox", "name": name ~ "[]", "value": other_value} %}
+    {% if other_value is not empty %}
+      {% set other_attrs = other_attrs|merge({"checked": "checked"}) %}
+    {% endif %}
+    <div class="form-group">
+      <label><input {{ helper("filter").attributes(other_attrs) }}/><span class="checkbox-label">{{ display.options.other_option }}</span> <input type="text" style="width:150px;display:inline-block" value="{{ other_value }}" oninput="var cb = document.getElementById('{{ other_id }}');cb.value = this.value;cb.checked=true;" class="form-control"/></label>
+    </div>
+  {% endif %}
+</div>

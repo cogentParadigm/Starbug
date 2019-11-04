@@ -8,23 +8,26 @@ input.dijitReset, select.dijitReset {
 }
 
 .dijitTextBoxFocused {
-  @extend .form-control:focus;
+  @extend :focus;
 }
 
 .dijitInputContainer {
-  padding: var(--spacing-small) var(--spacing-medium);
+  padding: var(--input-padding);
 }
 
 .dijitInputField .dijitInputInner {
   font-size: var(--base-font-size);
   line-height: var(--base-line-height);
+  &:focus {
+    box-shadow: none;
+  }
 }
 
 .dijitPlaceHolder {
   font-style: normal;
   font-size: var(--base-font-size);
   line-height: var(--base-line-height);
-  padding: var(--spacing-small) var(--spacing-medium);
+  padding: var(--input-padding);
 }
 
 .dijitTextBoxDisabled, .dijitTextBoxReadOnly {
@@ -42,7 +45,7 @@ input.dijitReset, select.dijitReset {
 .dijitTextArea {
   @extend .form-control;
   @extend textarea.form-control;
-  padding: var(--spacing-small) var(--spacing-medium);
+  padding: var(--input-padding);
   line-height: var(--base-line-height);
 }
 
@@ -82,13 +85,6 @@ input.dijitReset, select.dijitReset {
 
 .dijitValidationContainer {
   display: none;
-}
-
-.dijitUpArrowButton .dijitArrowButtonInner:before{
-  @extend .fa-caret-up:before;
-}
-.dijitDownArrowButton .dijitArrowButtonInner:before{
-  @extend .fa-caret-down:before;
 }
 
 .dijitSpinnerButtonContainer.dijitButtonNode {

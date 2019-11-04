@@ -65,8 +65,8 @@
 @define-mixin grid-row {
   display: flex;
   flex-wrap: wrap;
-  margin-left: -var(--spacing-small);
-  margin-right: -var(--spacing-small);
+  margin-left: calc(-1 * var(--spacing-small));
+  margin-right: calc(-1 * var(--spacing-small));
 }
 
 @define-mixin grid-column {

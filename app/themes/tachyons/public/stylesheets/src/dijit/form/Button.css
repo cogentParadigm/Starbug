@@ -2,10 +2,6 @@
   border: none;
 }
 
-.dijitButtonNode * {
-  vertical-align: baseline;
-}
-
 .dijitButtonNode .dijitIcon {
     // Keeps button heights with and without icons the same
     line-height: calc(var(--base-line-height) * 0.65);
@@ -62,18 +58,14 @@
 
 // Arrow
 .dijitArrowButtonInner {
-  @extend .dijitButtonNode .dijitIcon;
-}
-
-.dijitArrowButtonInner {
-  @extend .fa;
+  @extend .material-icons;
 }
 .dijitArrowButtonInner:before {
-  @extend .fa-caret-down:before;
+  content: "expand_more";
 }
 
 .dijitUpArrowButton .dijitArrowButtonInner:before {
-    @extend .fa-caret-up:before;
+  content: "expand_less";
 }
 
 // Specific Styling
@@ -86,7 +78,7 @@
 }
 
 .dijitComboButton .dijitArrowButton {
-    padding: var(--spacing-small) var(--spacing-medium);
+    padding: var(--btn-padding);
     border-radius: 0 .25rem .25rem 0;
 }
 

@@ -1,27 +1,34 @@
+:root {
+  --menu-bg: var(--white);
+  --menu-border: var(--input-border);
+  --menu-active-bg: var(--near-white);
+  --menu-disabled-color: var(--silver);
+}
+
 .dijitMenu {
-	background: var(--white);
-	border: 1px solid var(--moon-gray);
+  background: var(--menu-bg);
+  border: var(--menu-border);
 }
 
 .dijitMenuItem {
-	padding: var(--spacing-small) var(--spacing-medium);
+  padding: var(--btn-padding);
 }
 
 .dijitMenuItemHover,
 .dijitMenuItemSelected,
 .dijitMenuItemActive {
-	background-color: var(--near-white);
+  background-color: var(--menu-active-bg);
 }
 
 .dijitMenuBar .dijitMenuItemDisabled {
-	color: var(--silver);
+  color: var(--menu-disabled-color);
 }
 
 /* this prevents jiggling upon hover of a menu item */
 .dijitMenuTable {
-	border-collapse:separate;
-	border-spacing:0 0;
-	padding:0;
+  border-collapse:separate;
+  border-spacing:0 0;
+  padding:0;
 }
 
 .claro .dijitMenu .dijitMenuItemHover td,
@@ -29,64 +36,64 @@
 .claro .dijitMenuItemHover,
 .claro .dijitComboBoxMenu .dijitMenuItemHover,
 .claro .dijitMenuItemSelected {
-	background-color: var(--near-white);
+  background-color: var(--menu-active-bg);
 }
 
 // Menu
 .dijitMenu {
-    z-index: 1000;
-    padding: 5px 0;
-    margin: 2px 0 0; // override default ul
-    background-color: var(--white);
-    border: 1px solid var(--moon-gray);
-    border-radius: 6px;
-    box-shadow: 0 5px 10px rgba(0,0,0,.2);
-    border-collapse: separate;
+  z-index: 1000;
+  padding: 5px 0;
+  margin: 2px 0 0; // override default ul
+  background-color: var(--menu-bg);
+  border: var(--menu-border);
+  border-radius: 6px;
+  box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  border-collapse: separate;
 }
 
 .dijitMenuItem {
-  color: var(--dark-gray);
+  color: inherit;
   font-weight: normal;
   white-space: nowrap;
-  padding: var(--spacing-small) var(--spacing-medium);
+  padding: var(--btn-padding);
   cursor:pointer;
-	-webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 td.dijitMenuItemLabel {
-    padding: 6px 0.3em;
+  padding: 6px 0.3em;
 }
 
 tr.dijitMenuItem td:first-child {
-    padding-left: 20px;
+  padding-left: 20px;
 }
 
 tr.dijitMenuItem td:last-child {
-    padding-right: 20px;
+  padding-right: 20px;
 }
 
 // Separator
 .dijitMenuSeparator {
-    //margin: (($baseLineHeight / 2) - 1) 1px;
+  //margin: (($baseLineHeight / 2) - 1) 1px;
 }
 
 .dijitMenuSeparatorTop {
-    //border-bottom: 1px solid $dropdownDividerTop;
-    height: auto;
+  //border-bottom: 1px solid $dropdownDividerTop;
+  height: auto;
 }
 
 .dijitMenuSeparatorBottom {
-    height: auto;
+  height: auto;
 }
 
 // Icon
 .dijitMenuItemIcon,
 .dijitMenuExpand  {
-    // Keep in line with labels
-    //line-height: $baseLineHeight * 0.65;
+  // Keep in line with labels
+  //line-height: $baseLineHeight * 0.65;
 }
 
 .dijitMenuArrowCell .dijitMenuExpand:before {
-    @extend .dijitIcon;
-    @extend .fa-caret-right:before;
+  @extend .dijitIcon;
+  @extend .fa-caret-right:before;
 }

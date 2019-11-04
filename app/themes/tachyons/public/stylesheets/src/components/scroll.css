@@ -1,0 +1,23 @@
+:root {
+  --scrollbar-track-bg: var(--light-gray);
+  --scrollbar-thumb-bg: var(--gray);
+}
+
+.scroll-y {
+  overflow-y: overlay;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: auto;
+  -ms-overflow-y: auto;
+  //webkit scrollbars
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 5px;
+    background: var(--scrollbar-track-bg);
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: var(--scrollbar-thumb-bg);
+  }
+}

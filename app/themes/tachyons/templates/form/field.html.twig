@@ -1,0 +1,50 @@
+{% if display is not empty %}
+  {% set form = display %}
+{% endif %}
+{% if prepend is not empty %}
+  {{ prepend|raw }}
+{% endif %}
+{% set field_name = name|split("[")|last|trim("]", "right") %}
+{% if not nodiv %}
+  <div class="form-group {{ model ~ "-" ~ field_name }} {% if div is not empty %}{{ div }}{% endif %}{% if required %} required{% endif %}">
+{% endif %}
+{% if control != "input" or (type != "checkbox" and type != "radio") %}
+  {{ include("form/label.html.twig") }}
+{% endif %}
+{% if between is not empty %}{{ between|raw }}{% endif %}
+{% if attribute(form.errors, field) is not empty %}
+  {% set attributes = attributes|merge({"class":attributes.class ~ " form-error"}) %}
+  {% for error, message in attribute(form.errors, field) %}
+    {% if message is not iterable %}
+      {{ include("form/error.html.twig", {"error": message, 'atttributes': attributes}) }}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% if control == "input" and (type == "checkbox" or type == "radio") %}
+  {{ include("form/label.html.twig") }}
+{% endif %}
+{% if form.horizontal %}
+  <div class="col-sm-9">
+{% endif %}
+{% if control != "input" or (type != "checkbox" and type != "radio") %}
+  {% set a = model ~ "/form/" ~ field ~ "-" ~ control ~ ".html.twig" %}
+  {% set b = "form/" ~ field ~ "-" ~ control ~ ".html.twig" %}
+  {% set c = model ~ "/form/" ~ control ~ ".html.twig" %}
+  {% set d = "form/" ~ control ~ ".html.twig" %}
+  {{ include([a, b, c, d]) }}
+{% endif %}
+{% if form.horizontal %}
+  </div>
+{% endif %}
+{% if after is not empty %}
+  {{ after|raw }}
+{% endif %}
+{% if info is not empty %}
+  <span class="brand-gray db mt2">{{ info|nl2br }}</span>
+{% endif %}
+{% if not nodiv %}
+  </div>
+{% endif %}
+{% if append is not empty %}
+  {{ append|raw }}
+{% endif %}
