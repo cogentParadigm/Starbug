@@ -18,6 +18,7 @@ input.dijitReset, select.dijitReset {
 .dijitInputField .dijitInputInner {
   font-size: var(--base-font-size);
   line-height: var(--base-line-height);
+  padding: 0;
   &:focus {
     box-shadow: none;
   }
@@ -52,6 +53,7 @@ input.dijitReset, select.dijitReset {
 // ComboBox
 .dijitComboBox .dijitButtonNode {
   @extend .dijitComboButton .dijitButtonNode;
+  border-left: var(--input-border);
 }
 
 .dijitComboBox .dijitButtonNode.dijitArrowButton {
