@@ -9,8 +9,8 @@ define([
   "dojo/dom",
   "dojo/dom-class",
   "dojo/dom-geometry",
-  "dojo/ready"
-], function (declare, lang, List, Selection, put, Memory, on, dom, domclass, geometry, ready) {
+  "./theme/dropdown/default"
+], function (declare, lang, List, Selection, put, Memory, on, dom, domclass, geometry, theme) {
   return declare(null, {
     buildRendering: function() {
       this.inherited(arguments);
@@ -73,7 +73,7 @@ define([
       this.focusTargetNode = this.controlNode;
     },
     createToggleNode: function() {
-      this.toggleNode = put(this.controlGroupNode, 'span.input-group-btn button[type=button][tabindex=-1].btn.btn-default span.fa.fa-caret-down+span.sr-only $<', 'Toggle Dropdown');
+      this.toggleNode = put(this.controlGroupNode, theme.selector("toggleNode"), theme.text("toggleNode"));
     },
     createDropdownNode: function() {
       this.dropdownNode = put(this.domNode.parentNode, 'div.select-list.hidden');
