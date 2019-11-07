@@ -4,6 +4,7 @@ define([
 ], function (declare) {
   return declare(null, {
     constructor: function(args) {
+      args = args || {};
       this.selectors = args.selectors || {};
       this.content = args.content || {};
     },

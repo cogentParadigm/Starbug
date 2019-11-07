@@ -1,4 +1,4 @@
-@define-mixin dropdown-menu {
+@mixin dropdown-menu {
   position: absolute;
   top: 100%;
   z-index: 5;
@@ -8,7 +8,7 @@
 }
 
 .dropdown-menu {
-  @mixin dropdown-menu;
+  @include dropdown-menu;
 }
 
 .open > .dropdown-menu {
@@ -17,7 +17,7 @@
 
 @media (--breakpoint-not-small) {
   .dropdown-menu-ns {
-    @mixin dropdown-menu;
+    @include dropdown-menu;
   }
   .open > .dropdown-menu-ns,
   .open-ns > .dropdown-menu-ns,
@@ -28,7 +28,7 @@
 
 @media (--breakpoint-medium) {
   .dropdown-menu-m {
-    @mixin dropdown-menu;
+    @include dropdown-menu;
   }
   .open > .dropdown-menu-m,
   .open-ns > .dropdown-menu-m,
@@ -41,7 +41,7 @@
 
 @media (--breakpoint-large) {
   .dropdown-menu-l {
-    @mixin dropdown-menu;
+    @include dropdown-menu;
   }
   .open > .dropdown-menu-l,
   .open-ns > .dropdown-menu-l,

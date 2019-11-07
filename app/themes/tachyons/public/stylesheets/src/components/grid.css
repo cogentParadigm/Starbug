@@ -62,14 +62,14 @@
   }
 }
 
-@define-mixin grid-row {
+@mixin grid-row {
   display: flex;
   flex-wrap: wrap;
   margin-left: calc(-1 * var(--spacing-small));
   margin-right: calc(-1 * var(--spacing-small));
 }
 
-@define-mixin grid-column {
+@mixin grid-column {
   position: relative;
   // Prevent columns from becoming too narrow when at smaller grid tiers by
   // always setting `width: 100%;`. This works because we use `flex` values
@@ -80,19 +80,19 @@
   padding-right: var(--spacing-small);
 }
 
-@define-mixin make-col-default {
+@mixin make-col-default {
   flex-basis: 0;
   flex-grow: 1;
   max-width: 100%;
 }
 
-@define-mixin make-col-auto {
+@mixin make-col-auto {
   flex-basis: 0;
   flex-grow: 1;
   max-width: 100%;
 }
 
-@define-mixin make-col $size, $columns: 12 {
+@mixin make-col($size, $columns: 12) {
   flex: 0 0 calc($size / $columns * 100)%;
   // Add a `max-width` to ensure content within each column does not blow out
   // the width of the column. Applies to IE10+ and Firefox. Chrome and Safari
@@ -100,7 +100,7 @@
   max-width: calc($size / $columns * 100)%;
 }
 
-@define-mixin make-col-offset $size, $columns: 12 {
+@mixin make-col-offset($size, $columns: 12) {
   $num: $size / $columns;
   @if $num == 0 {
     margin-left: 0;
@@ -109,33 +109,33 @@
   }
 }
 
-@define-extend grid-column {
-  @mixin grid-column;
+%grid-column {
+  @include grid-column;
 }
 
-@define-mixin make-grid-columns $columns: 12, $sel: .col, $order-sel: .order, $offset-sel: .offset {
+@mixin make-grid-columns($columns: 12, $sel: .col, $order-sel: .order, $offset-sel: .offset) {
 
   @for $i from 1 to 12 {
     $(sel)-$(i) {
-      @extend grid-column;
+      @extend %grid-column;
     }
   }
 
   $(sel), $(sel)-auto {
-    @extend grid-column;
+    @extend %grid-column;
   }
 
   $(sel) {
-    @mixin make-col-default;
+    @include make-col-default;
   }
 
   $(sel)-auto {
-    @mixin make-col-auto;
+    @include make-col-auto;
   }
 
   @for $i from 1 to 12 {
     $(sel)-$i {
-      @mixin make-col $i;
+      @include make-col($i);
     }
   }
 
@@ -153,37 +153,37 @@
   @for $i from 0 to 11 {
     @if $i > 0 { // Avoid emitting useless .offset-0
       $(offset-sel)-$i {
-        @mixin make-col-offset $i;
+        @include make-col-offset($i);
       }
     }
   }
 
 }
 
-@define-mixin make-breakpoint-columns $suffix, $breakpoint, $columns: 12, $sel: .col, $order-sel: .order, $offset-sel: .offset {
+@mixin make-breakpoint-columns($suffix, $breakpoint, $columns: 12, $sel: .col, $order-sel: .order, $offset-sel: .offset) {
 
     @for $i from 1 to 12 {
       $(sel)-$(i)-$(suffix) {
-        @extend grid-column;
+        @extend %grid-column;
       }
     }
 
     $(sel)-$(suffix), $(sel)-auto-$(suffix) {
-      @extend grid-column;
+      @extend %grid-column;
     }
 
     @media ($breakpoint) {
       $(sel)-$(suffix) {
-        @mixin make-col-default;
+        @include make-col-default;
       }
 
       $(sel)-auto-$(suffix) {
-        @mixin make-col-auto;
+        @include make-col-auto;
       }
 
       @for $i from 1 to 12 {
         $(sel)-$(i)-$(suffix) {
-          @mixin make-col $i;
+          @include make-col($i);
         }
       }
 
@@ -200,7 +200,7 @@
       // `$columns - 1` because offsetting by the width of an entire row isn't possible
       @for $i from 0 to 11 {
         $(offset-sel)-$(i)-$(suffix) {
-          @mixin make-col-offset $i;
+          @include make-col-offset($i);
         }
       }
     }
@@ -208,13 +208,13 @@
 }
 
 .row {
-  @mixin grid-row;
+  @include grid-row;
 }
 
-@mixin make-grid-columns;
+@include make-grid-columns;
 
-@mixin make-breakpoint-columns ns, --breakpoint-not-small;
+@include make-breakpoint-columns(ns, --breakpoint-not-small);
 
-@mixin make-breakpoint-columns m, --breakpoint-medium;
+@include make-breakpoint-columns(m, --breakpoint-medium);
 
-@mixin make-breakpoint-columns l, --breakpoint-large;
+@include make-breakpoint-columns(l, --breakpoint-large);

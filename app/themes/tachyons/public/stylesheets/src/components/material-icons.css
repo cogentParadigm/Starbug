@@ -1,4 +1,4 @@
-@define-mixin material-icons {
+@mixin material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
@@ -18,5 +18,5 @@
 }
 
 .material-icons {
-  @mixin material-icons;
+  @include material-icons;
 }

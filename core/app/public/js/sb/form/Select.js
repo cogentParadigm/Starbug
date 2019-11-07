@@ -24,7 +24,7 @@ define([
       this.selectionNode = this.controlNode;
     },
     renderSelection: function() {
-      this.selectionNode.innerHTML = this.get("displayedValue");
+      this.selectionNode.innerHTML = this.get("displayedValue") || "&nbsp;";
     },
     _getDisplayedValueAttr: function() {
       var labels = [];

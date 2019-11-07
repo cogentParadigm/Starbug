@@ -95,7 +95,7 @@ select.form-control, .form-control.dropdown-indicator {
     color: var(--link-color);
   }
   &:focus + .checkbox-label:before {
-    @mixin focus;
+    @include focus;
     border-radius: var(--input-border-radius);
   }
 }
@@ -136,7 +136,7 @@ select.form-control, .form-control.dropdown-indicator {
     color: var(--link-color);
   }
   &:focus + .radio-label:before {
-    @mixin focus;
+    @include focus;
     border-radius: 100%;
   }
 }

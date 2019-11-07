@@ -8,7 +8,7 @@ input.dijitReset, select.dijitReset {
 }
 
 .dijitTextBoxFocused {
-  @extend :focus;
+  @mixin focus;
 }
 
 .dijitInputContainer {

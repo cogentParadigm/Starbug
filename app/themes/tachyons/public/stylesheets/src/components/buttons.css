@@ -41,24 +41,27 @@
 
 // Style Variants.
 
-@define-mixin btn-variant $fg, $bg, $border {
-  color: $fg;
-  background-color: $bg;
-  border: 1px solid $border;
+@mixin btn-variant($fgcolor, $bgcolor, $bordercolor) {
+  color: $fgcolor;
+  background-color: $bgcolor;
+  border: 1px solid $bordercolor;
+  &:hover, &.active {
+    background-color: color-mod($bgcolor lightness(36%));
+  }
 }
 
 .btn-default {
-  @mixin btn-variant var(--btn-default-color), var(--btn-default-bg), var(--btn-default-border-color);
+  @include btn-variant(var(--btn-default-color), var(--btn-default-bg), var(--btn-default-border-color));
 }
 
 .btn-gray {
-  @mixin btn-variant var(--btn-gray-color), var(--btn-gray-bg), var(--btn-gray-border-color);
+  @include btn-variant(var(--btn-gray-color), var(--btn-gray-bg), var(--btn-gray-border-color));
 }
 
 .btn-success {
-  @mixin btn-variant var(--btn-success-color), var(--btn-success-bg), var(--btn-success-border-color);
+  @include btn-variant(var(--btn-success-color), var(--btn-success-bg), var(--btn-success-border-color));
 }
 
 .btn-danger {
-  @mixin btn-variant var(--btn-danger-color), var(--btn-danger-bg), var(--btn-danger-border-color);
+  @include btn-variant(var(--btn-danger-color), var(--btn-danger-bg), var(--btn-danger-border-color));
 }
