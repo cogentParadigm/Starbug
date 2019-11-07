@@ -22,6 +22,7 @@
 //
 // -----------------------------------------------------------
 @import "./components/normalization.css";
+@import "./components/links.css";
 @import "./components/grid.css";
 @import "./components/material-icons.css";
 @import "./components/buttons.css";
@@ -52,7 +53,6 @@
 @import "./components/border-widths-pseudo.css";
 @import "./components/columns.css";
 @import "./components/widths.css";
-@import "./components/links.css";
 
 
 // 5. Variable Overrides

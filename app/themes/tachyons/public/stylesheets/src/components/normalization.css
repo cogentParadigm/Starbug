@@ -50,11 +50,11 @@ a {
 // Focus
 // -------------------------
 
-@define-mixin focus {
+@mixin focus {
   outline: none;
   box-shadow: var(--focus-shadow);
 }
 
 :focus {
-  @mixin focus;
+  @include focus;
 }
