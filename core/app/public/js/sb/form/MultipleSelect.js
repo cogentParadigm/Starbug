@@ -6,7 +6,8 @@ define([
   "dojo/on",
   "dojo/query",
   "dojo/dom-class",
-], function (declare, lang, Select, put, on, query, domclass) {
+  "./theme/MultipleSelect/default"
+], function (declare, lang, Select, put, on, query, domclass, theme) {
   return declare([Select], {
     searchable:true,
     _lastSelected:false,
@@ -33,7 +34,7 @@ define([
       this.inputNode = this.controlNode;
     },
     createSelectionNode: function() {
-      this.selectionNode = put(this.controlNode.parentNode, '-div.hidden');
+      theme.createSelectionNode.apply(this);
     },
     onInput: function(e) {
       var keyCode = (window.event) ? e.which : e.keyCode;
@@ -98,7 +99,8 @@ define([
         domclass.add(this.selectionNode, 'hidden');
       }
       for (var i = 0;i<items.length;i++) {
-        var button = put(this.selectionNode, 'button[type=button].btn.btn-primary.btn-xs[style=margin:0 5px 5px 0] $ span.fa.fa-times<', items[i].label + ' ');
+        var button = theme.createSelectionItem.apply(this, [items[i]]);
+        put(this.selectionNode, button);
         this.attachDeselection(button, items[i].id);
       }
     },

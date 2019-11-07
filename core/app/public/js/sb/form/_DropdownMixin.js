@@ -35,6 +35,7 @@ define([
       on(this.controlNode, 'focus,click', lang.hitch(this, 'onFocus'));
       // Closing of the dropdown is tied to blurring of the focus target.
       on(this.focusTargetNode, 'blur', lang.hitch(this, function() {
+        domclass.remove(this.domNode, "focused");
         //Delay 10 milliseconds to allow focus to move first. Otherwise,
         //we might hide the focusTargetNode if it's inside the dropdown.
         setTimeout(lang.hitch(this, 'close'), 10);
@@ -61,22 +62,19 @@ define([
       this.createToggleNode();
     },
     createControlGroupNode: function() {
-      this.controlGroupNode = put(this.domNode, "+div.input-group");
+      theme.createControlGroupNode.apply(this);
     },
     createControlNode: function() {
-      this.controlNode = put(this.controlGroupNode, 'button[type=button].text-left.form-control');
-      if (this.domNode.getAttribute("placeholder")) {
-        put(this.controlNode, {innerHTML: this.domNode.getAttribute('placeholder')});
-      }
+      theme.createControlNode.apply(this);
     },
     createFocusNode: function() {
       this.focusTargetNode = this.controlNode;
     },
     createToggleNode: function() {
-      this.toggleNode = put(this.controlGroupNode, theme.selector("toggleNode"), theme.text("toggleNode"));
+      theme.createToggleNode.apply(this);
     },
     createDropdownNode: function() {
-      this.dropdownNode = put(this.domNode.parentNode, 'div.select-list.hidden');
+      theme.createDropdownNode.apply(this);
     },
     open: function() {
       this.updateStyles();
@@ -118,6 +116,7 @@ define([
       this.controlNode.focus();
     },
     onFocus: function() {
+      domclass.add(this.domNode, "focused");
       this.open();
     }
   });

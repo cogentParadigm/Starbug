@@ -1,10 +1,20 @@
-define(["sb/css/Theme"], function(Theme) {
-  return new Theme({
-    selectors: {
-      toggleNode: "span.input-group-btn button[type=button][tabindex=-1].btn.btn-default"
+define(["dojo/_base/declare", "sb/css/Theme", "put-selector/put"], function(declare, Theme, put) {
+  var theme = new (declare([Theme], {
+    createControlGroupNode: function() {
+      this.controlGroupNode = put(this.domNode, "+div.dropdown-indicator");
     },
-    content: {
-      toggleNode: {innerHTML: '<span class="material-icons">expand_more</span><span class="sr-only">Toggle Dropdown</span>'}
+    createControlNode: function() {
+      this.controlNode = put(this.controlGroupNode, 'button[type=button].tl.form-control', {innerHTML: '&nbsp;'});
+      if (this.domNode.getAttribute("placeholder")) {
+        put(this.controlNode, {innerHTML: this.domNode.getAttribute('placeholder')});
+      }
+    },
+    createToggleNode: function() {
+      return false;
+    },
+    createDropdownNode: function() {
+      this.dropdownNode = put(this.domNode.parentNode, 'div.select-list.hidden');
     }
-  });
+  }))();
+  return theme;
 })

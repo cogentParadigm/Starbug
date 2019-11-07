@@ -3,6 +3,7 @@
     "map": {
       "*" : {
         "sb/form/theme/dropdown/default": "sb/form/theme/dropdown/tachyons",
+        "sb/form/theme/MultipleSelect/default": "sb/form/theme/MultipleSelect/tachyons",
         "sb/modal/theme": "sb/modal/theme/tachyons"
       }
     }
