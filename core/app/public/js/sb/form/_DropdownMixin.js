@@ -12,6 +12,7 @@ define([
   "./theme/dropdown/default"
 ], function (declare, lang, List, Selection, put, Memory, on, dom, domclass, geometry, theme) {
   return declare(null, {
+    dropdownTheme: theme,
     buildRendering: function() {
       this.inherited(arguments);
       //this.domNode should be a text input with name and value set appropriately
@@ -62,19 +63,19 @@ define([
       this.createToggleNode();
     },
     createControlGroupNode: function() {
-      theme.createControlGroupNode.apply(this);
+      this.dropdownTheme.createControlGroupNode.apply(this);
     },
     createControlNode: function() {
-      theme.createControlNode.apply(this);
+      this.dropdownTheme.createControlNode.apply(this);
     },
     createFocusNode: function() {
       this.focusTargetNode = this.controlNode;
     },
     createToggleNode: function() {
-      theme.createToggleNode.apply(this);
+      this.dropdownTheme.createToggleNode.apply(this);
     },
     createDropdownNode: function() {
-      theme.createDropdownNode.apply(this);
+      this.dropdownTheme.createDropdownNode.apply(this);
     },
     open: function() {
       this.updateStyles();
