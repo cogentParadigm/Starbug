@@ -105,6 +105,8 @@ define([
       var remove = false;
       if (node.tagName == "INPUT" && node.type == "checkbox" && !node.checked) {
         remove = true;
+      } else if (value === "") {
+        remove = true;
       }
       this.filter(filters, remove);
     },
