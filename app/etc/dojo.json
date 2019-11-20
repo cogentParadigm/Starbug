@@ -8,7 +8,7 @@
         "dojo/selector/acme",
         "dojo/query",
         "dojo/parser",
-        "bootstrap/Dropdown",
+        "sb/bootstrap/Dropdown",
         "bootstrap/Carousel"
       ]
     }
