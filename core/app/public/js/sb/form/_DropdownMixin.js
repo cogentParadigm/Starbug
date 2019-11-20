@@ -22,35 +22,13 @@ define([
     },
     postCreate:function() {
       this.inherited(arguments);
-      // The toggleNode and controlNode are two separate elements but sematically
-      // they behave as one. Consider a select input - it is just a single element.
-      // The dropdown indicator (the toggleNode) is not a separate element.
-
-      // The toggleNode is removed from the tabindex so we are only concerned with click events.
-      // Putting focus on the controlNode is the one true trigger event
       if (this.toggleNode) {
-        on(this.toggleNode, 'click', lang.hitch(this.controlNode, 'focus'));
+        this.signals.push(on(this.toggleNode, 'click', lang.hitch(this, 'onClick')));
       }
-      // The controlNode remains in the tabindex so we attach the focus event.
-      // Note that the controlNode will receive focus on mousedown.
-      on(this.controlNode, 'focus,click', lang.hitch(this, 'onFocus'));
-      // Closing of the dropdown is tied to blurring of the focus target.
-      on(this.focusTargetNode, 'blur', lang.hitch(this, function() {
-        domclass.remove(this.domNode, "focused");
-        //Delay 10 milliseconds to allow focus to move first. Otherwise,
-        //we might hide the focusTargetNode if it's inside the dropdown.
-        setTimeout(lang.hitch(this, 'close'), 10);
-      }));
-
-      // The blur event above will cause the dropdown to close before click events
-      // inside the dropdown can fire. We can interrupt that blur by preventing
-      // the mousedown event on the dropdown.
-      on(this.dropdownNode, 'mousedown', lang.hitch(this, function(e) {
-        // This condition avoids interrupting mouse events on the actual focus target.
-        if (e.target !== this.focusTargetNode) {
-          e.preventDefault();
-        }
-      }));
+      this.signals.push(on(this.controlNode, 'click', lang.hitch(this, 'onClick')));
+      this.signals.push(on(this.controlNode, 'focus', lang.hitch(this, 'onFocus')));
+      this.signals.push(on(this.domNode.parentNode, "focusout", lang.hitch(this, "onBlur")));
+      this.signals.push(on(this.domNode.parentNode, "keydown", lang.hitch(this, "onKeydown")));
     },
     startup: function() {
       this.inherited(arguments);
@@ -79,8 +57,8 @@ define([
     },
     open: function() {
       this.updateStyles();
-      domclass.remove(this.dropdownNode, 'hidden');
       this.focusTargetNode.focus();
+      domclass.remove(this.dropdownNode, 'hidden');
       if (this.focusTargetNode != this.controlNode) {
         this.controlNode.tabIndex = -1;
       }
@@ -102,6 +80,12 @@ define([
         this.close();
       }
     },
+    isOpened: function() {
+      return !this.isClosed();
+    },
+    isClosed: function() {
+      return domclass.contains(this.dropdownNode, "hidden");
+    },
     addStyles: function() {
       this.domNode.parentNode.style.position = "relative";
       this.dropdownNode.style.position = "absolute";
@@ -116,9 +100,53 @@ define([
     focus: function() {
       this.controlNode.focus();
     },
+    onClick: function() {
+      this.open();
+    },
     onFocus: function() {
       domclass.add(this.domNode, "focused");
-      this.open();
+      if (this.isOpened()) {
+        this.close();
+      }
+    },
+    onBlur: function(e) {
+      if (this.isClosed()) {
+        return;
+      }
+      // Allow focus to change, then check the active element.
+      setTimeout(lang.hitch(this, function() {
+        var node = document.activeElement;
+        while (node && node.parentNode) {
+          if (node.parentNode == this.domNode.parentNode) {
+            return;
+          }
+          node = node.parentNode;
+        }
+        this.close();
+      }), 100);
+    },
+    onKeydown: function(e) {
+      var keyCode = (window.event) ? e.which : e.keyCode;
+      if (keyCode == 27) { //ESC
+        if (this.isOpened()) {
+          this.close();
+          //Stop propagation to prevent closing a parent modal.
+          e.stopPropagation();
+          this.controlNode.focus();
+        }
+      } else if (keyCode == 40 && document.activeElement == this.focusTargetNode) { // Down Arrow
+        e.preventDefault();
+        if (this.isClosed()) {
+          this.open();
+        } else {
+          this.focusDropdown();
+        }
+      }
+    },
+    focusDropdown: function() {
+      if (this.dropdownFocusTarget) {
+        this.dropdownFocusTarget.focus();
+      }
     }
   });
 });

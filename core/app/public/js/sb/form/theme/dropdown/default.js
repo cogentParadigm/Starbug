@@ -4,9 +4,9 @@ define(["dojo/_base/declare", "sb/css/Theme", "put-selector/put"], function(decl
       this.controlGroupNode = put(this.domNode, "+div.input-group");
     },
     createControlNode: function() {
-      this.controlNode = put(this.controlGroupNode, 'button[type=button].text-left.form-control', {innerHTML: '&nbsp;'});
+      this.controlNode = put(this.controlGroupNode, 'input.form-control[type=text][autocomplete=off][readonly]');
       if (this.domNode.getAttribute("placeholder")) {
-        put(this.controlNode, {innerHTML: this.domNode.getAttribute('placeholder')});
+        this.controlNode.setAttribute("placeholder", this.domNode.getAttribute("placeholder"));
       }
     },
     createToggleNode: function() {
