@@ -17,14 +17,14 @@ define([
     postCreate: function() {
       this.inherited(arguments);
       if (this.closeOnSelect) {
-        this.selection.on('change', lang.hitch(this, 'close'));
+        this.selection.on('change', lang.hitch(this.controlNode, 'focus'));
       }
     },
     createSelectionNode: function() {
       this.selectionNode = this.controlNode;
     },
     renderSelection: function() {
-      this.selectionNode.innerHTML = this.get("displayedValue") || "&nbsp;";
+      this.selectionNode.value = this.get("displayedValue");
     },
     _getDisplayedValueAttr: function() {
       var labels = [];

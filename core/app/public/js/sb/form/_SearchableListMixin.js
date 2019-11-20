@@ -25,13 +25,19 @@ define([
       }
     },
     createInputNode: function() {
-      this.focusTargetNode = this.inputNode = put(this.listNode, "-div.dropdown-search input[type=text][autocomplete=off][placeholder=Search..][tabindex=-1].form-control");
+      this.inputNode = put(this.listNode, "-div.dropdown-search input[type=text][autocomplete=off][placeholder=Search..].form-control");
     },
     search: function(e) {
       var keywords = this.inputNode.value.replace(',','');
       if(keywords.length >= this.searchThreshold) {
-        this.query.query[this.filterAttrName] = keywords;
-        this.open();
+        if (this.isOpened()) {
+          var values = {};
+          values[this.filterAttrName] = keywords;
+          this.query.filter(values);
+        } else {
+          this.query.query[this.filterAttrName] = keywords;
+          this.open();
+        }
       } else {
         delete this.query.query[this.filterAttrName];
       }
@@ -46,50 +52,12 @@ define([
     },
     onInput: function(e) {
       var keyCode = (window.event) ? e.which : e.keyCode;
-      if (e.ctrlKey || keyCode == 16) return;
-      clearTimeout(this.interval);
-      var shifted = e.shiftKey;
-      var current = this._lastSelected;
-      if (false !== current) current = this.list.row(current);
-      this.list.clearSelection();
-      var target = false;
-      if (keyCode == 38) { //UP
-        if (current) target = this.list.up(current);
-      } else if (keyCode == 40) { //DOWN
-        if (domclass.contains(this.dropdownNode, "hidden")) {
-          this.open();
-        } else {
-          target = current ? this.list.down(current) : query(".dgrid-row", this.list.domNode)[0];
-        }
-      } else if (keyCode == 27) { //ESC
-        if (!domclass.contains(this.dropdownNode, "hidden")) {
-          this.close();
-          //Stop propagation to prevent closing a parent modal.
-          e.stopPropagation();
-          this.toggleNode.focus();
-        }
-      } else if (keyCode != 9) {
-        this.interval = setTimeout(lang.hitch(this, 'search'), 500);
-      }
-      if (target) {
-        if (shifted) {
-          this.list.select(this._selectionMark, target);
-        } else {
-          this.list.select(target);
-        }
-        if (target.element) this.list.scrollTo({y:(target.element.rowIndex-1)*this.list.rowHeight});
-        this._lastSelected = this.list.row(target).id;
-      }
-      if (keyCode == 13) { //ENTER
+      if (keyCode == 13) { // Enter
         e.preventDefault();
-        e.stopPropagation();
-        if (current && typeof current.data != "undefined")  {
-          this.selection.get(current.data.id).then(lang.hitch(this, function(selected) {
-            if (selected) this.selection.remove(current.data.id);
-            else this.selection.add([current.data]);
-          }));
-        }
-        this._lastSelected = false;
+        this.search();
+      } else if (keyCode == 40) { // Down Arrow
+        e.preventDefault();
+        this.focusDropdown();
       }
     },
     refresh: function() {

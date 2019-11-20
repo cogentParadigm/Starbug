@@ -4,16 +4,16 @@ define(["dojo/_base/declare", "sb/css/Theme", "put-selector/put"], function(decl
       this.controlGroupNode = put(this.domNode, "+div.dropdown-indicator");
     },
     createControlNode: function() {
-      this.controlNode = put(this.controlGroupNode, 'button[type=button].tl.form-control', {innerHTML: '&nbsp;'});
+      this.controlNode = put(this.controlGroupNode, 'input.form-control[type=text][autocomplete=off][readonly]');
       if (this.domNode.getAttribute("placeholder")) {
-        put(this.controlNode, {innerHTML: this.domNode.getAttribute('placeholder')});
+        this.controlNode.setAttribute("placeholder", this.domNode.getAttribute("placeholder"));
       }
     },
     createToggleNode: function() {
       return false;
     },
     createDropdownNode: function() {
-      this.dropdownNode = put(this.domNode.parentNode, 'div.select-list.hidden');
+      this.dropdownNode = put(this.domNode.parentNode, 'div.bg-white.br2.br--bottom.shadow-4.hidden');
     }
   }))();
   return theme;
