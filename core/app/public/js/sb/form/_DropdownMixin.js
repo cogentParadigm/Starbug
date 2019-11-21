@@ -25,9 +25,8 @@ define([
       if (this.toggleNode) {
         this.signals.push(on(this.toggleNode, 'click', lang.hitch(this, 'onClick')));
       }
-      this.signals.push(on(this.controlNode, 'click', lang.hitch(this, 'onClick')));
-      this.signals.push(on(this.controlNode, 'focus', lang.hitch(this, 'onFocus')));
-      this.signals.push(on(this.domNode.parentNode, "focusout", lang.hitch(this, "onBlur")));
+      this.signals.push(on(document.body, 'focusin', lang.hitch(this, 'onFocus')));
+      this.signals.push(on(document.body, 'click', lang.hitch(this, 'onClick')));
       this.signals.push(on(this.domNode.parentNode, "keydown", lang.hitch(this, "onKeydown")));
     },
     startup: function() {
@@ -100,30 +99,26 @@ define([
     focus: function() {
       this.controlNode.focus();
     },
-    onClick: function() {
-      this.open();
-    },
-    onFocus: function() {
-      domclass.add(this.domNode, "focused");
-      if (this.isOpened()) {
-        this.close();
-      }
-    },
-    onBlur: function(e) {
-      if (this.isClosed()) {
-        return;
-      }
-      // Allow focus to change, then check the active element.
-      setTimeout(lang.hitch(this, function() {
-        var node = document.activeElement;
-        while (node && node.parentNode) {
-          if (node.parentNode == this.domNode.parentNode) {
-            return;
-          }
-          node = node.parentNode;
+    onClick: function(e) {
+      if (e.target == this.controlNode || this.controlNode.contains(e.target)) {
+        if (this.isOpened()) {
+          this.focusTargetNode.focus();
+        } else {
+          this.open();
         }
+      } else if (this.isOpened() && !this.domNode.parentNode.contains(e.target)) {
         this.close();
-      }), 100);
+      }
+    },
+    onFocus: function(e) {
+      if (e.target == this.controlNode || this.controlNode.contains(e.target)) {
+        domclass.add(this.domNode, "focused");
+      } else {
+        domclass.remove(this.domNode, "focused");
+        if (this.isOpened() && !this.domNode.parentNode.contains(e.target)) {
+          this.close();
+        }
+      }
     },
     onKeydown: function(e) {
       var keyCode = (window.event) ? e.which : e.keyCode;
