@@ -17,7 +17,7 @@ define([
     postCreate: function() {
       this.inherited(arguments);
       if (this.closeOnSelect) {
-        this.selection.on('change', lang.hitch(this.controlNode, 'focus'));
+        this.selection.on('change', lang.hitch(this, 'close'));
       }
     },
     createSelectionNode: function() {
