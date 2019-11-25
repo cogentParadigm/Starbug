@@ -11,7 +11,8 @@ class Migration extends AbstractMigration {
       ["last_name", "type" => "string", "length" => "64", "list" => "true"],
       ["email", "type" => "string", "length" => "128", "unique" => "", "list" => "true"],
       ["password", "type" => "password", "confirm" => "password_confirm", "optional_update" => ""],
-      ["last_visit", "type" => "datetime", "default" => "0000-00-00 00:00:00", "list" => "true", "display" => "false"]
+      ["last_visit", "type" => "datetime", "default" => "0000-00-00 00:00:00", "list" => "true", "display" => "false"],
+      ["password_token", "type" => "string", "default" => ""]
     );
     $this->schema->addTable(["sessions"],
       ["users_id", "type" => "int", "references" => "users id"],

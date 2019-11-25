@@ -6,19 +6,6 @@ return [
       "type" => "views",
       "layout" => "home"
     ];
-    $routes["login"] = [
-      "title" => "Login",
-      "controller" => "login"
-    ];
-    $routes["logout"] = [
-      "controller" => "login",
-      "action" => "logout"
-    ];
-    $routes["forgot-password"] = [
-      "title" => "Forgot Password",
-      "controller" => "login",
-      "action" => "forgotPassword"
-    ];
     return $routes;
   }),
   'db.schema.migrations' => DI\add([
