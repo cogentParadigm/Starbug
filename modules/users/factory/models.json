@@ -1,6 +1,7 @@
 {
 	"users": {
 		"session": "SessionHandlerInterface",
-		"mailer": "MailerInterface"
+		"mailer": "MailerInterface",
+		"url": "Starbug\\Http\\UrlInterface"
 	}
 }

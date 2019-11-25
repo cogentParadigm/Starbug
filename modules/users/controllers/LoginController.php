@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\App;
+namespace Starbug\Users;
 
 use Starbug\Core\Controller;
 use Starbug\Core\SessionHandlerInterface;
@@ -24,5 +24,8 @@ class LoginController extends Controller {
   }
   public function forgotPassword() {
     $this->render("forgot-password.html");
+  }
+  public function resetPassword() {
+    $this->render("reset-password.html");
   }
 }
