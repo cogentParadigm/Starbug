@@ -3,7 +3,7 @@ namespace Starbug\Core;
 
 class StoreGroupsHook extends QueryHook {
   public function emptyBeforeInsert($query, $column, $argument) {
-    $query->set($column, "");
+    $query->set($column, $this->validate($query, $column, "", $column, $argument));
   }
   public function validate($query, $key, $value, $column, $argument) {
     if (empty($value)) $value = [];
