@@ -29,7 +29,7 @@ class Migration extends AbstractMigration {
       ["term_path", "type" => "string", "length" => "255", "default" => "", "display" => "false"]
     );
     $this->schema->addColumn("users",
-      ["groups", "type" => "terms", "taxonomy" => "groups", "user_access" => true, "optional" => true]
+      ["groups", "type" => "terms", "taxonomy" => "groups", "user_access" => true, "optional" => true, "groups" => true]
     );
     $this->schema->addUniqueIndex("users_groups", ["users_id", "groups_id"]);
     $this->schema->addTable(["permits", "list" => "all", "groups" => true],
