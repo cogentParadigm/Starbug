@@ -2,7 +2,7 @@
 namespace Starbug\App;
 
 use Starbug\Db\Schema\AbstractMigration;
-use Starbug\Core\Bundle;
+use Starbug\Bundle\Bundle;
 
 class Migration extends AbstractMigration {
   public function up() {

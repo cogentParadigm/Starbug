@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Db\Schema;
 
-use Starbug\Core\Bundle;
+use Starbug\Bundle\Bundle;
 
 class Schema implements SchemaInterface {
   protected $tables = [];

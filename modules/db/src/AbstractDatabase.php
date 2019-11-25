@@ -4,8 +4,7 @@ namespace Starbug\Core;
 use PDO;
 use SplQueue;
 use Starbug\Db\Query\BuilderFactory;
-use Starbug\Db\Query\QueryInterface;
-use Starbug\Db\Query\CompilerInterface;
+use Starbug\Bundle\Bundle;
 
 abstract class AbstractDatabase implements DatabaseInterface {
   /**

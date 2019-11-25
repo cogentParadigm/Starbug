@@ -4,7 +4,7 @@ namespace Starbug\Devices;
 
 use Starbug\Db\Schema\AbstractMigration;
 use Starbug\Db\Schema\SchemaInterface;
-use Starbug\Core\Bundle;
+use Starbug\Bundle\Bundle;
 
 class Migration extends AbstractMigration {
   public function __construct(SchemaInterface $schema, $handlers = [], $channels = [], $defaultHandlers = [], $defaultChannels = []) {

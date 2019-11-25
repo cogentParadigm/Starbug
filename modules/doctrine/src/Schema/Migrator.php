@@ -6,7 +6,7 @@ use Starbug\Db\Schema\AbstractMigration;
 use Starbug\Db\Schema\SchemaInterface;
 use Starbug\Core\Generator\Generator;
 use Starbug\Core\Generator\Definitions\Model;
-use Starbug\Core\Bundle;
+use Starbug\Bundle\BundleInterface;
 
 class Migrator extends AbstractMigration {
   public function __construct(DatabaseInterface $db, SchemaInterface $schema, Generator $generator, Model $definition) {
@@ -141,7 +141,7 @@ class Migrator extends AbstractMigration {
   }
   protected function expandBundles($values) {
     foreach ($values as $k => $v) {
-      if ($v instanceof Bundle) {
+      if ($v instanceof BundleInterface) {
         $ref = $this->db->query($v->get("table"))->conditions($v->get("keys"))->one();
         if ($ref) {
           $values[$k] = $ref["id"];
