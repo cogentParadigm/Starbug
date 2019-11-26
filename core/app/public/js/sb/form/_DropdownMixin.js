@@ -22,9 +22,6 @@ define([
     },
     postCreate:function() {
       this.inherited(arguments);
-      if (this.toggleNode) {
-        this.signals.push(on(this.toggleNode, 'click', lang.hitch(this, 'onClick')));
-      }
       this.signals.push(on(document.body, 'focusin', lang.hitch(this, 'onFocus')));
       this.signals.push(on(document.body, 'click', lang.hitch(this, 'onClick')));
       this.signals.push(on(this.domNode.parentNode, "keydown", lang.hitch(this, "onKeydown")));
@@ -106,6 +103,8 @@ define([
         } else {
           this.open();
         }
+      } else if (this.toggleNode && (e.target == this.toggleNode || this.toggleNode.contains(e.target))) {
+        this.toggle();
       } else if (this.isOpened() && !this.domNode.parentNode.contains(e.target)) {
         this.close();
       }
@@ -129,7 +128,7 @@ define([
           e.stopPropagation();
           this.controlNode.focus();
         }
-      } else if (keyCode == 40 && document.activeElement == this.focusTargetNode) { // Down Arrow
+      } else if ((keyCode == 40 || keyCode == 32) && document.activeElement == this.controlNode) { // Down Arrow or Space
         e.preventDefault();
         if (this.isClosed()) {
           this.open();
