@@ -16,12 +16,16 @@ define([
     },
     postCreate: function() {
       this.inherited(arguments);
-      if (this.closeOnSelect) {
-        this.selection.on('change', lang.hitch(this, 'close'));
-      }
+      this.selection.on('change', lang.hitch(this, 'onSelect'));
     },
     createSelectionNode: function() {
       this.selectionNode = this.controlNode;
+    },
+    onSelect: function () {
+      if (this.closeOnSelect) {
+        this.close();
+        this.controlNode.focus();
+      }
     },
     renderSelection: function() {
       this.selectionNode.value = this.get("displayedValue");
