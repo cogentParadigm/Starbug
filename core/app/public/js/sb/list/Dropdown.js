@@ -3,11 +3,10 @@ define([
   "dojo/_base/lang",
   "../grid/MultipleSelectionList",
   "dgrid/Keyboard",
-  "dgrid/OnDemandList",
   "put-selector/put",
   "dojo/on"
-], function (declare, lang, List, Keyboard, _VirtualScrolling, put, on) {
-  return declare([List, Keyboard, _VirtualScrolling], {
+], function (declare, lang, List, Keyboard, put, on) {
+  return declare([List, Keyboard], {
     rowHeight: 20,
     delegate:false,
     postMixInProperties: function() {
