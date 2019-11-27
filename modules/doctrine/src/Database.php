@@ -13,6 +13,9 @@ class Database extends AbstractDatabase {
     $params = [
       "url" => $db["type"]."://".urlencode($db["username"]).":".urlencode($db["password"]).'@'.$db["host"].'/'.$db["db"].'?charset=utf8'
     ];
+    if (!empty($db["driverOptions"])) {
+      $params["driverOptions"] = $db["driverOptions"];
+    }
     $this->connection = DriverManager::getConnection($params, new Configuration());
     $this->database_name = $db['db'];
     $this->prefix = $db['prefix'];
