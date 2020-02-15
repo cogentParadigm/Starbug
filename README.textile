@@ -24,7 +24,6 @@ Starbug PHP is an open source framework for PHP that employs an MVC design patte
 
 h2. Project Info
 
-* *Web*: "StarbugPHP.com":http://starbugphp.com
 * *Source*: "github.com/cogentParadigm/Starbug":http://github.com/cogentParadigm/Starbug
 * *Author*: "Ali Gangji":http://aligangji.com
 
