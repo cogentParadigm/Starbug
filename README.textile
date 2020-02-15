@@ -31,7 +31,7 @@ h2. Getting Started
 
 This repository is itself a base application. To get started you will most likely want to clone it and push it up to your own project repository.
 
-Visit [Getting Started](doc/getting-started/index.md) for installation instructions.
+Visit "Getting Started":doc/getting-started/index.md for installation instructions.
 
 h2. License
 
