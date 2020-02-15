@@ -28,13 +28,6 @@ h2. Project Info
 * *Source*: "github.com/cogentParadigm/Starbug":http://github.com/cogentParadigm/Starbug
 * *Author*: "Ali Gangji":http://aligangji.com
 
-h2. Dependencies
-
-* PHP 5.6+
-* MySQL 5.1.6+
-
-Optional dependencies are listed in the links section.
-
 h2. Getting Started
 
 This repository is itself a base application. To get started you will most likely want to clone it and push it up to your own project repository.
