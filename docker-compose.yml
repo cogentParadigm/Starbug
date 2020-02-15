@@ -1,0 +1,35 @@
+version: "3.7"
+services:
+  apache:
+    image: agangji/apache
+    networks:
+      default:
+        aliases:
+          - sb.local.com
+    volumes:
+      - .:/var/www/html
+      - php-fpm-run:/var/run/php-fpm
+      - ~/.docker/certs/server.key:/etc/pki/tls/private/localhost.key
+      - ~/.docker/certs/server.crt:/etc/pki/tls/certs/localhost.crt
+  php:
+    image: agangji/php:7.1
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+    volumes:
+      - .:/var/www/html
+      - mariadb-data:/var/lib/mysql
+      - php-fpm-run:/var/run/php-fpm
+  mariadb:
+    image: agangji/mariadb:10.2
+    volumes:
+      - mariadb-data:/var/lib/mysql
+  mailcatcher:
+    image: schickling/mailcatcher
+  chrome:
+    image: justinribeiro/chrome-headless
+    security_opt:
+      - seccomp:$HOME/chrome.json
+
+volumes:
+  mariadb-data:
+  php-fpm-run:
