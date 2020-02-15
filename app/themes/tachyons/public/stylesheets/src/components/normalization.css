@@ -6,7 +6,6 @@
   --link-color: var(--dark-green);
   --link-text-decoration: none;
   --paragraph-margin: var(--spacing-medium);
-  --focus-shadow: 0 0 2px 5px var(--gray);
 }
 
 // Document
@@ -45,16 +44,4 @@ h6 { font-size: var(--font-size-h6); }
 a {
   color: var(--link-color);
   text-decoration: var(--link-text-decoration);
-}
-
-// Focus
-// -------------------------
-
-@mixin focus {
-  outline: none;
-  box-shadow: var(--focus-shadow);
-}
-
-:focus {
-  @include focus;
 }

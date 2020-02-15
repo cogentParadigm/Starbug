@@ -17,9 +17,7 @@
     "less": "~2.5.3",
     "dojo-bootstrap": "~3.0.2",
     "font-awesome": "components-font-awesome#~4.7.0",
-    "animate.css": "^3.5.2",
-    "tachyons": "^4.9.0",
-    "sanitize-css": "^5.0.0"
+    "animate.css": "^3.5.2"
   },
   "license": "GPL-3.0+",
   "ignore": [

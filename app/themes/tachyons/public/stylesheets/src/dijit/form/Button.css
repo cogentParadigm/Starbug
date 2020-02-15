@@ -62,6 +62,10 @@
 }
 .dijitArrowButtonInner:before {
   content: "expand_more";
+  color: var(--input-border-color);
+  .dijitTextBox:hover & {
+    color: inherit;
+  }
 }
 
 .dijitUpArrowButton .dijitArrowButtonInner:before {

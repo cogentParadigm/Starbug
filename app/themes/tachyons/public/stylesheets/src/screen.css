@@ -11,8 +11,10 @@
 // These are loaded first so that they have the lowest specifity.
 //
 // -----------------------------------------------------------
-@import "../../../../../../libraries/sanitize-css/sanitize.css";
-@import "../../../../../../libraries/font-awesome/css/font-awesome.css";
+@import "../../../node_modules/sanitize.css/sanitize.css";
+@import "../../../node_modules/sanitize.css/forms.css";
+@import "../../../node_modules/sanitize.css/typography.css";
+@import "../../../node_modules/font-awesome/css/font-awesome.css";
 @import "./dijit/dijit.css";
 
 
@@ -34,6 +36,7 @@
 @import "./components/scroll.css";
 @import "./components/animations.css";
 @import "./components/tooltips.css";
+@import "./components/loading.css";
 @import "./bootstrap/modals.css";
 @import "./dijit/index.css";
 

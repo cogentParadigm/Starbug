@@ -1,4 +1,9 @@
 {
+  "dependencies": {
+    "sanitize.css": "^11.0.0",
+    "tachyons": "^4.11.1",
+    "font-awesome": "^4.7.0"
+  },
   "devDependencies": {
     "@lodder/grunt-postcss": "^1.0.9",
     "css-mqpacker": "^7.0.0",

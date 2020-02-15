@@ -41,12 +41,24 @@
 
 // Style Variants.
 
-@mixin btn-variant($fgcolor, $bgcolor, $bordercolor) {
-  color: $fgcolor;
-  background-color: $bgcolor;
-  border: 1px solid $bordercolor;
-  &:hover, &.active {
-    background-color: color-mod($bgcolor lightness(36%));
+@mixin btn-variant($fg, $bg, $border) {
+  color: $fg;
+  background-color: $bg;
+  border: 1px solid $border;
+  cursor: pointer;
+  @if $bg == $border {
+    &:hover, &.active {
+      background-color: color-mod($bg blend(white 35%));
+      border-color: color-mod($bg blend(white 35%));
+    }
+  }
+  &:focus {
+    background-color: color-mod($bg blend(white 35%));
+    @if $bg == $border {
+      box-shadow: inset 0 0 0 3px $bg;
+    } @else {
+      box-shadow: inset 0 0 0 3px var(--dark-gray);
+    }
   }
 }
 

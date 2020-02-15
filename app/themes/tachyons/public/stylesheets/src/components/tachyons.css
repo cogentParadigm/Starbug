@@ -1,66 +1,66 @@
 /*! TACHYONS v4.9.0 | http://tachyons.io */
 
 /* Modules */
-@import '../../../../../../../libraries/tachyons/src/_box-sizing';
-@import '../../../../../../../libraries/tachyons/src/_aspect-ratios';
-@import '../../../../../../../libraries/tachyons/src/_images';
-@import '../../../../../../../libraries/tachyons/src/_background-size';
-@import '../../../../../../../libraries/tachyons/src/_background-position';
-@import '../../../../../../../libraries/tachyons/src/_outlines';
-@import '../../../../../../../libraries/tachyons/src/_borders';
-@import '../../../../../../../libraries/tachyons/src/_border-colors';
-@import '../../../../../../../libraries/tachyons/src/_border-radius';
-@import '../../../../../../../libraries/tachyons/src/_border-style';
-@import '../../../../../../../libraries/tachyons/src/_border-widths';
-@import '../../../../../../../libraries/tachyons/src/_box-shadow';
-@import '../../../../../../../libraries/tachyons/src/_code';
-@import '../../../../../../../libraries/tachyons/src/_coordinates';
-@import '../../../../../../../libraries/tachyons/src/_clears';
-@import '../../../../../../../libraries/tachyons/src/_display';
-@import '../../../../../../../libraries/tachyons/src/_flexbox';
-@import '../../../../../../../libraries/tachyons/src/_floats';
-@import '../../../../../../../libraries/tachyons/src/_font-family';
-@import '../../../../../../../libraries/tachyons/src/_font-style';
-@import '../../../../../../../libraries/tachyons/src/_font-weight';
-//@import '../../../../../../../libraries/tachyons/src/_forms';
-@import '../../../../../../../libraries/tachyons/src/_heights';
-@import '../../../../../../../libraries/tachyons/src/_letter-spacing';
-@import '../../../../../../../libraries/tachyons/src/_line-height';
-//@import '../../../../../../../libraries/tachyons/src/_links';
-@import '../../../../../../../libraries/tachyons/src/_lists';
-@import '../../../../../../../libraries/tachyons/src/_max-widths';
-@import '../../../../../../../libraries/tachyons/src/_widths';
-@import '../../../../../../../libraries/tachyons/src/_overflow';
-@import '../../../../../../../libraries/tachyons/src/_position';
-//@import '../../../../../../../libraries/tachyons/src/_opacity';
-@import '../../../../../../../libraries/tachyons/src/_rotations';
-@import '../../../../../../../libraries/tachyons/src/_skins';
-@import '../../../../../../../libraries/tachyons/src/_skins-pseudo';
-@import '../../../../../../../libraries/tachyons/src/_spacing';
-@import '../../../../../../../libraries/tachyons/src/_negative-margins';
-@import '../../../../../../../libraries/tachyons/src/_tables';
-@import '../../../../../../../libraries/tachyons/src/_text-decoration';
-@import '../../../../../../../libraries/tachyons/src/_text-align';
-@import '../../../../../../../libraries/tachyons/src/_text-transform';
-//@import '../../../../../../../libraries/tachyons/src/_type-scale';
-@import '../../../../../../../libraries/tachyons/src/_typography';
-@import '../../../../../../../libraries/tachyons/src/_utilities';
-@import '../../../../../../../libraries/tachyons/src/_visibility';
-@import '../../../../../../../libraries/tachyons/src/_white-space';
-@import '../../../../../../../libraries/tachyons/src/_vertical-align';
-@import '../../../../../../../libraries/tachyons/src/_hovers';
-@import '../../../../../../../libraries/tachyons/src/_z-index';
-@import '../../../../../../../libraries/tachyons/src/_nested';
-@import '../../../../../../../libraries/tachyons/src/_styles';
+@import '../../../../node_modules/tachyons/src/_box-sizing';
+@import '../../../../node_modules/tachyons/src/_aspect-ratios';
+@import '../../../../node_modules/tachyons/src/_images';
+@import '../../../../node_modules/tachyons/src/_background-size';
+@import '../../../../node_modules/tachyons/src/_background-position';
+@import '../../../../node_modules/tachyons/src/_outlines';
+@import '../../../../node_modules/tachyons/src/_borders';
+@import '../../../../node_modules/tachyons/src/_border-colors';
+@import '../../../../node_modules/tachyons/src/_border-radius';
+@import '../../../../node_modules/tachyons/src/_border-style';
+@import '../../../../node_modules/tachyons/src/_border-widths';
+@import '../../../../node_modules/tachyons/src/_box-shadow';
+@import '../../../../node_modules/tachyons/src/_code';
+@import '../../../../node_modules/tachyons/src/_coordinates';
+@import '../../../../node_modules/tachyons/src/_clears';
+@import '../../../../node_modules/tachyons/src/_display';
+@import '../../../../node_modules/tachyons/src/_flexbox';
+@import '../../../../node_modules/tachyons/src/_floats';
+@import '../../../../node_modules/tachyons/src/_font-family';
+@import '../../../../node_modules/tachyons/src/_font-style';
+@import '../../../../node_modules/tachyons/src/_font-weight';
+//@import '../../../../node_modules/tachyons/src/_forms';
+@import '../../../../node_modules/tachyons/src/_heights';
+@import '../../../../node_modules/tachyons/src/_letter-spacing';
+@import '../../../../node_modules/tachyons/src/_line-height';
+//@import '../../../../node_modules/tachyons/src/_links';
+@import '../../../../node_modules/tachyons/src/_lists';
+@import '../../../../node_modules/tachyons/src/_max-widths';
+@import '../../../../node_modules/tachyons/src/_widths';
+@import '../../../../node_modules/tachyons/src/_overflow';
+@import '../../../../node_modules/tachyons/src/_position';
+//@import '../../../../node_modules/tachyons/src/_opacity';
+@import '../../../../node_modules/tachyons/src/_rotations';
+@import '../../../../node_modules/tachyons/src/_skins';
+@import '../../../../node_modules/tachyons/src/_skins-pseudo';
+@import '../../../../node_modules/tachyons/src/_spacing';
+@import '../../../../node_modules/tachyons/src/_negative-margins';
+@import '../../../../node_modules/tachyons/src/_tables';
+@import '../../../../node_modules/tachyons/src/_text-decoration';
+@import '../../../../node_modules/tachyons/src/_text-align';
+@import '../../../../node_modules/tachyons/src/_text-transform';
+//@import '../../../../node_modules/tachyons/src/_type-scale';
+@import '../../../../node_modules/tachyons/src/_typography';
+@import '../../../../node_modules/tachyons/src/_utilities';
+@import '../../../../node_modules/tachyons/src/_visibility';
+@import '../../../../node_modules/tachyons/src/_white-space';
+@import '../../../../node_modules/tachyons/src/_vertical-align';
+@import '../../../../node_modules/tachyons/src/_hovers';
+@import '../../../../node_modules/tachyons/src/_z-index';
+@import '../../../../node_modules/tachyons/src/_nested';
+@import '../../../../node_modules/tachyons/src/_styles';
 
 /* Variables */
 /* Importing here will allow you to override any variables in the modules */
-@import '../../../../../../../libraries/tachyons/src/_colors';
-@import '../../../../../../../libraries/tachyons/src/_media-queries';
+@import '../../../../node_modules/tachyons/src/_colors';
+@import '../../../../node_modules/tachyons/src/_media-queries';
 
 /* Debugging */
-@import '../../../../../../../libraries/tachyons/src/_debug-children';
-@import '../../../../../../../libraries/tachyons/src/_debug-grid';
+@import '../../../../node_modules/tachyons/src/_debug-children';
+@import '../../../../node_modules/tachyons/src/_debug-grid';
 
 /* Uncomment out the line below to help debug layout issues */
 /* @import './_debug'; */

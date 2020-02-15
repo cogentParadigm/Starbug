@@ -2,8 +2,8 @@
   --calendar-bg: var(--input-bg);
   --calendar-border: var(--input-border);
   --calendar-day-label-color: var(--silver);
-  --calendar-selected-color: var(--white);
-  --calendar-selected-bg: var(--link-color);
+  --calendar-selected-color: var(--input-selected-color);
+  --calendar-selected-bg: var(--input-selected-bg);
 }
 
 .dijitPopup .dijitCalendar {
@@ -22,6 +22,9 @@
   width: 48px;
   line-height: 48px;
   border: var(--calendar-border);
+  &:hover {
+    background: var(--input-hover-bg);
+  }
 }
 
 .dijitCalendarDayLabelTemplate {
@@ -38,6 +41,9 @@
 .dijitCalendarSelectedDate {
   background-color: var(--calendar-selected-bg);
   color: var(--calendar-selected-color);
+  &:hover {
+    background: var(--input-hover-bg);
+  }
 }
 
 .dijitCalendarCurrentDate .dijitCalendarDateLabel {
@@ -57,6 +63,10 @@
 
 .dijitCalendarIncrementControl {
   @extend .material-icons;
+  color: var(--input-border-color);
+  &:hover {
+    color: inherit;
+  }
 }
 
 .dijitCalendarIncrease:before {

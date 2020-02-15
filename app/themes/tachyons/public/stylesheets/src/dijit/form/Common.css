@@ -8,7 +8,7 @@ input.dijitReset, select.dijitReset {
 }
 
 .dijitTextBoxFocused {
-  @mixin focus;
+  @extend .form-control.focused;
 }
 
 .dijitInputContainer {
@@ -53,7 +53,6 @@ input.dijitReset, select.dijitReset {
 // ComboBox
 .dijitComboBox .dijitButtonNode {
   @extend .dijitComboButton .dijitButtonNode;
-  border-left: var(--input-border);
 }
 
 .dijitComboBox .dijitButtonNode.dijitArrowButton {
@@ -77,8 +76,8 @@ input.dijitReset, select.dijitReset {
 
 // Validation
 .dijitTextBoxError {
-  @extend .alert;
-  @extend .alert-danger;
+  //@extend .alert;
+  //@extend .alert-danger;
 }
 
 .dijitTextBoxError.dijitTextBoxFocused {
