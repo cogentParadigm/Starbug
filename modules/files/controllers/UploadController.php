@@ -51,7 +51,7 @@ class UploadController extends Controller {
         $_post['url'] = $this->filesystems->getFilesystem($record["location"])->getUrl($_post['name']);
         $_post['mime_type'] = $record["mime_type"];
         $image = in_array($record["mime_type"], ["image/gif", "image/jpeg", "image/png"]);
-        if  ($image) {
+        if ($image) {
           $_post['thumbnail'] = $this->images->thumb($record["location"]."://".$_post['name'], ["w" => 100, "w" => 100, "a" => 1]);
         }
         $_post['width'] = $width;
