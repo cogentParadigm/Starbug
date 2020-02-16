@@ -1,6 +1,12 @@
 <?php
+namespace Starbug\Core;
+
 use Interop\Container\ContainerInterface;
 use Monolog\Logger;
+use DI;
+use FastRoute\Dispatcher\GroupCountBased;
+use FastRoute\RouteCollector;
+use Starbug\Core\Routing\RoutesHelper;
 
 return [
   'environment' => 'development',
@@ -9,29 +15,28 @@ return [
   'time_zone' => 'America/Vancouver',
   'hmac_key' => '',
   'routes' => [
-    "api" => [
-      "controller" => "Starbug\\Core\\ApiRoutingController",
-      "action" => "response"
-    ],
-    "profile" => [
-      "title" => "Starbug\\Core\\ProfileController",
-      "controller" => "profile"
-    ],
-    "admin" => [
-      "title" => "Admin",
-      "controller" => "Starbug\\Core\\AdminController",
-      "action" => "defaultAction",
-      "groups" => "admin",
-      "theme" => "storm"
-    ],
-    "terms" => [
-      "template" => "xhr.xhr",
-      "groups" => "user"
-    ],
-    "robots" => [
-      "template" => "txt.txt"
-    ]
-  ],
+    "api/{controller}/{action}" => ["controller" => "Starbug\\Core\\ApiRoutingController", "action" => "response"],
+    "profile" => ["controller" => "profile"],
+    "robots" => ["template" => "txt.txt"],
+    "admin/settings" => RoutesHelper::adminRoute("Starbug\Core\AdminSettingsController"),
+    "admin/imports/run/{id:[0-9]+}" =>
+      RoutesHelper::adminRoute("Starbug\Core\AdminImportsController", ["action" => "run"]),
+    "admin/taxonomies/taxonomy/{taxonomy}" =>
+      RoutesHelper::adminRoute("Starbug\Core\AdminTaxonomiesController", ["action" => "taxonomy"]),
+    "admin/menus/menu/{menu}" =>
+      RoutesHelper::adminRoute("Starbug\Core\AdminMenusController", ["action" => "menu"])
+  ]
+  + RoutesHelper::crudRoutes("admin/taxonomies", "Starbug\Core\AdminTaxonomiesController")
+  + RoutesHelper::crudiRoutes("admin/menus", "Starbug\Core\AdminMenusController")
+  + RoutesHelper::crudRoutes("admin/imports", "Starbug\Core\AdminImportsController")
+  + RoutesHelper::crudRoutes("admin/imports_fields", "Starbug\Core\AdminImportsFieldsController"),
+  "FastRoute\RouteCollector" => DI\decorate(function (RouteCollector $r, ContainerInterface $c) {
+    $routes = $c->get("routes");
+    foreach ($routes as $pattern => $route) {
+      $r->addRoute("GET", "/" . $pattern, $route);
+    }
+    return $r;
+  }),
   'Starbug\Core\SettingsInterface' => DI\object('Starbug\Core\DatabaseSettings'),
   'Starbug\Core\*Interface' => DI\object('Starbug\Core\*'),
   'Starbug\Http\*Interface' => DI\object('Starbug\Http\*'),
@@ -51,10 +56,15 @@ return [
     $request = $c->get("Starbug\Http\RequestInterface");
     return $request->getUrl();
   },
+  "FastRoute\RouteParser" => DI\object("FastRoute\RouteParser\Std"),
+  "FastRoute\DataGenerator" => DI\object("FastRoute\DataGenerator\GroupCountBased"),
+  "FastRoute\Dispatcher" => function (ContainerInterface $c) {
+    $collector = $c->get("FastRoute\RouteCollector");
+    return new GroupCountBased($collector->getData());
+  },
   'Starbug\Core\Routing\RouterInterface' => DI\object('Starbug\Core\Routing\Router')
-    ->method('addStorage', DI\get('Starbug\Core\Routing\MemoryRouteStorage')),
+    ->method('addStorage', DI\get('Starbug\Core\Routing\FastRouteStorage')),
   'Starbug\Core\Routing\*Interface' => DI\object('Starbug\Core\Routing\*'),
-  'Starbug\Core\Routing\MemoryRouteStorage' => DI\object()->method('addRoutes', DI\get('routes')),
   'Starbug\Core\Images' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\ImportsForm' => DI\object()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
   'Starbug\Core\ImportsFieldsForm' => DI\object()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),

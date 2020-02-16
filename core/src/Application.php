@@ -59,17 +59,6 @@ class Application implements ApplicationInterface {
     $this->logger->addInfo("Loading ".$route['controller'].' -> '.$route['action']);
     $controller = $this->controllers->get($route['controller']);
 
-    if (isset($controller->routes[$route['action']])) {
-      $template = $controller->routes[$route['action']];
-      if (false === ($values = $this->router->validate($request, $route, $template))) {
-        $route['action'] = 'missing';
-      } elseif (is_array($values)) {
-        $route['arguments'] = $values;
-      }
-    }
-
-    if (empty($route['arguments'])) $route['arguments'] = [];
-
     $controller->start($this->output, $request, $this->response);
     if ($permitted) $controller->action($route['action'], $route['arguments']);
     else $controller->forbidden();

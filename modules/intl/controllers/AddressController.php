@@ -6,10 +6,6 @@ use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ModelFactoryInterface;
 
 class AddressController extends Controller {
-  public $routes = [
-    "update" => "update/{id}",
-    "form" => "form/[{locale}]"
-  ];
   public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
     $this->db = $db;
     $this->models = $models;

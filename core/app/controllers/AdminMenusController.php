@@ -1,15 +1,7 @@
 <?php
-namespace Starbug\App;
-
-use Starbug\Core\Controller;
-use Starbug\Core\DatabaseInterface;
-use Starbug\Core\ModelFactoryInterface;
+namespace Starbug\Core;
 
 class AdminMenusController extends Controller {
-  public $routes = [
-    'menu' => '{menu}',
-    'update' => '{id}'
-  ];
   public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
     $this->db = $db;
     $this->menus = $models->get("menus");

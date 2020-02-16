@@ -1,12 +1,9 @@
 <?php
-namespace Starbug\App;
+namespace Starbug\Files;
 
 use Starbug\Core\Controller;
 
 class AdminMediaController extends Controller {
-  public $routes = [
-    'update' => '{id}'
-  ];
   public function init() {
     $this->assign("model", "files");
   }

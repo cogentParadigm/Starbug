@@ -1,19 +1,15 @@
 <?php
-namespace Starbug\App;
+namespace Starbug\Users;
 
 use Starbug\Core\Controller;
 use Starbug\Core\DatabaseInterface;
 
 class AdminUsersController extends Controller {
-  public $routes = [
-    'update' => '{id}'
-  ];
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }
   public function init() {
     $this->assign("model", "users");
-    $this->assign("cancel_url", "admin/users");
   }
   public function defaultAction() {
     $this->render("admin/list.html");

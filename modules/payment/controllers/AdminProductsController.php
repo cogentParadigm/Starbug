@@ -7,9 +7,6 @@ use Starbug\Core\DatabaseInterface;
 class AdminProductsController extends WizardController {
   protected $model = "products";
   protected $formTemplate = "admin/products/form.html";
-  public $routes = [
-    'update' => '{id}'
-  ];
   public function init() {
     $this->assign("model", "products");
   }

@@ -10,9 +10,6 @@ class PagesController extends Controller {
     $this->db = $db;
     $this->user = $user;
   }
-  public $routes = [
-    "view" => "view/{id}"
-  ];
   public function view($id) {
     $page = $this->db->query("pages")->condition("id", $id)->one();
     if (!$page["published"] && !$this->user->loggedIn("admin")) {

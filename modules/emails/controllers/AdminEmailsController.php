@@ -5,9 +5,6 @@ use Starbug\Core\Controller;
 use Starbug\Core\DatabaseInterface;
 
 class AdminEmailsController extends Controller {
-  public $routes = [
-    'update' => '{id}'
-  ];
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }
@@ -25,5 +22,8 @@ class AdminEmailsController extends Controller {
   public function update($id) {
     $this->assign("id", $id);
     $this->render("admin/update.html");
+  }
+  public function import() {
+    $this->render("admin/import.html");
   }
 }

@@ -6,10 +6,6 @@ use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ModelFactoryInterface;
 
 class AdminOrdersController extends Controller {
-  public $routes = [
-    "update" => "{id}",
-    "details" => "{id}"
-  ];
   public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
     $this->db = $db;
     $this->models = $models;

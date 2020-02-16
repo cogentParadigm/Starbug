@@ -1,16 +1,7 @@
 <?php
-namespace Starbug\App;
-
-use Starbug\Core\Controller;
-use Starbug\Core\DatabaseInterface;
-use Starbug\Core\ModelFactoryInterface;
-use Starbug\Core\InputFilterInterface;
+namespace Starbug\Core;
 
 class AdminTaxonomiesController extends Controller {
-  public $routes = [
-    'update' => '{id}',
-    'taxonomy' => '{taxonomy}'
-  ];
   public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, InputFilterInterface $filter) {
     $this->db = $db;
     $this->terms = $models->get("terms");

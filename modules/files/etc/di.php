@@ -8,22 +8,29 @@ use Starbug\Core\Storage\Adapter\Local;
 use Starbug\Core\Storage\Adapter\LocalPrivate;
 use Starbug\Http\Url;
 use DI;
+use Starbug\Core\Routing\RoutesHelper;
 
 return [
-  'routes' => DI\add([
-    "upload" => [
-      "title" => "Starbug\Files\UploadController",
-      "controller" => "upload",
-      "template" => "xhr.xhr",
-      "groups" => "user"
-    ],
-    "files/download" => [
-      "title" => "Download Private File",
-      "controller" => "Starbug\Files\DownloadController",
-      "action" => "download",
-      "groups" => ["admin"]
+  'routes' => DI\add(
+    [
+      "upload" => [
+        "title" => "Starbug\Files\UploadController",
+        "controller" => "upload",
+        "template" => "xhr.xhr",
+        "groups" => "user"
+      ],
+      "files/download/{id:[0-9]+}" => [
+        "title" => "Download Private File",
+        "controller" => "Starbug\Files\DownloadController",
+        "action" => "download",
+        "groups" => ["admin"]
+      ],
+      "admin/media" =>
+        RoutesHelper::adminRoute("Starbug\Files\AdminMediaController"),
+      "admin/media/update/{id:[0-9]+}" =>
+        RoutesHelper::adminRoute("Starbug\Files\AdminMediaController", ["action" => "update"])
     ]
-  ]),
+  ),
   'filesystem.adapters' => ['default', 'public', 'private', 'tmp'],
   'filesystem.adapter.default' => 'public',
   'filesystem.public' => 'var/public/uploads',

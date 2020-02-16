@@ -7,10 +7,6 @@ use Starbug\Core\CollectionFactoryInterface;
 use Starbug\Core\IdentityInterface;
 
 class SubscriptionsController extends Controller {
-  public $routes = [
-    "update" => "update/{id}",
-    "payment" => "payment/{id}"
-  ];
   public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, IdentityInterface $user) {
     $this->models = $models;
     $this->collections = $collections;

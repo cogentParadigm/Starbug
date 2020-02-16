@@ -11,7 +11,6 @@ class Controller {
   public $auto_render = true;
   public $request;
   public $response;
-  public $routes = [];
   protected $output;
 
 

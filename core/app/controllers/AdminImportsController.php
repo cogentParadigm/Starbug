@@ -2,10 +2,6 @@
 namespace Starbug\Core;
 
 class AdminImportsController extends Controller {
-  public $routes = [
-    'update' => '{id}',
-    'run' => '{id}'
-  ];
   public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
     $this->db = $db;
     $this->models = $models;

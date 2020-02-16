@@ -5,9 +5,6 @@ use Starbug\Core\Controller;
 use Starbug\Core\DatabaseInterface;
 
 class AdminProvincesController extends Controller {
-  public $routes = [
-    'update' => '{id}'
-  ];
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }
