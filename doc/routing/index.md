@@ -45,17 +45,15 @@ The basic principles of a controller are simple:
 
 1. It has access to the `RequestInterface` and `ResponseInterface` so it is a good place to make decisions based on the request and it is a good place to modify the response.
 2. It is responsible for setting the content of the response. Typically you will render a view.
-3. If you don't specify an action in the route, the next component of the URL will determine which method is used.
 
-Let's take the route below.
+Let's take the routes below.
 
 ```php
 <?php
 // ...
-  'photos' => [
-    'title' => 'Photos',
-    'controller' => 'Starbug\App\PhotosController'
-  ]
+  "photos" => ["controller" => "Starbug\App\PhotosController"],
+  "photos/create" => ["controller" => "Starbug\App\PhotosController", "action" => "create"],
+  "photos/update/{id:[0-9]+}" => ["controller" => "Starbug\App\PhotosController", "action" => "update"]
 // ...
 ```
 
@@ -66,9 +64,6 @@ Here is the corresponding controller.
 namespace Starbug\App;
 use Starbug\Core\Controller;
 class PhotosController extends Controller {
-  public $routes = [
-    'update' => 'update/{id}'
-  ];
   public function init() {
     $this->assign("model", "photos");
   }
