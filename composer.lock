@@ -4308,16 +4308,16 @@
         },
         {
             "name": "starbug/standard",
-            "version": "v1.1",
+            "version": "v1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-standard.git",
-                "reference": "fa33af299cbe7f99d7ce7c7dd0a9268923190e1a"
+                "reference": "b60f6359737634fbf5d7653095d19d2711bc894f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-standard/zipball/fa33af299cbe7f99d7ce7c7dd0a9268923190e1a",
-                "reference": "fa33af299cbe7f99d7ce7c7dd0a9268923190e1a",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-standard/zipball/b60f6359737634fbf5d7653095d19d2711bc894f",
+                "reference": "b60f6359737634fbf5d7653095d19d2711bc894f",
                 "shasum": ""
             },
             "require": {
@@ -4329,7 +4329,7 @@
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "description": "Starbug coding standard configurations and validation tools.",
-            "time": "2019-10-11T18:02:20+00:00"
+            "time": "2020-02-16T00:21:31+00:00"
         },
         {
             "name": "symfony/browser-kit",
