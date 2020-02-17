@@ -1,4 +1,4 @@
-!https://travis-ci.org/cogentParadigm/Starbug.svg?branch=dev!:https://travis-ci.org/cogentParadigm/Starbug
+!https://travis-ci.org/cogentParadigm/Starbug.svg?branch=master!:https://travis-ci.org/cogentParadigm/Starbug
 
 h1. Starbug PHP Web Development Framework
 
