@@ -7,6 +7,7 @@ default:
         - Starbug\Behat\Context\ShellContext
         - Starbug\Behat\Context\MailContext
         - Starbug\Behat\Context\CsvContext
+        - Starbug\Behat\Context\ScreenshotsContext
         - Starbug\Features\FeatureContext
   extensions:
     Starbug\Behat\ServiceContainer\ChromeExtension: ~

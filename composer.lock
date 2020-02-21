@@ -4278,16 +4278,16 @@
         },
         {
             "name": "starbug/behat-starbug-extension",
-            "version": "v0.8.21",
+            "version": "v0.8.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/behat-starbug-extension.git",
-                "reference": "cddaa3274ab83afb91b553f020d86b93477fe471"
+                "reference": "1383b90550540eb1ba84cfb1ac54b656523b1fb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/behat-starbug-extension/zipball/cddaa3274ab83afb91b553f020d86b93477fe471",
-                "reference": "cddaa3274ab83afb91b553f020d86b93477fe471",
+                "url": "https://api.github.com/repos/cogentParadigm/behat-starbug-extension/zipball/1383b90550540eb1ba84cfb1ac54b656523b1fb3",
+                "reference": "1383b90550540eb1ba84cfb1ac54b656523b1fb3",
                 "shasum": ""
             },
             "require": {
@@ -4318,7 +4318,7 @@
                 }
             ],
             "description": "Starbug Extension for Behat",
-            "time": "2019-12-17T20:15:43+00:00"
+            "time": "2020-02-21T02:09:30+00:00"
         },
         {
             "name": "starbug/devel",
