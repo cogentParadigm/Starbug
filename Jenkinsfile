@@ -1,6 +1,7 @@
 pipeline {
   agent {
     node {
+      label ""
       customWorkspace "starbug/${env.BRANCH_NAME}"
     }
   }
