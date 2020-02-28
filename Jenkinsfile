@@ -77,40 +77,17 @@ pipeline {
             cloverReportFileName: "clover.xml"
           ])
           cobertura coberturaReportFile: "cobertura-coverage.xml", enableNewApi: true, failNoReports: false
-          plot csvFileName: "phloc-plot-A.csv",
+          plot csvFileName: "phloc-plot.csv",
             csvSeries: [[
               file: "build/logs/phploc.csv",
               inclusionFlag: "OFF"
             ]],
             group: "PHPLOC",
-            title: "A - Lines of code",
+            title: "Project Size",
             style: "line",
             keepRecords: true,
             numBuilds: "100",
-            yaxis: "Lines of Code"
-          plot csvFileName: "phloc-plot-C.csv",
-            csvSeries: [[
-              file: "build/logs/phploc.csv",
-              inclusionFlag: "OFF"
-            ]],
-            group: "PHPLOC",
-            title: "C - Average Length",
-            style: "line",
-            keepRecords: true,
-            numBuilds: "100",
-            yaxis: "Average Lines of Code"
-          plot csvFileName: "phloc-plot-AB.csv",
-            csvSeries: [[
-              file: "build/logs/phploc.csv",
-              exclusionValues: "                              Logical Lines of Code (LLOC),Classes Length (LLOC),Functions Length (LLOC),LLOC outside functions or classes                          ",
-              inclusionFlag: "INCLUDE_BY_STRING"
-            ]],
-            group: "PHPLOC",
-            title: "AB - Code Structure by Logical Lines of Code",
-            style: "line",
-            keepRecords: true,
-            numBuilds: "100",
-            yaxis: "Logical Lines of Code"
+            yaxis: ""
         }
       }
     }
