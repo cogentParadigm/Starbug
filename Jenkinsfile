@@ -1,13 +1,22 @@
 pipeline {
-  agent any
+  agent {
+    node {
+      customWorkspace "starbug/${env.BRANCH_NAME}"
+    }
+  }
+
+  parameters {
+    string(name: "branch", defaultValue: "master")
+  }
 
   stages {
 
     stage("Start services") {
       steps {
         sh """
-          docker volume ls | grep sb_test_mariadb-data && docker volume rm sb_mariadb-data
-          docker volume ls | grep sb_test_webroot && docker volume rm sb_webroot
+          sed -i'' -e \"s/COMPOSE_PROJECT_NAME=.*/COMPOSE_PROJECT_NAME=${env.JOB_NAME}_${env.BRANCH_NAME}/\" .env
+          docker volume ls | grep "${env.JOB_NAME}_${env.BRANCH_NAME}_mariadb-data" && docker volume rm "${env.JOB_NAME}_${env.BRANCH_NAME}_mariadb-data"
+          docker volume ls | grep "${env.JOB_NAME}_${env.BRANCH_NAME}_webroot" && docker volume rm "${env.JOB_NAME}_${env.BRANCH_NAME}_webroot"
           docker-compose up -d
           sleep 0.2
         """
