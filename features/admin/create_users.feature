@@ -1,4 +1,3 @@
-@javascript
 Feature: Admin manages users
   In order to facilitate different users accessing the system
   As an admin
