@@ -55,6 +55,7 @@ pipeline {
 
     stage("Run tests") {
       steps {
+        sh "mkdir -p build/logs"
         sh "docker-compose exec -T php vendor/bin/phpcs --extensions=php --standard=vendor/starbug/standard/phpcs.xml --ignore=views,templates,layouts --report=checkstyle --report-file=build/logs/checkstyle.xml core app modules"
         sh "docker-compose exec -T php vendor/bin/phploc --log-csv build/logs/phploc.csv --quiet --count-tests app core modules"
         sh "docker-compose exec -T php vendor/bin/phpmd . xml vendor/starbug/standard/phpmd.xml --reportfile build/logs/phpmd.xml --exclude libraries,var,node_modules,vendor || true"
