@@ -86,7 +86,7 @@ pipeline {
             title: "A - Lines of code",
             style: "line",
             keepRecords: true,
-            numBuilds: 100,
+            numBuilds: "100",
             yaxis: "Lines of Code"
           plot csvFileName: "phloc-plot-C.csv",
             csvSeries: [[
@@ -97,7 +97,7 @@ pipeline {
             title: "C - Average Length",
             style: "line",
             keepRecords: true,
-            numBuilds: 100,
+            numBuilds: "100",
             yaxis: "Average Lines of Code"
           plot csvFileName: "phloc-plot-AB.csv",
             csvSeries: [[
@@ -109,7 +109,7 @@ pipeline {
             title: "AB - Code Structure by Logical Lines of Code",
             style: "line",
             keepRecords: true,
-            numBuilds: 100,
+            numBuilds: "100",
             yaxis: "Logical Lines of Code"
         }
       }
