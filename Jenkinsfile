@@ -20,13 +20,14 @@ pipeline {
           docker volume ls | grep "${env.JOB_NAME}_${params.branch}_webroot" && docker volume rm "${env.JOB_NAME}_${params.branch}_webroot"
           docker-compose up -d
           sleep 0.2
+          docker-compose exec php useradd -m -u ${env.BUILD_USER_ID} user
         """
       }
     }
 
     stage("Install application") {
       steps {
-        sh "docker-compose exec -T php composer install"
+        sh "docker-compose exec -u ${env.BUILD_USER_ID}: -T php composer install"
 
         // Setup default database.
         sh """
@@ -37,8 +38,8 @@ pipeline {
         """
         sh "docker-compose exec -T mariadb mysql -e \"DROP DATABASE IF EXISTS starbug; CREATE DATABASE IF NOT EXISTS starbug\""
         sh """
-          echo \"root\" | docker-compose exec -T php php sb setup
-          docker-compose exec -T php composer dump-autoload
+          echo \"root\" | docker-compose exec -u ${env.BUILD_USER_ID}: -T php php sb setup
+          docker-compose exec -u ${env.BUILD_USER_ID}: -T php composer dump-autoload
         """
 
         // Setup test database.
@@ -50,15 +51,15 @@ pipeline {
         """
         sh "docker-compose exec -T mariadb mysql -e \"DROP DATABASE IF EXISTS starbug_test; CREATE DATABASE IF NOT EXISTS starbug_test\""
         sh """
-          docker-compose exec -T php php sb migrate -t -db=test
-          docker-compose exec -T php composer dump-autoload
+          docker-compose exec -u ${env.BUILD_USER_ID}: -T php php sb migrate -t -db=test
+          docker-compose exec -u ${env.BUILD_USER_ID}: -T php composer dump-autoload
         """
 
         // Populate SMTP settings for mailcatcher
         sh """
-          docker-compose exec -T php php sb store settings id:4 value:no-reply@sb.local.com
-          docker-compose exec -T php php sb store settings id:5 value:mailcatcher
-          docker-compose exec -T php php sb store settings id:6 value:1025
+          docker-compose exec -u ${env.BUILD_USER_ID}: -T php php sb store settings id:4 value:no-reply@sb.local.com
+          docker-compose exec -u ${env.BUILD_USER_ID}: -T php php sb store settings id:5 value:mailcatcher
+          docker-compose exec -u ${env.BUILD_USER_ID}: -T php php sb store settings id:6 value:1025
         """
       }
     }
@@ -66,12 +67,12 @@ pipeline {
     stage("Run tests") {
       steps {
         sh "mkdir -p build/logs"
-        sh "docker-compose exec -T php vendor/bin/phpcs --extensions=php --standard=vendor/starbug/standard/phpcs.xml --ignore=views,templates,layouts --report=checkstyle --report-file=build/logs/checkstyle.xml core app modules"
-        sh "docker-compose exec -T php vendor/bin/phploc --log-csv build/logs/phploc.csv --quiet --count-tests app core modules"
-        sh "docker-compose exec -T php vendor/bin/phpmd . xml vendor/starbug/standard/phpmd.xml --reportfile build/logs/phpmd.xml --exclude libraries,var,node_modules,vendor || true"
-        sh "docker-compose exec -T php vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules || true"
-        sh "docker-compose exec -T php vendor/bin/phpunit -c etc/phpunit.xml"
-        sh "docker-compose exec -T php vendor/bin/behat"
+        sh "docker-compose exec -u ${env.BUILD_USER_ID}: -T php vendor/bin/phpcs --extensions=php --standard=vendor/starbug/standard/phpcs.xml --ignore=views,templates,layouts --report=checkstyle --report-file=build/logs/checkstyle.xml core app modules"
+        sh "docker-compose exec -u ${env.BUILD_USER_ID}: -T php vendor/bin/phploc --log-csv build/logs/phploc.csv --quiet --count-tests app core modules"
+        sh "docker-compose exec -u ${env.BUILD_USER_ID}: -T php vendor/bin/phpmd . xml vendor/starbug/standard/phpmd.xml --reportfile build/logs/phpmd.xml --exclude libraries,var,node_modules,vendor || true"
+        sh "docker-compose exec -u ${env.BUILD_USER_ID}: -T php vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules || true"
+        sh "docker-compose exec -u ${env.BUILD_USER_ID}: -T php vendor/bin/phpunit -c etc/phpunit.xml"
+        sh "docker-compose exec -u ${env.BUILD_USER_ID}: -T php vendor/bin/behat"
       }
 
       post {
