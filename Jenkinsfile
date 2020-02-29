@@ -25,7 +25,8 @@ pipeline {
           docker volume ls | grep "${env.JOB_NAME}_${params.branch}_webroot" && docker volume rm "${env.JOB_NAME}_${params.branch}_webroot"
           docker-compose up -d
           sleep 0.2
-          docker-compose exec -T php useradd -m -u ${env.UID} -g ${env.GID} user
+          docker-compose exec -T php groupadd -g ${env.GID} jenkins
+          docker-compose exec -T php useradd -m -u ${env.UID} -g ${env.GID} jenkins
         """
       }
     }
