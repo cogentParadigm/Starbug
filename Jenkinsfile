@@ -95,7 +95,7 @@ pipeline {
 
       post {
         always {
-          sh "sed -i'' -e 's/\/var\/www\/html\///' /var/lib/jenkins/fixedasap/master/build/logs/*.*"
+          sh "sed -i'' -e 's/\\/var\\/www\\/html\\///' /var/lib/jenkins/fixedasap/master/build/logs/*.*"
           junit "build/logs/phpunit.xml,build/logs/behat/*.xml"
           recordIssues enabledForFailure: true, aggregatingResults: true, tools: [
             checkStyle(pattern: "build/logs/checkstyle.xml"),
