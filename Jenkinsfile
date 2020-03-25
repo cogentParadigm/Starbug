@@ -89,12 +89,13 @@ pipeline {
         sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phploc --log-csv build/logs/phploc.csv --quiet --count-tests app core modules"
         sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phpmd . xml vendor/starbug/standard/phpmd.xml --reportfile build/logs/phpmd.xml --exclude libraries,var,node_modules,vendor || true"
         sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules || true"
-        sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phpunit -c etc/phpunit.xml"
+        sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phpunit -c etc/phpunit.xml || true"
         sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/behat || true"
       }
 
       post {
         always {
+          sh "sed -i'' -e 's/\/var\/www\/html\///' /var/lib/jenkins/fixedasap/master/build/logs/*.*"
           junit "build/logs/phpunit.xml,build/logs/behat/*.xml"
           recordIssues enabledForFailure: true, aggregatingResults: true, tools: [
             checkStyle(pattern: "build/logs/checkstyle.xml"),
