@@ -17,17 +17,18 @@ services:
     volumes:
       - .:/var/www/html
       - mariadb-data:/var/lib/mysql
+    environment:
+      - PHP_USER=$PHP_USER
+      - PHP_GROUP=$PHP_GROUP
+      - PHP_UID=$PHP_UID
+      - PHP_GID=$PHP_GID
+    command: ["precreate-user.sh", "php-fpm", "-F"]
   mariadb:
     image: agangji/mariadb:10.2
     volumes:
       - mariadb-data:/var/lib/mysql
   mailcatcher:
     image: schickling/mailcatcher
-  chrome:
-    image: justinribeiro/chrome-headless
-    security_opt:
-      - seccomp:$HOME/chrome.json
-    command: ["--headless", "--disable-gpu", "--remote-debugging-address=0.0.0.0", "--remote-debugging-port=9222", "--hide-scrollbars"]
 
 volumes:
   mariadb-data:

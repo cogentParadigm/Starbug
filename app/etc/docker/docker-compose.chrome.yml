@@ -1,0 +1,18 @@
+version: "3.7"
+services:
+  chrome:
+    image: agangji/chrome
+    network_mode: service:php
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /dev/shm:/dev/shm
+      - $HOME/.docker/certs/rootCA.pem:/home/chrome/CA.pem
+    environment:
+      - DISPLAY=unix$DISPLAY
+    devices:
+      - /dev/dri
+      - /dev/snd
+    security_opt:
+      - seccomp:$HOME/chrome.json
+    command: ["--remote-debugging-address=0.0.0.0", "--remote-debugging-port=9222", "--user-data-dir=/tmp/data"]

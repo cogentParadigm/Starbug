@@ -20,6 +20,7 @@
     </whitelist>
   </filter>
   <logging>
+    <log type="junit" target="../build/logs/phpunit.xml"/>
     <log type="coverage-clover" target="../build/logs/clover.xml"/>
   </logging>
   <testsuites>
