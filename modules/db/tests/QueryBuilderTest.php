@@ -586,27 +586,6 @@ class QueryBuilderTest extends QueryBuilderTestBase {
   }
 
   /**
-   * Test conditions expanded through multiple reference fields using a sub query.
-   *
-   * @return void
-   */
-  public function testMultiValueTermExpansionSubquery() {
-    // This doesn't work now.
-    // The old query builder implicitly created a subquery this way.
-    return;
-    $query = $this->db->query("users");
-    $query->condition("users.groups", ["user", "admin"]);
-    // Expected output.
-    $expected = "SELECT `users`.* FROM `users` AS `users` WHERE (:default0 IN (SELECT users_groups.slug FROM `users_groups` users_groups_lookup INNER JOIN `terms` users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id) || :default1 IN (SELECT users_groups.slug FROM `users_groups` users_groups_lookup INNER JOIN `terms` users_groups ON users_groups.id=users_groups_lookup.groups_id WHERE users_groups_lookup.users_id=users.id))";
-
-    // Compare.
-    $actual = $query->build();
-    $this->assertSame($expected, $actual);
-    $this->assertSame("user", $query->parameters[":default0"]);
-    $this->assertSame("admin", $query->parameters[":default1"]);
-  }
-
-  /**
    * Test delete mode.
    *
    * @return void
