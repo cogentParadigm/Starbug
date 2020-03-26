@@ -8,5 +8,5 @@ services:
       - /dev/shm:/dev/shm
       - $HOME/.docker/certs/rootCA.pem:/home/chrome/CA.pem
     security_opt:
-      - seccomp:$HOME/chrome.json
+      - seccomp:app/etc/docker/chrome.json
     command: ["--headless", "--disable-gpu", "--remote-debugging-address=0.0.0.0", "--remote-debugging-port=9222", "--hide-scrollbars"]
