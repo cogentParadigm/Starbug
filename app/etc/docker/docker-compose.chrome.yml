@@ -4,6 +4,7 @@ services:
     image: agangji/chrome
     network_mode: service:php
     volumes:
+      - .:/var/www/html
       - /etc/localtime:/etc/localtime:ro
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /dev/shm:/dev/shm
