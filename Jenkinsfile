@@ -2,16 +2,18 @@ pipeline {
   agent {
     node {
       label ""
-      customWorkspace "starbug/${params.branch}"
+      customWorkspace "${env.JOB_NAME}/${params.branch}"
     }
   }
 
   parameters {
     string(name: "branch", defaultValue: "master")
+    string(name: "host", defaultValue: "local.com")
   }
 
   environment {
     JOB_ID = "${env.JOB_NAME}_${params.branch.replaceAll(/[-\.]/, '_')}"
+    DOMAIN = "${params.branch}.${env.JOB_NAME}.${params.host}"
     UID = sh(script: "id -u ${env.USER}", returnStdout: true).trim()
     GID = sh(script: "id -g ${env.USER}", returnStdout: true).trim()
     PHP_UID = "${env.UID}"
@@ -25,9 +27,11 @@ pipeline {
     stage("Start services") {
       steps {
         sh """
+          sed -i'' -e \"s/sb.local.com/${env.DOMAIN}/\" app/etc/docker/nginx/proxy.conf
+          sed -i'' -e \"s/sb.local.com/${env.DOMAIN}/\" docker-compose.yml
           sed -i'' -e \"s/COMPOSE_PROJECT_NAME=.*/COMPOSE_PROJECT_NAME=${env.JOB_ID}/\" .env
           sed -i'' -e \"s/docker-compose.chrome.yml/docker-compose.chrome-headless.yml/\" .env
-          docker volume ls | grep "${env.JOB_ID}_mariadb-data" && docker volume rm "${env.JOB_ID}_mariadb-data"
+          docker-compose down
           docker-compose up -d
           sleep 0.3
           docker-compose exec -T mariadb mysql -e \"DROP DATABASE IF EXISTS starbug; CREATE DATABASE IF NOT EXISTS starbug\"
@@ -68,16 +72,17 @@ pipeline {
           docker-compose exec -u ${env.UID}: -T php composer dump-autoload
         """
 
-        // Populate SMTP settings for mailcatcher
+        // Update settings
         sh """
-          docker-compose exec -u ${env.UID}: -T php php sb store settings id:4 value:no-reply@sb.local.com
+          docker-compose exec -u ${env.UID}: -T php php sb store settings id:4 value:no-reply@${env.DOMAIN}
           docker-compose exec -u ${env.UID}: -T php php sb store settings id:5 value:mailcatcher
           docker-compose exec -u ${env.UID}: -T php php sb store settings id:6 value:1025
         """
 
-        // Configure behat for docker
+        // Configure behat
         sh """
           sed -i'' -e 's/localhost:1080/mailcatcher:1080/' behat.yml
+          sed -i'' -e \"s/sb.local.com/${env.DOMAIN}/\" behat.yml
         """
       }
     }
@@ -127,7 +132,9 @@ pipeline {
 
   post {
     always {
-      sh "docker-compose down || true"
+      sh "docker-compose stop || true"
+      sh "docker cp app/etc/docker/nginx/proxy.conf nginx:/etc/nginx/conf.d/${env.DOMAIN}.conf || true"
+      sh "docker restart nginx || true"
     }
   }
 }
