@@ -133,8 +133,6 @@ pipeline {
   post {
     always {
       sh "docker-compose stop || true"
-      sh "docker cp app/etc/docker/nginx/proxy.conf nginx:/etc/nginx/conf.d/${env.DOMAIN}.conf || true"
-      sh "docker restart nginx || true"
     }
   }
 }
