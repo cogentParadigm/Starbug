@@ -13,7 +13,7 @@ pipeline {
 
   environment {
     JOB_ID = "${env.JOB_NAME}_${params.branch.replaceAll(/[-\.]/, '_')}"
-    DOMAIN = "${params.branch}.${env.JOB_NAME}.${params.host}"
+    DOMAIN = "${env.JOB_NAME}-${params.branch.replaceAll(/[.]/, '-')}.${params.host}"
     UID = sh(script: "id -u ${env.USER}", returnStdout: true).trim()
     GID = sh(script: "id -g ${env.USER}", returnStdout: true).trim()
     PHP_UID = "${env.UID}"
