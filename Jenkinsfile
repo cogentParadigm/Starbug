@@ -95,7 +95,7 @@ pipeline {
         sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phpmd . xml vendor/starbug/standard/phpmd.xml --reportfile build/logs/phpmd.xml --exclude libraries,var,node_modules,vendor || true"
         sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules || true"
         sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phpunit -c etc/phpunit.xml || true"
-        sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/behat --format=junit --out=build/logs/behat --format pretty --out=std || true"
+        sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/behat --format=junit --out=build/logs/behat --format=pretty --out=std || true"
       }
 
       post {
