@@ -3,8 +3,6 @@ function(dojo, when, sb, put, Select){
 	dojo.global.starbug.grid.columns = dojo.global.starbug.grid.columns || {};
 	dojo.global.starbug.grid.columns.statuses = function(column){
 
-		var grid;
-
 
 		column.renderCell = function(object, value, cell, options, header){
 			put(parent && parent.contents ? parent : cell, ".dgrid-statuses");
@@ -20,17 +18,12 @@ function(dojo, when, sb, put, Select){
 			});
 		};
 
-	 column.init = function() {
-		 grid = column.grid;
-		 column.editorArgs.store = sb.get(column.grid.model, 'statuses');
-
-	 };
-
 		column.editorArgs = {style:'width:100%', labelAttr:'label', multiple:true};
- 		column.editorArgs.onSetStore = function(store, items) {
+		column.editorArgs.onSetStore = function(store, items) {
 			for (var i in this.options) this.options[i].label = this.options[i].label.replace('_', ' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
- 			this._loadChildren();
- 		};
+			this._loadChildren();
+		};
+		column.editorArgs.store = sb.get(column.grid.model, 'statuses');
 
 		column.editor = Select;
 		column.editOn = column.editOn || "dblclick";

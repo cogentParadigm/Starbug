@@ -3,19 +3,15 @@ function(dojo, strings, put, on){
 	dojo.global.starbug.form = dojo.global.starbug.form || {};
 	dojo.global.starbug.form.columns = dojo.global.starbug.form.columns || {};
 	dojo.global.starbug.form.columns.FileSelectOptions = function(column){
-		
-		var grid;
+
 		column.sortable = false;
-		column.init = function(){
-			grid = column.grid;
-		};
 
 		column.renderCell = function(object, value, cell, options, header){
-			var parent = cell.parentNode;
+			var grid = this.grid, parent = cell.parentNode;
 			put(parent && parent.contents ? parent : cell, ".field-options");
-			
+
 			var div = put(cell, 'div.btn-group');
-			
+
 			//delete button
 			var remove = 'javascript:;';
 			remove = put(div, 'a.btn.btn-default[title=Remove][href='+remove+']', put('div.fa.fa-times'));
@@ -25,7 +21,7 @@ function(dojo, strings, put, on){
 				}
 			});
 		};
-		
+
 		column.renderHeaderCell = function(node) {
 			put(node, '.field-options', 'Options');
 		}

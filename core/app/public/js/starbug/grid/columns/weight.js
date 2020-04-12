@@ -3,13 +3,8 @@ function(dojo, strings, put, on, editor, NumberSpinner){
 	dojo.global.starbug.grid.columns = dojo.global.starbug.grid.columns || {};
 	dojo.global.starbug.grid.columns.weight = function(column){
 
-		var grid;
-		column.init = function(){
-			grid = column.grid;
-		};
-
 		column.renderCell = function(object, value, cell, options, header){
-			var url, text = '', row = object && grid.row(object), parent = cell.parentNode;
+			var grid = this.grid, row = object && grid.row(object), parent = cell.parentNode;
 			var base_url = grid.base_url || dojo.global.location.pathname;
 			put(parent && parent.contents ? parent : cell, ".dgrid-weight");
 

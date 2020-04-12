@@ -5,14 +5,10 @@ function(dojo, strings, put, on){
 	dojo.global.payment.grid.columns = dojo.global.payment.grid.columns || {};
 	dojo.global.payment.grid.columns.payment_gateway_options = function(column){
 
-		var grid;
 		column.sortable = false;
-		column.init = function(){
-			grid = column.grid;
-		};
 
 		column.renderCell = function(object, value, cell, options, header){
-			var url, text = '', row = object && grid.row(object), parent = cell.parentNode;
+			var grid = this.grid, row = object && grid.row(object), parent = cell.parentNode;
 			var base_url = grid.base_url || dojo.global.location.pathname;
 			put(parent && parent.contents ? parent : cell, ".dgrid-options");
 

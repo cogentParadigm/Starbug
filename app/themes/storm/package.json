@@ -19,5 +19,10 @@
     "postcss-scss": "^1.0.2",
     "postcss-url": "^5.1.2",
     "precss": "^2.0.0"
+  },
+  "dependencies": {
+    "animate.css": "^3.7.2",
+    "bootstrap": "^3.4.1",
+    "font-awesome": "^4.7.0"
   }
 }

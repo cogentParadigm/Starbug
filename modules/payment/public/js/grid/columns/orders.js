@@ -5,16 +5,12 @@ function(dojo, strings, put, on){
 	window.payment.grid.columns = window.payment.grid.columns || {};
 	window.payment.grid.columns.orders = function(column){
 
-		var grid;
 		column.sortable = false;
-		column.init = function(){
-			grid = column.grid;
-		};
 
 		column.className = 'dgrid-order-options';
 
 		column.renderCell = function(object, value, cell, options, header){
-			var url, text = '', row = object && grid.row(object), parent = cell.parentNode;
+			var grid = this.grid, row = object && grid.row(object), parent = cell.parentNode;
 			var base_url = grid.base_url || dojo.global.location.pathname;
 			//put(parent && parent.contents ? parent : cell, ".dgrid-order-options");
 

@@ -5,14 +5,10 @@ function(dojo, strings, put, on){
 	window.app.shop.columns = window.app.shop.columns || {};
 	window.app.shop.columns.remove = function(column){
 
-		var grid;
 		column.sortable = false;
-		column.init = function(){
-			grid = column.grid;
-		};
 
 		column.renderCell = function(object, value, cell, options, header){
-			var parent = cell.parentNode;
+			var grid = this.grid, parent = cell.parentNode;
 			put(parent && parent.contents ? parent : cell, ".dgrid-options");
 
 			var div = put(cell, 'div.btn-group');

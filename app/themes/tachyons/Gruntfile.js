@@ -17,7 +17,15 @@ module.exports = function(grunt) {
               'color-mod-function': { unresolved: 'warn' }
             }
           }),
-          require('postcss-url')({url: 'rebase'}),
+          require('postcss-url')([
+            {
+              filter: '**/fontawesome-webfont.*',
+              url: function(asset, dir) {
+                return "//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts/" + asset.url.split('/').pop();
+              }
+            },
+            { url: 'rebase'}
+          ]),
           require("postcss-calc")(),
           require("cssnano")({filterPlugins: false, autoprefixer: false, discardComments:{removeAll:true}})
         ]

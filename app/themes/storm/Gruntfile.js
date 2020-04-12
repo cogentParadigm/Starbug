@@ -24,8 +24,8 @@ module.exports = function(grunt) {
         ]
       },
       storm: {
-        src: "public/stylesheets/src/screen.css",
-        dest: "public/stylesheets/dist/screen.css"
+        src: "public/stylesheets/dist/screen.css",
+        dest: "public/stylesheets/dist/screen.min.css"
       }
     },
     watch: {

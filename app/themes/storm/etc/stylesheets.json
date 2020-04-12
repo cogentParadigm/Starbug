@@ -1,7 +1,7 @@
 {
 	"screen": [
 		{
-			"href": "public/stylesheets/dist/screen.css"
+			"href": "public/stylesheets/dist/screen.min.css"
 		}
 	]
 }
