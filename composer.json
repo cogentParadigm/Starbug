@@ -34,6 +34,12 @@
 		"migrate": [
 			"php sb migrate",
 			"@composer dump-autoload"
-		]
+		],
+		"phploc": "vendor/bin/phploc --count-tests app core modules",
+		"phpcs": "vendor/bin/phpcs --extensions=php --standard=vendor/starbug/standard/phpcs.xml --ignore=views,templates,layouts core app modules || true",
+		"phpmd": "vendor/bin/phpmd . text vendor/starbug/standard/phpmd.xml --exclude libraries,var,node_modules,vendor || true",
+		"phpcpd": "vendor/bin/phpcpd app core modules || true",
+		"phpunit": "vendor/bin/phpunit -c etc/phpunit.xml || true",
+		"behat": "vendor/bin/behat"
 	}
 }
