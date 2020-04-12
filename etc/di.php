@@ -1,7 +1,8 @@
 <?php
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\PHPConsoleHandler;
+use PhpConsole\Storage\File;
 
 return [
   'modules' => [
@@ -33,7 +34,7 @@ return [
     return $handler;
   },
   'Monolog\Handler\PHPConsoleHandler' => function (ContainerInterface $c) {
-    PhpConsole\Connector::setPostponeStorage(new PhpConsole\Storage\File('/tmp/pc.data'));
-    return new Monolog\Handler\PHPConsoleHandler();
+    PhpConsole\Connector::setPostponeStorage(new File('/tmp/pc.data'));
+    return new PHPConsoleHandler();
   }
 ];

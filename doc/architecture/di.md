@@ -2,7 +2,7 @@
 
 # Dependency Injection
 
-Starbug uses [PHP-DI](http://php-di.org) as a dependency injection container. This container implements [Interop\Container\ContainerInterface](https://github.com/container-interop/container-interop) and provides a robust [PHP configuration format](http://php-di.org/doc/php-definitions.html).
+Starbug uses [PHP-DI](http://php-di.org) as a dependency injection container. This container implements [Psr\Container\ContainerInterface](https://github.com/container-interop/container-interop) and provides a robust [PHP configuration format](http://php-di.org/doc/php-definitions.html).
 
 In most cases you should not instantiate classes manually, but rather allow them to be instantiated by the container. The container will recursively resolve the dependencies of any class it is instantiating. Type hint your method parameters where possible, especially in your constructors. The container will be able to resolve those parameters by that class or interface name. To map interfaces to concrete classes or further control how classes are instantiated and wired up, you can put PHP-DI definitions in `etc/di.php`.
 
@@ -28,7 +28,7 @@ In the above example, the container will try to instantiate a `DatabaseInterface
 ```php
 <?php
 return [
-	'Starbug\App\MyCustomClass' => DI\object()
+	'Starbug\App\MyCustomClass' => DI\autowire()
 		->constructorParameter('timezone', DI\get('time_zone'))
 		->constructorParameter('name', 'SomeName')
 ];
@@ -81,7 +81,7 @@ In this case, you must also configure the container to perform the injection aut
 ```php
 <?php
 return [
-	'Starbug\App\MyForm' => DI\object()
+	'Starbug\App\MyForm' => DI\autowire()
 		->method('setAbdul', DI\get('Starbug\App\MyOtherClass'))
 ]
 ```

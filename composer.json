@@ -7,7 +7,7 @@
 	"require": {
 		"starbug/bundle": "^1.0",
 		"starbug/http": "*",
-		"php-di/php-di": "^5.1",
+		"php-di/php-di": "^6.0",
 		"phpmailer/phpmailer": "dev-master",
 		"masterexploder/phpthumb": "dev-master",
 		"ezyang/htmlpurifier":"dev-master",

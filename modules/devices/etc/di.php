@@ -1,20 +1,20 @@
 <?php
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 return [
   "notification.handlers" => ["email"],
   "notification.channels" => ["system"],
   "notification.handlers.default" => ["email"],
   "notification.channels.default" => ["system"],
-  "notification.handler.email" => DI\object('Starbug\Devices\Notification\Handler\Email'),
-  "notification.channel.system" => DI\object('Starbug\Devices\Notification\Channel\System'),
-  "notification.handler.web" => DI\object("Starbug\Devices\Notification\Handler\WebPush"),
+  "notification.handler.email" => DI\autowire('Starbug\Devices\Notification\Handler\Email'),
+  "notification.channel.system" => DI\autowire('Starbug\Devices\Notification\Channel\System'),
+  "notification.handler.web" => DI\autowire("Starbug\Devices\Notification\Handler\WebPush"),
   "notification.handler.web.registration.enabled" => false,
   "notification.handler.web.publicKey" => false,
   "notification.handler.web.privateKey" => false,
-  "notification.handler.android" => DI\object("Starbug\Devices\Notification\Handler\AndroidPush"),
+  "notification.handler.android" => DI\autowire("Starbug\Devices\Notification\Handler\AndroidPush"),
   "notification.handler.android.apiKey" => false,
-  "notification.handler.apple" => DI\object("Starbug\Devices\Notification\Handler\ApplePush"),
+  "notification.handler.apple" => DI\autowire("Starbug\Devices\Notification\Handler\ApplePush"),
   "notification.handler.apple.certificateDirectory" => false,
   "notification.handler.apple.passphrase" => false,
   "notification.handler.push.handlers" => [],
@@ -43,9 +43,9 @@ return [
       return new Minishlink\WebPush\WebPush();
     }
   },
-  "Starbug\Devices\Notification\Handler\AndroidPush" => DI\object()
+  "Starbug\Devices\Notification\Handler\AndroidPush" => DI\autowire()
     ->constructorParameter("apiKey", DI\get("notification.handler.android.apiKey")),
-  "Starbug\Devices\Notification\Handler\ApplePush" => DI\object()
+  "Starbug\Devices\Notification\Handler\ApplePush" => DI\autowire()
     ->constructorParameter("certificateDirectory", "notification.handler.apple.certificateDirectory")
     ->constructorParameter("passphrase", "notification.handler.apple.passphrase"),
   "Starbug\Core\ConfigInterface" => DI\decorate(function ($config, ContainerInterface $container) {
@@ -56,7 +56,7 @@ return [
   'db.schema.migrations' => DI\add([
     DI\get('Starbug\Devices\Migration')
   ]),
-  'Starbug\Devices\Migration' => DI\object()
+  'Starbug\Devices\Migration' => DI\autowire()
     ->constructorParameter("handlers", DI\get("notification.handlers"))
     ->constructorParameter("channels", DI\get("notification.channels"))
     ->constructorParameter("defaultHandlers", DI\get("notification.handlers.default"))

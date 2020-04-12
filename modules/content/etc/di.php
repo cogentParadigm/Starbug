@@ -2,6 +2,7 @@
 namespace Starbug\Content;
 
 use DI;
+use Psr\Container\ContainerInterface;
 use Starbug\Core\Routing\RoutesHelper;
 
 return [
@@ -16,6 +17,8 @@ return [
   'db.schema.migrations' => DI\add([
     DI\get('Starbug\Content\Migration')
   ]),
-  'Starbug\Core\Routing\RouterInterface' => DI\object()
-    ->method('addAliasStorage', DI\get('Starbug\Content\AliasStorage')),
+  'Starbug\Core\Routing\RouterInterface' => DI\decorate(function ($router, ContainerInterface $container) {
+    $router->addAliasStorage($container->get('Starbug\Content\AliasStorage'));
+    return $router;
+  })
 ];

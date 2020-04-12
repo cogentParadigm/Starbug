@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Exception;
 
 class CollectionFactory implements CollectionFactoryInterface {

@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Db\Query;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Starbug\Core\DatabaseInterface;
 
 class BuilderFactory implements BuilderFactoryInterface {

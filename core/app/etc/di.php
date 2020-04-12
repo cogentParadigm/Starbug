@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Monolog\Logger;
 use DI;
 use FastRoute\Dispatcher\GroupCountBased;
@@ -37,12 +37,11 @@ return [
     }
     return $r;
   }),
-  'Starbug\Core\SettingsInterface' => DI\object('Starbug\Core\DatabaseSettings'),
-  'Starbug\Core\*Interface' => DI\object('Starbug\Core\*'),
-  'Starbug\Http\*Interface' => DI\object('Starbug\Http\*'),
-  'Starbug\Core\ResourceLocator' => DI\object()->constructor(DI\get('base_directory'), DI\get('modules')),
-  'Starbug\Core\ModelFactory' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
-  'Starbug\Core\CssGenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
+  'Starbug\Core\SettingsInterface' => DI\autowire('Starbug\Core\DatabaseSettings'),
+  'Starbug\Core\*Interface' => DI\autowire('Starbug\Core\*'),
+  'Starbug\Http\*Interface' => DI\autowire('Starbug\Http\*'),
+  'Starbug\Core\ModelFactoryInterface' => DI\autowire('Starbug\Core\ModelFactory')->constructorParameter('base_directory', DI\get('base_directory')),
+  'Starbug\Core\CssGenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\ErrorHandler' => DI\decorate(function ($previous, $container) {
     $cli = $container->get("cli");
     if (false === $cli) {
@@ -51,35 +50,37 @@ return [
     }
     return $previous;
   }),
-  'Starbug\Core\SessionStorage' => DI\object()->constructorParameter('key', DI\get('hmac_key')),
+  'Starbug\Core\SessionStorageInterface' => DI\autowire('Starbug\Core\SessionStorage')
+    ->constructorParameter('key', DI\get('hmac_key')),
   'Starbug\Http\UrlInterface' => function (ContainerInterface $c) {
     $request = $c->get("Starbug\Http\RequestInterface");
     return $request->getUrl();
   },
-  "FastRoute\RouteParser" => DI\object("FastRoute\RouteParser\Std"),
-  "FastRoute\DataGenerator" => DI\object("FastRoute\DataGenerator\GroupCountBased"),
+  "FastRoute\RouteParser" => DI\autowire("FastRoute\RouteParser\Std"),
+  "FastRoute\DataGenerator" => DI\autowire("FastRoute\DataGenerator\GroupCountBased"),
   "FastRoute\Dispatcher" => function (ContainerInterface $c) {
     $collector = $c->get("FastRoute\RouteCollector");
     return new GroupCountBased($collector->getData());
   },
-  'Starbug\Core\Routing\RouterInterface' => DI\object('Starbug\Core\Routing\Router')
+  'Starbug\Core\Routing\RouterInterface' => DI\autowire('Starbug\Core\Routing\Router')
     ->method('addStorage', DI\get('Starbug\Core\Routing\FastRouteStorage')),
-  'Starbug\Core\Routing\*Interface' => DI\object('Starbug\Core\Routing\*'),
-  'Starbug\Core\Images' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
-  'Starbug\Core\ImportsForm' => DI\object()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
-  'Starbug\Core\ImportsFieldsForm' => DI\object()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
+  'Starbug\Core\Routing\*Interface' => DI\autowire('Starbug\Core\Routing\*'),
+  'Starbug\Core\Images' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
+  'Starbug\Core\ImportsForm' => DI\autowire()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
+  'Starbug\Core\ImportsFieldsForm' => DI\autowire()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
   'db.schema.migrations' => [
     DI\get('Starbug\Core\Migration')
   ],
   'db.schema.hooks' => [
     DI\get('Starbug\Core\SchemaHook')
   ],
-  'Starbug\Core\Database' => DI\object()
+  'Starbug\Core\Database' => DI\autowire()
     ->method('setTimeZone', DI\get('time_zone'))
     ->method('setDatabase', DI\get('database_name')),
-  'Starbug\Core\GenerateCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
-  'Starbug\Core\Application' => DI\object()->method('setLogger', DI\get('Psr\Log\LoggerInterface')),
-  'Starbug\Core\SetupCommand' => DI\object()->constructorParameter('base_directory', DI\get('base_directory')),
+  'Starbug\Core\GenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
+  'Starbug\Core\ApplicationInterface' => DI\autowire('Starbug\Core\Application')
+    ->method('setLogger', DI\get('Psr\Log\LoggerInterface')),
+  'Starbug\Core\SetupCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   'Psr\Log\LoggerInterface' => function (ContainerInterface $c) {
     $logger = new Logger("main");
     $env = $c->get("environment");

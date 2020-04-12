@@ -25,7 +25,7 @@ class ContainerFactory {
       foreach ($locator->locate("di.php", "tests/etc") as $defs) $builder->addDefinitions($defs);
     }
     $container = $builder->build();
-    $container->set('Interop\Container\ContainerInterface', $container);
+    $container->set('Psr\Container\ContainerInterface', $container);
     $container->set('Starbug\Core\ResourceLocatorInterface', $locator);
     return $container;
   }

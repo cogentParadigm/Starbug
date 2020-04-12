@@ -1,4 +1,4 @@
 <?php
 return [
-  'Starbug\Core\MailerInterface' => DI\object('Starbug\Core\MockMailer')
+  'Starbug\Core\MailerInterface' => DI\autowire('Starbug\Core\MockMailer')
 ];

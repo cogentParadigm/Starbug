@@ -1,5 +1,5 @@
 <?php
-use \Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Starbug\Core\Routing\RoutesHelper;
 
 return [
@@ -47,13 +47,13 @@ return [
   'currency_locale' => 'en_US.UTF-8',
   'currency_minor_unit' => 2,
   'payment.cart.hooks' => [],
-  'Starbug\Payment\*Interface' => DI\object('Starbug\Payment\*'),
-  'Starbug\Payment\Cart' => DI\object()->constructorParameter('conditions', DI\get('cart_token'))->method("addHooks", DI\get('payment.cart.hooks')),
-  'Starbug\Payment\PriceFormatter' => DI\object()
+  'Starbug\Payment\*Interface' => DI\autowire('Starbug\Payment\*'),
+  'Starbug\Payment\Cart' => DI\autowire()->constructorParameter('conditions', DI\get('cart_token'))->method("addHooks", DI\get('payment.cart.hooks')),
+  'Starbug\Payment\PriceFormatter' => DI\autowire()
     ->constructorParameter('locale', DI\get('currency_locale'))
     ->constructorParameter('minorUnit', DI\get('currency_minor_unit')),
-  'Starbug\Payment\Gateway' => DI\object()->constructorParameter("gateway", DI\get('Omnipay\AuthorizeNet\AIMGateway')),
-  'Starbug\Payment\TokenGateway' => DI\object()->constructorParameter("gateway", DI\get('Omnipay\AuthorizeNet\CIMGateway')),
+  'Starbug\Payment\Gateway' => DI\autowire()->constructorParameter("gateway", DI\get('Omnipay\AuthorizeNet\AIMGateway')),
+  'Starbug\Payment\TokenGateway' => DI\autowire()->constructorParameter("gateway", DI\get('Omnipay\AuthorizeNet\CIMGateway')),
   'Omnipay\AuthorizeNet\AIMGateway' => function (ContainerInterface $c) {
     $settings = $c->get("Starbug\Payment\PaymentSettingsInterface");
     $gateway = new Omnipay\AuthorizeNet\AIMGateway();
@@ -74,5 +74,5 @@ return [
     }
     return $gateway;
   },
-  'Starbug\Payment\ProductOptionsForm' => DI\object()->method('setTableSchema', DI\get('Starbug\Db\Schema\SchemerInterface'))
+  'Starbug\Payment\ProductOptionsForm' => DI\autowire()->method('setTableSchema', DI\get('Starbug\Db\Schema\SchemerInterface'))
 ];

@@ -2,7 +2,7 @@
 namespace Starbug\Core;
 
 use Starbug\Core\Generator\Generator;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class GenerateCommand {
   public function __construct(Generator $generator, ContainerInterface $container, $base_directory) {

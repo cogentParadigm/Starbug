@@ -1,6 +1,6 @@
 <?php
 return [
-  'Starbug\Core\DatabaseInterface' => DI\object('Starbug\Doctrine\Database')
+  'Starbug\Core\DatabaseInterface' => DI\autowire('Starbug\Doctrine\Database')
     ->method('setTimeZone', DI\get('time_zone'))
     ->method('setDatabase', DI\get('database_name')),
   'db.schema.migrations' => DI\add([
