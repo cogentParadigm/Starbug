@@ -1,9 +1,9 @@
 {
   "devDependencies": {
     "css-mqpacker": "^6.0.1",
-    "cssnano": "^3.10.0",
-    "grunt": "^0.4.5",
-    "grunt-contrib-less": "^1.4.0",
+    "cssnano": "^4.1.10",
+    "grunt": "^1.1.0",
+    "grunt-contrib-less": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-postcss": "^0.8.0",
     "lost": "^8.0.0",
@@ -17,7 +17,7 @@
     "postcss-import": "^11.0.0",
     "postcss-partial-import": "^4.1.0",
     "postcss-scss": "^1.0.2",
-    "postcss-url": "^5.1.2",
+    "postcss-url": "^9.0.0",
     "precss": "^2.0.0"
   },
   "dependencies": {
