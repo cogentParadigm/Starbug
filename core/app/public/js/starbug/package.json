@@ -3,9 +3,5 @@
   "main": "main",
   "description": "Starbug PHP module for dojo",
   "homepage": "http://starbugphp.com/",
-  "dependencies": {
-    "dojo": "1.7.0",
-    "dijit": "1.7.0"
-  },
   "dojoBuild": "starbug.profile.js"
 }
