@@ -17,7 +17,7 @@ class ApiFilesController extends ApiController {
     $this->api->render("AdminFiles");
   }
   public function select() {
-    $this->api->render("Select");
+    $this->api->render("FilesSelect");
   }
   public function filterQuery($collection, $query, $ops) {
     if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");

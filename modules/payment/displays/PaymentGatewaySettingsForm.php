@@ -12,7 +12,7 @@ class PaymentGatewaySettingsForm extends FormDisplay {
     $this->add([
       "type",
       "input_type" => "select",
-      "options" => "text,textarea,select,checkbox,radio,password,file_select",
+      "options" => "text,textarea,select,checkbox,radio,password",
       "data-dojo-type" => "starbug/form/Dependency",
       "data-dojo-props" => "key:'type'"
     ]);

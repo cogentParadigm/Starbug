@@ -9,7 +9,7 @@ define([
   "dojo/dom",
   "dojo/dom-class",
   "dojo/dom-geometry",
-  "./theme/dropdown/default"
+  "sb/form/theme/dropdown/default"
 ], function (declare, lang, List, Selection, put, Memory, on, dom, domclass, geometry, theme) {
   return declare(null, {
     dropdownTheme: theme,

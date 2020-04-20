@@ -15,7 +15,7 @@ class TagsForm extends FormDisplay {
     // left
     $this->add(["name", "pane" => "left"]);
     $this->add(["description", "pane" => "left", "class" => "rich-text"]);
-    $this->add(["images", "pane" => "left", "input_type" => "file_select", "size" => 0]);
+    $this->add(["images", "pane" => "left", "input_type" => "text", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "selectionParams: {size: 0}, browseEnabled: true"]);
     // right
     $this->add(["groups", "taxonomy" => "groups", "input_type" => "multiple_category_select", "pane" => "right"]);
     $this->add(["slug", "label" => "Machine Name", "info" => "Leave empty to generate automatically", "pane" => "path"]);

@@ -40,7 +40,6 @@ define({
 		packages: [
 			{name:"dojo", location:"libraries/dojo/dojo"},
 			{name:"dijit", location:"libraries/dojo/dijit"},
-			{name:"dojox", location:"libraries/dojo/dojox"},
 			{name:"dstore", location:"libraries/dojo/dstore"},
 			{name:"dgrid", location:"libraries/dojo/dgrid"},
 			{name:"put-selector", location:"libraries/dojo/put-selector"},

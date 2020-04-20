@@ -16,15 +16,7 @@ class UploadController extends Controller {
     $this->user = $user;
   }
   public function defaultAction() {
-    $_post = [];
     $htmldata = [];
-    $record = [
-      "filename" => "",
-      "mime_type" => "",
-      "caption" => "uploaded file",
-      "category" => $this->request->getPost("category"),
-      "location" => $this->request->hasPost("location") ? $this->request->getPost("location") : "default"
-    ];
     $files = [];
 
     foreach ($this->request->getFiles()->get('uploadedfiles') as $key => $arr) {
@@ -34,6 +26,14 @@ class UploadController extends Controller {
     }
 
     foreach ($files as $file) {
+      $_post = [];
+      $record = [
+        "filename" => "",
+        "mime_type" => "",
+        "caption" => "uploaded file",
+        "category" => $this->request->getPost("category"),
+        "location" => $this->request->hasPost("location") ? $this->request->getPost("location") : "default"
+      ];
       try {
         list($width, $height) = getimagesize($file['tmp_name']);
       } catch (Exception $e) {
@@ -46,7 +46,7 @@ class UploadController extends Controller {
         $id = $this->models->get('files')->insert_id;
         $record = $this->models->get("files")->load($id);
         $_post['id'] = $id;
-        $_post['original_name'] = $record["filename"];
+        $_post['filename'] = $record["filename"];
         $_post['name'] = $id."_".$record["filename"];
         $_post['url'] = $this->filesystems->getFilesystem($record["location"])->getUrl($_post['name']);
         $_post['mime_type'] = $record["mime_type"];

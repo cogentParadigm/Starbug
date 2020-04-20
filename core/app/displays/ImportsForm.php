@@ -24,7 +24,7 @@ class ImportsForm extends FormDisplay {
     $this->add("name");
     $this->add(["model", "input_type" => "hidden", "default" => $options['model']]);
     $this->add(["action", "default" => "create"]);
-    $this->add(["source", "input_type" => "file_select"]);
+    $this->add(["source", "input_type" => "text", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "browseEnabled: true"]);
     if (!empty($source) && !empty($model)) {
       $this->add(["fields",
         "input_type" => "crud",

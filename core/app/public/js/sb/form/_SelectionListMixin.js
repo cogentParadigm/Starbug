@@ -30,6 +30,9 @@ define([
       this.inherited(arguments);
       //this.domNode should be a text input with name and value set appropriately
       this.domNode.type = "hidden";
+      this.createListNode();
+    },
+    createListNode: function() {
       this.listNode = put(this.domNode.parentNode, "div.dgrid-autoheight[style=display:none]");
     },
     createSelectionParams: function() {

@@ -18,7 +18,7 @@ class PagesForm extends FormDisplay {
     // left
     $this->add(["title", "pane" => "left"]);
     $this->add(["blocks", "input_type" => "blocks", "pane" => "left"]);
-    $this->add(["images", "pane" => "left", "input_type" => "file_select", "size" => "0"]);
+    $this->add(["images", "input_type" => "text", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "selectionParams: {size: 0}, browseEnabled: true"]);
     // right
     $this->add(["published", "pane" => "right"]);
     $this->add(["categories", "pane" => "right"]);

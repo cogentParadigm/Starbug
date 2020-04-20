@@ -56,7 +56,7 @@ class ProductConfigurationForm extends FormDisplay {
       } elseif ($item["type"] == "Hidden") {
         $this->add($field + ["input_type" => "hidden"]);
       } elseif ($item["type"] == "File") {
-        $this->add($field + ["input_type" => "file_select"]);
+        $this->add($field + ["input_type" => "text", "data-dojo-type" => "sb/form/Uploader"]);
       }
     }
   }

@@ -5,7 +5,7 @@ use Starbug\Db\Schema\AbstractMigration;
 
 class Migration extends AbstractMigration {
   public function up() {
-    $this->schema->addTable(["files", "list" => "all"],
+    $this->schema->addTable(["files", "label_select" => "files.filename"],
       ["location", "type" => "string", "length" => "128", "default" => "default"],
       ["filename", "type" => "string", "length" => "128"],
       ["category", "type" => "category", "null" => ""],

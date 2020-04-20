@@ -12,14 +12,14 @@ define([
 	"dojo/on",
 	"dojo/query",
 	"dojo/dom-class",
+	"dojo/aspect",
 	"starbug/grid/Grid",
+	"sb/form/_UploadButtonBase",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
-	"dojox/image/Lightbox",
-	"starbug/form/Uploader",
 	"starbug/grid/columns/options",
 	"starbug/grid/columns/filesize"
-], function (declare, lang, Widget, Templated, _WidgetsInTemplate, sb, api, template, List, put, on, query, domclass, Grid) {
+], function (declare, lang, Widget, Templated, _WidgetsInTemplate, sb, api, template, List, put, on, query, domclass, aspect, Grid, UploadButton) {
 	return declare([Widget, Templated, _WidgetsInTemplate], {
 		currentUser:0, //logged in user
 		editing:0, //id of the comment being edited (if a comment is being edited)
@@ -38,6 +38,7 @@ define([
 		mode:'icons',
 		modal:false,
 		postCreate:function() {
+			this.inherited(arguments);
 			var self = this;
 			this.collection = new api({model:'files', action:'admin'});
 
@@ -143,11 +144,11 @@ define([
 			this.clist.startup();
 
 			//initialize the uploader
-			this.uploader.url = WEBSITE_URL+'upload';
-			this.uploader.onBegin = lang.hitch(this, function() {
-				self.set_status('loading');
-			});
-			this.uploader.onComplete = lang.hitch(this, 'onUpload');
+			this.uploader = new UploadButton({
+				buttonGroupNode: this.buttonGroupNode,
+				statusNode: this.statusNode,
+			}, this.uploaderNode);
+			aspect.after(this.uploader, "onComplete", lang.hitch(this, "onUpload"), true);
 
 			//attach mode buttons
 			on(this.detailsMode, 'click', function() {
@@ -176,6 +177,10 @@ define([
 				}
 			}
 
+		},
+		startup: function() {
+			this.inherited(arguments);
+			this.uploader.startup();
 		},
 		setMode: function(mode) {
 			this.mode = mode;
@@ -260,11 +265,6 @@ define([
 			} else this.statusNode.innerHTML = value;
 		},
 		onUpload: function(files) {
-			/**
-			 * upload handler. adds the file to the list once it has been uploaded.
-			 */
-			this.set_status();
-			for (var i in files) files[i].filename = files[i].original_name;
 			this.list.renderArray(files);
 			if (this.grid != null) this.grid.renderArray(files);
 		},

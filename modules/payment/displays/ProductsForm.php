@@ -19,8 +19,8 @@ class ProductsForm extends FormDisplay {
     $this->add(["name", "pane" => "left"]);
     $this->add(["description", "pane" => "bottom"]);
     $this->add(["content", "pane" => "bottom"]);
-    $this->add(["thumbnail", "input_type" => "file_select", "pane" => "bottom"]);
-    $this->add(["photos", "input_type" => "file_select", "pane" => "bottom", "size" => "0"]);
+    $this->add(["thumbnail", "input_type" => "text", "pane" => "bottom", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "browseEnabled: true"]);
+    $this->add(["photos", "input_type" => "text", "pane" => "bottom", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "selectionParams: {size: 0}, browseEnabled: true"]);
 
     $this->add([
       "payment_type",
@@ -115,7 +115,7 @@ class ProductsForm extends FormDisplay {
       } elseif ($item["type"] == "Hidden") {
         $this->add($field + ["input_type" => "hidden"]);
       } elseif ($item["type"] == "File") {
-        $this->add($field + ["input_type" => "file_select"]);
+        $this->add($field + ["input_type" => "text", "data-dojo-type" => "sb/form/Uploader"]);
       }
     }
   }

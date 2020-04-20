@@ -6,7 +6,7 @@ define([
   "dojo/on",
   "dojo/query",
   "dojo/dom-class",
-  "./theme/MultipleSelect/default"
+  "sb/form/theme/MultipleSelect/default"
 ], function (declare, lang, Select, put, on, query, domclass, theme) {
   return declare([Select], {
     searchable:true,

@@ -65,7 +65,8 @@ return [
   'Starbug\Core\Routing\RouterInterface' => DI\autowire('Starbug\Core\Routing\Router')
     ->method('addStorage', DI\get('Starbug\Core\Routing\FastRouteStorage')),
   'Starbug\Core\Routing\*Interface' => DI\autowire('Starbug\Core\Routing\*'),
-  'Starbug\Core\Images' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
+  'Starbug\Core\ImagesInterface' => DI\autowire('Starbug\Core\Images')
+    ->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\ImportsForm' => DI\autowire()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
   'Starbug\Core\ImportsFieldsForm' => DI\autowire()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
   'db.schema.migrations' => [

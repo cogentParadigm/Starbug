@@ -22,4 +22,10 @@ class RoutesHelper {
       $path . "/import" => static::adminRoute($controller, ["action" => "import"])
     ];
   }
+  public static function routes($base, $paths) {
+    foreach ($paths as &$route) {
+      $route += $base;
+    }
+    return $paths;
+  }
 }

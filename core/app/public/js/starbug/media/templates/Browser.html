@@ -1,6 +1,6 @@
 <div class="media-browser">
 	<div class="navbar navbar-default" style="position:absolute;top:0;width:100%;margin:0">
-		<div class="container-fluid">
+		<div class="container-fluid" data-dojo-attach-point="buttonGroupNode">
 			<div class="pull-right">
 				<div class="btn-group">
 					<a class="btn btn-default navbar-btn active" href="javascript:;" data-dojo-attach-point="iconsMode"><span class="fa fa-th"></span></a>
@@ -11,7 +11,7 @@
 				</div>
 			</div>
 			<a class="btn btn-default navbar-btn" href="javascript:;" data-dojo-attach-event="click: new_category"><span class="fa fa-plus"></span> New Category</a>
-			<input data-dojo-attach-point="uploader" style="width:auto" type="file" multiple="true" data-dojo-type="starbug/form/Uploader" style="margin:0" label="<span class='fa fa-upload'></span> Upload" url="/upload" uploadOnSelect="true"/>
+			<input data-dojo-attach-point="uploaderNode" type="file" multiple/>
 		</div>
 	</div>
 	<div data-dojo-attach-point="outerBC" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:false, design:'sidebar', liveSplitters:true" style="position:fixed;top:58px;bottom:58px;left:0;right:0">

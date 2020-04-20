@@ -9,7 +9,7 @@ define([
   "dijit/registry",
   "dojo/query",
   "dojo/on",
-  "./theme",
+  "sb/modal/theme",
 ], function(declare, lang, array, Modal, ContentPane, put, xhr, registry, query, on, theme) {
   return declare(Modal, {
     "-chains-": {

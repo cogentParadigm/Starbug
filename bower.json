@@ -8,7 +8,6 @@
     "dijit": "dojo/dijit#~1.16.2",
     "dijit-themes": "dojo/dijit-themes#~1.15.0-pre",
     "dojo": "dojo/dojo#~1.16.2",
-    "dojox": "dojo/dojox#~1.16.2",
     "dstore": "^1.2.0",
     "dgrid": "^1.3.0",
     "put-selector": "~0.3.6",
