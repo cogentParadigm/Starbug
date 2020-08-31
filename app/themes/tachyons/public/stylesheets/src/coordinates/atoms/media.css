@@ -1,0 +1,9 @@
+@media (--breakpoint-not-small) {
+  .left-auto-ns { left: auto; }
+}
+@media (--breakpoint-medium) {
+  .left-auto-m { left: auto; }
+}
+@media (--breakpoint-large) {
+  .left-auto-l { left: auto; }
+}

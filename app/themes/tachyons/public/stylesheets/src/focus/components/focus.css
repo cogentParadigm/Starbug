@@ -1,0 +1,30 @@
+:root {
+  --focus-shadow-color: var(--dark-gray);
+  --focus-shadow-outset: 0 0 0 3px var(--focus-shadow-color);
+  --focus-shadow-inset: inset 0 0 0 3px var(--focus-shadow-color);
+  --focus-bg: var(--moon-gray);
+}
+
+/**
+ * Undo outline from sanitize.css
+ */
+
+ button:-moz-focusring,
+ [type="button"]:-moz-focusring,
+ [type="reset"]:-moz-focusring,
+ [type="submit"]:-moz-focusring {
+   @include focus-reset;
+ }
+
+/**
+ * Apply default focus styles
+ */
+
+:focus {
+  @include focus-reset;
+  @include focus-outset;
+}
+
+th:focus, td:focus {
+  @include focus-inset;
+}

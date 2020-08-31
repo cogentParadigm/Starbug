@@ -1,0 +1,14 @@
+@mixin make-form-sizing-components($suffix: "", $vpad: var(--input-padding-vertical), $hpad: var(--input-padding-horizontal), $iconSize: 24px) {
+  .form-control$(suffix) {
+    padding: $vpad $hpad;
+  }
+
+  .dropdown-indicator$(suffix):before {
+    padding: var(--input-sm-padding);
+    font-size: $iconSize;
+  }
+
+  select.form-control$(suffix), .form-control$(suffix).dropdown-indicator {
+    padding-right: calc(var(--input-sm-padding-horizontal) + var(--input-sm-padding-horizontal) + $iconSize);
+  }
+}

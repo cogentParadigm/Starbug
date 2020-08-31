@@ -127,7 +127,7 @@ select.form-control, .form-control.dropdown-indicator {
 }
 
 .checkbox-label {
-  padding-left: calc(var(--input-padding-horizontal) + var(--input-padding-horizontal) + 20px);
+  padding-left: calc(var(--input-padding-horizontal) + var(--input-padding-horizontal) + 24px);
   padding-top: var(--input-padding-vertical);
   padding-bottom: var(--input-padding-vertical);
   padding-right: var(--input-padding-horizontal);
@@ -178,7 +178,7 @@ select.form-control, .form-control.dropdown-indicator {
 }
 
 .radio-label {
-  padding-left: calc(var(--input-padding-horizontal) + var(--input-padding-horizontal) + 20px);
+  padding-left: calc(var(--input-padding-horizontal) + var(--input-padding-horizontal) + 24px);
   padding-top: var(--input-padding-vertical);
   padding-bottom: var(--input-padding-vertical);
   padding-right: var(--input-padding-horizontal);

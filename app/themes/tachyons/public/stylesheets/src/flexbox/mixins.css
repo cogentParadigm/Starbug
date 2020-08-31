@@ -1,0 +1,67 @@
+@mixin make-flexbox-atoms($suffix: "") {
+
+  .flex$(suffix) { display: flex; }
+  .inline-flex$(suffix) { display: inline-flex; }
+
+  /* 1. Fix for Chrome 44 bug.
+   * https://code.google.com/p/chromium/issues/detail?id=506893 */
+  .flex-auto$(suffix) {
+    flex: 1 1 auto;
+    min-width: 0; /* 1 */
+    min-height: 0; /* 1 */
+  }
+
+  .flex-none$(suffix) { flex: none; }
+
+  .flex-column$(suffix)  { flex-direction: column; }
+  .flex-row$(suffix)     { flex-direction: row; }
+  .flex-wrap$(suffix)    { flex-wrap: wrap; }
+  .flex-nowrap$(suffix)    { flex-wrap: nowrap; }
+  .flex-wrap-reverse$(suffix)    { flex-wrap: wrap-reverse; }
+  .flex-column-reverse$(suffix)  { flex-direction: column-reverse; }
+  .flex-row-reverse$(suffix)     { flex-direction: row-reverse; }
+
+  .items-start$(suffix)    { align-items: flex-start; }
+  .items-end$(suffix)      { align-items: flex-end; }
+  .items-center$(suffix)   { align-items: center; }
+  .items-baseline$(suffix) { align-items: baseline; }
+  .items-stretch$(suffix)  { align-items: stretch; }
+
+  .self-start$(suffix)    { align-self: flex-start; }
+  .self-end$(suffix)      { align-self: flex-end; }
+  .self-center$(suffix)   { align-self: center; }
+  .self-baseline$(suffix) { align-self: baseline; }
+  .self-stretch$(suffix)  { align-self: stretch; }
+
+  .justify-start$(suffix)   { justify-content: flex-start; }
+  .justify-end$(suffix)     { justify-content: flex-end; }
+  .justify-center$(suffix)  { justify-content: center; }
+  .justify-between$(suffix) { justify-content: space-between; }
+  .justify-around$(suffix)  { justify-content: space-around; }
+
+  .content-start$(suffix)   { align-content: flex-start; }
+  .content-end$(suffix)     { align-content: flex-end; }
+  .content-center$(suffix)  { align-content: center; }
+  .content-between$(suffix) { align-content: space-between; }
+  .content-around$(suffix)  { align-content: space-around; }
+  .content-stretch$(suffix) { align-content: stretch; }
+
+  .order-0$(suffix) { order: 0; }
+  .order-1$(suffix) { order: 1; }
+  .order-2$(suffix) { order: 2; }
+  .order-3$(suffix) { order: 3; }
+  .order-4$(suffix) { order: 4; }
+  .order-5$(suffix) { order: 5; }
+  .order-6$(suffix) { order: 6; }
+  .order-7$(suffix) { order: 7; }
+  .order-8$(suffix) { order: 8; }
+  .order-last$(suffix) { order: 99999; }
+  .order-inherit$(suffix) { order: inherit; }
+
+  .flex-grow-0$(suffix) { flex-grow: 0; }
+  .flex-grow-1$(suffix) { flex-grow: 1; }
+
+  .flex-shrink-0$(suffix) { flex-shrink: 0; }
+  .flex-shrink-1$(suffix) { flex-shrink: 1; }
+
+}

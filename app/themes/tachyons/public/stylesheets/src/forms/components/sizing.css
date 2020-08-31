@@ -1,0 +1,24 @@
+:root {
+  --input-sm-padding-vertical: var(--spacing-extra-small);
+  --input-sm-padding-horizontal: var(--spacing-small);
+  --input-sm-padding: var(--input-sm-padding-vertical) var(--input-sm-padding-horizontal);
+  --input-sm-dropdown-indicator-size: 21px;
+}
+
+@include make-form-sizing-components(-sm, var(--input-sm-padding-vertical), var(--input-sm-padding-horizontal), var(--input-sm-dropdown-indicator-size));
+@include make-form-sizing-components(-m);
+
+@media (--breakpoint-not-small) {
+  @include make-form-sizing-components(-sm-ns, var(--input-sm-padding-vertical), var(--input-sm-padding-horizontal), var(--input-sm-dropdown-indicator-size));
+  @include make-form-sizing-components(-m-ns);
+}
+
+@media (--breakpoint-medium) {
+  @include make-form-sizing-components(-sm-m, var(--input-sm-padding-vertical), var(--input-sm-padding-horizontal), var(--input-sm-dropdown-indicator-size));
+  @include make-form-sizing-components(-m-m);
+}
+
+@media (--breakpoint-large) {
+  @include make-form-sizing-components(-sm-l, var(--input-sm-padding-vertical), var(--input-sm-padding-horizontal), var(--input-sm-dropdown-indicator-size));
+  @include make-form-sizing-components(-m-l);
+}

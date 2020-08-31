@@ -41,27 +41,6 @@
 
 // Style Variants.
 
-@mixin btn-variant($fg, $bg, $border) {
-  color: $fg;
-  background-color: $bg;
-  border: 1px solid $border;
-  cursor: pointer;
-  @if $bg == $border {
-    &:hover, &.active {
-      background-color: color-mod($bg blend(white 35%));
-      border-color: color-mod($bg blend(white 35%));
-    }
-  }
-  &:focus {
-    background-color: color-mod($bg blend(white 35%));
-    @if $bg == $border {
-      box-shadow: inset 0 0 0 3px $bg;
-    } @else {
-      box-shadow: inset 0 0 0 3px var(--dark-gray);
-    }
-  }
-}
-
 .btn-default {
   @include btn-variant(var(--btn-default-color), var(--btn-default-bg), var(--btn-default-border-color));
 }

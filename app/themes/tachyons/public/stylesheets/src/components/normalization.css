@@ -45,3 +45,12 @@ a {
   color: var(--link-color);
   text-decoration: var(--link-text-decoration);
 }
+
+// Forms
+// -------------------------
+
+// Undo background image from sanitize.css: forms.css
+
+select:not([multiple]):not([size]) {
+  background-image: none;
+}

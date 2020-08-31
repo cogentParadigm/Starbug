@@ -1,0 +1,11 @@
+@mixin focus-reset {
+  outline: none;
+}
+
+@mixin focus-outset {
+  box-shadow: var(--focus-shadow-outset);
+}
+
+@mixin focus-inset {
+  box-shadow: var(--focus-shadow-inset);
+}

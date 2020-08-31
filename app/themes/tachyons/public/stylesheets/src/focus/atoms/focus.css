@@ -1,0 +1,19 @@
+.outset-focus:focus {
+  @include focus-outset;
+}
+
+.inset-focus:focus {
+  @include focus-inset;
+}
+
+.bg-focus:focus {
+  background: var(--focus-bg);
+  box-shadow: none;
+}
+
+.bg-focus:hover {
+  background: color-mod(var(--focus-bg) alpha(30%));
+}
+
+// Use the wrapper as a delegated focus target for a nested element
+.focus-wrapper:focus { box-shadow: none; }
