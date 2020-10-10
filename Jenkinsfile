@@ -9,17 +9,20 @@ pipeline {
   parameters {
     string(name: "branch", defaultValue: "master")
     string(name: "host", defaultValue: "local.com")
+    string(name: "project", defaultValue: "starbug")
   }
 
   environment {
-    JOB_ID = "${env.JOB_NAME}_${params.branch.replaceAll(/[-\.]/, '_')}"
-    DOMAIN = "${env.JOB_NAME}-${params.branch.replaceAll(/[.]/, '-')}.${params.host}"
+    JOB_ID = "${params.project}_${params.branch.replaceAll(/[-\.]/, '_').toLowerCase()}"
+    DOMAIN = "${params.project}-${params.branch.replaceAll(/[.]/, '-').toLowerCase()}.${params.host}"
     UID = sh(script: "id -u ${env.USER}", returnStdout: true).trim()
     GID = sh(script: "id -g ${env.USER}", returnStdout: true).trim()
     PHP_UID = "${env.UID}"
     PHP_GID = "${env.GID}"
     PHP_USER = "${env.USER}"
     PHP_GROUP = sh(script: "id -gn ${env.USER}", returnStdout: true).trim()
+    DB_NAME = "${params.project}"
+    DB_PREFIX = "sb_"
   }
 
   stages {
@@ -31,11 +34,11 @@ pipeline {
           sed -i'' -e \"s/sb.local.com/${env.DOMAIN}/\" docker-compose.yml
           sed -i'' -e \"s/COMPOSE_PROJECT_NAME=.*/COMPOSE_PROJECT_NAME=${env.JOB_ID}/\" .env
           sed -i'' -e \"s/docker-compose.chrome.yml/docker-compose.chrome-headless.yml/\" .env
-          docker-compose down
+          docker-compose down --volumes
           docker-compose up -d
           sleep 0.3
-          docker-compose exec -T mariadb mysql -e \"DROP DATABASE IF EXISTS starbug; CREATE DATABASE IF NOT EXISTS starbug\"
-          docker-compose exec -T mariadb mysql -e \"DROP DATABASE IF EXISTS starbug_test; CREATE DATABASE IF NOT EXISTS starbug_test\"
+          docker-compose exec -T mariadb mysql -e \"DROP DATABASE IF EXISTS ${env.DB_NAME}; CREATE DATABASE IF NOT EXISTS ${env.DB_NAME}\"
+          docker-compose exec -T mariadb mysql -e \"DROP DATABASE IF EXISTS ${env.DB_NAME}_test; CREATE DATABASE IF NOT EXISTS ${env.DB_NAME}_test\"
         """
       }
     }
@@ -48,7 +51,8 @@ pipeline {
         sh """
           sed -i'' -e 's/\"username\":.*/\"username\":\"root\",/' app/etc/db/default.json
           sed -i'' -e 's/\"password\":.*/\"password\":\"\",/' app/etc/db/default.json
-          sed -i'' -e 's/\"db\":.*/\"db\":\"starbug\",/' app/etc/db/default.json
+          sed -i'' -e 's/\"db\":.*/\"db\":\"${env.DB_NAME}\",/' app/etc/db/default.json
+          sed -i'' -e 's/\"prefix\":.*/\"prefix\":\"${env.DB_PREFIX}\"/' app/etc/db/default.json
           cat app/etc/db/default.json
         """
 
@@ -56,7 +60,7 @@ pipeline {
         sh """
           sed -i'' -e 's/\"username\":.*/\"username\":"root\",/' app/etc/db/test.json
           sed -i'' -e 's/\"password\":.*/\"password\":\"\",/' app/etc/db/test.json
-          sed -i'' -e 's/\"db\":.*/\"db\":\"starbug_test\",/' app/etc/db/test.json
+          sed -i'' -e 's/\"db\":.*/\"db\":\"${env.DB_NAME}_test\",/' app/etc/db/test.json
           cat app/etc/db/test.json
         """
 
