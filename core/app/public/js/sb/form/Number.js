@@ -6,6 +6,7 @@ define([
 ], function(declare, lang, on, Widget){
   return declare([Widget], {
     maxLength: 0,
+    allowNegative: false,
     postCreate: function() {
       this.domNode.removeAttribute('maxlength');
       on(this.domNode, 'input', lang.hitch(this, 'execute'));
@@ -31,10 +32,12 @@ define([
       }
     },
     normalize: function(value) {
+      var negative = (value.substr(0, 1) == "-");
       value = value.replace(/[^0-9]/g, '');
       if (this.maxLength > 0) {
         value = value.substr(0, this.maxLength);
       }
+      if (negative && this.allowNegative) value = "-" + value;
       return value;
     },
     format: function(value) {

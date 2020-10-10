@@ -94,22 +94,37 @@ define([
                 return;
             }
 
-            event.stop(e);
-
             if (domClass.contains(this, "disabled") || domAttr.get(this, "disabled")) {
                 return false;
             }
 
             if (targetNode) {
                 var isActive = domClass.contains(targetNode, 'open');
-                if (!isActive || (isActive && e.keyCode === 27)) {
-                    if(e.keyCode === 27){ query(targetNode).children(toggleSelector)[0].focus(); }
-                    return on.emit(targetNode, 'click', { bubbles:true, cancelable:true });
+                if (!isActive && e.keyCode === 27) {
+                    return;
+                } else if (!isActive || (isActive && e.keyCode === 27)) {
+                    event.stop(e);
+                    var toggleNode = query("> " + toggleSelector, targetNode)[0];
+                    if (toggleNode) {
+                        on.emit(toggleNode, 'click', { bubbles:true, cancelable:true });
+                    }
+                    return;
                 }
 
                 var desc = " li:not(.divider) a:not(.dn)",
-                    items = query('[role=menu] '+desc+', [role=listbox] '+desc, targetNode);
-                if (!items.length) { return; }
+                    items = query('> [role=menu] '+desc+',> [role=listbox] '+desc, targetNode);
+                if (!items.length) {
+                    if (document.activeElement == this) {
+                        var focusable = query('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])', targetNode);
+                        if (focusable.length)  {
+                            focusable[1].focus();
+                            event.stop(e);
+                        }
+                    }
+                    return;
+                }
+
+                event.stop(e);
                 var index = items.indexOf(document.activeElement);
 
                 if (e.keyCode === 38 && index > 0)                  { index--; }
@@ -122,7 +137,9 @@ define([
     });
 
     function clearMenus(e, context) {
-        context = query(context).parents(".dropdown")[0] || undefined;
+        if (context && !domClass.contains(context, "dropdown")) {
+            context = query(context).parents(".dropdown")[0] || undefined;
+        }
         query(backDropSelector).remove();
         query(toggleSelector, context).forEach(function(menu){
             var targetNode = _getParent(menu)[0];

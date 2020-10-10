@@ -60,6 +60,12 @@ define([
           evt.preventDefault();
         });
         query('.submit, [type=\"submit\"]', this.form).attr('onclick', '').on('click', this._onSubmit.bind(this));
+        var focus = query('[autofocus]', this.form);
+        if (focus.length) {
+          setTimeout(function() {
+            focus[0].focus();
+          }, 100);
+        }
       }
     },
     show: function(data, params) {

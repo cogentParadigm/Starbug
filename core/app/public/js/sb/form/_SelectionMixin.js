@@ -63,7 +63,7 @@ define([
         if (false === this.collection) {
           this.selection.add(value);
         } else {
-          this.collection.filter({id:value}).fetch().then(lang.hitch(this, function(results) {
+          return this.collection.filter({id:value}).fetch().then(lang.hitch(this, function(results) {
             if (results.length) {
               this.selection.add(results);
             } else {
@@ -77,6 +77,14 @@ define([
     },
     _getValueAttr: function() {
       return this.domNode.value;
+    },
+    _getDisplayedValueAttr: function() {
+      var labels = [];
+      var items = this.selection.getData();
+      for (var i = 0; i < items.length; i++) {
+        labels.push(items[i].label);
+      }
+      return labels.join(",");
     },
     renderSelection: function() {
       this.list.refresh();

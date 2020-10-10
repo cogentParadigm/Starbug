@@ -13,10 +13,14 @@ define([
 ], function (declare, lang, List, Selection, put, Memory, on, dom, domclass, geometry, theme) {
   return declare(null, {
     dropdownTheme: theme,
+    autofocus: false,
     buildRendering: function() {
       this.inherited(arguments);
       //this.domNode should be a text input with name and value set appropriately
       this.domNode.type = "hidden";
+      if (this.domNode.hasAttribute("autofocus")) {
+        this.autofocus = true;
+      }
       this.createControlGroup();
       this.createDropdownNode();
     },
@@ -29,6 +33,9 @@ define([
     startup: function() {
       this.inherited(arguments);
       this.addStyles();
+      if (this.autofocus) {
+        this.focus();
+      }
     },
     createControlGroup: function() {
       this.createControlGroupNode();
@@ -53,8 +60,8 @@ define([
     },
     open: function() {
       this.updateStyles();
-      this.focusTargetNode.focus();
       domclass.remove(this.dropdownNode, 'hidden');
+      this.focusTargetNode.focus();
       if (this.focusTargetNode != this.controlNode) {
         this.controlNode.tabIndex = -1;
       }
@@ -128,7 +135,7 @@ define([
           e.stopPropagation();
           this.controlNode.focus();
         }
-      } else if ((keyCode == 40 || keyCode == 32) && document.activeElement == this.controlNode) { // Down Arrow or Space
+      } else if ((keyCode == 40 || (keyCode == 32 && document.activeElement != this.inputNode)) && document.activeElement == this.controlNode) { // Down Arrow or Space
         e.preventDefault();
         if (this.isClosed()) {
           this.open();

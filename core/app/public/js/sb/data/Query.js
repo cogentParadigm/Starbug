@@ -40,6 +40,11 @@ define([
           //and the change event will fire undesirably when changing focus
           return;
         }
+        if (e.target.tagName == "SELECT" && e.type == "input") {
+          //ignore input events from select elements since the change event will do what we need
+          //and the special cases that require the input event are not relevant for select elements
+          return;
+        }
         query('[data-reset=' + this.scope + ']').forEach(function(btn) {
           domclass.remove(btn, 'hidden');
         });

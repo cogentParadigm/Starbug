@@ -7,10 +7,12 @@ define([
   "put-selector/put",
   "dojo/request/xhr",
   "dijit/registry",
+  "dijit/popup",
   "dojo/query",
   "dojo/on",
-  "sb/modal/theme",
-], function(declare, lang, array, Modal, ContentPane, put, xhr, registry, query, on, theme) {
+  "sb/modal/theme/default"
+], function(declare, lang, array, Modal, ContentPane, put, xhr, registry, popup, query, on, theme) {
+  popup._beginZIndex = 1051;
   return declare(Modal, {
     "-chains-": {
       constructor: "manual"

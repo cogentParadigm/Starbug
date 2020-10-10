@@ -1,4 +1,4 @@
-define(["../../css/Theme"], function(Theme) {
+define(["sb/css/Theme"], function(Theme) {
   return new Theme({
     selectors: {
       dialog: ".modal.fade[role=dialog][tabindex=-1] div.modal-dialog[role=document]",

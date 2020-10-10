@@ -9,19 +9,23 @@ define([
   "put-selector/put",
   "dstore/Memory",
   "dojo/on",
-  "dojo/query",
-  "dojo/dom-class",
-], function (declare, lang, Widget, Templated, _DropdownListMixin, List, ListSelection, put, Memory, on, query, domclass) {
+  "dojo/debounce"
+], function (declare, lang, Widget, Templated, _DropdownListMixin, List, ListSelection, put, Memory, on, debounce) {
   return declare(null, {
     filterAttrName:'keywords',
     searchThreshold:0,
     searchable:false,
-    _lastSelected:false,
+    autoSubmit:true,
+    constructor: function() {
+      this.debouncedSearch = debounce(lang.hitch(this, 'search'), 300);
+    },
     buildRendering: function() {
       this.inherited(arguments);
       if (this.searchable) {
         this.createInputNode();
+        this.focusTargetNode = this.inputNode;
         on(this.inputNode, 'keydown', lang.hitch(this, 'onInput'));
+        on(this.inputNode, "paste", lang.hitch(this, "onPaste"));
       }
     },
     createInputNode: function() {
@@ -38,8 +42,10 @@ define([
           this.query.query[this.filterAttrName] = keywords;
           this.open();
         }
-      } else {
-        delete this.query.query[this.filterAttrName];
+      } else if (this.query.query[this.filterAttrName]) {
+        var values = {};
+        values[this.filterAttrName] = true;
+        this.query.filter(values, true);
       }
     },
     close: function() {
@@ -58,6 +64,13 @@ define([
       } else if (keyCode == 40) { // Down Arrow
         e.preventDefault();
         this.focusDropdown();
+      } else if (this.autoSubmit && this.isInputCharacter(keyCode)) {
+        this.debouncedSearch();
+      }
+    },
+    onPaste: function(e) {
+      if (this.autoSubmit) {
+        this.debouncedSearch();
       }
     },
     refresh: function() {
@@ -71,6 +84,14 @@ define([
         this.inputNode.value = "";
         this.inputNode.focus();
       }
+    },
+    isInputCharacter: function(keyCode) {
+      return (keyCode == 8)               || // backspace
+        (keyCode > 47 && keyCode < 58)    || // number keys
+        (keyCode > 64 && keyCode < 91)    || // letter keys
+        (keyCode > 95 && keyCode < 112)   || // numpad keys
+        (keyCode > 185 && keyCode < 193)  || // ;=,-./` (in order)
+        (keyCode > 218 && keyCode < 223);    // [\]' (in order)
     }
   });
 });

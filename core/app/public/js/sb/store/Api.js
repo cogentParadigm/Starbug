@@ -81,16 +81,16 @@ define([
 
 			options = options || {};
 			var store = this;
-
+			var model = options.model || this.model;
 			var data = {};
 			if (options.formData) data = options.formData;
 			else {
-				for (var k in object) data[this.model+'['+k+']'] = object[k];
+				for (var k in object) data[model+'['+k+']'] = object[k];
 				data.oid = cookie('oid');
 			}
-			data['action['+this.model+']'] = options.action || this.put_action;
+			data['action['+model+']'] = options.action || this.put_action;
 
-			var initialResponse = request.post(this.target, {
+			var initialResponse = request.post(this._renderUrl(), {
 				data: data,
 				headers: lang.mixin({
 					Accept: this.accepts,
@@ -98,7 +98,7 @@ define([
 					'If-None-Match': options.overwrite === false ? '*' : null
 				}, this.headers, options.headers)
 			});
-			this.results = initialResponse.then(function (response) {
+			var finalResponse = initialResponse.then(function (response) {
 				var event = {};
 
 				var result = event.target = store._restore(store.parse(response), true) || object;
@@ -110,7 +110,8 @@ define([
 				return result;
 			}, lang.hitch(this, 'handleError'));
 
-			return this.results;
+			this.results = initialResponse;
+			return finalResponse;
 		},
 
 		add: function (object, options) {
@@ -136,11 +137,12 @@ define([
 			//		HTTP headers.
 
 			options = options || {};
+			options.onError = options.onError || lang.hitch(this, "handleError");
 			var store = this;
-
+      var model = options.model || this.model;
 			var args = {};
-			args['action['+this.model+']'] = options.action || this.remove_action;
-			args[this.model+'[id]'] = id;
+			args['action['+model+']'] = options.action || this.remove_action;
+			args[model+'[id]'] = id;
 			args.oid = cookie('oid');
 
 			this.results = request(this.target, {
@@ -151,7 +153,7 @@ define([
 				var target = response && store.parse(response);
 				store.emit('delete', {id: id, target: target});
 				return response ? target : true;
-			}, lang.hitch(this, 'handleError'));
+			}, options.onError);
 			return this.results;
 		},
 		fetch: function (kwArgs) {
