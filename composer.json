@@ -4,7 +4,7 @@
   "description": "Starbug Framework",
   "config": {
     "platform": {
-      "php": "7.1"
+      "php": "7.3"
     }
   },
   "require": {

@@ -2,8 +2,7 @@
 namespace Starbug\Css;
 
 use Starbug\Core\TemplateInterface;
-use Twig_Environment;
-use Twig_Loader_Filesystem;
+use Twig\Environment;
 
 /**
  * Twig based template renderer.
@@ -19,7 +18,7 @@ class TemplateRenderer implements TemplateInterface {
   protected $helpers;
   protected $hooks = [];
 
-  public function __construct(Twig_Environment $twig) {
+  public function __construct(Environment $twig) {
     $this->twig = $twig;
     $this->twig->addGlobal("this", $this);
   }
