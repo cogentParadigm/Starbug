@@ -5,6 +5,7 @@ use PDO;
 use SplQueue;
 use Starbug\Db\Query\BuilderFactory;
 use Starbug\Bundle\Bundle;
+use Starbug\Db\Query\BuilderInterface;
 
 abstract class AbstractDatabase implements DatabaseInterface {
   /**
@@ -13,12 +14,6 @@ abstract class AbstractDatabase implements DatabaseInterface {
    * @var int
    */
   public $record_count;
-  /**
-   * Holds the id of the last inserted record.
-   *
-   * @var int
-   */
-  public $insert_id;
   /**
    * Holds the active scope (usually 'global' or a model name).
    *
@@ -63,7 +58,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
   protected $config;
   protected $params;
   protected $models;
-  protected $hooks = [];
+  protected $insertIds = [];
   protected $timezone = false;
 
   const PHASE_VALIDATION = 0;
@@ -146,7 +141,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
    *
    * @return array record or records
    */
-  public function query($froms, $args = [], $replacements = []) {
+  public function query($froms, $args = [], $replacements = []) : BuilderInterface {
     return $this->queryBuilderFactory->create($this)->from($froms);
   }
 
@@ -244,5 +239,13 @@ abstract class AbstractDatabase implements DatabaseInterface {
 
   public function failure($model, $action) {
     return (($this->models->get($model)->action == $action) && !$this->errors->isEmpty());
+  }
+
+  public function setInsertId($table, $id) {
+    $this->insertIds[$table] = $id;
+  }
+
+  public function getInsertId($table) {
+    return isset($this->insertIds[$table]) ? $this->insertIds[$table] : null;
   }
 }

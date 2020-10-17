@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Query\BuilderInterface;
+
 interface DatabaseInterface {
   /**
    * Get records or columns.
@@ -19,7 +21,7 @@ interface DatabaseInterface {
    *
    * @return array record or records
    */
-  public function query($collection);
+  public function query($collection) : BuilderInterface;
   /**
    * Store data in the database.
    *
@@ -57,6 +59,8 @@ interface DatabaseInterface {
   public function exec($statement);
   public function prepare($statement);
   public function lastInsertId();
+  public function setInsertId($table, $id);
+  public function getInsertId($table);
   public function errors($key = "", $values = false);
   public function error($error, $field = "global", $scope = "global");
   public function success($model, $action);

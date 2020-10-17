@@ -42,6 +42,7 @@ class Executor implements ExecutorInterface {
         $this->record_count = $records->rowCount();
         if ($query->isInsert()) {
           $query->setValue("id", $db->lastInsertId());
+          $db->setInsertId($query->getTable()->getName(), $db->lastInsertId());
           $this->models->get($query->getTable()->getName())->insert_id = $db->lastInsertId();
         }
         if (!$query->isRaw()) {
