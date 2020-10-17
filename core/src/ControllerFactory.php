@@ -3,6 +3,7 @@ namespace Starbug\Core;
 
 use Psr\Container\ContainerInterface;
 use Exception;
+use Starbug\ResourceLocator\ResourceLocatorInterface;
 
 /**
  * An implementation of ControllerFactoryInterface.
@@ -16,7 +17,7 @@ class ControllerFactory implements ControllerFactoryInterface {
   }
   public function get($controller) {
     $className = $this->locator->className($controller, "Controller");
-    if (false === $className) {
+    if (false == $className) {
       throw new Exception("Controller not found. ".$controller.".");
     }
     $object = $this->container->get($className);

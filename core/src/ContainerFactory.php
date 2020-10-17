@@ -2,6 +2,7 @@
 namespace Starbug\Core;
 
 use DI\ContainerBuilder;
+use Starbug\ResourceLocator\ResourceLocator;
 
 class ContainerFactory {
   protected $defaults = [
@@ -26,7 +27,7 @@ class ContainerFactory {
     }
     $container = $builder->build();
     $container->set('Psr\Container\ContainerInterface', $container);
-    $container->set('Starbug\Core\ResourceLocatorInterface', $locator);
+    $container->set('Starbug\ResourceLocator\ResourceLocatorInterface', $locator);
     return $container;
   }
 }

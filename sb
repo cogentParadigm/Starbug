@@ -6,7 +6,7 @@
   $command = array_shift($argv);
   $script = array_shift($argv);
   $path = $namespace = false;
-  $locator = $container->get('Starbug\Core\ResourceLocatorInterface');
+  $locator = $container->get('Starbug\ResourceLocator\ResourceLocatorInterface');
   $locations = $locator->locate($script.".php", "script");
   $path = end($locations);
   $namespace = key($locations);

@@ -2,6 +2,7 @@
 namespace Starbug\Core;
 
 use Psr\Container\ContainerInterface;
+use Starbug\ResourceLocator\ResourceLocatorInterface;
 
 /**
  * An implementation of TaskFactoryInterface.

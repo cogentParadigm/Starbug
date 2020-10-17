@@ -4,6 +4,8 @@
  */
 namespace Starbug\Core;
 
+use Starbug\ResourceLocator\ResourceLocatorInterface;
+
 class Config implements ConfigInterface {
 
   private $locator;

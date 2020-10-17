@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Css;
 
-use Starbug\Core\ResourceLocatorInterface;
 use Starbug\Http\UrlInterface;
 use Starbug\Http\ResponseInterface;
+use Starbug\ResourceLocator\ResourceLocatorInterface;
 use Twig\Environment;
 
 class CssLoader {

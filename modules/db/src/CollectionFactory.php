@@ -3,6 +3,7 @@ namespace Starbug\Core;
 
 use Psr\Container\ContainerInterface;
 use Exception;
+use Starbug\ResourceLocator\ResourceLocatorInterface;
 
 class CollectionFactory implements CollectionFactoryInterface {
   protected $locator;
@@ -13,7 +14,7 @@ class CollectionFactory implements CollectionFactoryInterface {
   }
   public function get($collection) {
     $className = $this->locator->className($collection, "Collection");
-    if (false === $className) {
+    if (false == $className) {
       $className = "Starbug\\Core\\Collection";
     }
     $object = $this->container->get($className);

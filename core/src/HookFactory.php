@@ -3,6 +3,7 @@ namespace Starbug\Core;
 
 use Psr\Container\ContainerInterface;
 use Exception;
+use Starbug\ResourceLocator\ResourceLocatorInterface;
 
 /**
  * An implementation of HookFactoryInterface.

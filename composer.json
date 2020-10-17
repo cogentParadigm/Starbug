@@ -9,6 +9,7 @@
   },
   "require": {
     "starbug/bundle": "^1.0",
+    "starbug/resource-locator": "*",
     "starbug/http": "*",
     "php-di/php-di": "^6.0",
     "phpmailer/phpmailer": "dev-master",

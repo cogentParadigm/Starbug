@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1474463fb3413a86d4614900e877c74c",
+    "content-hash": "9e7bd2e0962e2677d142c9e13bfdcaaa",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -1222,6 +1222,42 @@
             ],
             "description": "Simple abstractions for handling incoming HTTP requests and generating a response.",
             "time": "2019-01-28T02:01:24+00:00"
+        },
+        {
+            "name": "starbug/resource-locator",
+            "version": "v0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-resource-locator.git",
+                "reference": "e08ac2a45e5cff29f59996b7745045e6b1786d87"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-resource-locator/zipball/e08ac2a45e5cff29f59996b7745045e6b1786d87",
+                "reference": "e08ac2a45e5cff29f59996b7745045e6b1786d87",
+                "shasum": ""
+            },
+            "require-dev": {
+                "starbug/devel": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\ResourceLocator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Locate files and classes from a list of modules.",
+            "time": "2020-10-17T22:16:23+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

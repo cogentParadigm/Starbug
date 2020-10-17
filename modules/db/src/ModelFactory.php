@@ -3,6 +3,7 @@ namespace Starbug\Core;
 
 use Psr\Container\ContainerInterface;
 use Exception;
+use Starbug\ResourceLocator\ResourceLocatorInterface;
 
 class ModelFactory implements ModelFactoryInterface {
   protected $locator;
@@ -19,7 +20,7 @@ class ModelFactory implements ModelFactoryInterface {
   }
   public function get($model) {
     $className = $this->locator->className($model);
-    if (false === $className) {
+    if (false == $className) {
       $className = "Starbug\\Core\\".str_replace(" ", "", ucwords(str_replace("_", " ", $model)))."Model";
     }
     $object = $this->container->get($className);
