@@ -6,25 +6,15 @@ use Starbug\Http\ResponseInterface;
 class LayoutDisplay extends ItemDisplay {
   public $type = "layout";
   public $template = "layout.html";
-
   public $cells = [];
-
   public $lastCell = false;
 
-  public function __construct(TemplateInterface $output, ResponseInterface $response, ModelFactoryInterface $models, CollectionFactoryInterface $collections, HookFactoryInterface $hook_builder, InputFilterInterface $filter) {
-    $this->output = $output;
-    $this->models = $models;
-    $this->collections = $collections;
-    $this->response = $response;
-    $this->hook_builder = $hook_builder;
-    $this->filter = $filter;
-  }
   /**
    * Allows you to filter the options for each column.
    * This is useful for adding defaults after the columns are set
    * or converting common parameters that have been specified to display specific parameters
    */
-  public function filter($field, $options, $column) {
+  public function filter($field, $options) {
     foreach ($options as $k => $v) {
       if ($k !== 'attributes') {
         $this->cells[$k] = Renderable::create($v);

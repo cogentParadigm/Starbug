@@ -12,12 +12,13 @@ return [
   'environment' => 'development',
   'website_url' => '/',
   'default_path' => 'home',
-  'time_zone' => 'America/Vancouver',
+  'time_zone' => 'UTC',
   'hmac_key' => '',
   'routes' => [
     "api/{controller}/{action}" => ["controller" => "Starbug\\Core\\ApiRoutingController", "action" => "response"],
     "profile" => ["controller" => "profile"],
     "robots" => ["template" => "txt.txt"],
+    "admin" => RoutesHelper::adminRoute("Starbug\Core\AdminController"),
     "admin/settings" => RoutesHelper::adminRoute("Starbug\Core\AdminSettingsController"),
     "admin/imports/run/{id:[0-9]+}" =>
       RoutesHelper::adminRoute("Starbug\Core\AdminImportsController", ["action" => "run"]),
@@ -67,7 +68,9 @@ return [
   'Starbug\Core\Routing\*Interface' => DI\autowire('Starbug\Core\Routing\*'),
   'Starbug\Core\ImagesInterface' => DI\autowire('Starbug\Core\Images')
     ->constructorParameter('base_directory', DI\get('base_directory')),
-  'Starbug\Core\ImportsForm' => DI\autowire()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
+  'Starbug\Core\ImportsForm' => DI\autowire()
+    ->method('setFilesystems', DI\get('League\Flysystem\MountManager'))
+    ->method('setModels', DI\get('Starbug\Core\ModelFactoryInterface')),
   'Starbug\Core\ImportsFieldsForm' => DI\autowire()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
   'db.schema.migrations' => [
     DI\get('Starbug\Core\Migration')

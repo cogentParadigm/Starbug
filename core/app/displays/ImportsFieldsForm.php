@@ -11,10 +11,13 @@ class ImportsFieldsForm extends FormDisplay {
   public function setFilesystems(MountManager $filesystems) {
     $this->filesystems = $filesystems;
   }
+  public function setModels(ModelFactoryInterface $models) {
+    $this->models = $models;
+  }
   public function buildDisplay($options) {
     $data = $this->request->getPost();
     if ($this->success("create") && empty($data['imports_fields']['id'])) {
-      $this->request->setPost('imports_fields', 'id', $this->models->get($this->model)->insert_id);
+      $this->request->setPost('imports_fields', 'id', $this->db->getInsertId($this->model));
     }
     $this->parseSource($options['source']);
     $this->add(["source", "input_type" => "select", "options" => $this->source_values]);

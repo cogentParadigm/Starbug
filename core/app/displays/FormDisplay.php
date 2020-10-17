@@ -20,16 +20,17 @@ class FormDisplay extends ItemDisplay {
   public $actions;
   protected $vars = [];
   public $horizontal = false;
+  protected $hook_builder;
+  protected $displays;
+  protected $request;
+  protected $db;
 
-  public function __construct(TemplateInterface $output, ResponseInterface $response, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, DatabaseInterface $db, ModelFactoryInterface $models, CollectionFactoryInterface $collections) {
-    $this->output = $output;
-    $this->response = $response;
+  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, DatabaseInterface $db) {
+    parent::__construct($output, $collections);
     $this->hook_builder = $hooks;
     $this->displays = $displays;
     $this->request = $request;
     $this->db = $db;
-    $this->models = $models;
-    $this->collections = $collections;
   }
 
   public function build($options = []) {
@@ -37,10 +38,6 @@ class FormDisplay extends ItemDisplay {
     if (empty($this->model) && !empty($this->options['model'])) $this->model = $this->options['model'];
     if (!empty($options["input_name"])) $this->input_name = $options["input_name"];
     if (false === $this->input_name) $this->input_name = [$this->model];
-    // grab schema
-    if (!empty($this->model) && $this->models->has($this->model)) {
-      $this->schema = $this->models->get($this->model)->hooks;
-    }
 
     // create layout display
     $this->layout = $this->displays->get("LayoutDisplay");
@@ -66,37 +63,9 @@ class FormDisplay extends ItemDisplay {
   /**
    * Filter columns to set the input type and some other defaults.
    */
-  public function filter($field, $options, $column) {
-    if (empty($options['input_type'])) {
-      if ($column["type"] == "text") $options["input_type"] = "textarea";
-      elseif ($column['type'] == "password") $options['input_type'] = "password";
-      elseif ($column['type'] == "bool") $options['input_type'] = "checkbox";
-      elseif ($column['type'] == "category") $options['input_type'] = "category_select";
-      elseif ($column['type'] == "tags") $options['input_type'] = "tag_input";
-      elseif (isset($column['upload'])) $options['input_type'] = "file_select";
-      elseif ($column['type'] == "terms") $options['input_type'] = "multiple_category_select";
-      elseif ($this->models->has($column['type'])) $options['input_type'] = "multiple_select";
-      elseif (isset($column['references'])) $options['input_type'] = "select";
-      else $options['input_type'] = "text";
-    }
-    if ($options['input_type'] == "password") $options['class'] .= ((empty($options['class'])) ? "" : " ")."text";
-    elseif ($column['type'] == "bool" && $options["input_type"] == "checkbox") $options['value'] = 1;
-    elseif ($options['input_type'] == "datetime") $options['data-dojo-type'] = "starbug/form/DateTextBox";
-    elseif ($options['input_type'] == "crud") {
-      if (empty($options['table'])) $options['table'] = (empty($column['table'])) ? $options['model']."_".$field : $column['table'];
-    } elseif ($options['input_type'] == "category_select") {
-      if (empty($options['taxonomy'])) $options['taxonomy'] = (empty($column['taxonomy'])) ? $options['model']."_".$field : $column['taxonomy'];
-    }
-    if (!isset($options['required'])) {
-      $default = isset($column['default']);
-      $optional = isset($column['optional']);
-      $nullable = isset($column['null']);
-      $not_optional_update = (!isset($column['optional_update']) || empty($this->options["id"]));
-      if (!$default && !$optional && !$nullable && $not_optional_update) {
-          $options['required'] = true;
-      } else {
-        $options['required'] = false;
-      }
+  public function filter($field, $options) {
+    if (empty($options["input_type"])) {
+      $options["input_type"] = "text";
     }
     return $options;
   }
@@ -137,10 +106,9 @@ class FormDisplay extends ItemDisplay {
       if ($this->success($this->defaultAction)) $this->attributes['class'][] = "submitted";
       elseif ($this->failure($this->defaultAction)) $this->attributes['class'][] = "errors";
     }
-    // grab errors and update schema
+    // grab errors
     $this->errors = [];
     foreach ($this->fields as $name => $field) {
-      $this->schema[$name] = $this->models->get($field['model'])->columnInfo($name);
       $error_key = implode(".", $this->input_name);
       $error_key .= ".".str_replace(["][", "[", "]"], [".", ".", ""], $name);
       $errors = $this->db->errors($error_key, true);
@@ -154,24 +122,29 @@ class FormDisplay extends ItemDisplay {
 
   public function errors($key = "", $values = false, $model = "") {
     if (empty($model)) $model = $this->model;
-    return $this->models->get($model)->errors($key, $values);
+    $key = (empty($key)) ? $model : $model.".".$key;
+    return $this->db->errors($key, $values);
   }
 
   public function error($error, $field = "global", $model = "") {
     if (empty($model)) $model = $this->model;
-    $this->models->get($model)->error($error, $field);
+    $this->db->error($error, $field, $model);
   }
 
-  public function success($action) {
-    $args = func_get_args();
-    if (count($args) == 1) $args = [$this->model, $args[0]];
-    return $this->models->get($args[0])->success($args[1]);
+  public function success($model, $action = false) {
+    if (false === $action) {
+      $action = $model;
+      $model = $this->model;
+    }
+    return $this->db->success($model, $action);
   }
 
-  public function failure($action) {
-    $args = func_get_args();
-    if (count($args) == 1) $args = [$this->model, $args[0]];
-    return $this->models->get($args[0])->failure($args[1]);
+  public function failure($model, $action = false) {
+    if (false === $action) {
+      $action = $model;
+      $model = $this->model;
+    }
+    return $this->db->failure($model, $action);
   }
 
   public function hasPost() {

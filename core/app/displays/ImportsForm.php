@@ -47,7 +47,7 @@ class ImportsForm extends FormDisplay {
   }
   protected function preparePaginatedOutput($id) {
     $rows = [];
-    $file = $this->models->get("files")->query()->condition("id", $id)->one();
+    $file = $this->db->query("files")->condition("id", $id)->one();
     $count = 0;
     if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file["id"]."_".$file["filename"]))) {
       while (!feof($handle)) {

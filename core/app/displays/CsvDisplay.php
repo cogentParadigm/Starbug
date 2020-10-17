@@ -3,6 +3,11 @@ namespace Starbug\Core;
 
 class CsvDisplay extends ItemDisplay {
   public $template = "csv";
+  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, ModelFactoryInterface $models) {
+    $this->output = $output;
+    $this->collections = $collections;
+    $this->models = $models;
+  }
   public function buildDisplay($options) {
     $this->model = $options['model'];
     $this->action = $options['action'];

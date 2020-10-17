@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Http\ResponseInterface;
+
 class GridDisplay extends ItemDisplay {
   public $type = "grid";
   public $template = "grid.html";
@@ -10,6 +12,12 @@ class GridDisplay extends ItemDisplay {
   public $fields = [
     "row_options" => ["field" => "id", "label" => "Options", "class" => "field-options", "plugin" => "starbug.grid.columns.options"]
   ];
+
+  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, ResponseInterface $response) {
+    $this->output = $output;
+    $this->collections = $collections;
+    $this->response = $response;
+  }
 
   public function build($options = []) {
     // set defaults
@@ -23,11 +31,6 @@ class GridDisplay extends ItemDisplay {
     $this->dnd = true;
     $this->grid_class = "starbug/grid/DnDGrid";
     $this->fields = array_merge(['dnd' => ["field" => "id", "label" => "-", "class" => "field-drag",  "plugin" => "starbug.grid.columns.handle", "sortable" => false]], $this->fields);
-  }
-
-  public function filter($field, $options, $column) {
-    // Override this method to filter columns.
-    return $options;
   }
 
   public function columnAttributes($field, $options) {

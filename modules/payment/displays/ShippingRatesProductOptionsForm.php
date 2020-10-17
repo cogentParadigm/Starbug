@@ -8,7 +8,7 @@ class ShippingRatesProductOptionsForm extends FormDisplay {
   public $model = "shipping_rates_product_options";
   public $cancel_url = "admin/shipping_rates_product_options";
   public function buildDisplay($options) {
-    if ($this->success("create") && !$this->request->hasPost($this->model, "id")) $this->request->setPost($this->model, "id", $this->models->get($this->model)->insert_id);
+    if ($this->success("create") && !$this->request->hasPost($this->model, "id")) $this->request->setPost($this->model, "id", $this->db->getInsertId($this->model));
     $tree = $this->getOptionsTree();
     $this->add(["product_options_id", "label" => "Product Option", "input_type" => "select", "div" => "col-sm-4"] + $tree);
     $this->add([

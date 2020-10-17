@@ -8,7 +8,7 @@ class ShippingRatesForm extends FormDisplay {
   public $model = "shipping_rates";
   public $cancel_url = "admin/shipping_rates";
   public function buildDisplay($options) {
-    if ($this->success("create") && !$this->request->hasPost($this->model, "id")) $this->request->setPost($this->model, "id", $this->models->get($this->model)->insert_id);
+    if ($this->success("create") && !$this->request->hasPost($this->model, "id")) $this->request->setPost($this->model, "id", $this->db->getInsertId($this->model));
     $this->layout->add(["row", "left" => "div.col-sm-8", "right" => "div.col-sm-4"]);
     // $this->add(["additive", "info" => "Check to make this an add-on rather than the base rate.", "pane" => "left"]);
     $this->add(["name", "pane" => "left"]);

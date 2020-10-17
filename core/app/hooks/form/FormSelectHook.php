@@ -50,11 +50,7 @@ class FormSelectHook extends FormHook {
       unset($field['options']);
       unset($field['values']);
     } else {
-      $info = $form->schema[$field['name']];
-      if (!empty($info['references'])) {
-        if (empty($field['from'])) $field['from'] = reset(explode(" ", $info['references']));
-        if (empty($field['query'])) $field['query'] = "Select";
-      }
+      if (!empty($field["from"]) && empty($field["query"])) $field["query"] = "Select";
       if (!empty($field['query']) && !empty($field['from'])) {
         $mode = "display";
       }
