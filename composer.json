@@ -1,45 +1,48 @@
 {
-	"config": {
-		"platform": {
-			"php": "7.1"
-		}
-	},
-	"require": {
-		"starbug/bundle": "^1.0",
-		"starbug/http": "*",
-		"php-di/php-di": "^6.0",
-		"phpmailer/phpmailer": "dev-master",
-		"masterexploder/phpthumb": "dev-master",
-		"ezyang/htmlpurifier":"dev-master",
-		"psr/log": "^1.0",
-		"monolog/monolog": "^1.17",
-		"php-console/php-console": "^3.1",
-		"wp-cli/php-cli-tools": "^0.10.5",
-		"doctrine/dbal": "^2.8",
-		"league/flysystem": "^1.0",
-		"twig/twig": "~2.0",
-		"litipk/flysystem-fallback-adapter": "^0.1.2",
-		"twistor/flysystem-http": "^0.2.0",
-		"nikic/fast-route": "^1.3"
-	},
-	"require-dev": {
-		"starbug/devel": "*"
-	},
-	"autoload": {
-		"classmap":["core", "app", "modules", "var", "features"]
-	},
-	"scripts": {
-		"pre-install-cmd": "mkdir -p var",
-		"post-install-cmd": "php sb generate host",
-		"migrate": [
-			"php sb migrate",
-			"@composer dump-autoload"
-		],
-		"phploc": "vendor/bin/phploc --count-tests app core modules",
-		"phpcs": "vendor/bin/phpcs --extensions=php --standard=vendor/starbug/standard/phpcs.xml --ignore=views,templates,layouts core app modules || true",
-		"phpmd": "vendor/bin/phpmd . text vendor/starbug/standard/phpmd.xml --exclude libraries,var,node_modules,vendor || true",
-		"phpcpd": "vendor/bin/phpcpd app core modules || true",
-		"phpunit": "vendor/bin/phpunit -c etc/phpunit.xml || true",
-		"behat": "vendor/bin/behat"
-	}
+  "name": "starbug/starbug",
+  "type": "project",
+  "description": "Starbug Framework",
+  "config": {
+    "platform": {
+      "php": "7.1"
+    }
+  },
+  "require": {
+    "starbug/bundle": "^1.0",
+    "starbug/http": "*",
+    "php-di/php-di": "^6.0",
+    "phpmailer/phpmailer": "dev-master",
+    "masterexploder/phpthumb": "dev-master",
+    "ezyang/htmlpurifier":"dev-master",
+    "psr/log": "^1.0",
+    "monolog/monolog": "^1.17",
+    "php-console/php-console": "^3.1",
+    "wp-cli/php-cli-tools": "^0.10.5",
+    "doctrine/dbal": "^2.8",
+    "league/flysystem": "^1.0",
+    "twig/twig": "~2.0",
+    "litipk/flysystem-fallback-adapter": "^0.1.2",
+    "twistor/flysystem-http": "^0.2.0",
+    "nikic/fast-route": "^1.3"
+  },
+  "require-dev": {
+    "starbug/devel": "*"
+  },
+  "autoload": {
+    "classmap":["core", "app", "modules", "var", "features"]
+  },
+  "scripts": {
+    "pre-install-cmd": "mkdir -p var",
+    "post-install-cmd": "php sb generate host",
+    "migrate": [
+      "php sb migrate",
+      "@composer dump-autoload"
+    ],
+    "phploc": "vendor/bin/phploc --count-tests app core modules",
+    "phpcs": "vendor/bin/phpcs --extensions=php --standard=vendor/starbug/standard/phpcs.xml --ignore=views,templates,layouts core app modules || true",
+    "phpmd": "vendor/bin/phpmd . text vendor/starbug/standard/phpmd.xml --exclude libraries,var,node_modules,vendor || true",
+    "phpcpd": "vendor/bin/phpcpd app core modules || true",
+    "phpunit": "vendor/bin/phpunit -c etc/phpunit.xml || true",
+    "behat": "vendor/bin/behat"
+  }
 }
