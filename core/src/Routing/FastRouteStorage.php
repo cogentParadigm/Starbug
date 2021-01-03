@@ -2,7 +2,8 @@
 namespace Starbug\Core\Routing;
 
 use FastRoute\Dispatcher;
-use Starbug\Http\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Http\UriBuilderInterface;
 
 class FastRouteStorage implements RouteStorageInterface {
   /**
@@ -12,12 +13,14 @@ class FastRouteStorage implements RouteStorageInterface {
    */
   protected $dispatcher;
   protected $routes = [];
-  public function __construct(Dispatcher $dispatcher, AccessInterface $access) {
+  public function __construct(Dispatcher $dispatcher, AccessInterface $access, UriBuilderInterface $uri) {
     $this->dispatcher = $dispatcher;
     $this->access = $access;
+    $this->uri = $uri;
   }
-  public function getRoute(RequestInterface $request) {
-    $routeInfo = $this->dispatcher->dispatch("GET", "/" . $request->getPath());
+  public function getRoute(ServerRequestInterface $request) {
+    $path = $this->uri->relativize($request->getUri())->getPath();
+    $routeInfo = $this->dispatcher->dispatch("GET", "/" . $path);
     if ($routeInfo[0] == Dispatcher::FOUND) {
       $route = $routeInfo[1];
       $vars = $routeInfo[2];

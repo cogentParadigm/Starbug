@@ -1,5 +1,7 @@
 {
-  "prefixes": [
-    ["devices", "../../modules/devices/public/js"]
-  ]
+  "config": {
+    "packages": [
+      {"name": "devices", "location": "../../modules/devices/public/js"}
+    ]
+  }
 }

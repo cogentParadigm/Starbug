@@ -1,16 +1,18 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Http\ResponseInterface;
+use GuzzleHttp\Psr7\Response;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Starbug\Http\ResponseBuilderInterface;
 
 /**
  * Error handler.
  */
 class ErrorHandler {
 
-  protected $out;
+  protected $output;
   protected $exceptionTemplate = "exception.txt";
   protected $logger;
   protected $map = [
@@ -33,10 +35,9 @@ class ErrorHandler {
   protected $fatalErrors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
   protected $contentOnly = true;
 
-  public function __construct(ResponseInterface $response, TemplateInterface $output, LoggerInterface $logger) {
-    $this->response = $response;
-    $this->output = $output;
+  public function __construct(LoggerInterface $logger, TemplateInterface $output) {
     $this->logger = $logger;
+    $this->output = $output;
   }
 
   public function setTemplate($template) {
@@ -71,16 +72,8 @@ class ErrorHandler {
     $error['traces'] = $exception->getTrace();
 
     $this->logger->error(sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($exception), $error['message'], $error['file'], $error['line']), ['exception' => $exception]);
-    $this->response->setCode(500);
-    $this->response->setTemplate("txt.txt");
-    $this->response->setHeader("Cache-Control", "no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");
-    $this->response->setContent($this->output->capture($this->exceptionTemplate, ["error" => $error, "handler" => $this]));
-    if ($this->contentOnly) {
-      $this->response->sendContent();
-    } else {
-      $this->response->send();
-    }
-    exit();
+
+    $this->handleOutput($error);
   }
 
   /**
@@ -113,14 +106,22 @@ class ErrorHandler {
       $level = isset($this->map[$errno]) ? $this->map[$errno] : LogLevel::CRITICAL;
       $this->logger->log($level, $error['message'], $error);
     }
-    $this->response->setCode(500);
-    $this->response->setTemplate("txt.txt");
-    $this->response->setHeader("Cache-Control", "no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0");
-    $this->response->setContent($this->output->capture($this->exceptionTemplate, ["error" => $error, "handler" => $this]));
+
+    $this->handleOutput($error);
+  }
+
+  protected function handleOutput($error) {
+    $message = $this->output->capture($this->exceptionTemplate, ["error" => $error, "handler" => $this]);
     if ($this->contentOnly) {
-      $this->response->sendContent();
+      echo $message;
     } else {
-      $this->response->send();
+      $headers = [
+        "Cache-Control" => "no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0"
+      ];
+      $body = $this->output->capture("txt.txt", ["content" => $message]);
+      $response = new Response(500, $headers, $body);
+      $emitter = new SapiEmitter();
+      $emitter->emit($response);
     }
     exit();
   }

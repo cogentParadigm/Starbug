@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Emails;
 
+use Exception;
 use Starbug\Core\FormDisplay;
 
 class EmailTemplatesForm extends FormDisplay {
@@ -13,8 +14,8 @@ class EmailTemplatesForm extends FormDisplay {
     $this->add(["subject", "pane" => "left"]);
     $this->add(["from", "pane" => "left"]);
     $this->add(["from_name", "pane" => "left"]);
-    $this->add(["cc", "pane" => "right", "style" => "height:108px"]);
-    $this->add(["bcc", "pane" => "right", "style" => "height:108px"]);
-    $this->add(["body", "pane" => "body"]);
+    $this->add(["cc", "input_type" => "textarea", "pane" => "right", "style" => "height:108px"]);
+    $this->add(["bcc", "input_type" => "textarea", "pane" => "right", "style" => "height:108px"]);
+    $this->add(["body", "input_type" => "textarea", "pane" => "body"]);
   }
 }

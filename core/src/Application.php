@@ -1,8 +1,7 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Http\RequestInterface;
-use Starbug\Http\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Routing\RouterInterface;
 
 class Application implements ApplicationInterface {
@@ -12,7 +11,6 @@ class Application implements ApplicationInterface {
   protected $router;
   protected $request;
   protected $output;
-  protected $response;
   protected $config;
   protected $session;
 
@@ -26,7 +24,6 @@ class Application implements ApplicationInterface {
    * @param RouterInterface $router Router translates paths to controllers.
    * @param SessionHandlerInterface $session Session for authenticated users.
    * @param TemplateInterface $output The output rendering interface.
-   * @param ResponseInterface $response Response which will be prepared and returned.
    * @param InputFilterInterface $filter Utility for input sanitization.
    */
   public function __construct(
@@ -35,7 +32,6 @@ class Application implements ApplicationInterface {
     RouterInterface $router,
     SessionHandlerInterface $session,
     TemplateInterface $output,
-    ResponseInterface $response,
     InputFilterInterface $filter
   ) {
     $this->controllers = $controllers;
@@ -43,27 +39,22 @@ class Application implements ApplicationInterface {
     $this->router = $router;
     $this->session = $session;
     $this->output = $output;
-    $this->response = $response;
     $this->filter = $filter;
   }
 
-  public function handle(RequestInterface $request) {
+  public function handle(ServerRequestInterface $request) {
     $this->session->startSession();
-    $permitted = $this->checkPost($request->getPost(), $request->getCookies());
+    $permitted = $this->checkPost($request->getParsedBody(), $request->getCookieParams());
     $this->output->assign("request", $request);
-    $this->output->assign("response", $this->response);
     $route = $this->router->route($request);
-    foreach ($route as $k => $v) {
-      if (!empty($v)) $this->response->{$k} = $v;
-    }
     $this->logger->addInfo("Loading ".$route['controller'].' -> '.$route['action']);
     $controller = $this->controllers->get($route['controller']);
-
-    $controller->start($this->output, $request, $this->response);
-    if ($permitted) $controller->action($route['action'], $route['arguments']);
-    else $controller->forbidden();
-    $this->response = $controller->finish();
-    return $this->response;
+    if (!$permitted) {
+      $response = $controller->handle($request, ["action" => "forbidden"]);
+    } else {
+      $response = $controller->handle($request, $route);
+    }
+    return $response;
   }
   /**
    * Run a model action if permitted.

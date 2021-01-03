@@ -15,12 +15,12 @@ class AdminProductTypesController extends Controller {
     $this->render("admin/list.html");
   }
   public function create() {
-    if ($this->db->success("product_types", "create")) $this->redirect("admin/product_types");
+    if ($this->db->success("product_types", "create")) $this->response->redirect("admin/product_types");
     else $this->render("admin/create.html");
   }
   public function update($id) {
     $this->assign("id", $id);
-    if ($this->db->success("product_types", "create")) $this->redirect("admin/product_types");
+    if ($this->db->success("product_types", "create")) $this->response->redirect("admin/product_types");
     else $this->render("admin/product_types/update.html");
   }
 }

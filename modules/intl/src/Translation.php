@@ -1,16 +1,20 @@
 <?php
 namespace Starbug\Intl;
 
-use Starbug\Http\RequestInterface;
+use Starbug\Core\DatabaseInterface;
 
 class Translation {
-  public function __construct(RequestInterface $request, DatabaseInterface $db) {
-    $this->request = $request;
+  // @var DatabaseInterface
+  protected $db;
+  // @var string
+  protected $language;
+  public function __construct(DatabaseInterface $db, $language = "en") {
     $this->db = $db;
+    $this->language = $language;
   }
   public function get($name, $target_language = "") {
     static $strings;
-    if (empty($target_language)) $target_language = $this->request->getLanguage();
+    if (empty($target_language)) $target_language = $this->language;
     if (!isset($strings[$target_language])) $strings[$target_language] = [];
     elseif (isset($strings[$target_language][$name])) return $strings[$target_language][$name];
 

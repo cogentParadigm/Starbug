@@ -17,8 +17,8 @@ class ProductsForm extends FormDisplay {
     $this->add(["type", "input_type" => "select", "from" => "product_types", "optional" => "", "pane" => "left", "data-submit" => "change"]);
     $this->add(["sku", "label" => "SKU", "pane" => "left"]);
     $this->add(["name", "pane" => "left"]);
-    $this->add(["description", "pane" => "bottom"]);
-    $this->add(["content", "pane" => "bottom"]);
+    $this->add(["description", "input_type" => "textarea", "pane" => "bottom"]);
+    $this->add(["content", "input_type" => "textarea", "pane" => "bottom"]);
     $this->add(["thumbnail", "input_type" => "text", "pane" => "bottom", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "browseEnabled: true"]);
     $this->add(["photos", "input_type" => "text", "pane" => "bottom", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "selectionParams: {size: 0}, browseEnabled: true"]);
 
@@ -60,7 +60,7 @@ class ProductsForm extends FormDisplay {
     ]);
 
     $this->add(["position", "pane" => "right"]);
-    $this->add(["categories", "pane" => "right"]);
+    $this->add(["categories", "input_type" => "multiple_category_select", "pane" => "right"]);
     $this->add(["path", "label" => "URL path", "info" => "Leave empty to generate automatically", "pane" => "path"]);
     $this->add(["meta_description", "label" => "Meta Description", "input_type" => "textarea", "class" => "plain", "style" => "width:100%", "data-dojo-type" => "dijit/form/Textarea", "pane" => "meta"]);
     $this->add(["meta_keywords", "label" => "Meta Keywords", "input_type" => "textarea", "class" => "plain", "style" => "width:100%", "data-dojo-type" => "dijit/form/Textarea", "pane" => "meta"]);

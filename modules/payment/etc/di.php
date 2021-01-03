@@ -20,7 +20,7 @@ return [
       "admin/payment_gateways/settings/{id:[0-9]+}" =>
         RoutesHelper::adminRoute("Starbug\Payment\AdminPaymentGatewaysController", ["action" => "settings"])
     ]
-    + RoutesHelper::crudRoutes("admin/orders", "Starbug\Payment\AdminOrdersController"),
+    + RoutesHelper::crudRoutes("admin/orders", "Starbug\Payment\AdminOrdersController")
     + RoutesHelper::crudiRoutes("admin/payment_gateways", "Starbug\Payment\AdminPaymentGatewaysController")
     + RoutesHelper::crudiRoutes("admin/payment_gateway_settings", "Starbug\Payment\AdminPaymentGatewaySettingsController")
     + RoutesHelper::crudRoutes("admin/product_options", "Starbug\Payment\AdminProductOptionsController")
@@ -34,13 +34,13 @@ return [
     DI\get('Starbug\Payment\Migration')
   ]),
   'cart_token' => function (ContainerInterface $c) {
-    $request = $c->get("Starbug\Http\RequestInterface");
-    $url = $c->get("Starbug\Http\UrlInterface");
-    $cid = $request->getCookie("cid");
+    $request = $c->get("Psr\Http\Message\ServerRequestInterface");
+    $uri = $c->get("Starbug\Http\UriBuilderInterface");
+    $cid = $request->getCookieParams()["cid"];
     if (!$cid) {
       $cid = md5(uniqid(mt_rand(), true));
-      setcookie("cid", $cid, 0, $url->build(""), null, false, false);
-      $request->setCookie("cid", $cid);
+      setcookie("cid", $cid, 0, $uri->build(""), null, false, false);
+      //$request->setCookie("cid", $cid);
     }
     return ["token" => $cid];
   },
@@ -49,11 +49,11 @@ return [
   'payment.cart.hooks' => [],
   'Starbug\Payment\*Interface' => DI\autowire('Starbug\Payment\*'),
   'Starbug\Payment\Cart' => DI\autowire()->constructorParameter('conditions', DI\get('cart_token'))->method("addHooks", DI\get('payment.cart.hooks')),
-  'Starbug\Payment\PriceFormatter' => DI\autowire()
+  'Starbug\Payment\PriceFormatterInterface' => DI\autowire("Starbug\Payment\PriceFormatter")
     ->constructorParameter('locale', DI\get('currency_locale'))
     ->constructorParameter('minorUnit', DI\get('currency_minor_unit')),
-  'Starbug\Payment\Gateway' => DI\autowire()->constructorParameter("gateway", DI\get('Omnipay\AuthorizeNet\AIMGateway')),
-  'Starbug\Payment\TokenGateway' => DI\autowire()->constructorParameter("gateway", DI\get('Omnipay\AuthorizeNet\CIMGateway')),
+  'Starbug\Payment\GatewayInterface' => DI\autowire("Starbug\Payment\Gateway")->constructorParameter("gateway", DI\get('Omnipay\AuthorizeNet\AIMGateway')),
+  'Starbug\Payment\TokenGatewayInterface' => DI\autowire("Starbug\Payment\TokenGateway")->constructorParameter("gateway", DI\get('Omnipay\AuthorizeNet\CIMGateway')),
   'Omnipay\AuthorizeNet\AIMGateway' => function (ContainerInterface $c) {
     $settings = $c->get("Starbug\Payment\PaymentSettingsInterface");
     $gateway = new Omnipay\AuthorizeNet\AIMGateway();

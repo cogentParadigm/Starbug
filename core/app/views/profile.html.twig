@@ -8,5 +8,5 @@
   {% if helper("db").success("users", "updateProfile") %}
     <div class="alert alert-success">You profile has been updated successfully.</div>
   {% endif %}
-  {{ helper("displays").render("ProfileForm", request.getParameters()|merge({"operation": action ?? "updateProfile", "id": id})) }}
+  {{ helper("displays").render("ProfileForm", request.getQueryParams()|merge({"operation": action ?? "updateProfile", "id": id})) }}
 {% endblock %}

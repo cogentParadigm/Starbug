@@ -16,5 +16,5 @@
   {% if form_header is empty and model is not empty %}
     {% set form_header = "New " ~ helper("models").get(model).singular_label %}
   {% endif %}
-  <div id="{{ model }}_dialog" data-dojo-type="sb/modal/Form" data-dojo-id="{{ model }}_form" data-dojo-props="url:'{{ request.getPath() }}/', title:'{{ form_header }}', callback:function(){ {{ model }}_grid.refresh()}"></div>
+  <div id="{{ model }}_dialog" data-dojo-type="sb/modal/Form" data-dojo-id="{{ model }}_form" data-dojo-props="url:'{{ request.getUri().getPath() }}/', title:'{{ form_header }}', callback:function(){ {{ model }}_grid.refresh()}"></div>
 {% endif %}

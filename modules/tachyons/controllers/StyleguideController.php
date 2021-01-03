@@ -2,6 +2,7 @@
 namespace Starbug\Tachyons;
 
 use Starbug\Core\Controller;
+use Starbug\Js\DojoConfiguration;
 
 class StyleguideController extends Controller {
   protected $colors = [
@@ -66,8 +67,11 @@ class StyleguideController extends Controller {
       "rgba(255,255,255,.1)" => "white-10"
     ]
   ];
+  public function __construct(DojoConfiguration $dojo) {
+    $this->dojo = $dojo;
+  }
   public function defaultAction() {
-    $this->redirect($this->request->getPath()."/colors");
+    $this->response->redirect($this->request->getUri()->getPath()."/colors");
   }
   public function colors() {
     $this->render("styleguide/template.html", ["page" => "colors", "sections" => $this->colors]);
@@ -85,8 +89,8 @@ class StyleguideController extends Controller {
     $this->render("styleguide/template.html", ["page" => "controls"]);
   }
   public function dgrid() {
-    $this->response->js("starbug/grid/PagedGrid");
-    $this->response->js("starbug/grid/columns/options");
+    $this->dojo->addDependency("starbug/grid/PagedGrid");
+    $this->dojo->addDependency("starbug/grid/columns/options");
     $this->render("styleguide/template.html", ["page" => "dgrid"]);
   }
 }

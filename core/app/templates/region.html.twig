@@ -1,4 +1,3 @@
-{% set route = response.path %}
 <div id="{{ region }}" class="region">
-  {{ include([route ~ "-" ~ region ~ ".html.twig", region ~ ".html.twig"]) }}
+  {{ include([route.path ~ "-" ~ region ~ ".html.twig", region ~ ".html.twig"]) }}
 </div>

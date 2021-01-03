@@ -16,7 +16,7 @@ class CheckoutForm extends FormDisplay {
       "input_type" => "html",
       "value" => '<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Shipping Address</h3></div><div class="panel-body">'
     ]);
-    $this->add(["shipping_address", "pane" => "left", "input_type" => "text", "nolabel" => "", "data-dojo-type" => "sb/form/AddressSelect", "data-dojo-props" => "dialogParams:{formData:{'address[order_token]':'".$this->request->getCookie("cid")."'}}"]);
+    $this->add(["shipping_address", "pane" => "left", "input_type" => "text", "nolabel" => "", "data-dojo-type" => "sb/form/AddressSelect", "data-dojo-props" => "dialogParams:{formData:{'address[order_token]':'".$this->request->getCookieParams()["cid"]."'}}"]);
     $this->add([
       "shipping_panel_bottom",
       "pane" => "left",
@@ -47,7 +47,7 @@ class CheckoutForm extends FormDisplay {
       "nolabel" => "",
       "data-dojo-type" => "sb/form/AddressSelect",
       "data-dojo-mixins" => "starbug/form/Dependent",
-      "data-dojo-props" => "key:'billing_same',values:[0],dialogParams:{formData:{'address[order_token]':'".$this->request->getCookie("cid")."'}}"
+      "data-dojo-props" => "key:'billing_same',values:[0],dialogParams:{formData:{'address[order_token]':'".$this->request->getCookieParams()["cid"]."'}}"
     ]);
     $this->add([
       "billing_panel_bottom",

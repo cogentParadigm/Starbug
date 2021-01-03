@@ -1,10 +1,10 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Http\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class RequestHelper {
-  public function __construct(RequestInterface $request) {
+  public function __construct(ServerRequestInterface $request) {
     $this->target = $request;
   }
   public function helper() {

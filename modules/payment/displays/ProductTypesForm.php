@@ -9,7 +9,7 @@ class ProductTypesForm extends FormDisplay {
   public function buildDisplay($options) {
     $this->add("name");
     $this->add("slug");
-    $this->add("description");
-    $this->add("content");
+    $this->add(["description", "input_type" => "textarea"]);
+    $this->add(["content", "input_type" => "textarea"]);
   }
 }

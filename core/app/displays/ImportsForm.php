@@ -56,7 +56,8 @@ class ImportsForm extends FormDisplay {
     }
     $count--;
     $size = 20;
-    $pager = new Pager($count, $size, intval($this->request->getParameter('pg')));
+    $vars = $this->request->getQueryParams();
+    $pager = new Pager($count, $size, intval($vars['pg']));
     $line = 0;
     rewind($handle);
     $rows[] = fgetcsv($handle);
@@ -67,10 +68,8 @@ class ImportsForm extends FormDisplay {
       $rows[] = $row;
     }
     fclose($handle);
-    $vars = $this->request->getParameters();
     unset($vars['pg']);
-    $prefix = $this->request->getUrl()->getDirectory();
-    $prefix .= $this->request->getPath()."?";
+    $prefix = "?";
     if (!empty($vars)) $prefix .= http_build_query($vars).'&';
     $prefix .= "pg=";
     $half = floor($pager->range/2);

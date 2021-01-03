@@ -15,7 +15,7 @@ class AdminUsersController extends Controller {
     $this->render("admin/list.html");
   }
   public function create() {
-    if ($this->db->success("users", "create")) $this->redirect("admin/users");
+    if ($this->db->success("users", "create")) $this->response->redirect("admin/users");
     else $this->render("admin/create.html");
   }
   public function update($id) {

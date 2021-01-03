@@ -15,12 +15,12 @@ class AdminPaymentGatewaysController extends Controller {
     $this->render("admin/list.html");
   }
   public function create() {
-    if ($this->db->success("payment_gateways", "create")) $this->redirect("admin/payment_gateways");
+    if ($this->db->success("payment_gateways", "create")) $this->response->redirect("admin/payment_gateways");
     else $this->render("admin/create.html");
   }
   public function update($id) {
     $this->assign("id", $id);
-    if ($this->db->success("payment_gateways", "create")) $this->redirect("admin/payment_gateways");
+    if ($this->db->success("payment_gateways", "create")) $this->response->redirect("admin/payment_gateways");
     else $this->render("admin/update.html");
   }
   public function import() {

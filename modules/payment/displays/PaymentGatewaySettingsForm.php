@@ -7,7 +7,7 @@ class PaymentGatewaySettingsForm extends FormDisplay {
   public $model = "payment_gateway_settings";
   public $cancel_url = "admin/payment_gateway_settings";
   public function buildDisplay($options) {
-    $this->add(["payment_gateway_id", "input_type" => "hidden", "default" => $this->request->getParameter("gateway")]);
+    $this->add(["payment_gateway_id", "input_type" => "hidden", "default" => $this->request->getQueryParams()["gateway"]]);
     $this->add("name");
     $this->add([
       "type",

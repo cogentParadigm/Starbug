@@ -1,26 +1,26 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Http\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class StoreUploadHook extends QueryHook {
   protected $uploaded = false;
   protected $request;
   protected $models;
   protected $files;
-  public function __construct(ModelFactoryInterface $models, RequestInterface $request) {
+  public function __construct(ModelFactoryInterface $models, ServerRequestInterface $request) {
     $this->request = $request;
     $this->models = $models;
     $this->files = $models->get("files");
   }
   public function emptyValidate($query, $column, $argument) {
-    $files = $this->request->getFiles();
+    $files = $this->request->getUploadedFiles();
     if (!empty($files[$column]["name"])) $query->set($column, $this->store($query, $column, "", $column, $argument));
   }
   public function store($query, $key, $value, $column, $argument) {
     if ($this->uploaded) return $value;
     else $this->uploaded = true;
-    $files = $this->request->getFiles();
+    $files = $this->request->getUploadedFiles();
     $record = ["filename" => "", "mime_type" => "", "caption" => "$name $field"];
     if (!empty($value) && is_numeric($value)) $records['id'] = $value;
     $file = $files[$column];

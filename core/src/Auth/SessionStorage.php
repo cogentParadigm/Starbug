@@ -1,7 +1,8 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Http\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Http\UriBuilderInterface;
 
 /**
  * Cookie based implementation of SessionStorageInterface
@@ -13,8 +14,9 @@ class SessionStorage implements SessionStorageInterface {
   private $data = [];
   private $secure = [];
 
-  public function __construct(RequestInterface $request, DatabaseInterface $db, $key) {
+  public function __construct(ServerRequestInterface $request, UriBuilderInterface $uris, DatabaseInterface $db, $key) {
     $this->request = $request;
+    $this->uris = $uris;
     $this->db = $db;
     $this->key = $key;
   }
@@ -46,7 +48,7 @@ class SessionStorage implements SessionStorageInterface {
    */
   public function load() {
     // Obtain and parse session cookie.
-    $session = $this->request->getCookie("sid");
+    ["sid" => $session] = $this->request->getCookieParams();
     if (empty($session)) return false;
     parse_str($session, $params);
     $digest = $params['d'];
@@ -106,12 +108,9 @@ class SessionStorage implements SessionStorageInterface {
     // Append digest.
     $session .= '&d='.urlencode(hash_hmac("sha256", $session, $this->key));
     // Write cookies.
-    $url = $this->request->getUrl();
     $oid = md5(uniqid(mt_rand(), true));
-    setcookie("sid", $session, $this->data['e'], $url->build(""), null, false, true);
-    setcookie("oid", $oid, $this->data['e'], $url->build(""), null, false, false);
-    $this->request->setCookie("sid", $session);
-    $this->request->SetCookie("oid", $oid);
+    setcookie("sid", $session, $this->data['e'], $this->uris->build(""), null, false, true);
+    setcookie("oid", $oid, $this->data['e'], $this->uris->build(""), null, false, false);
   }
   /**
    * {@inheritdoc}
@@ -123,7 +122,6 @@ class SessionStorage implements SessionStorageInterface {
       $this->db->query("sessions")->condition("id", $this->data["s"])->delete();
     }
     $this->data = [];
-    $url = $this->request->getUrl();
-    setcookie("sid", null, time(), $url->build(""), null, false, true);
+    setcookie("sid", null, time(), $this->uris->build(""), null, false, true);
   }
 }

@@ -25,9 +25,9 @@ class ApiFilesController extends ApiController {
   }
   public function filterRow($collection, $file) {
     if (reset(explode("/", $file['mime_type'])) == "image") {
-      $file["thumbnail"] = $this->images->thumb($file["location"]."://".$file['id']."_".$file['filename'], ["w" => 100, "h" => 100, "a" => 1]);
+      $file["thumbnail"] = (string) $this->images->thumb($file["location"]."://".$file['id']."_".$file['filename'], ["w" => 100, "h" => 100, "a" => 1]);
     }
-    $file["url"] = $this->filesystems->getFilesystem($file["location"])->getUrl($file["id"]."_".$file["filename"]);
+    $file["url"] = (string) $this->filesystems->getFilesystem($file["location"])->getUrl($file["id"]."_".$file["filename"]);
     return $file;
   }
 }

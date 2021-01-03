@@ -15,9 +15,9 @@ class ImportsFieldsForm extends FormDisplay {
     $this->models = $models;
   }
   public function buildDisplay($options) {
-    $data = $this->request->getPost();
+    $data = $this->getPost();
     if ($this->success("create") && empty($data['imports_fields']['id'])) {
-      $this->request->setPost('imports_fields', 'id', $this->db->getInsertId($this->model));
+      $this->setPost('id', $this->db->getInsertId($this->model));
     }
     $this->parseSource($options['source']);
     $this->add(["source", "input_type" => "select", "options" => $this->source_values]);

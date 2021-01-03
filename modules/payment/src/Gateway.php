@@ -8,7 +8,7 @@ use Omnipay\Common\GatewayInterface as OmnipayInterface;
 use Omnipay\Common\CreditCard;
 
 class Gateway implements GatewayInterface {
-  public function __construct(ModelFactoryInterface $models, OmnipayInterface $gateway, MailerInterface $mailer, IdentityInterface $user, PriceFormatter $priceFormatter) {
+  public function __construct(ModelFactoryInterface $models, OmnipayInterface $gateway, MailerInterface $mailer, IdentityInterface $user, PriceFormatterInterface $priceFormatter) {
     $this->models = $models;
     $this->gateway = $gateway;
     $this->mailer = $mailer;

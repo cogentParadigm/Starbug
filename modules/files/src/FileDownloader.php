@@ -1,12 +1,13 @@
 <?php
 namespace Starbug\Files;
 
+use GuzzleHttp\Psr7\Utils;
 use Starbug\Core\DatabaseInterface;
-use Starbug\Http\ResponseInterface;
+use Starbug\Http\ResponseBuilderInterface;
 use League\Flysystem\MountManager;
 
 class FileDownloader {
-  public function __construct(DatabaseInterface $db, MountManager $filesystems, ResponseInterface $response) {
+  public function __construct(DatabaseInterface $db, MountManager $filesystems, ResponseBuilderInterface $response) {
     $this->db = $db;
     $this->filesystems = $filesystems;
     $this->response = $response;
@@ -15,23 +16,12 @@ class FileDownloader {
     if (!is_array($file)) $file = $this->getFile($file);
     $filesystem = $this->filesystems->getFilesystem($file["location"]);
     $path = $file["id"]."_".$file["filename"];
-    $this->response->setContentType("application/octet-stream");
-    $this->response->setHeader("Content-Description", "File Transfer");
-    $this->response->setHeader("Content-Disposition", "attachment; filename=".str_replace(",", "", $file["filename"]));
-    $this->response->setHeader("Content-Length", $filesystem->getSize($path));
-    $this->response->setCallable(function () use (&$filesystem, $path) {
-      $stream = $filesystem->readStream($path);
-      if (is_object($stream)) {
-        while (!$stream->eof()) {
-          echo $stream->read(1024);
-        }
-      } elseif (is_resource($stream)) {
-        fpassthru($stream);
-        if (is_resource($stream)) {
-          fclose($stream);
-        }
-      }
-    });
+    $this->response
+      ->withHeader("content-type", "application/octet-stream")
+      ->withHeader("content-description", "File Transfer")
+      ->withHeader("content-disposition", "attachment; filename=".str_replace(",", "", $file["filename"]))
+      ->withHeader("content-length", $filesystem->getSize($path))
+      ->withBody(Utils::streamFor($filesystem->readStream($path)));
   }
   public function getFile($id) {
     return $this->db->get("files", $id);

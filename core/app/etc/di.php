@@ -6,16 +6,20 @@ use Monolog\Logger;
 use DI;
 use FastRoute\Dispatcher\GroupCountBased;
 use FastRoute\RouteCollector;
+use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Routing\RoutesHelper;
+use Starbug\Http\UriBuilder;
 
 return [
   'environment' => 'development',
   'website_url' => '/',
   'default_path' => 'home',
   'time_zone' => 'UTC',
+  'db' => 'default',
   'hmac_key' => '',
+  'cli' => false,
   'routes' => [
-    "api/{controller}/{action}" => ["controller" => "Starbug\\Core\\ApiRoutingController", "action" => "response"],
+    "api/{controller}/{action}.{format}" => ["controller" => "Starbug\\Core\\ApiRoutingController", "action" => "response"],
     "profile" => ["controller" => "profile"],
     "robots" => ["template" => "txt.txt"],
     "admin" => RoutesHelper::adminRoute("Starbug\Core\AdminController"),
@@ -24,6 +28,8 @@ return [
       RoutesHelper::adminRoute("Starbug\Core\AdminImportsController", ["action" => "run"]),
     "admin/taxonomies/taxonomy/{taxonomy}" =>
       RoutesHelper::adminRoute("Starbug\Core\AdminTaxonomiesController", ["action" => "taxonomy"]),
+    "admin/taxonomies/create.xhr" =>
+      RoutesHelper::adminRoute("Starbug\Core\AdminTaxonomiesController", ["action" => "create", "format" => "xhr"]),
     "admin/menus/menu/{menu}" =>
       RoutesHelper::adminRoute("Starbug\Core\AdminMenusController", ["action" => "menu"])
   ]
@@ -41,6 +47,23 @@ return [
   'Starbug\Core\SettingsInterface' => DI\autowire('Starbug\Core\DatabaseSettings'),
   'Starbug\Core\*Interface' => DI\autowire('Starbug\Core\*'),
   'Starbug\Http\*Interface' => DI\autowire('Starbug\Http\*'),
+  "Starbug\Http\UriBuilderInterface" => DI\factory(function (ServerRequestInterface $request, $siteUrl) {
+    $baseUri = $request->getUri()
+      ->withPath($siteUrl)
+      ->withQuery("")
+      ->withFragment("");
+    return new UriBuilder($baseUri);
+  })->parameter("siteUrl", DI\get("website_url")),
+  "Psr\Http\Message\UriInterface" => DI\factory(function (ContainerInterface $container, ServerRequestInterface $request) {
+    $uriBuilder = $container->make("Starbug\Http\UriBuilderInterface", ["request" => $request]);
+    $container->set("Starbug\Http\UriBuilderInterface", $uriBuilder);
+    $uri = $request->getUri();
+    $path = $uriBuilder->relativize($uri)->getPath();
+    if (empty($path)) {
+      $uri = $uriBuilder->build($uri->withPath($container->get("default_path")), true);
+    }
+    return $uri;
+  }),
   'Starbug\Core\ModelFactoryInterface' => DI\autowire('Starbug\Core\ModelFactory')->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\CssGenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\ErrorHandler' => DI\decorate(function ($previous, $container) {
@@ -53,10 +76,6 @@ return [
   }),
   'Starbug\Core\SessionStorageInterface' => DI\autowire('Starbug\Core\SessionStorage')
     ->constructorParameter('key', DI\get('hmac_key')),
-  'Starbug\Http\UrlInterface' => function (ContainerInterface $c) {
-    $request = $c->get("Starbug\Http\RequestInterface");
-    return $request->getUrl();
-  },
   "FastRoute\RouteParser" => DI\autowire("FastRoute\RouteParser\Std"),
   "FastRoute\DataGenerator" => DI\autowire("FastRoute\DataGenerator\GroupCountBased"),
   "FastRoute\Dispatcher" => function (ContainerInterface $c) {
@@ -80,7 +99,7 @@ return [
   ],
   'Starbug\Core\Database' => DI\autowire()
     ->method('setTimeZone', DI\get('time_zone'))
-    ->method('setDatabase', DI\get('database_name')),
+    ->method('setDatabase', DI\get('db')),
   'Starbug\Core\GenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\ApplicationInterface' => DI\autowire('Starbug\Core\Application')
     ->method('setLogger', DI\get('Psr\Log\LoggerInterface')),

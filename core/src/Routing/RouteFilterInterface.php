@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core\Routing;
 
-use Starbug\Http\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface RouteFilterInterface {
   /**
@@ -12,5 +12,5 @@ interface RouteFilterInterface {
    *
    * @return array the route
    */
-  public function filterRoute($route, RequestInterface $request);
+  public function filterRoute($route, ServerRequestInterface $request);
 }

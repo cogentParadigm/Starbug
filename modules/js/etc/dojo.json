@@ -1,20 +1,21 @@
 {
-  "prefixes": [
-    ["dijit", "../dijit"],
-    ["dstore", "../dstore"],
-    ["dgrid", "../dgrid"],
-    ["put-selector", "../put-selector"],
-    ["xstyle", "../xstyle"],
-    ["dbootstrap", "../dbootstrap"],
-    ["bootstrap", "../dojo-bootstrap"],
-    ["sb", "../../core/app/public/js/sb"],
-    ["starbug", "../../core/app/public/js/starbug"],
-    ["app", "../../app/public/js"]
-  ],
   "config": {
     "async": true,
     "parseOnLoad" :true,
     "serverTime":"{{ 'now'|date('Y-m-d H:i:s') }}",
-    "theme": "{{ response.theme }}"
+    "theme": "{{ helper('css').getTheme() }}",
+    "websiteUrl": "{{ helper('url').build('') }}",
+    "packages": [
+      {"name":"dijit", "location": "../dijit"},
+      {"name":"dstore", "location": "../dstore"},
+      {"name":"dgrid", "location": "../dgrid"},
+      {"name":"put-selector", "location": "../put-selector"},
+      {"name":"xstyle", "location": "../xstyle"},
+      {"name":"dbootstrap", "location": "../dbootstrap"},
+      {"name":"bootstrap", "location": "../dojo-bootstrap"},
+      {"name":"sb", "location": "../../core/app/public/js/sb"},
+      {"name":"starbug", "location": "../../core/app/public/js/starbug"},
+      {"name":"app", "location": "../../app/public/js"}
+    ]
   }
 }

@@ -19,7 +19,9 @@ class UploadController extends Controller {
     $htmldata = [];
     $files = [];
 
-    foreach ($this->request->getFiles()->get('uploadedfiles') as $key => $arr) {
+    $bodyParams = $this->request->getParsedBody();
+
+    foreach ($this->request->getUploadedFiles()["uploadedfiles"] as $key => $arr) {
       foreach ($arr as $idx => $value) {
         $files[$idx][$key] = $value;
       }
@@ -31,8 +33,8 @@ class UploadController extends Controller {
         "filename" => "",
         "mime_type" => "",
         "caption" => "uploaded file",
-        "category" => $this->request->getPost("category"),
-        "location" => $this->request->hasPost("location") ? $this->request->getPost("location") : "default"
+        "category" => $bodyParams["category"],
+        "location" => $bodyParams["location"] ?? "default"
       ];
       try {
         list($width, $height) = getimagesize($file['tmp_name']);
@@ -65,7 +67,7 @@ class UploadController extends Controller {
         $htmldata[] = ["ERROR" => "File could not be moved: ".$file['name']];
       }
     }
-    $this->response->content = $htmldata;
     $this->response->setTemplate("json.json");
+    $this->response->setContent($htmldata);
   }
 }

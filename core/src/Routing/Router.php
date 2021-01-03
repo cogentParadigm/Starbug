@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core\Routing;
 
-use Starbug\Http\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Router implements RouterInterface {
   protected $storage = [];
@@ -20,9 +20,9 @@ class Router implements RouterInterface {
     $this->filters[] = $filter;
   }
 
-  public function getRoute(RequestInterface $request) {
+  public function getRoute(ServerRequestInterface $request) {
     if ($path = $this->resolveAlias($request)) {
-      $request->setPath($path);
+      $request = $request->withUri($request->getUri()->withPath($path));
     }
     foreach ($this->storage as $storage) {
       if ($route = $storage->getRoute($request)) {
@@ -41,7 +41,7 @@ class Router implements RouterInterface {
    *                    - action: the action name
    *                    - arguments: the arguments
    */
-  public function route(RequestInterface $request) {
+  public function route(ServerRequestInterface $request) {
     $route = $this->getRoute($request);
     if (empty($route['controller']) && !empty($route['type'])) {
       $route = array_replace(['controller' => $route['type'], 'action' => 'show'], $route);
@@ -51,7 +51,7 @@ class Router implements RouterInterface {
     return $route;
   }
 
-  protected function resolveAlias(RequestInterface $request) {
+  protected function resolveAlias(ServerRequestInterface $request) {
     foreach ($this->aliasStorage as $storage) {
       if ($path = $storage->getPath($request)) {
         return $path;
@@ -60,7 +60,7 @@ class Router implements RouterInterface {
     return false;
   }
 
-  protected function filterRoute($route, RequestInterface $request) {
+  protected function filterRoute($route, ServerRequestInterface $request) {
     foreach ($this->filters as $filter) {
       $route = $filter->filterRoute($route, $request);
     }

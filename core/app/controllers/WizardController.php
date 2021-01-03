@@ -14,7 +14,7 @@ class WizardController extends Controller {
     $this->render($this->pageTemplate, ["options" => $this->getDisplayOptions()]);
   }
   public function form() {
-    $this->response->setTemplate("xhr.xhr");
+    $this->response->setFormat("xhr");
     $this->render($this->formTemplate, ["options" => $this->getDisplayOptions()]);
   }
 
@@ -37,18 +37,20 @@ class WizardController extends Controller {
     if (empty($options["step"])) $options["step"] = 1;
 
     // Set the correct step.
-    if ($this->request->hasParameter("step")) {
-      $options = $this->request->getParameters();
-    } elseif ($this->request->hasPost($this->model, "step")) {
-      $options["step"] = $this->request->getPost($this->model, "step");
+    $queryParams = $this->request->getQueryParams();
+    $bodyParams = $this->request->getParsedBody();
+    if (!empty($queryParams["step"])) {
+      $options = $queryParams;
+    } elseif (!empty($bodyParams[$this->model]["step"])) {
+      $options["step"] = $bodyParams[$this->model]["step"];
       if ($this->db->errors()) {
         $options["step"]--;
       }
     }
 
     // If we're past creating the user record, set the correct ID.
-    if ($this->request->hasPost($this->model, "id")) {
-      $options["id"] = $this->request->getPost($this->model, "id");
+    if (!empty($bodyParams[$this->model]["id"])) {
+      $options["id"] = $bodyParams[$this->model]["id"];
     } elseif (!is_null($this->models->get($this->model)->insert_id)) {
       $options["id"] = $this->models->get($this->model)->insert_id;
     }

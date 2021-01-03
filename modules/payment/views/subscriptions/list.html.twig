@@ -1,0 +1,42 @@
+{% if subscriptions is empty %}
+  <p>You have no subscriptions.</p>
+{% else %}
+  {% set now = "now"|date("Y-m-d H:i:s") %}
+  {% for s in subscriptions %}
+    <div class="subscription">
+      {% if s.canceled %}
+      {% elseif s.active and not s.completed %}
+        <a class="btn btn-info pull-right btn-brand-near-black f9 ttu ls1" href="{{ helper("url").build("subscriptions/update/" ~ s.id) }}">Update Payment Method</a>
+        <a class="btn btn-info pull-right btn-brand-near-black f9 ttu ls1" style="clear:right;margin-top:10px" href="{{ helper("url").build("subscriptions/change/" ~ s.id) }}">Change Plan</a>
+        <a class="btn pull-right btn-brand-near-black f9 ttu ls1" style="clear:right;margin-top:10px" href="{{ helper("url").build("subscriptions/cancel/" ~ s.id) }}">Cancel</a>
+      {% endif %}
+      <div class="f8 fw5 mb3">{{ s.name }}</div>
+      <div class="f8">
+        Status:
+        {% if s.completed %}
+          Completed
+        {% elseif s.canceled %}
+          Canceled
+        {% elseif s.active %}
+          Active
+        {% else %}
+          Suspended
+        {% endif %}
+      </div>
+      <div class="f8">Payment term: {{ s.interval }} {{ s.unit|title }}</div>
+      {% if s.completed %}
+      {% elseif s.canceled or s.bills is empty %}
+        <div class="f8">Expires: {{ s.expiration_date|date("l, F j Y") }}</div>
+      {% elseif s.active %}
+        {% for bill in s.bills %}
+          <p><strong class="h1">{{ helper("priceFormatter").format(bill.amount) }}</strong></p>
+          <p>Renews {{ bill.scheduled_date|date("l, F j Y") }}</p>
+          {% if bill.due_date < now %}
+            <p class="alert alert-danger">This payment is past due. <a href="{{ helper("url").build("subscriptions/payment/" ~ bill.id) }}">Make a payment</a></p>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+    </div>
+  {% endfor %}
+{% endif %}

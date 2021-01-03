@@ -25,7 +25,7 @@ abstract class DatabaseTestCase extends TestCase {
     global $container;
     if ($this->conn === null) {
       $config = $container->get("Starbug\Core\ConfigInterface");
-      $name = $container->get("database_name");
+      $name = $container->get("db");
       $params = $config->get("db/".$name);
       $pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
       $this->conn = $this->createDefaultDBConnection($pdo, $name);

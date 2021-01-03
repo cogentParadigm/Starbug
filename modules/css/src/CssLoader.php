@@ -1,17 +1,16 @@
 <?php
 namespace Starbug\Css;
 
-use Starbug\Http\UrlInterface;
-use Starbug\Http\ResponseInterface;
+use Starbug\Http\UriBuilderInterface;
 use Starbug\ResourceLocator\ResourceLocatorInterface;
 use Twig\Environment;
 
 class CssLoader {
+  protected $theme;
   protected $options = false;
-  public function __construct(ResourceLocatorInterface $locator, UrlInterface $url, ResponseInterface $response, Environment $twig, $modules) {
+  public function __construct(ResourceLocatorInterface $locator, UriBuilderInterface $uri, Environment $twig, $modules) {
     $this->locator = $locator;
-    $this->url = $url;
-    $this->response = $response;
+    $this->uri = $uri;
     $this->twig = $twig;
     $this->modules = $modules;
   }
@@ -26,14 +25,18 @@ class CssLoader {
       foreach ($styles as $style) {
         $stylesheets[] = '<link '.
           'rel="'.$style["rel"].'" '.
-          'href="'.$this->url->build($style["href"]).'" '.
+          'href="'.$this->uri->build($style["href"]).'" '.
           'type="text/css" '.
           'media="'.$media.'">';
       }
     }
     return $stylesheets;
   }
+  public function getTheme() {
+    return $this->theme;
+  }
   public function setTheme($name) {
+    $this->theme = $name;
     $previous = $this->modules["Starbug\Theme"];
     $this->modules["Starbug\Theme"] = "app/themes/".$name;
     $this->locator->set("Starbug\Theme", "app/themes/".$name);
@@ -59,7 +62,6 @@ class CssLoader {
     $this->twig->getLoader()->setPaths(["app/themes/".$name."/templates"], "theme");
     $this->twig->getLoader()->setPaths($layouts, "layouts");
     $this->twig->getLoader()->setPaths($views, "views");
-    $this->response->theme = $name;
     $this->options = false;
   }
   protected function load($reload = false) {

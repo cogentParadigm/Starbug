@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Http\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface ApplicationInterface {
   /**
@@ -11,5 +11,5 @@ interface ApplicationInterface {
    *
    * @return Response the response object
    */
-  public function handle(RequestInterface $request);
+  public function handle(ServerRequestInterface $request);
 }

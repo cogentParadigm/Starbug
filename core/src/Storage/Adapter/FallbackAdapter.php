@@ -2,13 +2,18 @@
 namespace Starbug\Core\Storage\Adapter;
 
 use Starbug\Core\Storage\AdapterInterface;
-use Starbug\Http\UrlInterface;
 use Litipk\Flysystem\Fallback\FallbackAdapter as ParentAdapter;
+use Starbug\Http\UriBuilderInterface;
 
 class FallbackAdapter extends ParentAdapter implements AdapterInterface {
-  protected $url;
-  public function setUrlInterface(UrlInterface $url) {
-    $this->url = $url;
+  /**
+   * URI Builder
+   *
+   * @var UriBuilderInterface
+   */
+  protected $uri;
+  public function setUriBuilder(UriBuilderInterface $uri) {
+    $this->uri = $uri;
   }
   public function getUrl($path, $absolute = false) {
     if ($this->mainAdapter->has($path)) {

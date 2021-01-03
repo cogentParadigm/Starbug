@@ -6,9 +6,9 @@ use League\Flysystem\MountManager;
 use Starbug\Core\Storage\Filesystem;
 use Starbug\Core\Storage\Adapter\Local;
 use Starbug\Core\Storage\Adapter\LocalPrivate;
-use Starbug\Http\Url;
 use DI;
 use Starbug\Core\Routing\RoutesHelper;
+use Starbug\Http\UriBuilder;
 
 return [
   'routes' => DI\add(
@@ -16,7 +16,7 @@ return [
       "upload" => [
         "title" => "Starbug\Files\UploadController",
         "controller" => "upload",
-        "template" => "xhr.xhr",
+        "format" => "xhr",
         "groups" => "user"
       ],
       "files/download/{id:[0-9]+}" => [
@@ -37,27 +37,30 @@ return [
   'filesystem.private' => 'var/private/uploads',
   'filesystem.tmp' => 'var/tmp',
   'filesystem.adapter.public' => function (ContainerInterface $c) {
-    $here = $c->get("Starbug\Http\UrlInterface");
+    $base = $c->get("Starbug\Http\UriBuilderInterface")->getBaseUri();
     $public = $c->get("filesystem.public");
-    $url = (new Url($here->getHost(), $here->getDirectory().$public."/"))->setScheme($here->getScheme());
+    $path = $base->getPath().$public."/";
     $adapter = new Local($c->get("base_directory")."/".$public);
-    $adapter->setUrlInterface($url);
+    $builder = new UriBuilder($base->withPath($path));
+    $adapter->setUriBuilder($builder);
     return $adapter;
   },
   "filesystem.adapter.private" => function (ContainerInterface $c) {
-    $here = $c->get("Starbug\Http\UrlInterface");
+    $base = $c->get("Starbug\Http\UriBuilderInterface")->getBaseUri();
     $private = $c->get("filesystem.private");
-    $url = (new Url($here->getHost(), $here->getDirectory()."files/download/"))->setScheme($here->getScheme());
+    $path = $base->getPath()."files/download/";
     $adapter = new LocalPrivate($c->get("base_directory")."/".$private);
-    $adapter->setUrlInterface($url);
+    $builder = new UriBuilder($base->withPath($path));
+    $adapter->setUriBuilder($builder);
     return $adapter;
   },
   'filesystem.adapter.tmp' => function (ContainerInterface $c) {
-    $here = $c->get("Starbug\Http\UrlInterface");
+    $base = $c->get("Starbug\Http\UriBuilderInterface")->getBaseUri();
     $tmp = $c->get("filesystem.tmp");
-    $url = (new Url($here->getHost(), $here->getDirectory().$tmp."/"))->setScheme($here->getScheme());
+    $path = $base->getPath().$tmp."/";
     $adapter = new Local($c->get("base_directory")."/".$tmp);
-    $adapter->setUrlInterface($url);
+    $builder = new UriBuilder($base->withPath($path));
+    $adapter->setUriBuilder($builder);
     return $adapter;
   },
   'League\Flysystem\MountManager' => function (ContainerInterface $c) {

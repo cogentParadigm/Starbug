@@ -1,11 +1,21 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Http\RequestInterface;
-use Starbug\Http\ResponseInterface;
+use Exception;
+use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Http\ResponseBuilderInterface;
 
 class ApiRequest {
 
+  // @var ModelFactoryInterface
+  protected $models;
+  // @var CollectionFactoryInterface
+  protected $collections;
+  // @var ServerRequestInterface
+  protected $request;
+  // @var ResponseBuilderInterface
+  protected $response;
+  protected $format = "json";
   protected $types = [
     "xml" => "text/xml",
     "json" => "application/json",
@@ -14,13 +24,12 @@ class ApiRequest {
   ];
 
   protected $results = [];
-  protected $time = '0000-00-00 00:00:00';
+  protected $headers = [];
   protected $options = [];
-  protected $ranges = [];
   protected $filters = [];
   protected $model;
 
-  public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, RequestInterface $request, ResponseInterface $response) {
+  public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, ServerRequestInterface $request, ResponseBuilderInterface $response) {
     $this->models = $models;
     $this->collections = $collections;
     $this->request = $request;
@@ -31,6 +40,15 @@ class ApiRequest {
   }
   public function getModel() {
     return $this->model;
+  }
+  public function setFormat($format) {
+    if (!array_key_exists($format, $this->types)) {
+      throw new Exception("Invalid format");
+    }
+    $this->format = $format;
+  }
+  public function getFormat() {
+    return $this->format;
   }
   public function setOptions($ops) {
     foreach ($ops as $k => $v) {
@@ -45,7 +63,6 @@ class ApiRequest {
   }
   public function add($collection, $options = [], $name = false) {
     if (!$name) $name = $this->model;
-    $options['time'] = $this->time;
 
     // Instantiate the model and collection.
     if (!is_null($this->model)) {
@@ -66,20 +83,21 @@ class ApiRequest {
     }
 
     // Populate default options.
-    $options = $options + $this->options + $this->request->getParameters();
+    $options = $options + $this->options + $this->request->getQueryParams();
     $range = $this->request->getHeader("HTTP_RANGE");
     if (!empty($range)) {
       list($start, $finish) = explode("-", end(explode("=", $range)));
       $options['limit'] = 1 + (int) $finish - (int) $start;
       $options['page'] = 1 + (int) $start/$options['limit'];
     }
-    if ($this->request->hasPost('action', $this->model) && !$instance->errors()) {
-      $id = ($this->request->hasPost($this->model, 'id')) ? $this->request->getPost($this->model, 'id') : $instance->insert_id;
+    $bodyParams = $this->request->getParsedBody();
+    if (!empty($bodyParams["action"][$this->model]) && !$instance->errors()) {
+      $id = $bodyParams[$this->model]["id"] ?? $instance->insert_id;
       $options['id'] = $id;
     }
 
     $results = $collection->query($options);
-    if ($this->request->getFormat() == "csv" && !empty($results)) {
+    if ($this->getFormat() == "csv" && !empty($results)) {
       $headers = $results[0];
       foreach ($headers as $key => $value) {
         $headers[$key] = ucwords(str_replace("_", " ", $key));
@@ -89,20 +107,22 @@ class ApiRequest {
     $this->results[$name] = $results;
 
     if ($pager = $collection->getPager()) {
-      $this->response->setHeader("Content-Range", "items ".$pager->start.'-'.$pager->finish.'/'.$pager->count);
+      $this->headers["Content-Range"] = "items ".$pager->start.'-'.$pager->finish.'/'.$pager->count;
     } else {
       $count = count($this->results[$name]);
-      $this->response->setHeader("Content-Range", "items 0-$count/$count");
+      $this->headers["Content-Range"] = "items 0-$count/$count";
     }
   }
 
   public function capture($key = false) {
-    $format = $this->request->getFormat();
-    $this->response->setContentType($this->types[$format]);
-    $this->response->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
-    $this->response->setHeader('Sync-Time', date('Y-m-d H:i:s'));
+    $format = $this->getFormat();
+    $this->response->setTemplate($format.".".$format);
+    $this->response->create(200, $this->headers + [
+      "Content-Type" => $this->types[$format],
+      "Sync-Time" => date('Y-m-d H:i:s')
+    ]);
     $results = $key ? $this->results[$key] : $this->results;
-    $this->response->content = $results;
+    $this->response->setContent($results);
   }
 
   public function render($collection, $options = [], $name = false) {

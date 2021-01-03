@@ -14,8 +14,7 @@ class FormWizard extends FormDisplay {
   public function buildDisplay($options) {
     $this->actions->remove($this->defaultAction);
     $this->attributes["class"][] = "animated";
-    $this->request->setPost($this->model, "step", "");
-    $this->request->setParameter("step", "");
+    $this->set("step", "");
 
     $this->add(["step", "input_type" => "hidden", "default" => $options["step"] + 1]);
 
@@ -109,6 +108,6 @@ class FormWizard extends FormDisplay {
     if (false === $id) {
       $id = $url;
     }
-    $this->addButton($id, $label, $attributes + ["onclick" => "window.location='".$this->request->getUrl()->build($url)."'"]);
+    $this->addButton($id, $label, $attributes + ["onclick" => "window.location = WEBSITE_URL + '".$url."'"]);
   }
 }

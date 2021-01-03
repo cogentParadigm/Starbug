@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Http\ResponseInterface;
+use Starbug\Js\DojoConfiguration;
 
 class GridDisplay extends ItemDisplay {
   public $type = "grid";
@@ -13,10 +13,10 @@ class GridDisplay extends ItemDisplay {
     "row_options" => ["field" => "id", "label" => "Options", "class" => "field-options", "plugin" => "starbug.grid.columns.options"]
   ];
 
-  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, ResponseInterface $response) {
+  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, DojoConfiguration $dojo) {
     $this->output = $output;
     $this->collections = $collections;
-    $this->response = $response;
+    $this->dojo = $dojo;
   }
 
   public function build($options = []) {
@@ -48,7 +48,7 @@ class GridDisplay extends ItemDisplay {
     }
     $options['data-dgrid-column'] = '{'.implode(', ', $options['data-dgrid-column']).'}';
     if (isset($options['plugin']) && !isset($options['readonly'])) {
-      $this->response->js(str_replace(".", "/", $options['plugin']));
+      $this->dojo->addDependency(str_replace(".", "/", $options['plugin']));
       $options['data-dgrid-column'] = $options['plugin']."(".$options['data-dgrid-column'].")";
     }
     return $options;
@@ -71,7 +71,7 @@ class GridDisplay extends ItemDisplay {
         $this->attributes['data-dojo-props'][$k] = $v;
       }
     }
-    $this->response->js($this->grid_class);
+    $this->dojo->addDependency($this->grid_class);
     $this->attributes['data-dojo-type'] = $this->grid_class;
     // convert from array to string
     $this->attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($this->attributes['data-dojo-props'])), '{}');

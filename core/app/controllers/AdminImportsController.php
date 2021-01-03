@@ -14,13 +14,13 @@ class AdminImportsController extends Controller {
     $this->render("admin/list.html");
   }
   public function create() {
-    if ($this->db->success("imports", "create")) $this->redirect("admin/imports/update/".$this->models->get("imports")->insert_id);
+    if ($this->db->success("imports", "create")) $this->response->redirect("admin/imports/update/".$this->models->get("imports")->insert_id);
     else $this->render("admin/create.html");
   }
   public function update($id) {
     $this->assign("id", $id);
     $import = $this->models->get("imports")->load($id);
-    if ($this->db->success("imports", "create")) $this->redirect("admin/".$import['model']."/import");
+    if ($this->db->success("imports", "create")) $this->response->redirect("admin/".$import['model']."/import");
     else $this->render("admin/update.html");
   }
   public function run($id) {

@@ -10,10 +10,10 @@ class SettingsForm extends FormDisplay {
       ->select("settings.*,category.term,category.slug")
       ->sort("settings_category.term_path, settings_category.position")
       ->all();
-    $this->request->setPost('settings', []);
+    $this->setPost([]);
     $last = "";
     foreach ($settings as $idx => $setting) {
-      $this->request->setPost('settings', $setting['name'], $setting['value']);
+      $this->setPost($setting['name'], $setting['value']);
       if ($setting['term'] != $last) {
         $last = $setting['term'];
         $this->layout->add([$setting['slug']."-row", $setting['slug'] => "div.col-xs-12"]);

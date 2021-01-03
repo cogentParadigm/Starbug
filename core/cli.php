@@ -10,10 +10,5 @@ foreach ($argv as $i => $arg) {
 
 include("init.php");
 
-$url = $container->make("Starbug\Http\Url", ['base_directory' => $container->get("website_url")]);
-$url->setScheme("http");
-$request = $container->make("Starbug\Http\Request", ['url' => $url]);
-$request->setHeaders($_SERVER);
-$container->set("Starbug\Http\RequestInterface", $request);
 $user = $container->get("Starbug\Core\IdentityInterface");
 $user->setUser(["id" => "NULL", "groups" => ["root"]]);

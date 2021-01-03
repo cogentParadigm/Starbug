@@ -18,7 +18,8 @@ class ApiShippingLinesController extends ApiController {
   }
   public function cart() {
     $params = [];
-    if (!$this->request->hasParameter("order")) {
+    $queryParams = $this->request->getQueryParams();
+    if (empty($queryParams["order"])) {
       $params["order"] = $this->cart->get("id");
     }
     $this->api->render("ShippingLines", $params);
@@ -27,10 +28,11 @@ class ApiShippingLinesController extends ApiController {
     $this->api->render("ShippingLines");
   }
   public function filterQuery($collection, $query, $ops) {
+    $cid = $this->request->getCookieParams()["cid"];
     if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) {
       $query->condition(
         $query->createCondition()
-        ->condition("shipping_lines.orders_id.token", $this->request->getCookie("cid"))
+        ->condition("shipping_lines.orders_id.token", $cid)
         ->orCondition("shipping_lines.orders_id.owner", $this->user->userinfo("id"))
       );
     }

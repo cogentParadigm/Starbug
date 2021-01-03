@@ -1,8 +1,7 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Http\RequestInterface;
-use Starbug\Http\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class FormDisplay extends ItemDisplay {
   public $type = "form";
@@ -22,10 +21,15 @@ class FormDisplay extends ItemDisplay {
   public $horizontal = false;
   protected $hook_builder;
   protected $displays;
+  /**
+   * PSR-7 Server Request
+   *
+   * @var ServerRequestInterface
+   */
   protected $request;
   protected $db;
 
-  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, RequestInterface $request, DatabaseInterface $db) {
+  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, ServerRequestInterface $request, DatabaseInterface $db) {
     parent::__construct($output, $collections);
     $this->hook_builder = $hooks;
     $this->displays = $displays;
@@ -80,8 +84,10 @@ class FormDisplay extends ItemDisplay {
     if (empty($options['id'])) $this->items = [];
     else parent::query(["action" => $this->defaultAction] + $options);
 
-    if ($this->request->hasParameter('copy') && is_numeric($this->request->getParameter('copy')) && empty($this->items)) {
-      $options['id'] = $this->request->getParameter('copy');
+    $queryParams = $this->request->getQueryParams();
+
+    if (!empty($queryParams["copy"]) && is_numeric($queryParams["copy"]) && empty($this->items)) {
+      $options['id'] = $queryParams["copy"];
       parent::query(["action" => $this->defaultAction] + $options);
       if (!empty($this->items)) {
         unset($this->items[0]['id']);
@@ -147,22 +153,41 @@ class FormDisplay extends ItemDisplay {
     return $this->db->failure($model, $action);
   }
 
-  public function hasPost() {
-    $args = func_get_args();
-    $keys = array_merge($this->input_name, $args);
-    return call_user_func_array([$this->request, "hasPost"], $keys);
+  public function hasPost(...$keys) {
+    $keys = array_merge($this->input_name, $keys);
+    $target = $this->request->getParsedBody();
+    while (!empty($keys)) {
+      $key = array_shift($keys);
+      if (is_array($target) && array_key_exists($key, $target)) {
+        $target = $target[$key];
+      } else {
+        return false;
+      }
+    }
+    return !empty($target);
   }
 
-  public function getPost() {
-    $args = func_get_args();
-    $keys = array_merge($this->input_name, $args);
-    return call_user_func_array([$this->request, "getPost"], $keys);
+  public function getPost(...$keys) {
+    $keys = array_merge($this->input_name, $keys);
+    $value = $this->request->getParsedBody();
+    foreach ($keys as $key) {
+      if (!isset($value[$key])) return null;
+      $value = $value[$key];
+    }
+    return $value;
   }
 
-  public function setPost($value) {
-    $args = func_get_args();
-    $keys = array_merge($this->input_name, $args);
-    return call_user_func_array([$this->request, "setPost"], $keys);
+  public function setPost(...$keys) {
+    $keys = array_merge($this->input_name, $keys);
+    $data = $this->request->getParsedBody();
+    $value = array_pop($keys);
+    $target = &$data;
+    foreach ($keys as $key) {
+      if (!is_array($target)) $target = [];
+      $target = &$target[$key];
+    }
+    $target = $value;
+    $this->request = $this->request->withParsedBody($data);
   }
 
   /**
@@ -200,7 +225,7 @@ class FormDisplay extends ItemDisplay {
    */
   public function get($name) {
     $parts = explode("[", $name);
-    $var = ($this->method == "post") ? $this->getPost() : $this->request->getParameters();
+    $var = ($this->method == "post") ? $this->getPost() : $this->request->getQueryParams();
     foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")];
     if (is_array($var)) return $var;
     else return stripslashes($var);
@@ -215,7 +240,8 @@ class FormDisplay extends ItemDisplay {
   public function set($name, $value) {
     $parts = explode("[", $name);
     $key = array_pop($parts);
-    $data = ($this->method == "post") ? $this->getPost() : $this->request->getParameters();
+    $data = ($this->method == "post") ? $this->getPost() : $this->request->getQueryParams();
+    $var = &$data;
     foreach ($parts as $p) {
       $var = &$var[rtrim($p, "]")];
     }
@@ -224,7 +250,7 @@ class FormDisplay extends ItemDisplay {
     if ($this->method == "post") {
       $this->setPost($data);
     } else {
-      $this->request->setParameters($data);
+      $this->request = $this->request->withQueryParams($data);
     }
     return $value;
   }

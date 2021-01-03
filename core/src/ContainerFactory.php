@@ -5,26 +5,21 @@ use DI\ContainerBuilder;
 use Starbug\ResourceLocator\ResourceLocator;
 
 class ContainerFactory {
-  protected $defaults = [
-    "db" => "default",
-    "cli" => false
-  ];
   public function __construct($base_directory) {
     $this->base_directory = $base_directory;
   }
   public function build($options = []) {
-    $options = is_array($options) ? $options + $this->defaults : $this->defaults;
-    $di = include($this->base_directory."/etc/di.php");
-    $di["base_directory"] = $this->base_directory;
-    $di["database_name"] = $options["db"];
-    $di["cli"] = $options["cli"];
-    $locator = new ResourceLocator($di['base_directory'], $di['modules']);
+    $config = include($this->base_directory."/etc/di.php");
+    $config["base_directory"] = $this->base_directory;
+    $config["modules"] = $config["modules"] ?? [];
+    $locator = new ResourceLocator($config['base_directory'], $config['modules']);
     $builder = new ContainerBuilder();
-    $builder->addDefinitions($di);
+    $builder->addDefinitions($config);
     foreach ($locator->locate("di.php", "etc") as $defs) $builder->addDefinitions($defs);
-    if (!empty($options["t"])) {
+    if (!empty($config["t"])) {
       foreach ($locator->locate("di.php", "tests/etc") as $defs) $builder->addDefinitions($defs);
     }
+    $builder->addDefinitions($options);
     $container = $builder->build();
     $container->set('Psr\Container\ContainerInterface', $container);
     $container->set('Starbug\ResourceLocator\ResourceLocatorInterface', $locator);

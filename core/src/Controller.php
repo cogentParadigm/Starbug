@@ -1,17 +1,29 @@
 <?php
 namespace Starbug\Core;
 
-use \ReflectionMethod;
-use Starbug\Http\RequestInterface;
-use Starbug\Http\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use ReflectionMethod;
+use Starbug\Http\ResponseBuilderInterface;
 
 class Controller {
 
-  public $template = "auto";
-  public $auto_render = true;
-  public $request;
-  public $response;
-  protected $output;
+  /**
+   * PSR-7 Server Request
+   *
+   * @var ServerRequestInterface
+   */
+  protected $request;
+  /**
+   * PSR-7 Response builder
+   *
+   * @var ResponseBuilderInterface
+   */
+  protected $response;
+
+  public function setResponseBuilder(ResponseBuilderInterface $builder) {
+    $this->response = $builder;
+  }
 
 
   public function init() {
@@ -20,7 +32,7 @@ class Controller {
   /**
    * Every controller has a default action, used when no action is specified.
    */
-  public function default() {
+  public function defaultAction() {
     $this->missing();
   }
 
@@ -49,58 +61,51 @@ class Controller {
     call_user_func_array([$this, $action], $args);
   }
 
+  /**
+   * Assign a variable
+   */
   public function assign($key, $value = null) {
-    $this->output->assign($key, $value);
+    $this->response->assign($key, $value);
   }
 
   /**
    * Set the view to render for this request.
    */
   public function render($path = "", $params = [], $options = []) {
-    $options = $options + ["scope" => "views"];
-    $this->response->setContent($this->output->capture($path, $params, $options));
+    $this->response->render($path, $params, $options);
   }
 
   /**
    * Return a forbidden response.
    */
   public function forbidden() {
-    $this->response->forbidden();
-    $this->render("forbidden.html");
+    $this->response->redirect("login?to=".$this->request->getUri()->getPath());
   }
 
   /**
    * Return a missing response.
    */
   public function missing() {
-    $this->response->missing();
+    $this->response->create(404);
     $this->render("missing.html");
   }
 
-  public function start(TemplateInterface $output, RequestInterface $request, ResponseInterface $response) {
-    $this->output = $output;
-    $this->request = $request;
-    $this->response = $response;
-    $this->init();
-  }
-
-  public function finish() {
-    return $this->response;
-  }
-
-  public function url($path = "", $absolute = false) {
-    return $this->request->getUrl()->build($path, $absolute);
-  }
   /**
-   * Redirect to another page.
-   *
-   * @param string $url the url to redirect to
-   * @param int $delay number of seconds to wait before redirecting (default 0)
+   * Generate a response
    */
-  public function redirect($url) {
-    $url = $this->url($url, true);
-    $this->response->setHeader('Location', $url);
-    $this->response->setContent('<script>setTimeout("location.href = \''.$url.'\';");</script>');
+  public function handle(ServerRequestInterface $request, $route = []) : ResponseInterface {
+    $route += ["action" => "", "arguments" => []];
+    $this->request = $request;
+    $this->response->assign("route", $route);
+    if (!empty($route["format"])) {
+      $this->response->setFormat($route["format"]);
+    }
+    if (!empty($route["template"])) {
+      $this->response->setTemplate($route["template"]);
+    }
+    $this->init();
+    $this->action($route["action"], $route["arguments"]);
+    return $this->response->getResponse();
   }
 
   /**

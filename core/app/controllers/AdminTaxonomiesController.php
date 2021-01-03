@@ -9,7 +9,8 @@ class AdminTaxonomiesController extends Controller {
   }
   public function init() {
     $this->assign("model", "terms");
-    if ($this->request->hasParameter('taxonomy')) $this->assign("taxonomy", $this->filter->normalize($this->request->getParameter('taxonomy')));
+    $params = $this->request->getQueryParams();
+    if (!empty($params["taxonomy"])) $this->assign("taxonomy", $this->filter->normalize($params["taxonomy"]));
   }
   public function defaultAction() {
     $this->render("admin/list.html");
@@ -19,9 +20,9 @@ class AdminTaxonomiesController extends Controller {
     $this->create();
   }
   public function create() {
-    if ($this->db->success("terms", "create") && $this->request->getFormat() != "xhr") {
+    if ($this->db->success("terms", "create") && $this->response->getFormat() != "xhr") {
       $term = $this->db->get("terms", $this->terms->insert_id);
-      $this->redirect("admin/taxonomies/taxonomy/".$term['taxonomy']);
+      $this->response->redirect("admin/taxonomies/taxonomy/".$term['taxonomy']);
     } else $this->render("admin/create.html");
   }
   public function update($id) {
@@ -29,7 +30,7 @@ class AdminTaxonomiesController extends Controller {
     $term = $this->db->get("terms", $id);
     $this->assign("taxonomy", $term['taxonomy']);
     if ($this->db->success("terms", "create")) {
-      $this->redirect("admin/taxonomies/taxonomy/".$term['taxonomy']);
+      $this->response->redirect("admin/taxonomies/taxonomy/".$term['taxonomy']);
     } else $this->render("admin/update.html");
   }
   public function taxonomy($taxonomy) {

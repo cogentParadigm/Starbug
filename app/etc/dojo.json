@@ -1,19 +1,19 @@
 {
+  "config": {
+    "packages": [
+      {"name": "storm", "location": "../../app/themes/storm/public/js"}
+    ]
+  },
+  "require": [
+    "dbootstrap",
+    "sb",
+    "dojo/parser",
+    "sb/bootstrap/Dropdown"
+  ],
   "layers": [
     {
       "name": "dojo.js",
-      "dependencies": [
-        "dbootstrap",
-        "sb",
-        "dojo/selector/acme",
-        "dojo/query",
-        "dojo/parser",
-        "sb/bootstrap/Dropdown",
-        "bootstrap/Carousel"
-      ]
+      "dependencies": []
     }
-  ],
-  "prefixes": [
-    ["storm", "../../app/themes/storm/public/js"]
   ]
 }

@@ -7,7 +7,7 @@
  * @ingroup templates
  * renders links for paging
  */
-	$vars = $this->request->getParameters();
+	$vars = $this->request->getQueryParams();
 	unset($vars['page']);
 	$prefix = $request->getUrl()->getDirectory();
 	$prefix .= $request->getPath()."?";

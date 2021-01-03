@@ -16,7 +16,7 @@ class AdminCategoriesController extends Controller {
   }
   public function create() {
     if ($this->db->success("categories", "create")) {
-      $this->redirect("admin/categories");
+      $this->response->redirect("admin/categories");
     } else {
       $this->render("admin/create.html");
     }
@@ -24,7 +24,7 @@ class AdminCategoriesController extends Controller {
   public function update($id) {
     $this->assign("id", $id);
     if ($this->db->success("categories", "create")) {
-      $this->redirect("admin/categories");
+      $this->response->redirect("admin/categories");
     } else {
       $this->render("admin/update.html");
     }

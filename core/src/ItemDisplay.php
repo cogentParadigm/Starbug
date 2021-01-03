@@ -1,8 +1,6 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Http\ResponseInterface;
-
 class ItemDisplay extends Display {
 
   public $model = "";

@@ -1,23 +1,19 @@
 <?php
-use Starbug\Http\Url;
-use Starbug\Http\Request;
+
+use GuzzleHttp\Psr7\ServerRequest;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 // include init file
 include("core/init.php");
 
-$request = new Request(Url::createFromSuperGlobals($container->get("website_url")));
-$request->setHeaders($_SERVER)
-  ->setPost($_POST)
-  ->setFiles($_FILES)
-  ->setCookies($_COOKIE);
+$request = ServerRequest::fromGlobals();
+$uri = $container->make("Psr\Http\Message\UriInterface", ["request" => $request]);
+$request = $request->withUri($uri);
 
-$path = $request->getPath();
-if (empty($path)) {
-  $request->setPath($container->get("default_path"));
-}
-
-$container->set("Starbug\Http\RequestInterface", $request);
+$container->set("Psr\Http\Message\UriInterface", $uri);
+$container->set("Psr\Http\Message\ServerRequestInterface", $request);
 $application = $container->get("Starbug\Core\ApplicationInterface");
 $response = $application->handle($request);
-$response->send();
-?>
+
+$emitter = new SapiEmitter();
+$emitter->emit($response);

@@ -29,7 +29,7 @@ class AdminOrdersController extends Controller {
   }
   public function update($id) {
     $this->assign("id", $id);
-    if ($this->db->success("orders", "create")) $this->redirect("admin/orders");
+    if ($this->db->success("orders", "create")) $this->response->redirect("admin/orders");
     else $this->render("admin/update.html");
   }
 }

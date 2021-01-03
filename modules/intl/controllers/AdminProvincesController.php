@@ -15,12 +15,12 @@ class AdminProvincesController extends Controller {
     $this->render("admin/list.html");
   }
   public function create() {
-    if ($this->db->success("provinces", "create")) $this->redirect("admin/provinces");
+    if ($this->db->success("provinces", "create")) $this->response->redirect("admin/provinces");
     else $this->render("admin/create.html");
   }
   public function update($id) {
     $this->assign("id", $id);
-    if ($this->db->success("provinces", "create")) $this->redirect("admin/provinces");
+    if ($this->db->success("provinces", "create")) $this->response->redirect("admin/provinces");
     else $this->render("admin/update.html");
   }
   public function import() {

@@ -59,7 +59,7 @@ return [
         if ($namespace !== FilesystemLoader::MAIN_NAMESPACE) {
           $result = twig_include($env, $context, "@".$namespace."/".$template, $variables, $withContext, $ignoreMissing, $sandboxed);
           if ($result) {
-            $results[] = $result;
+            array_unshift($results, $result);
           }
         }
       }

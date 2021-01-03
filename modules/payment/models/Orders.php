@@ -7,7 +7,7 @@ class Orders extends OrdersModel {
 
   public function create($order) {
     if (empty($order["id"])) {
-      $order["token"] = $this->request->getCookie("cid");
+      $order["token"] = $this->request->getCookieParams()["cid"];
     }
     $this->store($order);
   }
@@ -37,7 +37,8 @@ class Orders extends OrdersModel {
     } else {
       $order = $this->load($payment['id']);
     }
-    $this->request->setPost('orders', 'id', $order['id']);
+
+    // $this->request->setPost('orders', 'id', $order['id']);
 
     // populate the billing address
     $billing_address = $order["billing_same"] ? $order["shipping_address"] : $order["billing_address"];

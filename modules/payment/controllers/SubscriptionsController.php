@@ -22,7 +22,7 @@ class SubscriptionsController extends Controller {
   }
   public function update($id) {
     if ($this->models->get("subscriptions")->success("payment")) {
-      $this->request->setPost("subscriptions", []);
+      $this->response->redirect("subscriptions");
     }
     $subscription = $this->collections->get("Subscriptions")->one(["id" => $id]);
     $this->assign("subscription", $subscription);
@@ -30,7 +30,7 @@ class SubscriptionsController extends Controller {
   }
   public function payment($id) {
     if ($this->models->get("subscriptions")->success("payment")) {
-      $this->request->setPost("subscriptions", []);
+      $this->response->redirect("subscriptions");
     }
     $bill = $this->models->get("bills")->load($id);
     $subscription = $this->collections->get("Subscriptions")->one(["id" => $bill["subscriptions_id"]]);

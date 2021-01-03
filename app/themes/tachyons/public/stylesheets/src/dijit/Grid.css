@@ -52,6 +52,17 @@
   .dgrid-no-data {
     padding: var(--dgrid-padding);
   }
+
+  &.br--bottom .dgrid-header {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: -1px;
+  }
+
+  &.br--top .dgrid-header {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 }
 
 .dgrid-header-scroll {

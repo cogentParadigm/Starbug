@@ -17,7 +17,7 @@ class CheckoutController extends Controller {
   }
   public function defaultAction() {
     if ($this->db->success("orders", "checkout")) {
-      $this->redirect("checkout/payment");
+      $this->response->redirect("checkout/payment");
     } elseif (empty($this->cart)) {
       $this->render("cart/empty.html");
     } elseif ($this->user->loggedIn()) {
@@ -28,9 +28,9 @@ class CheckoutController extends Controller {
   }
   public function guest() {
     if ($this->db->success("orders", "checkout")) {
-      $this->redirect("checkout/payment");
+      $this->response->redirect("checkout/payment");
     } elseif ($this->user->loggedIn()) {
-      $this->redirect("checkout");
+      $this->response->redirect("checkout");
     } elseif (empty($this->cart)) {
       $this->render("cart/empty.html");
     } else {
@@ -39,7 +39,8 @@ class CheckoutController extends Controller {
   }
   public function payment() {
     if ($this->db->success("orders", "payment")) {
-      $this->redirect("checkout/success/".$this->request->getPost('orders', 'id'));
+      $id = $this->request->getParsedBody()["orders"]["id"];
+      $this->response->redirect("checkout/success/".$id);
     } elseif (empty($this->cart)) {
       $this->render("cart/empty.html");
     } else {

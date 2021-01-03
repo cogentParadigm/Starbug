@@ -13,17 +13,17 @@ class AdminMenusController extends Controller {
     $this->render("admin/list.html");
   }
   public function create() {
-    $this->assign("menu", $this->request->getParameter('menu'));
+    $this->assign("menu", $this->request->getQueryParams()['menu']);
     if ($this->db->success("menus", "create")) {
       $menu = $this->db->get("menus", $this->menus->insert_id);
-      $this->redirect("admin/menus/menu/".$menu['menu']);
+      $this->response->redirect("admin/menus/menu/".$menu['menu']);
     } else $this->render("admin/create.html");
   }
   public function update($id) {
     $this->assign("id", $id);
     if ($this->db->success("menus", "create")) {
       $menu = $this->db->get("menus", $id);
-      $this->redirect("admin/menus/menu/".$menu['menu']);
+      $this->response->redirect("admin/menus/menu/".$menu['menu']);
     } else $this->render("admin/update.html");
   }
   public function menu($menu) {

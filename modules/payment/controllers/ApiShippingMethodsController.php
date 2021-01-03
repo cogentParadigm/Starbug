@@ -16,7 +16,8 @@ class ApiShippingMethodsController extends ApiController {
   }
   public function select() {
     $params = [];
-    if (!$this->request->hasParameter("order")) {
+    $queryParams = $this->request->getQueryParams();
+    if (empty($queryParams["order"])) {
       $params["order"] = $this->cart->get("id");
     }
     $this->api->render("SelectShippingMethods", $params);

@@ -1,6 +1,6 @@
 {
 	"orders":{
-		"request":"Starbug\\Http\\RequestInterface",
+		"request":"Psr\\Http\\Message\\ServerRequestInterface",
 		"cart":"Starbug\\Payment\\Cart",
 		"gateway":"Starbug\\Payment\\GatewayInterface",
 		"subscriptions":"Starbug\\Payment\\TokenGatewayInterface",

@@ -6,13 +6,13 @@
   {% elseif base_url is not empty %}
     {% set path = helper("url").build(base_url ~ "/create") %}
   {% else %}
-    {% set path = helper("url").build(request.getPath() ~ "/create") %}
+    {% set path = helper("url").build(request.getUri().getPath() ~ "/create") %}
   {% endif %}
   <a class="btn btn-default" href="{{ path }}">{{ new_label }}</a>
   <a class="btn btn-default" href="javascript:window.location.href = {{ model }}_grid.collection._renderUrl().replace('json', 'csv');">
     Export CSV <b class="fa fa-file-text-o"></b>
   </a>
-  <a class="btn btn-default" href="{{ helper("url").build(request.getPath() ~ "/import") }}">
+  <a class="btn btn-default" href="{{ helper("url").build(request.getUri().getPath() ~ "/import") }}">
     Import CSV <b class="fa fa-file-text-o"></b>
   </a>
 </div>

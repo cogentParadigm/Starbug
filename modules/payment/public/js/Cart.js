@@ -78,7 +78,7 @@ define([
 
 				if (self.mode != "payment") {
 					self.shippingMethods.filter(self.query).fetch().then(lang.hitch(self, function(results) {
-						if (shippingLines.length == 0 && this.refreshCount < 2) {
+						if (shippingLines.length == 0 && this.refreshCount < 2 && results.length) {
 							this.selectShippingMethod(results[0].id);
 						} else {
 							put(this.shippingMethodsNode, {innerHTML: ''});

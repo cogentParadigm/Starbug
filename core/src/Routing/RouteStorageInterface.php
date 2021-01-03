@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Core\Routing;
 
-use Starbug\Http\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface RouteStorageInterface {
-  public function getRoute(RequestInterface $request);
+  public function getRoute(ServerRequestInterface $request);
 }

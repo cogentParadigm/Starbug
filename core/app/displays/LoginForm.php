@@ -6,7 +6,7 @@ class LoginForm extends FormDisplay {
   public $defaultAction = "login";
   public $submit_label = "Login";
   public function buildDisplay($options) {
-    $this->request->setPost('users', 'password', null);
+    $this->setPost('password', null);
     $this->add(["email"]);
     $this->add(["password", "input_type" => "password"]);
   }

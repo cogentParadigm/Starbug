@@ -16,9 +16,10 @@
   {% else %}
     {% set link_attributes = link_attributes|merge({"href": helper("url").build(link.href)}) %}
     {% set parts = link.href|split("/") %}
+    {% set requestParts = request.getUri().getPath()|split("/") %}
     {% set active = true %}
     {% for part in parts %}
-      {% if request.getComponent(loop.index0) != part %}
+      {% if requestParts[loop.index0] != part %}
         {% set active = false %}
       {% endif %}
     {% endfor %}

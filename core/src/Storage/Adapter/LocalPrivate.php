@@ -2,20 +2,20 @@
 namespace Starbug\Core\Storage\Adapter;
 
 use Starbug\Core\Storage\AdapterInterface;
-use Starbug\Http\UrlInterface;
 use League\Flysystem\Adapter\Local as ParentAdapter;
 use League\Flysystem\Config;
+use Starbug\Http\UriBuilderInterface;
 
 class LocalPrivate extends ParentAdapter implements AdapterInterface {
-  protected $url;
-  public function setUrlInterface(UrlInterface $url) {
-    $this->url = $url;
+  protected $uri;
+  public function setUriBuilder(UriBuilderInterface $uri) {
+    $this->uri = $uri;
   }
   public function getUrl($path, $absolute = false) {
     if (!is_numeric($path)) {
       [$path, $_] = explode("_", $path);
     }
-    return $this->url->build($path, $absolute);
+    return $this->uri->build($path, $absolute);
   }
   public function write($path, $contents, Config $config) {
     $config->set("visibility", "private");

@@ -124,7 +124,9 @@ class Executor implements ExecutorInterface {
       if (is_null($value)) $values[$key] = 'NULL';
     }
     // Walk the array to see if we can add single-quotes to strings
-    array_walk($values, create_function('&$v, $k', 'if (!is_numeric($v) && $v!="NULL") $v = "\'".$v."\'";'));
+    array_walk($values, function (&$value, $key) {
+      if (!is_numeric($value) && $value != "NULL") $value = "'".$value."'";
+    });
 
     $interpolation = preg_replace($keys, $values, $result->getSql());
 

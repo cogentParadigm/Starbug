@@ -1,0 +1,17 @@
+<script type="text/javascript">
+  var dojoConfig = {{ include(template_from_string(helper("dojo").getDojoConfig())) }}
+</script>
+
+{% if helper("dojo").getEnvironment() == "production" %}
+
+  <script type="text/javascript" src="{{ helper("url").build("libraries/release/dojo/dojo/dojo.js") }}"></script>
+
+{% else %}
+
+  <script type="text/javascript" src="{{ helper("url").build("libraries/dojo/dojo.js") }}"></script>
+
+{% endif %}
+
+<script type="text/javascript">
+    require({{ (helper("dojo").getDependencies())|raw }});
+  </script>
