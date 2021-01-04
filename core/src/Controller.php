@@ -96,6 +96,7 @@ class Controller {
   public function handle(ServerRequestInterface $request, $route = []) : ResponseInterface {
     $route += ["action" => "", "arguments" => []];
     $this->request = $request;
+    $this->response->assign("request", $request);
     $this->response->assign("route", $route);
     if (!empty($route["format"])) {
       $this->response->setFormat($route["format"]);

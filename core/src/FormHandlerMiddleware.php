@@ -1,60 +1,51 @@
 <?php
 namespace Starbug\Core;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\Routing\RouterInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
+use Starbug\Http\ResponseBuilderInterface;
 
-class Application implements ApplicationInterface {
+class FormHandlerMiddleware implements MiddlewareInterface {
 
-  protected $controllers;
   protected $models;
-  protected $router;
-  protected $request;
-  protected $output;
-  protected $config;
   protected $session;
-
-  use \Psr\Log\LoggerAwareTrait;
+  protected $filter;
+  protected $response;
+  protected $logger;
 
   /**
    * All the dependencies needed to co-ordinate the application.
    *
-   * @param ControllerFactoryInterface $controllers Factory to create controllers.
    * @param ModelFactoryInterface $models Factory to create models.
-   * @param RouterInterface $router Router translates paths to controllers.
    * @param SessionHandlerInterface $session Session for authenticated users.
-   * @param TemplateInterface $output The output rendering interface.
    * @param InputFilterInterface $filter Utility for input sanitization.
+   * @param ResponseBuilderInterface $response Response builder.
+   * @param LoggerInterface $logger Logger.
    */
   public function __construct(
-    ControllerFactoryInterface $controllers,
     ModelFactoryInterface $models,
-    RouterInterface $router,
     SessionHandlerInterface $session,
-    TemplateInterface $output,
-    InputFilterInterface $filter
+    InputFilterInterface $filter,
+    ResponseBuilderInterface $response,
+    LoggerInterface $logger
   ) {
-    $this->controllers = $controllers;
     $this->models = $models;
-    $this->router = $router;
     $this->session = $session;
-    $this->output = $output;
     $this->filter = $filter;
+    $this->response = $response;
+    $this->logger = $logger;
   }
 
-  public function handle(ServerRequestInterface $request) {
-    $this->session->startSession();
+  public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
     $permitted = $this->checkPost($request->getParsedBody(), $request->getCookieParams());
-    $this->output->assign("request", $request);
-    $route = $this->router->route($request);
-    $this->logger->addInfo("Loading ".$route['controller'].' -> '.$route['action']);
-    $controller = $this->controllers->get($route['controller']);
-    if (!$permitted) {
-      $response = $controller->handle($request, ["action" => "forbidden"]);
+    if ($permitted) {
+      return $handler->handle($request);
     } else {
-      $response = $controller->handle($request, $route);
+      return $this->response->redirect("login?to=".$request->getUri()->getPath());
     }
-    return $response;
   }
   /**
    * Run a model action if permitted.

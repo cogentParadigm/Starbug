@@ -12,8 +12,9 @@ $request = $request->withUri($uri);
 
 $container->set("Psr\Http\Message\UriInterface", $uri);
 $container->set("Psr\Http\Message\ServerRequestInterface", $request);
-$application = $container->get("Starbug\Core\ApplicationInterface");
-$response = $application->handle($request);
+
+$dispatcher = $container->get("Psr\Http\Server\RequestHandlerInterface");
+$response = $dispatcher->handle($request);
 
 $emitter = new SapiEmitter();
 $emitter->emit($response);
