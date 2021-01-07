@@ -6,9 +6,13 @@ use Monolog\Logger;
 use DI;
 use FastRoute\Dispatcher\GroupCountBased;
 use FastRoute\RouteCollector;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Routing\RoutesHelper;
 use Starbug\Http\UriBuilder;
+use Whoops\Handler\Handler;
+use Whoops\Handler\PlainTextHandler;
+use Whoops\Handler\PrettyPageHandler;
 
 return [
   'environment' => 'development',
@@ -66,13 +70,27 @@ return [
   }),
   'Starbug\Core\ModelFactoryInterface' => DI\autowire('Starbug\Core\ModelFactory')->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\CssGenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
-  'Starbug\Core\ErrorHandler' => DI\decorate(function ($previous, $container) {
+  "Whoops\Run" => DI\decorate(function ($whoops, $container) {
+    $textHandler = new PlainTextHandler($container->get("Psr\Log\LoggerInterface"));
+    $whoops->appendHandler($textHandler);
     $cli = $container->get("cli");
-    if (false === $cli) {
-      $previous->setTemplate("exception.html");
-      $previous->setContentOnly(false);
+    if (!\Whoops\Util\Misc::isCommandLine() && !$cli) {
+      $textHandler->loggerOnly(true);
+      if ($container->get("environment") == "production") {
+        $whoops->appendHandler(function ($e) use ($container) {
+          $response = $container->get("Starbug\Http\ResponseBuilderInterface");
+          $response = $response->create(500)
+          ->render("exception.html")
+          ->getResponse();
+          $emitter = new SapiEmitter();
+          $emitter->emit($response);
+          return Handler::QUIT;
+        });
+      } else {
+        $whoops->appendHandler(new PrettyPageHandler());
+      }
     }
-    return $previous;
+    return $whoops;
   }),
   'Starbug\Core\SessionStorageInterface' => DI\autowire('Starbug\Core\SessionStorage')
     ->constructorParameter('key', DI\get('hmac_key')),

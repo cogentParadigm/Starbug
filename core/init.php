@@ -9,4 +9,4 @@ $factory = new Starbug\Core\ContainerFactory(str_replace("/core", "", dirname(__
 $container = $factory->build($args);
 
 date_default_timezone_set($container->get('time_zone'));
-$container->get("Starbug\Core\ErrorHandler")->register();
+$container->get("Whoops\Run")->register();
