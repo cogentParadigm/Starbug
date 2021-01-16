@@ -2,22 +2,38 @@
   "name": "starbug/starbug",
   "type": "project",
   "description": "Starbug Framework",
-  "config": {
-    "platform": {
-      "php": "7.3"
+  "extra": {
+    "modules-plugin": {
+      "types": {
+        "starbug-module": "module",
+        "starbug-theme": "theme",
+        "starbug-custom-module": "module",
+        "starbug-custom-theme": "theme"
+      },
+      "parameters": ["namespace"]
     }
   },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "./modules/*"
+    },
+    {
+      "type": "path",
+      "url": "./app/themes/*"
+    }
+  ],
   "require": {
+    "starbug/modules": "^0.8",
     "starbug/bundle": "^1.0",
-    "starbug/resource-locator": "*",
-    "starbug/http": "*",
+    "starbug/resource-locator": "^0.9",
+    "starbug/http": "^0.9",
     "php-di/php-di": "^6.0",
     "phpmailer/phpmailer": "dev-master",
     "masterexploder/phpthumb": "dev-master",
     "ezyang/htmlpurifier":"dev-master",
     "psr/log": "^1.0",
     "monolog/monolog": "^1.17",
-    "php-console/php-console": "^3.1",
     "wp-cli/php-cli-tools": "^0.10.5",
     "doctrine/dbal": "^2.8",
     "league/flysystem": "^1.0",
@@ -25,7 +41,17 @@
     "litipk/flysystem-fallback-adapter": "^0.1.2",
     "twistor/flysystem-http": "^0.2.0",
     "nikic/fast-route": "^1.3",
-    "filp/whoops": "^2.9"
+    "filp/whoops": "^2.9",
+    "starbug/db": "dev-master",
+    "starbug/doctrine": "dev-master",
+    "starbug/users": "dev-master",
+    "starbug/tachyons": "dev-master",
+    "starbug/files": "dev-master",
+    "starbug/emails": "dev-master",
+    "starbug/css": "dev-master",
+    "starbug/js": "dev-master",
+    "starbug/content": "dev-master",
+    "starbug/storm": "dev-master"
   },
   "require-dev": {
     "starbug/devel": "*"

@@ -2,7 +2,6 @@
 namespace Starbug\Core;
 
 use DI\ContainerBuilder;
-use Starbug\ResourceLocator\ResourceLocator;
 
 class ContainerFactory {
   public function __construct($base_directory) {
@@ -12,17 +11,21 @@ class ContainerFactory {
     $config = include($this->base_directory."/etc/di.php");
     $config["base_directory"] = $this->base_directory;
     $config["modules"] = $config["modules"] ?? [];
-    $locator = new ResourceLocator($config['base_directory'], $config['modules']);
     $builder = new ContainerBuilder();
     $builder->addDefinitions($config);
-    foreach ($locator->locate("di.php", "etc") as $defs) $builder->addDefinitions($defs);
+    $this->addDefinitions($builder, $config["modules"]);
     if (!empty($config["t"])) {
-      foreach ($locator->locate("di.php", "tests/etc") as $defs) $builder->addDefinitions($defs);
+      $this->addDefinitions($builder, $config["modules"], "tests/etc");
     }
     $builder->addDefinitions($options);
     $container = $builder->build();
     $container->set('Psr\Container\ContainerInterface', $container);
-    $container->set('Starbug\ResourceLocator\ResourceLocatorInterface', $locator);
     return $container;
+  }
+  protected function addDefinitions(ContainerBuilder $builder, array $modules, string $dir = "etc") {
+    foreach ($modules as $module) {
+      $path = $module["path"] ."/" . $dir ."/di.php";
+      if (file_exists($path)) $builder->addDefinitions($path);
+    }
   }
 }

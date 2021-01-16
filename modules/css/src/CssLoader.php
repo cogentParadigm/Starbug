@@ -2,17 +2,19 @@
 namespace Starbug\Css;
 
 use Starbug\Http\UriBuilderInterface;
+use Starbug\Modules\Configuration;
 use Starbug\ResourceLocator\ResourceLocatorInterface;
 use Twig\Environment;
 
 class CssLoader {
   protected $theme;
   protected $options = false;
-  public function __construct(ResourceLocatorInterface $locator, UriBuilderInterface $uri, Environment $twig, $modules) {
+  public function __construct(ResourceLocatorInterface $locator, UriBuilderInterface $uri, Environment $twig, Configuration $modules, $theme) {
     $this->locator = $locator;
     $this->uri = $uri;
     $this->twig = $twig;
     $this->modules = $modules;
+    $this->theme = $theme;
   }
   public function getConfiguration($reload = false) {
     $this->load($reload);
@@ -36,30 +38,37 @@ class CssLoader {
     return $this->theme;
   }
   public function setTheme($name) {
+    $oldPath = $this->modules->get($this->theme, "path");
+    $newPath = $this->modules->get($name, "path");
+    $this->modules->disable($this->theme);
     $this->theme = $name;
-    $previous = $this->modules["Starbug\Theme"];
-    $this->modules["Starbug\Theme"] = "app/themes/".$name;
-    $this->locator->set("Starbug\Theme", "app/themes/".$name);
+    $this->modules->enable($this->theme);
+
+    $enabled = $this->modules->getEnabled();
+    $this->locator->setNamespaces(array_column($enabled, "namespace"));
+    $this->locator->setPaths(array_column($enabled, "path"));
+
     $templates = $this->twig->getLoader()->getPaths();
     $layouts = $this->twig->getLoader()->getPaths("layouts");
     $views = $this->twig->getLoader()->getPaths("views");
+
     foreach ($templates as $idx => $path) {
-      if ($path == $previous."/templates") {
-        $templates[$idx] = "app/themes/".$name."/templates";
+      if ($path == $oldPath."/templates") {
+        $templates[$idx] = $newPath."/templates";
       }
     }
     foreach ($layouts as $idx => $path) {
-      if ($path == $previous."/layouts") {
-        $layouts[$idx] = "app/themes/".$name."/layouts";
+      if ($path == $oldPath."/layouts") {
+        $layouts[$idx] = $newPath."/layouts";
       }
     }
     foreach ($views as $idx => $path) {
-      if ($path == $previous."/views") {
-        $views[$idx] = "app/themes/".$name."/views";
+      if ($path == $oldPath."/views") {
+        $views[$idx] = $newPath."/views";
       }
     }
     $this->twig->getLoader()->setPaths($templates);
-    $this->twig->getLoader()->setPaths(["app/themes/".$name."/templates"], "theme");
+    $this->twig->getLoader()->setPaths([$newPath."/templates"], "theme");
     $this->twig->getLoader()->setPaths($layouts, "layouts");
     $this->twig->getLoader()->setPaths($views, "views");
     $this->options = false;
@@ -81,7 +90,7 @@ class CssLoader {
             $style = ["href" => $style];
           }
           if (empty($style["rel"])) $style["rel"] = "stylesheet";
-          $style["href"] = $this->modules[$mid] . "/" . $style["href"];
+          $style["href"] = $mid . "/" . $style["href"];
           $options[$media][] = $style;
         }
       }

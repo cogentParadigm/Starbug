@@ -1,0 +1,15 @@
+{
+  "name": "starbug/css",
+  "type": "starbug-module",
+  "description": "Starbug css module.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Css"
+  }
+}

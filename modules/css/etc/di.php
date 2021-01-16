@@ -13,7 +13,7 @@ use Twig\TwigFunction;
 return [
   'theme' => 'tachyons',
   'Starbug\Css\CssLoader' => DI\autowire()
-    ->constructorParameter('modules', DI\get('modules')),
+    ->constructorParameter('theme', DI\get('theme')),
   'Starbug\Css\RouteFilter' => DI\autowire()->constructorParameter('theme', DI\get('theme')),
   'Starbug\Css\CssBuildCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\Routing\RouterInterface' => DI\decorate(function ($router, ContainerInterface $container) {
@@ -23,12 +23,12 @@ return [
   'Twig\Environment' => function (ContainerInterface $c) {
     // Configure loader.
     $loader = new FilesystemLoader();
-    $modules = array_reverse($c->get("modules"));
-    foreach ($modules as $ns => $dir) {
-      $ns = strtolower(explode("\\", $ns)[1]);
+    $modules = array_reverse($c->get("Starbug\Modules\Configuration")->getEnabled(), true);
+    foreach ($modules as $name => $module) {
+      $dir = $module["path"];
       if (file_exists($dir."/templates")) {
         $loader->addPath($dir."/templates");
-        $loader->addPath($dir."/templates", $ns);
+        $loader->addPath($dir."/templates", $name);
       }
       if (file_exists($dir."/layouts")) {
         $loader->addPath($dir."/layouts", "layouts");

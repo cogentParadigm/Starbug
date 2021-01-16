@@ -1,5 +1,4 @@
 <?php
-
 use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 

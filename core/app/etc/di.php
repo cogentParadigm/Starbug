@@ -10,6 +10,7 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Routing\RoutesHelper;
 use Starbug\Http\UriBuilder;
+use Starbug\ResourceLocator\ResourceLocator;
 use Whoops\Handler\Handler;
 use Whoops\Handler\PlainTextHandler;
 use Whoops\Handler\PrettyPageHandler;
@@ -130,5 +131,12 @@ return [
       $logger->pushHandler($handler);
     }
     return $logger;
+  },
+  "Starbug\ResourceLocator\ResourceLocatorInterface" => function (ContainerInterface $container) {
+    $modules = $container->get("Starbug\Modules\Configuration")->getEnabled();
+    $locator = new ResourceLocator($container->get("base_directory"));
+    $locator->setNamespaces(array_column($modules, "namespace"));
+    $locator->setPaths(array_column($modules, "path"));
+    return $locator;
   }
 ];

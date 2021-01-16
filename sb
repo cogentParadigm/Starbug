@@ -7,13 +7,7 @@
   $script = array_shift($argv);
   $path = $namespace = false;
   $locator = $container->get('Starbug\ResourceLocator\ResourceLocatorInterface');
-  $locations = $locator->locate($script.".php", "script");
-  $path = end($locations);
-  $namespace = key($locations);
-  if (file_exists($path)) include($path);
-  $classname = str_replace(' ', '', ucwords(str_replace('-', ' ', $script)))."Command";
-  if (class_exists($namespace."\\".$classname)) {
-    $command = $container->get($namespace."\\".$classname);
-    $command->run($argv);
-  }
+  $className = $locator->className($script, "Command");
+  $command = $container->get($className);
+  $command->run($argv);
 ?>

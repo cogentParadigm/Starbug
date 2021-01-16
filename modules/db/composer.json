@@ -1,0 +1,15 @@
+{
+  "name": "starbug/db",
+  "type": "starbug-module",
+  "description": "Starbug database module.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Db"
+  }
+}

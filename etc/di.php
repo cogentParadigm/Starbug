@@ -5,22 +5,29 @@ use Monolog\Handler\StreamHandler;
 
 return [
   'modules' => [
-    "Starbug\Core" => "core/app",
-    "Starbug\Db" => "modules/db",
-    "Starbug\Doctrine" => "modules/doctrine",
-    "Starbug\Users" => "modules/users",
-    "Starbug\Files" => "modules/files",
-    "Starbug\Emails" => "modules/emails",
-    "Starbug\Comments" => "modules/comments",
-    "Starbug\Css" => "modules/css",
-    "Starbug\Js" => "modules/js",
-    "Starbug\Tachyons" => "modules/tachyons",
-    "Starbug\Content" => "modules/content",
-    "Starbug\Theme" => "app/themes/tachyons",
-    "Starbug\App" => "app",
-    "Starbug\Var" => "var"
-
+    "core" => [
+      "type" => "module",
+      "path" => "core/app",
+      "namespace" => "Starbug\Core"
+    ]
+  ] +
+  (include("vendor/modules.php")) +
+  [
+    "app" => [
+      "type" => "module",
+      "path" => "app",
+      "namespace" => "Starbug\App"
+    ],
+    "var" => [
+      "type" => "module",
+      "path" => "var",
+      "namespace" => "Starbug\Var"
+    ]
   ],
+  "Starbug\Modules\Configuration" => DI\autowire("Starbug\Modules\Configuration")
+    ->constructorParameter("modules", DI\get("modules"))
+    ->method("enableAll", ["type" => "module"])
+    ->method("enable", DI\get("theme")),
   "application.middleware" => [
     DI\get("Starbug\Core\AuthenticationMiddleware"),
     DI\get("Starbug\Core\FormHandlerMiddleware"),

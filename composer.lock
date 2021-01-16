@@ -4,8 +4,156 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba9025c8a266923b811040a459225939",
+    "content-hash": "2bae0a83de75bbf37405b0fdf2e979fc",
     "packages": [
+        {
+            "name": "composer/installers",
+            "version": "v1.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/installers.git",
+                "reference": "1a0357fccad9d1cc1ea0c9a05b8847fbccccb78d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/installers/zipball/1a0357fccad9d1cc1ea0c9a05b8847fbccccb78d",
+                "reference": "1a0357fccad9d1cc1ea0c9a05b8847fbccccb78d",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0 || ^2.0"
+            },
+            "replace": {
+                "roundcube/plugin-installer": "*",
+                "shama/baton": "*"
+            },
+            "require-dev": {
+                "composer/composer": "1.6.* || ^2.0",
+                "composer/semver": "^1 || ^3",
+                "phpstan/phpstan": "^0.12.55",
+                "phpstan/phpstan-phpunit": "^0.12.16",
+                "symfony/phpunit-bridge": "^4.2 || ^5",
+                "symfony/process": "^2.3"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Composer\\Installers\\Plugin",
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Installers\\": "src/Composer/Installers"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kyle Robinson Young",
+                    "email": "kyle@dontkry.com",
+                    "homepage": "https://github.com/shama"
+                }
+            ],
+            "description": "A multi-framework Composer library installer",
+            "homepage": "https://composer.github.io/installers/",
+            "keywords": [
+                "Craft",
+                "Dolibarr",
+                "Eliasis",
+                "Hurad",
+                "ImageCMS",
+                "Kanboard",
+                "Lan Management System",
+                "MODX Evo",
+                "MantisBT",
+                "Mautic",
+                "Maya",
+                "OXID",
+                "Plentymarkets",
+                "Porto",
+                "RadPHP",
+                "SMF",
+                "Starbug",
+                "Thelia",
+                "Whmcs",
+                "WolfCMS",
+                "agl",
+                "aimeos",
+                "annotatecms",
+                "attogram",
+                "bitrix",
+                "cakephp",
+                "chef",
+                "cockpit",
+                "codeigniter",
+                "concrete5",
+                "croogo",
+                "dokuwiki",
+                "drupal",
+                "eZ Platform",
+                "elgg",
+                "expressionengine",
+                "fuelphp",
+                "grav",
+                "installer",
+                "itop",
+                "joomla",
+                "known",
+                "kohana",
+                "laravel",
+                "lavalite",
+                "lithium",
+                "magento",
+                "majima",
+                "mako",
+                "mediawiki",
+                "modulework",
+                "modx",
+                "moodle",
+                "osclass",
+                "phpbb",
+                "piwik",
+                "ppi",
+                "processwire",
+                "puppet",
+                "pxcms",
+                "reindex",
+                "roundcube",
+                "shopware",
+                "silverstripe",
+                "sydes",
+                "sylius",
+                "symfony",
+                "typo3",
+                "wordpress",
+                "yawik",
+                "zend",
+                "zikula"
+            ],
+            "support": {
+                "issues": "https://github.com/composer/installers/issues",
+                "source": "https://github.com/composer/installers/tree/v1.10.0"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-01-14T11:07:16+00:00"
+        },
         {
             "name": "doctrine/cache",
             "version": "1.10.2",
@@ -781,6 +929,68 @@
             "time": "2016-06-23T00:18:01+00:00"
         },
         {
+            "name": "marcj/topsort",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marcj/topsort.php.git",
+                "reference": "972f58e42b5f110a0a1d8433247f65248abcfd5c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marcj/topsort.php/zipball/972f58e42b5f110a0a1d8433247f65248abcfd5c",
+                "reference": "972f58e42b5f110a0a1d8433247f65248abcfd5c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "phpunit/phpunit": "^9",
+                "symfony/console": "~2.5 || ~3.0 || ~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "MJS\\TopSort\\": "src/",
+                    "MJS\\TopSort\\Tests\\": "tests/Tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marc J. Schmidt",
+                    "email": "marc@marcjschmidt.de"
+                }
+            ],
+            "description": "High-Performance TopSort/Dependency resolving algorithm",
+            "keywords": [
+                "dependency resolving",
+                "topological sort",
+                "topsort"
+            ],
+            "support": {
+                "issues": "https://github.com/marcj/topsort.php/issues",
+                "source": "https://github.com/marcj/topsort.php/tree/2.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/marcj",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-09-24T12:39:55+00:00"
+        },
+        {
             "name": "masterexploder/phpthumb",
             "version": "dev-master",
             "source": {
@@ -1072,57 +1282,6 @@
                 "psr-7"
             ],
             "time": "2020-12-06T00:59:17+00:00"
-        },
-        {
-            "name": "php-console/php-console",
-            "version": "3.1.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/barbushin/php-console.git",
-                "reference": "aa1d71d4ea3dc91e126edc9aa4f3c10eb8559cff"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/barbushin/php-console/zipball/aa1d71d4ea3dc91e126edc9aa4f3c10eb8559cff",
-                "reference": "aa1d71d4ea3dc91e126edc9aa4f3c10eb8559cff",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "ext-mbstring": "*",
-                "phpunit/phpunit": "^4.8",
-                "psr/log": "^1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "PhpConsole\\": "src/PhpConsole"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Sergey Barbushin",
-                    "email": "barbushin@gmail.com",
-                    "homepage": "http://linkedin.com/in/barbushin"
-                }
-            ],
-            "description": "PHP library for Google Chrome extension \"PHP Console\".",
-            "homepage": "https://github.com/barbushin/php-console",
-            "keywords": [
-                "chrome",
-                "debug",
-                "error handler",
-                "errors",
-                "google chrome",
-                "php"
-            ],
-            "time": "2019-07-25T03:43:28+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -1683,6 +1842,222 @@
             "time": "2019-01-28T15:27:20+00:00"
         },
         {
+            "name": "starbug/composer-modules-plugin",
+            "version": "v0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/composer-modules-plugin.git",
+                "reference": "6ab3a40de72fa39a80c452daa0dbb4d0ef0559ac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/composer-modules-plugin/zipball/6ab3a40de72fa39a80c452daa0dbb4d0ef0559ac",
+                "reference": "6ab3a40de72fa39a80c452daa0dbb4d0ef0559ac",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^2.0",
+                "marcj/topsort": "^2.0"
+            },
+            "require-dev": {
+                "composer/composer": "^2.0",
+                "starbug/devel": "*"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Starbug\\Composer\\ModulesPlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Composer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "A composer plugin for generating a module list.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/composer-modules-plugin/issues",
+                "source": "https://github.com/cogentParadigm/composer-modules-plugin/tree/v0.8"
+            },
+            "time": "2021-01-13T02:38:43+00:00"
+        },
+        {
+            "name": "starbug/content",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/content",
+                "reference": "81df8307cf409370ca8fbab44b0580ee8aa57a67"
+            },
+            "require": {
+                "starbug/db": "*"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Content"
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug content module.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "starbug/css",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/css",
+                "reference": "45ace0bbc070171b881d2faf53d48ee67065ac90"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Css"
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug css module.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "starbug/db",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/db",
+                "reference": "ec104cef9c0332aad29f9055005e630a251b297f"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Db"
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug database module.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "starbug/doctrine",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/doctrine",
+                "reference": "1c45f58cfd19c6a6464b93bfbeb9088fb738b091"
+            },
+            "require": {
+                "starbug/db": "*"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Doctrine"
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Doctrine based implementations of database module interfaces.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "starbug/emails",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/emails",
+                "reference": "ea01ff88e480d22f77198f0e2b0a8a08ecbc629f"
+            },
+            "require": {
+                "starbug/db": "*"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Emails"
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug emails module.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "starbug/files",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/files",
+                "reference": "8c26c3cc3dbcdd91bb1ee2294afee52adf659d74"
+            },
+            "require": {
+                "starbug/db": "*"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Files"
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug files module.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "starbug/http",
             "version": "v0.9.4",
             "source": {
@@ -1727,17 +2102,87 @@
             "time": "2021-01-04T04:16:25+00:00"
         },
         {
-            "name": "starbug/resource-locator",
+            "name": "starbug/js",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/js",
+                "reference": "9ebed3b85742fdd50e20dccf9d92ff9714a15357"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Js"
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug js module.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "starbug/modules",
             "version": "v0.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/cogentParadigm/starbug-resource-locator.git",
-                "reference": "e08ac2a45e5cff29f59996b7745045e6b1786d87"
+                "url": "https://github.com/cogentParadigm/starbug-modules.git",
+                "reference": "d094200068675b4a9112269a3ee28f62ddf3b58d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-resource-locator/zipball/e08ac2a45e5cff29f59996b7745045e6b1786d87",
-                "reference": "e08ac2a45e5cff29f59996b7745045e6b1786d87",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-modules/zipball/d094200068675b4a9112269a3ee28f62ddf3b58d",
+                "reference": "d094200068675b4a9112269a3ee28f62ddf3b58d",
+                "shasum": ""
+            },
+            "require": {
+                "composer/installers": "^1.10",
+                "starbug/composer-modules-plugin": "^0.8"
+            },
+            "require-dev": {
+                "starbug/devel": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Modules\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "A very simple module management layer.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-modules/issues",
+                "source": "https://github.com/cogentParadigm/starbug-modules/tree/v0.8"
+            },
+            "time": "2021-01-16T02:13:05+00:00"
+        },
+        {
+            "name": "starbug/resource-locator",
+            "version": "v0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-resource-locator.git",
+                "reference": "bf7b7e4eafa7914b5d49a7161538f8f6299cf47f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-resource-locator/zipball/bf7b7e4eafa7914b5d49a7161538f8f6299cf47f",
+                "reference": "bf7b7e4eafa7914b5d49a7161538f8f6299cf47f",
                 "shasum": ""
             },
             "require-dev": {
@@ -1760,7 +2205,92 @@
                 }
             ],
             "description": "Locate files and classes from a list of modules.",
-            "time": "2020-10-17T22:16:23+00:00"
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-resource-locator/issues",
+                "source": "https://github.com/cogentParadigm/starbug-resource-locator/tree/v0.9"
+            },
+            "time": "2021-01-11T02:39:27+00:00"
+        },
+        {
+            "name": "starbug/storm",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./app/themes/storm",
+                "reference": "f590aceef6165ec1e216d5f3f73b4fc5dbeec0f6"
+            },
+            "type": "starbug-custom-theme",
+            "extra": {
+                "namespace": "Starbug\\Storm"
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Storm admin theme for Starbug.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "starbug/tachyons",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./app/themes/tachyons",
+                "reference": "ea86208a3b8cfce1aedb1ea09da0842905e58cdd"
+            },
+            "type": "starbug-custom-theme",
+            "extra": {
+                "namespace": "Starbug\\Tachyons"
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Tachyons theme for Starbug.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "starbug/users",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/users",
+                "reference": "c8a467a9e3b753ef8da4cf8f091cf4cec0a1ab7a"
+            },
+            "require": {
+                "starbug/db": "*"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Users"
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug users module.",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2604,23 +3134,23 @@
         },
         {
             "name": "composer/semver",
-            "version": "3.2.2",
+            "version": "3.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "4089fddb67bcf6bf860d91b979e95be303835002"
+                "reference": "a02fdf930a3c1c3ed3a49b5f63859c0c20e10464"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/4089fddb67bcf6bf860d91b979e95be303835002",
-                "reference": "4089fddb67bcf6bf860d91b979e95be303835002",
+                "url": "https://api.github.com/repos/composer/semver/zipball/a02fdf930a3c1c3ed3a49b5f63859c0c20e10464",
+                "reference": "a02fdf930a3c1c3ed3a49b5f63859c0c20e10464",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.3.2 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12.19",
+                "phpstan/phpstan": "^0.12.54",
                 "symfony/phpunit-bridge": "^4.2 || ^5"
             },
             "type": "library",
@@ -2662,6 +3192,11 @@
                 "validation",
                 "versioning"
             ],
+            "support": {
+                "irc": "irc://irc.freenode.org/composer",
+                "issues": "https://github.com/composer/semver/issues",
+                "source": "https://github.com/composer/semver/tree/3.2.4"
+            },
             "funding": [
                 {
                     "url": "https://packagist.com",
@@ -2676,7 +3211,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-14T08:51:15+00:00"
+            "time": "2020-11-13T08:59:24+00:00"
         },
         {
             "name": "composer/xdebug-handler",
@@ -7150,14 +7685,21 @@
     "stability-flags": {
         "phpmailer/phpmailer": 20,
         "masterexploder/phpthumb": 20,
-        "ezyang/htmlpurifier": 20
+        "ezyang/htmlpurifier": 20,
+        "starbug/db": 20,
+        "starbug/doctrine": 20,
+        "starbug/users": 20,
+        "starbug/tachyons": 20,
+        "starbug/files": 20,
+        "starbug/emails": 20,
+        "starbug/css": 20,
+        "starbug/js": 20,
+        "starbug/content": 20,
+        "starbug/storm": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "platform-overrides": {
-        "php": "7.3"
-    },
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
