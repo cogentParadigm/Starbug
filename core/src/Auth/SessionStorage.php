@@ -48,7 +48,7 @@ class SessionStorage implements SessionStorageInterface {
    */
   public function load() {
     // Obtain and parse session cookie.
-    ["sid" => $session] = $this->request->getCookieParams();
+    $session = $this->request->getCookieParams()["sid"] ?? false;
     if (empty($session)) return false;
     parse_str($session, $params);
     $digest = $params['d'];

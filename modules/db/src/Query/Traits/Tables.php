@@ -24,7 +24,7 @@ trait Tables {
 
   public function getTable($alias = false) {
     if (false === $alias) $alias = $this->baseTableAlias;
-    return $this->tables[$alias];
+    return $this->tables[$alias] ?? null;
   }
 
   public function hasTable($alias = false) {

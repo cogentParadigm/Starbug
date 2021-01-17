@@ -48,7 +48,7 @@ class ControllerMiddleware implements MiddlewareInterface {
 
   public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
     $route = $this->router->route($request);
-    $this->logger->addInfo("Loading ".$route['controller'].' -> '.$route['action']);
+    $this->logger->addInfo("Loading ".$route['controller'].' -> '.($route['action'] ?? ""));
     $controller = $this->controllers->get($route['controller']);
     return $controller->handle($request, $route);
   }

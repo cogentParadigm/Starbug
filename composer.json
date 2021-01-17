@@ -24,11 +24,11 @@
     }
   ],
   "require": {
-    "starbug/modules": "^0.8",
+    "starbug/di": "^0.8",
+    "starbug/modules": "^0.8.1",
     "starbug/bundle": "^1.0",
     "starbug/resource-locator": "^0.9",
     "starbug/http": "^0.9",
-    "php-di/php-di": "^6.0",
     "phpmailer/phpmailer": "dev-master",
     "masterexploder/phpthumb": "dev-master",
     "ezyang/htmlpurifier":"dev-master",
@@ -71,6 +71,7 @@
     "phpmd": "vendor/bin/phpmd . text vendor/starbug/standard/phpmd.xml --exclude libraries,var,node_modules,vendor || true",
     "phpcpd": "vendor/bin/phpcpd app core modules || true",
     "phpunit": "vendor/bin/phpunit -c etc/phpunit.xml || true",
-    "behat": "vendor/bin/behat"
+    "behat": "vendor/bin/behat",
+    "console": "php -d auto_prepend_file=vendor/starbug/di/bootstrap/default.php -a"
   }
 }

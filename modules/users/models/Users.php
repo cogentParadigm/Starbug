@@ -13,7 +13,7 @@ class Users extends UsersModel {
     if ((!$this->errors()) && (empty($user['id']))) {
       $uid = $this->insert_id;
       $data = ["user" => $this->load($uid)];
-      $data['user']['password'] = $user['password'];
+      $data['user']['password'] = $user['password'] ?? "";
       $this->mailer->send(["template" => "Account Creation", "to" => $user['email']], $data);
     }
   }

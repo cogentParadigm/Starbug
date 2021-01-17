@@ -45,5 +45,6 @@ return [
     $name = $c->get("environment");
     $handler = new StreamHandler('var/log/'.$name.".log");
     return $handler;
-  }
+  },
+  "error_handler" => DI\get("Whoops\Run")
 ];

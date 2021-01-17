@@ -215,11 +215,13 @@ class Table implements CollectionFilterInterface {
       if ($id) $entities[$key] = $this->query($name)->condition($name.".id", $id)->one();
       elseif ($conditions) {
         $entity = $this->query($name)->conditions($conditions)->one();
-        $id = $entity["id"];
-        $entities[$name."-".$id] = $entity;
+        if ($entity) {
+          $id = $entity["id"];
+          $entities[$name."-".$id] = $entity;
+        }
       }
     }
-    return $entities[$name."-".$id];
+    return $entities[$name."-".$id] ?? null;
   }
 
   /**

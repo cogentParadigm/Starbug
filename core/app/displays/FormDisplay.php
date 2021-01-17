@@ -226,7 +226,7 @@ class FormDisplay extends ItemDisplay {
   public function get($name) {
     $parts = explode("[", $name);
     $var = ($this->method == "post") ? $this->getPost() : $this->request->getQueryParams();
-    foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")];
+    foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")] ?? null;
     if (is_array($var)) return $var;
     else return stripslashes($var);
   }
@@ -299,7 +299,7 @@ class FormDisplay extends ItemDisplay {
     }
 
     $capture = "field";
-    if (empty($field['field'])) $field['field'] = reset(explode("[", $field['name']));
+    if (empty($field['field'])) $field['field'] = explode("[", $field['name'])[0];
     $field['name'] = $this->getName($field['name']);
     foreach ($field as $k => $v) $this->assign($k, $v);
     if (isset($field['nofield'])) {

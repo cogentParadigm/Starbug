@@ -63,9 +63,10 @@ class StoreOrderedHook extends QueryHook {
         ->condition($query->model.".id", $ids, "!=")
         ->condition($query->model.".deleted", "0")
         ->condition($query->model.".".$column, $value)->one();
-      $ids[] = $row['id'];
+      if (!empty($row)) $ids[] = $row['id'];
       $value += $this->increment;
     }
     $this->conditions = false;
+    $this->value = false;
   }
 }

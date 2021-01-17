@@ -5,7 +5,7 @@ class UsersTest extends ModelTest {
 
   public $model = "users";
 
-  public function testDreate() {
+  public function testCreate() {
     $this->db->remove("users", ["email" => "phpunit@neonrain.com"]);
     $this->action("create", ["email" => "phpunit@neonrain.com", "groups" => "user"]);
     $user = $this->db->query("users")->select("users.*,GROUP_CONCAT(users.groups.slug) as groups")

@@ -2,8 +2,7 @@
 use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
-// include init file
-include("core/init.php");
+include("vendor/starbug/di/bootstrap/default.php");
 
 $request = ServerRequest::fromGlobals();
 $uri = $container->make("Psr\Http\Message\UriInterface", ["request" => $request]);

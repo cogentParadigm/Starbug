@@ -1,8 +1,24 @@
 #!/usr/bin/php -Cq
 <?php
   namespace Starbug\Core;
+  $positional = [];
+  $named = [];
+  foreach ($argv as $i => $arg) {
+    if (0 === strpos($arg, "-")) {
+      $arg = ltrim($arg, "-");
+      $parts = (false !== strpos($arg, "=")) ? explode("=", $arg, 2) : [$arg, true];
+      $named[$parts[0]] = $parts[1];
+    } else {
+      $positional[] = $arg;
+    }
+  }
+  $args = $named;
   chdir(dirname(__FILE__));
-  include("core/cli.php");
+  if (!empty($args["t"])) {
+    include("vendor/starbug/di/bootstrap/test.php");
+  } else {
+    include("vendor/starbug/di/bootstrap/default.php");
+  }
   $command = array_shift($argv);
   $script = array_shift($argv);
   $path = $namespace = false;

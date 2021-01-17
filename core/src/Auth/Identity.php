@@ -39,7 +39,7 @@ class Identity implements IdentityInterface {
    */
   public function userinfo($field = '') {
     if (empty($this->user)) return false;
-    return $this->user[$field];
+    return $this->user[$field] ?? null;
   }
   /**
    * Get the current user.

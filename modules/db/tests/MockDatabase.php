@@ -2,13 +2,14 @@
 namespace Starbug\Db\Tests;
 
 use Starbug\Core\DatabaseInterface;
+use Starbug\Db\Query\BuilderInterface;
 
 class MockDatabase implements DatabaseInterface {
   protected $prefix = "test_";
   public function get($collection, $conditions = [], $options = []) {
     // Empty function.
   }
-  public function query($collection) {
+  public function query($collection): BuilderInterface {
     // Empty function.
   }
   public function store($name, $fields = [], $from = "auto") {
@@ -37,6 +38,12 @@ class MockDatabase implements DatabaseInterface {
   }
   public function prepare($statement) {
     // Empty function.
+  }
+  public function setInsertId($table, $id) {
+    // Empty function.
+  }
+  public function getInsertId($table) {
+
   }
   public function lastInsertId() {
     // Empty function.

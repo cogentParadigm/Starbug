@@ -7,7 +7,7 @@
   convertWarningsToExceptions="true"
   processIsolation="false"
   stopOnFailure="false"
-  bootstrap="../core/test.php"
+  bootstrap="../vendor/starbug/di/bootstrap/test.php"
 >
   <filter>
     <whitelist>

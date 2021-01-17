@@ -59,7 +59,7 @@ class Display {
       foreach ($name as $k => $v) $this->attr($k, $v);
     } elseif (is_null($value)) {
       return $this->attributes[$name];
-    } elseif (is_array($this->attributes[$name])) {
+    } elseif (isset($this->attributes[$name]) && is_array($this->attributes[$name])) {
       $this->attributes[$name][] = $value;
     } else {
       $this->attributes[$name] = $value;

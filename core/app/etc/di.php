@@ -69,6 +69,9 @@ return [
     }
     return $uri;
   }),
+  'Psr\Http\Message\ServerRequestInterface' => DI\autowire("GuzzleHttp\Psr7\ServerRequest")
+    ->constructorParameter("method", "GET")
+    ->constructorParameter("uri", DI\get("website_url")),
   'Starbug\Core\ModelFactoryInterface' => DI\autowire('Starbug\Core\ModelFactory')->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\CssGenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   "Whoops\Run" => DI\decorate(function ($whoops, $container) {

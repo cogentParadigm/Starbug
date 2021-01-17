@@ -53,7 +53,7 @@ class Migrator extends AbstractMigration {
       }
       $t->setPrimaryKey($primary);
       foreach ($indexes as $index) {
-        if ($index["unique"]) {
+        if (!empty($index["unique"])) {
           $t->addUniqueIndex($index["columns"]);
         } else {
           $t->addIndex($index["columns"]);

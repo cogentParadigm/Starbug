@@ -22,7 +22,7 @@ class Executor implements ExecutorInterface {
   public function execute(BuilderInterface $builder) {
     $db = $builder->getDatabase();
     $query = $builder->getQuery();
-    if (!$query->isRaw() && $query->isInsert() || $query->isUpdate()) {
+    if (!$query->isRaw() && ($query->isInsert() || $query->isUpdate())) {
       if (!$query->isValidated()) $this->validate($builder, self::PHASE_VALIDATION);
       $this->validate($builder, self::PHASE_STORE);
     }

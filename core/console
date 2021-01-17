@@ -1,1 +1,0 @@
-php -d auto_prepend_file=core/cli.php -a
