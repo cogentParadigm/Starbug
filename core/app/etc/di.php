@@ -148,5 +148,8 @@ return [
     $locator->setNamespaces(array_column($modules, "namespace"));
     $locator->setPaths(array_column($modules, "path"));
     return $locator;
-  }
+  },
+  "Middlewares\Https" => DI\autowire()
+    ->constructorParameter("responseFactory", DI\get("Http\Factory\Guzzle\ResponseFactory"))
+    ->method("includeSubdomains")
 ];

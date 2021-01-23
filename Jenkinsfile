@@ -72,7 +72,7 @@ pipeline {
 
         // Migrate test database
         sh """
-          docker-compose exec -u ${env.UID}: -T php php sb migrate -t -db=test
+          docker-compose exec -u ${env.UID}: -T php php sb migrate -t
           docker-compose exec -u ${env.UID}: -T php composer dump-autoload
         """
 

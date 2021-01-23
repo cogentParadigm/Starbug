@@ -29,6 +29,7 @@ return [
     ->method("enableAll", ["type" => "module"])
     ->method("enable", DI\get("theme")),
   "application.middleware" => [
+    DI\get("Middlewares\Https"),
     DI\get("Starbug\Auth\Http\AuthenticationMiddleware"),
     DI\get("Starbug\Auth\Http\CsrfMiddleware"),
     DI\get("Starbug\Core\FormHandlerMiddleware"),
