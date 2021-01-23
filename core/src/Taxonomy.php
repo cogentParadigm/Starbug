@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Auth\SessionHandlerInterface;
+
 /**
  * Implementation of TaxonomyInterface.
  */
@@ -8,16 +10,16 @@ class Taxonomy implements TaxonomyInterface {
   protected $db;
   protected $models;
   protected $user;
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user, InputFilterInterface $filter) {
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SessionHandlerInterface $session, InputFilterInterface $filter) {
     $this->db = $db;
     $this->models = $models;
-    $this->user = $user;
+    $this->session = $session;
     $this->filter = $filter;
   }
   public function terms($taxonomy, $parent = 0, $depth = 0) {
     $terms = [];
     $parents = $this->db->query("terms")->condition("taxonomy", $taxonomy)->condition("parent", $parent)->sort("position");
-    if ($taxonomy == "groups" && !$this->user->loggedIn("root")) $parents->condition("slug", "root", "!=");
+    if ($taxonomy == "groups" && !$this->session->loggedIn("root")) $parents->condition("slug", "root", "!=");
     $parents = $parents->all();
     foreach ($parents as $idx => $term) {
       $term['depth'] = $depth;
@@ -56,7 +58,7 @@ class Taxonomy implements TaxonomyInterface {
     // IF THE TERM DOESN'T EXIST, ADD IT
     $term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->bind(["tag" => $tag, "tax" => $taxonomy])->one();
     if (empty($term)) $this->db->store("terms", ["term" => $tag, "slug" => $slug, "taxonomy" => $taxonomy, "parent" => "0", "position" => ""]);
-    elseif ($term['taxonomy'] == "groups" && !$this->user->loggedIn("root") && in_array($term['slug'], ["root"])) return false;
+    elseif ($term['taxonomy'] == "groups" && !$this->session->loggedIn("root") && in_array($term['slug'], ["root"])) return false;
     if ($this->db->errors()) return false;
 
     // APPLY TAG

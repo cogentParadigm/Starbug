@@ -108,6 +108,6 @@ class FormWizard extends FormDisplay {
     if (false === $id) {
       $id = $url;
     }
-    $this->addButton($id, $label, $attributes + ["onclick" => "window.location = WEBSITE_URL + '".$url."'"]);
+    $this->addButton($id, $label, $attributes + ["onclick" => "window.location = dojoConfig.websiteUrl + '".$url."'"]);
   }
 }

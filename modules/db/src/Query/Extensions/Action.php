@@ -1,13 +1,13 @@
 <?php
 namespace Starbug\Db\Query\Extensions;
 
-use Starbug\Core\IdentityInterface;
+use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Db\Query\BuilderInterface;
 use Starbug\Db\Schema\SchemaInterface;
 
 class Action {
-  public function __construct(IdentityInterface $user, SchemaInterface $schema) {
-    $this->user = $user;
+  public function __construct(SessionHandlerInterface $session, SchemaInterface $schema) {
+    $this->session = $session;
     $this->schema = $schema;
   }
   public function action(BuilderInterface $query, array $arguments) {
@@ -68,7 +68,7 @@ class Action {
     foreach ($user_columns as $cname => $column) {
       if (isset($column['user_access'])) {
         $permit_field = "user_".$cname;
-        if (!$this->user->loggedIn()) {
+        if (!$this->session->loggedIn()) {
           $query->condition("permits.".$permit_field, "NULL");
         } elseif ($this->schema->hasTable($column['type'])) {
           // multiple reference
@@ -80,7 +80,7 @@ class Action {
               ->condition(
                 "permits.".$permit_field,
                 $query->query($user_table." as u")
-                  ->select($ref)->condition("u.users_id", $this->user->userinfo("id"))
+                  ->select($ref)->condition("u.users_id", $this->session->getUserId())
               )
           );
         } else {
@@ -92,7 +92,7 @@ class Action {
               ->condition(
                 "permits.".$permit_field,
                 $query->query("users as u")
-                  ->select($user_field)->condition("u.id", $this->user->userinfo("id"))
+                  ->select($user_field)->condition("u.id", $this->session->getUserId())
               )
           );
         }
@@ -104,13 +104,13 @@ class Action {
     // everyone - no restriction
     $roleConditions->where("permits.role='everyone'");
     // user - a specific user
-    $roleConditions->where("permits.role='user' && permits.who='".$this->user->userinfo("id")."'");
+    $roleConditions->where("permits.role='user' && permits.who='".$this->session->getUserId()."'");
 
     if ($join) {
       // self - permit for user actions
-      if ($type == "users") $roleConditions->where("permits.role='self' && ".$collection.".id='".$this->user->userinfo("id")."'");
+      if ($type == "users") $roleConditions->where("permits.role='self' && ".$collection.".id='".$this->session->getUserId()."'");
       // owner - grant access to owner of object
-      $roleConditions->where("permits.role='owner' && ".$collection.".owner='".$this->user->userinfo("id")."'");
+      $roleConditions->where("permits.role='owner' && ".$collection.".owner='".$this->session->getUserId()."'");
       // [user_access field] - requires users and objects to share the same terms for the given relationship
       foreach ($user_columns as $cname => $column) {
         if (isset($column['user_access']) && isset($columns[$cname])) {
@@ -120,7 +120,7 @@ class Action {
             $object_table = empty($columns[$cname]['table']) ? $columns[$cname]['entity']."_".$cname : $columns[$cname]['table'];
             $ref = $cname."_id";
             $target = ($type == $columns[$cname]['entity']) ? "id" : $columns[$cname]['entity']."_id";
-            if ($this->user->loggedIn()) {
+            if ($this->session->loggedIn()) {
               $roleConditions->condition(
                 $query->createCondition()
                   ->condition("permits.role", $cname)
@@ -129,7 +129,7 @@ class Action {
                     ->condition(
                       $query->query($object_table." as o")->select($ref)
                       ->where("o.".$columns[$cname]['entity']."_id=".$collection.".".$target)
-                      ->condition("o.".$ref, $query->query($user_table." as u")->select($ref)->condition("u.users_id", $this->user->userinfo("id"))),
+                      ->condition("o.".$ref, $query->query($user_table." as u")->select($ref)->condition("u.users_id", $this->session->getUserId())),
                       "",
                       "EXISTS"
                     )
@@ -144,7 +144,7 @@ class Action {
               $query->orWhere(
                 "permits.role='".$cname."' && (EXISTS (".
                   "SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target." && o.".$ref." IN (".
-                    "SELECT ".$ref." FROM ".$this->db->prefix($user_table)." u WHERE u.users_id=".$this->user->userinfo("id").
+                    "SELECT ".$ref." FROM ".$this->db->prefix($user_table)." u WHERE u.users_id=".$this->session->getUserId().
                   ")".
                 ") || NOT EXISTS (SELECT ".$ref." FROM ".$this->db->prefix($object_table)." o WHERE o.".$columns[$cname]['entity']."_id=".$collection.".".$target."))"
               );
@@ -163,7 +163,7 @@ class Action {
             }
           } else {
             // single reference
-            if ($this->user->loggedIn()) {
+            if ($this->session->loggedIn()) {
               $roleConditions->condition(
                 $query->createCondition()
                   ->condition("permits.role", $cname)
@@ -172,7 +172,7 @@ class Action {
                       ->condition($collection.".".$cname, "NULL")
                       ->condition(
                         $collection.".".$cname,
-                        $query->query("users")->select($cname)->condition("id", $this->user->userinfo("id"))
+                        $query->query("users")->select($cname)->condition("id", $this->session->getUserId())
                       )
                   )
               );

@@ -2,13 +2,13 @@
 
 namespace Starbug\Log;
 
+use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\ApiController;
-use Starbug\Core\IdentityInterface;
 
 class ApiErrorLogController extends ApiController {
   public $model = "error_log";
-  public function __construct(IdentityInterface $user) {
-    $this->user = $user;
+  public function __construct(SessionHandlerInterface $session) {
+    $this->session = $session;
   }
   public function admin() {
     $this->api->render("AdminErrorLog");
@@ -17,7 +17,7 @@ class ApiErrorLogController extends ApiController {
     $this->api->render("Select");
   }
   public function filterQuery($collection, $query, $ops) {
-    if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
+    if (!$this->session->loggedIn("root") && !$this->session->loggedIn("admin")) $query->action("read");
     return $query;
   }
 }

@@ -1,15 +1,14 @@
 <?php
 namespace Starbug\Db\Tests;
 
-use Starbug\Core\IdentityInterface;
 use Starbug\Db\Query\Extensions\Action;
 
 class QueryBuilderActionExtensionTest extends QueryBuilderTestBase {
 
   public function setUp() {
     parent::setUp();
-    $this->user = new MockIdentity();
-    $this->action = new Action($this->user, $this->createSchema());
+    $sessionHandler = new MockSessionHandler();
+    $this->action = new Action($sessionHandler, $this->createSchema());
   }
 
   protected function createQuery() {

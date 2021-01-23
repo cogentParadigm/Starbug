@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Auth\Identity;
+
 /**
  * The Fixture class. Fixtures hold data sets used by the testing harness.
  */
@@ -15,8 +17,7 @@ class StoreTest extends DatabaseTestCase {
     global $container;
     $this->db = $container->get("Starbug\Core\DatabaseInterface");
     $this->models = $container->get("Starbug\Core\ModelFactoryInterface");
-    $this->user = $container->get("Starbug\Core\IdentityInterface");
-    $this->session = $container->get("Starbug\Core\SessionHandlerInterface");
+    $this->session = $container->get("Starbug\Auth\SessionHandlerInterface");
   }
 
   /**
@@ -313,7 +314,7 @@ class StoreTest extends DatabaseTestCase {
    */
   public function testOwner() {
     // become nobody
-    $this->user->clearUser();
+    $this->session->destroy();
     // store the record
     $this->db->store("hook_store_owner", []);
 
@@ -325,7 +326,8 @@ class StoreTest extends DatabaseTestCase {
     $this->assertSame(null, $record['value']);
 
     // become root
-    $this->user->setUser(["id" => 1, "groups" => ["admin", "root"]]);
+    $rootIdentity = new Identity(1, "", ["admin", "root"]);
+    $this->session->createSession($rootIdentity, false);
 
     // store the record
     $this->db->store("hook_store_owner", []);
@@ -337,8 +339,8 @@ class StoreTest extends DatabaseTestCase {
     // assert that the owner was stored
     $this->assertSame("1", $record['value']);
 
-    // restore anonymous root
-    $this->user->setUser(["id" => "NULL", "groups" => ["root"]]);
+    // restore nobody
+    $this->session->destroy();
   }
 
   /**

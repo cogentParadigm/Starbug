@@ -1,19 +1,19 @@
 <?php
 namespace Starbug\Files;
 
+use Exception;
+use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\Controller;
 use Starbug\Core\ModelFactoryInterface;
 use League\Flysystem\MountManager;
 use Starbug\Core\ImagesInterface;
-use Starbug\Core\IdentityInterface;
-use Exception;
 
 class UploadController extends Controller {
-  public function __construct(ModelFactoryInterface $models, MountManager $filesystems, ImagesInterface $images, IdentityInterface $user) {
+  public function __construct(ModelFactoryInterface $models, MountManager $filesystems, ImagesInterface $images, SessionHandlerInterface $session) {
     $this->models = $models;
     $this->filesystems = $filesystems;
     $this->images = $images;
-    $this->user = $user;
+    $this->session = $session;
   }
   public function defaultAction() {
     $htmldata = [];
@@ -61,7 +61,7 @@ class UploadController extends Controller {
         $_post['type'] = end(explode(".", $_post['name']));
         $_post['size'] = $this->filesystems->getFilesystem($record["location"])->getSize($_post['name']);
         $_post['image'] = $image;
-        $_post['owner'] = $this->user->userinfo("id");
+        $_post['owner'] = $this->session->getUserId();
         $htmldata[] = $_post;
       } else {
         $htmldata[] = ["ERROR" => "File could not be moved: ".$file['name']];

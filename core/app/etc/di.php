@@ -52,6 +52,17 @@ return [
   'Starbug\Core\SettingsInterface' => DI\autowire('Starbug\Core\DatabaseSettings'),
   'Starbug\Core\*Interface' => DI\autowire('Starbug\Core\*'),
   'Starbug\Http\*Interface' => DI\autowire('Starbug\Http\*'),
+  "Starbug\Auth\*RepositoryInterface" => DI\autowire("Starbug\Auth\Repository\*Repository"),
+  "Starbug\Auth\SessionExchangeInterface" => DI\autowire("Starbug\Auth\Http\CookieSessionExchange")
+    ->constructorParameter("path", DI\get("website_url"))
+    ->constructorParameter("key", DI\get("hmac_key")),
+  "Starbug\Auth\Http\CsrfExchangeInterface" => DI\autowire("Starbug\Auth\Http\CookieCsrfExchange")
+    ->constructorParameter("path", DI\get("website_url")),
+  "Starbug\Auth\SessionHandlerInterface" => DI\autowire("Starbug\Auth\SessionHandler")
+    ->method("addHook", DI\get("Starbug\Auth\Http\CsrfHandlerInterface")),
+  "Starbug\Auth\*Interface" => DI\autowire("Starbug\Auth\*"),
+  "Starbug\Auth\Http\CsrfHandlerInterface" => DI\autowire("Starbug\Auth\Http\CsrfHandler")
+  ->constructorParameter("key", DI\get("hmac_key")),
   "Starbug\Http\UriBuilderInterface" => DI\factory(function (ServerRequestInterface $request, $siteUrl) {
     $baseUri = $request->getUri()
       ->withPath($siteUrl)
@@ -96,8 +107,6 @@ return [
     }
     return $whoops;
   }),
-  'Starbug\Core\SessionStorageInterface' => DI\autowire('Starbug\Core\SessionStorage')
-    ->constructorParameter('key', DI\get('hmac_key')),
   "FastRoute\RouteParser" => DI\autowire("FastRoute\RouteParser\Std"),
   "FastRoute\DataGenerator" => DI\autowire("FastRoute\DataGenerator\GroupCountBased"),
   "FastRoute\Dispatcher" => function (ContainerInterface $c) {
@@ -123,8 +132,6 @@ return [
     ->method('setTimeZone', DI\get('time_zone'))
     ->method('setDatabase', DI\get('db')),
   'Starbug\Core\GenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
-  'Starbug\Core\ApplicationInterface' => DI\autowire('Starbug\Core\Application')
-    ->method('setLogger', DI\get('Psr\Log\LoggerInterface')),
   'Starbug\Core\SetupCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   'Psr\Log\LoggerInterface' => function (ContainerInterface $c) {
     $logger = new Logger("main");

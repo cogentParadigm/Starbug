@@ -165,7 +165,7 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
       "<p><strong>Message:</strong> ".reset($reason)."</p>"
     ]);
     $data = [
-      "user" => $this->user->getUser(),
+      "user" => $this->session->getData(),
       "payment" => $subscription,
       "bill" => $bill
     ];

@@ -1,22 +1,22 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\Controller;
 use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\CollectionFactoryInterface;
-use Starbug\Core\IdentityInterface;
 
 class SubscriptionsController extends Controller {
-  public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, IdentityInterface $user) {
+  public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, SessionHandlerInterface $session) {
     $this->models = $models;
     $this->collections = $collections;
-    $this->user = $user;
+    $this->session = $session;
   }
   public function init() {
     $this->assign("model", "orders");
   }
   public function defaultAction() {
-    $subscriptions = $this->collections->get("Subscriptions")->query(["owner" => $this->user->userinfo("id")]);
+    $subscriptions = $this->collections->get("Subscriptions")->query(["owner" => $this->session->getUserId()]);
     $this->assign("subscriptions", $subscriptions);
     $this->render("subscriptions/list.html");
   }

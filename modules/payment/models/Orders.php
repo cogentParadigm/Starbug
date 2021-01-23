@@ -57,7 +57,7 @@ class Orders extends OrdersModel {
     // prepare details to be added to the order
     $order_total = 0;
     $ammend = ["id" => $order['id'], "email" => $payment['email'], "phone" => $payment['phone']];
-    if ($this->user->loggedIn()) $ammend['owner'] = $this->user->userinfo('id');
+    if ($this->session->loggedIn()) $ammend['owner'] = $this->session->getUserId();
 
     // determine single payment amount
     // WARN: prices not validated, lines could be stale
@@ -109,7 +109,7 @@ class Orders extends OrdersModel {
         "<p><strong>Order Total:</strong> ".$this->priceFormatter->format($order_total)."</p>"
       ]);
       $data = [
-        "user" => $this->user->getUser(),
+        "user" => $this->session->getData(),
         "order" => $order
       ];
       $this->mailer->send(["template" => "Order Confirmation", "to" => $payment["email"]], $data);

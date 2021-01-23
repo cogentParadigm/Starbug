@@ -1,18 +1,18 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\Collection;
 use Starbug\Core\ModelFactoryInterface;
-use Starbug\Core\IdentityInterface;
 
 class SelectPaymentCardCollection extends Collection {
   protected $model = "payment_cards";
-  public function __construct(ModelFactoryInterface $models, IdentityInterface $user) {
+  public function __construct(ModelFactoryInterface $models, SessionHandlerInterface $session) {
     $this->models = $models;
-    $this->user = $user;
+    $this->session = $session;
   }
   public function build($query, $ops) {
-    $query->condition("payment_cards.owner", $this->user->userinfo("id"));
+    $query->condition("payment_cards.owner", $this->session->getUserId());
     return $query;
   }
   public function filterRows($rows) {

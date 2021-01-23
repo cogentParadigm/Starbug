@@ -1,15 +1,15 @@
 <?php
 namespace Starbug\Files;
 
-use Starbug\Core\ApiController;
-use Starbug\Core\IdentityInterface;
-use Starbug\Core\ImagesInterface;
 use League\Flysystem\MountManager;
+use Starbug\Auth\SessionHandlerInterface;
+use Starbug\Core\ApiController;
+use Starbug\Core\ImagesInterface;
 
 class ApiFilesController extends ApiController {
   public $model = "files";
-  public function __construct(IdentityInterface $user, ImagesInterface $images, MountManager $filesystems) {
-    $this->user = $user;
+  public function __construct(SessionHandlerInterface $session, ImagesInterface $images, MountManager $filesystems) {
+    $this->session = $session;
     $this->images = $images;
     $this->filesystems = $filesystems;
   }
@@ -20,7 +20,7 @@ class ApiFilesController extends ApiController {
     $this->api->render("FilesSelect");
   }
   public function filterQuery($collection, $query, $ops) {
-    if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
+    if (!$this->session->loggedIn("root") && !$this->session->loggedIn("admin")) $query->action("read");
     return $query;
   }
   public function filterRow($collection, $file) {

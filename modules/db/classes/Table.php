@@ -24,10 +24,9 @@ class Table implements CollectionFilterInterface {
    * @param Starbug\Core\ModelFactoryInterface $models The factory from which other models can be retrieved.
    * @param Starbug\Core\IdentityInterface $user Authenticated user.
    */
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user) {
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
     $this->db = $db;
     $this->models = $models;
-    $this->user = $user;
     // $this->logger = $loggers->get(get_class($this));
     $this->init();
   }

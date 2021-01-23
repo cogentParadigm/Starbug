@@ -9,7 +9,7 @@ class Devices extends DevicesModel {
     $token = $device['token'];
     $platform = $device['platform'];
     $environment = $device['environment'];
-    $uid = $this->user->userinfo("id");
+    $uid = $this->session->getUserId();
 
     $user_agent = $this->request->getHeader('HTTP_USER_AGENT');
     $exists = $this->query()->condition("token", $token)

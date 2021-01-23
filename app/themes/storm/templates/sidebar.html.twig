@@ -3,11 +3,11 @@
   -	<!-- User info -->
   <div class="login-info">
     <span>
-      {% if helper("user").userinfo("photo") is not empty %}
-      <img src="{{ helper("images").thumb(helper("user").userinfo("photo"), {"w": 64, "h": 64}) }}" alt="me" class="online" />
+      {% if helper("session").getData("photo") is not empty %}
+      <img src="{{ helper("images").thumb(helper("session").getData("photo"), {"w": 64, "h": 64}) }}" alt="me" class="online" />
       {% endif %}
       <span class="username">
-        <a href="{{ helper("url").build("profile") }}">{{ helper("user").userinfo("first_name") ~ " " ~ helper("user").userinfo("last_name") }}</a>
+        <a href="{{ helper("url").build("profile") }}">{{ helper("session").getData("first_name") ~ " " ~ helper("session").getData("last_name") }}</a>
       </span>
     </span>
   </div>

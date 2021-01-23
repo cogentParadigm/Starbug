@@ -1,13 +1,13 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\ApiController;
-use Starbug\Core\IdentityInterface;
 
 class ApiProductLinesController extends ApiController {
   public $model = "product_lines";
-  public function __construct(IdentityInterface $user, Cart $cart) {
-    $this->user = $user;
+  public function __construct(SessionHandlerInterface $session, Cart $cart) {
+    $this->session = $session;
     $this->cart = $cart;
   }
   public function admin() {
@@ -29,11 +29,11 @@ class ApiProductLinesController extends ApiController {
   }
   public function filterQuery($collection, $query, $ops) {
     $cid = $this->request->getCookieParams()["cid"];
-    if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) {
+    if (!$this->session->loggedIn("root") && !$this->session->loggedIn("admin")) {
       $query->condition(
         $query->createCondition()
           ->condition("product_lines.orders_id.token", $cid)
-          ->orCondition("product_lines.orders_id.owner", $this->user->userinfo("id"))
+          ->orCondition("product_lines.orders_id.owner", $this->session->getUserId())
       );
     }
     return $query;

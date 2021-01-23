@@ -8,7 +8,7 @@
     {% endfor %}
   {% endif %}
   {% if display.method == "post" %}
-    <input name="oid" type="hidden" value="{{ request.getCookieParams()["oid"] }}"/>
+    <input name="oid" type="hidden" value="{{ helper("csrf").getRequestToken() }}"/>
   {% endif %}
   {{ include("display/fields.html.twig") }}
 {% if display.actions.template != "inline" %}

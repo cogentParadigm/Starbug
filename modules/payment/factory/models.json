@@ -1,5 +1,6 @@
 {
 	"orders":{
+		"session": "Starbug\\Auth\\SessionHandlerInterface",
 		"request":"Psr\\Http\\Message\\ServerRequestInterface",
 		"cart":"Starbug\\Payment\\Cart",
 		"gateway":"Starbug\\Payment\\GatewayInterface",
@@ -8,6 +9,7 @@
 		"mailer":"MailerInterface"
 	},
 	"subscriptions":{
+		"session": "Starbug\\Auth\\SessionHandlerInterface",
 		"gateway":"Starbug\\Payment\\TokenGatewayInterface",
 		"collections":"CollectionFactoryInterface",
 		"priceFormatter":"Starbug\\Payment\\PriceFormatterInterface",

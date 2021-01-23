@@ -17,34 +17,31 @@ class FormHandlerMiddleware implements MiddlewareInterface {
   protected $logger;
 
   /**
-   * All the dependencies needed to co-ordinate the application.
+   * Dependencies for handling form submissions.
    *
    * @param ModelFactoryInterface $models Factory to create models.
-   * @param SessionHandlerInterface $session Session for authenticated users.
    * @param InputFilterInterface $filter Utility for input sanitization.
    * @param ResponseBuilderInterface $response Response builder.
    * @param LoggerInterface $logger Logger.
    */
   public function __construct(
     ModelFactoryInterface $models,
-    SessionHandlerInterface $session,
     InputFilterInterface $filter,
     ResponseBuilderInterface $response,
     LoggerInterface $logger
   ) {
     $this->models = $models;
-    $this->session = $session;
     $this->filter = $filter;
     $this->response = $response;
     $this->logger = $logger;
   }
 
   public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
-    $permitted = $this->checkPost($request->getParsedBody(), $request->getCookieParams());
+    $permitted = $this->checkPost($request->getParsedBody());
     if ($permitted) {
       return $handler->handle($request);
     } else {
-      return $this->response->redirect("login?to=".$request->getUri()->getPath());
+      return $this->response->redirect("login?to=".$request->getUri()->getPath())->getResponse();
     }
   }
   /**
@@ -66,18 +63,11 @@ class FormHandlerMiddleware implements MiddlewareInterface {
   /**
    * Check $_POST['action'] for posted actions and run them through postAction.
    */
-  protected function checkPost($post, $cookies) {
+  protected function checkPost($post) {
     if (!empty($post['action']) && is_array($post['action'])) {
-      // Validate csrf token for authenticated requests.
-      if ($this->session->loggedIn()) {
-        $validated = false;
-        if (!empty($cookies['oid']) && !empty($post['oid']) && $cookies['oid'] === $post['oid']) $validated = true;
-        if (true !== $validated) {
-          return false;
-        }
+      foreach ($post['action'] as $key => $val) {
+        return $this->postAction($this->filter->normalize($key), $this->filter->normalize($val), $post[$key]);
       }
-      // Execute post actions.
-      foreach ($post['action'] as $key => $val) return $this->postAction($this->filter->normalize($key), $this->filter->normalize($val), $post[$key]);
     }
     return true;
   }

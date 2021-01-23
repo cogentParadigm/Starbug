@@ -1,18 +1,17 @@
 define([
 	'dojo/request',
 	'dojo/when',
+	"dojo/_base/config",
 	'dojo/_base/lang',
 	'dojo/_base/array',
 	'dojo/json',
-	'dojo/io-query',
 	'dojo/_base/declare',
-	'dojo/cookie',
 	'dstore/Request', /*=====, './Store' =====*/
 	'dstore/QueryResults',
 	'dstore/Tree',
 	'dstore/SimpleQuery',
 	'dstore/Trackable'
-], function (request, when, lang, arrayUtil, JSON, ioQuery, declare, cookie, Request /*=====, Store =====*/, QueryResults, Tree, SimpleQuery, Trackable) {
+], function (request, when, config, lang, arrayUtil, JSON, declare, Request /*=====, Store =====*/, QueryResults, Tree, SimpleQuery, Trackable) {
 
 	/*=====
 	var __HeaderOptions = {
@@ -41,7 +40,7 @@ define([
 		results:null,
 
 		constructor: function(options) {
-			this.target = WEBSITE_URL+'api/'+this.model+'/'+this.action+'.json';
+			this.target = config.websiteUrl+'api/'+this.model+'/'+this.action+'.json';
 		},
 
 		get: function (id, options) {
@@ -86,7 +85,7 @@ define([
 			if (options.formData) data = options.formData;
 			else {
 				for (var k in object) data[model+'['+k+']'] = object[k];
-				data.oid = cookie('oid');
+				data.oid = config.csrfToken;
 			}
 			data['action['+model+']'] = options.action || this.put_action;
 
@@ -143,7 +142,7 @@ define([
 			var args = {};
 			args['action['+model+']'] = options.action || this.remove_action;
 			args[model+'[id]'] = id;
-			args.oid = cookie('oid');
+			args.oid = config.csrfToken;
 
 			this.results = request(this.target, {
 				method: 'POST',

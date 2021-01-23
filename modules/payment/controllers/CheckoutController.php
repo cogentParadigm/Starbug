@@ -1,14 +1,14 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\Controller;
-use Starbug\Core\IdentityInterface;
 use Starbug\Core\DatabaseInterface;
 
 class CheckoutController extends Controller {
-  public function __construct(Cart $cart, IdentityInterface $user, DatabaseInterface $db) {
+  public function __construct(Cart $cart, SessionHandlerInterface $session, DatabaseInterface $db) {
     $this->cart = $cart;
-    $this->user = $user;
+    $this->session = $session;
     $this->db = $db;
   }
   public function init() {
@@ -20,7 +20,7 @@ class CheckoutController extends Controller {
       $this->response->redirect("checkout/payment");
     } elseif (empty($this->cart)) {
       $this->render("cart/empty.html");
-    } elseif ($this->user->loggedIn()) {
+    } elseif ($this->session->loggedIn()) {
       $this->render("checkout/default.html");
     } else {
       $this->render("checkout/login.html");
@@ -29,7 +29,7 @@ class CheckoutController extends Controller {
   public function guest() {
     if ($this->db->success("orders", "checkout")) {
       $this->response->redirect("checkout/payment");
-    } elseif ($this->user->loggedIn()) {
+    } elseif ($this->session->loggedIn()) {
       $this->response->redirect("checkout");
     } elseif (empty($this->cart)) {
       $this->render("cart/empty.html");

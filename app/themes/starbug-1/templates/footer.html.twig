@@ -7,7 +7,7 @@
         <ul>
           <li><a href="{{ helper("url").build("") }}">Blog</a></li>
           <li><a href="{{ helper("url").build("") }}">Contact Us</a></li>
-        {% if  helper("user").loggedIn() %}
+        {% if  helper("session").loggedIn() %}
           <li><a href="{{ helper("url").build("logout") }}">Log Out</a></li>
         {% else %}
           <li><a href="{{ helper("url").build("login") }}">Log In</a></li>

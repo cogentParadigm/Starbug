@@ -2,21 +2,19 @@
 namespace Starbug\Users;
 
 use GuzzleHttp\Psr7\Uri;
+use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\Controller;
-use Starbug\Core\SessionHandlerInterface;
-use Starbug\Core\IdentityInterface;
 use Starbug\Core\Routing\RouterInterface;
 
 class LoginController extends Controller {
-  public function __construct(SessionHandlerInterface $session, IdentityInterface $user, RouterInterface $router) {
+  public function __construct(SessionHandlerInterface $session, RouterInterface $router) {
     $this->session = $session;
-    $this->user = $user;
     $this->router = $router;
   }
   public function defaultAction() {
-    if ($this->user->loggedIn()) {
+    if ($this->session->loggedIn()) {
       $redirectPath = "";
-      if ($this->user->loggedIn('admin') || $this->user->loggedIn('root')) $redirectPath = "admin";
+      if ($this->session->loggedIn('admin') || $this->session->loggedIn('root')) $redirectPath = "admin";
       $queryParams = $this->request->getQueryParams();
       if (!empty($queryParams["to"])) {
         $redirectPath = $this->filterRedirectPath($queryParams["to"], $redirectPath);
@@ -43,7 +41,7 @@ class LoginController extends Controller {
     }
     $request = $this->request->withUri($uri);
     $route = $this->router->route($request);
-    if ($route["action"] == "missing") {
+    if ($route["action"] ?? "" == "missing") {
       return $default;
     }
     return (string) $uri;

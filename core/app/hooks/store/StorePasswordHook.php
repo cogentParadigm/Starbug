@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Auth\SessionHandlerInterface;
+
 class StorePasswordHook extends QueryHook {
   public function __construct(SessionHandlerInterface $session) {
     $this->session = $session;

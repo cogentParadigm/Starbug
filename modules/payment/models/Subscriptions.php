@@ -37,7 +37,7 @@ class Subscriptions extends SubscriptionsModel {
           "<p><strong>Next payment date:</strong> ".date("l, F j", strtotime($bill["scheduled_date"]))."</p>"
         ]);
         $data = [
-          "user" => $this->user->getUser(),
+          "user" => $this->session->getData(),
           "subscription" => $subscription
         ];
         $this->mailer->send(["template" => "Update Subscription", "to" => $subscription["email"]], $data);
@@ -64,7 +64,7 @@ class Subscriptions extends SubscriptionsModel {
         "<p><strong>Next payment date:</strong> ".date("l, F j", strtotime($bill["scheduled_date"]))."</p>"
       ]);
       $data = [
-        "user" => $this->user->getUser(),
+        "user" => $this->session->getData(),
         "payment" => $subscription
       ];
       $this->mailer->send(["template" => "Payment Confirmation", "to" => $subscription["email"]], $data);

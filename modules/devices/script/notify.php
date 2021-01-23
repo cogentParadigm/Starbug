@@ -1,16 +1,16 @@
 <?php
 namespace Starbug\Devices;
 
-use Starbug\Core\IdentityInterface;
+use Starbug\Core\DatabaseInterface;
 
 class NotifyCommand {
-  public function __construct(NotificationManagerInterface $notifications, IdentityInterface $user) {
+  public function __construct(NotificationManagerInterface $notifications, DatabaseInterface $db) {
     $this->notifications = $notifications;
-    $this->user = $user;
+    $this->db = $db;
   }
   public function run($argv) {
     $uid = $argv[0];
-    $user = $this->user->loadUser($uid);
+    $user = $this->db->query("users")->condition("id", $uid)->one();
     $this->notifications->deliver($user, "system", "Hello World", "This is a test message.");
   }
 }

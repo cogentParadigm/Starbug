@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "42e1f7772f3985b065ee53f30c2a064a",
+    "content-hash": "7ac7182e5682077e8ab3ac3ef2f46851",
     "packages": [
         {
             "name": "composer/installers",
@@ -1841,6 +1841,48 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "starbug/auth",
+            "version": "v0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-auth.git",
+                "reference": "511f57c354434dc16b9f46e8c3a0a8db1d7e9297"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-auth/zipball/511f57c354434dc16b9f46e8c3a0a8db1d7e9297",
+                "reference": "511f57c354434dc16b9f46e8c3a0a8db1d7e9297",
+                "shasum": ""
+            },
+            "require-dev": {
+                "psr/http-message": "^1.0",
+                "psr/http-server-middleware": "^1.0",
+                "starbug/devel": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Auth\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Authentication layer for Starbug framework.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-auth/issues",
+                "source": "https://github.com/cogentParadigm/starbug-auth/tree/v0.9"
+            },
+            "time": "2021-01-23T03:34:01+00:00"
         },
         {
             "name": "starbug/bundle",

@@ -10,6 +10,9 @@ Header edit Cache-control "^(?!.*max-age.*)(.*)" "max-age=1209600,$1"
 
 RewriteEngine On
 
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} (.+)/$
 RewriteRule ^ %1 [R=301,L]

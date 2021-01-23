@@ -1,4 +1,4 @@
-{% if helper("user").loggedIn() %}
+{% if helper("session").loggedIn() %}
   <h2>Sorry!</h2>
   <p>You do not have sufficient permission to access this page.</p>
 {% endif %}

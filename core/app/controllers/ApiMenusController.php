@@ -1,10 +1,12 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Auth\SessionHandlerInterface;
+
 class ApiMenusController extends ApiController {
   public $model = "menus";
-  public function __construct(IdentityInterface $user) {
-    $this->user = $user;
+  public function __construct(SessionHandlerInterface $session) {
+    $this->session = $session;
   }
   public function admin() {
     $this->api->render("AdminMenus");
@@ -16,7 +18,7 @@ class ApiMenusController extends ApiController {
     $this->api->render("MenusTree");
   }
   public function filterQuery($collection, $query, $ops) {
-    if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
+    if (!$this->session->loggedIn("root") && !$this->session->loggedIn("admin")) $query->action("read");
     return $query;
   }
 }

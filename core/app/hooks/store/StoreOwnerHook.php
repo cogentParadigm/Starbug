@@ -1,14 +1,16 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Auth\SessionHandlerInterface;
+
 class StoreOwnerHook extends QueryHook {
-  public function __construct(IdentityInterface $user) {
-    $this->user = $user;
+  public function __construct(SessionHandlerInterface $session) {
+    $this->session = $session;
   }
   public function emptyBeforeInsert($query, $column, $argument) {
-    $query->set($column, ($this->user->loggedIn() ? $this->user->userinfo("id") : "NULL"));
+    $query->set($column, ($this->session->loggedIn() ? $this->session->getUserId() : "NULL"));
   }
   public function validate($query, $key, $value, $column, $argument) {
-    return $this->user->loggedIn() ? $this->user->userinfo("id") : "NULL";
+    return $this->session->loggedIn() ? $this->session->getUserId() : "NULL";
   }
 }

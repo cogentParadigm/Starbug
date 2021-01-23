@@ -49,11 +49,9 @@ class Users extends UsersModel {
    * A function for logging in
    */
   public function login($login) {
-    $user = $this->user->loadUser(["email" => $login['email']]);
-    if ($this->session->authenticate($user, $login['password'])) {
+    if ($user = $this->session->authenticate(["email" => $login['email']], $login['password'])) {
       $this->session->createSession($user);
-      $this->user->setUser($user);
-      $this->store(["id" => $user['id'], "last_visit" => date("Y-m-d H:i:s")]);
+      $this->store(["id" => $user->getId(), "last_visit" => date("Y-m-d H:i:s")]);
     } else {
       $this->error("That email and password combination was not found.", "email");
     }

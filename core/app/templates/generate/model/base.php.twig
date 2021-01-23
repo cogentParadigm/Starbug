@@ -18,10 +18,9 @@ class {{ className }}Model extends Table {
   public $search_fields = "{{ search }}";
 
 
-  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, IdentityInterface $user{% for varname, typehint in factory %}, {{ typehint }} ${{ varname }}{% endfor %}) {
+  function __construct(DatabaseInterface $db, ModelFactoryInterface $models{% for varname, typehint in factory %}, {{ typehint }} ${{ varname }}{% endfor %}) {
     $this->db = $db;
     $this->models = $models;
-    $this->user = $user;
 {% for varname, typehint in factory %}
     $this->{{ varname }} = ${{ varname }};
 {% endfor %}

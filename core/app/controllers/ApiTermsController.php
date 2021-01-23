@@ -1,10 +1,12 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Auth\SessionHandlerInterface;
+
 class ApiTermsController extends ApiController {
   public $model = "terms";
-  public function __construct(IdentityInterface $user) {
-    $this->user = $user;
+  public function __construct(SessionHandlerInterface $session) {
+    $this->session = $session;
   }
   public function admin() {
     $this->api->render("AdminTerms");
@@ -19,7 +21,7 @@ class ApiTermsController extends ApiController {
     $this->api->render("TermsTree");
   }
   public function filterQuery($collection, $query, $ops) {
-    if (!$this->user->loggedIn("root") && !$this->user->loggedIn("admin")) $query->action("read");
+    if (!$this->session->loggedIn("root") && !$this->session->loggedIn("admin")) $query->action("read");
     return $query;
   }
 }
