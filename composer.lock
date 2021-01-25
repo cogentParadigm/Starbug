@@ -1096,6 +1096,112 @@
             "time": "2019-08-06T20:38:22+00:00"
         },
         {
+            "name": "micheh/psr7-cache",
+            "version": "0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/micheh/psr7-cache.git",
+                "reference": "b99e8ae6d024d8c70945084b5b979a62cfd05df4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/micheh/psr7-cache/zipball/b99e8ae6d024d8c70945084b5b979a62cfd05df4",
+                "reference": "b99e8ae6d024d8c70945084b5b979a62cfd05df4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4",
+                "psr/http-message": "~1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0||~5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Micheh\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Cache and conditional request helpers for PSR-7 HTTP Messages",
+            "keywords": [
+                "cache",
+                "conditional",
+                "http",
+                "http-message",
+                "if-match",
+                "if-modified-since",
+                "if-none-match",
+                "if-unmodified-since",
+                "psr",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "support": {
+                "issues": "https://github.com/micheh/psr7-cache/issues",
+                "source": "https://github.com/micheh/psr7-cache/tree/master"
+            },
+            "time": "2016-04-15T16:31:14+00:00"
+        },
+        {
+            "name": "middlewares/cache",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/middlewares/cache.git",
+                "reference": "131929e40044d53167ee8ad6da569ddbbb7d79d9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/middlewares/cache/zipball/131929e40044d53167ee8ad6da569ddbbb7d79d9",
+                "reference": "131929e40044d53167ee8ad6da569ddbbb7d79d9",
+                "shasum": ""
+            },
+            "require": {
+                "micheh/psr7-cache": "^0.5.0",
+                "middlewares/utils": "^3.0",
+                "php": "^7.2 || ^8.0",
+                "psr/cache": "^1.0",
+                "psr/http-server-middleware": "^1.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "laminas/laminas-diactoros": "^2.3",
+                "matthiasmullie/scrapbook": "^1.4",
+                "oscarotero/php-cs-fixer-config": "^1.0",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^8|^9",
+                "squizlabs/php_codesniffer": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Middlewares\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Middleware with various cache utilities",
+            "homepage": "https://github.com/middlewares/cache",
+            "keywords": [
+                "http",
+                "middleware",
+                "psr-15",
+                "psr-7"
+            ],
+            "support": {
+                "issues": "https://github.com/middlewares/cache/issues",
+                "source": "https://github.com/middlewares/cache/tree/v2.1.0"
+            },
+            "time": "2020-12-02T00:05:27+00:00"
+        },
+        {
             "name": "middlewares/https",
             "version": "v2.0.1",
             "source": {
@@ -1704,6 +1810,55 @@
                 }
             ],
             "time": "2020-10-15T12:18:47+00:00"
+        },
+        {
+            "name": "psr/cache",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/cache.git",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for caching libraries",
+            "keywords": [
+                "cache",
+                "psr",
+                "psr-6"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/cache/tree/master"
+            },
+            "time": "2016-08-06T20:24:11+00:00"
         },
         {
             "name": "psr/container",
@@ -2402,22 +2557,23 @@
         },
         {
             "name": "starbug/http",
-            "version": "v0.9.5",
+            "version": "v0.9.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-http.git",
-                "reference": "9fdb6e224a77f7eabbe7f92a5f8913267b592eec"
+                "reference": "479a303785752d6e0cbdedfb2737c0388bf3eda5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/9fdb6e224a77f7eabbe7f92a5f8913267b592eec",
-                "reference": "9fdb6e224a77f7eabbe7f92a5f8913267b592eec",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/479a303785752d6e0cbdedfb2737c0388bf3eda5",
+                "reference": "479a303785752d6e0cbdedfb2737c0388bf3eda5",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/psr7": "^1.7",
                 "http-interop/http-factory-guzzle": "^1.0",
                 "laminas/laminas-httphandlerrunner": "^1.2",
+                "middlewares/cache": "^2.1",
                 "middlewares/https": "^2.0",
                 "oscarotero/middleland": "^1.0",
                 "psr/http-factory": "^1.0",
@@ -2447,9 +2603,9 @@
             "description": "Basic HTTP message components.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-http/issues",
-                "source": "https://github.com/cogentParadigm/starbug-http/tree/v0.9.5"
+                "source": "https://github.com/cogentParadigm/starbug-http/tree/v0.9.7"
             },
-            "time": "2021-01-23T15:42:25+00:00"
+            "time": "2021-01-25T06:11:46+00:00"
         },
         {
             "name": "starbug/js",

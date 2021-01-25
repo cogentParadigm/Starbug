@@ -41,7 +41,7 @@ class FormHandlerMiddleware implements MiddlewareInterface {
     if ($permitted) {
       return $handler->handle($request);
     } else {
-      return $this->response->redirect("login?to=".$request->getUri()->getPath())->getResponse();
+      return $this->response->redirect("login?to=".$request->getUri()->getPath());
     }
   }
   /**

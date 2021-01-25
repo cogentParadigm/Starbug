@@ -32,6 +32,7 @@ return [
     DI\get("Middlewares\Https"),
     DI\get("Starbug\Auth\Http\AuthenticationMiddleware"),
     DI\get("Starbug\Auth\Http\CsrfMiddleware"),
+    DI\get("Middlewares\CachePrevention"),
     DI\get("Starbug\Core\FormHandlerMiddleware"),
     DI\get("Starbug\Core\ControllerMiddleware")
   ],
@@ -45,7 +46,7 @@ return [
   ],
   'Monolog\Handler\StreamHandler' => function (ContainerInterface $c) {
     $name = $c->get("environment");
-    $handler = new StreamHandler('var/log/'.$name.".log");
+    $handler = new StreamHandler("php://stdout");
     return $handler;
   },
   "error_handler" => DI\get("Whoops\Run")
