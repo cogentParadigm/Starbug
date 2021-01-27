@@ -18,7 +18,6 @@ use Whoops\Handler\PrettyPageHandler;
 return [
   'environment' => 'development',
   'website_url' => '/',
-  'default_path' => 'home',
   'time_zone' => 'UTC',
   'db' => 'default',
   'hmac_key' => '',
@@ -63,7 +62,8 @@ return [
   "Starbug\Auth\*Interface" => DI\autowire("Starbug\Auth\*"),
   "Starbug\Auth\Http\CsrfHandlerInterface" => DI\autowire("Starbug\Auth\Http\CsrfHandler")
   ->constructorParameter("key", DI\get("hmac_key")),
-  "Starbug\Http\UriBuilderInterface" => DI\factory(function (ServerRequestInterface $request, $siteUrl) {
+  "Starbug\Http\UriBuilderInterface" => DI\factory(function (ContainerInterface $container, $siteUrl) {
+    $request = $container->get("Psr\Http\Message\ServerRequestInterface");
     $baseUri = $request->getUri()
       ->withPath($siteUrl)
       ->withQuery("")
@@ -71,18 +71,9 @@ return [
     return new UriBuilder($baseUri);
   })->parameter("siteUrl", DI\get("website_url")),
   "Psr\Http\Message\UriInterface" => DI\factory(function (ContainerInterface $container, ServerRequestInterface $request) {
-    $uriBuilder = $container->make("Starbug\Http\UriBuilderInterface", ["request" => $request]);
-    $container->set("Starbug\Http\UriBuilderInterface", $uriBuilder);
-    $uri = $request->getUri();
-    $path = $uriBuilder->relativize($uri)->getPath();
-    if (empty($path)) {
-      $uri = $uriBuilder->build($uri->withPath($container->get("default_path")), true);
-    }
-    return $uri;
+    return $request->getUri();
   }),
-  'Psr\Http\Message\ServerRequestInterface' => DI\autowire("GuzzleHttp\Psr7\ServerRequest")
-    ->constructorParameter("method", "GET")
-    ->constructorParameter("uri", DI\get("website_url")),
+  "Psr\Http\Message\ResponseFactoryInterface" => DI\autowire("Http\Factory\Guzzle\ResponseFactory"),
   'Starbug\Core\ModelFactoryInterface' => DI\autowire('Starbug\Core\ModelFactory')->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\CssGenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   "Whoops\Run" => DI\decorate(function ($whoops, $container) {

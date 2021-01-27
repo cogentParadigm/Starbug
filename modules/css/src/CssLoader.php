@@ -9,12 +9,12 @@ use Twig\Environment;
 class CssLoader {
   protected $theme;
   protected $options = false;
-  public function __construct(ResourceLocatorInterface $locator, UriBuilderInterface $uri, Environment $twig, Configuration $modules, $theme) {
+  public function __construct(ResourceLocatorInterface $locator, Environment $twig, Configuration $modules, $theme, $baseUrl = "/") {
     $this->locator = $locator;
-    $this->uri = $uri;
     $this->twig = $twig;
     $this->modules = $modules;
     $this->theme = $theme;
+    $this->baseUrl = $baseUrl;
   }
   public function getConfiguration($reload = false) {
     $this->load($reload);
@@ -27,7 +27,7 @@ class CssLoader {
       foreach ($styles as $style) {
         $stylesheets[] = '<link '.
           'rel="'.$style["rel"].'" '.
-          'href="'.$this->uri->build($style["href"]).'" '.
+          'href="'.$this->baseUrl.$style["href"].'" '.
           'type="text/css" '.
           'media="'.$media.'">';
       }

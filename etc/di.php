@@ -30,9 +30,12 @@ return [
     ->method("enable", DI\get("theme")),
   "application.middleware" => [
     DI\get("Middlewares\Https"),
+    DI\get("Starbug\Http\BaseUrlMiddleware"),
+    DI\get("Middlewares\CachePrevention"),
     DI\get("Starbug\Auth\Http\AuthenticationMiddleware"),
     DI\get("Starbug\Auth\Http\CsrfMiddleware"),
-    DI\get("Middlewares\CachePrevention"),
+    DI\get("Starbug\Core\RoutingMiddleware"),
+    DI\get("Starbug\Http\RequestInjectionMiddleware"),
     DI\get("Starbug\Core\FormHandlerMiddleware"),
     DI\get("Starbug\Core\ControllerMiddleware")
   ],

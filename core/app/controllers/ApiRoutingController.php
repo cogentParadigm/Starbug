@@ -13,6 +13,6 @@ class ApiRoutingController extends Controller {
     $this->api->setFormat($format);
     $controller = $this->controllers->get("Api".ucwords($controller));
     $controller->setApi($this->api);
-    return $controller->handle($this->request, ["action" => $action]);
+    return $controller->handle($this->request->withAttribute("action", $action));
   }
 }

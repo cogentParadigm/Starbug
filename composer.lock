@@ -2265,16 +2265,16 @@
         },
         {
             "name": "starbug/bundle",
-            "version": "v1.0.1",
+            "version": "v1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-bundle.git",
-                "reference": "ab566f39dbf34437a77a3feb3e77d05b9382c8b1"
+                "reference": "619fcb05bbcc2ed1ef441486bac33bbe73bcd130"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-bundle/zipball/ab566f39dbf34437a77a3feb3e77d05b9382c8b1",
-                "reference": "ab566f39dbf34437a77a3feb3e77d05b9382c8b1",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-bundle/zipball/619fcb05bbcc2ed1ef441486bac33bbe73bcd130",
+                "reference": "619fcb05bbcc2ed1ef441486bac33bbe73bcd130",
                 "shasum": ""
             },
             "require-dev": {
@@ -2294,7 +2294,11 @@
                 }
             ],
             "description": "A simple object abstraction for working with nested array structures.",
-            "time": "2019-01-28T15:27:20+00:00"
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-bundle/issues",
+                "source": "https://github.com/cogentParadigm/starbug-bundle/tree/v1.1"
+            },
+            "time": "2021-01-26T02:46:16+00:00"
         },
         {
             "name": "starbug/composer-modules-plugin",
@@ -2557,16 +2561,16 @@
         },
         {
             "name": "starbug/http",
-            "version": "v0.9.7",
+            "version": "v0.9.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-http.git",
-                "reference": "479a303785752d6e0cbdedfb2737c0388bf3eda5"
+                "reference": "032350f44ab1e3bf9f561dc3767cf9af33f5bd47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/479a303785752d6e0cbdedfb2737c0388bf3eda5",
-                "reference": "479a303785752d6e0cbdedfb2737c0388bf3eda5",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/032350f44ab1e3bf9f561dc3767cf9af33f5bd47",
+                "reference": "032350f44ab1e3bf9f561dc3767cf9af33f5bd47",
                 "shasum": ""
             },
             "require": {
@@ -2603,9 +2607,9 @@
             "description": "Basic HTTP message components.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-http/issues",
-                "source": "https://github.com/cogentParadigm/starbug-http/tree/v0.9.7"
+                "source": "https://github.com/cogentParadigm/starbug-http/tree/v0.9.8"
             },
-            "time": "2021-01-25T06:11:46+00:00"
+            "time": "2021-01-27T05:14:30+00:00"
         },
         {
             "name": "starbug/js",

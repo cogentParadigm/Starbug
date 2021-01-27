@@ -1,9 +1,9 @@
 <?php
 return [
   "routes" => DI\decorate(function ($routes) {
-    $routes["home"] = [
+    $routes[""] = [
       "title" => "Home",
-      "type" => "views",
+      "controller" => "Starbug\App\Page\HomeController",
       "layout" => "home"
     ];
     return $routes;

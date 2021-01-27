@@ -93,8 +93,8 @@ class Controller {
   /**
    * Generate a response
    */
-  public function handle(ServerRequestInterface $request, $route = []) : ResponseInterface {
-    $route += ["action" => "", "arguments" => []];
+  public function handle(ServerRequestInterface $request) : ResponseInterface {
+    $route = $request->getAttributes() + ["action" => "", "arguments" => []];
     $this->request = $request;
     $this->response->assign("request", $request);
     $this->response->assign("route", $route);

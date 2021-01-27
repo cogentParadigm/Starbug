@@ -1,12 +1,12 @@
 <?php
 namespace Starbug\Core;
 
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
-use Starbug\Http\ResponseBuilderInterface;
 
 class FormHandlerMiddleware implements MiddlewareInterface {
 
@@ -21,18 +21,18 @@ class FormHandlerMiddleware implements MiddlewareInterface {
    *
    * @param ModelFactoryInterface $models Factory to create models.
    * @param InputFilterInterface $filter Utility for input sanitization.
-   * @param ResponseBuilderInterface $response Response builder.
+   * @param ResponseFactoryInterface $response Response factory.
    * @param LoggerInterface $logger Logger.
    */
   public function __construct(
     ModelFactoryInterface $models,
     InputFilterInterface $filter,
-    ResponseBuilderInterface $response,
+    ResponseFactoryInterface $responseFactory,
     LoggerInterface $logger
   ) {
     $this->models = $models;
     $this->filter = $filter;
-    $this->response = $response;
+    $this->responseFactory = $responseFactory;
     $this->logger = $logger;
   }
 
@@ -41,7 +41,8 @@ class FormHandlerMiddleware implements MiddlewareInterface {
     if ($permitted) {
       return $handler->handle($request);
     } else {
-      return $this->response->redirect("login?to=".$request->getUri()->getPath());
+      return $this->responseFactory->createResponse(302)
+        ->withHeader("Location", "login?to=".$request->getUri()->getPath());
     }
   }
   /**
