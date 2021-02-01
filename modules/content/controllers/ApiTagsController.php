@@ -10,10 +10,10 @@ class ApiTagsController extends ApiController {
     $this->session = $session;
   }
   public function admin() {
-    $this->api->render("AdminTags");
+    return $this->api->render("AdminTags");
   }
   public function select() {
-    $this->api->render("Select");
+    return $this->api->render("Select");
   }
   public function filterQuery($collection, $query, $ops) {
     if (!$this->session->loggedIn("root") && !$this->session->loggedIn("admin")) $query->action("read");

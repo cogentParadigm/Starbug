@@ -2,11 +2,9 @@
 namespace Starbug\Core;
 
 class ApiController extends Controller implements CollectionFilterInterface {
-  public function init() {
-    $this->api->setModel($this->model);
-  }
   public function setApi(ApiRequest $api) {
     $this->api = $api;
+    $this->api->setModel($this->model);
     $api->addFilter($this);
   }
   public function getApi() {

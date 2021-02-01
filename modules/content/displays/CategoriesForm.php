@@ -21,6 +21,6 @@ class CategoriesForm extends FormDisplay {
     $this->add(["groups", "taxonomy" => "groups", "input_type" => "multiple_category_select", "pane" => "right"]);
     $this->add(["slug", "label" => "Machine Name", "info" => "Leave empty to generate automatically", "pane" => "path"]);
     // $display->add(["breadcrumb", "label" => "Breadcrumbs Title", "style" => "width:100%", "pane" => "breadcrumbs"]);
-    $this->add(["parent", "info" => "Start typing the title of the page and autocomplete results will display", "input_type" => "autocomplete", "from" => "categories", "pane" => "breadcrumbs"]);
+    $this->add(["parent", "info" => "Start typing the title of the page and autocomplete results will display", "data-dojo-type" => "sb/form/Autocomplete", "data-dojo-props" => "model: 'categories'", "pane" => "breadcrumbs"]);
   }
 }

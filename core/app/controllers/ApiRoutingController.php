@@ -1,18 +1,18 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Core\Routing\RouterInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class ApiRoutingController extends Controller {
-  public function __construct(ControllerFactoryInterface $controllers, RouterInterface $router, ApiRequest $api) {
+  public function __construct(ControllerFactoryInterface $controllers, ControllerMiddleware $dispatcher, ApiRequest $api) {
     $this->controllers = $controllers;
-    $this->router = $router;
+    $this->dispatcher = $dispatcher;
     $this->api = $api;
   }
-  public function response($controller, $action, $format) {
+  public function __invoke(ServerRequestInterface $request, $controller, $action, $format) {
     $this->api->setFormat($format);
     $controller = $this->controllers->get("Api".ucwords($controller));
     $controller->setApi($this->api);
-    return $controller->handle($this->request->withAttribute("action", $action));
+    return $this->dispatcher->dispatch([$controller, $action], $request->getAttribute("route")->getOptions());
   }
 }

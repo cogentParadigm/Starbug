@@ -71,26 +71,26 @@ class StyleguideController extends Controller {
     $this->dojo = $dojo;
   }
   public function defaultAction() {
-    $this->response->redirect($this->request->getUri()->getPath()."/colors");
+    return $this->redirect("styleguide/colors");
   }
   public function colors() {
-    $this->render("styleguide/template.html", ["page" => "colors", "sections" => $this->colors]);
+    return $this->render("styleguide/template.html", ["page" => "colors", "sections" => $this->colors]);
   }
   public function type() {
-    $this->render("styleguide/template.html", ["page" => "type"]);
+    return $this->render("styleguide/template.html", ["page" => "type"]);
   }
   public function scales() {
-    $this->render("styleguide/template.html", ["page" => "scales"]);
+    return $this->render("styleguide/template.html", ["page" => "scales"]);
   }
   public function content() {
-    $this->render("styleguide/template.html", ["page" => "content"]);
+    return $this->render("styleguide/template.html", ["page" => "content"]);
   }
   public function controls() {
-    $this->render("styleguide/template.html", ["page" => "controls"]);
+    return $this->render("styleguide/template.html", ["page" => "controls"]);
   }
   public function dgrid() {
     $this->dojo->addDependency("starbug/grid/PagedGrid");
     $this->dojo->addDependency("starbug/grid/columns/options");
-    $this->render("styleguide/template.html", ["page" => "dgrid"]);
+    return $this->render("styleguide/template.html", ["page" => "dgrid"]);
   }
 }

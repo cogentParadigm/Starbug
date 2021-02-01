@@ -28,20 +28,15 @@ class RoutingMiddleware implements MiddlewareInterface {
    * @param RouterInterface $router Router translates paths to controllers.
    * @param LoggerInterface $logger To write log messages.
    */
-  public function __construct(
-    RouterInterface $router,
-    LoggerInterface $logger
-  ) {
+  public function __construct(RouterInterface $router, LoggerInterface $logger) {
     $this->router = $router;
     $this->logger = $logger;
   }
 
   public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
     $route = $this->router->route($request);
-    $this->logger->info("Route selected.", $route);
-    foreach ($route as $key => $value) {
-      $request = $request->withAttribute($key, $value);
-    }
-    return $handler->handle($request);
+    $this->logger->info("Route selected.", ["route" => $route]);
+    $response = $handler->handle($request->withAttribute("route", $route));
+    return $response;
   }
 }

@@ -1,5 +1,6 @@
 define([
   "dojo/_base/declare",
+  "dojo/_base/config",
   "dojo/_base/lang",
   "dojo/_base/array",
   "put-selector/put",
@@ -7,14 +8,14 @@ define([
   "dojo/request",
   "dojo/has",
   "sb/form/theme/uploadButton/default"
-], function (declare, lang, array, put, on, request, has, theme) {
+], function (declare, config, lang, array, put, on, request, has, theme) {
   return declare(null, {
     model: "files",
     uploadOnSelect: true,
     browseEnabled: false,
     category:null,
     location: "default",
-    url: WEBSITE_URL + "upload",
+    url: config.websiteUrl + "upload",
     uploadButtonTheme: theme,
     buildRendering: function() {
       this.inherited(arguments);
@@ -63,6 +64,7 @@ define([
       formData.uploadType = this.uploadType;
       if (this.category != null) formData.category = this.category;
       formData.location = this.location;
+      formData.oid = config.csrfToken;
       this.onBegin(this.getFileList());
       this.uploadWithFormData(formData);
     },

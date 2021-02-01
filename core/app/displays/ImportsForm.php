@@ -11,6 +11,9 @@ class ImportsForm extends FormDisplay {
   public function setFilesystems(MountManager $filesystems) {
     $this->filesystems = $filesystems;
   }
+  public function setDatabase(DatabaseInterface $db) {
+    $this->db = $db;
+  }
   public function buildDisplay($options) {
     if ($options['operation'] == "run") {
       $this->buildRun($options);
@@ -22,7 +25,7 @@ class ImportsForm extends FormDisplay {
     $source = $this->get("source");
     $model = $this->get("model");
     $this->add("name");
-    $this->add(["model", "input_type" => "hidden", "default" => $options['model']]);
+    $this->add(["model", "input_type" => "hidden", "default" => $options['model'] ?? ""]);
     $this->add(["action", "default" => "create"]);
     $this->add(["source", "input_type" => "text", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "browseEnabled: true"]);
     if (!empty($source) && !empty($model)) {
@@ -56,7 +59,7 @@ class ImportsForm extends FormDisplay {
     }
     $count--;
     $size = 20;
-    $vars = $this->request->getQueryParams();
+    $vars = $this->request->getQueryParams() + ["pg" => 1];
     $pager = new Pager($count, $size, intval($vars['pg']));
     $line = 0;
     rewind($handle);

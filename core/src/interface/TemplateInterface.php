@@ -14,7 +14,7 @@ interface TemplateInterface {
    */
   public function assign($key, $value = null);
   /**
-   * Render a child template.
+   * Output a rendered template.
    *
    * @param mixed $paths a path or an array of paths to try
    * @param array $params an array of variables to inject
@@ -23,7 +23,7 @@ interface TemplateInterface {
   public function render($paths = [""], $params = [], $options = []);
 
   /**
-   * Capture a child template.
+   * Capture and return a rendered template.
    *
    * @param mixed $paths a path or an array of paths to try
    * @param array $params an array of variables to inject
@@ -32,4 +32,14 @@ interface TemplateInterface {
    * @return string the output of the template
    */
   public function capture($paths = [""], $params = [], $options = []);
+
+  /**
+   * Render an inline template string and return the result.
+   *
+   * @param string $template The template string.
+   * @param array $params The replacement parameters.
+   *
+   * @return string The rendered result.
+   */
+  public function replace($template, $params = []);
 }

@@ -7,43 +7,53 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
+use Starbug\Bundle\BundleFactoryInterface;
+use Starbug\Bundle\BundleInterface;
 
 class FormHandlerMiddleware implements MiddlewareInterface {
 
   protected $models;
-  protected $session;
+  protected $db;
   protected $filter;
   protected $response;
+  protected $bundles;
   protected $logger;
 
   /**
    * Dependencies for handling form submissions.
    *
    * @param ModelFactoryInterface $models Factory to create models.
+   * @param DatabaseInterface $db Database.
    * @param InputFilterInterface $filter Utility for input sanitization.
    * @param ResponseFactoryInterface $response Response factory.
+   * @param BundleFactoryInterface $bundles Factory to create bundles.
    * @param LoggerInterface $logger Logger.
    */
   public function __construct(
     ModelFactoryInterface $models,
+    DatabaseInterface $db,
     InputFilterInterface $filter,
-    ResponseFactoryInterface $responseFactory,
+    ResponseFactoryInterface $response,
+    BundleFactoryInterface $bundles,
     LoggerInterface $logger
   ) {
     $this->models = $models;
+    $this->db = $db;
     $this->filter = $filter;
-    $this->responseFactory = $responseFactory;
+    $this->responseFactory = $response;
+    $this->bundles = $bundles;
     $this->logger = $logger;
   }
 
   public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
     $permitted = $this->checkPost($request->getParsedBody());
-    if ($permitted) {
-      return $handler->handle($request);
-    } else {
-      return $this->responseFactory->createResponse(302)
+    if (false === $permitted) {
+      return $this->response->createResponse(302)
         ->withHeader("Location", "login?to=".$request->getUri()->getPath());
+    } elseif (true === $permitted) {
+      $request = $request->withAttribute("state", $this->getErrorState($request));
     }
+    return $handler->handle($request);
   }
   /**
    * Run a model action if permitted.
@@ -70,6 +80,13 @@ class FormHandlerMiddleware implements MiddlewareInterface {
         return $this->postAction($this->filter->normalize($key), $this->filter->normalize($val), $post[$key]);
       }
     }
-    return true;
+    return null;
+  }
+
+  protected function getErrorState(ServerRequestInterface $request): BundleInterface {
+    $model = array_keys($request->getParsedBody()["action"])[0];
+    $errors = $this->models->get($model)->errors("", true);
+    $state = $this->bundles->create($errors);
+    return $state;
   }
 }

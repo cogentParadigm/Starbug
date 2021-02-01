@@ -2,30 +2,39 @@
 namespace Starbug\Files;
 
 use Exception;
+use GuzzleHttp\Psr7\Utils;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\Controller;
 use Starbug\Core\ModelFactoryInterface;
 use League\Flysystem\MountManager;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\ImagesInterface;
 
 class UploadController extends Controller {
-  public function __construct(ModelFactoryInterface $models, MountManager $filesystems, ImagesInterface $images, SessionHandlerInterface $session) {
+  protected $models;
+  protected $filesystems;
+  protected $images;
+  protected $session;
+  protected $response;
+  public function __construct(
+    ModelFactoryInterface $models,
+    MountManager $filesystems,
+    ImagesInterface $images,
+    SessionHandlerInterface $session,
+    ResponseFactoryInterface $response
+  ) {
     $this->models = $models;
     $this->filesystems = $filesystems;
     $this->images = $images;
     $this->session = $session;
+    $this->response = $response;
   }
-  public function defaultAction() {
+  public function __invoke(ServerRequestInterface $request) {
     $htmldata = [];
-    $files = [];
+    $files = $request->getUploadedFiles()["uploadedfiles"];
 
-    $bodyParams = $this->request->getParsedBody();
-
-    foreach ($this->request->getUploadedFiles()["uploadedfiles"] as $key => $arr) {
-      foreach ($arr as $idx => $value) {
-        $files[$idx][$key] = $value;
-      }
-    }
+    $bodyParams = $request->getParsedBody();
 
     foreach ($files as $file) {
       $_post = [];
@@ -33,16 +42,15 @@ class UploadController extends Controller {
         "filename" => "",
         "mime_type" => "",
         "caption" => "uploaded file",
-        "category" => $bodyParams["category"],
+        "category" => $bodyParams["category"] ?? "",
         "location" => $bodyParams["location"] ?? "default"
       ];
       try {
-        list($width, $height) = getimagesize($file['tmp_name']);
+        list($width, $height) = getimagesize($file->getStream()->getMetadata("uri"));
       } catch (Exception $e) {
         $width = 0;
         $height = 0;
       }
-      if (!empty($file['category'])) $record['category'] = $file['category'];
       $moved = $this->models->get("files")->upload($record, $file);
       if ($moved) {
         $id = $this->models->get('files')->insert_id;
@@ -50,7 +58,7 @@ class UploadController extends Controller {
         $_post['id'] = $id;
         $_post['filename'] = $record["filename"];
         $_post['name'] = $id."_".$record["filename"];
-        $_post['url'] = $this->filesystems->getFilesystem($record["location"])->getUrl($_post['name']);
+        $_post['url'] = (string) $this->filesystems->getFilesystem($record["location"])->getUrl($_post['name']);
         $_post['mime_type'] = $record["mime_type"];
         $image = in_array($record["mime_type"], ["image/gif", "image/jpeg", "image/png"]);
         if ($image) {
@@ -58,7 +66,7 @@ class UploadController extends Controller {
         }
         $_post['width'] = $width;
         $_post['height'] = $height;
-        $_post['type'] = end(explode(".", $_post['name']));
+        $_post['type'] = pathinfo($_post['name'], PATHINFO_EXTENSION);
         $_post['size'] = $this->filesystems->getFilesystem($record["location"])->getSize($_post['name']);
         $_post['image'] = $image;
         $_post['owner'] = $this->session->getUserId();
@@ -67,7 +75,8 @@ class UploadController extends Controller {
         $htmldata[] = ["ERROR" => "File could not be moved: ".$file['name']];
       }
     }
-    $this->response->setTemplate("json.json");
-    $this->response->setContent($htmldata);
+    return $this->response->createResponse()
+      ->withHeader("Content-Type", "application/json")
+      ->withBody(Utils::streamFor(json_encode($htmldata)));
   }
 }

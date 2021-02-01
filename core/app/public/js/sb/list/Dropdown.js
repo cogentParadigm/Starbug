@@ -9,8 +9,11 @@ define([
   return declare([List, Keyboard], {
     rowHeight: 20,
     delegate:false,
-    postMixInProperties: function() {
+    postCreate: function() {
       this.inherited(arguments);
+      this.domNode.style.borderBottom = "1px solid #DDD";
+      this.bodyNode.style.maxHeight = "160px";
+      this.bodyNode.style.overflow = "auto";
       var addSelection = lang.hitch(this, function(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -23,14 +26,13 @@ define([
           }
         }
       });
-      this.keyMap[32] = addSelection; // Space
-      this.keyMap[13] = addSelection; // Enter
-    },
-    postCreate: function() {
-      this.inherited(arguments);
-      this.domNode.style.borderBottom = "1px solid #DDD";
-      this.bodyNode.style.maxHeight = "160px";
-      this.bodyNode.style.overflow = "auto";
+      // Attach _handleSelect to enter key, it's already
+      // attached to space bar in dgrid/Selection
+      this.addKeyHandler(13, lang.hitch(this, function (event) {
+        this._handleSelect(event, event.target);
+      }));
+      this.addKeyHandler(32, addSelection); // Space
+      this.addKeyHandler(13, addSelection); // Enter
     },
     renderRow: function(object, options) {
       var self = this;

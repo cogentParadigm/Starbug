@@ -2,8 +2,9 @@
 namespace Starbug\Core;
 
 use Exception;
+use GuzzleHttp\Psr7\Utils;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Http\ResponseBuilderInterface;
 
 class ApiRequest {
 
@@ -13,13 +14,11 @@ class ApiRequest {
   protected $collections;
   // @var ServerRequestInterface
   protected $request;
-  // @var ResponseBuilderInterface
+  // @var ResponsefactoryInterface
   protected $response;
   protected $format = "json";
   protected $types = [
-    "xml" => "text/xml",
     "json" => "application/json",
-    "jsonp" => "application/x-javascript",
     "csv" => "text/csv"
   ];
 
@@ -29,7 +28,7 @@ class ApiRequest {
   protected $filters = [];
   protected $model;
 
-  public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, ServerRequestInterface $request, ResponseBuilderInterface $response) {
+  public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, ServerRequestInterface $request, ResponseFactoryInterface $response) {
     $this->models = $models;
     $this->collections = $collections;
     $this->request = $request;
@@ -116,19 +115,31 @@ class ApiRequest {
 
   public function capture($key = false) {
     $format = $this->getFormat();
-    $this->response->setTemplate($format.".".$format);
-    $this->response->create(200, $this->headers + [
+    $headers = $this->headers + [
       "Content-Type" => $this->types[$format],
       "Sync-Time" => date('Y-m-d H:i:s')
-    ]);
+    ];
+    $response = $this->response->createResponse();
+    foreach ($headers as $name => $value) {
+      $response = $response->withHeader($name, $value);
+    }
     $results = $key ? $this->results[$key] : $this->results;
-    $this->response->setContent($results);
+    if ($format == "json") {
+      $response = $response->withBody(Utils::streamFor(json_encode($results)));
+    } elseif ($format == "csv") {
+      $csv = fopen('php://temp', 'r+');
+      foreach ($results as $row) {
+        fputcsv($csv, $row);
+      }
+      $response = $response->withBody(Utils::streamFor($csv));
+    }
+    return $response;
   }
 
   public function render($collection, $options = [], $name = false) {
     $this->add($collection, $options, $name);
     if (!$name) $name = $this->model;
-    $this->capture($name);
+    return $this->capture($name);
   }
 
   protected function errors($model) {

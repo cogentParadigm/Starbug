@@ -8,7 +8,6 @@ use FastRoute\Dispatcher\GroupCountBased;
 use FastRoute\RouteCollector;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\Routing\RoutesHelper;
 use Starbug\Http\UriBuilder;
 use Starbug\ResourceLocator\ResourceLocator;
 use Whoops\Handler\Handler;
@@ -22,32 +21,20 @@ return [
   'db' => 'default',
   'hmac_key' => '',
   'cli' => false,
-  'routes' => [
-    "api/{controller}/{action}.{format}" => ["controller" => "Starbug\\Core\\ApiRoutingController", "action" => "response"],
-    "profile" => ["controller" => "profile"],
-    "robots" => ["template" => "txt.txt"],
-    "admin" => RoutesHelper::adminRoute("Starbug\Core\AdminController"),
-    "admin/settings" => RoutesHelper::adminRoute("Starbug\Core\AdminSettingsController"),
-    "admin/imports/run/{id:[0-9]+}" =>
-      RoutesHelper::adminRoute("Starbug\Core\AdminImportsController", ["action" => "run"]),
-    "admin/taxonomies/taxonomy/{taxonomy}" =>
-      RoutesHelper::adminRoute("Starbug\Core\AdminTaxonomiesController", ["action" => "taxonomy"]),
-    "admin/taxonomies/create.xhr" =>
-      RoutesHelper::adminRoute("Starbug\Core\AdminTaxonomiesController", ["action" => "create", "format" => "xhr"]),
-    "admin/menus/menu/{menu}" =>
-      RoutesHelper::adminRoute("Starbug\Core\AdminMenusController", ["action" => "menu"])
-  ]
-  + RoutesHelper::crudRoutes("admin/taxonomies", "Starbug\Core\AdminTaxonomiesController")
-  + RoutesHelper::crudiRoutes("admin/menus", "Starbug\Core\AdminMenusController")
-  + RoutesHelper::crudRoutes("admin/imports", "Starbug\Core\AdminImportsController")
-  + RoutesHelper::crudRoutes("admin/imports_fields", "Starbug\Core\AdminImportsFieldsController"),
   "FastRoute\RouteCollector" => DI\decorate(function (RouteCollector $r, ContainerInterface $c) {
-    $routes = $c->get("routes");
-    foreach ($routes as $pattern => $route) {
-      $r->addRoute("GET", "/" . $pattern, $route);
+    $routes = $c->get("Starbug\Core\Routing\Configuration")->getRoutes();
+    foreach ($routes as $route) {
+      $r->addRoute("GET", $route->getPath(), $route);
     }
     return $r;
   }),
+  "route.providers" => [
+    DI\get("Starbug\Core\Admin\RouteProvider"),
+    DI\get("Starbug\Core\Admin\Menus\RouteProvider"),
+    DI\get("Starbug\Core\Admin\Imports\RouteProvider"),
+    DI\get("Starbug\Core\Api\RouteProvider")
+  ],
+  "Starbug\Core\Routing\Configuration" => DI\autowire()->method("addProviders", DI\get("route.providers")),
   'Starbug\Core\SettingsInterface' => DI\autowire('Starbug\Core\DatabaseSettings'),
   'Starbug\Core\*Interface' => DI\autowire('Starbug\Core\*'),
   'Starbug\Http\*Interface' => DI\autowire('Starbug\Http\*'),
@@ -111,7 +98,7 @@ return [
     ->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\ImportsForm' => DI\autowire()
     ->method('setFilesystems', DI\get('League\Flysystem\MountManager'))
-    ->method('setModels', DI\get('Starbug\Core\ModelFactoryInterface')),
+    ->method('setDatabase', DI\get('Starbug\Core\DatabaseInterface')),
   'Starbug\Core\ImportsFieldsForm' => DI\autowire()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
   'db.schema.migrations' => [
     DI\get('Starbug\Core\Migration')
@@ -142,5 +129,8 @@ return [
   },
   "Middlewares\Https" => DI\autowire()
     ->constructorParameter("responseFactory", DI\get("Http\Factory\Guzzle\ResponseFactory"))
-    ->method("includeSubdomains")
+    ->method("includeSubdomains"),
+  "Starbug\Bundle\*Interface" => DI\autowire("Starbug\Bundle\*"),
+  "Starbug\Operation\*Interface" => DI\autowire("Starbug\Operation\*"),
+  "Starbug\Core\SettingsForm" => DI\autowire()->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface"))
 ];

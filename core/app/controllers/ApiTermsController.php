@@ -9,16 +9,16 @@ class ApiTermsController extends ApiController {
     $this->session = $session;
   }
   public function admin() {
-    $this->api->render("AdminTerms");
+    return $this->api->render("AdminTerms");
   }
   public function select() {
-    $this->api->render("SelectTerms");
+    return $this->api->render("SelectTerms");
   }
   public function index() {
-    $this->api->render("TermsList");
+    return $this->api->render("TermsList");
   }
   public function tree() {
-    $this->api->render("TermsTree");
+    return $this->api->render("TermsTree");
   }
   public function filterQuery($collection, $query, $ops) {
     if (!$this->session->loggedIn("root") && !$this->session->loggedIn("admin")) $query->action("read");

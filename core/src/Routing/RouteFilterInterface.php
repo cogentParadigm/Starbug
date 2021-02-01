@@ -12,5 +12,5 @@ interface RouteFilterInterface {
    *
    * @return array the route
    */
-  public function filterRoute($route, ServerRequestInterface $request);
+  public function filterRoute(Route $route, ServerRequestInterface $request);
 }

@@ -2,6 +2,7 @@
 namespace Starbug\Core;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Bundle\Bundle;
 
 class FormDisplay extends ItemDisplay {
   public $type = "form";
@@ -11,7 +12,7 @@ class FormDisplay extends ItemDisplay {
 
   public $url;
   public $method = "post";
-  public $errors = [];
+  public $errors;
   public $layout;
   public $defaultAction = "create";
   public $submit_label = "Save";
@@ -29,19 +30,24 @@ class FormDisplay extends ItemDisplay {
   protected $request;
   protected $db;
 
-  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, ServerRequestInterface $request, DatabaseInterface $db) {
+  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, ServerRequestInterface $request) {
     parent::__construct($output, $collections);
     $this->hook_builder = $hooks;
     $this->displays = $displays;
     $this->request = $request;
-    $this->db = $db;
+    $this->errors = $this->request->getAttribute("state") ?? new Bundle();
   }
 
   public function build($options = []) {
     $this->options = $options;
     if (empty($this->model) && !empty($this->options['model'])) $this->model = $this->options['model'];
     if (!empty($options["input_name"])) $this->input_name = $options["input_name"];
-    if (false === $this->input_name) $this->input_name = [$this->model];
+    if (false === $this->input_name) {
+      $this->input_name = [];
+      if (!empty($this->model)) {
+        $this->input_name[] = $this->model;
+      }
+    }
 
     // create layout display
     $this->layout = $this->displays->get("LayoutDisplay");
@@ -112,45 +118,29 @@ class FormDisplay extends ItemDisplay {
       if ($this->success($this->defaultAction)) $this->attributes['class'][] = "submitted";
       elseif ($this->failure($this->defaultAction)) $this->attributes['class'][] = "errors";
     }
-    // grab errors
-    $this->errors = [];
-    foreach ($this->fields as $name => $field) {
-      $error_key = implode(".", $this->input_name);
-      $error_key .= ".".str_replace(["][", "[", "]"], [".", ".", ""], $name);
-      $errors = $this->db->errors($error_key, true);
-      if (!empty($errors)) $this->errors[$name] = $errors;
-    }
   }
 
   public function render($query = false) {
     parent::render($query);
   }
 
-  public function errors($key = "", $values = false, $model = "") {
-    if (empty($model)) $model = $this->model;
-    $key = (empty($key)) ? $model : $model.".".$key;
-    return $this->db->errors($key, $values);
-  }
-
-  public function error($error, $field = "global", $model = "") {
-    if (empty($model)) $model = $this->model;
-    $this->db->error($error, $field, $model);
-  }
-
-  public function success($model, $action = false) {
-    if (false === $action) {
-      $action = $model;
-      $model = $this->model;
+  public function errors($key = "", $values = false) {
+    if (is_bool($key)) {
+      $values = $key;
+      $key = "";
     }
-    return $this->db->success($model, $action);
+    $parts = empty($key) ? [] : explode(".", $key);
+    if ($values) return $this->errors->get(...$parts);
+    elseif (!empty($parts)) return $this->errors->has(...$parts);
+    else return !$this->errors->isEmpty();
   }
 
-  public function failure($model, $action = false) {
-    if (false === $action) {
-      $action = $model;
-      $model = $this->model;
-    }
-    return $this->db->failure($model, $action);
+  public function success() {
+    return $this->request->getAttribute("state") && $this->errors->isEmpty();
+  }
+
+  public function failure() {
+    return $this->request->getAttribute("state") && !$this->errors->isEmpty();
   }
 
   public function hasPost(...$keys) {

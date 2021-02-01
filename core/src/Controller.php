@@ -1,129 +1,47 @@
 <?php
 namespace Starbug\Core;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use ReflectionMethod;
-use Starbug\Http\ResponseBuilderInterface;
+use GuzzleHttp\Psr7\Response;
+use Starbug\Http\TemplatedResponse;
 
 class Controller {
 
-  /**
-   * PSR-7 Server Request
-   *
-   * @var ServerRequestInterface
-   */
-  protected $request;
-  /**
-   * PSR-7 Response builder
-   *
-   * @var ResponseBuilderInterface
-   */
-  protected $response;
-
-  public function setResponseBuilder(ResponseBuilderInterface $builder) {
-    $this->response = $builder;
-  }
-
-
-  public function init() {
-  }
-
-  /**
-   * Every controller has a default action, used when no action is specified.
-   */
-  public function defaultAction() {
-    $this->missing();
-  }
-
-  /**
-   * Run a controller action.
-   *
-   * @param string $action - the action to run, an empty string will run defaultAction
-   * @param string $arguments - arguments to pass to the action
-   */
-  public function action($action = "", $arguments = []) {
-    if (empty($action)) {
-      $action = "defaultAction";
-    } else {
-      $action = $this->formatActionName($action);
-    }
-    $args = [];
-    if (method_exists($this, $action)) {
-      $reflection = new ReflectionMethod($this, $action);
-      $parameters = $reflection->getParameters();
-      foreach ($parameters as $parameter) {
-        $name = $parameter->getName();
-        if (isset($arguments[$name])) $args[] = $arguments[$name];
-        elseif ($parameter->isDefaultValueAvailable()) $args[] = $parameter->getDefaultValue();
-      }
-    }
-    call_user_func_array([$this, $action], $args);
-  }
+  protected $parameters = [];
 
   /**
    * Assign a variable
    */
   public function assign($key, $value = null) {
-    $this->response->assign($key, $value);
+    $merge = is_array($key) ? $key : [$key => $value];
+    $this->parameters = $merge + $this->parameters;
   }
 
   /**
-   * Set the view to render for this request.
+   * Return a templated response.
    */
   public function render($path = "", $params = [], $options = []) {
-    $this->response->render($path, $params, $options);
+    return new TemplatedResponse($path, $params + $this->parameters, $options);
   }
 
   /**
    * Return a forbidden response.
    */
-  public function forbidden() {
-    $this->response->redirect("login?to=".$this->request->getUri()->getPath());
+  public function forbidden($to = false) {
+    if (false !== $to) return $this->redirect("login?to=".$to);
+    return $this->redirect("login");
   }
 
   /**
    * Return a missing response.
    */
   public function missing() {
-    $this->response->create(404);
-    $this->render("missing.html");
+    return $this->render("missing.html")->withStatus(404);
   }
 
   /**
-   * Generate a response
+   * Return a redirect response.
    */
-  public function handle(ServerRequestInterface $request) : ResponseInterface {
-    $route = $request->getAttributes() + ["action" => "", "arguments" => []];
-    $this->request = $request;
-    $this->response->assign("request", $request);
-    $this->response->assign("route", $route);
-    if (!empty($route["format"])) {
-      $this->response->setFormat($route["format"]);
-    }
-    if (!empty($route["template"])) {
-      $this->response->setTemplate($route["template"]);
-    }
-    $this->init();
-    $this->action($route["action"], $route["arguments"]);
-    return $this->response->getResponse();
-  }
-
-  /**
-   * If an unknown action is called, trigger a missing response.
-   */
-  public function __call($name, $arguments) {
-    $this->missing();
-  }
-
-  /**
-   * Convert a URL component with dashes to camel case format.
-   *
-   * @param string $segment the path segment.
-   *
-   * @return string the camel case converted name
-   */
-  protected function formatActionName($segment) {
-    return str_replace(" ", "", ucwords(str_replace("-", " ", $segment)));
+  public function redirect($path, $status = 302) {
+    return new Response($status, ["Location" => $path]);
   }
 }

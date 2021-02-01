@@ -14,17 +14,17 @@ class ApiFilesController extends ApiController {
     $this->filesystems = $filesystems;
   }
   public function admin() {
-    $this->api->render("AdminFiles");
+    return $this->api->render("AdminFiles");
   }
   public function select() {
-    $this->api->render("FilesSelect");
+    return $this->api->render("FilesSelect");
   }
   public function filterQuery($collection, $query, $ops) {
     if (!$this->session->loggedIn("root") && !$this->session->loggedIn("admin")) $query->action("read");
     return $query;
   }
   public function filterRow($collection, $file) {
-    if (reset(explode("/", $file['mime_type'])) == "image") {
+    if (in_array($file["mime_type"], ["image/gif", "image/jpeg", "image/png"])) {
       $file["thumbnail"] = (string) $this->images->thumb($file["location"]."://".$file['id']."_".$file['filename'], ["w" => 100, "h" => 100, "a" => 1]);
     }
     $file["url"] = (string) $this->filesystems->getFilesystem($file["location"])->getUrl($file["id"]."_".$file["filename"]);

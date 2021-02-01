@@ -71,4 +71,8 @@ class TemplateRenderer implements TemplateInterface {
 
     return $this->twig->resolveTemplate($paths)->render($params);
   }
+
+  public function replace($template, $params = []) {
+    return $this->twig->createTemplate((string) $template)->render($params);
+  }
 }

@@ -20,12 +20,6 @@ class ControllerFactory implements ControllerFactoryInterface {
     if (false == $className) {
       throw new Exception("Controller not found. ".$controller.".");
     }
-    $object = $this->container->get($className);
-    if ($object instanceof Controller) {
-      $object->setResponseBuilder($this->container->get("Starbug\Http\ResponseBuilderInterface"));
-      return $object;
-    } else {
-      throw new Exception("ControllerFactoryInterface contract violation. ".$controller." is not an instance of Controller.");
-    }
+    return $this->container->get($className);
   }
 }

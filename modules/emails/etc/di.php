@@ -2,13 +2,12 @@
 namespace Starbug\Emails;
 
 use DI;
-use Starbug\Core\Routing\RoutesHelper;
 
 return [
-  "routes" => DI\add(
-    RoutesHelper::crudiRoutes("admin/emails", "Starbug\Emails\AdminEmailsController")
-  ),
-  'db.schema.migrations' => DI\add([
-    DI\get('Starbug\Emails\Migration')
+  "route.providers" => DI\add([
+    DI\get("Starbug\Emails\RouteProvider")
+  ]),
+  "db.schema.migrations" => DI\add([
+    DI\get("Starbug\Emails\Migration")
   ])
 ];

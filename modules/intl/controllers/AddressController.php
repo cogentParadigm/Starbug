@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Intl;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Controller;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ModelFactoryInterface;
@@ -10,21 +11,10 @@ class AddressController extends Controller {
     $this->db = $db;
     $this->models = $models;
   }
-  public function init() {
-    $this->assign("model", "address");
-    $this->response->setFormat("xhr");
-  }
-  public function create() {
-    $this->render("admin/create.html");
-  }
-  public function update($id) {
-    $this->assign("id", $id);
-    $this->render("admin/update.html");
-  }
-  public function form($locale = "US") {
+  public function __invoke(ServerRequestInterface $request, $locale = "US") {
     $address = [];
-    $queryParams = $this->request->getQueryParams();
-    $bodyParams = $this->request->getParsedBody();
+    $queryParams = $request->getQueryParams();
+    $bodyParams = $request->getParsedBody();
     $edit = !empty($queryParams["edit"]);
 
     // load the country by id OR code
@@ -48,6 +38,6 @@ class AddressController extends Controller {
       $options["input_name"] = $queryParams["keys"];
     }
     $this->assign("options", $options);
-    $this->render("address/form.html");
+    return $this->render("address/form.html");
   }
 }

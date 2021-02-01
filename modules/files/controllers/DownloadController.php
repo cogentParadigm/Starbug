@@ -7,7 +7,7 @@ class DownloadController extends Controller {
   public function __construct(FileDownloader $fileDownloader) {
     $this->fileDownloader = $fileDownloader;
   }
-  public function download($id) {
+  public function __invoke($id) {
     $this->fileDownloader->download($id);
   }
 }

@@ -1,5 +1,5 @@
-define(["dojo", "dojo/string", "put-selector/put", "dojo/on"],
-function(dojo, strings, put, on){
+define(["dojo", "dojo/_base/config", "dojo/string", "put-selector/put", "dojo/on"],
+function(dojo, config, strings, put, on){
   dojo.global.starbug.grid.columns = dojo.global.starbug.grid.columns || {};
   dojo.global.starbug.grid.columns.options = function(column){
 
@@ -11,7 +11,8 @@ function(dojo, strings, put, on){
 
     column.renderCell = function(object, value, cell, options, header){
       var grid = this.grid, row = object && grid.row(object), parent = cell.parentNode;
-      var base_url = grid.base_url || dojo.global.location.pathname;
+      var base_url = grid.base_url || dojo.global.location.pathname.substr(config.websiteUrl.length);
+      base_url = config.websiteUrl + base_url;
       put(parent && parent.contents ? parent : cell, ".dgrid-options");
 
       var div = put(cell, 'div.btn-group');

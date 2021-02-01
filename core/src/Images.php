@@ -74,7 +74,7 @@ class Images implements ImagesInterface {
   }
   public function thumb($url, $dimensions = [], $absolute = false) {
     list($filesystem, $filename) = explode("://", $url);
-    $dimensions = array_merge(['w' => 0, 'h' => 0, 'a' => false], $dimensions);
+    $dimensions = array_merge(['w' => 0, 'h' => 0, 'a' => false, 'f' => false], $dimensions);
     $dir = $dimensions['w']."x".$dimensions['h']."a".$dimensions['a'];
     $target = $dir."/".$filename;
     if (!$this->filesystems->has($filesystem."://thumbnails/".$target) || $dimensions['f']) {

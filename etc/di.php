@@ -36,6 +36,9 @@ return [
     DI\get("Starbug\Auth\Http\CsrfMiddleware"),
     DI\get("Starbug\Core\RoutingMiddleware"),
     DI\get("Starbug\Http\RequestInjectionMiddleware"),
+    DI\get("Starbug\Http\TemplateRenderingMiddleware"),
+    DI\get("Starbug\Core\Routing\ResolutionMiddleware"),
+    DI\get("Starbug\Operation\Http\OperationMiddleware"),
     DI\get("Starbug\Core\FormHandlerMiddleware"),
     DI\get("Starbug\Core\ControllerMiddleware")
   ],

@@ -20,7 +20,7 @@ class Router implements RouterInterface {
     $this->filters[] = $filter;
   }
 
-  public function getRoute(ServerRequestInterface $request) {
+  public function getRoute(ServerRequestInterface $request): Route {
     if ($path = $this->resolveAlias($request)) {
       $request = $request->withUri($request->getUri()->withPath($path));
     }
@@ -29,7 +29,7 @@ class Router implements RouterInterface {
         return $this->filterRoute($route, $request);
       }
     }
-    return $this->filterRoute(["controller" => "main", "action" => "missing", "arguments" => []], $request);
+    return $this->filterRoute(new Route($path, ["Starbug\\Core\\MainController", "missing"], ["arguments" => []]), $request);
   }
   /**
    * A router must identify a controller from a Request
@@ -41,14 +41,8 @@ class Router implements RouterInterface {
    *                    - action: the action name
    *                    - arguments: the arguments
    */
-  public function route(ServerRequestInterface $request) {
-    $route = $this->getRoute($request);
-    if (empty($route['controller']) && !empty($route['type'])) {
-      $route = array_replace(['controller' => $route['type'], 'action' => 'show'], $route);
-      $route['controller'] = $route['type'];
-      if (empty($route['action'])) $route['action'] = 'show';
-    }
-    return $route;
+  public function route(ServerRequestInterface $request): Route {
+    return $this->getRoute($request);
   }
 
   protected function resolveAlias(ServerRequestInterface $request) {

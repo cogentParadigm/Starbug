@@ -24,7 +24,7 @@ class FormCrudHook extends FormHook {
       $field['data-dojo-props'] = [];
     }
     $field['data-dojo-props']['input_name'] = "'".$form->getName($field['name'])."'";
-    $field['data-dojo-props']['model'] = "'".$field['table']."'";
+    if (isset($field["table"])) $field['data-dojo-props']['model'] = "'".$field['table']."'";
     $field['data-dojo-props']['value'] = '[]';
     if (!empty($field['size'])) $field['data-dojo-props']['size'] = $field['size'];
     if (!empty($field['value'])) {

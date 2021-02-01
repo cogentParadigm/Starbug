@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7ac7182e5682077e8ab3ac3ef2f46851",
+    "content-hash": "4683ddf0581f006422bb27ec440c1f8e",
     "packages": [
         {
             "name": "composer/installers",
@@ -2561,16 +2561,16 @@
         },
         {
             "name": "starbug/http",
-            "version": "v0.9.8",
+            "version": "v0.9.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-http.git",
-                "reference": "032350f44ab1e3bf9f561dc3767cf9af33f5bd47"
+                "reference": "a36b65d26527b6601a6ca1d1e85567184b1461fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/032350f44ab1e3bf9f561dc3767cf9af33f5bd47",
-                "reference": "032350f44ab1e3bf9f561dc3767cf9af33f5bd47",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/a36b65d26527b6601a6ca1d1e85567184b1461fb",
+                "reference": "a36b65d26527b6601a6ca1d1e85567184b1461fb",
                 "shasum": ""
             },
             "require": {
@@ -2607,9 +2607,9 @@
             "description": "Basic HTTP message components.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-http/issues",
-                "source": "https://github.com/cogentParadigm/starbug-http/tree/v0.9.8"
+                "source": "https://github.com/cogentParadigm/starbug-http/tree/v0.9.9"
             },
-            "time": "2021-01-27T05:14:30+00:00"
+            "time": "2021-02-01T05:59:43+00:00"
         },
         {
             "name": "starbug/js",
@@ -2680,6 +2680,51 @@
                 "source": "https://github.com/cogentParadigm/starbug-modules/tree/v0.8.1"
             },
             "time": "2021-01-16T23:52:55+00:00"
+        },
+        {
+            "name": "starbug/operation",
+            "version": "v0.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-operation.git",
+                "reference": "b5610c6513a8bcb7caadbd2b59d3f278861d230a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-operation/zipball/b5610c6513a8bcb7caadbd2b59d3f278861d230a",
+                "reference": "b5610c6513a8bcb7caadbd2b59d3f278861d230a",
+                "shasum": ""
+            },
+            "require": {
+                "psr/http-message": "^1.0",
+                "psr/http-server-middleware": "^1.0",
+                "starbug/bundle": "^1.0"
+            },
+            "require-dev": {
+                "starbug/devel": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Operation\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "PSR-15 middleware for handling POST requests such as form submissions and API calls.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-operation/issues",
+                "source": "https://github.com/cogentParadigm/starbug-operation/tree/v0.7.0"
+            },
+            "time": "2021-02-01T06:11:32+00:00"
         },
         {
             "name": "starbug/resource-locator",

@@ -14,6 +14,6 @@ interface RouterInterface {
    *                    - action: the action name
    *                    - arguments: the arguments
    */
-  public function route(ServerRequestInterface $request);
+  public function route(ServerRequestInterface $request): Route;
   public function addFilter(RouteFilterInterface $filter);
 }

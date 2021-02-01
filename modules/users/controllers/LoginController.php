@@ -19,20 +19,20 @@ class LoginController extends Controller {
       if (!empty($queryParams["to"])) {
         $redirectPath = $this->filterRedirectPath($queryParams["to"], $redirectPath);
       }
-      $this->response->redirect($redirectPath);
+      return $this->redirect($redirectPath);
     } else {
-      $this->render("login.html");
+      return $this->render("login.html");
     }
   }
   public function logout() {
     $this->session->destroy();
-    $this->response->redirect("");
+    return $this->redirect("");
   }
   public function forgotPassword() {
-    $this->render("forgot-password.html");
+    return $this->render("forgot-password.html");
   }
   public function resetPassword() {
-    $this->render("reset-password.html");
+    return $this->render("reset-password.html");
   }
   protected function filterRedirectPath($input, $default = "") {
     $uri = new Uri($input);

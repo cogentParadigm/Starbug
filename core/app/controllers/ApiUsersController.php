@@ -9,7 +9,7 @@ class ApiUsersController extends ApiController {
     $this->session = $session;
   }
   public function admin() {
-    $this->api->render("AdminUsers");
+    return $this->api->render("AdminUsers");
   }
   public function select() {
     $this->api->render("Select");

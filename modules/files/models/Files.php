@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Files;
 
+use Psr\Http\Message\UploadedFileInterface;
 use Starbug\Core\FilesModel;
 
 class Files extends FilesModel {
@@ -22,18 +23,21 @@ class Files extends FilesModel {
     }
   }
 
-  public function upload($record, $file, $remote = false) {
-    if (!empty($file['name'])) {
-      if ($file["error"] > 0) $this->error($file["error"], "filename");
-      $record['filename'] = str_replace(" ", "_", $file['name']);
-      $record['mime_type'] = $this->getMime($file['tmp_name']);
-      $record['size'] = filesize($file['tmp_name']);
+  public function upload($record, UploadedFileInterface $file, $remote = false) {
+    $filename = $file->getClientFilename();
+    $tmpName = $file->getStream()->getMetadata("uri");
+    $error = $file->getError();
+    if (!empty($filename)) {
+      if ($error > 0) $this->error("Error ".$error, "filename");
+      $record['filename'] = str_replace(" ", "_", $filename);
+      $record['mime_type'] = $this->getMime($tmpName);
+      $record['size'] = filesize($tmpName);
       if (empty($record['category'])) $record['category'] = "files_category uncategorized";
       if (empty($record["location"])) $record["location"] = "default";
       $this->store($record);
       if ((!$this->errors()) && (!empty($record['filename']))) {
         $id = (empty($record['id'])) ? $this->insert_id : $record['id'];
-        $stream = fopen($file["tmp_name"], "r+");
+        $stream = fopen($tmpName, "r+");
         $success = $this->filesystems->getFilesystem($record["location"])->writeStream($id."_".$record["filename"], $stream);
         if (is_resource($stream)) fclose($stream);
         if ($success) {

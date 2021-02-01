@@ -7,12 +7,13 @@ class Access implements AccessInterface {
   public function __construct(SessionHandlerInterface $session) {
     $this->session = $session;
   }
-  public function hasAccess($route) {
-    if (empty($route["groups"])) return true;
-    if (!is_array($route["groups"])) {
-      $route["groups"] = [$route["groups"]];
+  public function hasAccess(Route $route) {
+    $groups = $route->getOption("groups");
+    if (empty($groups)) return true;
+    if (!is_array($groups)) {
+      $groups = [$groups];
     }
-    foreach ($route["groups"] as $group) {
+    foreach ($groups as $group) {
       if ($this->session->loggedIn($group)) return true;
     }
     return false;

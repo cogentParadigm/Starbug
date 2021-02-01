@@ -30,6 +30,7 @@
     "starbug/resource-locator": "^0.9",
     "starbug/http": "^0.9",
     "starbug/auth": "^0.9",
+    "starbug/operation": "^0.7",
     "phpmailer/phpmailer": "dev-master",
     "masterexploder/phpthumb": "dev-master",
     "ezyang/htmlpurifier":"dev-master",
@@ -55,7 +56,7 @@
     "starbug/storm": "dev-master"
   },
   "require-dev": {
-    "starbug/devel": "*"
+    "starbug/devel": "^1.0"
   },
   "autoload": {
     "classmap":["core", "app", "modules", "var", "features"]

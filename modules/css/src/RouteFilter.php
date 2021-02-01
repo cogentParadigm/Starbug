@@ -2,6 +2,7 @@
 namespace Starbug\Css;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Core\Routing\Route;
 use Starbug\Core\Routing\RouteFilterInterface;
 
 class RouteFilter implements RouteFilterInterface {
@@ -9,10 +10,10 @@ class RouteFilter implements RouteFilterInterface {
     $this->css = $css;
     $this->theme = $theme;
   }
-  public function filterRoute($route, ServerRequestInterface $request) {
-    if (empty($route['theme'])) $route['theme'] = $this->theme;
-    if (empty($route['layout'])) $route['layout'] = empty($route['type']) ? "views" : $route['type'];
-    $this->css->setTheme($route['theme']);
+  public function filterRoute(Route $route, ServerRequestInterface $request) {
+    if (!$route->hasOption("theme")) $route->setOption("theme", $this->theme);
+    if (!$route->hasOption("layout")) $route->setOption("layout", "views");
+    $this->css->setTheme($route->getOption("theme"));
     return $route;
   }
 }
