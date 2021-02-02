@@ -11,7 +11,7 @@ services:
       - ~/.docker/certs/server.key:/etc/pki/tls/private/localhost.key
       - ~/.docker/certs/server.crt:/etc/pki/tls/certs/localhost.crt
   php:
-    image: agangji/php:7.1
+    image: agangji/php:7.3
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
     volumes:
