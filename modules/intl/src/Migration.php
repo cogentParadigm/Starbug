@@ -31,7 +31,7 @@ class Migration extends AbstractMigration {
       ["postal_url", "type" => "string", "length" => "255", "default" => ""]
     );
 
-    $this->schema->addTable(["provinces", "groups" => false, "label_select" => "provinces.name"],
+    $this->schema->addTable(["provinces", "groups" => false, "label_select" => "provinces.name", "singular_label" => "State/Province", "label" => "States/Provinces"],
       ["countries_id", "type" => "int", "references" => "countries id"],
       ["name", "type" => "string", "length" => "128"],
       ["code", "type" => "string", "length" => "2", "index" => ""]

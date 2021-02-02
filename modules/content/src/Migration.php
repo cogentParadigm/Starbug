@@ -9,7 +9,7 @@ class Migration extends AbstractMigration {
       ["path", "type" => "string", "length" => 255, "index" => true],
       ["alias", "type" => "string", "length" => 255, "index" => true, "unique" => true]
     );
-    $this->schema->addTable(["categories", "label_select" => "categories.title"],
+    $this->schema->addTable(["categories", "singular" => "category", "label_select" => "categories.title"],
       ["title", "type" => "string", "length" => "128"],
       ["path", "type" => "path", "path" => "categories/view/[categories:id]", "pattern" => "category/[categories:title]", "null" => true, "default" => "NULL"],
       ["description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],

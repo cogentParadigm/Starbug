@@ -13,7 +13,7 @@ class ShippingRatesForm extends FormDisplay {
     // $this->add(["additive", "info" => "Check to make this an add-on rather than the base rate.", "pane" => "left"]);
     $this->add(["name", "pane" => "left"]);
     $this->add(["price", "info" => "Enter price in cents. For example, enter 5000 for $50.", "pane" => "left"]);
-    $this->add(["product_types", "pane" => "right"]);
+    $this->add(["product_types", "input_type" => "multiple_select", "from" => "product_types", "query" => "Select", "pane" => "right"]);
     $this->add(["product_options", "pane" => "right", "input_type" => "text", "data-dojo-type" => "sb/form/CRUDList", "data-dojo-props" => "model:'shipping_rates_product_options', newItemLabel:'Add Product Option Condition'"]);
   }
 }

@@ -7,9 +7,9 @@ class PaymentGatewaysForm extends FormDisplay {
   public $model = "payment_gateways";
   public $cancel_url = "admin/payment_gateways";
   public function buildDisplay($options) {
-    $this->add("name");
-    $this->add("description");
-    $this->add("is_active");
-    $this->add("is_test_mode");
+    $this->add(["name", "input_type" => "text"]);
+    $this->add(["description", "input_type" => "textarea"]);
+    $this->add(["is_active", "input_type" => "checkbox", "value" => 1]);
+    $this->add(["is_test_mode", "input_type" => "checkbox", "value" => 1]);
   }
 }

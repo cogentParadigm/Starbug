@@ -60,12 +60,12 @@ class ProductsForm extends FormDisplay {
     ]);
 
     $this->add(["position", "pane" => "right"]);
-    $this->add(["categories", "input_type" => "multiple_category_select", "pane" => "right"]);
+    $this->add(["categories", "input_type" => "multiple_category_select", "taxonomy" => "product_categories", "pane" => "right"]);
     $this->add(["path", "label" => "URL path", "info" => "Leave empty to generate automatically", "pane" => "path"]);
     $this->add(["meta_description", "label" => "Meta Description", "input_type" => "textarea", "class" => "plain", "style" => "width:100%", "data-dojo-type" => "dijit/form/Textarea", "pane" => "meta"]);
     $this->add(["meta_keywords", "label" => "Meta Keywords", "input_type" => "textarea", "class" => "plain", "style" => "width:100%", "data-dojo-type" => "dijit/form/Textarea", "pane" => "meta"]);
-    $this->add(["published", "pane" => "publishing", "value" => "1"]);
-    $this->add(["hidden", "pane" => "publishing", "value" => "1"]);
+    $this->add(["published", "pane" => "publishing", "input_type" => "checkbox", "value" => "1"]);
+    $this->add(["hidden", "pane" => "publishing", "input_type" => "checkbox", "value" => "1"]);
 
     $options = $this->db->query("product_options")->condition("product_types_id", $this->get("type"))
       ->sort("product_options.tree_path, product_options.position")->all();
