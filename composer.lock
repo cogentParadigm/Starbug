@@ -2728,16 +2728,16 @@
         },
         {
             "name": "starbug/resource-locator",
-            "version": "v0.9",
+            "version": "v0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-resource-locator.git",
-                "reference": "bf7b7e4eafa7914b5d49a7161538f8f6299cf47f"
+                "reference": "8429ac369acb66488ce9d83e476fa2ac6f5917c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-resource-locator/zipball/bf7b7e4eafa7914b5d49a7161538f8f6299cf47f",
-                "reference": "bf7b7e4eafa7914b5d49a7161538f8f6299cf47f",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-resource-locator/zipball/8429ac369acb66488ce9d83e476fa2ac6f5917c4",
+                "reference": "8429ac369acb66488ce9d83e476fa2ac6f5917c4",
                 "shasum": ""
             },
             "require-dev": {
@@ -2762,9 +2762,9 @@
             "description": "Locate files and classes from a list of modules.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-resource-locator/issues",
-                "source": "https://github.com/cogentParadigm/starbug-resource-locator/tree/v0.9"
+                "source": "https://github.com/cogentParadigm/starbug-resource-locator/tree/v0.9.1"
             },
-            "time": "2021-01-11T02:39:27+00:00"
+            "time": "2021-01-12T07:17:05+00:00"
         },
         {
             "name": "starbug/storm",
