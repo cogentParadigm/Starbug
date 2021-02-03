@@ -6,6 +6,7 @@ use Monolog\Logger;
 use DI;
 use FastRoute\Dispatcher\GroupCountBased;
 use FastRoute\RouteCollector;
+use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Http\UriBuilder;
@@ -61,6 +62,9 @@ return [
     return $request->getUri();
   }),
   "Psr\Http\Message\ResponseFactoryInterface" => DI\autowire("Http\Factory\Guzzle\ResponseFactory"),
+  "Psr\Http\Message\ServerRequestInterface" => function (ContainerInterface $container) {
+    return new ServerRequest("GET", $container->get("website_url"));
+  },
   'Starbug\Core\ModelFactoryInterface' => DI\autowire('Starbug\Core\ModelFactory')->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\CssGenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   "Whoops\Run" => DI\decorate(function ($whoops, $container) {

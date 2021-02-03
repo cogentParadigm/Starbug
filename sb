@@ -2,34 +2,28 @@
 <?php
 namespace Starbug\Core;
 
-use GuzzleHttp\Psr7\ServerRequest;
-
-  $positional = [];
-  $named = [];
-  foreach ($argv as $i => $arg) {
-    if (0 === strpos($arg, "-")) {
-      $arg = ltrim($arg, "-");
-      $parts = (false !== strpos($arg, "=")) ? explode("=", $arg, 2) : [$arg, true];
-      $named[$parts[0]] = $parts[1];
-    } else {
-      $positional[] = $arg;
-    }
-  }
-  $args = $named;
-  chdir(dirname(__FILE__));
-  if (!empty($args["t"])) {
-    include("vendor/starbug/di/bootstrap/test.php");
+$positional = [];
+$named = [];
+foreach ($argv as $i => $arg) {
+  if (0 === strpos($arg, "-")) {
+    $arg = ltrim($arg, "-");
+    $parts = (false !== strpos($arg, "=")) ? explode("=", $arg, 2) : [$arg, true];
+    $named[$parts[0]] = $parts[1];
   } else {
-    include("vendor/starbug/di/bootstrap/default.php");
+    $positional[] = $arg;
   }
-
-  $request = new ServerRequest("GET", $container->get("website_url"));
-  $container->set("Psr\Http\Message\ServerRequestInterface", $request);
-
-  $command = array_shift($argv);
-  $script = array_shift($argv);
-  $path = $namespace = false;
-  $locator = $container->get('Starbug\ResourceLocator\ResourceLocatorInterface');
-  $className = $locator->className($script, "Command");
-  $command = $container->get($className);
-  $command->run($argv);
+}
+$args = $named;
+chdir(dirname(__FILE__));
+if (!empty($args["t"])) {
+  include("vendor/starbug/di/bootstrap/test.php");
+} else {
+  include("vendor/starbug/di/bootstrap/default.php");
+}
+$command = array_shift($argv);
+$script = array_shift($argv);
+$path = $namespace = false;
+$locator = $container->get('Starbug\ResourceLocator\ResourceLocatorInterface');
+$className = $locator->className($script, "Command");
+$command = $container->get($className);
+$command->run($argv);
