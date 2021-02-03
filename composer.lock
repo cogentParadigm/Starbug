@@ -2302,16 +2302,16 @@
         },
         {
             "name": "starbug/composer-modules-plugin",
-            "version": "v0.8",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/composer-modules-plugin.git",
-                "reference": "6ab3a40de72fa39a80c452daa0dbb4d0ef0559ac"
+                "reference": "346cc8438872434825d7de3ceb4d6c2cfc8c064c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/composer-modules-plugin/zipball/6ab3a40de72fa39a80c452daa0dbb4d0ef0559ac",
-                "reference": "6ab3a40de72fa39a80c452daa0dbb4d0ef0559ac",
+                "url": "https://api.github.com/repos/cogentParadigm/composer-modules-plugin/zipball/346cc8438872434825d7de3ceb4d6c2cfc8c064c",
+                "reference": "346cc8438872434825d7de3ceb4d6c2cfc8c064c",
                 "shasum": ""
             },
             "require": {
@@ -2344,9 +2344,9 @@
             "description": "A composer plugin for generating a module list.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/composer-modules-plugin/issues",
-                "source": "https://github.com/cogentParadigm/composer-modules-plugin/tree/v0.8"
+                "source": "https://github.com/cogentParadigm/composer-modules-plugin/tree/v0.8.1"
             },
-            "time": "2021-01-13T02:38:43+00:00"
+            "time": "2021-02-03T22:29:11+00:00"
         },
         {
             "name": "starbug/content",
