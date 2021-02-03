@@ -1,6 +1,9 @@
 #!/usr/bin/php -Cq
 <?php
-  namespace Starbug\Core;
+namespace Starbug\Core;
+
+use GuzzleHttp\Psr7\ServerRequest;
+
   $positional = [];
   $named = [];
   foreach ($argv as $i => $arg) {
@@ -19,6 +22,10 @@
   } else {
     include("vendor/starbug/di/bootstrap/default.php");
   }
+
+  $request = new ServerRequest("GET", $container->get("website_url"));
+  $container->set("Psr\Http\Message\ServerRequestInterface", $request);
+
   $command = array_shift($argv);
   $script = array_shift($argv);
   $path = $namespace = false;
@@ -26,4 +33,3 @@
   $className = $locator->className($script, "Command");
   $command = $container->get($className);
   $command->run($argv);
-?>
