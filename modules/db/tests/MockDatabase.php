@@ -43,7 +43,7 @@ class MockDatabase implements DatabaseInterface {
     // Empty function.
   }
   public function getInsertId($table) {
-
+    // Empty function.
   }
   public function lastInsertId() {
     // Empty function.

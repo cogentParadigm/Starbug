@@ -40,7 +40,7 @@ return [
     if (!$cid) {
       $cid = md5(uniqid(mt_rand(), true));
       setcookie("cid", $cid, 0, $uri->build(""), null, false, false);
-      //$request->setCookie("cid", $cid);
+      // $request->setCookie("cid", $cid);
     }
     return ["token" => $cid];
   },
