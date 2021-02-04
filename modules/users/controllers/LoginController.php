@@ -2,14 +2,16 @@
 namespace Starbug\Users;
 
 use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\Controller;
 use Starbug\Core\Routing\RouterInterface;
 
 class LoginController extends Controller {
-  public function __construct(SessionHandlerInterface $session, RouterInterface $router) {
+  public function __construct(SessionHandlerInterface $session, RouterInterface $router, ServerRequestInterface $request) {
     $this->session = $session;
     $this->router = $router;
+    $this->request = $request;
   }
   public function defaultAction() {
     if ($this->session->loggedIn()) {

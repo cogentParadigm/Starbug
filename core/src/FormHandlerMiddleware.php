@@ -86,7 +86,7 @@ class FormHandlerMiddleware implements MiddlewareInterface {
   protected function getErrorState(ServerRequestInterface $request): BundleInterface {
     $model = array_keys($request->getParsedBody()["action"])[0];
     $errors = $this->models->get($model)->errors("", true);
-    $state = $this->bundles->create($errors);
+    $state = $this->bundles->create($errors ?? []);
     return $state;
   }
 }
