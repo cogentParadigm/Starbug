@@ -6,6 +6,7 @@ use PHPUnit\DbUnit\TestCaseTrait;
 use PHPUnit\DbUnit\Operation\Composite;
 use PHPunit\DbUnit\Operation\Factory;
 use PDO;
+use Starbug\Behat\DbUnit\DataSet\PrefixedMysqlXmlDataSet;
 
 abstract class DatabaseTestCase extends TestCase {
 
@@ -13,6 +14,10 @@ abstract class DatabaseTestCase extends TestCase {
 
   protected $conn = null;
   protected $db = null;
+
+  protected function createMySQLXMLDataSet($xmlFile) {
+    return new PrefixedMysqlXmlDataSet($xmlFile, $this->db->getPrefix());
+  }
 
   public function getSetUpOperation() {
     return new Composite([
