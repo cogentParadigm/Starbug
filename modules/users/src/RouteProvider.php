@@ -7,7 +7,9 @@ use Starbug\Core\Routing\Route;
 class RouteProvider extends AdminRouteProvider {
 
   public function configure(Route $routes) {
-    $this->addCrudRoutes($routes->getRoute("admin")->addRoute("/users"), "users");
+    $users = $this->addCrudRoutes($routes->getRoute("admin")->addRoute("/users"), "users");
+
+    $users->getRoute("/delete/{id:[0-9]+}")->setOption("operation", "Starbug\Core\Operation\SoftDelete");
 
     $routes->addRoute("login", ["Starbug\Users\LoginController", "defaultAction"], [
       "operation" => "Starbug\Users\Operation\Login"
