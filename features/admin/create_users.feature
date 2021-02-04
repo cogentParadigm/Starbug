@@ -22,7 +22,6 @@ Feature: Admin manages users
       | password_confirm | Wj6tNdQP3bnc22IQ |
     And I press "Save"
     Then I should be on "/admin/users"
-    And "Welcome to Starbug!" should be emailed to "dave@neonrain.com"
 
   Scenario: Save a new user without required fields
     When I go to "/admin/users/create"
