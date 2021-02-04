@@ -7,10 +7,7 @@ use Starbug\Core\Routing\Route;
 class RouteProvider extends AdminRouteProvider {
 
   public function configure(Route $routes) {
-    $admin = $routes->getRoute("admin");
-    $users = $this->addCrudRoutes($admin->addRoute("/users"), "users");
-
-    $users->getRoute("/create")->setOption("operation", "Starbug\Users\Operation\CreateUser");
+    $this->addCrudRoutes($routes->getRoute("admin")->addRoute("/users"), "users");
 
     $routes->addRoute("login", ["Starbug\Users\LoginController", "defaultAction"], [
       "operation" => "Starbug\Users\Operation\Login"
