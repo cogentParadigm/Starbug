@@ -32,6 +32,7 @@ return [
     DI\get("Middlewares\Https"),
     DI\get("Starbug\Http\BaseUrlMiddleware"),
     DI\get("Middlewares\CachePrevention"),
+    DI\get("Middlewares\UrlEncodePayload"),
     DI\get("Starbug\Auth\Http\AuthenticationMiddleware"),
     DI\get("Starbug\Auth\Http\CsrfMiddleware"),
     DI\get("Starbug\Core\RoutingMiddleware"),

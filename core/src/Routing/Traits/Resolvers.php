@@ -6,6 +6,7 @@ trait Resolvers {
   public function addResolver($name, $resolver, $type = "inbound") {
     if (!is_array($resolver)) $resolver = ["resolver" => $resolver];
     $this->resolvers[$name] = $resolver + ["type" => $type];
+    return $this;
   }
   public function getResolver($name) {
     return $this->resolvers[$name];
@@ -24,14 +25,16 @@ trait Resolvers {
   }
   public function removeResolver($name) {
     unset($this->resolvers[$name]);
+    return $this;
   }
   public function setResolvers($resolvers) {
     $this->resolvers = [];
     foreach ($resolvers as $name => $resolver) {
       $this->addResolver($name, $resolver);
     }
+    return $this;
   }
   public function resolve($name, $resolver, $type = "inbound") {
-    $this->addResolver($name, $resolver, $type);
+    return $this->addResolver($name, $resolver, $type);
   }
 }

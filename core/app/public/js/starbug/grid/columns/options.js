@@ -20,7 +20,7 @@ function(dojo, config, strings, put, on){
       //edit button
       if (column.canEdit) {
         if (typeof grid['dialog'] == 'string') column.editUrl = 'javascript:'+grid['dialog']+'.show('+row.id+')';
-        else if (typeof grid['dialog'] == 'undefined') column.editUrl = column.editUrl || base_url+'/update/${id}'+dojo.global.location.search;
+        else if (typeof grid['dialog'] == 'undefined') column.editUrl = column.editUrl || base_url+'/update/${id}';
         var edit = put(div, 'a.Edit.btn.btn-default[title=Edit][href='+strings.substitute(column.editUrl, row)+']', put('div.fa.fa-edit'));
         if (column.editTarget) {
           edit.setAttribute("target", column.editTarget);
@@ -58,9 +58,12 @@ function(dojo, config, strings, put, on){
 
       //delete button
       if (column.canDelete) {
+        if (typeof grid['dialog'] == 'string') column.deleteUrl = 'javascript:'+grid['dialog']+'.show('+row.id+')';
+        else if (typeof grid['dialog'] == 'undefined') column.deleteUrl = column.deleteUrl || base_url+'/delete/${id}';
         var remove = 'javascript:;';
-        remove = put(div, 'a.Delete.btn.btn-default[title=Delete][href='+remove+']', put('div.fa.fa-times'));
-        on(remove, 'click', function() {
+        remove = put(div, 'a.Delete.btn.btn-default[title=Delete][href='+strings.substitute(column.deleteUrl, row)+']', put('div.fa.fa-times'));
+        on(remove, 'click', function(event) {
+          event.preventDefault();
           if (confirm('Are you sure you want to delete this item?')) {
             if (typeof grid['editor'] != "undefined") {
               grid.editor.remove(row.id);

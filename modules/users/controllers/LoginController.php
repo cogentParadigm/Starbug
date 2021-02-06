@@ -16,7 +16,9 @@ class LoginController extends Controller {
   public function defaultAction() {
     if ($this->session->loggedIn()) {
       $redirectPath = "";
-      if ($this->session->loggedIn('admin') || $this->session->loggedIn('root')) $redirectPath = "admin";
+      if ($this->session->loggedIn('admin') || $this->session->loggedIn('root')) {
+        $redirectPath = "admin";
+      }
       $queryParams = $this->request->getQueryParams();
       if (!empty($queryParams["to"])) {
         $redirectPath = $this->filterRedirectPath($queryParams["to"], $redirectPath);
@@ -43,7 +45,7 @@ class LoginController extends Controller {
     }
     $request = $this->request->withUri($uri);
     $route = $this->router->route($request);
-    if ($route["action"] ?? "" == "missing") {
+    if ($route->getPath() == "/missing") {
       return $default;
     }
     return (string) $uri;

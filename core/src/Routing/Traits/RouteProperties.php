@@ -11,6 +11,7 @@ trait RouteProperties {
   protected $parent;
   public function setPath($path) {
     $this->path = $path;
+    return $this;
   }
   public function getPath($absolute = true) {
     if ($this->hasParent() && $absolute) {
@@ -20,21 +21,25 @@ trait RouteProperties {
   }
   public function setController($controller) {
     $this->controller = $controller;
+    return $this;
   }
   public function getController() {
     return $this->controller;
   }
   public function setArguments($arguments) {
     $this->arguments = $arguments;
+    return $this;
   }
   public function getArguments() {
     return $this->arguments;
   }
   public function setOption($name, $value) {
     $this->options[$name] = $value;
+    return $this;
   }
   public function setOptions($options) {
     $this->options = $options + $this->options;
+    return $this;
   }
   public function getOption($name) {
     return $this->getOptions()[$name] ?? null;
@@ -50,6 +55,7 @@ trait RouteProperties {
   }
   public function setParent(Route $parent) {
     $this->parent = $parent;
+    return $this;
   }
   public function getParent(): ?Route {
     return $this->parent;

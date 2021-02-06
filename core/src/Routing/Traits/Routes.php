@@ -25,9 +25,11 @@ trait Routes {
   }
   public function removeRoute($path) {
     unset($this->routes[$path]);
+    return $this;
   }
   public function clearRoutes() {
     $this->routes = [];
+    return $this;
   }
   protected function assertNotExists($path) {
     if (!empty($this->routes[$path])) {

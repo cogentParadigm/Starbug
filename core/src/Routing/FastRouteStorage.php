@@ -22,13 +22,11 @@ class FastRouteStorage implements RouteStorageInterface {
     if ($routeInfo[0] == Dispatcher::FOUND) {
       $route = $routeInfo[1];
       $vars = $routeInfo[2];
-      if ($this->access->hasAccess($route)) {
-        $route->setOptions($vars);
-        return $route;
-      } else {
-        return new Route($route->getPath(), ["Starbug\\Core\\MainController", "forbidden"]);
+      if (!$this->access->hasAccess($route)) {
+        $route->forbidden();
       }
+      $route->setOptions($vars);
+      return $route;
     }
-    return new Route($path, ["Starbug\\Core\\MainController", "missing"]);
   }
 }

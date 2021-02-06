@@ -8,6 +8,8 @@ use Starbug\Core\Routing\RouteProviderInterface;
 class RouteProvider implements RouteProviderInterface {
 
   public function configure(Route $routes) {
+    $routes->addRoute("missing", ["Starbug\Core\Controller", "missing"]);
+    $routes->addRoute("forbidden", ["Starbug\Core\Controller", "forbidden"]);
     // admin group
     $admin = $routes->addRoute("admin", "Starbug\Core\Controller\ViewController", [
       "title" => "Admin",
@@ -18,10 +20,9 @@ class RouteProvider implements RouteProviderInterface {
 
     // Settings
     $admin->addRoute("/settings", "Starbug\Core\Controller\ViewController", [
-      "operation" => "Starbug\Core\Operation\UpdateSettings",
       "view" => "settings.html",
       "model" => "settings"
-    ]);
+    ])->onPost("Starbug\Core\Operation\UpdateSettings");
 
     // Taxonomy
     $terms = $this->addCrudRoutes($admin->addRoute("/taxonomies"), "terms");
@@ -47,18 +48,15 @@ class RouteProvider implements RouteProviderInterface {
     $routes->setOption("model", $model);
     $routes->setOption("successUrl", $routes->getPath());
 
-    $create = $routes->addRoute("/create", "Starbug\Core\Crud\CreateController", [
-      "operation" => "Starbug\Core\Operation\Save"
-    ]);
-    $create->resolve("term", "Starbug\Core\Routing\Resolvers\RowByInsertId");
+    $create = $routes->addRoute("/create", "Starbug\Core\Crud\CreateController")
+      ->onPost("Starbug\Core\Operation\Save");
 
-    $update = $routes->addRoute("/update/{id:[0-9]+}", "Starbug\Core\Crud\UpdateController", [
-      "operation" => "Starbug\Core\Operation\Save"
-    ]);
+    $update = $routes->addRoute("/update/{id:[0-9]+}", "Starbug\Core\Crud\UpdateController")
+      ->onPost("Starbug\Core\Operation\Save")
+      ->resolve("row", "Starbug\Core\Routing\Resolvers\RowById");
 
-    $routes->addRoute("/delete/{id:[0-9]+}", "Starbug\Core\Crud\DeleteController", [
-      "operation" => "Starbug\Core\Operation\Delete"
-    ]);
+    $routes->addRoute("/delete/{id:[0-9]+}", "Starbug\Core\Crud\DeleteController")
+      ->onPost("Starbug\Core\Operation\Delete");
 
     $routes->addRoute("/import", "Starbug\Core\Crud\ImportController");
 

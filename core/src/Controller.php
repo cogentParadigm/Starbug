@@ -2,6 +2,7 @@
 namespace Starbug\Core;
 
 use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\UriInterface;
 use Starbug\Http\TemplatedResponse;
 
 class Controller {
@@ -26,8 +27,13 @@ class Controller {
   /**
    * Return a forbidden response.
    */
-  public function forbidden($to = false) {
-    if (false !== $to) return $this->redirect("login?to=".$to);
+  public function forbidden($requestUri = false) {
+    if ($requestUri instanceof UriInterface) {
+      $requestUri = $requestUri->getPath();
+    }
+    if (is_string($requestUri)) {
+      return $this->redirect("login?to=".$requestUri);
+    }
     return $this->redirect("login");
   }
 

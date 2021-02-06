@@ -1,12 +1,19 @@
 <?php
 namespace Starbug\Core\Routing;
 
+use Exception;
+use Invoker\InvokerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Router implements RouterInterface {
   protected $storage = [];
   protected $aliasStorage = [];
   protected $filters = [];
+  protected $invoker;
+
+  public function __construct(InvokerInterface $invoker) {
+    $this->invoker = $invoker;
+  }
 
   public function addStorage(RouteStorageInterface $storage) {
     $this->storage[] = $storage;
@@ -26,10 +33,16 @@ class Router implements RouterInterface {
     }
     foreach ($this->storage as $storage) {
       if ($route = $storage->getRoute($request)) {
-        return $this->filterRoute($route, $request);
+        if ($route->isForbidden()) {
+          return $this->forbidden($request);
+        }
+        return $route;
       }
     }
-    return $this->filterRoute(new Route($path, ["Starbug\\Core\\MainController", "missing"], ["arguments" => []]), $request);
+    if (in_array($request->getUri()->getPath(), ["/missing"])) {
+      throw new Exception("No '{$request->getUri()->getPath()}' route defined.");
+    }
+    return $this->notFound($request);
   }
   /**
    * A router must identify a controller from a Request
@@ -42,7 +55,27 @@ class Router implements RouterInterface {
    *                    - arguments: the arguments
    */
   public function route(ServerRequestInterface $request): Route {
-    return $this->getRoute($request);
+    $route = $this->getRoute($request);
+    $route = $this->resolveParameters($route, $request);
+    $route = $this->filterRoute($route, $request);
+    return $route;
+  }
+
+  public function resolveParameters(Route $route, ServerRequestInterface $request, $type = "inbound"): Route {
+    if ($route->hasResolvers($type)) {
+      $arguments = $route->getOptions() + ["route" => $route];
+      foreach ($route->getResolvers($type) as $key => $value) {
+        $arguments[$key] = $this->invoker->call($value["resolver"], $arguments);
+        $route->setOption($key, $arguments[$key]);
+      }
+      if ($route->isNotFound()) {
+        return $this->notFound($request);
+      }
+      if ($route->isForbidden()) {
+        return $this->forbidden($request);
+      }
+    }
+    return $route;
   }
 
   protected function resolveAlias(ServerRequestInterface $request) {
@@ -59,5 +92,15 @@ class Router implements RouterInterface {
       $route = $filter->filterRoute($route, $request);
     }
     return $route;
+  }
+
+  protected function notFound(ServerRequestInterface $request) {
+    return $this->getRoute($request->withUri($request->getUri()->withPath("/missing")))
+      ->setOption("requestUri", $request->getUri());
+  }
+
+  protected function forbidden(ServerRequestInterface $request) {
+    return $this->getRoute($request->withUri($request->getUri()->withPath("/forbidden")))
+      ->setOption("requestUri", $request->getUri());
   }
 }
