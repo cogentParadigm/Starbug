@@ -1,0 +1,6 @@
+@mixin make-width-atoms($suffix: "") {
+  .w6$(suffix) { width: 32rem; }
+
+  .w-5$(suffix) { width: 5% }
+  .w-15$(suffix) { width: 15% }
+}

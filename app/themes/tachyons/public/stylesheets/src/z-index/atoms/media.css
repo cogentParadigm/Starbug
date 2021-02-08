@@ -1,0 +1,9 @@
+@media (--breakpoint-not-small) {
+  @include make-z-index-atoms(-ns);
+}
+@media (--breakpoint-medium) {
+  @include make-z-index-atoms(-m);
+}
+@media (--breakpoint-large) {
+  @include make-z-index-atoms(-l);
+}

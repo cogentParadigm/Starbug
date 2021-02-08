@@ -4,10 +4,13 @@
 //
 // -----------------------------------------------------------
 @import "./components/variables.css";
-@import "./buttons/mixins/variants.css";
-@import "./forms/mixins/sizing.css";
 @import "./flexbox/mixins.css";
 @import "./focus/mixins.css";
+@import "./width/mixins.css";
+@import "./buttons/mixins/variants.css";
+@import "./forms/mixins/sizing.css";
+@import "./z-index/mixins.css";
+@import "./letter-spacing/mixins.css";
 
 
 // 2. External libraries and 3rd party components
@@ -21,6 +24,7 @@
 @import "../../../node_modules/font-awesome/css/font-awesome.css";
 @import "../../../node_modules/animate.css/animate.css";
 @import "./dijit/dijit.css";
+@import "https://fonts.googleapis.com/icon?family=Material+Icons";
 
 
 // 3. Global and Component CSS
@@ -32,7 +36,6 @@
 @import "./focus/components/focus.css";
 @import "./components/links.css";
 @import "./components/grid.css";
-@import "./components/material-icons.css";
 @import "./buttons/components/buttons.css";
 @import "./components/button-groups.css";
 @import "./components/dropdowns.css";
@@ -55,8 +58,10 @@
 // -----------------------------------------------------------
 @import "./focus/atoms/focus.css";
 @import "./focus/atoms/z-index.css";
+@import "./width/atoms/default.css";
 @import "./flexbox/atoms/default.css";
 @import "./coordinates/atoms/default.css";
+@import "./z-index/atoms/default.css";
 @import "./components/tachyons.css";
 @import "./components/type.css";
 @import "./components/a11y.css";
@@ -65,7 +70,7 @@
 @import "./components/opacity.css";
 @import "./components/border-widths-pseudo.css";
 @import "./components/columns.css";
-@import "./components/widths.css";
+@import "./letter-spacing/atoms/default.css";
 
 
 // 5. Media Queried Atomic Styles
@@ -74,8 +79,11 @@
 //
 // -----------------------------------------------------------
 
+@import "./width/atoms/media.css";
 @import "./flexbox/atoms/media.css";
 @import "./coordinates/atoms/media.css";
+@import "./z-index/atoms/media.css";
+@import "./letter-spacing/atoms/media.css";
 
 
 // 6. Variable Overrides

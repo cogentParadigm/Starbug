@@ -17,6 +17,8 @@ html {
 
 body {
   font-size: var(--base-font-size);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 // Headings

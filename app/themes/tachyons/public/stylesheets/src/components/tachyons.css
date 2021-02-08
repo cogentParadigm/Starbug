@@ -24,7 +24,7 @@
 @import '../../../../node_modules/tachyons/src/_font-weight';
 //@import '../../../../node_modules/tachyons/src/_forms';
 @import '../../../../node_modules/tachyons/src/_heights';
-@import '../../../../node_modules/tachyons/src/_letter-spacing';
+//@import '../../../../node_modules/tachyons/src/_letter-spacing';
 @import '../../../../node_modules/tachyons/src/_line-height';
 //@import '../../../../node_modules/tachyons/src/_links';
 @import '../../../../node_modules/tachyons/src/_lists';
@@ -49,7 +49,7 @@
 @import '../../../../node_modules/tachyons/src/_white-space';
 @import '../../../../node_modules/tachyons/src/_vertical-align';
 @import '../../../../node_modules/tachyons/src/_hovers';
-@import '../../../../node_modules/tachyons/src/_z-index';
+//@import '../../../../node_modules/tachyons/src/_z-index';
 @import '../../../../node_modules/tachyons/src/_nested';
 @import '../../../../node_modules/tachyons/src/_styles';
 

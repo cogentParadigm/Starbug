@@ -1,0 +1,9 @@
+@media (--breakpoint-not-small) {
+  @include make-letter-spacing-atoms(-ns);
+}
+@media (--breakpoint-medium) {
+  @include make-letter-spacing-atoms(-m);
+}
+@media (--breakpoint-large) {
+  @include make-letter-spacing-atoms(-l);
+}

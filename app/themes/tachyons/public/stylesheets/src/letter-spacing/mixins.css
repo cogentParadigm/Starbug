@@ -1,0 +1,8 @@
+@mixin make-letter-spacing-atoms($suffix: "") {
+  .ls0$(suffix) { letter-spacing: 0; }
+  .ls1$(suffix) { letter-spacing: 0.05em; }
+  .ls2$(suffix) { letter-spacing: 0.1em; }
+  .ls3$(suffix) { letter-spacing: 0.25em; }
+
+  .nls1$(suffix) { letter-spacing: -0.05em; }
+}

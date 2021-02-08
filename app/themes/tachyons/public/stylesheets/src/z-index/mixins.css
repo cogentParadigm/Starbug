@@ -1,0 +1,19 @@
+@mixin make-z-index-atoms($suffix: "") {
+  .z-0$(suffix) { z-index: 0; }
+  .z-1$(suffix) { z-index: 1; }
+  .z-2$(suffix) { z-index: 2; }
+  .z-3$(suffix) { z-index: 3; }
+  .z-4$(suffix) { z-index: 4; }
+  .z-5$(suffix) { z-index: 5; }
+
+  .z-999$(suffix) { z-index: 999; }
+  .z-9999$(suffix) { z-index: 9999; }
+
+  .z-max$(suffix) {
+    z-index: 2147483647;
+  }
+
+  .z-inherit$(suffix) { z-index: inherit; }
+  .z-initial$(suffix) { z-index: initial; }
+  .z-unset$(suffix) { z-index: unset; }
+}
