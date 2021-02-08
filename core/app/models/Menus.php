@@ -12,10 +12,6 @@ class Menus extends MenusModel {
     $this->store($menu);
   }
 
-  public function delete($menu) {
-    $this->remove($menu['id']);
-  }
-
   public function deleteMenu($menu) {
     $this->db->query("menus")->condition("menu", $menu['menu'])->delete();
   }

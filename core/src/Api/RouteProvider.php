@@ -10,18 +10,18 @@ class RouteProvider extends AdminRouteProvider {
     $api = $routes->addRoute("api", null, ["groups" => "admin"]);
 
     // Taxonomy
-    $this->addAdminApiRoute($api->addRoute("/terms/admin.json"), "terms", "AdminTerms");
+    $this->addAdminApiRoute($api->addRoute("/terms/admin.{format:csv|json}"), "terms", "AdminTerms");
     $this->addApiRoute($api->addRoute("/terms/select.json"), "terms", "SelectTerms");
     $this->addApiRoute($api->addRoute("/terms/index.json"), "terms", "TermsList");
     $this->addApiRoute($api->addRoute("/terms/tree.json"), "terms", "TermsTree");
 
     // Menus
-    $this->addAdminApiRoute($api->addRoute("/menus/admin.json"), "menus", "AdminMenus");
+    $this->addAdminApiRoute($api->addRoute("/menus/admin.{format:csv|json}"), "menus", "AdminMenus");
     $this->addApiRoute($api->addRoute("/menus/select.json"), "menus", "Select");
     $this->addApiRoute($api->addRoute("/menus/tree.json"), "menus", "MenusTree");
 
     // Imports
-    $this->addAdminApiRoute($api->addRoute("/imports/admin.json"), "imports", "AdminImports");
+    $this->addAdminApiRoute($api->addRoute("/imports/admin.{format:csv|json}"), "imports", "AdminImports");
     $this->addApiRoute($api->addRoute("/imports/select.json"), "imports", "Select");
     $this->addAdminApiRoute($api->addRoute("/imports-fields/admin.json"), "imports_fields");
     $this->addApiRoute($api->addRoute("/imports-fields/select.json"), "imports_fields", "Select");

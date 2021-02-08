@@ -11,7 +11,7 @@ class RouteProvider extends AdminRouteProvider {
     $this->addCrudRoutes($admin->addRoute("/email-templates"), "email_templates");
 
     $api = $routes->getRoute("api");
-    $this->addAdminApiRoute($api->addRoute("/email-templates/admin.json"), "email_templates");
+    $this->addAdminApiRoute($api->addRoute("/email-templates/admin.{format:csv|json}"), "email_templates");
     $this->addApiRoute($api->addRoute("/email-templates/select.json"), "email_templates", "Select");
   }
 }

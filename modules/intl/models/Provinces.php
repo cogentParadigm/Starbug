@@ -5,10 +5,6 @@ use Starbug\Core\ProvincesModel;
 
 class Provinces extends ProvincesModel {
 
-  public function create($province) {
-    $this->store($province);
-  }
-
   /******************************************************************
    * Query functions
    *****************************************************************/

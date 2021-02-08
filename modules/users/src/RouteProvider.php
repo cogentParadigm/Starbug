@@ -11,7 +11,7 @@ class RouteProvider extends AdminRouteProvider {
     $users->getRoute("/delete/{id:[0-9]+}")->onPost("Starbug\Core\Operation\SoftDelete");
 
     $api = $routes->getRoute("api");
-    $api->addRoute("/users/admin.json", "Starbug\Core\ApiUsersController", ["collection" => "AdminUsers"])
+    $api->addRoute("/users/admin.{format:csv|json}", "Starbug\Core\ApiUsersController", ["collection" => "AdminUsers"])
     ->onPost("Starbug\Core\Operation\Save")
     ->onDelete("Starbug\Core\Operation\SoftDelete");
     $api->addRoute("/users/select.json", "Starbug\Core\ApiUsersController", ["collection" => "Select"]);

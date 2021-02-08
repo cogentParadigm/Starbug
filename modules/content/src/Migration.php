@@ -35,7 +35,7 @@ class Migration extends AbstractMigration {
       ["path", "type" => "path", "path" => "pages/view/[pages:id]", "pattern" => "page/[pages:title]", "null" => true, "default" => "NULL"],
       ["template", "type" => "string", "length" => "64", "default" => ""],
       ["categories", "type" => "categories", "optional" => ""],
-      ["tags", "type" => "tags", "column" => "title"],
+      ["tags", "type" => "tags", "column" => "name"],
       ["parent", "type" => "int", "default" => "0"],
       ["type", "type" => "string", "default" => ""],
       ["theme", "type" => "string", "length" => "128", "default" => ""],

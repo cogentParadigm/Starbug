@@ -17,15 +17,15 @@ class RouteProvider extends AdminRouteProvider {
     $api = $routes->getRoute("api");
 
     // Categories API
-    $this->addAdminApiRoute($api->addRoute("/categories/admin.json"), "categories", "AdminCategories");
+    $this->addAdminApiRoute($api->addRoute("/categories/admin.{format:csv|json}"), "categories", "AdminCategories");
     $this->addApiRoute($api->addRoute("/categories/select.json"), "categories", "Select");
 
     // Pages API
-    $this->addAdminApiRoute($api->addRoute("/pages/admin.json"), "pages", "AdminPages");
+    $this->addAdminApiRoute($api->addRoute("/pages/admin.{format:csv|json}"), "pages", "AdminPages");
     $this->addApiRoute($api->addRoute("/pages/select.json"), "pages", "Select");
 
     // Tags API
-    $this->addAdminApiRoute($api->addRoute("/tags/admin.json"), "tags", "AdminTags");
+    $this->addAdminApiRoute($api->addRoute("/tags/admin.{format:csv|json}"), "tags", "AdminTags");
     $this->addApiRoute($api->addRoute("/tags/select.json"), "tags", "Select");
   }
 }

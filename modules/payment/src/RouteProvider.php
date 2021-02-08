@@ -38,13 +38,13 @@ class RouteProvider extends AdminRouteProvider {
     $this->addCrudRoutes($admin->addRoute("/shipping-rates-product-options"), "shipping_rates_product_options");
 
     $api = $routes->getRoute("api");
-    $this->addAdminApiRoute($api->addRoute("/orders/admin.json"), "orders", "AdminOrders");
+    $this->addAdminApiRoute($api->addRoute("/orders/admin.{format:csv|json}"), "orders", "AdminOrders");
     $this->addApiRoute($api->addRoute("/orders/select.json"), "orders", "Select");
 
-    $this->addAdminApiRoute($api->addRoute("/payment-gateways/admin.json"), "payment_gateways");
+    $this->addAdminApiRoute($api->addRoute("/payment-gateways/admin.{format:csv|json}"), "payment_gateways");
     $this->addApiRoute($api->addRoute("/payment-gateways/select.json"), "payment_gateways", "Select");
 
-    $this->addAdminApiRoute($api->addRoute("/payment-gateway-settings/admin.json"), "payment_gateway_settings", "AdminPaymentGatetwaySettings");
+    $this->addAdminApiRoute($api->addRoute("/payment-gateway-settings/admin.{format:csv|json}"), "payment_gateway_settings", "AdminPaymentGatetwaySettings");
     $this->addApiRoute($api->addRoute("/payment-gateway-settings/select.json"), "payment_gateway_settings", "Select");
 
     $api->addRoute("/product-lines/admin.json", "Starbug\Payment\ApiProductLinesController", [
@@ -69,24 +69,24 @@ class RouteProvider extends AdminRouteProvider {
     ]);
     $api->addRoute("/shipping-lines/cart.json", ["Starbug\Payment\ApiShippingLinesController", "cart"]);
 
-    $this->addAdminApiRoute($api->addRoute("/product-options/admin.json"), "product_options", "AdminProductOptions");
+    $this->addAdminApiRoute($api->addRoute("/product-options/admin.{format:csv|json}"), "product_options", "AdminProductOptions");
     $this->addApiRoute($api->addRoute("/product-options/select.json"), "product_options", "Select");
 
-    $this->addAdminApiRoute($api->addRoute("/products/admin.json"), "products");
+    $this->addAdminApiRoute($api->addRoute("/products/admin.{format:csv|json}"), "products");
     $this->addApiRoute($api->addRoute("/products/select.json"), "products", "Select");
 
-    $this->addAdminApiRoute($api->addRoute("/product-types/admin.json"), "product_types");
+    $this->addAdminApiRoute($api->addRoute("/product-types/admin.{format:csv|json}"), "product_types");
     $this->addApiRoute($api->addRoute("/product-types/select.json"), "product_types", "Select");
 
-    $api->addRoute("/shipping-methods/admin.json", "Starbug\Payment\ApiShippingMethodsController", [
+    $api->addRoute("/shipping-methods/admin.{format:csv|json}", "Starbug\Payment\ApiShippingMethodsController", [
       "collection" => "AdminShippingMethods"
     ]);
     $api->addRoute("/shipping-methods/select.json", ["Starbug\Payment\ApiShippingMethodsController", "select"]);
 
-    $this->addAdminApiRoute($api->addRoute("/shipping-rates/admin.json"), "shipping_rates");
+    $this->addAdminApiRoute($api->addRoute("/shipping-rates/admin.{format:csv|json}"), "shipping_rates");
     $this->addApiRoute($api->addRoute("/shipping-rates/select.json"), "shipping_rates", "Select");
 
-    $this->addAdminApiRoute($api->addRoute("/shipping-rates-product-options/admin.json"), "shipping_rates_product_options");
+    $this->addAdminApiRoute($api->addRoute("/shipping-rates-product-options/admin.{format:csv|json}"), "shipping_rates_product_options");
     $this->addApiRoute($api->addRoute("/shipping-rates-product-options/select.json"), "shipping_rates_product_options", "Select");
   }
 }

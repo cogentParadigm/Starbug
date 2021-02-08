@@ -17,13 +17,13 @@ class RouteProvider extends AdminRouteProvider {
     $this->addCrudRoutes($admin->addRoute("/provinces"), "provinces");
 
     $api = $routes->getRoute("api");
-    $this->addAdminApiRoute($api->addRoute("/address/admin.json"), "address");
+    $this->addAdminApiRoute($api->addRoute("/address/admin.{format:csv|json}"), "address");
     $this->addApiRoute($api->addRoute("/address/select.json"), "address", "SelectAddress");
 
-    $this->addAdminApiRoute($api->addRoute("/countries/admin.json"), "countries");
+    $this->addAdminApiRoute($api->addRoute("/countries/admin.{format:csv|json}"), "countries");
     $this->addApiRoute($api->addRoute("/countries/select.json"), "countries", "Select");
 
-    $this->addAdminApiRoute($api->addRoute("/provinces/admin.json"), "provinces");
+    $this->addAdminApiRoute($api->addRoute("/provinces/admin.{format:csv|json}"), "provinces");
     $this->addApiRoute($api->addRoute("/provinces/select.json"), "provinces", "Select");
   }
 }
