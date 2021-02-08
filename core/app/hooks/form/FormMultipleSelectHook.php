@@ -20,7 +20,7 @@ class FormMultipleSelectHook extends FormHook {
 
     $other_option = empty($field['other_option']) ? false : $field['other_option'];
     $form->assign("value", $value);
-    $form->assign("options", $field["options"]);
+    $form->assign("options", $field["options"] ?? []);
     $form->assign("other_option", $other_option);
   }
 }
