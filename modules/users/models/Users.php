@@ -5,19 +5,6 @@ use Starbug\Core\UsersModel;
 
 class Users extends UsersModel {
 
-  /**
-   * A function for an administrator to create and update users
-   */
-  public function create($user) {
-    $this->store($user);
-    if ((!$this->errors()) && (empty($user['id']))) {
-      $uid = $this->insert_id;
-      $data = ["user" => $this->load($uid)];
-      $data['user']['password'] = $user['password'] ?? "";
-      $this->mailer->send(["template" => "Account Creation", "to" => $user['email']], $data);
-    }
-  }
-
   public function delete($user) {
     $this->store(["id" => $user['id'], "deleted" => "1"]);
   }
@@ -43,26 +30,6 @@ class Users extends UsersModel {
     } else {
       $this->error("Your credentials could not be authenticated.", "current_password");
     }
-  }
-
-  /**
-   * A function for logging in
-   */
-  public function login($login) {
-    if ($user = $this->session->authenticate(["email" => $login['email']], $login['password'])) {
-      $this->session->createSession($user);
-      $this->store(["id" => $user->getId(), "last_visit" => date("Y-m-d H:i:s")]);
-    } else {
-      $this->error("That email and password combination was not found.", "email");
-    }
-  }
-
-  /**
-   * For logging out
-   */
-  public function logout() {
-    $this->session->destroy();
-    return [];
   }
 
   /**
