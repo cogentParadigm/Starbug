@@ -1,11 +1,15 @@
 <?php
 namespace Starbug\Intl;
 
+use Starbug\Core\DatabaseInterface;
 use Starbug\Core\FormDisplay;
 
 class AddressForm extends FormDisplay {
   public $model = "address";
   public $cancel_url = "address";
+  public function setDatabase(DatabaseInterface $db) {
+    $this->db = $db;
+  }
   public function buildDisplay($ops) {
     if ($this->success("create") && !$this->hasPost("id")) $this->setPost("id", $this->db->getInsertId($this->model));
     if (!empty($ops["input_name"])) $this->template = "fields.html";

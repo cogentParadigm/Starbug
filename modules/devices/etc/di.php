@@ -2,6 +2,9 @@
 use Psr\Container\ContainerInterface;
 
 return [
+  "route.providers" => DI\add([
+    DI\get("Starbug\Devices\RouteProvider")
+  ]),
   "notification.handlers" => ["email"],
   "notification.channels" => ["system"],
   "notification.handlers.default" => ["email"],

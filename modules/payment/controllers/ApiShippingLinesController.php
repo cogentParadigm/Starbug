@@ -2,19 +2,15 @@
 namespace Starbug\Payment;
 
 use Starbug\Auth\SessionHandlerInterface;
-use Starbug\Core\ApiController;
+use Starbug\Core\ApiRequest;
+use Starbug\Core\Controller\CollectionController;
 
-class ApiShippingLinesController extends ApiController {
+class ApiShippingLinesController extends CollectionController {
   public $model = "shipping_lines";
-  public function __construct(SessionHandlerInterface $session, Cart $cart) {
+  public function __construct(ApiRequest $api, SessionHandlerInterface $session, Cart $cart) {
+    parent::__construct($api);
     $this->session = $session;
     $this->cart = $cart;
-  }
-  public function admin() {
-    $this->api->render("Admin");
-  }
-  public function select() {
-    $this->api->render("Select");
   }
   public function cart() {
     $params = [];
@@ -22,10 +18,7 @@ class ApiShippingLinesController extends ApiController {
     if (empty($queryParams["order"])) {
       $params["order"] = $this->cart->get("id");
     }
-    $this->api->render("ShippingLines", $params);
-  }
-  public function order() {
-    $this->api->render("ShippingLines");
+    return $this->api->render("ShippingLines", $params);
   }
   public function filterQuery($collection, $query, $ops) {
     $cid = $this->request->getCookieParams()["cid"];

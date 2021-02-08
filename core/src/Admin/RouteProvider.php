@@ -77,4 +77,16 @@ class RouteProvider implements RouteProviderInterface {
     $route->getRoute("/update/{id:[0-9]+}")->resolve("row", "Starbug\Core\Routing\Resolvers\RowById");
     return $route;
   }
+
+  protected function addAdminApiRoute(Route $route, $model, $collection = "Admin") {
+    return $this->addApiRoute($route, $model, $collection)
+      ->onPost("Starbug\Core\Operation\Save")
+      ->onDelete("Starbug\Core\Operation\Delete");
+  }
+
+  protected function addApiRoute(Route $route, $model, $collection, $options = []) {
+    $route->setController("Starbug\Core\Controller\CollectionController");
+    $route->setOptions($options + compact('model', 'collection'));
+    return $route;
+  }
 }

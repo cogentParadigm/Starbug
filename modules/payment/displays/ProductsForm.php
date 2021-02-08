@@ -1,19 +1,24 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Core\DatabaseInterface;
 use Starbug\Core\FormDisplay;
 
 class ProductsForm extends FormDisplay {
   public $model = "products";
   public $cancel_url = "admin/products";
   public $collection = "ProductsForm";
+  public function setDatabase(DatabaseInterface $db) {
+    $this->db = $db;
+  }
   public function buildDisplay($options) {
+    $options += ["tab" => ""];
     $this->layout->add(["top", "right" => "div.col-md-3.pull-right", "left" => "div.col-md-9", "center" => "div.col-md-9", "bottom" => "div.col-md-9"]);
     $this->layout->add(["footer", "tabs" => "div.col-sm-12"]);
     $this->layout->put("tabs", 'div[data-dojo-type="dijit/layout/TabContainer"][data-dojo-props="doLayout:false, tabPosition:\'left-h\'"][style="width:100%;height:100%"]', '', 'tc');
-    $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="URL path"]'.((empty($ops['tab'])) ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'path');
-    $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Meta tags"]'.(($ops['tab'] === "meta") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'meta');
-    $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Publishing options"]'.(($ops['tab'] === "breadcrumbs") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'publishing');
+    $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="URL path"]'.((empty($options['tab'])) ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'path');
+    $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Meta tags"]'.(($options['tab'] === "meta") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'meta');
+    $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Publishing options"]'.(($options['tab'] === "breadcrumbs") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'publishing');
     $this->add(["type", "input_type" => "select", "from" => "product_types", "optional" => "", "pane" => "left", "data-submit" => "change"]);
     $this->add(["sku", "label" => "SKU", "pane" => "left"]);
     $this->add(["name", "pane" => "left"]);

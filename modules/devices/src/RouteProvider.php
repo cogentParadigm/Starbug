@@ -1,0 +1,14 @@
+<?php
+namespace Starbug\Devices;
+
+use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Core\Routing\Route;
+
+class RouteProvider extends AdminRouteProvider {
+
+  public function configure(Route $routes) {
+    $api = $routes->getRoute("api");
+    $this->addAdminApiRoute($api->addRoute("/devices/admin.json"), "devices");
+    $this->addApiRoute($api->addRoute("/devices/select.json"), "devices", "Select");
+  }
+}

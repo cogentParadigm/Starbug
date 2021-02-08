@@ -2,26 +2,16 @@
 namespace Starbug\Files;
 
 use League\Flysystem\MountManager;
-use Starbug\Auth\SessionHandlerInterface;
-use Starbug\Core\ApiController;
+use Starbug\Core\ApiRequest;
+use Starbug\Core\Controller\CollectionController;
 use Starbug\Core\ImagesInterface;
 
-class ApiFilesController extends ApiController {
-  public $model = "files";
-  public function __construct(SessionHandlerInterface $session, ImagesInterface $images, MountManager $filesystems) {
-    $this->session = $session;
+class ApiFilesController extends CollectionController {
+  protected $model = "files";
+  public function __construct(ApiRequest $api, ImagesInterface $images, MountManager $filesystems) {
+    parent::__construct($api);
     $this->images = $images;
     $this->filesystems = $filesystems;
-  }
-  public function admin() {
-    return $this->api->render("AdminFiles");
-  }
-  public function select() {
-    return $this->api->render("FilesSelect");
-  }
-  public function filterQuery($collection, $query, $ops) {
-    if (!$this->session->loggedIn("root") && !$this->session->loggedIn("admin")) $query->action("read");
-    return $query;
   }
   public function filterRow($collection, $file) {
     if (in_array($file["mime_type"], ["image/gif", "image/jpeg", "image/png"])) {

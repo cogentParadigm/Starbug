@@ -1,42 +1,17 @@
 <?php
 use Psr\Container\ContainerInterface;
-use Starbug\Core\Routing\RoutesHelper;
 
 return [
-  'routes' => DI\add(
-    [
-      "cart" => ["controller" => "cart", "title" => "Shopping Cart"],
-      "cart/add" => ["controller" => "cart", "action" => "add", "title" => "Add to Cart"],
-      "checkout" => ["controller" => "checkout", "title" => "Checkout"],
-      "checkout/guest" => ["controller" => "checkout", "action" => "guest", "title" => "Checkout"],
-      "checkout/payment" => ["controller" => "checkout", "action" => "payment", "title" => "Checkout"],
-      "checkout/success/{id:[0-9]+}" => ["controller" => "checkout", "action" => "success", "title" => "Checkout"],
-      "product/details/{path}" => ["controller" => "product", "action" => "details"],
-      "subscriptions" => ["controller" => "subscriptions", "title" => "Subscriptions"],
-      "subscriptions/update/{id:[0-9]+}" => ["controller" => "subscriptions", "action" => "update", "title" => "Subscriptions"],
-      "subscriptions/payment/{id:[0-9]+}" => ["controller" => "subscriptions", "action" => "payment", "title" => "Subscriptions"],
-      "admin/orders/details/{id:[0-9]+}" =>
-        RoutesHelper::adminRoute("Starbug\Payment\AdminOrdersController", ["action" => "details"]),
-      "admin/payment_gateways/settings/{id:[0-9]+}" =>
-        RoutesHelper::adminRoute("Starbug\Payment\AdminPaymentGatewaysController", ["action" => "settings"])
-    ]
-    + RoutesHelper::crudRoutes("admin/orders", "Starbug\Payment\AdminOrdersController")
-    + RoutesHelper::crudiRoutes("admin/payment_gateways", "Starbug\Payment\AdminPaymentGatewaysController")
-    + RoutesHelper::crudiRoutes("admin/payment_gateway_settings", "Starbug\Payment\AdminPaymentGatewaySettingsController")
-    + RoutesHelper::crudRoutes("admin/product_options", "Starbug\Payment\AdminProductOptionsController")
-    + RoutesHelper::crudRoutes("admin/products", "Starbug\Payment\AdminProductsController")
-    + RoutesHelper::crudRoutes("admin/product_types", "Starbug\Payment\AdminProductTypesController")
-    + RoutesHelper::crudRoutes("admin/shipping_methods", "Starbug\Payment\AdminShippingMethodsController")
-    + RoutesHelper::crudRoutes("admin/shipping_rates", "Starbug\Payment\AdminShippingRatesController")
-    + RoutesHelper::crudRoutes("admin/shipping_rates_product_options", "Starbug\Payment\AdminShippingRatesProductOptionsController")
-  ),
+  "route.providers" => DI\add([
+    DI\get("Starbug\Payment\RouteProvider")
+  ]),
   'db.schema.migrations' => DI\add([
     DI\get('Starbug\Payment\Migration')
   ]),
   'cart_token' => function (ContainerInterface $c) {
     $request = $c->get("Psr\Http\Message\ServerRequestInterface");
     $uri = $c->get("Starbug\Http\UriBuilderInterface");
-    $cid = $request->getCookieParams()["cid"];
+    $cid = $request->getCookieParams()["cid"] ?? false;
     if (!$cid) {
       $cid = md5(uniqid(mt_rand(), true));
       setcookie("cid", $cid, 0, $uri->build(""), null, false, false);
@@ -74,5 +49,7 @@ return [
     }
     return $gateway;
   },
-  'Starbug\Payment\ProductOptionsForm' => DI\autowire()->method('setTableSchema', DI\get('Starbug\Db\Schema\SchemerInterface'))
+  'Starbug\Payment\ProductOptionsForm' => DI\autowire()->method('setTableSchema', DI\get('Starbug\Db\Schema\SchemerInterface')),
+  "Starbug\Payment\ProductsForm" => DI\autowire()
+    ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface"))
 ];

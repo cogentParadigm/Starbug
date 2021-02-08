@@ -1,5 +1,7 @@
 {% extends "panel.html.twig" %}
 
+{% set model = "payment_gateway_settings" %}
+
 {% block title %}{{ gateway.name }} Settings{% endblock %}
 {% block body %}
   {{ include([model ~ "/admin-toolbar.html.twig", "admin-toolbar.html.twig"]) }}

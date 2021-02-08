@@ -13,5 +13,19 @@ class RouteProvider extends AdminRouteProvider {
     $this->addCrudRoutes($admin->addRoute("/tags"), "tags");
 
     $routes->addRoute("pages/view/{id:[0-9]+}", "Starbug\Content\PagesController");
+
+    $api = $routes->getRoute("api");
+
+    // Categories API
+    $this->addAdminApiRoute($api->addRoute("/categories/admin.json"), "categories", "AdminCategories");
+    $this->addApiRoute($api->addRoute("/categories/select.json"), "categories", "Select");
+
+    // Pages API
+    $this->addAdminApiRoute($api->addRoute("/pages/admin.json"), "pages", "AdminPages");
+    $this->addApiRoute($api->addRoute("/pages/select.json"), "pages", "Select");
+
+    // Tags API
+    $this->addAdminApiRoute($api->addRoute("/tags/admin.json"), "tags", "AdminTags");
+    $this->addApiRoute($api->addRoute("/tags/select.json"), "tags", "Select");
   }
 }

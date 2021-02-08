@@ -1,0 +1,20 @@
+{
+  "name": "starbug/payment",
+  "type": "starbug-module",
+  "description": "Starbug payment module.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Payment"
+  },
+  "require": {
+    "starbug/intl": "*",
+    "league/omnipay": "^3",
+    "omnipay/authorizenet": "^3.0"
+  }
+}

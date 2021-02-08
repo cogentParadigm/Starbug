@@ -26,8 +26,8 @@ class Save extends Operation {
     return $this->getErrorState($state);
   }
   protected function getErrorState(BundleInterface $state): BundleInterface {
-    if ($this->models->get($this->model)->errors()) {
-      $errors = $this->models->get($this->model)->errors("", true);
+    if ($this->models->get($this->model)->db->errors()) {
+      $errors = $this->models->get($this->model)->db->errors(true);
       $state->set($errors);
     }
     return $state;

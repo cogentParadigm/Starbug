@@ -40,7 +40,7 @@ define([
 		results:null,
 
 		constructor: function(options) {
-			this.target = config.websiteUrl+'api/'+this.model+'/'+this.action+'.json';
+			this.target = config.websiteUrl+'api/'+this.model.replace(/_/g, "-")+'/'+this.action+'.json';
 		},
 
 		get: function (id, options) {
@@ -140,12 +140,11 @@ define([
 			var store = this;
       var model = options.model || this.model;
 			var args = {};
-			args['action['+model+']'] = options.action || this.remove_action;
 			args[model+'[id]'] = id;
 			args.oid = config.csrfToken;
 
 			this.results = request(this.target, {
-				method: 'POST',
+				method: 'DELETE',
 				data: args,
 				headers: lang.mixin({}, this.headers, options.headers)
 			}).then(function (response) {

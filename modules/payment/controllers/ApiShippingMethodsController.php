@@ -3,16 +3,15 @@
 namespace Starbug\Payment;
 
 use Starbug\Auth\SessionHandlerInterface;
-use Starbug\Core\ApiController;
+use Starbug\Core\ApiRequest;
+use Starbug\Core\Controller\CollectionController;
 
-class ApiShippingMethodsController extends ApiController {
+class ApiShippingMethodsController extends CollectionController {
   public $model = "shipping_methods";
-  public function __construct(SessionHandlerInterface $session, Cart $cart) {
+  public function __construct(ApiRequest $api, SessionHandlerInterface $session, Cart $cart) {
+    parent::__construct($api);
     $this->session = $session;
     $this->cart = $cart;
-  }
-  public function admin() {
-    $this->api->render("AdminShippingMethods");
   }
   public function select() {
     $params = [];

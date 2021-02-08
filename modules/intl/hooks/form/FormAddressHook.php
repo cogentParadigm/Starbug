@@ -2,7 +2,7 @@
 namespace Starbug\Intl;
 
 use Starbug\Core\FormHook;
-use starbug\Core\DatabaseInterface;
+use Starbug\Core\DatabaseInterface;
 
 class FormAddressHook extends FormHook {
   public function __construct(DatabaseInterface $db) {
@@ -17,7 +17,7 @@ class FormAddressHook extends FormHook {
       unset($field['default']);
     }
     if (empty($field['data-dojo-type'])) $field['data-dojo-type'] = 'starbug/form/Address';
-    if (!is_array($field['data-dojo-props'])) {
+    if (!isset($field['data-dojo-props']) || !is_array($field['data-dojo-props'])) {
       $field['data-dojo-props'] = [];
     }
     $field['data-dojo-props']['updateOnLoad'] = "false";

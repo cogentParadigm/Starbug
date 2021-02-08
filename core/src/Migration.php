@@ -81,7 +81,7 @@ class Migration extends AbstractMigration {
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/users"], ["content" => "Users", "icon" => "fa-users"]);
     $configuration = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Configuration"], ["icon" => "fa-cogs"]);
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/menus"], ["parent" => $configuration, "content" => "Menus", "icon" => "fa-list"]);
-    $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/emails"], ["parent" => $configuration, "content" => "Email Templates", "icon" => "fa-envelope"]);
+    $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/email-templates"], ["parent" => $configuration, "content" => "Email Templates", "icon" => "fa-envelope"]);
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/settings"], ["parent" => $configuration, "content" => "Settings", "icon" => "fa-cog"]);
 
     // settings categories

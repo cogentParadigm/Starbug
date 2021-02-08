@@ -41,8 +41,11 @@ class GridDisplay extends ItemDisplay {
     }
     foreach ($options as $k => $v) {
       if (!in_array($k, ["id", "class", "style", "label", "data-dgrid-column", "plugin"]) && $v !== "") {
-        if ($k == "model" || $k == "field" || ($k == "default" && !is_numeric($v))) $v = "'".$v."'";
-        elseif ($v === false) $v = "false";
+        if ($k == "model" || $k == "field" || ($k == "default" && !is_numeric($v))) {
+          $v = "'".$v."'";
+        } elseif ($v === false) {
+          $v = "false";
+        }
         $options['data-dgrid-column'][] = $k.":".$v;
       }
     }
@@ -77,14 +80,22 @@ class GridDisplay extends ItemDisplay {
     $this->attributes['data-dojo-props'] = trim(str_replace('"', "'", json_encode($this->attributes['data-dojo-props'])), '{}');
     // add query params
     $params = $this->options;
-    foreach ($params as $key => $value) if (is_array($value)) $params[$key] = implode(",", $value);
+    foreach ($params as $key => $value) {
+      if (is_array($value)) {
+        $params[$key] = implode(",", $value);
+      }
+    }
     if (!empty($params)) {
       $this->attributes['data-dojo-props'] .= ', query: {';
-      foreach ($params as $k => $v) $this->attributes['data-dojo-props'] .= $k.":'".$v."', ";
+      foreach ($params as $k => $v) {
+        $this->attributes['data-dojo-props'] .= $k.":'".$v."', ";
+      }
       $this->attributes['data-dojo-props'] = rtrim($this->attributes['data-dojo-props'], ', ').'}';
     }
-    $row_options = $this->fields['row_options'];
-    unset($this->fields['row_options']);
-    $this->fields['row_options'] = $row_options;
+    if (isset($this->fields["row_options"])) {
+      $row_options = $this->fields["row_options"];
+      unset($this->fields["row_options"]);
+      $this->fields["row_options"] = $row_options;
+    }
   }
 }

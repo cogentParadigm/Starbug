@@ -129,10 +129,14 @@ class FormDisplay extends ItemDisplay {
       $values = $key;
       $key = "";
     }
-    $parts = empty($key) ? [] : explode(".", $key);
-    if ($values) return $this->errors->get(...$parts);
-    elseif (!empty($parts)) return $this->errors->has(...$parts);
-    else return !$this->errors->isEmpty();
+    $parts = array_merge($this->input_name, empty($key) ? [] : explode(".", $key));
+    if ($values) {
+      return $this->errors->get(...$parts);
+    } elseif (!empty($parts)) {
+      return $this->errors->has(...$parts);
+    } else {
+      return !$this->errors->isEmpty();
+    }
   }
 
   public function success() {

@@ -10,14 +10,8 @@ class AdminOrdersController extends Controller {
     $this->db = $db;
     $this->models = $models;
   }
-  public function init() {
-    $this->assign("model", "orders");
-    $this->assign("cancel_url", "admin/orders");
-  }
-  public function defaultAction() {
-    $this->render("admin/list.html");
-  }
   public function details($id) {
+    $this->assign("model", "orders");
     $this->assign("id", $id);
     $order = $this->models->get("orders")->load($id);
     $products = $this->models->get("product_lines")->query()->condition("orders_id", $order['id'])->select("SUM(price*qty) as total")->one();
@@ -25,11 +19,6 @@ class AdminOrdersController extends Controller {
     $this->assign("order", $order);
     $this->assign("products", $products);
     $this->assign("shipping", $shipping);
-    $this->render("admin/orders/details.html");
-  }
-  public function update($id) {
-    $this->assign("id", $id);
-    if ($this->db->success("orders", "create")) $this->response->redirect("admin/orders");
-    else $this->render("admin/update.html");
+    return $this->render("admin/orders/details.html");
   }
 }

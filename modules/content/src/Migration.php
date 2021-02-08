@@ -9,17 +9,17 @@ class Migration extends AbstractMigration {
       ["path", "type" => "string", "length" => 255, "index" => true],
       ["alias", "type" => "string", "length" => 255, "index" => true, "unique" => true]
     );
-    $this->schema->addTable(["categories", "singular" => "category", "label_select" => "categories.title"],
-      ["title", "type" => "string", "length" => "128"],
-      ["path", "type" => "path", "path" => "categories/view/[categories:id]", "pattern" => "category/[categories:title]", "null" => true, "default" => "NULL"],
+    $this->schema->addTable(["categories", "singular" => "category", "label_select" => "categories.name"],
+      ["name", "type" => "string", "length" => "128"],
+      ["path", "type" => "path", "path" => "categories/view/[categories:id]", "pattern" => "category/[categories:name]", "null" => true, "default" => "NULL"],
       ["description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
       ["parent", "type" => "int", "default" => "0", "materialized_path" => "tree_path"],
       ["position", "type" => "int", "ordered" => "parent"],
       ["tree_path", "type" => "string", "length" => "255", "default" => ""]
     );
-    $this->schema->addTable(["tags", "label_select" => "tags.title"],
-      ["title", "type" => "string", "length" => "128"],
-      ["path", "type" => "path", "path" => "tags/view/[tags:id]", "pattern" => "tag/[tags:title]", "null" => true, "default" => "NULL"],
+    $this->schema->addTable(["tags", "label_select" => "tags.name"],
+      ["name", "type" => "string", "length" => "128"],
+      ["path", "type" => "path", "path" => "tags/view/[tags:id]", "pattern" => "tag/[tags:name]", "null" => true, "default" => "NULL"],
       ["description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
       ["parent", "type" => "int", "default" => "0", "materialized_path" => "tree_path"],
       ["position", "type" => "int", "ordered" => "parent"],
@@ -62,9 +62,9 @@ class Migration extends AbstractMigration {
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/media", "content" => "Media"], ["target" => "_blank", "parent" => $content]);
 
     // categories
-    $this->schema->addRow("categories", ["title" => "Uncategorized"]);
+    $this->schema->addRow("categories", ["name" => "Uncategorized"]);
 
     // tags
-    $this->schema->addRow("tags", ["title" => "Uncategorized"]);
+    $this->schema->addRow("tags", ["name" => "Uncategorized"]);
   }
 }

@@ -14,7 +14,7 @@ class StoreOperationHook extends QueryHook {
         $model = $hooks["type"];
         $multiple = true;
       } else {
-        $model = reset(explode(" ", $hooks["references"]));
+        $model = explode(" ", $hooks["references"])[0];
         $multiple = false;
       }
       $instance = $this->models->get($model);

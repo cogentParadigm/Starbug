@@ -60,7 +60,7 @@ class FormSelectHook extends FormHook {
     $other_option = empty($field['other_option']) ? false : $field['other_option'];
     $form->assign("optional", $optional);
     $form->assign("value", $value);
-    $form->assign("options", $options);
+    $form->assign("options", $options ?? []);
     $form->assign("mode", $mode);
     $form->assign("other_option", $other_option);
   }
