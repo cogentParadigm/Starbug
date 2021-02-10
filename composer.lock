@@ -2742,16 +2742,16 @@
         },
         {
             "name": "starbug/operation",
-            "version": "v0.7.0",
+            "version": "v0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-operation.git",
-                "reference": "b5610c6513a8bcb7caadbd2b59d3f278861d230a"
+                "reference": "44dd661d8da499d6f0dc8b37f3a9d8eda447a386"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-operation/zipball/b5610c6513a8bcb7caadbd2b59d3f278861d230a",
-                "reference": "b5610c6513a8bcb7caadbd2b59d3f278861d230a",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-operation/zipball/44dd661d8da499d6f0dc8b37f3a9d8eda447a386",
+                "reference": "44dd661d8da499d6f0dc8b37f3a9d8eda447a386",
                 "shasum": ""
             },
             "require": {
@@ -2781,9 +2781,9 @@
             "description": "PSR-15 middleware for handling POST requests such as form submissions and API calls.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-operation/issues",
-                "source": "https://github.com/cogentParadigm/starbug-operation/tree/v0.7.0"
+                "source": "https://github.com/cogentParadigm/starbug-operation/tree/v0.7.1"
             },
-            "time": "2021-02-01T06:11:32+00:00"
+            "time": "2021-02-08T18:32:07+00:00"
         },
         {
             "name": "starbug/resource-locator",
