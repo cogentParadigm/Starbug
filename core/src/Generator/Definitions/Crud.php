@@ -19,25 +19,4 @@ class Crud extends CompositeDefinition {
     $this->definitions[] = $form;
     $this->definitions[] = $grid;
   }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @param array $options The options to pass in.
-   *
-   * @return void
-   */
-  public function build(array $options = []) {
-    parent::build($options);
-    $className = str_replace(" ", "", ucwords(str_replace("_", " ", $options["model"])));
-    $this->setParameter("className", $className);
-    $this->addTemplate(
-      "generate/crud/controller.php",
-      $this->module."/controllers/Admin".$className."Controller.php"
-    );
-    $this->addTemplate(
-      "generate/crud/api.php",
-      $this->module."/controllers/Api".$className."Controller.php"
-    );
-  }
 }
