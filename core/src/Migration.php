@@ -63,9 +63,10 @@ class Migration extends AbstractMigration {
     );
     $this->schema->addTable(["queues"],
       ["queue", "type" => "string"],
+      ["worker", "type" => "string"],
       ["data", "type" => "text", "default" => ""],
       ["position", "type" => "int", "ordered" => "queue", "default" => "0"],
-      ["status", "type" => "string", "default" => ""],
+      ["status", "type" => "string", "default" => "ready"],
       ["message", "type" => "text", "default" => ""]
     );
 

@@ -22,10 +22,22 @@ class RouteProvider extends AdminRouteProvider {
     $routes->addRoute("logout", ["Starbug\Users\LoginController", "logout"])
       ->onPost("Starbug\Users\Operation\Logout");
 
-    $routes->addRoute("forgot-password", ["Starbug\Users\LoginController", "forgotPassword"])
-      ->onPost("Starbug\Users\Operation\ForgotPassword");
+    $routes->addRoute("forgot-password", "Starbug\Core\Controller\ViewController", [
+      "view" => "forgot-password.html",
+      "successUrl" => "forgot-password/submitted"
+    ])->onPost("Starbug\Users\Operation\ForgotPassword");
 
-    $routes->addRoute("reset-password", ["Starbug\Users\LoginController", "resetPassword"])
-      ->onPost("Starbug\Users\Operation\ResetPassword");
+    $routes->addRoute("forgot-password/submitted", "Starbug\Core\Controller\ViewController", [
+      "view" => "forgot-password/submitted.html"
+    ]);
+
+    $routes->addRoute("reset-password", "Starbug\Core\Controller\ViewController", [
+      "view" => "reset-password.html",
+      "successUrl" => "reset-password/submitted"
+    ])->onPost("Starbug\Users\Operation\ResetPassword");
+
+    $routes->addRoute("reset-password/submitted", "Starbug\Core\Controller\ViewController", [
+      "view" => "reset-password/submitted.html"
+    ]);
   }
 }

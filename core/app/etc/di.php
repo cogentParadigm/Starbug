@@ -10,6 +10,7 @@ use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Http\UriBuilder;
+use Starbug\Queue\QueueFactory;
 use Starbug\ResourceLocator\ResourceLocator;
 use Whoops\Handler\Handler;
 use Whoops\Handler\PlainTextHandler;
@@ -136,5 +137,13 @@ return [
     ->method("includeSubdomains"),
   "Starbug\Bundle\*Interface" => DI\autowire("Starbug\Bundle\*"),
   "Starbug\Operation\*Interface" => DI\autowire("Starbug\Operation\*"),
-  "Starbug\Core\SettingsForm" => DI\autowire()->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface"))
+  "Starbug\Core\SettingsForm" => DI\autowire()->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface")),
+  "Starbug\Queue\*Interface" => DI\autowire("Starbug\Queue\*"),
+  "Starbug\Queue\QueueFactoryInterface" => function (ContainerInterface $container) {
+    $factory = new QueueFactory();
+    $factory->addQueue("default", function () use ($container) {
+      return $container->make("Starbug\Queue\Driver\Sql", ["name" => "default"]);
+    });
+    return $factory;
+  }
 ];

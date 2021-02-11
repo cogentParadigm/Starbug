@@ -32,12 +32,6 @@ class LoginController extends Controller {
     $this->session->destroy();
     return $this->redirect("");
   }
-  public function forgotPassword() {
-    return $this->render("forgot-password.html");
-  }
-  public function resetPassword() {
-    return $this->render("reset-password.html");
-  }
   protected function filterRedirectPath($input, $default = "") {
     $uri = new Uri($input);
     if (!Uri::isAbsolutePathReference($uri) || Uri::isRelativePathReference($uri)) {

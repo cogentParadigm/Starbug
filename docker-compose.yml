@@ -29,6 +29,20 @@ services:
       - mariadb-data:/var/lib/mysql
   mailcatcher:
     image: schickling/mailcatcher
+  default-queue:
+    image: agangji/php:7.3
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+    volumes:
+      - .:/var/www/html
+      - mariadb-data:/var/lib/mysql
+    environment:
+      - PHP_USER=$PHP_USER
+      - PHP_GROUP=$PHP_GROUP
+      - PHP_UID=$PHP_UID
+      - PHP_GID=$PHP_GID
+    command: ["precreate-user.sh", "php", "sb", "process-queue"]
 
 volumes:
   mariadb-data:

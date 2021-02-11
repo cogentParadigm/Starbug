@@ -31,6 +31,7 @@
     "starbug/http": "^0.9",
     "starbug/auth": "^0.9",
     "starbug/operation": "^0.7",
+    "starbug/queue": "^0.8.0",
     "phpmailer/phpmailer": "dev-master",
     "masterexploder/phpthumb": "dev-master",
     "ezyang/htmlpurifier":"dev-master",

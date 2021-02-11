@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4683ddf0581f006422bb27ec440c1f8e",
+    "content-hash": "16e871ac29d2538284d56771fbb522fe",
     "packages": [
         {
             "name": "composer/installers",
@@ -2784,6 +2784,52 @@
                 "source": "https://github.com/cogentParadigm/starbug-operation/tree/v0.7.1"
             },
             "time": "2021-02-08T18:32:07+00:00"
+        },
+        {
+            "name": "starbug/queue",
+            "version": "v0.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-queue.git",
+                "reference": "569e543095e655f5715d4a7f348be839666bc19a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-queue/zipball/569e543095e655f5715d4a7f348be839666bc19a",
+                "reference": "569e543095e655f5715d4a7f348be839666bc19a",
+                "shasum": ""
+            },
+            "require-dev": {
+                "pda/pheanstalk": "^4.0",
+                "predis/predis": "^1.1",
+                "starbug/devel": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Queue\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Background task queue.",
+            "keywords": [
+                "beanstalkd",
+                "redis"
+            ],
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-queue/issues",
+                "source": "https://github.com/cogentParadigm/starbug-queue/tree/v0.8.0"
+            },
+            "time": "2021-02-11T04:16:36+00:00"
         },
         {
             "name": "starbug/resource-locator",
