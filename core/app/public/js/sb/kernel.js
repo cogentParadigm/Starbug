@@ -1,4 +1,4 @@
-define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, ready, put) {
+define(["dojo/Deferred", "dojo/ready", "put-selector/put", "dojo/_base/config"], function(Deferred, ready, put, config) {
 	if (!window.sb) {
 		window.sb = {
 			stores:{},
@@ -65,7 +65,7 @@ define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, r
 					}
 					var script = window.document.createElement('script');
 					script.type = 'text/javascript';
-					script.src = '//tinymce.cachefly.net/4.2/tinymce.min.js';
+					script.src = config.websiteUrl + 'libraries/tinymce/tinymce.min.js';
 					var done = false;
 					script.onload = script.onreadystatechange = function() {
 						if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
@@ -80,12 +80,14 @@ define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, r
 				}
 			},
 			initTinyMCE: function(rt, ed) {
-				var tiny_mce_browser_callback = function(field_name, url, type, win){
+				var tiny_mce_browser_callback = function(callback, value, meta){
 					window.SetUrl=function(url,width,height,caption){
-						var input_field = win.document.getElementById(field_name);
-						input_field.value = url;
-						if(caption){
-							input_field.setAttribute('alt', caption);
+						if (meta.filetype == "file") {
+							callback(url, {text: caption});
+						} else if (meta.filetype == "image") {
+							callback(url, {alt: caption});
+						} else if (meta.filetype == "media") {
+							callback(url);
 						}
 					};
 					window.open(WEBSITE_URL+'admin/media?modal=true','media','modal,width=1020,height=600');
@@ -93,11 +95,10 @@ define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, r
 
 				var tiny_options = {
 					// General options
-					theme : "modern",
 					plugins: [
-							"advlist autolink autoresize textcolor lists link image charmap print preview hr anchor pagebreak",
+							"advlist autolink autoresize lists link image charmap print preview hr anchor pagebreak",
 							"searchreplace wordcount visualblocks visualchars code fullscreen charmap",
-							"insertdatetime media nonbreaking save table contextmenu directionality",
+							"insertdatetime media nonbreaking save table directionality",
 							"emoticons template paste save"
 					],
 					paste_auto_cleanup_on_paste : true,
@@ -129,7 +130,7 @@ define(["dojo/Deferred", "dojo/ready", "put-selector/put"], function(Deferred, r
 							]
 						}
 					],
-					file_browser_callback: tiny_mce_browser_callback
+					file_picker_callback: tiny_mce_browser_callback
 				};
 
 				if (rt.length > 0) {

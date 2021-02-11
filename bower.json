@@ -12,7 +12,8 @@
     "put-selector": "~0.3.6",
     "dbootstrap": "dbootstrap-less#*",
     "dojo-bootstrap": "~3.0.2",
-    "xstyle": "^0.3.3"
+    "xstyle": "^0.3.3",
+    "tinymce": "^5.7.0"
   },
   "license": "GPL-3.0+",
   "ignore": [
