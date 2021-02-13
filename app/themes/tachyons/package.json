@@ -22,6 +22,7 @@
     "postcss-partial-import": "^4.1.0",
     "postcss-scss": "^2.0.0",
     "postcss-url": "^8.0.0",
+    "postcss-import-url": "^5.1.0",
     "precss": "^4.0.0"
   }
 }

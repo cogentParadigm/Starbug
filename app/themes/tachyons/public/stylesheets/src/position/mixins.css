@@ -1,0 +1,7 @@
+@mixin make-position-atoms($suffix: "") {
+  .static$(suffix) { position: static; }
+  .relative$(suffix) { position: relative; }
+  .absolute$(suffix) { position: absolute; }
+  .fixed$(suffix) { position: fixed; }
+  .sticky$(suffix) { position: sticky; }
+}

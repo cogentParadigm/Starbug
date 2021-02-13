@@ -11,6 +11,7 @@
 @import "./forms/mixins/sizing.css";
 @import "./z-index/mixins.css";
 @import "./letter-spacing/mixins.css";
+@import "./position/mixins.css";
 
 
 // 2. External libraries and 3rd party components
@@ -58,10 +59,6 @@
 // -----------------------------------------------------------
 @import "./focus/atoms/focus.css";
 @import "./focus/atoms/z-index.css";
-@import "./width/atoms/default.css";
-@import "./flexbox/atoms/default.css";
-@import "./coordinates/atoms/default.css";
-@import "./z-index/atoms/default.css";
 @import "./components/tachyons.css";
 @import "./components/type.css";
 @import "./components/a11y.css";
@@ -70,7 +67,12 @@
 @import "./components/opacity.css";
 @import "./components/border-widths-pseudo.css";
 @import "./components/columns.css";
+@import "./width/atoms/default.css";
+@import "./flexbox/atoms/default.css";
+@import "./coordinates/atoms/default.css";
+@import "./z-index/atoms/default.css";
 @import "./letter-spacing/atoms/default.css";
+@import "./position/atoms/default.css";
 
 
 // 5. Media Queried Atomic Styles
@@ -84,6 +86,7 @@
 @import "./coordinates/atoms/media.css";
 @import "./z-index/atoms/media.css";
 @import "./letter-spacing/atoms/media.css";
+@import "./position/atoms/media.css";
 
 
 // 6. Variable Overrides

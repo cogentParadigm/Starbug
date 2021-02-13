@@ -9,6 +9,7 @@ module.exports = function(grunt) {
         parser: require("postcss-scss"),
         processors: [
           require("postcss-import"),
+          require("postcss-import-url")({modernBrowser: true}),
           require("postcss-at-rules-variables")({
             atRules: ['for', 'if', 'else', 'each', 'mixin', 'custom-media', 'include']
           }),
