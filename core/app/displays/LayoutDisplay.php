@@ -6,6 +6,7 @@ class LayoutDisplay extends ItemDisplay {
   public $template = "layout.html";
   public $cells = [];
   public $lastCell = false;
+  public $rowClass = "row";
 
   /**
    * Allows you to filter the options for each column.
@@ -19,8 +20,16 @@ class LayoutDisplay extends ItemDisplay {
         $this->lastCell = $k;
       }
     }
-    if (!isset($options['attributes']['class'])) $options['attributes']['class'] = ['row'];
-    elseif (!in_array('row', $options['attributes']['class'])) $options['attributes']['class'][] = 'row';
+    if (!isset($options['attributes'])) {
+      $options['attributes'] = [];
+    }
+    if (false !== $this->rowClass) {
+      if (!isset($options['attributes']['class'])) {
+        $options['attributes']['class'] = [$this->rowClass];
+      } elseif (!in_array($this->rowClass, $options['attributes']['class'])) {
+        $options['attributes']['class'][] = $this->rowClass;
+      }
+    }
     return $options;
   }
 

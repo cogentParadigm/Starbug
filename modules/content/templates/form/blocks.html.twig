@@ -1,5 +1,5 @@
 {% for bid, content in value %}
-  <label>{{ bid|split("-", -1)|join(" ")|title }}<label>
+  <label class="b mb2">{{ bid|split("-", -1)|join(" ")|title }}</label>
   {% set attributes = attributes|merge({"id": "block-" ~ bid, "name": display.getName("blocks[" ~ bid ~ "]")}) %}
   {{ include("form/textarea.html.twig", {"attributes": attributes, "value": content}) }}
 {% endfor %}

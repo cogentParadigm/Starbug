@@ -10,8 +10,8 @@ class PagesForm extends FormDisplay {
   public function buildDisplay($options) {
     $options += ["tab" => ""];
     // layout
-    $this->layout->add(["top", "left" => "div.col-md-9", "right" => "div.col-md-3"]);
-    $this->layout->add(["bottom", "tabs" => "div.col-sm-12"]);
+    $this->layout->add(["top", "left" => "div.col-md-9.col-9", "right" => "div.col-md-3.col-3"]);
+    $this->layout->add(["bottom", "tabs" => "div.col-sm-12.col-12"]);
     $this->layout->put("tabs", 'div[data-dojo-type="dijit/layout/TabContainer"][data-dojo-props="doLayout:false, tabPosition:\'left-h\'"][style="width:100%;height:100%"]', '', 'tc');
     $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="URL path"]'.((empty($options['tab'])) ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'path');
     $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Meta tags"]'.(($options['tab'] === "meta") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'meta');

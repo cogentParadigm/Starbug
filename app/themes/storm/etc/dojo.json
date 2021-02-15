@@ -1,4 +1,9 @@
 {
+  "config": {
+    "packages": [
+      {"name": "storm", "location": "../../app/themes/storm/public/js"}
+    ]
+  },
   "require": [
     "storm/main"
   ]

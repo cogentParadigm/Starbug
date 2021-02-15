@@ -1,10 +1,29 @@
-{% if attributes is not empty %}
+{% if attributes is not defined %}
   {% set attributes = {} %}
 {% endif %}
-{% set attributes = attributes|merge({"data-dojo-type":"storm/menu"}) %}
+{% if itemAttributes is not defined %}
+  {% set itemAttributes = {} %}
+{% endif %}
+{% if anchorAttributes is not defined %}
+  {% set anchorAttributes = {} %}
+{% endif %}
+{% if iconAttributes is not defined %}
+  {% set iconAttributes = {} %}
+{% endif %}
+{% if subMenuAttributes is not defined %}
+  {% set subMenuAttributes = {} %}
+{% endif %}
 {% set links = helper("collections").get("Menu").query({"menu": menu}) %}
 <ul {{ helper("filter").attributes(attributes)|raw }}>
   {% for link in links %}
-    {{ include("menu-link.html.twig", {"link": link}) }}
+    {{
+      include("menu-link.html.twig", {
+        "link": link,
+        "itemAttributes": itemAttributes,
+        "anchorAttributes": anchorAttributes,
+        "iconAttributes": iconAttributes,
+        "subMenuAttributes": subMenuAttributes
+      })
+    }}
   {% endfor %}
 </ul>
