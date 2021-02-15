@@ -8,11 +8,11 @@ function(dojo, sb, put, editor){
 		//populate the cell with the label or value
 		column.renderCell = function(object, value, cell, options){
 			put(parent && parent.contents ? parent : cell, ".dgrid-handle");
-			node = put(cell, 'div.dojoDndHandle', put('div.fa.fa-bars'));
+			node = put(cell, 'div.dojoDndHandle', put("div.material-icons.pointer", "drag_handle"));
 		};
 
 		column.renderHeaderCell = function(node) {
-			put(node, 'div.fa.fa-bars');
+			put(node, "div.material-icons", "drag_handle");
 		}
 
 		return column;

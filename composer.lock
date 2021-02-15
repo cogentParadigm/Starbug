@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16e871ac29d2538284d56771fbb522fe",
+    "content-hash": "092ac0d670b89016334064917163bdc8",
     "packages": [
         {
             "name": "composer/installers",
@@ -2873,16 +2873,23 @@
         },
         {
             "name": "starbug/storm",
-            "version": "dev-master",
-            "dist": {
-                "type": "path",
-                "url": "./app/themes/storm",
-                "reference": "f590aceef6165ec1e216d5f3f73b4fc5dbeec0f6"
+            "version": "v0.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-storm.git",
+                "reference": "6c6f5b96b3deb15b4ab92f17eea46ef1bfbf5322"
             },
-            "type": "starbug-custom-theme",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/6c6f5b96b3deb15b4ab92f17eea46ef1bfbf5322",
+                "reference": "6c6f5b96b3deb15b4ab92f17eea46ef1bfbf5322",
+                "shasum": ""
+            },
+            "type": "starbug-theme",
             "extra": {
                 "namespace": "Starbug\\Storm"
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -2892,10 +2899,12 @@
                     "homepage": "https://github.com/cogentParadigm"
                 }
             ],
-            "description": "Storm admin theme for Starbug.",
-            "transport-options": {
-                "relative": true
-            }
+            "description": "Administrative theme for Starbug.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-storm/issues",
+                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v0.7.1"
+            },
+            "time": "2021-02-15T16:14:50+00:00"
         },
         {
             "name": "starbug/tachyons",
@@ -8741,8 +8750,7 @@
         "starbug/emails": 20,
         "starbug/css": 20,
         "starbug/js": 20,
-        "starbug/content": 20,
-        "starbug/storm": 20
+        "starbug/content": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

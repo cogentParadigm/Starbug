@@ -12,9 +12,9 @@
   {{ include("form/label.html.twig") }}
 {% endif %}
 {% if between is not empty %}{{ between|raw }}{% endif %}
-{% if attribute(form.errors, field) is not empty %}
+{% if form.errors(field) %}
   {% set attributes = attributes|merge({"class":attributes.class ~ " form-error"}) %}
-  {% for error, message in attribute(form.errors, field) %}
+  {% for error, message in form.errors(field, true) %}
     {% if message is not iterable %}
       {{ include("form/error.html.twig", {"error": message, 'atttributes': attributes}) }}
     {% endif %}
