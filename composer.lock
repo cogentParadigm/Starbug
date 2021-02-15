@@ -2873,16 +2873,16 @@
         },
         {
             "name": "starbug/storm",
-            "version": "v0.7.1",
+            "version": "v0.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-storm.git",
-                "reference": "6c6f5b96b3deb15b4ab92f17eea46ef1bfbf5322"
+                "reference": "fd93b7c22c595dc7373a6b12d81f5a3192011e8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/6c6f5b96b3deb15b4ab92f17eea46ef1bfbf5322",
-                "reference": "6c6f5b96b3deb15b4ab92f17eea46ef1bfbf5322",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/fd93b7c22c595dc7373a6b12d81f5a3192011e8e",
+                "reference": "fd93b7c22c595dc7373a6b12d81f5a3192011e8e",
                 "shasum": ""
             },
             "type": "starbug-theme",
@@ -2902,9 +2902,9 @@
             "description": "Administrative theme for Starbug.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-storm/issues",
-                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v0.7.1"
+                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v0.7.2"
             },
-            "time": "2021-02-15T16:14:50+00:00"
+            "time": "2021-02-15T16:35:21+00:00"
         },
         {
             "name": "starbug/tachyons",
