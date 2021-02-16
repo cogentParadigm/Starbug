@@ -53,7 +53,7 @@ class FormDisplay extends ItemDisplay {
     $this->layout->build();
     // create actions display
     $this->actions = $this->displays->get("ItemDisplay");
-    $this->actions->add([$this->defaultAction, "label" => $this->submit_label, "class" => "btn-success"]);
+    $this->actions->add([$this->defaultAction, "label" => $this->submit_label, "template" => "button/primary.html"]);
 
     // run query
     $this->beforeQuery($options);

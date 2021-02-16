@@ -1,0 +1,3 @@
+{% set attributes = attributes|default({}) %}
+{% set attributes = attributes|merge({"class":((attributes.class is empty) ? "" : attributes.class ~ " ") ~ "btn btn-success"}) %}
+{{ include("button.html.twig") }}

@@ -21,8 +21,12 @@
     {% if ops.type is empty %}
       {% set ops = ops|merge({'type':'submit'}) %}
     {% endif %}
-    {% set ops = ops|merge({'class':((ops.class is empty) ? "" : ops.class ~ " ") ~ "btn"}) %}
-    <button {{ helper("filter").attributes(ops)|raw }}>{{ label }}</button>
+    {% if ops.template is defined %}
+      {{ include(ops.template ~ ".twig", {"label": label, attributes: ops}) }}
+    {% else %}
+      {% set ops = ops|merge({'class':((ops.class is empty) ? "" : ops.class ~ " ") ~ "btn"}) %}
+      <button {{ helper("filter").attributes(ops)|raw }}>{{ label }}</button>
+    {% endif %}
     {% if display.cancel_url is not empty %}
       <button type="button" class="cancel btn btn-default" onclick="window.location='{{ helper("url").build(display.cancel_url) }}'">Cancel</button>
     {% endif %}
