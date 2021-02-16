@@ -20,6 +20,7 @@ class FormDisplay extends ItemDisplay {
   public $actions;
   protected $vars = [];
   public $horizontal = false;
+  protected $layoutDisplay = "LayoutDisplay";
   protected $hook_builder;
   protected $displays;
   /**
@@ -28,8 +29,6 @@ class FormDisplay extends ItemDisplay {
    * @var ServerRequestInterface
    */
   protected $request;
-  protected $db;
-
   public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, ServerRequestInterface $request) {
     parent::__construct($output, $collections);
     $this->hook_builder = $hooks;
@@ -50,7 +49,8 @@ class FormDisplay extends ItemDisplay {
     }
 
     // create layout display
-    $this->layout = $this->displays->get("LayoutDisplay");
+    $this->layout = $this->displays->get($this->layoutDisplay);
+    $this->layout->build();
     // create actions display
     $this->actions = $this->displays->get("ItemDisplay");
     $this->actions->add([$this->defaultAction, "label" => $this->submit_label, "class" => "btn-success"]);

@@ -1,4 +1,4 @@
-{% extends "panel."~ response.getFormat()|default("html") ~ ".twig" %}
+{% extends "panel."~ route.getOption("format")|default("html") ~ ".twig" %}
 
 {% set label = helper("models").get(model).label %}
 {% if dialog is not empty %}

@@ -17,7 +17,7 @@ define([
       this.inherited(arguments);
       this.dialogClass = this.dialogClass || Dialog;
       this.dialogParams = this.dialogParams || {};
-      this.dialogParams.url = this.dialogParams.url || WEBSITE_URL + 'admin/' + this.model + '/';
+      this.dialogParams.url = this.dialogParams.url || WEBSITE_URL + 'admin/' + this.model.replace(/_/g, "-") + '/';
       if (false == this.collection && false !== this.model) {
         this.collectionParams = this.collectionParams || {};
         this.collectionParams.model = this.collectionParams.model || this.model;
