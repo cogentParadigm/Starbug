@@ -41,6 +41,7 @@ class StyleguideController extends Controller {
       "#777" => "gray",
       "#999" => "silver",
       "#AAA" => "light-silver",
+      "#CCC" => "moon-gray",
       "#EEE" => "light-gray",
       "#F4F4F4" => "near-white",
       "#FFF" => "white"
