@@ -1,6 +1,8 @@
-<div class="panel panel-default">
-  <div class="panel-heading"><strong>Settings</strong></div>
-  <div class="panel-body">
+{% extends "panel.html.twig" %}
+
+{% block before %}<div class="mw7">{% endblock %}
+{% block title %}Settings{% endblock %}
+{% block body %}
     {{ helper("displays").render("SettingsForm", {"operation": "update"}) }}
-  </div>
-</div>
+{% endblock %}
+{% block after %}</div>{% endblock %}

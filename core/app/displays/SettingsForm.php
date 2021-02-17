@@ -18,8 +18,9 @@ class SettingsForm extends FormDisplay {
     foreach ($settings as $idx => $setting) {
       $this->setPost($setting['name'], $setting['value']);
       if ($setting['term'] != $last) {
+        $marginTop = $last ? "mt4" : "mt0";
         $last = $setting['term'];
-        $this->add([$setting["slug"], "input_type" => "html", "value" => "<h1 class=\"well\">".$setting["term"]."</h1>"]);
+        $this->add([$setting["slug"], "input_type" => "html", "value" => "<h2 class=\"f7 mb2 {$marginTop} ttu\">".$setting["term"]."</h1>"]);
       }
       $field = [$setting['name'], "input_type" => $setting['type']];
       if (!empty($setting['label'])) $field['label'] = $setting['label'];
