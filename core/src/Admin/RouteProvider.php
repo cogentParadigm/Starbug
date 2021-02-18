@@ -60,15 +60,17 @@ class RouteProvider implements RouteProviderInterface {
 
     $routes->addRoute("/import", "Starbug\Core\Crud\ImportController");
 
-    $this->addXhr($create);
-    $this->addXhr($update);
+    $this->addXhr($create)
+      ->onPost("Starbug\Core\Operation\Save");
+    $this->addXhr($update)
+      ->onPost("Starbug\Core\Operation\Save")
+      ->resolve("row", "Starbug\Core\Routing\Resolvers\RowById");
 
     return $routes;
   }
 
   protected function addXhr(Route $route) {
-    $route->addRoute(".{format:xhr}", $route->getController(), ["successUrl" => false]);
-    return $route;
+    return $route->addRoute(".{format:xhr}", $route->getController(), ["successUrl" => false]);
   }
 
   protected function addStatefulRedirects(Route $route, $url) {

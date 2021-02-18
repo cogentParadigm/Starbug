@@ -28,23 +28,29 @@ return [
     ->constructorParameter("modules", DI\get("modules"))
     ->method("enableAll", ["type" => "module"])
     ->method("enable", DI\get("theme")),
-  "application.middleware" => [
-    DI\get("Middlewares\Https"),
-    DI\get("Starbug\Http\BaseUrlMiddleware"),
-    DI\get("Middlewares\CachePrevention"),
-    DI\get("Middlewares\UrlEncodePayload"),
-    DI\get("Starbug\Auth\Http\AuthenticationMiddleware"),
-    DI\get("Starbug\Auth\Http\CsrfMiddleware"),
-    DI\get("Starbug\Core\RoutingMiddleware"),
-    DI\get("Starbug\Http\RequestInjectionMiddleware"),
-    DI\get("Starbug\Http\TemplateRenderingMiddleware"),
-    DI\get("Starbug\Core\Routing\ResolutionMiddleware"),
-    DI\get("Starbug\Operation\Http\OperationMiddleware"),
-    DI\get("Starbug\Core\FormHandlerMiddleware"),
-    DI\get("Starbug\Core\ControllerMiddleware")
-  ],
+  "application.middleware" => function (ContainerInterface $container) {
+    $env = $container->get("environment");
+    return [
+      "Middlewares\Https",
+      "Starbug\Http\BaseUrlMiddleware",
+      "Middlewares\CachePrevention",
+      "Middlewares\UrlEncodePayload",
+      "Starbug\Auth\Http\AuthenticationMiddleware",
+      "Starbug\Auth\Http\CsrfMiddleware",
+      "Starbug\Core\RoutingMiddleware",
+      [$env !== "development", "Starbug\Core\SecureJsonErrorHandlerMiddleware"],
+      [$env === "development", "Starbug\Core\JsonErrorHandlerMiddleware"],
+      "Starbug\Http\RequestInjectionMiddleware",
+      "Starbug\Http\TemplateRenderingMiddleware",
+      "Starbug\Core\Routing\ResolutionMiddleware",
+      "Starbug\Operation\Http\OperationMiddleware",
+      "Starbug\Core\FormHandlerMiddleware",
+      "Starbug\Core\ControllerMiddleware"
+    ];
+  },
   "Psr\Http\Server\RequestHandlerInterface" => DI\autowire("Middleland\Dispatcher")
-    ->constructorParameter("middleware", DI\get("application.middleware")),
+    ->constructorParameter("middleware", DI\get("application.middleware"))
+    ->constructorParameter("container", DI\get(ContainerInterface::class)),
   'log.handlers.development' => [
     DI\get('Monolog\Handler\StreamHandler')
   ],
