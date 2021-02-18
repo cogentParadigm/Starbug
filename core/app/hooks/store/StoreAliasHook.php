@@ -1,14 +1,18 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Schema\SchemaInterface;
+
 class StoreAliasHook extends QueryHook {
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+  protected $db;
+  protected $schema;
+  public function __construct(DatabaseInterface $db, SchemaInterface $schema) {
     $this->db = $db;
-    $this->models = $models;
+    $this->schema = $schema;
   }
   public function validate($query, $key, $value, $column, $alias) {
     if (!empty($value) && !is_numeric($value) && $value != "NULL") {
-      $referenced_model = explode(" ", $this->models->get($query->model)->hooks[$column]["references"]);
+      $referenced_model = explode(" ", $this->schema->getColumn($query->model, $column)["references"]);
       // $alias might be '%first_name% %last_name%'
       $alias = explode("%", $alias);
       $match = '';

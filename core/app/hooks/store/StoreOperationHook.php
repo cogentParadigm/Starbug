@@ -1,21 +1,22 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Schema\SchemaInterface;
+
 class StoreOperationHook extends QueryHook {
   protected $replace = false;
-  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db) {
+  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db, SchemaInterface $schema) {
     $this->models = $models;
     $this->db = $db;
+    $this->schema = $schema;
   }
   public function validate($query, $key, $value, $column, $argument) {
     if (is_array($value)) {
-      $hooks = $this->models->get($query->model)->hooks[$column];
+      $hooks = $this->schema->getColumn($query->model, $column);
       if ($this->models->has($hooks["type"])) {
         $model = $hooks["type"];
-        $multiple = true;
       } else {
         $model = explode(" ", $hooks["references"])[0];
-        $multiple = false;
       }
       $instance = $this->models->get($model);
       $instance->$argument($value);

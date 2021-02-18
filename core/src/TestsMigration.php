@@ -29,7 +29,7 @@ class TestsMigration extends AbstractMigration {
     // you can optionally specify taxonomy:taxonomy_name
     // the default taxonomy will be [table_name]_[column_name]
     $this->schema->addTable(["hook_store_category"],
-      ["value", "type" => "category"]
+      ["value", "type" => "category", "taxonomy" => "groups"]
     );
 
     /*****************************************

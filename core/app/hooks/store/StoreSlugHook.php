@@ -1,12 +1,14 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Schema\SchemaInterface;
+
 class StoreSlugHook extends QueryHook {
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, MacroInterface $macro, InputFilterInterface $filter) {
+  public function __construct(DatabaseInterface $db, MacroInterface $macro, InputFilterInterface $filter, SchemaInterface $schema) {
     $this->db = $db;
     $this->macro = $macro;
-    $this->models = $models;
     $this->filter = $filter;
+    $this->schema = $schema;
   }
   public function emptyBeforeInsert($query, $column, $argument) {
     $query->set($column, $this->validate($query, $column, "", $column, $argument));
@@ -17,8 +19,9 @@ class StoreSlugHook extends QueryHook {
 
       $value = strtolower(str_replace(" ", "-", $this->filter->normalize($value)));
 
-      if (!empty($this->models->get($query->model)->hooks[$column]["pattern"])) {
-        $pattern = $this->models->get($query->model)->hooks[$column]["pattern"];
+      $field = $this->schema->getColumn($query->model, $column);
+      if (!empty($field["pattern"])) {
+        $pattern = $field["pattern"];
         $data = [$query->model => array_merge($query->fields, [$column => $value])];
         $value = $this->macro->replace($pattern, $data);
       }
@@ -42,9 +45,14 @@ class StoreSlugHook extends QueryHook {
       $id = $query->getId();
       $exists->condition($query->model.".id", $id, "!=");
     }
-    if (!empty($this->models->get($query->model)->hooks[$column]["unique"])) {
-      $parts = explode(" ", $this->models->get($query->model)->hooks[$column]["unique"]);
-      foreach ($parts as $c) if (!empty($c)) $exists->condition($c, $query->fields[$c]);
+    $field = $this->schema->getColumn($query->model, $column);
+    if (!empty($field["unique"])) {
+      $parts = explode(" ", $field["unique"]);
+      foreach ($parts as $c) {
+        if (!empty($c)) {
+          $exists->condition($c, $query->fields[$c]);
+        }
+      }
     }
     return $exists;
   }

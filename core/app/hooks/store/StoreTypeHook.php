@@ -1,10 +1,13 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Schema\SchemaInterface;
+
 class StoreTypeHook extends QueryHook {
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemaInterface $schema) {
     $this->db = $db;
     $this->models = $models;
+    $this->schema = $schema;
   }
   public function emptyValidate($query, $column, $argument) {
     if ($this->models->has($argument)) $query->exclude($column);
