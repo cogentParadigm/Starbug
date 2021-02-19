@@ -1,12 +1,12 @@
 <?php
-namespace Starbug\App;
+namespace {{ module.namespace }};
 
 use Starbug\Core\GridDisplay;
 
 class {{ className }}Grid extends GridDisplay {
   public $model = "{{ model }}";
   public $action = "admin";
-  function buildDisplay($options) {
+  public function buildDisplay($options) {
     $this->add(["id", "label" => "ID"]);
   }
 }

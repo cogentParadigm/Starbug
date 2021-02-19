@@ -3,9 +3,11 @@ namespace Starbug\Core\Generator\Definitions;
 
 use Starbug\Core\Generator\Definition;
 use Starbug\Db\Schema\SchemerInterface;
+use Starbug\Modules\Configuration;
 
 class Grid extends Definition {
-  public function __construct(SchemerInterface $schemer) {
+  public function __construct(Configuration $modules, SchemerInterface $schemer) {
+    parent::__construct($modules);
     $this->schemer = $schemer;
   }
   public function build(array $options = []) {
@@ -20,7 +22,7 @@ class Grid extends Definition {
     $this->setParameter("className", $className);
     $this->addTemplate(
       "generate/grid/grid.php",
-      $this->module."/displays/".$className."Grid.php"
+      $this->module["path"]."/displays/".$className."Grid.php"
     );
   }
 }

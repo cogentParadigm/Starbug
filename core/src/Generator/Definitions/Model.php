@@ -4,9 +4,11 @@ namespace Starbug\Core\Generator\Definitions;
 use Starbug\Core\Generator\Definition;
 use Starbug\Db\Schema\SchemerInterface;
 use Starbug\Core\ConfigInterface;
+use Starbug\Modules\Configuration;
 
 class Model extends Definition {
-  public function __construct(SchemerInterface $schemer, ConfigInterface $config) {
+  public function __construct(Configuration $modules, SchemerInterface $schemer, ConfigInterface $config) {
+    parent::__construct($modules);
     $this->schemer = $schemer;
     $this->config = $config;
   }
@@ -43,7 +45,7 @@ class Model extends Definition {
     if (empty($options["update"])) {
       $this->addTemplate(
         "generate/model/model.php",
-        $this->module."/models/".$className.".php"
+        $this->module["path"]."/models/".$className.".php"
       );
     }
   }

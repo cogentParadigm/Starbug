@@ -18,7 +18,7 @@ class Controller extends Definition {
     parent::build($options);
     $this->addTemplate(
       "generate/controller/controller.php",
-      $this->module."/controllers/".ucwords($options["name"])."Controller.php"
+      $this->module["path"]."/controllers/".ucwords($options["name"])."Controller.php"
     );
   }
 }

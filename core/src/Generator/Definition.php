@@ -2,6 +2,8 @@
 
 namespace Starbug\Core\Generator;
 
+use Starbug\Modules\Configuration;
+
 /**
  * Definition is a representation object used by the generator. It describes:
  * - directories to be created
@@ -14,6 +16,11 @@ class Definition {
   protected $copy = [];
   protected $parameters = [];
   protected $module = "app";
+  protected $modules;
+
+  public function __construct(Configuration $modules) {
+    $this->modules = $modules;
+  }
   /**
    * Set module.
    *
@@ -22,7 +29,8 @@ class Definition {
    * @return void
    */
   public function setModule($module) {
-    $this->module = $module;
+    $this->module = $this->modules->get($module) + ["name" => $module];
+    $this->setParameter("module", $this->module);
   }
   public function getModule() {
     return $this->module;
@@ -65,11 +73,7 @@ class Definition {
   public function build(array $options = []) {
     $this->parameters = $options;
     if (!empty($options["module"])) {
-      if ($options["module"] == "app") $this->setModule("app");
-      elseif ($options["module"] == "core") $this->setModule("core/app");
-      else $this->setModule("modules/".$options["module"]);
-    } elseif (!empty($options["theme"])) {
-      $this->setModule("app/themes/".$options["theme"]);
+      $this->setModule($options["module"]);
     }
   }
   public function reset() {
