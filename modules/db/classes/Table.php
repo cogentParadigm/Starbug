@@ -32,7 +32,7 @@ class Table implements CollectionFilterInterface {
   }
 
   public function create($data) {
-    if (!empty($this->base)) {
+    if ($this->schema->getTable($this->type)->hasOption("base")) {
       $this->store($data + ["type" => $this->type]);
     } else {
       $this->store($data);

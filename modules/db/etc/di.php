@@ -32,6 +32,7 @@ return [
   ],
   'db.query.builder.extensions' => [
     'search' => DI\get('Starbug\Db\Query\Extensions\Search'),
+    'getSearchFields' => DI\get('Starbug\Db\Query\Extensions\Search'),
     'action' => DI\get('Starbug\Db\Query\Extensions\Action')
   ]
 ];

@@ -1,7 +1,7 @@
 {% extends "panel." ~ route.getOption("format")|default("html") ~ ".twig" %}
 
 {% if form_header is empty and model is not empty %}
-  {% set form_header = "Update " ~ helper("models").get(model).singular_label %}
+  {% set form_header = "Update " ~ helper("schema").getTable(model).getOption("singular_label") %}
 {% endif %}
 {% block title %}{{ form_header }}{% endblock %}
 {% block body %}

@@ -103,7 +103,7 @@ class SchemaHook implements HookInterface {
       "name" => $model,
       "label" => ucwords(str_replace(["-", "_"], [" ", " "], $model)),
       "singular" => rtrim($model, 's'),
-      "search" => $model.'.'.implode(",$model.", $search_cols)
+      "search_fields" => $model.'.'.implode(",$model.", $search_cols)
     ];
     $defaults["singular_label"] = ucwords(str_replace(["-", "_"], [" ", " "], $defaults["singular"]));
     foreach ($defaults as $key => $value) {

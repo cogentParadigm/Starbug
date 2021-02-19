@@ -1,6 +1,6 @@
 {% extends "panel.html.twig" %}
 
-{% block title %}{{ helper("models").get(model).label }}{% endblock %}
+{% block title %}{{ helper("schema").getTable(model).getOption("label") }}{% endblock %}
 {% block body %}
   {{ include("imports/admin-toolbar.html.twig") }}
   {{ helper("displays").render("ImportsGrid", {"model": model}) }}

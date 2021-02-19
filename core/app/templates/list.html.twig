@@ -1,6 +1,6 @@
 {% extends "panel."~ route.getOption("format")|default("html") ~ ".twig" %}
 
-{% set label = helper("models").get(model).label %}
+{% set label = helper("schema").getTable(model).getOption("label") %}
 {% if dialog is not empty %}
   {% if grid_attributes is empty %}
     {% set grid_attributes = {} %}
@@ -16,7 +16,7 @@
 {% block after %}
   {% if dialog %}
     {% if form_header is empty and model is not empty %}
-      {% set form_header = "New " ~ helper("models").get(model).singular_label %}
+      {% set form_header = "New " ~ helper("schema").getTable(model).getOption("singular_label") %}
     {% endif %}
     <div id="{{ model }}_dialog" data-dojo-type="sb/modal/Form" data-dojo-id="{{ model }}_form" data-dojo-props="url:'{{ request.getUri().getPath() }}/', title:'{{ form_header }}', callback:function(){ {{ model }}_grid.refresh()}"></div>
   {% endif %}

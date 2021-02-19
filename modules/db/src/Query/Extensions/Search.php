@@ -2,8 +2,16 @@
 namespace Starbug\Db\Query\Extensions;
 
 use Starbug\Db\Query\BuilderInterface;
+use Starbug\Db\Schema\SchemaInterface;
 
 class Search {
+  public function __construct(SchemaInterface $schema) {
+    $this->schema = $schema;
+  }
+  public function getSearchFields(BuilderInterface $builder, array $arguments) {
+    $table = array_shift($arguments);
+    return $this->schema->getTable($table)->getOption("search_fields");
+  }
   /**
    * Add search conditions to search one or more fields for some words.
    *

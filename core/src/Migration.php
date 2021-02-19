@@ -50,7 +50,7 @@ class Migration extends AbstractMigration {
       ["category", "type" => "category", "null" => ""],
       ["autoload", "type" => "bool", "default" => "0"]
     );
-    $this->schema->addTable(["menus", "groups" => true],
+    $this->schema->addTable(["menus", "groups" => true, "label_select" => "CONCAT(menus.menu, ': ', menus.content)"],
       ["menu", "type" => "string", "length" => "32", "list" => "true", "display" => "false"],
       ["parent", "type" => "int", "default" => "0", "materialized_path" => "menu_path"],
       ["href", "type" => "string", "length" => "255", "label" => "URL", "default" => ""],
@@ -122,7 +122,7 @@ class Migration extends AbstractMigration {
         ["new_value", "type" => "text"]
       );
     */
-    $this->schema->addTable(["imports_fields"],
+    $this->schema->addTable(["imports_fields", "label_select" => "CONCAT(imports_fields.source, ' => ', imports_fields.destination, CASE WHEN update_key=1 THEN ' (update key)' ELSE '' END)"],
       ["source", "type" => "text"],
       ["destination", "type" => "text"],
       ["update_key", "type" => "bool", "default" => "0"]

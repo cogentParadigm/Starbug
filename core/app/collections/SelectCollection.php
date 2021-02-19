@@ -1,8 +1,14 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Schema\SchemerInterface;
+
 class SelectCollection extends Collection {
   protected $optional = false;
+  public function __construct(ModelFactoryInterface $models, SchemerInterface $schemer) {
+    $this->models = $models;
+    $this->schema = $schemer->getSchema();
+  }
   public function build($query, $ops) {
     $query->removeSelection();
     if (empty($ops['id'])) {
@@ -11,8 +17,12 @@ class SelectCollection extends Collection {
         $this->optional = $ops["optional"];
       }
     }
-    $query->select($query->model.".id");
-    $query->select($this->models->get($query->model)->label_select." as label");
+    $idSelection = $labelSelection = $query->model.".id";
+    if ($this->schema->getTable($query->model)->hasOption("label_select")) {
+      $labelSelection = $this->schema->getTable($query->model)->getOption("label_select");
+    }
+    $query->select($idSelection);
+    $query->select($labelSelection." as label");
     return $query;
   }
   public function filterRows($rows) {

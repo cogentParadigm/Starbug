@@ -7,7 +7,7 @@ class QueryBuilderSearchExtensionTest extends QueryBuilderTestBase {
 
   public function setUp() {
     parent::setUp();
-    $this->search = new Search();
+    $this->search = new Search($this->createSchema());
   }
 
   protected function createQuery() {

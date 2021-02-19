@@ -39,11 +39,10 @@ class Collection implements CollectionInterface {
     return $query;
   }
   public function query($ops = []) {
-    if (false === $this->search_fields) {
-      $this->search_fields = $this->models->get($this->model)->search_fields;
-    }
-    // create
     $query = $this->models->get($this->model)->query();
+    if (false === $this->search_fields) {
+      $this->search_fields = $query->getSearchFields($this->model);
+    }
     // prepare
     $query = $this->prepare($query, $ops);
     // filter query

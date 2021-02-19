@@ -18,16 +18,14 @@ class ModelFactory implements ModelFactoryInterface {
   public function has($collection) {
     return (!empty($collection) && (!empty($this->objects[$collection]) || (file_exists($this->base_directory."/var/models/".str_replace(" ", "", ucwords(str_replace("_", " ", $collection)))."Model.php"))));
   }
-  public function get($model) {
-    $className = $this->locator->className($model);
-    if (false == $className) {
-      $className = "Starbug\\Core\\".str_replace(" ", "", ucwords(str_replace("_", " ", $model)))."Model";
+  public function get($model): Table {
+    if (!isset($this->objects[$model])) {
+      $className = $this->locator->className($model);
+      if (false == $className) {
+        $className = "Starbug\\Core\\".str_replace(" ", "", ucwords(str_replace("_", " ", $model)))."Model";
+      }
+      $this->objects[$model] = $this->container->get($className);
     }
-    $object = $this->container->get($className);
-    if ($object instanceof Table) {
-      return $object;
-    } else {
-      throw new Exception("ModelFactoryInterface contract violation. ".$model." is not an instance of Starbug\Core\Table.");
-    }
+    return $this->objects[$model];
   }
 }
