@@ -49,7 +49,9 @@ return [
     }
     return $gateway;
   },
-  'Starbug\Payment\ProductOptionsForm' => DI\autowire()->method('setTableSchema', DI\get('Starbug\Db\Schema\SchemerInterface')),
+  'Starbug\Payment\ProductOptionsForm' => DI\autowire()
+    ->method('setTableSchema', DI\get('Starbug\Db\Schema\SchemerInterface'))
+    ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface")),
   "Starbug\Payment\ProductsForm" => DI\autowire()
-    ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface"))
+    ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface")),
 ];

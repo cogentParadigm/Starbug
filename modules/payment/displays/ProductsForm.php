@@ -13,15 +13,18 @@ class ProductsForm extends FormDisplay {
   }
   public function buildDisplay($options) {
     $options += ["tab" => ""];
-    $this->layout->add(["top", "right" => "div.col-md-3.pull-right", "left" => "div.col-md-9", "center" => "div.col-md-9", "bottom" => "div.col-md-9"]);
-    $this->layout->add(["footer", "tabs" => "div.col-sm-12"]);
+    $this->layout->add(["main", "right" => "div.col-3.order-last", "left" => "div.col-9"]);
+    $this->layout->put("left", "div", "", "top");
+    $this->layout->put("left", "div", "", "center");
+    $this->layout->put("left", "div", "", "bottom");
+    $this->layout->add(["footer", "tabs" => "div.col-12"]);
     $this->layout->put("tabs", 'div[data-dojo-type="dijit/layout/TabContainer"][data-dojo-props="doLayout:false, tabPosition:\'left-h\'"][style="width:100%;height:100%"]', '', 'tc');
     $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="URL path"]'.((empty($options['tab'])) ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'path');
     $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Meta tags"]'.(($options['tab'] === "meta") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'meta');
     $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Publishing options"]'.(($options['tab'] === "breadcrumbs") ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'publishing');
-    $this->add(["type", "input_type" => "select", "from" => "product_types", "optional" => "", "pane" => "left", "data-submit" => "change"]);
-    $this->add(["sku", "label" => "SKU", "pane" => "left"]);
-    $this->add(["name", "pane" => "left"]);
+    $this->add(["type", "input_type" => "select", "from" => "product_types", "optional" => "", "pane" => "top", "data-submit" => "change"]);
+    $this->add(["sku", "label" => "SKU", "pane" => "top"]);
+    $this->add(["name", "pane" => "top"]);
     $this->add(["description", "input_type" => "textarea", "pane" => "bottom"]);
     $this->add(["content", "input_type" => "textarea", "pane" => "bottom"]);
     $this->add(["thumbnail", "input_type" => "text", "pane" => "bottom", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "browseEnabled: true"]);
@@ -90,9 +93,9 @@ class ProductsForm extends FormDisplay {
     foreach ($items as $item) {
       $input_name = "options[".$item["slug"]."]";
       $target = empty($item["parent"]) ? "container" : $item["parent"];
-      $field = [$input_name, "label" => $item["name"], "pane" => $target, "div" => "col-xs-12 col-sm-".$item["columns"], "required" => (bool) $item["required"]];
+      $field = [$input_name, "label" => $item["name"], "pane" => $target, "div" => "col-".$item["columns"], "required" => (bool) $item["required"]];
       if ($item["type"] == "Fieldset") {
-        $this->layout->put($target, "div.col-xs-12.col-sm-".$item["columns"], "", $item["id"]."FieldsetCol");
+        $this->layout->put($target, "div.col-".$item["columns"], "", $item["id"]."FieldsetCol");
         $this->layout->put($item["id"]."FieldsetCol", "div.panel.panel-default", "", $item["id"]."FieldsetPanel");
         $this->layout->put($item["id"]."FieldsetPanel", "div.panel-heading", $item["name"]);
         $this->layout->put($item["id"]."FieldsetPanel", "div.panel-body", "", $item["id"]."PanelBody");

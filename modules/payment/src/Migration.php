@@ -57,7 +57,7 @@ class Migration extends AbstractMigration {
       ["price", "type" => "int", "default" => "0", "filter_var" => FILTER_SANITIZE_NUMBER_FLOAT],
       ["interval", "type" => "int"],
       ["unit", "type" => "string"],
-      ["limit", "type" => "int", "default" => 0],
+      ["limit", "type" => "int", "default" => "0"],
       ["published", "type" => "bool", "default" => "1"],
       ["hidden", "type" => "bool", "default" => "0"],
       ["description", "type" => "text", "default" => ""],

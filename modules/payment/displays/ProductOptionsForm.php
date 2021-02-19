@@ -2,17 +2,21 @@
 
 namespace Starbug\Payment;
 
+use Starbug\Core\DatabaseInterface;
 use Starbug\Core\FormDisplay;
 use Starbug\Db\Schema\SchemerInterface;
 
 class ProductOptionsForm extends FormDisplay {
   public $model = "product_options";
-  public $cancel_url = "admin/product_options";
+  protected $layoutDisplay = "ModalFormLayout";
   public function setTableSchema(SchemerInterface $schemer) {
     $this->tableSchema = $schemer->getSchema();
   }
+  public function setDatabase(DatabaseInterface $db) {
+    $this->db = $db;
+  }
   public function buildDisplay($options) {
-    $tree = $this->getOptionsTree($options["product_types_id"]);
+    $tree = $this->getOptionsTree($options["product_types_id"] ?? $this->get("product_types_id"));
     $this->add("name");
     $this->add("slug");
     $this->add(["description", "input_type" => "textarea"]);
@@ -22,6 +26,8 @@ class ProductOptionsForm extends FormDisplay {
     $this->add(["parent", "input_type" => "select"] + $tree);
     $this->add("position");
     $this->add(["columns", "input_type" => "select", "options" => "1,2,3,4,5,6,7,8,9,10,11,12"]);
+    $this->actions->attributes["class"] = "modal-footer flex flex-row-reverse";
+    $this->actions->add(["cancel", "class" => "cancel mr2 btn-default"]);
   }
   public function getOptionsTree($type, $parent = 0, $prefix = "") {
     $options = $values = [""];

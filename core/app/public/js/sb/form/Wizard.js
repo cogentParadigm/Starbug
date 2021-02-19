@@ -12,7 +12,7 @@ define([
 ], function(declare, lang, xhr, on, query, ContentPane, put, domForm, domClass, attr) {
   return declare([ContentPane], {
     formNode:null,
-    url: 'form',
+    url: 'form.xhr',
     hasNext:false,
     hasPrevious:false,
     query: false,

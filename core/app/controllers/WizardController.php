@@ -2,20 +2,22 @@
 
 namespace Starbug\Core;
 
+use Psr\Http\Message\ServerRequestInterface;
+
 class WizardController extends Controller {
   protected $model;
   protected $pageTemplate;
   protected $formTemplate;
-  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db) {
+  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db, ServerRequestInterface $request) {
     $this->models = $models;
     $this->db = $db;
+    $this->request = $request;
   }
   public function defaultAction() {
-    $this->render($this->pageTemplate, ["options" => $this->getDisplayOptions()]);
+    return $this->render($this->pageTemplate, ["options" => $this->getDisplayOptions()]);
   }
   public function form() {
-    $this->response->setFormat("xhr");
-    $this->render($this->formTemplate, ["options" => $this->getDisplayOptions()]);
+    return $this->render($this->formTemplate, ["options" => $this->getDisplayOptions()]);
   }
 
   /**

@@ -1,3 +1,8 @@
-<div data-dojo-type="sb/form/Wizard" data-dojo-props="step: {{ options.step }}, url: '{{ helper("url").build("admin/products/form") }}', query: {{ options|json_encode()|replace({'"': "'"}) }}">
+{% extends "panel.html.twig" %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block body %}
+<div data-dojo-type="sb/form/Wizard" data-dojo-props="step: {{ options.step }}, url: '{{ helper("url").build("admin/products/form.xhr") }}', query: {{ options|json_encode()|replace({'"': "'"}) }}">
   {{ include("@views/admin/products/form.html.twig") }}
 </div>
+{% endblock %}

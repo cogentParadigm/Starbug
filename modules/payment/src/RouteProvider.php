@@ -19,16 +19,27 @@ class RouteProvider extends AdminRouteProvider {
     $routes->addRoute("subscriptions/payment/{id:[0-9]+}", ["Starbug\Payment\SubscriptionsController", "payment"]);
 
     $admin = $routes->getRoute("admin");
+
     $orders = $this->addCrudRoutes($admin->addRoute("/orders"), "orders");
     $orders->addRoute("/details/{id:[0-9]+}", ["Starbug\Payment\AdminOrdersController", "details"]);
+
     $gateways = $this->addCrudRoutes($admin->addRoute("/payment-gateways"), "payment_gateways");
     $gateways->addRoute("/settings/{id:[0-9]+}", "Starbug\Core\Controller\ViewController", [
       "view" => "admin/payment_gateways/settings.html"
     ])->resolve("gateway", "Starbug\Core\Routing\Resolvers\RowById");
     $settings = $this->addCrudRoutes($admin->addRoute("/payment-gateway-settings"), "payment_gateway_settings");
     $this->addStatefulRedirects($settings, "admin/payment-gateways/settings/{{ row.payment_gateway_id }}");
-    $this->addCrudRoutes($admin->addRoute("/product-options"), "payment_gateways");
-    $this->addCrudRoutes($admin->addRoute("/products"), "products");
+
+    $this->addCrudRoutes($admin->addRoute("/product-options"), "product_options");
+
+    $products = $this->addCrudRoutes($admin->addRoute("/products"), "products");
+    $products->getRoute("/create")
+      ->setController(["Starbug\Payment\AdminProductsController", "create"]);
+    $products->getRoute("/update/{id:[0-9]+}")
+      ->setController(["Starbug\Payment\AdminProductsController", "update"]);
+    $products->addRoute("/form.{format:xhr}")
+      ->setController(["Starbug\Payment\AdminProductsController", "form"]);
+
     $productTypes = $this->addCrudRoutes($admin->addRoute("/product-types"), "product_types");
     $productTypes->getRoute("/update/{id:[0-9]+}")
       ->setController("Starbug\Core\Controller\ViewController")

@@ -7,4 +7,4 @@
     {{ helper("displays").render("ProductOptionsGrid", {"product_types_id":id, "attributes":{"dialog":"product_options_form"}}) }}
   </div>
 </div>
-<div id="product_options_dialog" data-dojo-type="starbug/form/Dialog" data-dojo-id="product_options_form" data-dojo-props="url:'{{ helper("url").build("admin/product_options/") }}', callback:function(){product_options_grid.refresh();}, get_data:{'product_types_id':'{{ id }}'}, post_data:{'product_options[product_types_id]':'{{ id }}'}"></div>
+<div id="product_options_dialog" data-dojo-type="sb/modal/Form" data-dojo-id="product_options_form" data-dojo-props="url:'{{ helper("url").build("admin/product-options/") }}', title: 'New Product Option', callback:function(){product_options_grid.refresh();}, urlParams:{'product_types_id':'{{ id }}'}, formData:{'product_options[product_types_id]':'{{ id }}'}"></div>

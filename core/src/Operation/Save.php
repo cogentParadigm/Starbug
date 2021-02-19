@@ -22,7 +22,7 @@ class Save extends Operation {
     }
   }
   public function handle(BundleInterface $data, BundleInterface $state): BundleInterface {
-    $this->store($data->get($this->model));
+    $this->create($data->get($this->model));
     return $this->getErrorState($state);
   }
   protected function getErrorState(BundleInterface $state): BundleInterface {

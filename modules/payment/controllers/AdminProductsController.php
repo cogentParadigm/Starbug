@@ -14,12 +14,10 @@ class AdminProductsController extends WizardController {
     $this->render("admin/list.html");
   }
   public function create() {
-    if ($this->db->success("products", "create")) $this->response->redirect("admin/products");
-    else $this->render("admin/products/wizard.html", ["options" => $this->getDisplayOptions()]);
+    return $this->render("admin/products/wizard.html", ["options" => $this->getDisplayOptions(), "title" => "New Product"]);
   }
   public function update($id) {
     $this->assign("id", $id);
-    if ($this->db->success("products", "create")) $this->response->redirect("admin/products");
-    else $this->render("admin/products/wizard.html", ["options" => $this->getDisplayOptions(["id" => $id])]);
+    return $this->render("admin/products/wizard.html", ["options" => $this->getDisplayOptions(["id" => $id]), "title" => "Update Product"]);
   }
 }
