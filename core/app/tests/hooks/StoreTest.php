@@ -16,7 +16,6 @@ class StoreTest extends DatabaseTestCase {
     parent::setUp();
     global $container;
     $this->db = $container->get("Starbug\Core\DatabaseInterface");
-    $this->models = $container->get("Starbug\Core\ModelFactoryInterface");
     $this->session = $container->get("Starbug\Auth\SessionHandlerInterface");
   }
 
@@ -28,7 +27,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_addslashes", ["value" => "phpunit's"]);
 
     // retrieve the record
-    $id = $this->models->get("hook_store_addslashes")->insert_id;
+    $id = $this->db->getInsertId("hook_store_addslashes");
     $record = $this->db->query("hook_store_addslashes")->condition("id", $id)->one();
 
     // verify the quote is escaped
@@ -61,7 +60,7 @@ class StoreTest extends DatabaseTestCase {
     $query->insert();
 
     // retrieve the record
-    $id = $this->models->get("hook_store_alias")->insert_id;
+    $id = $this->db->getInsertId("hook_store_alias");
     $record = $this->db->query("hook_store_alias")->condition("id", $id)->one();
 
     // verify that the values were converted properly
@@ -92,7 +91,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_category", ["value" => "user"]);
 
     // retrieve the record
-    $rid = $this->models->get("hook_store_category")->insert_id;
+    $rid = $this->db->getInsertId("hook_store_category");
     $record = $this->db->get("hook_store_category", $rid);
 
     // verify the correct id is set
@@ -137,7 +136,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_datetime", ["value" => "February 12th, 1988"]);
 
     // retrieve the record
-    $id = $this->models->get("hook_store_datetime")->insert_id;
+    $id = $this->db->getInsertId("hook_store_datetime");
     $record = $this->db->get("hook_store_datetime", $id);
 
     // assert that it has the correct value
@@ -152,7 +151,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_default", []);
 
     // retrieve the record
-    $id = $this->models->get("hook_store_default")->insert_id;
+    $id = $this->db->getInsertId("hook_store_default");
     $record = $this->db->get("hook_store_default", $id);
 
     // assert that the default values have been stored
@@ -192,7 +191,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_materialized_path", []);
 
     // retrieve the record
-    $l1_id = $this->models->get("hook_store_materialized_path")->insert_id;
+    $l1_id = $this->db->getInsertId("hook_store_materialized_path");
     $l1_record = $this->db->get("hook_store_materialized_path", $l1_id);
 
     // the materialized path field should be empty for top level items
@@ -202,7 +201,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_materialized_path", ["parent" => $l1_id]);
 
     // retrieve the record
-    $l2_id = $this->models->get("hook_store_materialized_path")->insert_id;
+    $l2_id = $this->db->getInsertId("hook_store_materialized_path");
     $l2_record = $this->db->get("hook_store_materialized_path", $l2_id);
 
     // the materialized path field should show the correct ancestry
@@ -212,7 +211,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_materialized_path", ["parent" => $l2_id]);
 
     // retrieve the record
-    $l3_id = $this->models->get("hook_store_materialized_path")->insert_id;
+    $l3_id = $this->db->getInsertId("hook_store_materialized_path");
     $l3_record = $this->db->get("hook_store_materialized_path", $l3_id);
 
     // the materialized path field should show the correct ancestry
@@ -222,7 +221,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_materialized_path", ["parent" => $l3_id]);
 
     // retrieve the record
-    $l4_id = $this->models->get("hook_store_materialized_path")->insert_id;
+    $l4_id = $this->db->getInsertId("hook_store_materialized_path");
     $l4_record = $this->db->get("hook_store_materialized_path", $l4_id);
 
     // the materialized path field should show the correct ancestry
@@ -232,7 +231,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_materialized_path", ["parent" => $l4_id]);
 
     // retrieve the record
-    $l5_id = $this->models->get("hook_store_materialized_path")->insert_id;
+    $l5_id = $this->db->getInsertId("hook_store_materialized_path");
     $l5_record = $this->db->get("hook_store_materialized_path", $l5_id);
 
     // the materialized path field should show the correct ancestry
@@ -249,7 +248,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_md5", ["value" => $str]);
 
     // retrieve the record
-    $id = $this->models->get("hook_store_md5")->insert_id;
+    $id = $this->db->getInsertId("hook_store_md5");
     $record = $this->db->get("hook_store_md5", $id);
 
     // ensure the value has been md5 encoded
@@ -264,7 +263,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_optional_update", ["value" => "starbug"]);
 
     // retrieve the record
-    $id = $this->models->get("hook_store_optional_update")->insert_id;
+    $id = $this->db->getInsertId("hook_store_optional_update");
     $record = $this->db->get("hook_store_optional_update", $id);
 
     // a ssert that the initial value was stored
@@ -286,19 +285,19 @@ class StoreTest extends DatabaseTestCase {
   public function testOrdered() {
     // store 5 items
     $this->db->store("hook_store_ordered", []);
-    $id1 = $this->models->get("hook_store_ordered")->insert_id;
+    $id1 = $this->db->getInsertId("hook_store_ordered");
     $record1 = $this->db->get("hook_store_ordered", $id1);
     $this->db->store("hook_store_ordered", []);
-    $id2 = $this->models->get("hook_store_ordered")->insert_id;
+    $id2 = $this->db->getInsertId("hook_store_ordered");
     $record2 = $this->db->get("hook_store_ordered", $id2);
     $this->db->store("hook_store_ordered", []);
-    $id3 = $this->models->get("hook_store_ordered")->insert_id;
+    $id3 = $this->db->getInsertId("hook_store_ordered");
     $record3 = $this->db->get("hook_store_ordered", $id3);
     $this->db->store("hook_store_ordered", []);
-    $id4 = $this->models->get("hook_store_ordered")->insert_id;
+    $id4 = $this->db->getInsertId("hook_store_ordered");
     $record4 = $this->db->get("hook_store_ordered", $id4);
     $this->db->store("hook_store_ordered", []);
-    $id5 = $this->models->get("hook_store_ordered")->insert_id;
+    $id5 = $this->db->getInsertId("hook_store_ordered");
     $record5 = $this->db->get("hook_store_ordered", $id5);
 
     // assert that they have incrementing values
@@ -319,7 +318,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_owner", []);
 
     // retrieve the record
-    $id = $this->models->get("hook_store_owner")->insert_id;
+    $id = $this->db->getInsertId("hook_store_owner");
     $record = $this->db->get("hook_store_owner", $id);
 
     // assert that the owner was stored
@@ -333,7 +332,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_owner", []);
 
     // retrieve the record
-    $id = $this->models->get("hook_store_owner")->insert_id;
+    $id = $this->db->getInsertId("hook_store_owner");
     $record = $this->db->get("hook_store_owner", $id);
 
     // assert that the owner was stored
@@ -353,7 +352,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_password", ["value" => $pass]);
 
     // Retrieve record.
-    $id = $this->models->get("hook_store_password")->insert_id;
+    $id = $this->db->getInsertId("hook_store_password");
     $record = $this->db->get("hook_store_password", $id);
 
     // Assert that the hashed password was stored.
@@ -366,13 +365,13 @@ class StoreTest extends DatabaseTestCase {
   public function testReferences() {
     // store a user
     $this->db->store("users", ["email" => "hook_store_references"]);
-    $uid = $this->models->get("users")->insert_id;
+    $uid = $this->db->getInsertId("users");
 
     // store a record
     $this->db->store("hook_store_references", ["value" => ""]);
 
     // retrieve record
-    $id = $this->models->get("hook_store_references")->insert_id;
+    $id = $this->db->getInsertId("hook_store_references");
     $record = $this->db->get("hook_store_references", $id);
 
     // assert that the record contains the last inserted users id
@@ -400,7 +399,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_required", ["value" => "value"]);
 
     // retrieve the record
-    $id = $this->models->get("hook_store_required")->insert_id;
+    $id = $this->db->getInsertId("hook_store_required");
     $record = $this->db->get("hook_store_required", $id);
 
     // assert that the value is what we stored
@@ -434,7 +433,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_slug", ["title_field" => "Abdul's House of Rugs"]);
 
     // retrieve the record
-    $id = $this->models->get("hook_store_slug")->insert_id;
+    $id = $this->db->getInsertId("hook_store_slug");
     $record = $this->db->get("hook_store_slug", $id);
 
     // assert that the slug is stored correctly
@@ -449,7 +448,7 @@ class StoreTest extends DatabaseTestCase {
     $this->db->store("hook_store_terms", ["value" => "user,admin"]);
 
     // get the id
-    $id = $this->models->get("hook_store_terms")->insert_id;
+    $id = $this->db->getInsertId("hook_store_terms");
 
     // retrieve the entries
     $terms = $this->db->query("hook_store_terms_value")->conditions(["hook_store_terms_id" => $id])->select("value_id.slug as slug")->sort("slug")->all();
@@ -487,7 +486,7 @@ class StoreTest extends DatabaseTestCase {
     $after = time();
 
     // retrieve the record
-    $id = $this->models->get("hook_store_time")->insert_id;
+    $id = $this->db->getInsertId("hook_store_time");
     $record = $this->db->get("hook_store_time", $id);
 
     // verify that 2 time stamps were stored

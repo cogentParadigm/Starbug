@@ -1,19 +1,25 @@
 <?php
 namespace Starbug\Db\Query;
 
-use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\HookFactoryInterface;
 use PDO;
+use Starbug\Db\Schema\SchemerInterface;
 
 class Executor implements ExecutorInterface {
 
   protected $hooks = [];
 
-  public function __construct(ModelFactoryInterface $models, HookFactoryInterface $hookFactory, CompilerInterface $compiler) {
+  protected $models;
+  protected $hookFactory;
+  protected $compiler;
+  protected $schema;
+
+  public function __construct(ModelFactoryInterface $models, HookFactoryInterface $hookFactory, CompilerInterface $compiler, SchemerInterface $schemer) {
     $this->models = $models;
     $this->hookFactory = $hookFactory;
     $this->compiler = $compiler;
+    $this->schema = $schemer->getSchema();
   }
 
   /**
@@ -81,12 +87,16 @@ class Executor implements ExecutorInterface {
    */
   public function validate(BuilderInterface $builder, $phase = self::PHASE_VALIDATION) {
     $query = $builder->getQuery();
-    if ($phase == self::PHASE_VALIDATION && !$query->isValidated()) $query->beginValidation();
+    if ($phase == self::PHASE_VALIDATION && !$query->isValidated()) {
+      $query->beginValidation();
+    }
     $tableName = $query->getTable()->getName();
-    if ($this->models->has($tableName)) {
-      $model = $this->models->get($tableName);
-      foreach ($model->hooks as $column => $hooks) {
-        if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) $hooks['required'] = "";
+    if ($this->schema->hasTable($tableName)) {
+      $columns = $this->schema->getTable($tableName)->getColumns();
+      foreach ($columns as $column => $hooks) {
+        if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) {
+          $hooks['required'] = "";
+        }
         foreach ($hooks as $hook => $argument) {
           $this->invokeHook($builder, $phase, $column, $hook, $argument);
         }

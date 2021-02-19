@@ -10,19 +10,25 @@ class StoreTypeHook extends QueryHook {
     $this->schema = $schema;
   }
   public function emptyValidate($query, $column, $argument) {
-    if ($this->models->has($argument)) $query->exclude($column);
+    if ($this->models->has($argument)) {
+      $query->exclude($column);
+    }
   }
   public function validate($query, $key, $value, $column, $argument) {
-    if ($this->models->has($argument)) $query->exclude($key);
+    if ($this->models->has($argument)) {
+      $query->exclude($key);
+    }
     return $value;
   }
   public function afterStore($query, $key, $value, $column, $argument) {
-    if ($argument == "terms" || $argument == "blocks" || !$this->models->has($argument)) return;
+    if ($argument == "terms" || $argument == "blocks" || !$this->models->has($argument)) {
+      return;
+    }
 
     // vars
     $model = $query->model;
     $model_id = $query->getId();
-    $hooks = $this->models->get($model)->hooks[$column];
+    $hooks = $this->schema->getColumn($model, $column);
     $target = (empty($hooks['table'])) ? $model."_".$column : $hooks['table'];
     $type = $argument;
     $type_ids = [];
@@ -30,8 +36,11 @@ class StoreTypeHook extends QueryHook {
     $clean = true;
 
     // loop through values
-    if (empty($value)) $value = [];
-    elseif (!is_array($value)) $value = explode(",", preg_replace("/[,\s]*,[,\s]*/", ",", $value));
+    if (empty($value)) {
+      $value = [];
+    } elseif (!is_array($value)) {
+      $value = explode(",", preg_replace("/[,\s]*,[,\s]*/", ",", $value));
+    }
     foreach ($value as $position => $type_id) {
       $remove = false;
       $value_type = ($type == $target) ? "id" : $column."_id";
@@ -63,8 +72,11 @@ class StoreTypeHook extends QueryHook {
         $entry->set($model."_id", $model_id);
         $entry->fields($type_id);
         $entry->set("position", intval($position)+1);
-        if (isset($type_id['id']) || $entry->one()) $entry->update();
-        else $entry->insert();
+        if (isset($type_id['id']) || $entry->one()) {
+          $entry->update();
+        } else {
+          $entry->insert();
+        }
       } elseif ($value_type === "id") {
         $entry = $this->db->query($target)->condition("id", $type_id);
         if ($remove) {

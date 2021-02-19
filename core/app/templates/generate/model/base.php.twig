@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Schema\SchemerInterface;
 {% if useLines is not empty %}{{ useLines|join("\n") }}{% endif %}
 
 /**
@@ -18,22 +19,11 @@ class {{ className }}Model extends Table {
   public $search_fields = "{{ search }}";
 
 
-  function __construct(DatabaseInterface $db, ModelFactoryInterface $models{% for varname, typehint in factory %}, {{ typehint }} ${{ varname }}{% endfor %}) {
-    $this->db = $db;
-    $this->models = $models;
+  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer{% for varname, typehint in factory %}, {{ typehint }} ${{ varname }}{% endfor %}) {
+    parent::__construct($db, $models, $schemer);
 {% for varname, typehint in factory %}
     $this->{{ varname }} = ${{ varname }};
 {% endfor %}
-    $this->init();
   }
-
-  public $hooks = [
-{% for column, field in fields %}
-{% if field is not empty %}
-    "{{ column }}" => [{% for k, v in field %}"{{ k }}" => "{{ v }}"{% if not loop.last %}, {% endif %}{% endfor %}]{% if not loop.last %},{% endif %}
-
-{% endif %}
-{% endfor %}
-  ];
 
 }

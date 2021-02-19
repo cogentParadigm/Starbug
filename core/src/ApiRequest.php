@@ -144,11 +144,8 @@ class ApiRequest {
 
   protected function errors($model) {
     $instance = $this->models->get($model);
-    $schema = $instance->columnInfo();
-    if (empty($schema)) $schema = [];
     $json = ["errors" => []];
     foreach ($instance->errors("", true) as $k => $v) {
-      if (!empty($schema[$k]) && !empty($schema[$k]['label'])) $k = $schema[$k]['label'];
       $json['errors'][] = ["field" => $k, "errors" => $v];
     }
     return $json;

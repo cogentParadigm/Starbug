@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Schema\SchemerInterface;
+
 /**
  * This class wraps a databse table, it is the base class for database models.
  */
@@ -8,13 +10,12 @@ class Table implements CollectionFilterInterface {
 
   public $db;
   public $type;
-  public $hooks = [];
   public $record_count;
   public $insert_id;
   public $store_on_errors = false;
 
   protected $models;
-  protected $user;
+  protected $schema;
   public $action = false;
 
   /**
@@ -24,11 +25,10 @@ class Table implements CollectionFilterInterface {
    * @param Starbug\Core\ModelFactoryInterface $models The factory from which other models can be retrieved.
    * @param Starbug\Core\IdentityInterface $user Authenticated user.
    */
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer) {
     $this->db = $db;
     $this->models = $models;
-    // $this->logger = $loggers->get(get_class($this));
-    $this->init();
+    $this->schema = $schemer->getSchema();
   }
 
   public function create($data) {
@@ -82,9 +82,6 @@ class Table implements CollectionFilterInterface {
     }
   }
 
-  protected function init() {
-  }
-
   /**
    * Get records from the db
    *
@@ -97,79 +94,16 @@ class Table implements CollectionFilterInterface {
   }
 
   /**
-   * Get the root model of an entity.
-   *
-   * @param string $entity the entity.
-   */
-  public function root($entity = "") {
-    if (empty($entity)) $entity = $this->type;
-    $base = $entity;
-    while (!empty($this->models->get($base)->base)) {
-      $base = $this->models->get($base)->base;
-    }
-    return $base;
-  }
-
-  /**
-   * Get an array representing the chain of inheritance for an entity
-   *
-   * @param string $entity the name of the entity
-   *
-   * @return array the inheritance chain. the first member will be $entity
-   */
-  public function chain($entity = "") {
-    if (empty($entity)) $entity = $this->type;
-    $chain = [];
-    while (!empty($entity)) {
-      $chain[] = $entity;
-      $entity = $this->models->get($entity)->base;
-    }
-    return $chain;
-  }
-
-  /**
-   * Get entity or column info
-   *
-   * @param string $entity entity name
-   * @param string $column column name
-   */
-  public function columnInfo($column = "", $entity = "") {
-    if (empty($entity)) $entity = $this->type;
-    $info = [];
-    if (!$this->models->has($entity)) return $info;
-    if (empty($column)) {
-      while (!empty($entity)) {
-        $hooks = $this->models->get($entity)->hooks;
-        foreach ($hooks as $col => $hook) $hooks[$col]["entity"] = $entity;
-        $info = array_merge($hooks, $info);
-        $entity = $this->models->get($entity)->base;
-      }
-    } else {
-      while (!isset($this->models->get($entity)->hooks[$column]) && !empty($this->models->get($entity)->base)) {
-        $entity = $this->models->get($entity)->base;
-      }
-      if (isset($this->models->get($entity)->hooks[$column])) $info = $this->models->get($entity)->hooks[$column];
-      $info["entity"] = $entity;
-    }
-    return $info;
-  }
-
-
-  /**
    * Query helper to provide a query with all tables joined and columns selected.
    *
    * @param string $entity the name of the entity.
    */
   public function query($entity = "") {
-    if (empty($entity)) $entity = $this->type;
-    $chain = [];
-    $base = $entity;
-
-    // build entity chain.
-    while (!empty($base)) {
-      $chain[] = $base;
-      $base = $this->models->get($base)->base;
+    if (empty($entity)) {
+      $entity = $this->type;
     }
+
+    $chain = $this->schema->getEntityChain($entity);
     $root = count($chain)-1;
 
     // build query.
@@ -231,9 +165,9 @@ class Table implements CollectionFilterInterface {
    * @param string $name the name of the entity
    */
   public function store($fields, $from = [], $name = "") {
-    if (empty($name)) $name = $this->type;
-    $chain = [];
-    $base = $name;
+    if (empty($name)) {
+      $name = $this->type;
+    }
     $original = $update = false;
 
     if (!empty($fields["id"])) {
@@ -247,25 +181,22 @@ class Table implements CollectionFilterInterface {
       }
     }
 
-    // build entity chain
-    while (!empty($base)) {
-      $chain[] = $base;
-      $base = $this->models->get($base)->base;
-    }
-
+    $chain = $this->schema->getEntityChain($name);
     $last = count($chain)-1;
 
     foreach ($chain as $idx => $name) {
       if ($idx < $last) {
         $record = [];
-        foreach ($this->models->get($name)->hooks as $column => $hooks) {
+        foreach ($this->schema->getTable($name)->getColumns() as $column => $hooks) {
           if ($column !== "id" && $column !== $chain[$last]."_id" && isset($fields[$column])) {
             $record[$column] = $fields[$column];
             unset($fields[$column]);
           }
         }
         if ($update) {
-          if (!empty($record)) $this->db->queue($name, $record, [$chain[$last]."_id" => $original[$chain[$last]."_id"]]);
+          if (!empty($record)) {
+            $this->db->queue($name, $record, [$chain[$last]."_id" => $original[$chain[$last]."_id"]]);
+          }
         } else {
           $record[$chain[$last]."_id"] = "";
           $this->db->queue($name, $record);
@@ -273,7 +204,9 @@ class Table implements CollectionFilterInterface {
       } else {
         if ($last > 0) {
           unset($fields[$chain[$last]."_id"]);
-          if ($update) $fields["id"] = $original[$chain[$last]."_id"];
+          if ($update) {
+            $fields["id"] = $original[$chain[$last]."_id"];
+          }
         }
         $this->db->store($name, $fields);
       }
@@ -294,23 +227,18 @@ class Table implements CollectionFilterInterface {
    * @param string $name the entity name
    */
   public function remove($id, $name = "") {
-    if (empty($name)) $name = $this->type;
-    $chain = [];
-    $base = $name;
+    if (empty($name)) {
+      $name = $this->type;
+    }
     $original = $this->load($id, false, $name);
     if (!$original) return;
 
-    if (empty($this->models->get($base)->base)) {
+    if (!$this->schema->getTable($name)->hasOption("base")) {
       $this->db->remove($name, ["id" => $id]);
       return;
     }
 
-    // Build entity chain.
-    while (!empty($base)) {
-      $chain[] = $base;
-      $base = $this->models->get($base)->base;
-    }
-
+    $chain = $this->schema->getEntityChain($name);
     $last = count($chain)-1;
 
     foreach ($chain as $idx => $name) {

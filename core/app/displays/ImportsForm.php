@@ -30,10 +30,9 @@ class ImportsForm extends FormDisplay {
     $this->add(["source", "input_type" => "text", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "browseEnabled: true"]);
     if (!empty($source) && !empty($model)) {
       $this->add(["fields",
-        "input_type" => "crud",
-        "data-dojo-props" => [
-          "get_data" => "{model:'".$model."',  source:'".$source."'}"
-        ]
+        "input_type" => "text",
+        "data-dojo-type" => "sb/form/CRUDList",
+        "data-dojo-props" => "model: 'imports_fields', dialogParams: { title: 'Add Field', urlParams: {model:'{$model}',  source:'{$source}'}}"
       ]);
     }
   }

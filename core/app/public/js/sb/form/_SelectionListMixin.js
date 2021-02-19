@@ -33,7 +33,7 @@ define([
       this.createListNode();
     },
     createListNode: function() {
-      this.listNode = put(this.domNode.parentNode, "div.dgrid-autoheight[style=display:none]");
+      this.listNode = put(this.domNode.parentNode, "div.dgrid-autoheight.dbootstrap-grid[style=display:none]");
     },
     createSelectionParams: function() {
       this.inherited(arguments);

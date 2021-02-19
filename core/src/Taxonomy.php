@@ -2,6 +2,7 @@
 namespace Starbug\Core;
 
 use Starbug\Auth\SessionHandlerInterface;
+use Starbug\Db\Schema\SchemerInterface;
 
 /**
  * Implementation of TaxonomyInterface.
@@ -10,9 +11,9 @@ class Taxonomy implements TaxonomyInterface {
   protected $db;
   protected $models;
   protected $user;
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SessionHandlerInterface $session, InputFilterInterface $filter) {
+  public function __construct(DatabaseInterface $db, SchemerInterface $schemer, SessionHandlerInterface $session, InputFilterInterface $filter) {
     $this->db = $db;
-    $this->models = $models;
+    $this->schema = $schemer->getSchema();
     $this->session = $session;
     $this->filter = $filter;
   }
@@ -38,8 +39,10 @@ class Taxonomy implements TaxonomyInterface {
    * @return bool returns true on success, false otherwise.
    */
   public function tag($table, $object_id, $field, $tag = "") {
-    $columnInfo = $this->models->get($table)->columnInfo($field);
-    if (empty($columnInfo['taxonomy'])) $columnInfo['taxonomy'] = $table."_".$field;
+    $columnInfo = $this->schema->getColumn($table, $field);
+    if (empty($columnInfo['taxonomy'])) {
+      $columnInfo['taxonomy'] = $table."_".$field;
+    }
     $taxonomy = $columnInfo['taxonomy'];
     $tags = empty($columnInfo['table']) ? $table."_".$field : $columnInfo['table'];
 
@@ -57,12 +60,17 @@ class Taxonomy implements TaxonomyInterface {
 
     // IF THE TERM DOESN'T EXIST, ADD IT
     $term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->bind(["tag" => $tag, "tax" => $taxonomy])->one();
-    if (empty($term)) $this->db->store("terms", ["term" => $tag, "slug" => $slug, "taxonomy" => $taxonomy, "parent" => "0", "position" => ""]);
-    elseif ($term['taxonomy'] == "groups" && !$this->session->loggedIn("root") && in_array($term['slug'], ["root"])) return false;
-    if ($this->db->errors()) return false;
+    if (empty($term)) {
+      $this->db->store("terms", ["term" => $tag, "slug" => $slug, "taxonomy" => $taxonomy, "parent" => "0", "position" => ""]);
+    } elseif ($term['taxonomy'] == "groups" && !$this->session->loggedIn("root") && in_array($term['slug'], ["root"])) {
+      return false;
+    }
+    if ($this->db->errors()) {
+      return false;
+    }
 
     // APPLY TAG
-    $term_id = (empty($term)) ? $this->models->get("terms")->insert_id : $term['id'];
+    $term_id = (empty($term)) ? $this->db->getInsertId("terms") : $term['id'];
     $this->db->store($tags, [$field."_id" => $term_id, $table."_id" => $object_id]);
     return (!$this->db->errors());
   }
@@ -75,8 +83,10 @@ class Taxonomy implements TaxonomyInterface {
    * @param string $tag the tag
    */
   public function untag($table, $object_id, $field, $tag = "") {
-    $columnInfo = $this->models->get($table)->columnInfo($field);
-    if (empty($columnInfo['taxonomy'])) $columnInfo['taxonomy'] = $table."_".$field;
+    $columnInfo = $this->schema->getColumn($table, $field);
+    if (empty($columnInfo['taxonomy'])) {
+      $columnInfo['taxonomy'] = $table."_".$field;
+    }
     $tags = empty($columnInfo['table']) ? $table."_".$field : $columnInfo['table'];
     $query = $this->db->query($tags)->condition($tags.".".$table."_id", $object_id);
     $fields = [$field."_id.id", $field."_id.slug", $field."_id.term"];

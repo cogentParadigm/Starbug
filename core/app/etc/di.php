@@ -104,7 +104,11 @@ return [
   'Starbug\Core\ImportsForm' => DI\autowire()
     ->method('setFilesystems', DI\get('League\Flysystem\MountManager'))
     ->method('setDatabase', DI\get('Starbug\Core\DatabaseInterface')),
-  'Starbug\Core\ImportsFieldsForm' => DI\autowire()->method('setFilesystems', DI\get('League\Flysystem\MountManager')),
+  'Starbug\Core\ImportsFieldsForm' => DI\autowire()
+    ->method('setFilesystems', DI\get('League\Flysystem\MountManager'))
+    ->method("setModels", DI\get("Starbug\Core\ModelFactoryInterface"))
+    ->method("setSchema", DI\get("Starbug\Db\Schema\SchemerInterface"))
+    ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface")),
   'db.schema.migrations' => [
     DI\get('Starbug\Core\Migration')
   ],

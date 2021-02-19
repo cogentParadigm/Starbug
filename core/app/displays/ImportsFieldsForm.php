@@ -2,17 +2,24 @@
 namespace Starbug\Core;
 
 use League\Flysystem\MountManager;
+use Starbug\Db\Schema\SchemerInterface;
 
 class ImportsFieldsForm extends FormDisplay {
   public $source_keys = [];
   public $source_values = [];
   public $model = "imports_fields";
-  public $cancel_url = "admin/imports_fields";
+  protected $layoutDisplay = "ModalFormLayout";
   public function setFilesystems(MountManager $filesystems) {
     $this->filesystems = $filesystems;
   }
   public function setModels(ModelFactoryInterface $models) {
     $this->models = $models;
+  }
+  public function setSchema(SchemerInterface $schemer) {
+    $this->schema = $schemer->getSchema();
+  }
+  public function setDatabase(DatabaseInterface $db) {
+    $this->db = $db;
   }
   public function buildDisplay($options) {
     $data = $this->getPost();
@@ -26,10 +33,12 @@ class ImportsFieldsForm extends FormDisplay {
     if (method_exists($model, "import_fields")) {
       $dest_ops = array_merge($dest_ops, $model->import_fields($options));
     } else {
-      $dest_ops['options'] = array_keys($this->models->get($options['model'])->columnInfo());
+      $dest_ops['options'] = array_keys($this->schema->getColumn($options['model']));
     }
     $this->add($dest_ops);
-    $this->add(["update_key", "input_type" => "checkbox", "label" => "Use this field as a key to update records"]);
+    $this->add(["update_key", "input_type" => "checkbox", "value" => "1", "label" => "Use this field as a key to update records"]);
+    $this->actions->attributes["class"] = "modal-footer flex flex-row-reverse";
+    $this->actions->add(["cancel", "class" => "cancel mr2 btn-default"]);
   }
   protected function parseSource($id) {
     $file = $this->models->get("files")->load($id);

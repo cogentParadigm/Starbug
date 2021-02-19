@@ -6,12 +6,13 @@ use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\MacroInterface;
 use Starbug\Core\InputFilterInterface;
+use Starbug\Db\Schema\SchemaInterface;
 
 class StorePathHook extends QueryHook {
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, MacroInterface $macro, InputFilterInterface $filter) {
+  public function __construct(DatabaseInterface $db, SchemaInterface $schema, MacroInterface $macro, InputFilterInterface $filter) {
     $this->db = $db;
     $this->macro = $macro;
-    $this->models = $models;
+    $this->schema = $schema;
     $this->filter = $filter;
   }
   public function emptyBeforeInsert($query, $column, $argument) {
@@ -46,7 +47,7 @@ class StorePathHook extends QueryHook {
   }
 
   public function generate($query, $column, $path = false) {
-    $pattern = $this->models->get($query->model)->hooks[$column]["pattern"];
+    $pattern = $this->schema->getColumn($query->model, $column)["pattern"];
     $data = [$query->model => $query->getValues()];
     $value = $this->macro->replace($pattern, $data);
     $value = strtolower(str_replace(" ", "-", $this->filter->normalize($value, 'a-zA-Z0-9 \-_\/')));
@@ -72,7 +73,7 @@ class StorePathHook extends QueryHook {
       return $exists["id"];
     } else {
       $this->db->store("aliases", ["alias" => $value, "path" => $path]);
-      return $this->models->get("aliases")->insert_id;
+      return $this->db->getInsertId("aliases");
     }
   }
 
