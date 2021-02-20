@@ -7,31 +7,7 @@ use Starbug\Js\DojoConfiguration;
 class StyleguideController extends Controller {
   protected $colors = [
     "Colors" => [
-      "#E7040F" => "dark-red",
-      "#FF4136" => "red",
-      "#FF725C" => "light-red",
-      "#FF6300" => "orange",
-      "#FFB700" => "gold",
-      "#FFD700" => "yellow",
-      "#FBF1A9" => "light-yellow",
-      "#5E2CA5" => "purple",
-      "#A463F2" => "light-purple",
-      "#D5008F" => "dark-pink",
-      "#FF41B4" => "hot-pink",
-      "#FF80CC" => "pink",
-      "#FFA3D7" => "light-pink",
-      "#137752" => "dark-green",
-      "#19A974" => "green",
-      "#9EEBCF" => "light-green",
-      "#001B44" => "navy",
-      "#00449E" => "dark-blue",
-      "#357EDD" => "blue",
-      "#96CCFF" => "light-blue",
-      "#CDECFF" => "lightest-blue",
-      "#F6FFFE" => "washed-blue",
-      "#E8FDF5" => "washed-green",
-      "#FFFCEB" => "washed-yellow",
-      "#FFDFDF" => "washed-red"
+      "#494" => "brand-green"
     ],
     "Grayscale" => [
       "#000" => "black",

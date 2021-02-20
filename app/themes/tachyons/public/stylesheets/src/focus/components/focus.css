@@ -1,5 +1,5 @@
 :root {
-  --focus-shadow-color: var(--dark-gray);
+  --focus-shadow-color: var(--link-color);
   --focus-shadow-outset: 0 0 0 3px var(--focus-shadow-color);
   --focus-shadow-inset: inset 0 0 0 3px var(--focus-shadow-color);
   --focus-bg: var(--moon-gray);

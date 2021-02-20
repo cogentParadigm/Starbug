@@ -8,7 +8,7 @@
 @import '../../../../node_modules/tachyons/src/_background-position';
 @import '../../../../node_modules/tachyons/src/_outlines';
 @import '../../../../node_modules/tachyons/src/_borders';
-@import '../../../../node_modules/tachyons/src/_border-colors';
+//@import '../../../../node_modules/tachyons/src/_border-colors';
 @import '../../../../node_modules/tachyons/src/_border-radius';
 @import '../../../../node_modules/tachyons/src/_border-style';
 @import '../../../../node_modules/tachyons/src/_border-widths';
@@ -34,8 +34,8 @@
 //@import '../../../../node_modules/tachyons/src/_position';
 //@import '../../../../node_modules/tachyons/src/_opacity';
 @import '../../../../node_modules/tachyons/src/_rotations';
-@import '../../../../node_modules/tachyons/src/_skins';
-@import '../../../../node_modules/tachyons/src/_skins-pseudo';
+//@import '../../../../node_modules/tachyons/src/_skins';
+//@import '../../../../node_modules/tachyons/src/_skins-pseudo';
 @import '../../../../node_modules/tachyons/src/_spacing';
 @import '../../../../node_modules/tachyons/src/_negative-margins';
 @import '../../../../node_modules/tachyons/src/_tables';

@@ -4,21 +4,23 @@
 
 :root {
   --f1-size: 3rem;
-  --f2-size: 2.25rem;
-  --f3-size: 1.5rem;
-  --f4-size: 1.25rem;
-  --f5-size: 1rem;
-  --f6-size: 0.875rem;
-  --f7-size: 0.75rem;
-  --base-font-size: var(--f5-size);
+  --f2-size: 2.5rem;
+  --f3-size: 2.25rem;
+  --f4-size: 2rem;
+  --f5-size: 1.5rem;
+  --f6-size: 1.25rem;
+  --f7-size: 1rem;
+  --f8-size: 0.875rem;
+  --f9-size: 0.75rem;
+  --base-font-size: var(--f7-size);
   --base-line-height: 1.5;
   --headings-font-weight: 700;
   --font-size-h1: var(--f1-size);
-  --font-size-h2: var(--f2-size);
-  --font-size-h3: var(--f3-size);
-  --font-size-h4: var(--f4-size);
-  --font-size-h5: var(--f5-size);
-  --font-size-h6: var(--f6-size);
+  --font-size-h2: var(--f3-size);
+  --font-size-h3: var(--f5-size);
+  --font-size-h4: var(--f6-size);
+  --font-size-h5: var(--f7-size);
+  --font-size-h6: var(--f8-size);
 }
 
 // Font Family
@@ -44,7 +46,8 @@
 .f5 { font-size: var(--f5-size); }
 .f6 { font-size: var(--f6-size); }
 .f7 { font-size: var(--f7-size); }
-
+.f8 { font-size: var(--f8-size); }
+.f9 { font-size: var(--f9-size); }
 
 @media (--breakpoint-not-small){
   .f1-ns { font-size: var(--f1-size); }
@@ -54,6 +57,8 @@
   .f5-ns { font-size: var(--f5-size); }
   .f6-ns { font-size: var(--f6-size); }
   .f7-ns { font-size: var(--f7-size); }
+  .f8-ns { font-size: var(--f8-size); }
+  .f9-ns { font-size: var(--f9-size); }
 }
 
 @media (--breakpoint-medium) {
@@ -64,6 +69,8 @@
   .f5-m { font-size: var(--f5-size); }
   .f6-m { font-size: var(--f6-size); }
   .f7-m { font-size: var(--f7-size); }
+  .f8-m { font-size: var(--f8-size); }
+  .f9-m { font-size: var(--f9-size); }
 }
 
 @media (--breakpoint-large) {
@@ -74,31 +81,6 @@
   .f5-l { font-size: var(--f5-size); }
   .f6-l { font-size: var(--f6-size); }
   .f7-l { font-size: var(--f7-size); }
-}
-
-
-// For Hero/Marketing Titles
-// --------------------------------
-
-/***********************************************
- * These generally are too large for mobile
- * so be careful using them on smaller screens.
- ***********************************************/
-
-.f-6, .f-headline { font-size: 6rem; }
-.f-5, .f-subheadline { font-size: 5rem; }
-
-@media (--breakpoint-not-small){
-  .f-6-ns, .f-headline-ns { font-size: 6rem; }
-  .f-5-ns, .f-subheadline-ns { font-size: 5rem; }
-}
-
-@media (--breakpoint-medium) {
-  .f-6-m, .f-headline-m { font-size: 6rem; }
-  .f-5-m, .f-subheadline-m { font-size: 5rem; }
-}
-
-@media (--breakpoint-large) {
-  .f-6-l, .f-headline-l { font-size: 6rem; }
-  .f-5-l, .f-subheadline-l { font-size: 5rem; }
+  .f8-l { font-size: var(--f8-size); }
+  .f9-l { font-size: var(--f9-size); }
 }

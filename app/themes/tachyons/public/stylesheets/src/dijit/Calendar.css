@@ -11,11 +11,20 @@
   box-shadow: 0 5px 10px rgba(0,0,0,.2);
 }
 
+.dijitPopup .dijitCalendar > table {
+  width: 100%;
+}
+
 .dijitCalendar {
   background-color: var(--calendar-bg);
   text-align: center;
-  font-size: var(--f4-size);
   margin: 0 auto;
+}
+
+.dijitCalendarMonthContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
 }
 
 .dijitCalendarDateTemplate {
@@ -29,7 +38,7 @@
 
 .dijitCalendarDayLabelTemplate {
   color: var(--calendar-day-label-color);
-  font-size: var(--f6-size);
+  font-size: var(--f8-size);
   font-weight: normal;
 }
 
@@ -51,7 +60,7 @@
 }
 
 .dijitCalendarSelectedYear {
-  font-size: var(--f3-size);
+  font-size: var(--f5-size);
   margin-left: 8px;
   margin-right: 8px;
 }
@@ -61,7 +70,7 @@
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.dijitCalendarIncrementControl {
+.dijitCalendarArrow {
   @extend .material-icons;
   color: var(--input-border-color);
   &:hover {
@@ -69,12 +78,26 @@
   }
 }
 
-.dijitCalendarIncrease:before {
+.dijitCalendarDecrease,
+.dijitCalendarIncrease {
+  display: none;
+}
+
+.dijitCalendarIncrementArrow {
+  order: 3;
+  width: 48px;
+}
+
+.dijitCalendarIncrementArrow:before {
   /* Right arrow. */
   content: "chevron_right";
 }
 
-.dijitCalendarDecrease:before {
+.dijitCalendarDecrementArrow {
+  width: 48px;
+}
+
+.dijitCalendarDecrementArrow:before {
   /* Left arrow. */
   content: "chevron_left";
 }
@@ -83,10 +106,16 @@
   display: none;
 }
 
-.dijitCalendarMonthMenu .dijitCalendarMonthLabel {
+.dijitCalendarMonthLabel {
   @extend .dijitMenuItem;
+  font-size: var(--f8-size);
+  padding: var(--spacing-extra-small) var(--spacing-small);
 }
 
-.dijitCalendarMonthMenu .dijitCalendarMonthLabelHover {
+.dijitCalendarMonthLabelHover {
   @extend .dijitMenuItemHover;
+}
+
+.dijitCalendarMonthContainer .dijitArrowButtonInner {
+  vertical-align: middle;
 }

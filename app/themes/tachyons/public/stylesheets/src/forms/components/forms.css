@@ -40,8 +40,9 @@
   background: var(--input-bg);
   border: var(--input-border);
   border-radius: var(--input-border-radius);
+  transition: border-color 0.2s, box-shadow 0.2s;
   &:hover {
-    border-color: currentColor;
+    border-color: color-mod(var(--input-border-color) blend(black 20%));
   }
 }
 
@@ -96,9 +97,11 @@ label {
     @extend .material-icons;
     content: "expand_more";
     color: var(--input-border-color);
+    line-height: calc(var(--base-font-size) * 1.5);
+    transition: border-color 0.2s;
   }
   &:hover:before {
-    color: inherit;
+    color: color-mod(var(--input-border-color) blend(black 20%));
   }
 }
 select.form-control, .form-control.dropdown-indicator {
@@ -134,6 +137,7 @@ select.form-control, .form-control.dropdown-indicator {
   position: relative;
   display: inline-block;
   width: 100%;
+  transition: background-color 0.2s;
   &:before {
     @extend .material-icons;
     content: "check_box_outline_blank";
@@ -185,6 +189,7 @@ select.form-control, .form-control.dropdown-indicator {
   position: relative;
   display: inline-block;
   width: 100%;
+  transition: background-color 0.2s;
   &:before {
     @extend .material-icons;
     content: "radio_button_unchecked";

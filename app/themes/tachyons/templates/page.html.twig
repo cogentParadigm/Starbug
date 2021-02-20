@@ -3,11 +3,11 @@
     <h1 class="mt0 mb0-ns tc"><a class="link silver dim" href="{{ helper("url").build("") }}">{{ helper("settings").get("site_name") }}</a></h1>
     <nav id="navigation">
       <ul class="list pl0 ma0 flex justify-center items-center">
-        <li><a class="active btn white bg-silver bn link" href="{{ helper("url").build("") }}">Home</a></li>
+        <li><a class="btn btn-gray" href="{{ helper("url").build("") }}">Home</a></li>
         {% if helper("session").loggedIn() %}
-          <li class="ml2"><a class="btn silver bn hover-bg-silver hover-white link" href="{{ helper("url").build("logout") }}">Log Out</a></li>
+          <li class="ml2"><a class="btn btn-gray" href="{{ helper("url").build("logout") }}">Log Out</a></li>
         {% else %}
-          <li class="ml2"><a class="btn silver bn hover-bg-silver hover-white link" href="{{ helper("url").build("login") }}">Log In</a></li>
+          <li class="ml2"><a class="btn btn-gray" href="{{ helper("url").build("login") }}">Log In</a></li>
         {% endif %}
       </ul>
     </nav>

@@ -1,0 +1,55 @@
+:root {
+  --brand-green: #494;
+}
+
+// Brand
+@include make-color(brand-green);
+
+// Grayscale
+@include make-color(black);
+@include make-color(near-black);
+@include make-color(dark-gray);
+@include make-color(mid-gray);
+@include make-color(gray);
+@include make-color(silver );
+@include make-color(light-silver);
+@include make-color(moon-gray);
+@include make-color(light-gray);
+@include make-color(near-white);
+@include make-color(white);
+
+// Translucent
+@include make-color(black-90);
+@include make-color(black-80);
+@include make-color(black-70);
+@include make-color(black-60);
+@include make-color(black-50);
+@include make-color(black-40);
+@include make-color(black-30);
+@include make-color(black-20);
+@include make-color(black-10);
+@include make-color(black-05);
+@include make-color(black-025);
+@include make-color(black-0125);
+
+@include make-color(white-90);
+@include make-color(white-80);
+@include make-color(white-70);
+@include make-color(white-60);
+@include make-color(white-50);
+@include make-color(white-40);
+@include make-color(white-30);
+@include make-color(white-20);
+@include make-color(white-10);
+@include make-color(white-05);
+@include make-color(white-025);
+@include make-color(white-0125);
+
+@include make-color(transparent);
+
+.color-inherit { color: inherit; }
+.hover-color-inherit:hover, .hover-color-inherit:focus { color: inherit; }
+.bg-inherit { background-color: inherit; }
+.hover-bg-inherit:hover, .hover-bg-inherit:focus { background-color: inherit; }
+.b--inherit { border-color: inherit; }
+.hover-b--inherit:hover, .hover-b--inherit:focus { border-color: inherit; }

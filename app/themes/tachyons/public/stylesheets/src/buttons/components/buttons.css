@@ -56,3 +56,7 @@
 .btn-danger {
   @include btn-variant(var(--btn-danger-color), var(--btn-danger-bg), var(--btn-danger-border-color));
 }
+
+.btn-brand-green {
+  @include btn-variant(var(--white), var(--brand-green), var(--brand-green));
+}

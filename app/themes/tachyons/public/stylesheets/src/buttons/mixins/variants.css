@@ -3,10 +3,15 @@
   background-color: $bg;
   border: 1px solid $border;
   cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
   @if $bg == $border {
     &:hover, &.active {
       background-color: color-mod($bg blend(white 35%));
       border-color: color-mod($bg blend(white 35%));
+    }
+  } @else {
+    &:hover, &.active {
+      border-color: color-mod($border blend(black 20%));
     }
   }
   &:focus, .dijitFocused & {

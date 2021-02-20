@@ -4,7 +4,7 @@
   --dgrid-header-color: var(--silver);
   --dgrid-header-bg: var(--near-white);
   --dgrid-row-border: var(--input-border);
-  --dgrid-padding: var(--spacing-medium);
+  --dgrid-padding: var(--spacing-small) var(--spacing-medium);
   --dgrid-selected-bg: var(--link-color);
   --dgrid-pagination-disabled-color: var(--light-gray);
   --dgrid-border-radius: 0.25rem;
@@ -29,7 +29,7 @@
   .dgrid-header {
     color: var(--dgrid-header-color);
     text-transform: uppercase;
-    font-size: var(--f7-size);
+    font-size: var(--f9-size);
     background: var(--dgrid-header-bg);
     border-top-left-radius: var(--dgrid-border-radius);
     border-top-right-radius: var(--dgrid-border-radius);
@@ -160,7 +160,6 @@
   @extend .material-icons;
   width: 16px;
   height: 16px;
-  line-height: 16px;
 }
 
 .ui-icon-triangle-1-e:before {
@@ -247,17 +246,19 @@
   padding: var(--dgrid-padding);
 }
 
-.dgrid-pagination .dgrid-status {
-  float: left;
+.dgrid-pagination {
+  display: flex;
+  align-items: center;
 }
 .dgrid-navigation {
   padding: var(--dgrid-padding);
 }
 .dgrid-page-size {
   margin: var(--dgrid-padding);
+  order: 3;
 }
-.dgrid-pagination .dgrid-navigation, .dgrid-pagination .dgrid-page-size {
-  float: right;
+.dgrid-navigation {
+  margin-left: auto;
 }
 .dgrid-navigation .dgrid-page-link {
   cursor: pointer;

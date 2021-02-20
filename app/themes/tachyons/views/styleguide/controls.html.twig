@@ -1,25 +1,25 @@
 
     <article class="mt5">
-      <h3 class="f6 ttu fw6 mt0 mb3 bb pb2">Buttons</h3>
+      <h3 class="f8 ttu fw6 mt0 mb3 bb pb2">Buttons</h3>
       <div style="overflow-x:auto" class="nl2 nr2">
         <div style="min-width:80rem" class="pa2">
           <div class="row">
             <div class="col-2 mb3">
             </div>
             <div class="col-2 mb3">
-              <code class="f6 truncate mid-gray">link</code>
+              <code class="f8 truncate mid-gray">link</code>
             </div>
             <div class="col-2 mb3">
-              <code class="f6 truncate mid-gray">btn</code>
+              <code class="f8 truncate mid-gray">btn</code>
             </div>
             <div class="col-2 mb3">
-              <code class="f6 truncate mid-gray">btn btn-gray</code>
+              <code class="f8 truncate mid-gray">btn btn-gray</code>
             </div>
             <div class="col-2 mb3">
-              <code class="f6 truncate mid-gray">btn btn-success</code>
+              <code class="f8 truncate mid-gray">btn btn-success</code>
             </div>
             <div class="col-2 mb3">
-              <code class="f6 truncate mid-gray">btn btn-danger</code>
+              <code class="f8 truncate mid-gray">btn btn-danger</code>
             </div>
           </div>
           {% set rows = ["", "pointer underline", "pointer underline-hover", "pointer dim", "pointer o-50 glow", "pointer grow", "pointer grow-large", "pointer shadow-hover"] %}
@@ -27,7 +27,7 @@
           <div class="row">
             <div class="col-2 mb3">
               {% if row is not empty %}
-                <code class="f6 truncate mid-gray">{{ row }}</code>
+                <code class="f8 truncate mid-gray">{{ row }}</code>
               {% endif %}
             </div>
             <div class="col-2 mb3">
@@ -52,31 +52,31 @@
     </article>
 
     <article class="mt5">
-      <h3 class="f6 ttu fw6 mt0 mb3 bb pb2">Forms</h3>
+      <h3 class="f8 ttu fw6 mt0 mb3 bb pb2">Forms</h3>
       <div class="measure-wide">
 
         <div class="form-group">
           <label class="mb2">Textbox</label>
           <input type="text" class="form-control"/>
-          <div class="pv2 gray f7">This is a plain textbox.</div>
+          <div class="pv2 gray f9">This is a plain textbox.</div>
         </div>
 
         <div class="form-group">
           <label class="mb2">Number</label>
           <input type="text" class="form-control" data-dojo-type="sb/form/Number"/>
-          <div class="pv2 gray f7">This is a numeric input textbox.</div>
+          <div class="pv2 gray f9">This is a numeric input textbox.</div>
         </div>
 
         <div class="form-group">
           <label class="mb2">Phone Number</label>
           <input type="text" class="form-control" data-dojo-type="sb/form/PhoneNumber"/>
-          <div class="pv2 gray f7">This is a phone number input textbox.</div>
+          <div class="pv2 gray f9">This is a phone number input textbox.</div>
         </div>
 
         <div class="form-group">
           <label class="mb2">Currency</label>
           <input type="text" class="form-control" data-dojo-type="sb/form/Currency"/>
-          <div class="pv2 gray f7">This is a currency input textbox.</div>
+          <div class="pv2 gray f9">This is a currency input textbox.</div>
         </div>
 
         <div class="form-group">
@@ -87,38 +87,38 @@
               <option value="1">Yes</option>
               <option value="0">No</option>
             </select>
-            <div class="pv2 gray f7">This is a native select element.</div>
+            <div class="pv2 gray f9">This is a native select element.</div>
           </div>
         </div>
 
         <div class="form-group">
           <label class="mb2">Dynamic Select</label>
           <input type="text" class="form-control" data-dojo-type="sb/form/Select" data-dojo-props="collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})"/>
-           <div class="pv2 gray f7">This is a dynamic selection widget.</div>
+           <div class="pv2 gray f9">This is a dynamic selection widget.</div>
         </div>
 
         <div class="form-group">
           <label class="mb2">Dynamic Select</label>
           <input type="text" class="form-control" data-dojo-type="sb/form/Select" data-dojo-props="searchable: true, collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})"/>
-           <div class="pv2 gray f7">This is a dynamic selection widget with searching enabled.</div>
+           <div class="pv2 gray f9">This is a dynamic selection widget with searching enabled.</div>
         </div>
 
         <div class="form-group">
           <label class="mb2">Gender</label>
           <input type="text" class="form-control" data-dojo-type="sb/form/MultipleSelect" data-dojo-props="collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})"/>
-           <div class="pv2 gray f7">This is a multiple select widget.</div>
+           <div class="pv2 gray f9">This is a multiple select widget.</div>
         </div>
 
         <div class="form-group">
           <label class="mb2">Date of Birth</label>
           <input type="text" class="form-control" data-dojo-type="starbug/form/DateTextBox" value="0000-00-00"/>
-           <div class="pv2 gray f7">This is a date picker.</div>
+           <div class="pv2 gray f9">This is a date picker.</div>
         </div>
 
         <div class="form-group">
           <label class="mb2">Date</label>
           <input type="text" name="date" data-dojo-type="sb/form/DatePicker"/>
-          <div class="pv2 gray f7">This is an inline date picker.</div>
+          <div class="pv2 gray f9">This is an inline date picker.</div>
         </div>
 
         <div class="form-group">

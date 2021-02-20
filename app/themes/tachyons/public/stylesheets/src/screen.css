@@ -1,6 +1,6 @@
 // 1. Abstractions
 //
-// Load pure abstractions such as variables and mixins.
+// Load pure abstractions such as preprocessor variables and mixins.
 //
 // -----------------------------------------------------------
 @import "./components/variables.css";
@@ -12,6 +12,7 @@
 @import "./z-index/mixins.css";
 @import "./letter-spacing/mixins.css";
 @import "./position/mixins.css";
+@import "./colors/mixins.css";
 
 
 // 2. External libraries and 3rd party components
@@ -73,6 +74,7 @@
 @import "./z-index/atoms/default.css";
 @import "./letter-spacing/atoms/default.css";
 @import "./position/atoms/default.css";
+@import "./colors/atoms/default.css";
 
 
 // 5. Media Queried Atomic Styles
@@ -94,5 +96,5 @@
 // Lastly we load our CSS custom property and custom media overrides.
 //
 // -----------------------------------------------------------
-//@import "./components/colors.css";
-@import "./components/media-queries.css";
+@import "./override/variables.css";
+@import "./override/media-queries.css";
