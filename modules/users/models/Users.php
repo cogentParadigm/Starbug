@@ -9,7 +9,7 @@ use Starbug\Db\Schema\SchemerInterface;
 
 class Users extends Table {
 
-  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, SessionHandlerInterface $session) {
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, SessionHandlerInterface $session) {
     parent::__construct($db, $models, $schemer);
     $this->session = $session;
   }
