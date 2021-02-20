@@ -1,9 +1,18 @@
 <?php
 namespace Starbug\Devices;
 
-use Starbug\Core\DevicesModel;
+use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Core\DatabaseInterface;
+use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\Table;
+use Starbug\Db\Schema\SchemerInterface;
 
-class Devices extends DevicesModel {
+class Devices extends Table {
+
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, ServerRequestInterface $request) {
+    parent::__construct($db, $models, $schemer);
+    $this->request = $request;
+  }
 
   public function register($device) {
     $token = $device['token'];

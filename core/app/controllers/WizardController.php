@@ -8,8 +8,7 @@ class WizardController extends Controller {
   protected $model;
   protected $pageTemplate;
   protected $formTemplate;
-  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db, ServerRequestInterface $request) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db, ServerRequestInterface $request) {
     $this->db = $db;
     $this->request = $request;
   }
@@ -53,8 +52,8 @@ class WizardController extends Controller {
     // If we're past creating the user record, set the correct ID.
     if (!empty($bodyParams[$this->model]["id"])) {
       $options["id"] = $bodyParams[$this->model]["id"];
-    } elseif (!is_null($this->models->get($this->model)->insert_id)) {
-      $options["id"] = $this->models->get($this->model)->insert_id;
+    } elseif (!is_null($this->db->getInsertId($this->model))) {
+      $options["id"] = $this->db->getInsertId($this->model);
     }
 
     return $options;

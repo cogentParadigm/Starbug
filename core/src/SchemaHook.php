@@ -6,9 +6,6 @@ use Starbug\Db\Schema\SchemaInterface;
 use Starbug\Db\Schema\Table as SchemaTable;
 
 class SchemaHook implements HookInterface {
-  public function __construct(ModelFactoryInterface $models) {
-    $this->models = $models;
-  }
   public function addColumn($column, SchemaTable $table, SchemaInterface $schema) {
     $name = array_shift($column);
     if ($column['type'] == "category") {
@@ -24,8 +21,10 @@ class SchemaHook implements HookInterface {
       $access_col = ["object_".$name];
     }
     if ($access_col) {
-      foreach ($column as $nk => $nv) $access_col[$nk] = $nv;
-      if ($schema->hasTable($column['type']) || $this->models->has($column['type'])) {
+      foreach ($column as $nk => $nv) {
+        $access_col[$nk] = $nv;
+      }
+      if ($schema->hasTable($column['type'])) {
         $access_col['type'] = "int";
         $access_col['references'] = $column["type"]." id";
       } else {
@@ -35,7 +34,7 @@ class SchemaHook implements HookInterface {
       $access_col["default"] = "NULL";
       $schema->addColumn("permits", $access_col);
     }
-    if ($schema->hasTable($column['type']) || $this->models->has($column['type'])) {
+    if ($schema->hasTable($column['type'])) {
       $ref_table_name = (empty($column['table'])) ? $table->getName()."_".$name : $column['table'];
       $schema->addTable([$ref_table_name, "groups" => false],
         ["owner", "type" => "int", "null" => true, "references" => "users id", "owner" => true, "update" => "cascade", "delete" => "cascade", "optional" => true],
@@ -97,7 +96,9 @@ class SchemaHook implements HookInterface {
     $columns = $table->getColumns();
     $search_cols = array_keys($columns);
     foreach ($search_cols as $colname_index => $colname_value) {
-      if ($schema->hasTable($columns[$colname_value]["type"]) || $this->models->has($columns[$colname_value]["type"])) unset($search_cols[$colname_index]);
+      if ($schema->hasTable($columns[$colname_value]["type"])) {
+        unset($search_cols[$colname_index]);
+      }
     }
     $defaults = [
       "name" => $model,

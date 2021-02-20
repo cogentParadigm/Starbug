@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Intl;
 
-use Starbug\Core\ProvincesModel;
+use Starbug\Core\Table;
 
-class Provinces extends ProvincesModel {
+class Provinces extends Table {
 
   /******************************************************************
    * Query functions

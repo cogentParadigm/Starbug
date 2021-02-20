@@ -1,9 +1,24 @@
 <?php
 namespace Starbug\Payment;
 
-use Starbug\Core\SubscriptionsModel;
+use Starbug\Auth\SessionHandlerInterface;
+use Starbug\Core\CollectionFactoryInterface;
+use Starbug\Core\DatabaseInterface;
+use Starbug\Core\MailerInterface;
+use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\Table;
+use Starbug\Db\Schema\SchemerInterface;
 
-class Subscriptions extends SubscriptionsModel {
+class Subscriptions extends Table {
+
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, SessionHandlerInterface $session, TokenGatewayInterface $gateway, CollectionFactoryInterface $collections, PriceFormatterInterface $priceFormatter, MailerInterface $mailer) {
+    parent::__construct($db, $models, $schemer);
+    $this->session = $session;
+    $this->gateway = $gateway;
+    $this->collections = $collections;
+    $this->priceFormatter = $priceFormatter;
+    $this->mailer = $mailer;
+  }
 
   public function update($subscription, $email = true) {
     if (empty($subscription["card"])) {

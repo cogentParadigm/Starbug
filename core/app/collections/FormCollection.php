@@ -20,7 +20,7 @@ class FormCollection extends Collection {
       }
     }
     foreach ($fields as $fieldname => $field) {
-      if ($this->models->has($field['type'])) {
+      if ($this->schema->hasTable($field['type'])) {
         if (empty($field['column'])) {
           $field['column'] = "id";
         }
@@ -30,7 +30,7 @@ class FormCollection extends Collection {
     $parent = $table->getOption("base");
     while (!empty($parent)) {
       foreach ($this->schema->getTable($parent)->getColumns() as $column => $field) {
-        if ($this->models->has($field['type'])) {
+        if ($this->schema->hasTable($field['type'])) {
           if (empty($field['column'])) {
             $field['column'] = "id";
           }

@@ -1,16 +1,30 @@
 <?php
 namespace Starbug\Core;
 
-class Terms extends TermsModel {
+use Exception;
+use Starbug\Db\Schema\SchemerInterface;
+
+class Terms extends Table {
+
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, InputFilterInterface $filter) {
+    parent::__construct($db, $models, $schemer);
+    $this->filter = $filter;
+  }
 
   public function create($term) {
     if (!empty($term['term'])) {
       $term['term'] = $this->filter->normalize($term['term']);
       $term['slug'] = strtolower(str_replace(" ", "-", $term['term']));
     }
-    if (empty($term['id']) && empty($term['position'])) $term['position'] = '';
+    if (empty($term['id']) && empty($term['position'])) {
+      $term['position'] = '';
+    }
     $this->store($term);
-    if ($this->errors('slug') && !empty($term['term'])) foreach ($this->errors("slug", true) as $e) $this->error(str_replace("slug", "term", $e), "term");
+    if ($this->errors('slug') && !empty($term['term'])) {
+      foreach ($this->errors("slug", true) as $e) {
+        $this->error(str_replace("slug", "term", $e), "term");
+      }
+    }
   }
 
   public function delete($term) {

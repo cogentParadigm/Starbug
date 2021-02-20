@@ -1,9 +1,18 @@
 <?php
 namespace Starbug\Payment;
 
-use Starbug\Core\ProductLinesModel;
+use Starbug\Core\DatabaseInterface;
+use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\Table;
+use Starbug\Db\Schema\SchemerInterface;
 
-class ProductLines extends ProductLinesModel {
+class ProductLines extends Table {
+
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, Cart $cart) {
+    parent::__construct($db, $models, $schemer);
+    $this->cart = $cart;
+  }
+
   public function update($lines) {
     if (count($this->cart)) {
       foreach ($lines as $id => $qty) {
@@ -33,6 +42,8 @@ class ProductLines extends ProductLinesModel {
     if ($action == "update" || $action == "delete") {
       $this->$action($data);
       return true;
-    } else return parent::post($action, $data);
+    } else {
+      return parent::post($action, $data);
+    }
   }
 }

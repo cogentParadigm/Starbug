@@ -1,6 +1,0 @@
-{
-	"files": {
-		"filesystems": "League\\Flysystem\\MountManager",
-		"images": "ImagesInterface"
-	}
-}

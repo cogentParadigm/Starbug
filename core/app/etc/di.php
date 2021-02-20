@@ -66,7 +66,6 @@ return [
   "Psr\Http\Message\ServerRequestInterface" => function (ContainerInterface $container) {
     return new ServerRequest("GET", $container->get("website_url"));
   },
-  'Starbug\Core\ModelFactoryInterface' => DI\autowire('Starbug\Core\ModelFactory')->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\CssGenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   "Whoops\Run" => DI\decorate(function ($whoops, $container) {
     $textHandler = new PlainTextHandler($container->get("Psr\Log\LoggerInterface"));

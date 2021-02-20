@@ -1,5 +1,0 @@
-{
-  "devices": {
-    "request": "Psr\\Http\\Message\\ServerRequestInterface"
-  }
-}

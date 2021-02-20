@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Intl;
 
-use Starbug\Core\AddressModel;
+use Starbug\Core\Table;
 
-class Address extends AddressModel {
+class Address extends Table {
 
   public $map = [
     'N' => 'recipient',

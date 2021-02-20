@@ -9,7 +9,7 @@ use Starbug\Db\Schema\SchemerInterface;
 class Table implements CollectionFilterInterface {
 
   public $db;
-  public $type;
+  protected $type;
   public $record_count;
   public $insert_id;
   public $store_on_errors = false;

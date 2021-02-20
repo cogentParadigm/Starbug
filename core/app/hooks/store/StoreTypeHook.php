@@ -4,24 +4,23 @@ namespace Starbug\Core;
 use Starbug\Db\Schema\SchemaInterface;
 
 class StoreTypeHook extends QueryHook {
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemaInterface $schema) {
+  public function __construct(DatabaseInterface $db, SchemaInterface $schema) {
     $this->db = $db;
-    $this->models = $models;
     $this->schema = $schema;
   }
   public function emptyValidate($query, $column, $argument) {
-    if ($this->models->has($argument)) {
+    if ($this->schema->hasTable($argument)) {
       $query->exclude($column);
     }
   }
   public function validate($query, $key, $value, $column, $argument) {
-    if ($this->models->has($argument)) {
+    if ($this->schema->hasTable($argument)) {
       $query->exclude($key);
     }
     return $value;
   }
   public function afterStore($query, $key, $value, $column, $argument) {
-    if ($argument == "terms" || $argument == "blocks" || !$this->models->has($argument)) {
+    if ($argument == "terms" || $argument == "blocks" || !$this->schema->hasTable($argument)) {
       return;
     }
 

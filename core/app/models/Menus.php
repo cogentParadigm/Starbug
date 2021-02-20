@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core;
 
-class Menus extends MenusModel {
+class Menus extends Table {
 
   public function create($menu) {
     if (!isset($menu['position'])) {

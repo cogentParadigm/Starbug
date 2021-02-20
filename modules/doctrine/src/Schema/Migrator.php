@@ -70,14 +70,6 @@ class Migrator extends AbstractMigration {
         $this->db->exec($line);
       }
     }
-    echo "Generating models..\n";
-    foreach ($tables as $name => $table) {
-      $this->generator->generate($this->definition, ["model" => $name, "update" => true]);
-      $className = str_replace(" ", "", ucwords(str_replace("_", " ", $name)))."Model";
-      $class = "Starbug\\Core\\".$className;
-      if (!class_exists($class)) include("var/models/".$className.".php");
-      $this->definition->reset();
-    }
     $this->populate();
   }
   protected function getType($column) {

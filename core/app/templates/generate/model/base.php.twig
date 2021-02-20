@@ -10,8 +10,6 @@ use Starbug\Db\Schema\SchemerInterface;
  */
 class {{ className }}Model extends Table {
 
-  public $type = "{{ name }}";
-
   function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer{% for varname, typehint in factory %}, {{ typehint }} ${{ varname }}{% endfor %}) {
     parent::__construct($db, $models, $schemer);
 {% for varname, typehint in factory %}

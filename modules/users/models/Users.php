@@ -1,9 +1,18 @@
 <?php
 namespace Starbug\Users;
 
-use Starbug\Core\UsersModel;
+use Starbug\Auth\SessionHandlerInterface;
+use Starbug\Core\DatabaseInterface;
+use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\Table;
+use Starbug\Db\Schema\SchemerInterface;
 
-class Users extends UsersModel {
+class Users extends Table {
+
+  function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, SessionHandlerInterface $session) {
+    parent::__construct($db, $models, $schemer);
+    $this->session = $session;
+  }
 
   public function delete($user) {
     $this->store(["id" => $user['id'], "deleted" => "1"]);

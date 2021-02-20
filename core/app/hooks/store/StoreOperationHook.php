@@ -13,7 +13,7 @@ class StoreOperationHook extends QueryHook {
   public function validate($query, $key, $value, $column, $argument) {
     if (is_array($value)) {
       $hooks = $this->schema->getColumn($query->model, $column);
-      if ($this->models->has($hooks["type"])) {
+      if ($this->schema->hasTable($hooks["type"])) {
         $model = $hooks["type"];
       } else {
         $model = explode(" ", $hooks["references"])[0];

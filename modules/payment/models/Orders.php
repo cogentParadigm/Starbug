@@ -1,9 +1,26 @@
 <?php
 namespace Starbug\Payment;
 
-use Starbug\Core\OrdersModel;
+use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Auth\SessionHandlerInterface;
+use Starbug\Core\DatabaseInterface;
+use Starbug\Core\MailerInterface;
+use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\Table;
+use Starbug\Db\Schema\SchemerInterface;
 
-class Orders extends OrdersModel {
+class Orders extends Table {
+
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, SessionHandlerInterface $session, ServerRequestInterface $request, Cart $cart, GatewayInterface $gateway, TokenGatewayInterface $subscriptions, PriceFormatterInterface $priceFormatter, MailerInterface $mailer) {
+    parent::__construct($db, $models, $schemer);
+    $this->session = $session;
+    $this->request = $request;
+    $this->cart = $cart;
+    $this->gateway = $gateway;
+    $this->subscriptions = $subscriptions;
+    $this->priceFormatter = $priceFormatter;
+    $this->mailer = $mailer;
+  }
 
   public function create($order) {
     if (empty($order["id"])) {

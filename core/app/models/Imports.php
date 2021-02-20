@@ -1,7 +1,15 @@
 <?php
 namespace Starbug\Core;
 
-class Imports extends ImportsModel {
+use Starbug\Db\Schema\SchemerInterface;
+use League\Flysystem\MountManager;
+
+class Imports extends Table {
+
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, MountManager $filesystems) {
+    parent::__construct($db, $models, $schemer);
+    $this->filesystems = $filesystems;
+  }
 
   public function create($import) {
     $this->store($import);
