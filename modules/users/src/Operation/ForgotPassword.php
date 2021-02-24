@@ -12,7 +12,7 @@ class ForgotPassword extends Operation {
     $this->queues = $queues;
   }
   public function handle(BundleInterface $data, BundleInterface $state): BundleInterface {
-    $fields = $data->get("users");
+    $fields = $data->get();
     $email = trim($fields['email']);
     $this->queues->put(Worker::class, ["email" => $email]);
     return $state;

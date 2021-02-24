@@ -39,13 +39,14 @@ class FormDisplay extends ItemDisplay {
 
   public function build($options = []) {
     $this->options = $options;
-    if (empty($this->model) && !empty($this->options['model'])) $this->model = $this->options['model'];
-    if (!empty($options["input_name"])) $this->input_name = $options["input_name"];
+    if (empty($this->model) && !empty($this->options['model'])) {
+      $this->model = $this->options['model'];
+    }
+    if (!empty($options["input_name"])) {
+      $this->input_name = $options["input_name"];
+    }
     if (false === $this->input_name) {
       $this->input_name = [];
-      if (!empty($this->model)) {
-        $this->input_name[] = $this->model;
-      }
     }
 
     // create layout display

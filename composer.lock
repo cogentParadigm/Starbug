@@ -2281,16 +2281,16 @@
         },
         {
             "name": "starbug/auth",
-            "version": "v0.9",
+            "version": "v0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-auth.git",
-                "reference": "511f57c354434dc16b9f46e8c3a0a8db1d7e9297"
+                "reference": "9c1acb038be54b7c18af61b9c317c3ee33cc29ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-auth/zipball/511f57c354434dc16b9f46e8c3a0a8db1d7e9297",
-                "reference": "511f57c354434dc16b9f46e8c3a0a8db1d7e9297",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-auth/zipball/9c1acb038be54b7c18af61b9c317c3ee33cc29ad",
+                "reference": "9c1acb038be54b7c18af61b9c317c3ee33cc29ad",
                 "shasum": ""
             },
             "require-dev": {
@@ -2317,9 +2317,9 @@
             "description": "Authentication layer for Starbug framework.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-auth/issues",
-                "source": "https://github.com/cogentParadigm/starbug-auth/tree/v0.9"
+                "source": "https://github.com/cogentParadigm/starbug-auth/tree/v0.9.1"
             },
-            "time": "2021-01-23T03:34:01+00:00"
+            "time": "2021-02-24T04:44:46+00:00"
         },
         {
             "name": "starbug/bundle",

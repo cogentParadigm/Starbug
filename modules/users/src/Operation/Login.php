@@ -13,7 +13,7 @@ class Login extends Save {
   }
   public function handle(BundleInterface $data, BundleInterface $state): BundleInterface {
     $this->setModel("users");
-    $login = $data->get("users");
+    $login = $data->get();
     if ($user = $this->session->authenticate(["email" => $login['email']], $login['password'])) {
       $this->session->createSession($user);
       $this->store(["id" => $user->getId(), "last_visit" => date("Y-m-d H:i:s")]);

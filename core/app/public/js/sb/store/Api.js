@@ -87,7 +87,9 @@ define([
 				for (var k in object) data[model+'['+k+']'] = object[k];
 				data.oid = config.csrfToken;
 			}
-			data['action['+model+']'] = options.action || this.put_action;
+			if (options.action) {
+				data['action['+model+']'] = options.action;
+			}
 
 			var initialResponse = request.post(this._renderUrl(), {
 				data: data,
