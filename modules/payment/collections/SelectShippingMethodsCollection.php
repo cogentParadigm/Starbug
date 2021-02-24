@@ -4,11 +4,12 @@ namespace Starbug\Payment;
 use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\CollectionFactoryInterface;
 use Starbug\Core\SelectCollection;
+use Starbug\Db\Schema\SchemerInterface;
 
 class SelectShippingMethodsCollection extends SelectCollection {
   protected $model = "shipping_methods";
-  public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, PriceFormatterInterface $priceFormatter) {
-    $this->models = $models;
+  public function __construct(ModelFactoryInterface $models, SchemerInterface $schemer, CollectionFactoryInterface $collections, PriceFormatterInterface $priceFormatter) {
+    parent::__construct($models, $schemer);
     $this->collections = $collections;
     $this->priceFormatter = $priceFormatter;
   }

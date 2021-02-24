@@ -2,16 +2,18 @@
 
 namespace Starbug\Payment;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\ApiRequest;
 use Starbug\Core\Controller\CollectionController;
 
 class ApiShippingMethodsController extends CollectionController {
   public $model = "shipping_methods";
-  public function __construct(ApiRequest $api, SessionHandlerInterface $session, Cart $cart) {
+  public function __construct(ApiRequest $api, SessionHandlerInterface $session, Cart $cart, ServerRequestInterface $request) {
     parent::__construct($api);
     $this->session = $session;
     $this->cart = $cart;
+    $this->request = $request;
   }
   public function select() {
     $params = [];
@@ -19,6 +21,6 @@ class ApiShippingMethodsController extends CollectionController {
     if (empty($queryParams["order"])) {
       $params["order"] = $this->cart->get("id");
     }
-    $this->api->render("SelectShippingMethods", $params);
+    return $this->api->render("SelectShippingMethods", $params);
   }
 }

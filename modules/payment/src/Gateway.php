@@ -44,7 +44,10 @@ class Gateway implements GatewayInterface {
       if ($txn = $response->getTransactionReference(false)) {
         $txn_id = $txn->getTransId();
       }
-      $record = ["orders_id" => $payment["orders_id"], "subscriptions_id" => $payment["subscriptions_id"], "response_code" => $code, "txn_id" => $txn_id, "amount" => $payment["amount"], "response" => $response->getData()->asXML()];
+      $record = ["orders_id" => $payment["orders_id"], "response_code" => $code, "txn_id" => $txn_id, "amount" => $payment["amount"], "response" => json_encode($response->getData())];
+      if (isset($payment["subscriptions_id"])) {
+        $record["subscriptions_id"] = $payment["subscriptions_id"];
+      }
       $this->models->get("payments")->store($record);
     }
   }

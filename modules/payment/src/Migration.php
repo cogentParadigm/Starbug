@@ -28,13 +28,6 @@ class Migration extends AbstractMigration {
     );
 
     // Products, product types, product options
-    $this->schema->addTable(["product_types", "groups" => false, "label_select" => "product_types.name"],
-      ["name", "type" => "string", "length" => "128"],
-      ["slug", "type" => "string", "length" => "128", "unique" => "", "default" => "", "slug" => "name"],
-      ["description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
-      ["content", "type" => "text", "default" => ""],
-      ["options", "type" => "product_options", "table" => "product_options"]
-    );
     $this->schema->addTable(["product_options", "label_select" => "product_options.name"],
       ["name", "type" => "string", "length" => "128"],
       ["slug", "type" => "string", "length" => "128", "default" => "", "slug" => "name"],
@@ -47,12 +40,19 @@ class Migration extends AbstractMigration {
       ["reference_type", "type" => "string"],
       ["columns", "type" => "int", "default" => "12"]
     );
+    $this->schema->addTable(["product_types", "groups" => false, "label_select" => "product_types.name"],
+      ["name", "type" => "string", "length" => "128"],
+      ["slug", "type" => "string", "length" => "128", "unique" => "", "default" => "", "slug" => "name"],
+      ["description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
+      ["content", "type" => "text", "default" => ""],
+      ["options", "type" => "product_options", "table" => "product_options"]
+    );
     $this->schema->addTable(["products", "label_select" => "products.name"],
       ["type", "type" => "int", "references" => "product_types id", "alias" => "%slug%", "null" => ""],
       ["sku", "type" => "string", "unique" => ""],
       ["name", "type" => "string"],
       ["options", "type" => "product_options", "exclude" => "always"],
-      ["path", "type" => "string", "length" => "128", "unique" => "", "default" => "", "slug" => "name"],
+      ["path", "type" => "path", "path" => "product/details/[products:id]", "pattern" => "product/[products:name]", "null" => true, "default" => "NULL"],
       ["payment_type", "type" => "string", "default" => "single"],
       ["price", "type" => "int", "default" => "0", "filter_var" => FILTER_SANITIZE_NUMBER_FLOAT],
       ["interval", "type" => "int"],
@@ -173,6 +173,12 @@ class Migration extends AbstractMigration {
     $this->schema->addTable("address",
       ["order_token", "type" => "string", "default" => ""]
     );
+
+    $store = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Store"]);
+    $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/orders"], ["parent" => $store, "content" => "Orders"]);
+    $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/products"], ["parent" => $store, "content" => "Products"]);
+    $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/product-types"], ["parent" => $store, "content" => "Product Types"]);
+    $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/payment-gateways"], ["parent" => $store, "content" => "Payment Gateways"]);
 
     $this->schema->addRow("permits", ["related_table" => "shipping_methods", "action" => "add", "role" => "everyone", "priv_type" => "global"]);
     $this->schema->addRow("permits", ["related_table" => "orders", "action" => "checkout", "role" => "owner", "priv_type" => "global"]);

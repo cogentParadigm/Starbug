@@ -123,7 +123,8 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     foreach ($this->lines["product"] as $line) {
       if ($line["product"] == $input["id"] && empty($line["options"]) && empty($input["options"])) {
         // Product is in cart without options and is being added without options.
-        return $this->models->get("product_lines")->update([$line["id"] => $line["qty"] + $input["qty"]]);
+        $this->models->get("product_lines")->update([$line["id"] => $line["qty"] + $input["qty"]]);
+        return $line;
       }
     }
     $product = $this->models->get("products")->query()->condition("products.id", $input['id'])->one();

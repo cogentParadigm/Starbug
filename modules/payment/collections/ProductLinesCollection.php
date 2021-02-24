@@ -29,7 +29,7 @@ class ProductLinesCollection extends Collection {
       $item['total'] = $item['price'] * $item['qty'];
       $item['total_formatted'] = $this->formatter->format($item['total']);
       $item['price_formatted'] = $this->formatter->format($item['price']);
-      if ($item["recurring"]) {
+      if (!empty($item["recurring"])) {
         $unit = $item["unit"];
         $interval = $item["interval"];
         $phrase = "";

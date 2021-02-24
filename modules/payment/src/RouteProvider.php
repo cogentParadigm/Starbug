@@ -8,12 +8,22 @@ class RouteProvider extends AdminRouteProvider {
 
   public function configure(Route $routes) {
     $routes->addRoute("cart", ["Starbug\Payment\CartController", "defaultAction"], ["title" => "Shopping Cart"]);
-    $routes->addRoute("cart/add", ["Starbug\Payment\CartController", "add"], ["title" => "Add to Cart"]);
-    $routes->addRoute("checkout", ["Starbug\Payment\CheckoutController", "defaultAction"], ["title" => "Checkout"]);
-    $routes->addRoute("checkout/guest", ["Starbug\Payment\CheckoutController", "guest"], ["title" => "Checkout"]);
-    $routes->addRoute("checkout/payment", ["Starbug\Payment\CheckoutController", "payment"], ["title" => "Checkout"]);
+    $routes->addRoute("cart/add[.{format:xhr}]", ["Starbug\Payment\CartController", "add"], ["title" => "Add to Cart"]);
+    $routes->addRoute("checkout", ["Starbug\Payment\CheckoutController", "defaultAction"], [
+      "title" => "Checkout",
+      "successUrl" => "checkout/payment"
+      ])->onPost("Starbug\Payment\Cart\Checkout");
+    $routes->addRoute("checkout/guest", ["Starbug\Payment\CheckoutController", "guest"], [
+      "title" => "Checkout",
+      "successUrl" => "checkout/payment"
+    ])->onPost("Starbug\Payment\Cart\Checkout");
+    $routes->addRoute("checkout/payment", ["Starbug\Payment\CheckoutController", "payment"], [
+      "title" => "Checkout",
+      "successUrl" => "checkout/success"
+    ])->onPost("Starbug\Payment\Cart\Payment");
     $routes->addRoute("checkout/success/{id:[0-9]+}", ["Starbug\Payment\CheckoutController", "success"], ["title" => "Checkout"]);
-    $routes->addRoute("product/details/{path}", ["Starbug\Payment\ProductController", "details"], ["title" => "Checkout"]);
+    $routes->addRoute("product/details/{id:[0-9]+}", "Starbug\Payment\ProductController", ["title" => "Checkout"])
+      ->onPost("Starbug\Payment\Cart\AddProduct");
     $routes->addRoute("subscriptions", "Starbug\Payment\SubscriptionsController");
     $routes->addRoute("subscriptions/update/{id:[0-9]+}", ["Starbug\Payment\SubscriptionsController", "update"]);
     $routes->addRoute("subscriptions/payment/{id:[0-9]+}", ["Starbug\Payment\SubscriptionsController", "payment"]);

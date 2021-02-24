@@ -1,8 +1,8 @@
 <h2>Complete Order</h2>
-<div data-dojo-type="payment/Cart" data-dojo-props="mode:'payment', order:{{ cart.getOrder()|json_encode|replace('"', "'") }}"></div>
+<div data-dojo-type="payment/Cart" data-dojo-props="mode:'payment', order:{{ cart.getOrder()|json_encode|replace({'"': "'"}) }}"></div>
 <div style="clear:both"></div>
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-6">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Shipping Address</h3>
@@ -12,7 +12,7 @@
       </div>
     </div>
   </div>
-  <div class="col-sm-6">
+  <div class="col-6">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Billing Address</h3>
@@ -28,7 +28,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-6">
     {{ helper("displays").render("PaymentForm", {"id": cart.get("id")}) }}
   </div>
 </div>

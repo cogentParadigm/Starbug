@@ -54,4 +54,6 @@ return [
     ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface")),
   "Starbug\Payment\ProductsForm" => DI\autowire()
     ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface")),
+  "Starbug\Payment\ProductConfigurationForm" => DI\autowire()
+    ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface")),
 ];

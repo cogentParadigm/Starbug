@@ -21,11 +21,13 @@ define([
       this.list.bodyNode.style.maxHeight = "300px";
     },
     createControlNode: function() {
-      this.controlNode = put(this.controlGroupNode, 'button.form-control.text-left.tl[style=height:114px]');
+      this.controlNode = put(this.controlGroupNode, 'button.form-control.text-left.tl[type=button][style=height:114px]');
     },
     createToggleNode: function() {
       this.inherited(arguments);
-      put(this.toggleNode, '[style=height:114px]');
+      if (this.toggleNode) {
+        put(this.toggleNode, '[style=height:114px]');
+      }
     },
     renderSelection: function() {
       this.selectionNode.innerHTML = this.get('displayedValue');

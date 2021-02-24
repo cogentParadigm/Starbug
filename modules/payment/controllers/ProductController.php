@@ -8,9 +8,9 @@ class ProductController extends Controller {
   public function __construct(ModelFactoryInterface $models) {
     $this->models = $models;
   }
-  public function details($path) {
-    $product = $this->models->get("products")->load(["path" => $path]);
+  public function __invoke($id) {
+    $product = $this->models->get("products")->load($id);
     $this->assign("product", $product);
-    $this->render("products/details.html");
+    return $this->render("products/details.html");
   }
 }
