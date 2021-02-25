@@ -31,10 +31,7 @@ class CheckoutController extends Controller {
   }
   public function payment() {
     $this->assign("cart", $this->cart);
-    if ($this->db->success("orders", "payment")) {
-      $id = $this->request->getParsedBody()["orders"]["id"];
-      return $this->redirect("checkout/success/".$id);
-    } elseif (count($this->cart) == 0) {
+    if (count($this->cart) == 0) {
       return $this->render("cart/empty.html");
     } else {
       return $this->render("checkout/payment.html");

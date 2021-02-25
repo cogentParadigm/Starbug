@@ -3,24 +3,22 @@ namespace Starbug\Payment\Cart;
 
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Bundle\BundleInterface;
-use Starbug\Core\MailerInterface;
 use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\Operation\Save;
 use Starbug\Payment\Cart;
 use Starbug\Payment\GatewayInterface;
-use Starbug\Payment\PriceFormatterInterface;
 use Starbug\Payment\TokenGatewayInterface;
+use Starbug\Queue\QueueManagerInterface;
 
 class Payment extends Save {
   protected $model = "orders";
-  public function __construct(ModelFactoryInterface $models, Cart $cart, SessionHandlerInterface $session, MailerInterface $mailer, PriceFormatterInterface $priceFormatter, GatewayInterface $gateway, TokenGatewayInterface $subscriptions) {
+  public function __construct(ModelFactoryInterface $models, Cart $cart, SessionHandlerInterface $session, GatewayInterface $gateway, TokenGatewayInterface $subscriptions, QueueManagerInterface $queues) {
     $this->models = $models;
     $this->cart = $cart;
     $this->session = $session;
-    $this->mailer = $mailer;
-    $this->priceFormatter = $priceFormatter;
     $this->gateway = $gateway;
     $this->subscriptions = $subscriptions;
+    $this->queues = $queues;
   }
   public function handle(array $payment, BundleInterface $state): BundleInterface {
     if (empty($payment['id'])) {
@@ -46,22 +44,15 @@ class Payment extends Save {
     }
 
     // prepare details to be added to the order
-    $order_total = 0;
+    $orderTotal = 0;
     $ammend = ["id" => $order['id'], "email" => $payment['email'], "phone" => $payment['phone']];
     if ($this->session->loggedIn()) {
       $ammend['owner'] = $this->session->getUserId();
     }
 
-    // determine single payment amount
-    // WARN: prices not validated, lines could be stale
-    $lines = $this->query("product_lines")
-      ->condition("orders_id", $order['id'])
-      ->condition("product_lines.product.payment_type", "single")
-      ->select("SUM(product_lines.price * qty) as total")->one();
-    $total = $lines['total'];
+    $total = $this->getOrderTotal($order["id"]);
     if ($total) {
-      $order_total += $total;
-      $ammend["total"] = $total;
+      $orderTotal += $total;
       $this->purchase($payment + ["amount" => $total, "orders_id" => $order["id"]]);
     }
 
@@ -71,42 +62,17 @@ class Payment extends Save {
       ->condition("product_lines.product.payment_type", "recurring")->all();
     foreach ($lines as $line) {
       $price = $line["price"] * $line["qty"];
-      $order_total += $price;
+      $orderTotal += $price;
       $this->purchase($payment + ["amount" => $price, "orders_id" => $order["id"]]);
       if (!$this->errors()) {
         $this->subscriptions->createSubscription(["orders_id" => $order["id"], "amount" => $price, "product" => $line["product"], "payment" => $this->models->get("payments")->insert_id] + $payment);
       }
     }
 
+    $ammend["total"] = $orderTotal;
+
     $this->store($ammend);
-    if (!$this->errors()) {
-      $this->store(["id" => $order['id'], "order_status" => "pending"]);
-      $lines = $this->query("product_lines")->condition("orders_id", $order["id"])->all();
-      $order["description"] = $lines[0]["description"];
-      $count = count($lines) - 1;
-      if ($count > 1) {
-        $order["description"] .= " and ".$count." other items";
-      } elseif ($count > 0) {
-        $order["description"] .= " and 1 other item";
-      }
-      $rows = [];
-      foreach ($lines as $line) {
-        $rows[] = "<tr><td>".$line["description"]."</td><td>".$line["qty"]."</td><td>".$this->priceFormatter->format($line["price"]*$line["qty"])."</td></tr>";
-      }
-      $order["details"] = implode("\n", [
-        "<p>Order #".$order["id"]."</p>",
-        "<table>",
-        "<tr><th>Product</th><th>Qty</th><th>Total</th></tr>",
-        implode("\n", $rows),
-        "</table>",
-        "<p><strong>Order Total:</strong> ".$this->priceFormatter->format($order_total)."</p>"
-      ]);
-      $data = [
-        "user" => $this->session->getData(),
-        "order" => $order
-      ];
-      $this->mailer->send(["template" => "Order Confirmation", "to" => $payment["email"]], $data);
-    }
+    $this->onPaymentCompleted($ammend + $order);
     return $this->getErrorState($state);
   }
   protected function purchase($payment) {
@@ -114,6 +80,23 @@ class Payment extends Save {
       $this->gateway->purchase($payment);
     } else {
       $this->subscriptions->purchase($payment);
+    }
+  }
+
+  protected function getOrderTotal($id) {
+    // determine single payment amount
+    // WARN: prices not validated, lines could be stale
+    $lines = $this->query("product_lines")
+      ->condition("orders_id", $id)
+      ->condition("product_lines.product.payment_type", "single")
+      ->select("SUM(product_lines.price * qty) as total")->one();
+    return $lines['total'];
+  }
+
+  protected function onPaymentCompleted($order) {
+    if (!$this->errors()) {
+      $this->store(["id" => $order['id'], "order_status" => "pending"]);
+      $this->queues->put(ConfirmOrder::class, ["order" => $order["id"]]);
     }
   }
 }
