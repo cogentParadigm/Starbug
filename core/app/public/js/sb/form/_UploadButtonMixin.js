@@ -51,7 +51,6 @@ define([
     },
     createFileInput: function() {
       this.uploadButtonTheme.createFileInput.apply(this);
-      this.fileInput.name = "uploadedfiles[]";
     },
     createBrowseButton: function() {
       this.uploadButtonTheme.createBrowseButton.apply(this);
