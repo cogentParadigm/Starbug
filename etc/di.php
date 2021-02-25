@@ -37,6 +37,7 @@ return [
       "Middlewares\UrlEncodePayload",
       "Starbug\Auth\Http\AuthenticationMiddleware",
       "Starbug\Auth\Http\CsrfMiddleware",
+      "Starbug\Http\RequestInjectionMiddleware",
       "Starbug\Core\RoutingMiddleware",
       [$env !== "development", "Starbug\Core\SecureJsonErrorHandlerMiddleware"],
       [$env === "development", "Starbug\Core\JsonErrorHandlerMiddleware"],

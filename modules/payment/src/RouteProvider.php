@@ -19,8 +19,10 @@ class RouteProvider extends AdminRouteProvider {
     ])->onPost("Starbug\Payment\Cart\Checkout");
     $routes->addRoute("checkout/payment", ["Starbug\Payment\CheckoutController", "payment"], [
       "title" => "Checkout",
-      "successUrl" => "checkout/success"
-    ])->onPost("Starbug\Payment\Cart\Payment");
+      "model" => "orders",
+      "successUrl" => "checkout/success/{{ order.id }}"
+    ])->onPost("Starbug\Payment\Cart\Payment")
+      ->resolve("order", "Starbug\Payment\Routing\Resolvers\CartOrder");
     $routes->addRoute("checkout/success/{id:[0-9]+}", ["Starbug\Payment\CheckoutController", "success"], ["title" => "Checkout"]);
     $routes->addRoute("product/details/{id:[0-9]+}", "Starbug\Payment\ProductController", ["title" => "Checkout"])
       ->onPost("Starbug\Payment\Cart\AddProduct");
