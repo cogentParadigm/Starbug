@@ -21,8 +21,8 @@ class Save extends Operation {
       $this->model = $options["model"];
     }
   }
-  public function handle(BundleInterface $data, BundleInterface $state): BundleInterface {
-    $this->create($data->get());
+  public function handle(array $data, BundleInterface $state): BundleInterface {
+    $this->create($data);
     return $this->getErrorState($state);
   }
   protected function getErrorState(BundleInterface $state): BundleInterface {

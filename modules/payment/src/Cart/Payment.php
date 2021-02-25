@@ -22,8 +22,7 @@ class Payment extends Save {
     $this->gateway = $gateway;
     $this->subscriptions = $subscriptions;
   }
-  public function handle(BundleInterface $data, BundleInterface $state): BundleInterface {
-    $payment = $data->get();
+  public function handle(array $payment, BundleInterface $state): BundleInterface {
     if (empty($payment['id'])) {
       $order = $this->cart->getOrder();
     } else {

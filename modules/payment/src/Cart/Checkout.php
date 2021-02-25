@@ -12,8 +12,7 @@ class Checkout extends Save {
     $this->models = $models;
     $this->cart = $cart;
   }
-  public function handle(BundleInterface $data, BundleInterface $state): BundleInterface {
-    $order = $data->get();
+  public function handle(array $order, BundleInterface $state): BundleInterface {
     $target = ["id" => $this->cart->get("id"), "billing_same" => $order["billing_same"]];
     if (empty($order['shipping_address'])) {
       $this->error("Please enter a shipping address", "shipping_address");

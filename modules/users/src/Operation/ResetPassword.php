@@ -5,9 +5,8 @@ use Starbug\Bundle\BundleInterface;
 use Starbug\Core\Operation\Save;
 
 class ResetPassword extends Save {
-  public function handle(BundleInterface $data, BundleInterface $state): BundleInterface {
+  public function handle(array $data, BundleInterface $state): BundleInterface {
     $this->setModel("users");
-    $data = $data->get();
     $user = $this->query()->condition("email", $data['email'])->one();
     if (empty($user['password_token']) || $user['password_token'] != $data['token']) {
       $this->error("Your password reset request could not be verified. Please follow the link you were emailed.", "email");

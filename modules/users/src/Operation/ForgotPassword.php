@@ -11,9 +11,8 @@ class ForgotPassword extends Operation {
   public function __construct(QueueManagerInterface $queues) {
     $this->queues = $queues;
   }
-  public function handle(BundleInterface $data, BundleInterface $state): BundleInterface {
-    $fields = $data->get();
-    $email = trim($fields['email']);
+  public function handle(array $data, BundleInterface $state): BundleInterface {
+    $email = trim($data['email']);
     $this->queues->put(Worker::class, ["email" => $email]);
     return $state;
   }

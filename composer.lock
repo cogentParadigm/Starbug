@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d9da99d75496f5758dd1c8aac936cac",
+    "content-hash": "180e6a9a297b5db815b4891078ba32b8",
     "packages": [
         {
             "name": "composer/installers",
@@ -2742,16 +2742,16 @@
         },
         {
             "name": "starbug/operation",
-            "version": "v0.7.1",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-operation.git",
-                "reference": "44dd661d8da499d6f0dc8b37f3a9d8eda447a386"
+                "reference": "596977a6d5a50e2380ae3a0c304774d1f5d0e841"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-operation/zipball/44dd661d8da499d6f0dc8b37f3a9d8eda447a386",
-                "reference": "44dd661d8da499d6f0dc8b37f3a9d8eda447a386",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-operation/zipball/596977a6d5a50e2380ae3a0c304774d1f5d0e841",
+                "reference": "596977a6d5a50e2380ae3a0c304774d1f5d0e841",
                 "shasum": ""
             },
             "require": {
@@ -2781,9 +2781,9 @@
             "description": "PSR-15 middleware for handling POST requests such as form submissions and API calls.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-operation/issues",
-                "source": "https://github.com/cogentParadigm/starbug-operation/tree/v0.7.1"
+                "source": "https://github.com/cogentParadigm/starbug-operation/tree/v0.8.0"
             },
-            "time": "2021-02-08T18:32:07+00:00"
+            "time": "2021-02-25T05:23:52+00:00"
         },
         {
             "name": "starbug/queue",

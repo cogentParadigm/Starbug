@@ -12,9 +12,8 @@ class AddProduct extends Save {
     $this->models = $models;
     $this->cart = $cart;
   }
-  public function handle(BundleInterface $data, BundleInterface $state): BundleInterface {
-    $product = $data->get();
-    $this->cart->addProduct($product);
+  public function handle(array $data, BundleInterface $state): BundleInterface {
+    $this->cart->addProduct($data);
     return $this->getErrorState($state);
   }
 }
