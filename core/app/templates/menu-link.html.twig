@@ -1,99 +1,23 @@
-{% if itemAttributes is not defined %}
-  {% set itemAttributes = {} %}
-{% endif %}
-{% if anchorAttributes is not defined %}
-  {% set anchorAttributes = {} %}
-{% endif %}
-{% if iconAttributes is not defined %}
-  {% set iconAttributes = {} %}
-{% endif %}
-{% if subMenuAttributes is not defined %}
-  {% set subMenuAttributes = {} %}
-{% endif %}
-{% if subMenuAttributes.style is not defined %}
-  {% set subMenuAttributes = subMenuAttributes|merge({"style":""}) %}
-{% endif %}
-{% set subMenuAttributes = subMenuAttributes|merge({"style":"display:none;" ~ subMenuAttributes.style}) %}
-{% set class = [] %}
-{% set active = false %}
-
-{# add first class for first item in list #}
-{% if link.position == 0 %}
-  {% set class = class|merge(["first"]) %}
-{% endif %}
-
-{# handle href #}
-{% if link.href is not empty %}
-  {% set absolute = (link.href starts with "http") %}
-  {% if absolute %}
-    {% set anchorAttributes = anchorAttributes|merge({"href": link.href}) %}
-  {% else %}
-    {% set anchorAttributes = anchorAttributes|merge({"href": helper("url").build(link.href)}) %}
-    {% set parts = link.href|split("/") %}
-    {% set requestParts = request.getUri().getPath()|split("/") %}
-    {% set active = true %}
-    {% for part in parts %}
-      {% if requestParts[loop.index0] != part %}
-        {% set active = false %}
-      {% endif %}
-    {% endfor %}
-    {% if active %}
-      {% set class = class|merge(["active"]) %}
-    {% endif %}
-  {% endif %}
-{% elseif link.children is not empty %}
-  {% set anchorAttributes = anchorAttributes|merge({"href": "javascript:;"}) %}
-{% endif %}
-
-{# set the link target #}
-{% if link.target is not empty %}
-  {% set anchorAttributes = anchorAttributes|merge({"target": link.target}) %}
-{% endif %}
-
-{% set itemAttributes = itemAttributes|merge({"data-menu-id": link.id, "data-parent": link.parent}) %}
-
-{% if link.template is not empty %}
-  {% set class = class|merge([link.template]) %}
-{% endif %}
-
-{# serialize the array of classes #}
-{% if class is not empty %}
-  {% if itemAttributes.class is defined %}
-    {% if itemAttributes.class is iterable %}
-      {% set class = class|merge(itemAttributes.class) %}
-    {% else %}
-      {% set class = class|merge([itemAttributes.class]) %}
-    {% endif %}
-  {% endif %}
-  {% set itemAttributes = itemAttributes|merge({"class": (class|join(" "))}) %}
-{% endif %}
-
-{% if link.template is empty %}
-  <li{{ helper("filter").attributes(itemAttributes)|raw }}>
-    <a{{ helper("filter").attributes(anchorAttributes)|raw }}>
-      {% if link.icon is not empty %}
-        {% set iconClass = [link.icon] %}
-        {% if iconAttributes.class is defined %}
-          {% if iconAttributes.class is iterable %}
-            {% set iconClass = iconClass|merge(iconAttributes.class) %}
-          {% else %}
-            {% set iconClass = iconClass|merge([iconAttributes.class]) %}
-          {% endif %}
+<li{{ helper("filter").attributes(itemAttributes)|raw }}>
+  <a{{ helper("filter").attributes(anchorAttributes)|raw }}>
+    {% if link.icon is not empty %}
+      {% set iconClass = [link.icon] %}
+      {% if iconAttributes.class is defined %}
+        {% if iconAttributes.class is iterable %}
+          {% set iconClass = iconClass|merge(iconAttributes.class) %}
+        {% else %}
+          {% set iconClass = iconClass|merge([iconAttributes.class]) %}
         {% endif %}
-        <i{{ helper("filter").attributes(iconAttributes|merge({"class": (iconClass|join(" "))}))|raw }}></i>
       {% endif %}
-      <span class="menu-item-parent">{{ link.content }}</span>
-    </a>
-    {% if link.children is not empty %}
-      <ul{{ helper("filter").attributes(subMenuAttributes)|raw }}>
-        {% for child in link.children %}
-          {{ include("menu-link.html.twig", {"link": child}) }}
-        {% endfor %}
-      </ul>
+      <i{{ helper("filter").attributes(iconAttributes|merge({"class": (iconClass|join(" "))}))|raw }}></i>
     {% endif %}
-  </li>
-{% elseif link.template == "divider" %}
-  <li{{ helper("filter").attributes(itemAttributes)|raw }}></li>
-{% else %}
-  {{ include(link.template ~ ".html.twig") }}
-{% endif %}
+    <span class="menu-item-parent">{{ link.content }}</span>
+  </a>
+  {% if link.children is not empty %}
+    <ul{{ helper("filter").attributes(subMenuAttributes)|raw }}>
+      {% for child in link.children %}
+        {{ include("menu-item.html.twig", {"link": child}) }}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</li>

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "092ac0d670b89016334064917163bdc8",
+    "content-hash": "8d9da99d75496f5758dd1c8aac936cac",
     "packages": [
         {
             "name": "composer/installers",
@@ -2873,16 +2873,16 @@
         },
         {
             "name": "starbug/storm",
-            "version": "v0.7.7",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-storm.git",
-                "reference": "021d4ce15deef93ca9863f62637dc241418d1fde"
+                "reference": "71ebe396de270b2b4571843228a0fbba473dca09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/021d4ce15deef93ca9863f62637dc241418d1fde",
-                "reference": "021d4ce15deef93ca9863f62637dc241418d1fde",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/71ebe396de270b2b4571843228a0fbba473dca09",
+                "reference": "71ebe396de270b2b4571843228a0fbba473dca09",
                 "shasum": ""
             },
             "type": "starbug-theme",
@@ -2902,9 +2902,9 @@
             "description": "Administrative theme for Starbug.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-storm/issues",
-                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v0.7.7"
+                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v0.8.0"
             },
-            "time": "2021-02-20T21:17:14+00:00"
+            "time": "2021-02-25T04:14:20+00:00"
         },
         {
             "name": "starbug/tachyons",

@@ -54,7 +54,7 @@
     "starbug/css": "dev-master",
     "starbug/js": "dev-master",
     "starbug/content": "dev-master",
-    "starbug/storm": "^0.7.0"
+    "starbug/storm": "^0.8.0"
   },
   "require-dev": {
     "starbug/devel": "^1.0"

@@ -17,7 +17,7 @@
 <ul {{ helper("filter").attributes(attributes)|raw }}>
   {% for link in links %}
     {{
-      include("menu-link.html.twig", {
+      include("menu-item.html.twig", {
         "link": link,
         "itemAttributes": itemAttributes,
         "anchorAttributes": anchorAttributes,
