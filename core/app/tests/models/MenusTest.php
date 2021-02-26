@@ -8,7 +8,7 @@ class MenusTest extends ModelTest {
   public function testCreateUpdateDelete() {
     // create
     $this->action("create", ["content" => "PHP Unit", "menu" => "phpunit"]);
-    $id = $this->insert_id;
+    $id = $this->db->getInsertId("menus");
     $object = $this->db->query($this->model)->condition("id", $id)->one();
     // lets verify the explicit values were set
     $this->assertEquals("phpunit", $object['menu']);

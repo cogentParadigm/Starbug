@@ -8,9 +8,8 @@ use Starbug\Db\Schema\SchemerInterface;
  */
 class Table implements CollectionFilterInterface {
 
-  public $db;
+  protected $db;
   protected $type;
-  public $record_count;
   public $insert_id;
   public $store_on_errors = false;
 
@@ -49,22 +48,11 @@ class Table implements CollectionFilterInterface {
   }
 
   public function error($error, $field = "global", $model = "") {
-    if (empty($model)) $model = $this->type;
+    if (empty($model)) {
+      $model = $this->type;
+    }
     $this->db->error($error, $field, $model);
   }
-
-  public function success($action) {
-    $args = func_get_args();
-    if (count($args) == 1) $args = [$this->type, $args[0]];
-    return $this->db->success($args[0], $args[1]);
-  }
-
-  public function failure($action) {
-    $args = func_get_args();
-    if (count($args) == 1) $args = [$this->type, $args[0]];
-    return $this->db->failure($args[0], $args[1]);
-  }
-
 
   public function post($action, $data = []) {
     $this->action = $action;

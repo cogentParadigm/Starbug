@@ -63,6 +63,4 @@ interface DatabaseInterface {
   public function getInsertId($table);
   public function errors($key = "", $values = false);
   public function error($error, $field = "global", $scope = "global");
-  public function success($model, $action);
-  public function failure($model, $action);
 }

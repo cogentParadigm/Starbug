@@ -233,14 +233,6 @@ abstract class AbstractDatabase implements DatabaseInterface {
     $statement->execute([$scope, $field, $error, $this->models->get($scope)->action]);
   }
 
-  public function success($model, $action) {
-    return (($this->models->get($model)->action == $action) && $this->errors->isEmpty());
-  }
-
-  public function failure($model, $action) {
-    return (($this->models->get($model)->action == $action) && !$this->errors->isEmpty());
-  }
-
   public function setInsertId($table, $id) {
     $this->insertIds[$table] = $id;
   }

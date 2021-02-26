@@ -8,7 +8,7 @@ class TermsTest extends ModelTest {
   public function testCreateUpdateDelete() {
     // create
     $this->action("create", ["term" => "PHP Unit", "taxonomy" => "phpunit"]);
-    $id = $this->insert_id;
+    $id = $this->db->getInsertId("terms");
     $object = $this->db->query($this->model)->condition("id", $id)->one();
     // lets verify the explicit values were set
     $this->assertEquals("phpunit", $object['taxonomy']);

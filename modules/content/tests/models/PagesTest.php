@@ -7,7 +7,7 @@ class PagesTest extends ModelTest {
   public $model = "pages";
   public function testCreate() {
     $this->action("create", ["path" => "phpunit", "blocks" => ["content-1" => "test"]]);
-    $object = $this->db->query($this->model)->condition("pages.id", $this->insert_id)->select("pages.path.alias as path")->one();
+    $object = $this->db->query($this->model)->condition("pages.id", $this->db->getInsertId("pages"))->select("pages.path.alias as path")->one();
     // lets verify the explicit values were set
     $this->assertEquals("phpunit", $object['path']);
   }

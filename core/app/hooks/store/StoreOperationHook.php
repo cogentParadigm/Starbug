@@ -21,7 +21,7 @@ class StoreOperationHook extends QueryHook {
       $instance = $this->models->get($model);
       $instance->$argument($value);
       if (!$instance->errors()) {
-        $value = empty($value["id"]) ? $instance->insert_id : $value["id"];
+        $value = empty($value["id"]) ? $this->db->getInsertId($model) : $value["id"];
       } else {
         $this->db->errors->set($query->model, $key, $this->db->errors->get($model));
         $this->db->errors->set($model, null);
