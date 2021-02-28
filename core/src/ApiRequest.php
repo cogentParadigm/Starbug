@@ -8,8 +8,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ApiRequest {
 
-  // @var ModelFactoryInterface
-  protected $models;
+  // @var DatabaseInterface
+  protected $db;
   // @var CollectionFactoryInterface
   protected $collections;
   // @var ServerRequestInterface
@@ -28,8 +28,8 @@ class ApiRequest {
   protected $filters = [];
   protected $model;
 
-  public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, ServerRequestInterface $request, ResponseFactoryInterface $response) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db, CollectionFactoryInterface $collections, ServerRequestInterface $request, ResponseFactoryInterface $response) {
+    $this->db = $db;
     $this->collections = $collections;
     $this->request = $request;
     $this->response = $response;
@@ -61,12 +61,13 @@ class ApiRequest {
     $this->filters[] = $filter;
   }
   public function add($collection, $options = [], $name = false) {
-    if (!$name) $name = $this->model;
+    if (!$name) {
+      $name = $this->model;
+    }
 
     // Instantiate the model and collection.
     if (!is_null($this->model)) {
-      $instance = $this->models->get($this->model);
-      if ($instance->errors()) {
+      if ($this->db->errors($this->model)) {
         $this->results[$name] = $this->errors($this->model);
         return;
       }
@@ -90,8 +91,8 @@ class ApiRequest {
       $options['page'] = 1 + (int) $start/$options['limit'];
     }
     $bodyParams = $this->request->getParsedBody();
-    if (!empty($bodyParams["action"][$this->model]) && !$instance->errors()) {
-      $id = $bodyParams[$this->model]["id"] ?? $instance->insert_id;
+    if (!empty($bodyParams["action"][$this->model]) && !$this->db->errors($this->model)) {
+      $id = $bodyParams[$this->model]["id"] ?? $this->db->getInsertId($this->model);
       $options['id'] = $id;
     }
 
@@ -138,14 +139,15 @@ class ApiRequest {
 
   public function render($collection, $options = [], $name = false) {
     $this->add($collection, $options, $name);
-    if (!$name) $name = $this->model;
+    if (!$name) {
+      $name = $this->model;
+    }
     return $this->capture($name);
   }
 
   protected function errors($model) {
-    $instance = $this->models->get($model);
     $json = ["errors" => []];
-    foreach ($instance->errors("", true) as $k => $v) {
+    foreach ($this->db->errors($model, true) as $k => $v) {
       $json['errors'][] = ["field" => $k, "errors" => $v];
     }
     return $json;

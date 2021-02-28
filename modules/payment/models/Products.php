@@ -18,7 +18,7 @@ class Products extends Table {
     unset($product["options"]);
     $this->store($product);
     if (!$this->errors()) {
-      $id = empty($product["id"]) ? $this->insert_id : $product["id"];
+      $id = empty($product["id"]) ? $this->db->getInsertId("products") : $product["id"];
       foreach ($options as $option => $value) {
         $conditions = ["products_id" => $id, "options_id" => $option];
         $exists = $this->models->get("products_options")->query()->conditions($conditions)->one();

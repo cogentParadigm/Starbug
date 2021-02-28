@@ -140,9 +140,8 @@ define([
 			options = options || {};
 			options.onError = options.onError || lang.hitch(this, "handleError");
 			var store = this;
-      var model = options.model || this.model;
 			var args = {};
-			args[model+'[id]'] = id;
+			args["id"] = id;
 			args.oid = config.csrfToken;
 
 			this.results = request(this.target, {

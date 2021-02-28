@@ -1,11 +1,13 @@
 <?php
 namespace Starbug\Db;
 
+use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ModelFactoryInterface;
 
 class StoreCommand {
-  public function __construct(ModelFactoryInterface $models) {
+  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db) {
     $this->models = $models;
+    $this->db = $db;
   }
   public function run($argv) {
     $name = array_shift($argv);
@@ -13,10 +15,12 @@ class StoreCommand {
     $instance = $this->models->get($name);
     $instance->store($params);
     if (!$instance->errors()) {
-      $id = (empty($params['id'])) ? $instance->insert_id : $params['id'];
+      $id = $params['id'] ?? $this->db->getInsertId($name);
       $records = $instance->query()->condition($name.".id", $id)->all();
       $result = [];
-      foreach ($records as $record) $result[] = array_values($record);
+      foreach ($records as $record) {
+        $result[] = array_values($record);
+      }
       $table = new \cli\Table();
       $table->setHeaders(array_keys($records[0]));
       $table->setRows($result);
@@ -24,7 +28,6 @@ class StoreCommand {
     } else {
       $errors = $instance->errors("", true);
       $result = [];
-      foreach ($records as $record) $result[] = array_values($record);
       foreach ($errors as $col => $arr) {
         foreach ($arr as $e => $m) {
           $result[] = [$col, $m];

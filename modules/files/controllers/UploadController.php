@@ -9,22 +9,26 @@ use Starbug\Core\ModelFactoryInterface;
 use League\Flysystem\MountManager;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ImagesInterface;
 
 class UploadController extends Controller {
   protected $models;
+  protected $db;
   protected $filesystems;
   protected $images;
   protected $session;
   protected $response;
   public function __construct(
     ModelFactoryInterface $models,
+    DatabaseInterface $db,
     MountManager $filesystems,
     ImagesInterface $images,
     SessionHandlerInterface $session,
     ResponseFactoryInterface $response
   ) {
     $this->models = $models;
+    $this->db = $db;
     $this->filesystems = $filesystems;
     $this->images = $images;
     $this->session = $session;
@@ -53,7 +57,7 @@ class UploadController extends Controller {
       }
       $moved = $this->models->get("files")->upload($record, $file);
       if ($moved) {
-        $id = $this->models->get('files')->insert_id;
+        $id = $this->db->getInsertId("files");
         $record = $this->models->get("files")->load($id);
         $_post['id'] = $id;
         $_post['filename'] = $record["filename"];

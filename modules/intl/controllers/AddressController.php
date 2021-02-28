@@ -22,7 +22,7 @@ class AddressController extends Controller {
 
     // if we have just saved an address or an id has been provided, then load it
     if ($this->db->success("address", "create")) {
-      $id = $bodyParams["address"]["id"] ?? $this->models->get("address")->insert_id;
+      $id = $bodyParams["address"]["id"] ?? $this->db->getInsertId("address");
       $address = $this->db->query("address")->condition("id", $id)->one();
     } elseif (!empty($queryParams["id"])) {
       $address = $this->db->query("address")->condition("id", $queryParams["id"])->one();

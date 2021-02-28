@@ -3,7 +3,7 @@ namespace Starbug\Payment\Cart;
 
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Bundle\BundleInterface;
-use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\DatabaseInterface;
 use Starbug\Core\Operation\Save;
 use Starbug\Payment\Cart;
 use Starbug\Payment\GatewayInterface;
@@ -12,8 +12,8 @@ use Starbug\Queue\QueueManagerInterface;
 
 class Payment extends Save {
   protected $model = "orders";
-  public function __construct(ModelFactoryInterface $models, Cart $cart, SessionHandlerInterface $session, GatewayInterface $gateway, TokenGatewayInterface $subscriptions, QueueManagerInterface $queues) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db, Cart $cart, SessionHandlerInterface $session, GatewayInterface $gateway, TokenGatewayInterface $subscriptions, QueueManagerInterface $queues) {
+    $this->db = $db;
     $this->cart = $cart;
     $this->session = $session;
     $this->gateway = $gateway;
@@ -65,7 +65,7 @@ class Payment extends Save {
       $orderTotal += $price;
       $this->purchase($payment + ["amount" => $price, "orders_id" => $order["id"]]);
       if (!$this->errors()) {
-        $this->subscriptions->createSubscription(["orders_id" => $order["id"], "amount" => $price, "product" => $line["product"], "payment" => $this->models->get("payments")->insert_id] + $payment);
+        $this->subscriptions->createSubscription(["orders_id" => $order["id"], "amount" => $price, "product" => $line["product"], "payment" => $this->db->getInsertId("payments")] + $payment);
       }
     }
 

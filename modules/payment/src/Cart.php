@@ -3,6 +3,7 @@ namespace Starbug\Payment;
 
 use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\CollectionFactoryInterface;
+use Starbug\Core\DatabaseInterface;
 
 /**
  * A wrapper around orders intended for mediating shopping cart behavior.
@@ -21,8 +22,9 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
   /**
    * Constructor.
    */
-  public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, $conditions) {
+  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db, CollectionFactoryInterface $collections, $conditions) {
     $this->models = $models;
+    $this->db = $db;
     $this->collections = $collections;
     $this->conditions = $conditions;
   }
@@ -48,8 +50,12 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
   }
 
   public function load($conditions = []) {
-    if (empty($conditions)) $conditions = $this->conditions;
-    if (empty($conditions['order_status'])) $conditions['order_status'] = 'cart';
+    if (empty($conditions)) {
+      $conditions = $this->conditions;
+    }
+    if (empty($conditions["order_status"])) {
+      $conditions["order_status"] = "cart";
+    }
     $order = $this->models->get("orders")->query()->conditions($conditions)->one();
     $this->setOrder($order);
   }
@@ -136,7 +142,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     ];
     $this->invokeHooks("addProduct", [$product, &$line, &$input]);
     $this->add("product_lines", $line);
-    $line['id'] = $this->models->get("product_lines")->insert_id;
+    $line['id'] = $this->db->getInsertId("product_lines");
     if (!empty($input["options"])) {
       foreach ($input["options"] as $option => $value) {
         $conditions = ["product_lines_id" => $line["id"], "options_id" => $option];
@@ -164,7 +170,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
       $line["id"] = $this->lines["shipping"][0]["id"];
     }
     $this->add("shipping_lines", $line);
-    $line["id"] = $this->models->get("shipping_lines")->insert_id;
+    $line["id"] = $this->db->getInsertId("shipping_lines");
     return $line;
   }
 

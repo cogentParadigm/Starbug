@@ -10,8 +10,6 @@ class Table implements CollectionFilterInterface {
 
   protected $db;
   protected $type;
-  public $insert_id;
-  public $store_on_errors = false;
 
   protected $models;
   protected $schema;

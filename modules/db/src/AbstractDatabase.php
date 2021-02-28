@@ -8,6 +8,7 @@ use Starbug\Bundle\Bundle;
 use Starbug\Db\Query\BuilderInterface;
 
 abstract class AbstractDatabase implements DatabaseInterface {
+  public $errors;
   /**
    * Holds the number of records returned by last query.
    *
@@ -15,33 +16,25 @@ abstract class AbstractDatabase implements DatabaseInterface {
    */
   public $record_count;
   /**
-   * Holds the active scope (usually 'global' or a model name).
-   *
-   * @var string
-   */
-  public $active_scope = "global";
-  /**
    * Table prefix.
    *
    * @var string
    */
-  public $prefix;
+  protected $prefix;
   /**
    * Name of database.
    *
    * @var string
    */
-  public $database_name;
+  protected $database_name;
   /**
    * Holds records waiting to be stored
    *
    * @var QueryQueue
    */
-  public $queue;
+  protected $queue;
 
-  public $errors;
-
-  public $operators = [
+  protected $operators = [
     '=' => 1,
     '>' => 1,
     '<' => 1,
@@ -67,9 +60,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
   const PHASE_BEFORE_DELETE = 3;
   const PHASE_AFTER_DELETE = 4;
 
-  public function __construct(ModelFactoryInterface $models, HookFactoryInterface $hook_builder, BuilderFactory $queryBuilderFactory, ConfigInterface $config) {
-    $this->models = $models;
-    $this->hook_builder = $hook_builder;
+  public function __construct(BuilderFactory $queryBuilderFactory, ConfigInterface $config) {
     $this->queryBuilderFactory = $queryBuilderFactory;
     $this->config = $config;
     $this->queue = new QueryQueue();
@@ -97,34 +88,48 @@ abstract class AbstractDatabase implements DatabaseInterface {
 
     // loop through the input arguments
     foreach ($args as $idx => $a) {
-      if ($idx == 0) $collection = $a; // first argument is the collection
-      elseif ($idx == 1) $conditions = $a; // second argument are the conditions
-      else {
+      if ($idx == 0) {
+        $collection = $a; // first argument is the collection
+      } elseif ($idx == 1) {
+        $conditions = $a; // second argument are the conditions
+      } else {
         $arg = $a;
-        if (!empty($arg['orderby'])) $arg['sort'] = $arg['orderby']; // DEPRECATED: use sort
+        if (!empty($arg['orderby'])) {
+          $arg['sort'] = $arg['orderby']; // DEPRECATED: use sort
+        }
       }
     }
     $args = $arg;
 
     // apply conditions
     $query = $this->query($collection);
-    if (!is_array($conditions)) $conditions = [$conditions];
+    if (!is_array($conditions)) {
+      $conditions = [$conditions];
+    }
     foreach ($conditions as $k => $v) {
       if (isset($this->operators[$k])) {
         $query->conditions($v, $k);
       } else {
         $col = ($k === 0) ? "id" : $k;
         // if id is compared for equality, set the limit to 1
-        if ($col === "id" && !is_array($v)) $args['limit'] = 1;
+        if ($col === "id" && !is_array($v)) {
+          $args['limit'] = 1;
+        }
         $query->condition($col, $v);
       }
     }
 
     if (!empty($args['sort'])) {
-      foreach ($args['sort'] as $key => $direction) $query->sort($key, $direction);
+      foreach ($args['sort'] as $key => $direction) {
+        $query->sort($key, $direction);
+      }
     }
-    if (!empty($args['limit'])) $query->limit($args['limit']);
-    if (!empty($args['skip'])) $query->skip($args['skip']);
+    if (!empty($args['limit'])) {
+      $query->limit($args['limit']);
+    }
+    if (!empty($args['skip'])) {
+      $query->skip($args['skip']);
+    }
 
 
     // obtain query result
@@ -173,19 +178,24 @@ abstract class AbstractDatabase implements DatabaseInterface {
   public function queue($name, $fields = [], $from = "auto", $unshift = false) {
     $query = $this->queryBuilderFactory->create($this)->from($name)->set($fields);
 
-    if ($from === "auto" && !empty($fields['id'])) $from = ["id" => $fields['id']];
+    if ($from === "auto" && !empty($fields['id'])) {
+      $from = ["id" => $fields['id']];
+    }
 
     if (!empty($from) && is_array($from)) {
       $query->mode("update");
-      foreach ($from as $c => $v) $query->condition($c, $v);
+      foreach ($from as $c => $v) {
+        $query->condition($c, $v);
+      }
     } else {
       $query->mode("insert");
     }
 
-    if ($this->models->get($name)->store_on_errors) $query->store_on_errors = true;
-
-    if ($unshift) $this->queue->unshift($query);
-    else $this->queue->push($query);
+    if ($unshift) {
+      $this->queue->unshift($query);
+    } else {
+      $this->queue->push($query);
+    }
   }
 
   /**
@@ -210,7 +220,9 @@ abstract class AbstractDatabase implements DatabaseInterface {
   }
 
   public function prefix($table) {
-    if (substr($table, 0, 1) == "(") return $table;
+    if (substr($table, 0, 1) == "(") {
+      return $table;
+    }
     return $this->prefix.$table;
   }
 
@@ -220,17 +232,21 @@ abstract class AbstractDatabase implements DatabaseInterface {
       $key = "";
     }
     $parts = empty($key) ? [] : explode(".", $key);
-    if ($values) return $this->errors->get(...$parts);
-    elseif (!empty($parts)) return $this->errors->has(...$parts);
-    else return !$this->errors->isEmpty();
+    if ($values) {
+      return $this->errors->get(...$parts);
+    } elseif (!empty($parts)) {
+      return $this->errors->has(...$parts);
+    } else {
+      return !$this->errors->isEmpty();
+    }
   }
 
   public function error($error, $field = "global", $scope = "global") {
     $parts = array_merge([$scope], explode(".", $field));
     $parts[] = is_array($error) ? $error : [$error];
     $this->errors->set(...$parts);
-    $statement = $this->prepare("INSERT INTO ".$this->prefix."errors (type, field, message, action, created, modified) VALUES (?, ?, ?, ?, NOW(), NOW())");
-    $statement->execute([$scope, $field, $error, $this->models->get($scope)->action]);
+    $statement = $this->prepare("INSERT INTO ".$this->prefix."errors (type, field, message, created, modified) VALUES (?, ?, ?, NOW(), NOW())");
+    $statement->execute([$scope, $field, $error]);
   }
 
   public function setInsertId($table, $id) {

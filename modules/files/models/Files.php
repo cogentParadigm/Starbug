@@ -56,7 +56,7 @@ class Files extends Table {
       }
       $this->store($record);
       if ((!$this->errors()) && (!empty($record['filename']))) {
-        $id = (empty($record['id'])) ? $this->insert_id : $record['id'];
+        $id = (empty($record['id'])) ? $this->db->getInsertId("files") : $record['id'];
         $stream = fopen($tmpName, "r+");
         $success = $this->filesystems->getFilesystem($record["location"])->writeStream($id."_".$record["filename"], $stream);
         if (is_resource($stream)) {

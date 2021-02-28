@@ -15,8 +15,7 @@ class Executor implements ExecutorInterface {
   protected $compiler;
   protected $schema;
 
-  public function __construct(ModelFactoryInterface $models, HookFactoryInterface $hookFactory, CompilerInterface $compiler, SchemerInterface $schemer) {
-    $this->models = $models;
+  public function __construct(HookFactoryInterface $hookFactory, CompilerInterface $compiler, SchemerInterface $schemer) {
     $this->hookFactory = $hookFactory;
     $this->compiler = $compiler;
     $this->schema = $schemer->getSchema();
@@ -29,15 +28,21 @@ class Executor implements ExecutorInterface {
     $db = $builder->getDatabase();
     $query = $builder->getQuery();
     if (!$query->isRaw() && ($query->isInsert() || $query->isUpdate())) {
-      if (!$query->isValidated()) $this->validate($builder, self::PHASE_VALIDATION);
+      if (!$query->isValidated()) {
+        $this->validate($builder, self::PHASE_VALIDATION);
+      }
       $this->validate($builder, self::PHASE_STORE);
     }
 
     $result = $this->compiler->build($query);
 
-    if ($db->errors() && !$query->isSelect() && $query->errorsPreventSaving()) return false;
+    if ($db->errors() && !$query->isSelect() && $query->errorsPreventSaving()) {
+      return false;
+    }
 
-    if ($query->isDelete()) $this->validate($builder, self::PHASE_BEFORE_DELETE);
+    if ($query->isDelete()) {
+      $this->validate($builder, self::PHASE_BEFORE_DELETE);
+    }
     if ($result->isExecutable()) {
       $records = $db->prepare($result->getSql());
       $records->execute($query->getParameters());
@@ -49,11 +54,13 @@ class Executor implements ExecutorInterface {
         if ($query->isInsert()) {
           $query->setValue("id", $db->lastInsertId());
           $db->setInsertId($query->getTable()->getName(), $db->lastInsertId());
-          $this->models->get($query->getTable()->getName())->insert_id = $db->lastInsertId();
         }
         if (!$query->isRaw()) {
-          if ($query->isDelete()) $this->validate($builder, self::PHASE_AFTER_DELETE);
-          else $this->validate($builder, self::PHASE_AFTER_STORE);
+          if ($query->isDelete()) {
+            $this->validate($builder, self::PHASE_AFTER_DELETE);
+          } else {
+            $this->validate($builder, self::PHASE_AFTER_STORE);
+          }
         }
         return $this->record_count;
       }
@@ -62,7 +69,9 @@ class Executor implements ExecutorInterface {
       // with only 'virtual' fields, which will be very rare
       // since most tables will have a modified flag
       $this->record_count = 0;
-      if (!$query->isRaw() && $query->isUpdate()) $this->validate($builder, self::PHASE_AFTER_STORE);
+      if (!$query->isRaw() && $query->isUpdate()) {
+        $this->validate($builder, self::PHASE_AFTER_STORE);
+      }
       return $this->record_count;
     }
   }
@@ -74,8 +83,12 @@ class Executor implements ExecutorInterface {
     $db = $builder->getDatabase();
     $query = $builder->getQuery();
     $result = $this->compiler->build($query);
-    if ($db->errors()) return false;
-    if (empty($params)) $params = $query->getParameters();
+    if ($db->errors()) {
+      return false;
+    }
+    if (empty($params)) {
+      $params = $query->getParameters();
+    }
     $records = $db->prepare($result->getCountSql());
     $records->execute($params);
     $count = $records->fetchColumn();
@@ -102,7 +115,9 @@ class Executor implements ExecutorInterface {
         }
       }
     }
-    if ($phase == self::PHASE_VALIDATION) $query->setValidated(true);
+    if ($phase == self::PHASE_VALIDATION) {
+      $query->setValidated(true);
+    }
   }
 
   /**
@@ -117,7 +132,9 @@ class Executor implements ExecutorInterface {
    */
   public function interpolate(QueryInterface $query, $params = null) {
     $result = $this->compiler->build($query);
-    if (is_null($params)) $params = $query->getParameters();
+    if (is_null($params)) {
+      $params = $query->getParameters();
+    }
     $keys = [];
     $values = $params;
 
@@ -129,13 +146,19 @@ class Executor implements ExecutorInterface {
         $keys[] = '/[?]/';
       }
 
-      if (is_array($value)) $values[$key] = implode(',', $value);
+      if (is_array($value)) {
+        $values[$key] = implode(',', $value);
+      }
 
-      if (is_null($value)) $values[$key] = 'NULL';
+      if (is_null($value)) {
+        $values[$key] = 'NULL';
+      }
     }
     // Walk the array to see if we can add single-quotes to strings
     array_walk($values, function (&$value, $key) {
-      if (!is_numeric($value) && $value != "NULL") $value = "'".$value."'";
+      if (!is_numeric($value) && $value != "NULL") {
+        $value = "'".$value."'";
+      }
     });
 
     $interpolation = preg_replace($keys, $values, $result->getSql());
@@ -148,11 +171,16 @@ class Executor implements ExecutorInterface {
     $key = false;
     $model = $query->getTable()->getName();
     $alias = $query->getAlias();
-    if ($query->hasValue($column)) $key = $column;
-    elseif ($query->hasValue($model.".".$column)) $key = $model.".".$column;
-    elseif ($query->hasValue($alias.".".$column)) $key = $alias.".".$column;
-    if (!isset($this->hooks["store_".$column."_".$hook])) $this->hooks["store_".$column."_".$hook] = $this->hookFactory->get("store/".$hook);
-    $wasHook = $hook;
+    if ($query->hasValue($column)) {
+      $key = $column;
+    } elseif ($query->hasValue($model.".".$column)) {
+      $key = $model.".".$column;
+    } elseif ($query->hasValue($alias.".".$column)) {
+      $key = $alias.".".$column;
+    }
+    if (!isset($this->hooks["store_".$column."_".$hook])) {
+      $this->hooks["store_".$column."_".$hook] = $this->hookFactory->get("store/".$hook);
+    }
     foreach ($this->hooks["store_".$column."_".$hook] as $hook) {
       // hooks are invoked in 3 phases
       // 0 = validate (before)
@@ -160,21 +188,33 @@ class Executor implements ExecutorInterface {
       // 2 = after
       if ($phase == self::PHASE_VALIDATION) {
         if ($key == false) {
-          if ($query->isInsert()) $hook->emptyBeforeInsert($builder, $column, $argument);
-          elseif ($query->isUpdate()) $hook->emptyBeforeUpdate($builder, $column, $argument);
+          if ($query->isInsert()) {
+            $hook->emptyBeforeInsert($builder, $column, $argument);
+          } elseif ($query->isUpdate()) {
+            $hook->emptyBeforeUpdate($builder, $column, $argument);
+          }
           $hook->emptyValidate($builder, $column, $argument);
         } else {
-          if ($query->isInsert()) $query->setValue($key, $hook->beforeInsert($builder, $key, $query->getValue($key), $column, $argument));
-          elseif ($query->isUpdate()) $query->setValue($key, $hook->beforeUpdate($builder, $key, $query->getValue($key), $column, $argument));
+          if ($query->isInsert()) {
+            $query->setValue($key, $hook->beforeInsert($builder, $key, $query->getValue($key), $column, $argument));
+          } elseif ($query->isUpdate()) {
+            $query->setValue($key, $hook->beforeUpdate($builder, $key, $query->getValue($key), $column, $argument));
+          }
           $query->setValue($key, $hook->validate($builder, $key, $query->getValue($key), $column, $argument));
         }
       } elseif ($phase == self::PHASE_STORE && $key != false) {
-        if ($query->isInsert()) $query->setValue($key, $hook->insert($builder, $key, $query->getValue($key), $column, $argument));
-        elseif ($query->isUpdate()) $query->setValue($key, $hook->update($builder, $key, $query->getValue($key), $column, $argument));
+        if ($query->isInsert()) {
+          $query->setValue($key, $hook->insert($builder, $key, $query->getValue($key), $column, $argument));
+        } elseif ($query->isUpdate()) {
+          $query->setValue($key, $hook->update($builder, $key, $query->getValue($key), $column, $argument));
+        }
         $query->setValue($key, $hook->store($builder, $key, $query->getValue($key), $column, $argument));
       } elseif ($phase == self::PHASE_AFTER_STORE && $key != false) {
-        if ($query->isInsert()) $hook->afterInsert($builder, $key, $query->getValue($key), $column, $argument);
-        elseif ($query->isUpdate()) $hook->afterUpdate($builder, $key, $query->getValue($key), $column, $argument);
+        if ($query->isInsert()) {
+          $hook->afterInsert($builder, $key, $query->getValue($key), $column, $argument);
+        } elseif ($query->isUpdate()) {
+          $hook->afterUpdate($builder, $key, $query->getValue($key), $column, $argument);
+        }
         $hook->afterStore($builder, $key, $query->getValue($key), $column, $argument);
       } elseif ($phase == self::PHASE_BEFORE_DELETE) {
         $hook->beforeDelete($builder, $column, $argument);

@@ -1,14 +1,12 @@
 <?php
 namespace Starbug\Payment;
 
-use Starbug\Core\ModelFactoryInterface;
-use Omnipay\Common\GatewayInterface as OmnipayInterface;
 use Omnipay\Common\CreditCard;
 
 class TokenGateway extends Gateway implements TokenGatewayInterface {
   public function createSubscription($subscription) {
     if (!empty($subscription["product"])) {
-      $product = $this->models->get("products")->load($subscription["product"]);
+      $product = $this->db->get("products", $subscription["product"]);
       $subscription["unit"] = $product["unit"];
       $subscription["interval"] = $product["interval"];
       $subscription["limit"] = $product["limit"];
@@ -18,34 +16,40 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
       $subscription["card"] = $card["id"];
     }
     foreach (['amount', 'unit', 'interval'] as $field) {
-      if (empty($subscription[$field])) $this->models->get("orders")->error('This field is required', $field);
+      if (empty($subscription[$field])) $this->db->error("This field is required", $field, "orders");
     }
     if (empty($subscription["start_date"])) $subscription["start_date"] = date("Y-m-d");
-    if (!$this->models->get("orders")->errors()) {
+    if (!$this->db->errors("orders")) {
       // prevent attempts to update subscriptions using this method
       unset($subscription["id"]);
       $next_billing = strtotime($subscription["start_date"] . "+ " . $subscription["interval"] . " " . $subscription["unit"]);
       $subscription["expiration_date"] = date("Y-m-d 00:00:00", $next_billing + 86400);
       $this->saveSubscription($subscription);
-      if (!$this->models->get("subscriptions")->errors()) {
+      if (!$this->db->errors("subscriptions")) {
         // create a bill for the next payment
-        $this->models->get("bills")->store([
+        $this->db->store("bills", [
           "amount" => $subscription["amount"],
           "due_date" => $subscription["expiration_date"],
           "scheduled_date" => date("Y-m-d 00:00:00", $next_billing),
-          "subscriptions_id" => $this->models->get("subscriptions")->insert_id,
+          "subscriptions_id" => $this->db->getInsertId("subscriptions"),
           "scheduled" => "1"
         ]);
       }
     }
   }
   public function updateSubscription($subscription) {
-    if (empty($subscription["id"])) $this->models->get("subscriptions")->error('You must specify a subscription to update', 'global');
-    else $this->saveSubscription(["id" => $subscription["id"], "card" => $subscription["card"]]);
+    if (empty($subscription["id"])) {
+      $this->db->error("You must specify a subscription to update", "global", "subscriptions");
+    } else {
+      $this->saveSubscription(["id" => $subscription["id"], "card" => $subscription["card"]]);
+    }
   }
   public function cancelSubscription($subscription) {
-    if (empty($subscription["id"])) $this->models->get("subscriptions")->error('You must specify a subscription to update', 'global');
-    else $this->saveSubscription(["id" => $subscription["id"], "canceled" => 1, "active" => "0"]);
+    if (empty($subscription["id"])) {
+      $this->db->error("You must specify a subscription to update", "global", "subscriptions");
+    } else {
+      $this->saveSubscription(["id" => $subscription["id"], "canceled" => 1, "active" => "0"]);
+    }
   }
   public function processSubscription($subscription) {
     $complete = false;
@@ -57,7 +61,7 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
       "amount" => $subscription["amount"]
     ];
     $this->purchase($purchase);
-    if (!$this->models->get("orders")->errors()) {
+    if (!$this->db->errors("orders")) {
       $update = [
         "id" => $subscription["id"],
         "expiration_date" => date("Y-m-d H:i:s", strtotime($subscription["expiration_date"] . "+ " . $subscription["interval"] . " " . $subscription["unit"]))
@@ -67,13 +71,13 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
         $update["completed"] = 1;
         $update["active"] = "0";
       }
-      $this->models->get("subscriptions")->store($update);
+      $this->db->store("subscriptions", $update);
       // the payment succeeded so add it to the bill and mark it as paid
-      $payment = $this->models->get("payments")->insert_id;
-      $this->models->get("bills")->store(["id" => $subscription["bill"], "payments" => "+".$payment, "paid" => "1"]);
+      $payment = $this->db->getInsertId("payments");
+      $this->db->store("bills", ["id" => $subscription["bill"], "payments" => "+".$payment, "paid" => "1"]);
       if (!$complete && $subscription["active"] && !$subscription["canceled"]) {
         // create a bill for the next payment
-        $this->models->get("bills")->store([
+        $this->db->store("bills", [
           "amount" => $subscription["amount"],
           "due_date" => $subscription["expiration_date"],
           "scheduled_date" => date("Y-m-d 00:00:00", strtotime($subscription["expiration_date"]) - 86400),
@@ -82,10 +86,10 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
         ]);
       }
     } else {
-      if (isset($this->models->get("payments")->insert_id)) {
+      if (!is_null($this->db->getInsertId("payments"))) {
         // the payment was decline so add it to the bill and unschedule it
-        $payment = $this->models->get("payments")->insert_id;
-        $this->models->get("bills")->store(["id" => $subscription["bill"], "payments" => "+".$payment, "scheduled" => "0"]);
+        $payment = $this->db->getInsertId("payments");
+        $this->db->store("bills", ["id" => $subscription["bill"], "payments" => "+".$payment, "scheduled" => "0"]);
       }
       $this->sendDeclinedNotification($subscription["id"]);
     }
@@ -93,20 +97,22 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
   protected function saveSubscription($subscription) {
     $record = [];
     foreach (['id', 'orders_id', 'product', 'amount', 'start_date', 'unit', 'interval', 'limit', 'card', 'canceled', 'completed', 'expiration_date'] as $field) {
-      if (!empty($subscription[$field])) $record[$field] = $subscription[$field];
+      if (!empty($subscription[$field])) {
+        $record[$field] = $subscription[$field];
+      }
     }
-    $this->models->get("subscriptions")->store($record);
-    if (!$this->models->get("subscriptions")->errors()) {
+    $this->db->store("subscriptions", $record);
+    if (!$this->db->errors("subscriptions")) {
       if (!empty($subscription["payment"])) {
-        $id = empty($subscription["id"]) ? $this->models->get("subscriptions")->insert_id : $subscription["id"];
-        $this->models->get("payments")->store(["id" => $subscription["payment"], "subscriptions_id" => $id]);
+        $id = empty($subscription["id"]) ? $this->db->getInsertId("subscriptions") : $subscription["id"];
+        $this->db->store("payments", ["id" => $subscription["payment"], "subscriptions_id" => $id]);
       }
     }
   }
   public function createCard($options) {
     $options = $this->validateCard($options);
     // if we have all the fields, continue processing
-    if (!$this->models->get("orders")->errors()) {
+    if (!$this->db->errors("orders")) {
       $card = new CreditCard($options);
       $response = $this->gateway->createCard(["card" => $card, "forceCardUpdate" => true] + $options)->send();
       if ($response->isSuccessful()) {
@@ -118,16 +124,18 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
           "month" => $card->getExpiryMonth(),
           "year" => $card->getExpiryYear()
         ];
-        $this->models->get("payment_cards")->store($record);
+        $this->db->store("payment_cards", $record);
         return $this->getCard();
       } else {
-        $this->models->get("orders")->error($response->getMessage(), 'global');
+        $this->db->error($response->getMessage(), "global", "orders");
       }
     }
   }
   public function getCard($id = false) {
-    if (!$id) $id = $this->models->get("payment_cards")->insert_id;
-    return $this->models->get("payment_cards")->load($id);
+    if (!$id) {
+      $id = $this->db->getInsertId("payment_cards");
+    }
+    return $this->db->get("payment_cards", $id);
   }
   public function purchase($payment) {
     if (!empty($payment["card"])) {
@@ -136,13 +144,15 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
     }
     // check for required fields
     foreach (['cardReference', 'amount'] as $field) {
-      if (empty($payment[$field])) $this->models->get("orders")->error('This field is required', $field);
+      if (empty($payment[$field])) {
+        $this->db->error("This field is required", $field, "orders");
+      }
     }
     // if we have all the fields, continue processing
-    if (!$this->models->get("orders")->errors()) {
+    if (!$this->db->errors("orders")) {
       $response = $this->gateway->purchase(["amount" => floatval($payment["amount"]/100), "cardReference" => $payment["cardReference"]])->send();
       if (!$response->isSuccessful()) {
-        $this->models->get("orders")->error($response->getMessage(), 'global');
+        $this->db->error($response->getMessage(), "global", "orders");
       }
       $code = $response->getResultCode();
       $txn_id = "";
@@ -150,15 +160,16 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
         $txn_id = $txn->getTransId();
       }
       $record = ["orders_id" => $payment["orders_id"], "subscriptions_id" => $payment["subscriptions_id"], "response_code" => $code, "txn_id" => $txn_id, "amount" => $payment["amount"], "response" => $response->getData()->asXML()];
-      $this->models->get("payments")->store($record);
+      $this->db->store("payments", $record);
     }
   }
   protected function sendDeclinedNotification($sid) {
-    $subscription = $this->models->get("subscriptions")->query()->condition("subscriptions.id", $sid)
+    $subscription = $this->db->query("subscriptions")->condition("subscriptions.id", $sid)
+      ->select("subscriptions.*")
       ->select("subscriptions.product.name as description,subscriptions.orders_id.email as email")
       ->select(["brand", "number", "month", "year"], "subscriptions.card")->one();
-    $bill = $this->models->get("bills")->query()->condition("subscriptions_id", $sid)->sort("due_date DESC")->one();
-    $reason = $this->models->get("orders")->errors("global", true);
+    $bill = $this->db->query("bills")->condition("subscriptions_id", $sid)->sort("due_date DESC")->one();
+    $reason = $this->db->errors("orders.global", true);
     $subscription["details"] = implode("\n", [
       "<p><strong>Card:</strong>".$subscription["brand"]." xxxx".$subscription["number"]."</p>",
       "<p><strong>Payment amount:</strong>".$this->priceFormatter->format($subscription["amount"])."</p>",
