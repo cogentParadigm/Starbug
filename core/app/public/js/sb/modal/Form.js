@@ -20,7 +20,10 @@ define([
     },
     _onSubmit: function(evt){
       evt.preventDefault();
-      this.options.formData[evt.target.getAttribute("name")] = evt.target.getAttribute("value");
+      var name = evt.target.getAttribute("name");
+      if (name) {
+        this.options.formData[name] = evt.target.getAttribute("value");
+      }
       this.execute();
       return false;
     },
