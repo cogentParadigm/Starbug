@@ -18,7 +18,7 @@ class ControllerMiddleware implements MiddlewareInterface {
   public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
     $this->container->set("Psr\Http\Message\ServerRequestInterface", $request);
     $route = $request->getAttribute("route");
-    $arguments = $route->getOptions();
+    $arguments = $route->getOptions() + ["route" => $route];
     return $this->dispatch($route->getController(), $arguments);
   }
   public function dispatch($controller, $arguments = []): ResponseInterface {

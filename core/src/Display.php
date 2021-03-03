@@ -41,10 +41,12 @@ class Display {
    */
   public function option($name, $value = null) {
     if (is_array($name)) {
-      foreach ($name as $k => $v) $this->option($k, $v);
+      foreach ($name as $k => $v) {
+        $this->option($k, $v);
+      }
     } elseif (is_null($value)) {
       return $this->options[$name];
-    } elseif (is_array($this->options[$name])) {
+    } elseif (isset($this->options[$name]) && is_array($this->options[$name])) {
       $this->options[$name][] = $value;
     } else {
       $this->options[$name] = $value;
@@ -56,7 +58,9 @@ class Display {
    */
   public function attr($name, $value = null) {
     if (is_array($name)) {
-      foreach ($name as $k => $v) $this->attr($k, $v);
+      foreach ($name as $k => $v) {
+        $this->attr($k, $v);
+      }
     } elseif (is_null($value)) {
       return $this->attributes[$name];
     } elseif (isset($this->attributes[$name]) && is_array($this->attributes[$name])) {
