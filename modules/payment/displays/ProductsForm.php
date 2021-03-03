@@ -26,7 +26,7 @@ class ProductsForm extends FormDisplay {
     $this->add(["sku", "label" => "SKU", "pane" => "top"]);
     $this->add(["name", "pane" => "top"]);
     $this->add(["description", "input_type" => "textarea", "pane" => "bottom"]);
-    $this->add(["content", "input_type" => "textarea", "pane" => "bottom"]);
+    $this->add(["content", "input_type" => "textarea", "class" => "rich-text", "pane" => "bottom"]);
     $this->add(["thumbnail", "input_type" => "text", "pane" => "bottom", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "browseEnabled: true"]);
     $this->add(["photos", "input_type" => "text", "pane" => "bottom", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "selectionParams: {size: 0}, browseEnabled: true"]);
 

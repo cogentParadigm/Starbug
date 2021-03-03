@@ -4,6 +4,10 @@ namespace Starbug\Payment;
 use Starbug\Core\FormCollection;
 
 class ProductsFormCollection extends FormCollection {
+  public function build($query, $ops) {
+    $query->select("path.alias as path");
+    return parent::build($query, $ops);
+  }
   public function filterRows($rows) {
     foreach ($rows as &$row) {
       $row["options"] = [];

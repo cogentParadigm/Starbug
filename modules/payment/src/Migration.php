@@ -65,7 +65,6 @@ class Migration extends AbstractMigration {
       ["notes", "type" => "text", "default" => ""],
       ["thumbnail", "type" => "int", "references" => "files id", "null" => "", "default" => "NULL"],
       ["photos", "type" => "files", "optional" => ""],
-      ["position", "type" => "int", "ordered" => "type"],
       ["categories", "type" => "terms", "optional" => ""],
       ["meta_keywords", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
       ["meta_description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
