@@ -11,7 +11,7 @@ define([
 		values:[],
 		postCreate: function() {
 			this.inherited(arguments);
-			this.domNode.setAttribute('data-depend', this.key);
+			if (this.key.length) this.domNode.setAttribute('data-depend', this.key);
 		},
 		disable: function() {
 			query(this.domNode.parentNode).closest('.form-group').addClass("hidden");
