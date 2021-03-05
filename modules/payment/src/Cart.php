@@ -121,6 +121,13 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     return $count;
   }
 
+  public function getTotal() {
+    $this->init(false);
+    $total = 0;
+    foreach ($this->lines['product'] as $line) $total += intval($line["qty"]) * intval($line["price"]);
+    return $total;
+  }
+
   public function addProduct($input) {
     $this->init();
     if (empty($input["qty"])) {

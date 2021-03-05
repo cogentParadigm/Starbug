@@ -4,6 +4,7 @@ namespace Starbug\Payment\Cart;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Bundle\BundleInterface;
 use Starbug\Core\DatabaseInterface;
+use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\Operation\Save;
 use Starbug\Payment\Cart;
 use Starbug\Payment\GatewayInterface;
@@ -12,7 +13,8 @@ use Starbug\Queue\QueueManagerInterface;
 
 class Payment extends Save {
   protected $model = "orders";
-  public function __construct(DatabaseInterface $db, Cart $cart, SessionHandlerInterface $session, GatewayInterface $gateway, TokenGatewayInterface $subscriptions, QueueManagerInterface $queues) {
+  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db, Cart $cart, SessionHandlerInterface $session, GatewayInterface $gateway, TokenGatewayInterface $subscriptions, QueueManagerInterface $queues) {
+    $this->models = $models;
     $this->db = $db;
     $this->cart = $cart;
     $this->session = $session;

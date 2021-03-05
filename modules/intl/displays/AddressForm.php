@@ -21,7 +21,9 @@ class AddressForm extends FormDisplay {
     $format = str_split($country['format']);
     $upper = str_split($country['upper']);
     $req = str_split($country['require']);
-    $this->add(["recipient", "input_type" => "text", "label" => "Full name", "required" => true]);
+    if (!empty($ops["includeRecipient"])) {
+      $this->add(["recipient", "input_type" => "text", "label" => "Full name", "required" => true]);
+    }
     $this->add(["address1", "input_type" => "text", "label" => "Address 1", "required" => true]);
     $this->add(["address2", "input_type" => "text", "label" => "Address 2"]);
     foreach ($format as $idx => $token) {

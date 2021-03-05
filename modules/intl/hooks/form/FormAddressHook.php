@@ -42,6 +42,6 @@ class FormAddressHook extends FormHook {
       $props[] = $k.':'.$v;
     }
     $field['data-dojo-props'] = implode(', ', $props);
-    $field["options"] = $options;
+    $field["options"] = $options + ($field["options"] ?? []);
   }
 }
