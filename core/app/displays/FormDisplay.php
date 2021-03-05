@@ -130,7 +130,10 @@ class FormDisplay extends ItemDisplay {
       $values = $key;
       $key = "";
     }
-    $parts = array_merge($this->input_name, empty($key) ? [] : explode(".", $key));
+    $parts = empty($key) ? [] : explode("[", $key);
+    $parts = array_map(function ($part) {
+      return rtrim($part, "]");
+    }, $parts);
     if ($values) {
       return $this->errors->get(...$parts);
     } elseif (!empty($parts)) {
