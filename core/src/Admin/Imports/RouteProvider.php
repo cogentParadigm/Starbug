@@ -22,7 +22,8 @@ class RouteProvider extends AdminRouteProvider {
       "view" => "admin/update.html",
       "form_header" => "Run Import",
       "action" => "run"
-    ]);
+    ])
+    ->onPost("Starbug\Core\Admin\Imports\Run");
 
     $this->addCrudRoutes($admin->addRoute("/imports-fields"), "imports_fields");
   }

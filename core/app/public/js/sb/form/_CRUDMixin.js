@@ -36,7 +36,7 @@ define([
     postCreate:function() {
       this.inherited(arguments);
       this.dialogParams.callback = lang.hitch(this, function(data) {
-        var object_id = query('input[name="id"]').attr('value')[0];
+        var object_id = query('input[name="id"]', this.dialog.domNode).attr('value')[0];
         if (false !== this.editing) {
           //allow replacement of an edited object
           if (object_id != this.editing) {
