@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Payment\Cart;
 
+use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Core\MailerInterface;
 use Starbug\Core\ModelFactoryInterface;
@@ -10,11 +11,12 @@ use Starbug\Queue\QueueInterface;
 use Starbug\Queue\WorkerInterface;
 
 class ConfirmOrder implements WorkerInterface {
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, MailerInterface $mailer, PriceFormatterInterface $priceFormatter) {
+  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, MailerInterface $mailer, PriceFormatterInterface $priceFormatter, SessionHandlerInterface $session) {
     $this->db = $db;
     $this->models = $models;
     $this->mailer = $mailer;
     $this->priceFormatter = $priceFormatter;
+    $this->session = $session;
   }
   public function process(TaskInterface $task, QueueInterface $queue) {
     $id = $task->getData()["order"];
