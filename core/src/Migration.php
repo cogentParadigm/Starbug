@@ -9,13 +9,13 @@ class Migration extends AbstractMigration {
     $this->schema->addTable(["users", "label_select" => "CONCAT(first_name, ' ', last_name)", "groups" => true],
       ["first_name", "type" => "string", "length" => "64", "list" => "true"],
       ["last_name", "type" => "string", "length" => "64", "list" => "true"],
-      ["email", "type" => "string", "length" => "128", "unique" => "", "list" => "true"],
+      ["email", "type" => "string", "length" => "128", "unique" => "", "null" => true],
       ["password", "type" => "password", "confirm" => "password_confirm", "optional_update" => ""],
       ["last_visit", "type" => "datetime", "default" => "0000-00-00 00:00:00", "list" => "true", "display" => "false"],
       ["password_token", "type" => "string", "default" => ""]
     );
     $this->schema->addTable(["sessions"],
-      ["users_id", "type" => "int", "references" => "users id"],
+      ["users_id", "type" => "int", "references" => "users id", "update" => "cascade", "delete" => "cascade"],
       ["token", "type" => "string"],
       ["expires", "type" => "datetime"]
     );
