@@ -84,9 +84,9 @@ class ApiRequest {
 
     // Populate default options.
     $options = $options + $this->options + $this->request->getQueryParams();
-    $range = $this->request->getHeader("HTTP_RANGE");
+    $range = $this->request->getHeaderLine("range");
     if (!empty($range)) {
-      list($start, $finish) = explode("-", end(explode("=", $range)));
+      list($start, $finish) = explode("-", explode("=", $range)[1]);
       $options['limit'] = 1 + (int) $finish - (int) $start;
       $options['page'] = 1 + (int) $start/$options['limit'];
     }
