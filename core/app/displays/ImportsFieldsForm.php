@@ -30,8 +30,8 @@ class ImportsFieldsForm extends FormDisplay {
     $this->add(["source", "input_type" => "select", "options" => $this->source_values]);
     $model = $this->models->get($options['model']);
     $dest_ops = ["destination", "input_type" => "select"];
-    if (method_exists($model, "import_fields")) {
-      $dest_ops = array_merge($dest_ops, $model->import_fields($options));
+    if (method_exists($model, "importFields")) {
+      $dest_ops = array_merge($dest_ops, $model->importFields($options));
     } else {
       $dest_ops['options'] = array_keys($this->schema->getColumn($options['model']));
     }

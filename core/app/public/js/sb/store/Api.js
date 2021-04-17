@@ -84,7 +84,7 @@ define([
 			var data = {};
 			if (options.formData) data = options.formData;
 			else {
-				for (var k in object) data[model+'['+k+']'] = object[k];
+				data = object;
 				data.oid = config.csrfToken;
 			}
 			if (options.action) {

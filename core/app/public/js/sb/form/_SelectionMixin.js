@@ -30,9 +30,13 @@ define([
     createSelectionParams: function() {
       this.selectionParams = this.selectionParams || {};
     },
-    refresh: function() {
+    refresh: function(event) {
+      event = event || {};
+      event.suppress = event.suppress || false;
       this.renderValues();
-      on.emit(this.domNode, "change", {bubbles: true, cancelable: true});
+      if (!event.suppress) {
+        on.emit(this.domNode, "change", {bubbles: true, cancelable: true});
+      }
       this.renderSelection();
       if (typeof this.updateStyles == "function") {
         this.updateStyles();
@@ -57,7 +61,8 @@ define([
         });
       }
     },
-    _setValueAttr: function(value) {
+    _setValueAttr: function(value, suppress) {
+      suppress = suppress || false;
       this.selection.selection.setData([]);
       if (value.length) {
         if (false === this.collection) {
@@ -65,36 +70,41 @@ define([
         } else {
           return this.collection.filter({id:value}).fetch().then(lang.hitch(this, function(results) {
             if (results.length) {
-              this.selection.add(results);
+              this.selection.add(results, {suppress: suppress});
             } else {
-              this.refresh();
+              this.refresh({suppress: suppress});
             }
           }));
         }
       } else {
-        this.refresh();
+        this.refresh({suppress: suppress});
       }
     },
     _getValueAttr: function() {
       return this.domNode.value;
     },
-    _getDisplayedValueAttr: function() {
+    _getDisplayedValueAttr: function(items) {
       var labels = [];
-      var items = this.selection.getData();
+      items = items || this.selection.getData();
       for (var i = 0; i < items.length; i++) {
         labels.push(items[i].label);
       }
       return labels.join(",");
     },
-    renderSelection: function() {
+    renderSelection: function(items) {
+      items = items || this.selection.getData();
       this.list.refresh();
-      this.list.renderArray(this.selection.getData());
+      this.list.renderArray(items);
     },
     destroy: function() {
       this.inherited(arguments);
       this.signals.forEach(function(signal) {
         signal.remove();
       });
+    },
+    get: function(name){
+      var names = this._getAttrNames(name);
+      return this[names.g] ? this[names.g].apply(this, Array.prototype.slice.call(arguments, 1)) : this._get(name);
     }
   });
 });

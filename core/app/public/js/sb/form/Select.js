@@ -16,7 +16,7 @@ define([
     },
     postCreate: function() {
       this.inherited(arguments);
-      this.selection.on('change', lang.hitch(this, 'onSelect'));
+      this.selection.on("change", lang.hitch(this, "onSelect"));
     },
     createSelectionNode: function() {
       this.selectionNode = this.controlNode;
@@ -27,12 +27,13 @@ define([
         this.controlNode.focus();
       }
     },
-    renderSelection: function() {
-      this.selectionNode.value = this.get("displayedValue");
+    renderSelection: function(items) {
+      items = items || this.selection.getData();
+      this.selectionNode.value = this.get("displayedValue", items);
     },
-    _getDisplayedValueAttr: function() {
+    _getDisplayedValueAttr: function(items) {
       var labels = [];
-      var items = this.selection.getData();
+      items = items || this.selection.getData();
       for (var i = 0; i < items.length; i++) {
         labels.push(items[i].label);
       }

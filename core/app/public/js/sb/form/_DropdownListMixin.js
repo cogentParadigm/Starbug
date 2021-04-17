@@ -57,7 +57,7 @@ define([
     refresh: function(event) {
       this.inherited(arguments);
       if (event && this.list && this.list.collection) {
-        if (this.list.collection.track == undefined) {
+        if (this.list.collection.track == undefined || (event.selection == undefined && event.previous == undefined)) {
           this.list.refresh();
         } else {
           var target = (event.selection.length > event.previous.length) ? event.selection : event.previous;

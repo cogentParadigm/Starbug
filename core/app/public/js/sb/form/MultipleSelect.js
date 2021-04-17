@@ -29,13 +29,13 @@ define([
       this.inherited(arguments);
       put(this.controlNode, "[readonly]");
     },
-    renderSelection: function() {
-      this.selectionNode.innerHTML = '';
-      var items = this.selection.getData();
+    renderSelection: function(items) {
+      this.selectionNode.innerHTML = "";
+      items = items || this.selection.getData();
       if (items.length > 0) {
-        domclass.remove(this.selectionNode, 'hidden');
+        domclass.remove(this.selectionNode, "hidden");
       } else {
-        domclass.add(this.selectionNode, 'hidden');
+        domclass.add(this.selectionNode, "hidden");
       }
       for (var i = 0;i<items.length;i++) {
         var button = theme.createSelectionItem.apply(this, [items[i]]);
@@ -44,8 +44,10 @@ define([
       }
     },
     attachDeselection: function(button, id) {
-      on(button, 'click', lang.hitch(this, function() {
-        this.selection.remove(id);
+      on(button, "click", lang.hitch(this, function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.list.delegate.remove(id);
       }));
     }
   });

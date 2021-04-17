@@ -8,10 +8,10 @@ define([
   "dojo/query",
   "dojo/dom-class",
   "dojo/dom-geometry"
-], function (declare, lang, Evented, put, Memory, on, query, domclass, geometry) {
+], function (declare, lang, Evented, Memory) {
   return declare([Evented], {
     size:1,
-    valuePrefix:'',
+    valuePrefix:"",
     constructor: function(kwArgs) {
       lang.mixin(this, kwArgs);
       this.selection = this.selection || new Memory({data: []});
@@ -25,7 +25,8 @@ define([
     getIdentity: function(item) {
       return this.valuePrefix + this.selection.getIdentity(item);
     },
-    add:function(items) {
+    add:function(items, params) {
+      params = params || {};
       var data = lang.clone(this.selection.data);
       var target_size = this.selection.data.length + items.length;
       if (this.size === 0) {
@@ -39,17 +40,19 @@ define([
       for (var i = 0;i < items.length;i++) {
         this.selection.put(items[i]);
       }
-      this.emit('change', {selection:this.selection.data, previous: data});
+      params.selection = this.selection.data;
+      params.previous = data;
+      this.emit("change", params);
     },
     remove: function(id) {
       var data = lang.clone(this.selection.data);
       this.selection.remove(id);
-      this.emit('change', {selection:this.selection.data, previous: data});
+      this.emit("change", {selection:this.selection.data, previous: data});
     },
     reset: function() {
       var data = lang.clone(this.selection.data);
       this.selection.setData([]);
-      this.emit('change', {selection:this.selection.data, previous: data});
+      this.emit("change", {selection:this.selection.data, previous: data});
     }
   });
 });
