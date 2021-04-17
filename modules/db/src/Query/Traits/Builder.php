@@ -324,6 +324,8 @@ trait Builder {
   }
 
   protected function createQuery() {
-    return new Query($this->db->getPrefix());
+    $query = new Query($this->db->getPrefix());
+    $query->setIdentifierQuoteCharacter($this->db->getIdentifierQuoteCharacter());
+    return $query;
   }
 }

@@ -70,7 +70,7 @@ trait Parsing {
       $token = array_pop($parts);
       $alias = $this->expand($query, implode(".", $parts), true);
       // get the field string and table name
-      $field = "`".$alias."`.".$token;
+      $field = $query->quoteIdentifier($alias).".".$token;
       $table = $query->getTable($alias);
       if (!empty($table)) {
         // otherwise we look at the field schema if we recognize the table

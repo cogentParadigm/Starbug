@@ -55,4 +55,7 @@ interface QueryInterface {
   public function addExclusion($column);
   public function removeExclusion($column);
   public function isExcluded($column);
+  public function quoteIdentifier($str);
+  public function getIdentifierQuoteCharacter();
+  public function setIdentifierQuoteCharacter($char);
 }

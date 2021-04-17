@@ -74,7 +74,8 @@ class Compiler implements CompilerInterface {
       'GROUP BY' => '', // query
       'HAVING' => '', // query
       'ORDER BY' => '', // query, delete (single table), update (single table)
-      'LIMIT' => '' // query, delete (single table), update (single table)
+      'LIMIT' => '', // query, delete (single table), update (single table)
+      'OFFSET' => ''
     ];
 
     // select, delete, or set
@@ -95,7 +96,10 @@ class Compiler implements CompilerInterface {
     if ($query->isSelect() || $query->isUpdate() || $query->isDelete()) $components['ORDER BY'] = $this->buildSort($query);
 
     // limit
-    if ($query->isSelect() || $query->isUpdate() || $query->isDelete()) $components['LIMIT'] = $this->buildLimit($query);
+    if ($query->isSelect() || $query->isUpdate() || $query->isDelete()) $components['LIMIT'] = $query->getLimit();
+
+    // offset
+    if ($query->isSelect() || $query->isUpdate() || $query->isDelete()) $components['OFFSET'] = $query->getSkip();
 
     // from
     if ($query->isSelect() || $query->isDelete()) $components['FROM'] = $this->buildFrom($query);
@@ -115,7 +119,7 @@ class Compiler implements CompilerInterface {
   protected function buildSelect($query) {
     $component = $query->getSelection();
     $select = [];
-    if (empty($component)) $select[] = "`".$query->getAlias()."`.*";
+    if (empty($component)) $select[] = $query->quoteIdentifier($query->getAlias()).".*";
     else {
       foreach ($component as $alias => $field) {
         if ($field instanceof QueryInterface) {
@@ -133,14 +137,14 @@ class Compiler implements CompilerInterface {
     $baseTableName = $baseTable->getName();
     $baseTableAlias = $baseTable->getAlias();
     $tables = $query->getTables();
-    $from = "`".$query->prefix($baseTableName)."`";
-    if (!$query->isInsert() && !$query->isTruncate()) $from .= " AS `".$baseTableAlias."`";
+    $from = $query->quoteIdentifier($query->prefix($baseTableName));
+    if (!$query->isInsert() && !$query->isTruncate()) $from .= " AS ".$query->quoteIdentifier($baseTableAlias);
     foreach ($tables as $alias => $table) {
       if ($alias == $baseTableAlias) continue;
-      $tableSegment = ("(" === substr($table->getName(), 0, 1)) ? $table->getName() : "`".$query->prefix($table->getName())."`";
+      $tableSegment = ("(" === substr($table->getName(), 0, 1)) ? $table->getName() : $query->quoteIdentifier($query->prefix($table->getName()));
       $joinType = $table->getJoinType();
       $joinType = $joinType ? " ".$joinType : "";
-      $segment = $joinType." JOIN ".$tableSegment." AS `".$alias."`";
+      $segment = $joinType." JOIN ".$tableSegment." AS ".$query->quoteIdentifier($alias);
       if (count($table) > 0) {
         $segment .= " ON ".$this->buildCondition($query, $table);
       }
@@ -160,7 +164,8 @@ class Compiler implements CompilerInterface {
         }
         if ($value == "NULL") $value = null;
         $idx = $this->incrementParameterIndex("set");
-        $set[] = "`".str_replace(".", "`.`", str_replace('`', '', $name))."` = :set".$idx;
+        $char = $query->getIdentifierQuoteCharacter();
+        $set[] = $query->quoteIdentifier(str_replace(".", $char.".".$char, str_replace($char, '', $name)))." = :set".$idx;
         $query->setParameter("set".$idx, $value);
       }
     }
@@ -264,6 +269,13 @@ class Compiler implements CompilerInterface {
   }
 
   protected function buildLimit($query) {
+    $limit = [];
+    if (!empty($query->getSkip())) $limit[] = $query->getSkip();
+    if (!empty($query->getLimit())) $limit[] = $query->getLimit();
+    return implode(', ', $limit);
+  }
+
+  protected function buildOffset($query) {
     $limit = [];
     if (!empty($query->getSkip())) $limit[] = $query->getSkip();
     if (!empty($query->getLimit())) $limit[] = $query->getLimit();

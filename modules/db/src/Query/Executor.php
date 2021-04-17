@@ -107,7 +107,7 @@ class Executor implements ExecutorInterface {
     if ($this->schema->hasTable($tableName)) {
       $columns = $this->schema->getTable($tableName)->getColumns();
       foreach ($columns as $column => $hooks) {
-        if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['null']) && !isset($hooks['optional'])) {
+        if (!isset($hooks['required']) && !isset($hooks['default']) && !isset($hooks['optional'])) {
           $hooks['required'] = "";
         }
         foreach ($hooks as $hook => $argument) {

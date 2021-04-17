@@ -20,4 +20,5 @@ class Query implements QueryInterface {
   use Traits\Set;
   use Traits\Exclusion;
   use Traits\Tagging;
+  use Traits\Quotation;
 }

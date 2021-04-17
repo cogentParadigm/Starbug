@@ -48,6 +48,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
     'NOT LIKE' => 1,
     'NOT RLIKE' => 1
   ];
+  protected $identifierQuoteChar = "\"";
   protected $config;
   protected $params;
   protected $models;
@@ -255,5 +256,14 @@ abstract class AbstractDatabase implements DatabaseInterface {
 
   public function getInsertId($table) {
     return isset($this->insertIds[$table]) ? $this->insertIds[$table] : null;
+  }
+
+  public function quoteIdentifier($str) {
+    $char = $this->getIdentifierQuoteCharacter();
+    return $char . $str . $char;
+  }
+
+  public function getIdentifierQuoteCharacter() {
+    return $this->identifierQuoteChar;
   }
 }
