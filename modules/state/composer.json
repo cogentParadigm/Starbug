@@ -1,0 +1,15 @@
+{
+  "name": "starbug/state",
+  "type": "starbug-module",
+  "description": "Starbug state module.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\State"
+  }
+}
