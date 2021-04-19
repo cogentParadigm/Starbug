@@ -38,7 +38,7 @@ trait Selection {
   }
 
   public function createSubquery() {
-    return new static($this->prefix);
+    return new static($this->prefix, $this->identifierQuoteCharacter);
   }
 
   public function setForUpdate($forUpdate = true) {

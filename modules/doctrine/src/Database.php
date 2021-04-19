@@ -37,4 +37,12 @@ class Database extends AbstractDatabase {
   public function getConnection() {
     return $this->connection;
   }
+
+  public function getIdentifierQuoteCharacter() {
+    return $this->getConnection()->getDatabasePlatform()->getIdentifierQuoteCharacter();
+  }
+
+  public function quoteIdentifier($str) {
+    return $this->getConnection()->quoteIdentifier($str);
+  }
 }

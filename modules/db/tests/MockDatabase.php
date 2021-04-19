@@ -60,4 +60,11 @@ class MockDatabase implements DatabaseInterface {
   public function failure($model, $action) {
     // Empty function.
   }
+  public function quoteIdentifier($str) {
+    $char = $this->getIdentifierQuoteCharacter();
+    return $char . $str . $char;
+  }
+  public function getIdentifierQuoteCharacter() {
+    return "`";
+  }
 }

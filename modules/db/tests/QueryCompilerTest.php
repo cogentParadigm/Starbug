@@ -18,7 +18,9 @@ class QueryCompilerTest extends TestCase {
   }
 
   protected function createQuery() {
-    return new Query("test_");
+    $query = new Query("test_");
+    $query->setIdentifierQuoteCharacter("`");
+    return $query;
   }
 
   protected function createCompiler() {
@@ -357,7 +359,7 @@ class QueryCompilerTest extends TestCase {
     $this->query->setSkip(10);
 
     // expected output
-    $expected = "SELECT `terms`.* FROM `test_terms` AS `terms` LIMIT 10, 5";
+    $expected = "SELECT `terms`.* FROM `test_terms` AS `terms` LIMIT 5 OFFSET 10";
 
     // compare
     $actual = $this->compile();

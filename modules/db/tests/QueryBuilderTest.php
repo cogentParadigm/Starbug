@@ -457,7 +457,7 @@ class QueryBuilderTest extends QueryBuilderTestBase {
     $this->createQuery()->from("terms")->limit(5)->skip(10);
 
     // Expected output.
-    $expected = "SELECT `terms`.* FROM `test_terms` AS `terms` LIMIT 10, 5";
+    $expected = "SELECT `terms`.* FROM `test_terms` AS `terms` LIMIT 5 OFFSET 10";
 
     // Compare.
     $actual = $this->compile();
