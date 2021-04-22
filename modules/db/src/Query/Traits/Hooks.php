@@ -25,15 +25,15 @@ trait Hooks {
   public function __call($name, $arguments) {
     if (!empty($this->extensions[$name])) {
       $extension = $this->extensions[$name];
-      call_user_func_array([$extension, $name], [&$this, $arguments]);
+      $result = call_user_func_array([$extension, $name], [&$this, $arguments]);
     } elseif (method_exists($this->query, $name)) {
       $result = call_user_func_array([$this->query, $name], $arguments);
-      if (!is_null($result)) {
-        return $result;
-      }
     } else {
       $trace = debug_backtrace();
       trigger_error('Call to undefined method via __call(): '.$name.' in '.$trace[0]['file'].' on line '.$trace[0]['line'], E_USER_WARNING);
+    }
+    if (!is_null($result)) {
+      return $result;
     }
     return $this;
   }
