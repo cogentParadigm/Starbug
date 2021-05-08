@@ -1,0 +1,8 @@
+{
+  "type":"{{ dbtype|default("mysql") }}",
+  "host":"{{ dbhost|default("localhost") }}",
+  "username":"{{ dbuser|default("root") }}",
+  "password":"",
+  "db":"{{ dbname|default("starbug") }}_test",
+  "prefix":"{{ dbprefix|default("sb_") }}"
+}

@@ -47,26 +47,9 @@ pipeline {
       steps {
         sh "docker-compose exec -u ${env.UID}: -T php composer install"
 
-        // Configure default database.
-        sh """
-          sed -i'' -e 's/\"username\":.*/\"username\":\"root\",/' app/etc/db/default.json
-          sed -i'' -e 's/\"password\":.*/\"password\":\"\",/' app/etc/db/default.json
-          sed -i'' -e 's/\"db\":.*/\"db\":\"${env.DB_NAME}\",/' app/etc/db/default.json
-          sed -i'' -e 's/\"prefix\":.*/\"prefix\":\"${env.DB_PREFIX}\"/' app/etc/db/default.json
-          cat app/etc/db/default.json
-        """
-
-        // Configure test database.
-        sh """
-          sed -i'' -e 's/\"username\":.*/\"username\":"root\",/' app/etc/db/test.json
-          sed -i'' -e 's/\"password\":.*/\"password\":\"\",/' app/etc/db/test.json
-          sed -i'' -e 's/\"db\":.*/\"db\":\"${env.DB_NAME}_test\",/' app/etc/db/test.json
-          cat app/etc/db/test.json
-        """
-
         // Setup/migrate database
         sh """
-          echo \"root\" | docker-compose exec -u ${env.UID}: -T php php sb setup --host=http://${env.DOMAIN}
+          docker-compose exec -u ${env.UID}: -T php php sb setup --host=http://${env.DOMAIN} --dbuser=root --dbname=${env.DB_NAME} --dbprefix=${env.DB_PREFIX}
           docker-compose exec -u ${env.UID}: -T php composer dump-autoload
         """
 
