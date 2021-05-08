@@ -4,13 +4,11 @@ namespace Starbug\Core;
 use Psr\Http\Message\ServerRequestInterface;
 
 class StoreUploadHook extends QueryHook {
-  protected $uploaded = false;
+  protected $db;
   protected $request;
-  protected $models;
   protected $files;
   public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, ServerRequestInterface $request) {
     $this->db = $db;
-    $this->models = $models;
     $this->request = $request;
     $this->files = $models->get("files");
   }
@@ -21,10 +19,10 @@ class StoreUploadHook extends QueryHook {
     }
   }
   public function store($query, $key, $value, $column, $argument) {
-    if ($this->uploaded) {
+    if ($query->getMeta("{$column}.upload.uploaded", false)) {
       return $value;
     } else {
-      $this->uploaded = true;
+      $query->setMeta("{$column}.upload.uploaded", true);
     }
     $files = $this->request->getUploadedFiles();
     $record = ["filename" => "", "mime_type" => "", "caption" => "{$query->model} {$column}"];

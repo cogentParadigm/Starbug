@@ -314,6 +314,14 @@ trait Builder {
     return $this;
   }
 
+  public function hasMeta($name) {
+    return $this->query->hasMeta($name);
+  }
+
+  public function getMeta($name, $default = null) {
+    return $this->query->getMeta($name, $default);
+  }
+
   public function reset() {
     $this->query = $this->createQuery();
     return $this;
@@ -324,8 +332,6 @@ trait Builder {
   }
 
   protected function createQuery() {
-    $query = new Query($this->db->getPrefix());
-    $query->setIdentifierQuoteCharacter($this->db->getIdentifierQuoteCharacter());
-    return $query;
+    return new Query($this->db->getPrefix(), $this->db->getIdentifierQuoteCharacter());
   }
 }

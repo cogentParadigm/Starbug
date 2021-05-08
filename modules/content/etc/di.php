@@ -14,5 +14,9 @@ return [
   'Starbug\Core\Routing\RouterInterface' => DI\decorate(function ($router, ContainerInterface $container) {
     $router->addAliasStorage($container->get('Starbug\Content\AliasStorage'));
     return $router;
-  })
+  }),
+  "db.query.executor.hooks" => DI\add([
+    "path" => "Starbug\Content\StorePathHook",
+    "blocks" => "Starbug\Content\StoreBlocksHook"
+  ])
 ];

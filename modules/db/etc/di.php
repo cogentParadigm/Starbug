@@ -27,6 +27,8 @@ return [
     return new QueryCompilerHook($schemer->getSchema());
   },
   'Starbug\Db\Query\CompilerInterface' => DI\autowire('Starbug\Db\Query\Compiler')->method('addHooks', DI\get('db.query.compiler.hooks')),
+  "Starbug\Db\Query\ExecutorHookFactoryInterface" => DI\autowire("Starbug\Db\Query\ExecutorHookFactory")
+    ->constructorParameter("hooks", DI\get("db.query.executor.hooks")),
   'db.query.compiler.hooks' => [
     DI\get('Starbug\Db\Schema\QueryCompilerHook')
   ],
@@ -34,5 +36,36 @@ return [
     'search' => DI\get('Starbug\Db\Query\Extensions\Search'),
     'getSearchFields' => DI\get('Starbug\Db\Query\Extensions\Search'),
     'action' => DI\get('Starbug\Db\Query\Extensions\Action')
+  ],
+  "db.query.executor.hooks" => [
+    "addslashes" => "Starbug\Core\StoreAddslashesHook",
+    "alias" => "Starbug\Core\StoreAliasHook",
+    "category" => "Starbug\Core\StoreCategoryHook",
+    "confirm" => "Starbug\Core\StoreConfirmHook",
+    "date" => "Starbug\Core\StoreDateHook",
+    "datetime" => "Starbug\Core\StoreDatetimeHook",
+    "default" => "Starbug\Core\StoreDefaultHook",
+    "email" => "Starbug\Core\StoreEmailHook",
+    "exclude" => "Starbug\Core\StoreExcludeHook",
+    "filter_var" => "Starbug\Core\StoreFilterVarHook",
+    "groups" => "Starbug\Core\StoreGroupsHook",
+    "length" => "Starbug\Core\StoreLengthHook",
+    "materialized_path" => "Starbug\Core\StoreMaterializedPathHook",
+    "md5" => "Starbug\Core\StoreMd5Hook",
+    "operation" => "Starbug\Core\StoreOperationHook",
+    "optional_update" => "Starbug\Core\StoreOptionalUpdateHook",
+    "ordered" => "Starbug\Core\StoreOrderedHook",
+    "owner" => "Starbug\Core\StoreOwnerHook",
+    "password" => "Starbug\Core\StorePasswordHook",
+    "references" => "Starbug\Core\StoreReferencesHook",
+    "required" => "Starbug\Core\StoreRequiredHook",
+    "selection" => "Starbug\Core\StoreSelectionHook",
+    "slug" => "Starbug\Core\StoreSlugHook",
+    "terms" => "Starbug\Core\StoreTermsHook",
+    "time" => "Starbug\Core\StoreTimeHook",
+    "timestamp" => "Starbug\Core\StoreTimestampHook",
+    "type" => "Starbug\Core\StoreTypeHook",
+    "unique" => "Starbug\Core\StoreUniqueHook",
+    "upload" => "Starbug\Core\StoreUploadHook"
   ]
 ];

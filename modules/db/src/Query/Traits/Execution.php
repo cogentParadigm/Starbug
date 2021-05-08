@@ -2,9 +2,10 @@
 namespace Starbug\Db\Query\Traits;
 
 use ArrayIterator;
+use Starbug\Core\DatabaseInterface;
 
 trait Execution {
-  public function getDatabase() {
+  public function getDatabase(): DatabaseInterface {
     return $this->db;
   }
   public function validate() {

@@ -4,7 +4,6 @@ namespace Starbug\Core;
 use Starbug\Db\Schema\SchemaInterface;
 
 class StoreOperationHook extends QueryHook {
-  protected $replace = false;
   public function __construct(ModelFactoryInterface $models, DatabaseInterface $db, SchemaInterface $schema) {
     $this->models = $models;
     $this->db = $db;

@@ -2,6 +2,7 @@
 namespace Starbug\Db\Query;
 
 use IteratorAggregate;
+use Starbug\Core\DatabaseInterface;
 
 interface BuilderInterface extends IteratorAggregate {
   /**
@@ -114,4 +115,5 @@ interface BuilderInterface extends IteratorAggregate {
   public function forUpdate($forUpdate = true);
   public function reset();
   public function getQuery();
+  public function getDatabase(): DatabaseInterface;
 }

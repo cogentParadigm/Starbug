@@ -1,8 +1,6 @@
 <?php
 namespace Starbug\Db\Query;
 
-use Starbug\Core\ModelFactoryInterface;
-use Starbug\Core\HookFactoryInterface;
 use PDO;
 use Starbug\Db\Schema\SchemerInterface;
 
@@ -15,7 +13,7 @@ class Executor implements ExecutorInterface {
   protected $compiler;
   protected $schema;
 
-  public function __construct(HookFactoryInterface $hookFactory, CompilerInterface $compiler, SchemerInterface $schemer) {
+  public function __construct(ExecutorHookFactoryInterface $hookFactory, CompilerInterface $compiler, SchemerInterface $schemer) {
     $this->hookFactory = $hookFactory;
     $this->compiler = $compiler;
     $this->schema = $schemer->getSchema();
@@ -166,7 +164,7 @@ class Executor implements ExecutorInterface {
     return $interpolation;
   }
 
-  protected function invokeHook(BuilderInterface $builder, $phase, $column, $hook, $argument) {
+  protected function invokeHook(BuilderInterface $builder, $phase, $column, $hookName, $argument) {
     $query = $builder->getQuery();
     $key = false;
     $model = $query->getTable()->getName();
@@ -178,10 +176,7 @@ class Executor implements ExecutorInterface {
     } elseif ($query->hasValue($alias.".".$column)) {
       $key = $alias.".".$column;
     }
-    if (!isset($this->hooks["store_".$column."_".$hook])) {
-      $this->hooks["store_".$column."_".$hook] = $this->hookFactory->get("store/".$hook);
-    }
-    foreach ($this->hooks["store_".$column."_".$hook] as $hook) {
+    if ($hook = $this->hookFactory->get($hookName)) {
       // hooks are invoked in 3 phases
       // 0 = validate (before)
       // 1 = store (during)
