@@ -63,8 +63,7 @@
     "classmap":["core", "app", "modules", "var", "features"]
   },
   "scripts": {
-    "pre-install-cmd": "mkdir -p var",
-    "post-install-cmd": "php sb generate host",
+    "pre-install-cmd": "mkdir -p var/tmp var/log var/public/uploads var/private/uploads",
     "migrate": [
       "php sb migrate",
       "@composer dump-autoload"

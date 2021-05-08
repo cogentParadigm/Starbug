@@ -17,12 +17,13 @@ use Whoops\Handler\PlainTextHandler;
 use Whoops\Handler\PrettyPageHandler;
 
 return [
-  'environment' => 'development',
-  'website_url' => '/',
-  'time_zone' => 'UTC',
-  'db' => 'default',
-  'hmac_key' => '',
-  'cli' => false,
+  "environment" => "development",
+  "website_url" => "/",
+  "website_host" => "",
+  "time_zone" => "UTC",
+  "db" => "default",
+  "hmac_key" => "",
+  "cli" => false,
   "FastRoute\RouteCollector" => DI\decorate(function (RouteCollector $r, ContainerInterface $c) {
     $routes = $c->get("Starbug\Core\Routing\Configuration")->getRoutes();
     foreach ($routes as $route) {
@@ -64,7 +65,7 @@ return [
   }),
   "Psr\Http\Message\ResponseFactoryInterface" => DI\autowire("Http\Factory\Guzzle\ResponseFactory"),
   "Psr\Http\Message\ServerRequestInterface" => function (ContainerInterface $container) {
-    return new ServerRequest("GET", $container->get("website_url"));
+    return new ServerRequest("GET", $container->get("website_host").$container->get("website_url"));
   },
   'Starbug\Core\CssGenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   "Whoops\Run" => DI\decorate(function ($whoops, $container) {
@@ -118,7 +119,6 @@ return [
     ->method('setTimeZone', DI\get('time_zone'))
     ->method('setDatabase', DI\get('db')),
   'Starbug\Core\GenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
-  'Starbug\Core\SetupCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   'Psr\Log\LoggerInterface' => function (ContainerInterface $c) {
     $logger = new Logger("main");
     $env = $c->get("environment");
