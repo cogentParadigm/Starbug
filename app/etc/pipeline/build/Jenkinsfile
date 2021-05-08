@@ -105,12 +105,19 @@ pipeline {
       post {
         always {
           sh "sed -i'' -e 's/\\/var\\/www\\/html\\///' build/logs/*.*"
-          junit "build/logs/phpunit.xml,build/logs/behat/*.xml"
-          recordIssues enabledForFailure: true, aggregatingResults: true, tools: [
-            checkStyle(pattern: "build/logs/checkstyle.xml"),
-            pmdParser(pattern: "build/logs/phpmd.xml"),
-            cpd(pattern: "build/logs/pmd-cpd.xml")
-          ]
+          xunit testTimeMargin: '3000', thresholdMode: 1,
+            thresholds: [ failed(failureThreshold: '0') ],
+            tools: [ JUnit(pattern: 'build/logs/behat/*.xml'), PHPUnit(pattern: 'build/logs/phpunit.xml') ]
+          recordIssues enabledForFailure: true,
+            aggregatingResults: true,
+            tools: [
+              checkStyle(pattern: "build/logs/checkstyle.xml"),
+              pmdParser(pattern: "build/logs/phpmd.xml"),
+              cpd(pattern: "build/logs/pmd-cpd.xml")
+            ],
+            qualityGates: [
+              [threshold: 1, type: 'TOTAL_ERROR']
+            ]
           step([
             $class: "CloverPublisher",
             cloverReportDir: "build/logs",
