@@ -1,15 +1,16 @@
 <?php
 namespace Starbug\Core;
 
+use Psr\Container\ContainerInterface;
 use Starbug\Core\Generator\Definitions\Host;
 use Starbug\Core\Generator\Generator;
 use Starbug\Db\Schema\SchemerInterface;
 
 class SetupCommand {
-  public function __construct(Generator $generator, Host $host, SchemerInterface $schemer) {
+  public function __construct(Generator $generator, Host $host, ContainerInterface $container) {
     $this->generator = $generator;
     $this->host = $host;
-    $this->schemer = $schemer;
+    $this->container = $container;
   }
   public function run($argv) {
     $positional = [];
@@ -28,6 +29,6 @@ class SetupCommand {
     $this->generator->generate($this->host, $named);
 
     // Migrate database
-    $this->schemer->migrate();
+    $this->container->get(SchemerInterface::class)->migrate();
   }
 }
