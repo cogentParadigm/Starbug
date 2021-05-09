@@ -25,8 +25,14 @@ class SetupCommand {
       }
     }
 
-    // Generate host configuration
-    $this->generator->generate($this->host, $named);
+    if (!file_exists("var/etc/di.php")) {
+      // Generate host configuration
+      $this->generator->generate($this->host, $named);
+      $vars = include("var/etc/di.php");
+      foreach ($vars as $name => $value) {
+        $this->container->set($name, $value);
+      }
+    }
 
     // Migrate database
     $this->container->get(SchemerInterface::class)->migrate();
