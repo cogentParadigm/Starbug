@@ -117,7 +117,7 @@ return [
   ],
   'Starbug\Core\Database' => DI\autowire()
     ->method('setTimeZone', DI\get('time_zone'))
-    ->method('setDatabase', DI\get('db')),
+    ->method('setDatabase', DI\get("databases.active")),
   'Starbug\Core\GenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   'Psr\Log\LoggerInterface' => function (ContainerInterface $c) {
     $logger = new Logger("main");

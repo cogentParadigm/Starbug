@@ -1,8 +1,6 @@
 <?php
 namespace Starbug\Core;
 
-use PDO;
-use SplQueue;
 use Starbug\Db\Query\BuilderFactory;
 use Starbug\Bundle\Bundle;
 use Starbug\Db\Query\BuilderInterface;
@@ -61,9 +59,8 @@ abstract class AbstractDatabase implements DatabaseInterface {
   const PHASE_BEFORE_DELETE = 3;
   const PHASE_AFTER_DELETE = 4;
 
-  public function __construct(BuilderFactory $queryBuilderFactory, ConfigInterface $config) {
+  public function __construct(BuilderFactory $queryBuilderFactory) {
     $this->queryBuilderFactory = $queryBuilderFactory;
-    $this->config = $config;
     $this->queue = new QueryQueue();
     $this->errors = new Bundle();
   }

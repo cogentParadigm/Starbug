@@ -1,14 +1,14 @@
 <?php
 namespace Starbug\Core;
 
-use \PDO;
+use Exception;
+use PDO;
 
 class Database extends AbstractDatabase {
 
   public $pdo;
 
-  public function setDatabase($name) {
-    $params = $this->config->get("db/".$name);
+  public function setDatabase($params) {
     $this->pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
     $this->database_name = $params['db'];
     $this->prefix = $params['prefix'];

@@ -8,8 +8,7 @@ use Doctrine\DBAL\Configuration;
 
 class Database extends AbstractDatabase {
   protected $connection;
-  public function setDatabase($name) {
-    $db = $this->config->get("db/".$name);
+  public function setDatabase($db) {
     $params = [
       "url" => $db["type"]."://".urlencode($db["username"]).":".urlencode($db["password"]).'@'.$db["host"].'/'.$db["db"].'?charset=utf8'
     ];

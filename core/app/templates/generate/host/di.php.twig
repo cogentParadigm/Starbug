@@ -2,5 +2,21 @@
 return [
   "website_host" => "{{ host }}",
   "environment" => "development",
-  "hmac_key" => "{{ hmac_key }}"
+  "hmac_key" => "{{ hmac_key }}",
+  "databases.default" => [
+    "type" => "{{ dbtype|default("mysql") }}",
+    "host" => "{{ dbhost|default("localhost") }}",
+    "username" => "{{ dbuser|default("root") }}",
+    "password" => "{{ dbpassword|default("") }}",
+    "db" => "{{ dbname|default("starbug") }}",
+    "prefix" => "{{ dbprefix|default("sb_") }}"
+  ],
+  "databases.test" => [
+    "type" => "{{ dbtype|default("mysql") }}",
+    "host" => "{{ dbhost|default("localhost") }}",
+    "username" => "{{ dbuser|default("root") }}",
+    "password" => "{{ dbpassword|default("") }}",
+    "db" => "{{ dbname|default("starbug") }}_test",
+    "prefix" => "{{ dbprefix|default("sb_") }}"
+  ]
 ];

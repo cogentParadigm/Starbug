@@ -11,11 +11,5 @@ class Host extends Definition {
       $this->setParameter("hmac_key", md5(uniqid(rand(), true)));
       $this->addTemplate("generate/host/di.php", "var/etc/di.php");
     }
-    if (!file_exists("app/etc/db/default.json")) {
-      $this->addTemplate("generate/host/db/default.json", "app/etc/db/default.json");
-    }
-    if (!file_exists("app/etc/db/test.json")) {
-      $this->addTemplate("generate/host/db/test.json", "app/etc/db/test.json");
-    }
   }
 }

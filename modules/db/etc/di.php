@@ -67,5 +67,8 @@ return [
     "type" => "Starbug\Core\StoreTypeHook",
     "unique" => "Starbug\Core\StoreUniqueHook",
     "upload" => "Starbug\Core\StoreUploadHook"
-  ]
+  ],
+  "databases.active" => function (ContainerInterface $container) {
+    return $container->get("databases.".$container->get("db"));
+  }
 ];
