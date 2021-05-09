@@ -75,9 +75,6 @@ class Migration extends AbstractMigration {
     $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "User"]);
     $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Admin"]);
 
-    // root user
-    $this->schema->addRow("users", ["email" => "root"], ["groups" => "root,admin,user"]);
-
     // admin menu
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/users"], ["content" => "Users", "icon" => "fa-users"]);
     $configuration = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Configuration"], ["icon" => "fa-cogs"]);
