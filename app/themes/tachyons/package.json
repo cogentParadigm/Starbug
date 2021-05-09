@@ -9,7 +9,7 @@
     "@lodder/grunt-postcss": "^1.0.10",
     "css-mqpacker": "^7.0.0",
     "cssnano": "^4.0.0",
-    "grunt": "^1.1.0",
+    "grunt": "^1.3.0",
     "grunt-contrib-watch": "^1.0.0",
     "postcss": "^7.0.27",
     "postcss-advanced-variables": "^3.0.1",
