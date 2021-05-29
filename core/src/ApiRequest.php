@@ -90,10 +90,13 @@ class ApiRequest {
       $options['limit'] = 1 + (int) $finish - (int) $start;
       $options['page'] = 1 + (int) $start/$options['limit'];
     }
+    $method = $this->request->getMethod();
     $bodyParams = $this->request->getParsedBody();
-    if (!empty($bodyParams["action"][$this->model]) && !$this->db->errors($this->model)) {
-      $id = $bodyParams[$this->model]["id"] ?? $this->db->getInsertId($this->model);
-      $options['id'] = $id;
+    if (in_array($method, ["PUT", "POST", "DELETE"]) && !$this->db->errors($this->model)) {
+      $id = $bodyParams["id"] ?? $this->db->getInsertId($this->model);
+      if (!empty($id)) {
+        $options["id"] = $id;
+      }
     }
 
     $results = $collection->query($options);
