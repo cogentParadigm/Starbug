@@ -47,6 +47,7 @@ class RouteProvider implements RouteProviderInterface {
     $routes->setController("Starbug\Core\Crud\ListController");
     $routes->setOption("model", $model);
     $routes->setOption("successUrl", $routes->getPath());
+    $routes->setOption("cancelUrl", $routes->getPath());
 
     $create = $routes->addRoute("/create", "Starbug\Core\Crud\CreateController")
       ->onPost("Starbug\Core\Operation\Save");

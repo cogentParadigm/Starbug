@@ -3,6 +3,7 @@ namespace Starbug\Core;
 
 class SearchForm extends FormDisplay {
   public $method = "get";
+  public $cancelable = false;
   protected $panes = ["first" => "div.col-3", "second" => "div.col-3", "third" => "div.col-3", "fourth" => "div.col-3"];
   protected $filters = [];
   public function buildDisplay($options) {

@@ -3,7 +3,6 @@ namespace Starbug\Core;
 
 class UsersForm extends FormDisplay {
   public $model = "users";
-  public $cancel_url = "admin/users";
   public function buildDisplay($options) {
     $this->layout->add(["top", "left" => "div.col-md-6.col-6", "right" => "div.col-md-6.col-6"]);
     $this->layout->put('left', 'h2.f8', 'User Information');

@@ -16,6 +16,7 @@ class FormDisplay extends ItemDisplay {
   public $layout;
   public $defaultAction = "create";
   public $submit_label = "Save";
+  public $cancelable = true;
   public $cancel_url = "";
   public $actions;
   protected $vars = [];
@@ -35,6 +36,10 @@ class FormDisplay extends ItemDisplay {
     $this->displays = $displays;
     $this->request = $request;
     $this->errors = $this->request->getAttribute("state") ?? new Bundle();
+    $route = $this->request->getAttribute("route");
+    if ($route->hasOption("cancelUrl") && empty($this->cancel_url)) {
+      $this->cancel_url = $route->getOption("cancelUrl");
+    }
   }
 
   public function build($options = []) {
