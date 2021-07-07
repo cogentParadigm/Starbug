@@ -3,13 +3,20 @@ namespace Starbug\Core;
 
 class MenuCollection extends Collection {
   public $model = "menus";
-  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db) {
-    $this->models = $models;
-    $this->db = $db;
-  }
   public function build($query, $ops) {
     $query->condition("menus.menu", $ops['menu']);
     $query->sort("menus.menu_path ASC, menus.position ASC");
+    $query->select([
+      "id",
+      "menu",
+      "parent",
+      "href",
+      "content",
+      "icon",
+      "target",
+      "template",
+      "menu_path"
+    ], "menus");
     return $query;
   }
   public function filterRows($rows) {

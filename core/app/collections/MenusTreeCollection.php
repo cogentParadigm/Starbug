@@ -2,10 +2,6 @@
 namespace Starbug\Core;
 
 class MenusTreeCollection extends Collection {
-  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db) {
-    $this->models = $models;
-    $this->db = $db;
-  }
   public function build($query, $ops) {
     $query->select("(SELECT COUNT(*) FROM ".$this->db->prefix("menus")." as t WHERE t.parent=menus.id) as children");
     if (!empty($ops['parent'])) $query->condition("menus.parent", $ops['parent']);

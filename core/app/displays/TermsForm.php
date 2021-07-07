@@ -3,7 +3,6 @@ namespace Starbug\Core;
 
 class TermsForm extends FormDisplay {
   public $model = "terms";
-  public $cancel_url = "admin/taxonomies";
   public function buildDisplay($options) {
     $options += ["tab" => ""];
     $taxonomy = $options["taxonomy"] ?? $this->get("taxonomy") ?? "";

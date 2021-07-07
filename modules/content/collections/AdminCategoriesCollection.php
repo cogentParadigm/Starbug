@@ -2,14 +2,8 @@
 namespace Starbug\Content;
 
 use Starbug\Core\Collection;
-use Starbug\Core\ModelFactoryInterface;
-use Starbug\Core\DatabaseInterface;
 
 class AdminCategoriesCollection extends Collection {
-  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db) {
-    $this->models = $models;
-    $this->db = $db;
-  }
   public function build($query, $ops) {
     $query->select("categories.*,(SELECT COUNT(*) FROM ".$this->db->prefix("categories")." as c WHERE c.parent=categories.id) as children");
     if (!empty($ops['parent'])) $query->condition("parent", $ops['parent']);

@@ -1,15 +1,15 @@
 <?php
 namespace Starbug\Payment;
 
-use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\CollectionFactoryInterface;
+use Starbug\Core\DatabaseInterface;
 use Starbug\Core\SelectCollection;
 use Starbug\Db\Schema\SchemerInterface;
 
 class SelectShippingMethodsCollection extends SelectCollection {
   protected $model = "shipping_methods";
-  public function __construct(ModelFactoryInterface $models, SchemerInterface $schemer, CollectionFactoryInterface $collections, PriceFormatterInterface $priceFormatter) {
-    parent::__construct($models, $schemer);
+  public function __construct(DatabaseInterface $db, SchemerInterface $schemer, CollectionFactoryInterface $collections, PriceFormatterInterface $priceFormatter) {
+    parent::__construct($db, $schemer);
     $this->collections = $collections;
     $this->priceFormatter = $priceFormatter;
   }
@@ -24,13 +24,14 @@ class SelectShippingMethodsCollection extends SelectCollection {
     $products = $this->collections->get("ProductLines")->query(["order" => $this->order]);
 
     foreach ($rows as &$row) {
-      $rates = $this->models->get("shipping_rates")->query()
+      $rates = $this->db->query("shipping_rates")
         ->select("shipping_rates.product_types.slug as product_types")
         ->condition("shipping_rates.shipping_methods_id", $row["id"])
         ->sort("shipping_rates.position")->all();
       foreach ($rates as $idx => $rate) {
-        $options = $this->models->get("shipping_rates_product_options")->query()
-        ->select("product_options_id.slug")->condition("shipping_rates_product_options.shipping_rates_id", $rate["id"])->all();
+        $options = $this->db->query("shipping_rates_product_options")
+        ->select("product_options_id.slug")
+        ->condition("shipping_rates_product_options.shipping_rates_id", $rate["id"])->all();
         foreach ($options as $option) {
           $rates[$idx]["options"][$option["slug"]] = $option;
         }

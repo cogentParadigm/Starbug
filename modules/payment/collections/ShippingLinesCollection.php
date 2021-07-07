@@ -2,12 +2,12 @@
 namespace Starbug\Payment;
 
 use Starbug\Core\Collection;
-use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\DatabaseInterface;
 
 class ShippingLinesCollection extends Collection {
   protected $model = "shipping_lines";
-  public function __construct(ModelFactoryInterface $models, PriceFormatterInterface $formatter) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db, PriceFormatterInterface $formatter) {
+    $this->db = $db;
     $this->formatter = $formatter;
   }
   public function build($query, $ops) {

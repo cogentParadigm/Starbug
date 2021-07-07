@@ -1,80 +1,23 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Db\Query;
 
+use Starbug\Core\DatabaseInterface;
 use Starbug\Db\Schema\SchemerInterface;
 
-/**
- * This class wraps a databse table, it is the base class for database models.
- */
-class Table {
+class Entity {
 
   protected $db;
-  protected $type;
-
-  protected $models;
   protected $schema;
-  public $action = false;
 
   /**
    * Table constructor.
    *
-   * @param Starbug\Core\DatabaseInterface $db The database connection.
-   * @param Starbug\Core\IdentityInterface $user Authenticated user.
+   * @param DatabaseInterface $db The database connection.
+   * @param SchemerInterface $schemer The schema provider.
    */
   public function __construct(DatabaseInterface $db, SchemerInterface $schemer) {
     $this->db = $db;
     $this->schema = $schemer->getSchema();
-  }
-
-  public function create($data) {
-    if ($this->schema->getTable($this->type)->hasOption("base")) {
-      $this->store($data + ["type" => $this->type]);
-    } else {
-      $this->store($data);
-    }
-  }
-
-  public function delete($data) {
-    $this->remove($data["id"]);
-  }
-
-  public function errors($key = "", $values = false) {
-    $key = (empty($key)) ? $this->type : $this->type.".".$key;
-    return $this->db->errors($key, $values);
-  }
-
-  public function error($error, $field = "global", $model = "") {
-    if (empty($model)) {
-      $model = $this->type;
-    }
-    $this->db->error($error, $field, $model);
-  }
-
-  public function post($action, $data = []) {
-    $this->action = $action;
-    if (isset($data['id'])) {
-      $permits = $this->db->query($this->type)->action($action)->condition($this->type.".id", $data['id'])->one();
-    } else {
-      $permits = $this->db->query("permits")->action($action, $this->type)->one();
-    }
-    if ($permits) {
-      $this->$action($data);
-      return true;
-    } else {
-      $this->error("Access Denied");
-      return false;
-    }
-  }
-
-  /**
-   * Get records from the db
-   *
-   * @see db::get
-   */
-  public function get() {
-    $args = func_get_args();
-    array_unshift($args, $this->type);
-    return call_user_func_array([$this->db, "get"], $args);
   }
 
   /**
@@ -82,11 +25,7 @@ class Table {
    *
    * @param string $entity the name of the entity.
    */
-  public function query($entity = "") {
-    if (empty($entity)) {
-      $entity = $this->type;
-    }
-
+  public function query($entity) {
     $chain = $this->schema->getEntityChain($entity);
     $root = count($chain)-1;
 
@@ -118,8 +57,7 @@ class Table {
    * @param boolean $reset set to true if you don't want to load from cache
    * @param string $name the name of the entity
    */
-  public function load($id, $reset = false, $name = "") {
-    if (empty($name)) $name = $this->type;
+  public function load($name, $id, $reset = false) {
     static $entities = [];
     $key = $name;
     if (is_array($id)) {
@@ -148,17 +86,14 @@ class Table {
    * @param array $from the conditions to match on instead of an ID. must map to a single entity
    * @param string $name the name of the entity
    */
-  public function store($fields, $from = [], $name = "") {
-    if (empty($name)) {
-      $name = $this->type;
-    }
+  public function store($name, $fields, $from = []) {
     $original = $update = false;
 
     if (!empty($fields["id"])) {
       $update = true;
-      $original = $this->load($fields["id"], true, $name);
+      $original = $this->load($name, $fields["id"], true);
     } elseif (!empty($from)) {
-      $original = $this->load($from, true, $name);
+      $original = $this->load($name, $from, true);
       if ($original) {
         $update = true;
         $fields["id"] = $original["id"];
@@ -210,11 +145,8 @@ class Table {
    * @param int $id the id of the item to delete
    * @param string $name the entity name
    */
-  public function remove($id, $name = "") {
-    if (empty($name)) {
-      $name = $this->type;
-    }
-    $original = $this->load($id, false, $name);
+  public function remove($name, $id) {
+    $original = $this->load($name, $id, false);
     if (!$original) return;
 
     if (!$this->schema->getTable($name)->hasOption("base")) {

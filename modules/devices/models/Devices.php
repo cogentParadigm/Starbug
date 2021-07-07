@@ -3,14 +3,13 @@ namespace Starbug\Devices;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\DatabaseInterface;
-use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\Table;
 use Starbug\Db\Schema\SchemerInterface;
 
 class Devices extends Table {
 
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, ServerRequestInterface $request) {
-    parent::__construct($db, $models, $schemer);
+  public function __construct(DatabaseInterface $db, SchemerInterface $schemer, ServerRequestInterface $request) {
+    parent::__construct($db, $schemer);
     $this->request = $request;
   }
 

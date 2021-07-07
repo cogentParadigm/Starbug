@@ -2,12 +2,12 @@
 namespace Starbug\Payment;
 
 use Starbug\Core\Collection;
-use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\DatabaseInterface;
 
 class ProductLinesCollection extends Collection {
   protected $model = "product_lines";
-  public function __construct(ModelFactoryInterface $models, PriceFormatterInterface $formatter) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db, PriceFormatterInterface $formatter) {
+    $this->db = $db;
     $this->formatter = $formatter;
   }
   public function build($query, $ops) {
@@ -21,8 +21,9 @@ class ProductLinesCollection extends Collection {
   }
   public function filterRows($rows) {
     foreach ($rows as $idx => $item) {
-      $options = $this->models->get("product_lines_options")->query()
-        ->select("options_id.slug")->condition("product_lines_id", $item["id"])->all();
+      $options = $this->db->query("product_lines_options")
+        ->select(["value", "options_id.slug"], "product_lines_options")
+        ->condition("product_lines_id", $item["id"])->all();
       foreach ($options as $option) {
         $item["options"][$option["slug"]] = $option["value"];
       }

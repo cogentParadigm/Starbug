@@ -41,7 +41,7 @@ class ImportsFieldsForm extends FormDisplay {
     $this->actions->add(["cancel", "class" => "cancel mr2 btn-default"]);
   }
   protected function parseSource($id) {
-    $file = $this->models->get("files")->load($id);
+    $file = $this->db->get("files", $id);
     $head = [];
     if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file["id"]."_".$file["filename"]))) {
       $head = fgetcsv($handle);

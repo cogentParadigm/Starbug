@@ -2,19 +2,16 @@
 namespace Starbug\Core\Operation;
 
 use Starbug\Bundle\BundleInterface;
-use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\DatabaseInterface;
 use Starbug\Operation\Operation;
 
 class Save extends Operation {
   protected $model;
-  public function __construct(ModelFactoryInterface $models) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db) {
+    $this->db = $db;
   }
   public function setModel($model) {
     $this->model = $model;
-  }
-  protected function getModel() {
-    return $this->models->get($this->model);
   }
   public function configure($options = []) {
     if (!empty($options["model"])) {
@@ -22,22 +19,14 @@ class Save extends Operation {
     }
   }
   public function handle(array $data, BundleInterface $state): BundleInterface {
-    $this->create($data);
+    $this->db->store($this->model, $data);
     return $this->getErrorState($state);
   }
   protected function getErrorState(BundleInterface $state): BundleInterface {
-    if ($this->models->get($this->model)->errors()) {
-      $errors = $this->models->get($this->model)->errors("", true);
+    if ($this->db->errors($this->model)) {
+      $errors = $this->db->errors($this->model, true);
       $state->set($errors);
     }
     return $state;
-  }
-
-  public function __call($name, $arguments) {
-    return call_user_func_array([$this->getModel(), $name], $arguments);
-  }
-
-  public function __get($name) {
-    return $this->getModel()->$name;
   }
 }

@@ -14,7 +14,7 @@ class SubscriptionsCollection extends Collection {
   }
   public function filterRows($rows) {
     foreach ($rows as &$row) {
-      $row["bills"] = $this->models->get("bills")->query()
+      $row["bills"] = $this->db->query("bills")
         ->condition("subscriptions_id", $row["id"])
         ->condition("paid", "0")
         ->sort("due_date")

@@ -4,12 +4,11 @@ namespace Starbug\Intl;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Controller;
 use Starbug\Core\DatabaseInterface;
-use Starbug\Core\ModelFactoryInterface;
 
 class AddressController extends Controller {
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+  public function __construct(DatabaseInterface $db, AddressFormatter $address) {
     $this->db = $db;
-    $this->models = $models;
+    $this->address = $address;
   }
   public function __invoke(ServerRequestInterface $request, $locale = "US") {
     $address = [];
@@ -29,7 +28,7 @@ class AddressController extends Controller {
     }
 
     // assign and render
-    $formatted = $this->models->get("address")->format($address, $country);
+    $formatted = $this->address->format($address, $country);
     $this->assign("formatted_address", $formatted);
     $this->assign("address", $address);
     $this->assign("edit", $edit);

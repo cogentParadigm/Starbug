@@ -2,11 +2,11 @@
 namespace Starbug\Payment;
 
 use Starbug\Core\FormCollection;
-use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\DatabaseInterface;
 
 class OrdersFormCollection extends FormCollection {
-  public function __construct(ModelFactoryInterface $models, Cart $cart) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db, Cart $cart) {
+    $this->db = $db;
     $this->cart = $cart;
   }
   public function build($query, $ops) {

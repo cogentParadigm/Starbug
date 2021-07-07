@@ -1,11 +1,9 @@
 define([
   "dojo/_base/declare",
   "./_UploadButtonBase",
-  "./_CollectionMixin",
-  "./_SelectionMixin",
   "put-selector/put"
-], function (declare, _UploadButtonBase, _CollectionMixin, _SelectionMixin, put) {
-  return declare([_UploadButtonBase, _CollectionMixin, _SelectionMixin], {
+], function (declare, _UploadButtonBase) {
+  return declare([_UploadButtonBase], {
     buildRendering: function() {
       this.inherited(arguments);
       this.createDisplayNode();

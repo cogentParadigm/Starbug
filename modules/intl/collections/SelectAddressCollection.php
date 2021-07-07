@@ -2,11 +2,11 @@
 namespace Starbug\Intl;
 
 use Starbug\Core\Collection;
-use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\DatabaseInterface;
 
 class SelectAddressCollection extends Collection {
-  public function __construct(ModelFactoryInterface $models, AddressFormatter $address) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db, AddressFormatter $address) {
+    $this->db = $db;
     $this->address = $address;
   }
   public function filterRows($rows) {

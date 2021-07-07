@@ -3,14 +3,13 @@ namespace Starbug\Users;
 
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\DatabaseInterface;
-use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\Table;
 use Starbug\Db\Schema\SchemerInterface;
 
 class Users extends Table {
 
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, SessionHandlerInterface $session) {
-    parent::__construct($db, $models, $schemer);
+  public function __construct(DatabaseInterface $db, SchemerInterface $schemer, SessionHandlerInterface $session) {
+    parent::__construct($db, $schemer);
     $this->session = $session;
   }
 

@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Payment;
 
-use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\CollectionFactoryInterface;
 use Starbug\Core\DatabaseInterface;
+use Starbug\Db\Query\EntityInterface;
 
 /**
  * A wrapper around orders intended for mediating shopping cart behavior.
@@ -22,9 +22,9 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
   /**
    * Constructor.
    */
-  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db, CollectionFactoryInterface $collections, $conditions) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db, EntityInterface $entity, CollectionFactoryInterface $collections, $conditions) {
     $this->db = $db;
+    $this->entity = $entity;
     $this->collections = $collections;
     $this->conditions = $conditions;
   }
@@ -33,7 +33,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     if (!empty($this->order)) return;
     $this->load();
     if (empty($this->order) && $create) {
-      $this->models->get("orders")->create([]);
+      $this->db->store("orders", $this->conditions);
       $this->load();
     }
   }
@@ -56,7 +56,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     if (empty($conditions["order_status"])) {
       $conditions["order_status"] = "cart";
     }
-    $order = $this->models->get("orders")->query()->conditions($conditions)->one();
+    $order = $this->db->query("orders")->conditions($conditions)->one();
     $this->setOrder($order);
   }
 
@@ -82,7 +82,8 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
   public function add($type, $options = []) {
     $this->init(false);
     $options['orders_id'] = $this->order['id'];
-    $this->models->get($type)->create($options);
+    $options["type"] = $type;
+    $this->entity->store($type, $options);
   }
 
   public function offsetSet($offset, $value) {
@@ -136,11 +137,15 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     foreach ($this->lines["product"] as $line) {
       if ($line["product"] == $input["id"] && empty($line["options"]) && empty($input["options"])) {
         // Product is in cart without options and is being added without options.
-        $this->models->get("product_lines")->update([$line["id"] => $line["qty"] + $input["qty"]]);
+          $exists = $this->entity->query("product_lines")->condition("product_lines.id", $line["id"])
+          ->condition("product_lines.orders_id", $this->get('id'))->one();
+          if ($exists) {
+            $this->entity->store("product_lines", ["id" => $line["id"], "qty" => $line["qty"] + $input["qty"]]);
+          }
         return $line;
       }
     }
-    $product = $this->models->get("products")->query()->condition("products.id", $input['id'])->one();
+    $product = $this->db->query("products")->condition("products.id", $input['id'])->one();
     $line = [
       "product" => $product['id'],
       "description" => $product['name'],
@@ -153,11 +158,11 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     if (!empty($input["options"])) {
       foreach ($input["options"] as $option => $value) {
         $conditions = ["product_lines_id" => $line["id"], "options_id" => $option];
-        $exists = $this->models->get("product_lines_options")->query()->conditions($conditions)->one();
+        $exists = $this->db->query("product_lines_options")->conditions($conditions)->one();
         if ($exists) {
-          $this->models->get("product_lines_options")->store(["id" => $exists["id"], "value" => $value]);
+          $this->db->store("product_lines_options", ["id" => $exists["id"], "value" => $value]);
         } else {
-          $this->models->get("product_lines_options")->store($conditions + ["value" => $value]);
+          $this->db->store("product_lines_options", $conditions + ["value" => $value]);
         }
       }
     }

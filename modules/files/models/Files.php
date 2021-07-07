@@ -8,12 +8,11 @@ use League\Flysystem\MountManager;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ImagesInterface;
-use Starbug\Core\ModelFactoryInterface;
 
 class Files extends Table {
 
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, MountManager $filesystems, ImagesInterface $images, ServerRequestInterface $request) {
-    parent::__construct($db, $models, $schemer);
+  public function __construct(DatabaseInterface $db, SchemerInterface $schemer, MountManager $filesystems, ImagesInterface $images, ServerRequestInterface $request) {
+    parent::__construct($db, $schemer);
     $this->filesystems = $filesystems;
     $this->images = $images;
     $this->request = $request;

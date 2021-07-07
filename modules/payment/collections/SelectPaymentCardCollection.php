@@ -3,12 +3,12 @@ namespace Starbug\Payment;
 
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\Collection;
-use Starbug\Core\ModelFactoryInterface;
+use Starbug\Core\DatabaseInterface;
 
 class SelectPaymentCardCollection extends Collection {
   protected $model = "payment_cards";
-  public function __construct(ModelFactoryInterface $models, SessionHandlerInterface $session) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db, SessionHandlerInterface $session) {
+    $this->db = $db;
     $this->session = $session;
   }
   public function build($query, $ops) {

@@ -13,6 +13,7 @@
     "namespace": "Starbug\\Files"
   },
   "require": {
-    "starbug/db": "*"
+    "starbug/db": "*",
+    "ralouphie/mimey": "^2.1.0"
   }
 }

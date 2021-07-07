@@ -3,6 +3,7 @@ namespace Starbug\Payment;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Core\Routing\Route;
+use Starbug\Payment\Product\Save;
 
 class RouteProvider extends AdminRouteProvider {
 
@@ -46,9 +47,11 @@ class RouteProvider extends AdminRouteProvider {
 
     $products = $this->addCrudRoutes($admin->addRoute("/products"), "products");
     $products->getRoute("/create")
-      ->setController(["Starbug\Payment\AdminProductsController", "create"]);
+      ->setController(["Starbug\Payment\AdminProductsController", "create"])
+      ->onPost(Save::class);
     $products->getRoute("/update/{id:[0-9]+}")
-      ->setController(["Starbug\Payment\AdminProductsController", "update"]);
+      ->setController(["Starbug\Payment\AdminProductsController", "update"])
+      ->onPost(Save::class);
     $products->addRoute("/form.{format:xhr}")
       ->setController(["Starbug\Payment\AdminProductsController", "form"]);
 

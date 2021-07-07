@@ -11,7 +11,7 @@ class ProductConfigurationFormCollection extends FormCollection {
   public function filterRows($rows) {
     foreach ($rows as &$row) {
       if (!empty($this->ops["product_lines_id"])) {
-        $options = $this->models->get("product_lines_options")->query()
+        $options = $this->db->query("product_lines_options")
           ->select("options_id.slug")->condition("product_lines_id", $this->ops["product_lines_id"])->all();
         foreach ($options as $option) {
           $row["options"][$option["slug"]] = $option["value"];

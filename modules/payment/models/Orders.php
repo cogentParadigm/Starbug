@@ -3,14 +3,13 @@ namespace Starbug\Payment;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\DatabaseInterface;
-use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\Table;
 use Starbug\Db\Schema\SchemerInterface;
 
 class Orders extends Table {
 
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, SchemerInterface $schemer, ServerRequestInterface $request, Cart $cart) {
-    parent::__construct($db, $models, $schemer);
+  public function __construct(DatabaseInterface $db, SchemerInterface $schemer, ServerRequestInterface $request, Cart $cart) {
+    parent::__construct($db, $schemer);
     $this->request = $request;
     $this->cart = $cart;
   }

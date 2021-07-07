@@ -1,4 +1,4 @@
-define(["dojo/_base/declare", "sb/css/Theme", "put-selector/put"], function(declare, Theme, put) {
+define(["dojo/_base/declare", "dojo/_base/lang", "sb/css/Theme", "put-selector/put", "dojo/on"], function(declare, lang, Theme, put, on) {
   var theme = new (declare([Theme], {
     createButtonGroupNode: function() {
       this.buttonGroupNode = this.buttonGroupNode || put(this.domNode, "+div");
@@ -31,6 +31,9 @@ define(["dojo/_base/declare", "sb/css/Theme", "put-selector/put"], function(decl
       if (item.mime_type.split('/')[0] == "image") {
         put(this.displayNode, "img[src=$][style=margin-bottom:10px]", item.thumbnail);
       }
+      on(put(this.displayNode, "a.btn.btn-default[href=javascript:;][style=vertical-align:top;margin-left:5px] span.fa.fa-times<"), "click", lang.hitch(this, function() {
+        this.selection.remove(item.id);
+      }));
       put(this.displayNode, "div[style=margin-bottom:10px]", item.filename);
     },
     createListNode: function() {

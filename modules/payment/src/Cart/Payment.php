@@ -4,7 +4,6 @@ namespace Starbug\Payment\Cart;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Bundle\BundleInterface;
 use Starbug\Core\DatabaseInterface;
-use Starbug\Core\ModelFactoryInterface;
 use Starbug\Core\Operation\Save;
 use Starbug\Payment\Cart;
 use Starbug\Payment\GatewayInterface;
@@ -13,8 +12,7 @@ use Starbug\Queue\QueueManagerInterface;
 
 class Payment extends Save {
   protected $model = "orders";
-  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db, Cart $cart, SessionHandlerInterface $session, GatewayInterface $gateway, TokenGatewayInterface $subscriptions, QueueManagerInterface $queues) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db, Cart $cart, SessionHandlerInterface $session, GatewayInterface $gateway, TokenGatewayInterface $subscriptions, QueueManagerInterface $queues) {
     $this->db = $db;
     $this->cart = $cart;
     $this->session = $session;
@@ -26,14 +24,14 @@ class Payment extends Save {
     if (empty($payment['id'])) {
       $order = $this->cart->getOrder();
     } else {
-      $order = $this->load($payment['id']);
+      $order = $this->db->get("orders", $payment['id']);
     }
 
     // $this->request->setPost('orders', 'id', $order['id']);
 
     // populate the billing address
     $billing_address = $order["billing_same"] ? $order["shipping_address"] : $order["billing_address"];
-    $address = $this->query("address")->condition("address.id", $billing_address)->select("address.*,address.country.name as country")->one();
+    $address = $this->db->query("address")->condition("address.id", $billing_address)->select("address.*,address.country.name as country")->one();
     $payment['country'] = $address['country'];
     $payment['address'] = $address['address1'];
     $payment['address2'] = $address['address2'];
@@ -41,7 +39,7 @@ class Payment extends Save {
     $payment['city'] = $address['locality'];
     $payment['state'] = $address['administrative_area'];
     if (is_numeric($payment['state'])) {
-      $province = $this->query("provinces")->condition("id", $payment['state'])->one();
+      $province = $this->db->query("provinces")->condition("id", $payment['state'])->one();
       $payment['state'] = $province['name'];
     }
 
@@ -59,21 +57,21 @@ class Payment extends Save {
     }
 
     // determine recurring payment amounts
-    $lines = $this->query("product_lines")
+    $lines = $this->db->query("product_lines")
       ->condition("orders_id", $order['id'])
       ->condition("product_lines.product.payment_type", "recurring")->all();
     foreach ($lines as $line) {
       $price = $line["price"] * $line["qty"];
       $orderTotal += $price;
       $this->purchase($payment + ["amount" => $price, "orders_id" => $order["id"]]);
-      if (!$this->errors()) {
+      if (!$this->db->errors()) {
         $this->subscriptions->createSubscription(["orders_id" => $order["id"], "amount" => $price, "product" => $line["product"], "payment" => $this->db->getInsertId("payments")] + $payment);
       }
     }
 
     $ammend["total"] = $orderTotal;
 
-    $this->store($ammend);
+    $this->db->store("orders", $ammend);
     $this->onPaymentCompleted($ammend + $order);
     return $this->getErrorState($state);
   }
@@ -88,7 +86,7 @@ class Payment extends Save {
   protected function getOrderTotal($id) {
     // determine single payment amount
     // WARN: prices not validated, lines could be stale
-    $lines = $this->query("product_lines")
+    $lines = $this->db->query("product_lines")
       ->condition("orders_id", $id)
       ->condition("product_lines.product.payment_type", "single")
       ->select("SUM(product_lines.price * qty) as total")->one();
@@ -96,8 +94,8 @@ class Payment extends Save {
   }
 
   protected function onPaymentCompleted($order) {
-    if (!$this->errors()) {
-      $this->store(["id" => $order['id'], "order_status" => "pending"]);
+    if (!$this->db->errors()) {
+      $this->db->store("orders", ["id" => $order['id'], "order_status" => "pending"]);
       $this->queues->put(ConfirmOrder::class, ["order" => $order["id"]]);
     }
   }

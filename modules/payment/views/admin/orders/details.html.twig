@@ -23,7 +23,7 @@
         <h3 class="panel-title">Shipping Address</h3>
       </div>
       <div class="panel-body">
-        {{ helper("models").get("address").format(order.shipping_address) }}
+        {{ helper("addressFormatter").format(order.shipping_address) }}
       </div>
     </div>
   </div>
@@ -36,7 +36,7 @@
       {% if order.billing_same %}
         Same as shipping address
       {% else %}
-        {{ helper("models").get("address").format(order.billing_address) }}
+        {{ helper("addressFormatter").format(order.billing_address) }}
       {% endif %}
       </div>
     </div>

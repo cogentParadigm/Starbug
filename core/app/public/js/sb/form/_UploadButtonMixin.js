@@ -77,7 +77,7 @@ define([
     },
     reset: function() {
       delete this._files;
-      // destroy and re-create input
+      this.fileInput.value = null;
       this.set("status");
     },
     _setStatusAttr: function(value) {

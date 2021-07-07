@@ -4,16 +4,14 @@ namespace Starbug\Payment\Cart;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Core\MailerInterface;
-use Starbug\Core\ModelFactoryInterface;
 use Starbug\Payment\PriceFormatterInterface;
 use Starbug\Queue\TaskInterface;
 use Starbug\Queue\QueueInterface;
 use Starbug\Queue\WorkerInterface;
 
 class ConfirmOrder implements WorkerInterface {
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, MailerInterface $mailer, PriceFormatterInterface $priceFormatter, SessionHandlerInterface $session) {
+  public function __construct(DatabaseInterface $db, MailerInterface $mailer, PriceFormatterInterface $priceFormatter, SessionHandlerInterface $session) {
     $this->db = $db;
-    $this->models = $models;
     $this->mailer = $mailer;
     $this->priceFormatter = $priceFormatter;
     $this->session = $session;
@@ -21,8 +19,11 @@ class ConfirmOrder implements WorkerInterface {
   public function process(TaskInterface $task, QueueInterface $queue) {
     $id = $task->getData()["order"];
     $order = $this->db->query("orders")->condition("id", $id)->one();
-    $lines = $this->models->get("product_lines")->query()
-      ->condition("orders_id", $order["id"])->all();
+    $lines = $this->db->query("product_lines")
+      ->innerJoin("lines")->on("lines.id=product_lines.lines_id")
+      ->condition("lines.orders_id", $order["id"])
+      ->select(["description", "qty", "price"], "lines")
+      ->all();
     $order["description"] = $lines[0]["description"];
     $count = count($lines) - 1;
     if ($count > 1) {

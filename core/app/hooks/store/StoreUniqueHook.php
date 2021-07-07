@@ -2,9 +2,8 @@
 namespace Starbug\Core;
 
 class StoreUniqueHook extends QueryHook {
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models) {
+  public function __construct(DatabaseInterface $db) {
     $this->db = $db;
-    $this->models = $models;
   }
   public function validate($query, $key, $value, $column, $argument) {
     $argument = explode(" ", $argument);
@@ -12,7 +11,9 @@ class StoreUniqueHook extends QueryHook {
     foreach ($argument as $c) if (!empty($c)) $existing->condition($c, $query->fields[$c]);
     $row = $existing->one();
     $id = $query->getId();
-    if ($row && (empty($id) || $id != $row["id"])) $this->models->get($query->model)->error("That $column already exists.", $column);
+    if ($row && (empty($id) || $id != $row["id"])) {
+      $this->db->error("That $column already exists.", $column, $query->model);
+    }
     return $value;
   }
 }

@@ -2,15 +2,16 @@
 namespace Starbug\Core;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Files\FileUploader;
 
 class StoreUploadHook extends QueryHook {
   protected $db;
   protected $request;
   protected $files;
-  public function __construct(DatabaseInterface $db, ModelFactoryInterface $models, ServerRequestInterface $request) {
+  public function __construct(DatabaseInterface $db, FileUploader $uploader, ServerRequestInterface $request) {
     $this->db = $db;
+    $this->uploader = $uploader;
     $this->request = $request;
-    $this->files = $models->get("files");
   }
   public function emptyValidate($query, $column, $argument) {
     $files = $this->request->getUploadedFiles();
@@ -31,11 +32,11 @@ class StoreUploadHook extends QueryHook {
     }
     $file = $files[$column];
     if (!empty($file['name'])) {
-      $this->files->upload($record, $file);
-      if (!$this->files->errors()) {
+      $record = $this->uploader->upload($record, $file);
+      if (!$this->db->errors("files")) {
         $value = (empty($record['id'])) ? $this->db->getInsertId("files") : $record['id'];
       } else {
-        foreach ($this->files->errors("filename", true) as $type => $message) {
+        foreach ($this->db->errors("files.filename", true) as $type => $message) {
           $this->db->error($message, $column, $query->model);
         }
       }

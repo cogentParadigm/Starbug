@@ -11,7 +11,7 @@ class PagesFormCollection extends FormCollection {
   public function filterRows($rows) {
     foreach ($rows as $idx => $item) {
       if (!empty($item['id'])) {
-        $blocks = $this->models->get("blocks")->query()->condition("pages_id", $item['id'])->all();
+        $blocks = $this->db->query("blocks")->condition("pages_id", $item['id'])->all();
         $item['blocks'] = [];
         foreach ($blocks as $block) {
           $item['blocks'][$block['region']."-".$block['position']] = $block['content'];

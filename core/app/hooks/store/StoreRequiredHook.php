@@ -3,20 +3,28 @@ namespace Starbug\Core;
 
 class StoreRequiredHook extends QueryHook {
   protected $models;
-  public function __construct(ModelFactoryInterface $models) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db) {
+    $this->db = $db;
   }
   public function emptyBeforeInsert($query, $column, $argument) {
-    if ($argument == "insert") $this->models->get($query->model)->error("This field is required.", $column);
+    if ($argument == "insert") {
+      $this->db->error("This field is required.", $column, $query->error);
+    }
   }
   public function emptyBeforeUpdate($query, $column, $argument) {
-    if ($argument == "update") $this->models->get($query->model)->error("This field is required.", $column);
+    if ($argument == "update") {
+      $this->db->error("This field is required.", $column, $query->model);
+    }
   }
   public function emptyValidate($query, $column, $argument) {
-    if ($argument == "always") $this->models->get($query->model)->error("This field is required.", $column);
+    if ($argument == "always") {
+      $this->db->error("This field is required.", $column, $query->model);
+    }
   }
   public function store($query, $key, $value, $column, $argument) {
-    if ($value === "" && !$query->isExcluded($key)) $this->models->get($query->model)->error("This field is required", $column);
+    if ($value === "" && !$query->isExcluded($key)) {
+      $this->db->error("This field is required", $column, $query->model);
+    }
     return $value;
   }
 }

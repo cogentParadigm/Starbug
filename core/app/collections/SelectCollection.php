@@ -5,12 +5,11 @@ use Starbug\Db\Schema\SchemerInterface;
 
 class SelectCollection extends Collection {
   protected $optional = false;
-  public function __construct(ModelFactoryInterface $models, SchemerInterface $schemer) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db, SchemerInterface $schemer) {
+    $this->db = $db;
     $this->schema = $schemer->getSchema();
   }
   public function build($query, $ops) {
-    $query->removeSelection();
     if (empty($ops['id'])) {
       $query->condition($query->model.".deleted", "0");
       if (isset($ops["optional"])) {

@@ -3,10 +3,6 @@ namespace Starbug\Core;
 
 class TermsTreeCollection extends TermsCollection {
   protected $model = "terms";
-  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db) {
-    $this->models = $models;
-    $this->db = $db;
-  }
   public function build($query, $ops) {
     $query->select("terms.*,(SELECT COUNT(*) FROM ".$this->db->prefix("terms")." as t WHERE t.parent=terms.id) as children");
     if (!empty($ops['parent'])) $query->condition("parent", $ops['parent']);

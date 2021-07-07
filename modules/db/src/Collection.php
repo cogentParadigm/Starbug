@@ -7,8 +7,8 @@ class Collection implements CollectionInterface {
   public $results = [];
   protected $filters = [];
   protected $pager;
-  public function __construct(ModelFactoryInterface $models) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db) {
+    $this->db = $db;
   }
   public function getModel() {
     return $this->model;
@@ -39,7 +39,7 @@ class Collection implements CollectionInterface {
     return $query;
   }
   public function query($ops = []) {
-    $query = $this->models->get($this->model)->query();
+    $query = $this->db->query($this->model);
     if (false === $this->search_fields) {
       $this->search_fields = $query->getSearchFields($this->model);
     }
@@ -50,7 +50,6 @@ class Collection implements CollectionInterface {
     foreach ($this->filters as $filter) {
       $query = $filter->filterQuery($this, $query, $ops);
     }
-    $query = $this->models->get($this->model)->filterQuery($this, $query, $ops);
     // build
     $query = $this->build($query, $ops);
     // paginate
@@ -68,7 +67,6 @@ class Collection implements CollectionInterface {
       $data = $filter->filterRows($this, $data);
     }
     $data = $this->filterRows($data);
-    $data = $this->models->get($this->model)->filterRows($this, $data);
     $this->results = $data;
     return $this->results;
   }

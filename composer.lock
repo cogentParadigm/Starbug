@@ -2275,6 +2275,50 @@
             "time": "2019-03-08T08:55:37+00:00"
         },
         {
+            "name": "ralouphie/mimey",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ralouphie/mimey.git",
+                "reference": "8f74e6da73f9df7bd965e4e123f3d8fb9acb89ba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ralouphie/mimey/zipball/8f74e6da73f9df7bd965e4e123f3d8fb9acb89ba",
+                "reference": "8f74e6da73f9df7bd965e4e123f3d8fb9acb89ba",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.4|^7.0"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^1.1",
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mimey\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ralph Khattar",
+                    "email": "ralph.khattar@gmail.com"
+                }
+            ],
+            "description": "PHP package for converting file extensions to MIME types and vice versa.",
+            "support": {
+                "issues": "https://github.com/ralouphie/mimey/issues",
+                "source": "https://github.com/ralouphie/mimey/tree/develop"
+            },
+            "time": "2019-03-08T08:49:03+00:00"
+        },
+        {
             "name": "starbug/auth",
             "version": "v0.9.2",
             "source": {
@@ -2589,9 +2633,10 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/files",
-                "reference": "8c26c3cc3dbcdd91bb1ee2294afee52adf659d74"
+                "reference": "3325039e4a555ed2be1dfbc165ba0e7a37dcf447"
             },
             "require": {
+                "ralouphie/mimey": "^2.1.0",
                 "starbug/db": "*"
             },
             "type": "starbug-module",
