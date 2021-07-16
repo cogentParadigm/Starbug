@@ -16,7 +16,7 @@ class CreateUser extends Save {
     $this->db->store("users", $user);
     $state = $this->getErrorState($state);
     if (!$this->db->errors() && empty($user["id"])) {
-      $uid = $this->insert_id;
+      $uid = $this->db->getInsertId("users");
       $data = ["user" => $this->db->get("users", $uid)];
       $data['user']['password'] = $user["password"] ?? "";
       $this->mailer->send(["template" => "Account Creation", "to" => $user["email"]], $data);

@@ -19,10 +19,10 @@ class RemoveCommand {
         $positional[] = $arg;
       }
     }
-    $name = array_shift($named);
-    if (!empty($named)) {
-      $positional["id"] = array_shift($named);
+    $name = array_shift($positional);
+    if (!empty($positional)) {
+      $named["id"] = array_shift($positional);
     }
-    $this->db->remove($name, $positional);
+    $this->db->remove($name, $named);
   }
 }

@@ -7,12 +7,12 @@ class ModelTest extends TestCase {
 
   public $model;
   protected $db;
-  protected $models;
+  protected $operations;
 
   public function setUp() {
     global $container;
     $this->db = $container->get("Starbug\Core\DatabaseInterface");
-    $this->models = $container->get("Starbug\Core\ModelFactoryInterface");
+    $this->operations = $container->get("Starbug\Operation\OperationFactoryInterface");
   }
 
   public function get() {
@@ -25,13 +25,10 @@ class ModelTest extends TestCase {
     return call_user_func_array([$this->db, "query"], $args);
   }
 
-  public function action() {
-    $args = func_get_args();
-    $method = array_shift($args);
-    return call_user_func_array([$this->models->get($this->model), $method], $args);
-  }
-
-  public function __get($name) {
-    return $this->models->get($this->model)->$name;
+  public function operation($name, $args) {
+    $operation = $this->operations->get($name);
+    $operation->configure(["model" => $this->model]);
+    $operation->execute($args);
+    return $operation;
   }
 }

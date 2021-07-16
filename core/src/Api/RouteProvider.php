@@ -2,6 +2,8 @@
 namespace Starbug\Core\Api;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Core\Operation\DeleteMenus;
+use Starbug\Core\Operation\DeleteTerms;
 use Starbug\Core\Routing\Route;
 
 class RouteProvider extends AdminRouteProvider {
@@ -10,13 +12,15 @@ class RouteProvider extends AdminRouteProvider {
     $api = $routes->addRoute("api", null, ["groups" => "admin"]);
 
     // Taxonomy
-    $this->addAdminApiRoute($api->addRoute("/terms/admin.{format:csv|json}"), "terms", "AdminTerms");
+    $this->addAdminApiRoute($api->addRoute("/terms/admin.{format:csv|json}"), "terms", "AdminTerms")
+      ->onDelete(DeleteTerms::class);
     $this->addApiRoute($api->addRoute("/terms/select.json"), "terms", "SelectTerms");
     $this->addApiRoute($api->addRoute("/terms/index.json"), "terms", "TermsList");
     $this->addApiRoute($api->addRoute("/terms/tree.json"), "terms", "TermsTree");
 
     // Menus
-    $this->addAdminApiRoute($api->addRoute("/menus/admin.{format:csv|json}"), "menus", "AdminMenus");
+    $this->addAdminApiRoute($api->addRoute("/menus/admin.{format:csv|json}"), "menus", "AdminMenus")
+      ->onDelete(DeleteMenus::class);
     $this->addApiRoute($api->addRoute("/menus/select.json"), "menus", "Select");
     $this->addApiRoute($api->addRoute("/menus/tree.json"), "menus", "MenusTree");
 

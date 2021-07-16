@@ -1,13 +1,16 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Core\Operation\DeleteMenus;
+use Starbug\Core\Operation\Save;
+
 class MenusTest extends ModelTest {
 
   public $model = "menus";
 
   public function testCreateUpdateDelete() {
     // create
-    $this->action("create", ["content" => "PHP Unit", "menu" => "phpunit"]);
+    $this->operation(Save::class, ["content" => "PHP Unit", "menu" => "phpunit"]);
     $id = $this->db->getInsertId("menus");
     $object = $this->db->query($this->model)->condition("id", $id)->one();
     // lets verify the explicit values were set
@@ -16,27 +19,27 @@ class MenusTest extends ModelTest {
 
     // update
     $object["content"] = "Unit Testing";
-    $this->action("create", $object);
+    $this->operation(Save::class, $object);
     $updated = $this->db->query($this->model)->condition("id", $id)->one();
     $this->assertEquals("phpunit", $updated['menu']);
     $this->assertEquals("Unit Testing", $updated['content']);
 
     // add a few extras
     foreach (["First", "Second", "Third"] as $term) {
-      $this->action("create", ["content" => $term." Menu", "menu" => "phpunit"]);
+      $this->operation(Save::class, ["content" => $term." Menu", "menu" => "phpunit"]);
     }
     // we should now have 4
     $count = $this->query()->condition("menu", "phpunit")->count();
     $this->assertEquals(4, $count);
 
     // delete
-    $this->action("delete", ["id" => $id]);
+    $this->operation(DeleteMenus::class, ["id" => $id]);
     // we should now have 3
     $count = $this->query()->condition("menu", "phpunit")->count();
     $this->assertEquals(3, $count);
 
     // delete taxonomy
-    $this->action("deleteMenu", ["menu" => "phpunit"]);
+    $this->operation(DeleteMenus::class, ["menu" => "phpunit"]);
     // we should now have none
     $count = $this->query()->condition("menu", "phpunit")->count();
     $this->assertEquals(0, $count);

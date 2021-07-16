@@ -1,13 +1,16 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Core\Operation\SoftDelete;
+use Starbug\Users\Operation\CreateUser;
+
 class UsersTest extends ModelTest {
 
   public $model = "users";
 
   public function testCreate() {
     $this->db->remove("users", ["email" => "phpunit@neonrain.com"]);
-    $this->action("create", ["email" => "phpunit@neonrain.com", "groups" => "user"]);
+    $this->operation(CreateUser::class, ["email" => "phpunit@neonrain.com", "groups" => "user"]);
     $user = $this->db->query("users")->select("users.*,GROUP_CONCAT(users.groups.slug) as groups")
               ->condition("users.id", $this->db->getInsertId("users"))->condition("users.deleted", "0")->one();
     // lets verify the explicit values were set
@@ -22,7 +25,7 @@ class UsersTest extends ModelTest {
     $this->assertEquals(empty($user), false);
 
     // remove it and assert that the record is gone
-    $this->action("delete", $user);
+    $this->operation(SoftDelete::class, $user);
     $user = $this->db->query("users")->condition("email", "phpunit@neonrain.com")->one();
     $this->assertEquals($user['deleted'], "1");
     $this->db->remove("users_groups", ["users_id" => $user['id']]);
