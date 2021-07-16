@@ -137,11 +137,11 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
     foreach ($this->lines["product"] as $line) {
       if ($line["product"] == $input["id"] && empty($line["options"]) && empty($input["options"])) {
         // Product is in cart without options and is being added without options.
-          $exists = $this->entity->query("product_lines")->condition("product_lines.id", $line["id"])
+        $exists = $this->entity->query("product_lines")->condition("product_lines.id", $line["id"])
           ->condition("product_lines.orders_id", $this->get('id'))->one();
-          if ($exists) {
-            $this->entity->store("product_lines", ["id" => $line["id"], "qty" => $line["qty"] + $input["qty"]]);
-          }
+        if ($exists) {
+          $this->entity->store("product_lines", ["id" => $line["id"], "qty" => $line["qty"] + $input["qty"]]);
+        }
         return $line;
       }
     }
