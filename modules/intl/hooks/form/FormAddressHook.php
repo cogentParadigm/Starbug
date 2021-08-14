@@ -30,6 +30,7 @@ class FormAddressHook extends FormHook {
         }
         $country = $this->db->query("countries")->condition("id", $value["country"])->one();
         $options["code"] = $country["code"];
+        $options["default"] = $value;
       } else {
         $field['data-dojo-props']['id'] = $value;
         $address = $this->db->query("address")->condition("address.id", $value)->select("country.code")->one();

@@ -2,12 +2,13 @@
 namespace Starbug\Core;
 
 use Starbug\Db\Schema\SchemaInterface;
+use Starbug\Operation\OperationFactoryInterface;
 
 class StoreOperationHook extends QueryHook {
-  public function __construct(ModelFactoryInterface $models, DatabaseInterface $db, SchemaInterface $schema) {
-    $this->models = $models;
+  public function __construct(DatabaseInterface $db, SchemaInterface $schema, OperationFactoryInterface $operations) {
     $this->db = $db;
     $this->schema = $schema;
+    $this->operations = $operations;
   }
   public function validate($query, $key, $value, $column, $argument) {
     if (is_array($value)) {
@@ -17,9 +18,11 @@ class StoreOperationHook extends QueryHook {
       } else {
         $model = explode(" ", $hooks["references"])[0];
       }
-      $instance = $this->models->get($model);
-      $instance->$argument($value);
-      if (!$instance->errors()) {
+
+      $operation = $this->operations->get($argument);
+      $operation->configure(["model" => $model]);
+      $operation->execute($value);
+      if ($operation->success()) {
         $value = empty($value["id"]) ? $this->db->getInsertId($model) : $value["id"];
       } else {
         $this->db->errors->set($query->model, $key, $this->db->errors->get($model));

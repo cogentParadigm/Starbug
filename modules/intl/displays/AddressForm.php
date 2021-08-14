@@ -44,4 +44,9 @@ class AddressForm extends FormDisplay {
       }
     }
   }
+  protected function beforeQuery($options) {
+    if (!empty($options["default"]) && empty($options["id"]) && !$this->hasPost()) {
+      $this->setPost($options["default"]);
+    }
+  }
 }
