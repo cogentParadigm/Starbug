@@ -10,17 +10,12 @@ define([
 	"dgrid/Grid",
 	"dgrid/Keyboard",
 	"dgrid/Selector",
-	"dgrid/extensions/Pagination",
+	"sb/grid/_PaginationMixin",
 	"dgrid/Editor",
 	"dojo/_base/Deferred",
 	"dojo/dom-attr"
-], function(dojo, lang, on, starbug, sb, Query, Api, GridFromHtml, List, Keyboard, Selector, Pagination, Editor, Deferred, attr){
-return dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard, Selector, Pagination, Editor], {
-	pagingLinks: 2,
-	firstLastArrows: true,
-	previousNextArrows: true,
-	pagingTextBox: false,
-	pageSizeOptions: [10, 15, 25, 50],
+], function(dojo, lang, on, starbug, sb, Query, Api, GridFromHtml, List, Keyboard, Selector, _PaginationMixin, Editor, Deferred, attr){
+return dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard, Selector, _PaginationMixin, Editor], {
 	noDataMessage:'No Results',
 	getBeforePut:false,
 	query:{},

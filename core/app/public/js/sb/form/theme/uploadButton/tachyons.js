@@ -8,6 +8,7 @@ define(["dojo/_base/declare", "sb/css/Theme", "put-selector/put"], function(decl
     },
     createFileInput: function() {
       this.fileInput = put(this.uploadButton, "input[type=file][tabindex=-1][style=\"position:absolute;top:0;left:0;right:0;bottom:0;opacity:0;width:100%\"]");
+      this.fileInput.id = this.domNode.id + "_fileInput";
       if (this.selection.size != 1) {
         put(this.fileInput, "[multiple]");
       }

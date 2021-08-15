@@ -3,7 +3,7 @@ define([
   "dojo/_base/lang",
   "./_SelectionMixin",
   "./_DropdownMixin",
-  "../list/Dropdown",
+  "sb/list/Dropdown",
   "dgrid/OnDemandList",
   "sb/grid/_StoreMixin",
   "put-selector/put",
