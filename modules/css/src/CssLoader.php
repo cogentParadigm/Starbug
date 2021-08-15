@@ -69,6 +69,7 @@ class CssLoader {
     }
     $this->twig->getLoader()->setPaths($templates);
     $this->twig->getLoader()->setPaths([$newPath."/templates"], "theme");
+    $this->twig->getLoader()->setPaths([$newPath."/templates"], $this->theme);
     $this->twig->getLoader()->setPaths($layouts, "layouts");
     $this->twig->getLoader()->setPaths($views, "views");
     $this->options = false;

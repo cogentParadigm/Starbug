@@ -53,10 +53,10 @@ return [
     });
     $twig->addFunction($helperFunction);
     // Add publish function.
-    $publish = new TwigFunction('publish', function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = true, $sandboxed = false) {
+    $publish = new TwigFunction('publish', function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = true, $sandboxed = false) use ($c) {
       $results = [];
-      $namespaces = $env->getLoader()->getNamespaces();
-      foreach ($namespaces as $namespace) {
+      $modules = array_reverse($c->get("Starbug\Modules\Configuration")->getEnabled(), true);
+      foreach ($modules as $namespace => $module) {
         if ($namespace !== FilesystemLoader::MAIN_NAMESPACE) {
           $result = twig_include($env, $context, "@".$namespace."/".$template, $variables, $withContext, $ignoreMissing, $sandboxed);
           if ($result) {
