@@ -15,7 +15,7 @@ class GenerateCommand {
     $args = [];
     foreach ($argv as $i => $arg) {
       if (0 === strpos($arg, "-")) {
-        $arg = str_replace("-", "", $arg);
+        $arg = ltrim($arg, "-");
         $parts = (false !== strpos($arg, "=")) ? explode("=", $arg, 2) : [$arg, true];
         $args[$parts[0]] = $parts[1];
         $params[$parts[0]] = $parts[1];
