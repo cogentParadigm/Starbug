@@ -10,8 +10,9 @@ class PagesController extends Controller {
     $this->db = $db;
     $this->session = $session;
   }
-  public function __invoke($id) {
+  public function __invoke($id, $route) {
     $page = $this->db->query("pages")->condition("id", $id)->one();
+    $route->setOption("layout", $page["layout"]);
     if (!$page["published"] && !$this->session->loggedIn("admin")) {
       return $this->missing();
     } else {
