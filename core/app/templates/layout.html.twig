@@ -1,1 +1,1 @@
-{{ include(['@layouts/' ~ route.layout ~ '-' ~ route.path ~ ".html.twig", '@layouts/' ~ route.layout ~ ".html.twig", '@layouts/views.html.twig']) }}
+{{ include(['@layouts/' ~ route.getOption("layout") ~ '-' ~ route.getPath() ~ ".html.twig", '@layouts/' ~ route.getOption("layout") ~ ".html.twig", '@layouts/views.html.twig']) }}
