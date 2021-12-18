@@ -8,7 +8,8 @@ default:
         - Starbug\Behat\Context\MailContext
         - Starbug\Behat\Context\CsvContext
         - Starbug\Behat\Context\ScreenshotsContext
-        - Starbug\Features\FeatureContext
+        - Starbug\Features\DebuggingContext
+        - Starbug\Features\CrudListContext
   extensions:
     Starbug\Behat\ServiceContainer\ChromeExtension: ~
     Behat\MinkExtension:

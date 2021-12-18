@@ -9,7 +9,7 @@ use Ingenerator\BehatTableAssert\AssertTable;
 /**
  * Defines application features from the specific context.
  */
-class FeatureContext extends RawStarbugContext {
+class CrudListContext extends RawStarbugContext {
 
   /**
    * Assert the presence of a grid widget.
@@ -33,14 +33,5 @@ class FeatureContext extends RawStarbugContext {
    */
   public function exportCsv($type, $button = "") {
     $this->mink->visit("api/".$type."/admin.csv");
-  }
-
-  /**
-   * Wait time.
-   *
-   * @When /^(?:|I )wait for "(?P<count>[^"]*)" second(?:|s)$/
-   */
-  public function wait($count) {
-    sleep($count * 1000);
   }
 }
