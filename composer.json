@@ -75,5 +75,11 @@
     "phpunit": "vendor/bin/phpunit -c etc/phpunit.xml || true",
     "behat": "vendor/bin/behat",
     "console": "php -d auto_prepend_file=vendor/starbug/di/bootstrap/default.php -a"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "starbug/composer-modules-plugin": true
+    }
   }
 }
