@@ -22,11 +22,20 @@ services:
       - PHP_GROUP=$PHP_GROUP
       - PHP_UID=$PHP_UID
       - PHP_GID=$PHP_GID
+      - DEFAULT_DATABASE_TYPE=mysql
+      - DEFAULT_DATABASE_HOST=localhost
+      - DEFAULT_DATABASE_USERNAME=root
+      - DEFAULT_DATABASE_NAME=starbug
+      - DEFAULT_DATABASE_PREFIX=sb_
     command: ["precreate-user.sh", "php-fpm", "-F"]
   mariadb:
     image: agangji/mariadb:10.2
     volumes:
       - mariadb-data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=starbug
+  redis:
+    image: redis
   mailcatcher:
     image: schickling/mailcatcher
   default-queue:
@@ -42,6 +51,11 @@ services:
       - PHP_GROUP=$PHP_GROUP
       - PHP_UID=$PHP_UID
       - PHP_GID=$PHP_GID
+      - DEFAULT_DATABASE_TYPE=mysql
+      - DEFAULT_DATABASE_HOST=localhost
+      - DEFAULT_DATABASE_USERNAME=root
+      - DEFAULT_DATABASE_NAME=starbug
+      - DEFAULT_DATABASE_PREFIX=sb_
     command: ["precreate-user.sh", "php", "sb", "process-queue"]
 
 volumes:
