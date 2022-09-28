@@ -15,8 +15,10 @@ class Mailer implements MailerInterface {
   protected $secure;
   protected $macro;
   protected $db;
+  protected $whitelistEnabled = false;
+  protected $whitelist = [];
 
-  public function __construct(SettingsInterface $settings, MacroInterface $macro, DatabaseInterface $db) {
+  public function __construct(SettingsInterface $settings, MacroInterface $macro, DatabaseInterface $db, $whitelistEnabled = false, $whitelist = []) {
     $this->settings = $settings;
     $this->macro = $macro;
     $this->db = $db;
@@ -27,6 +29,8 @@ class Mailer implements MailerInterface {
     $this->from_name = $settings->get("site_name");
     $this->port = $settings->get("email_port");
     $this->secure = $settings->get("email_secure");
+    $this->whitelistEnabled = $whitelistEnabled;
+    $this->whitelist = $whitelist;
   }
 
   public function create() {
@@ -83,6 +87,23 @@ class Mailer implements MailerInterface {
   public function send($options = [], $data = [], $rendered = false) {
     $mailer = $this->create();
     if (!$rendered) $options = $this->render($options, $data);
+
+    if ($this->whitelistEnabled) {
+      $validated = [];
+      foreach ($options["to"] as $email) {
+        foreach ($this->whitelist as $pattern) {
+          if (preg_match($pattern, $email)) {
+            $validated[] = $email;
+            break;
+          };
+        }
+      }
+      if (empty($validated)) {
+        return 1;
+      }
+      $options["to"] = $validated;
+    }
+
     // set mailer params
     if (!empty($options['from'])) $mailer->From = $options['from'];
     if (!empty($options['from_name'])) $mailer->FromName = $options['from_name'];
