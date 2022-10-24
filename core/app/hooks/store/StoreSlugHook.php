@@ -49,7 +49,7 @@ class StoreSlugHook extends QueryHook {
     if (!empty($field["unique"])) {
       $parts = explode(" ", $field["unique"]);
       foreach ($parts as $c) {
-        if (!empty($c)) {
+        if (!empty($c) && $query->hasValue($c)) {
           $exists->condition($c, $query->getValue($c));
         }
       }

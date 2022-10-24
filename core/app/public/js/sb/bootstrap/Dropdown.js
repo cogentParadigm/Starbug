@@ -141,14 +141,25 @@ define([
             context = query(context).parents(".dropdown")[0] || undefined;
         }
         query(backDropSelector).remove();
-        query(toggleSelector, context).forEach(function(menu){
-            var targetNode = _getParent(menu)[0];
-            if(targetNode){
-                on.emit(targetNode, 'hide.bs.dropdown', { bubbles:true, cancelable:true, relatedTarget: menu });
-                domClass.remove(targetNode, 'open');
-                on.emit(targetNode, 'hidden.bs.dropdown', { bubbles:true, cancelable:true, relatedTarget: menu });
-            }
-        });
+        var checkContext = function(context) {
+            query(toggleSelector, context).forEach(function(menu){
+                var targetNode = _getParent(menu)[0];
+                if(targetNode){
+                    on.emit(targetNode, 'hide.bs.dropdown', { bubbles:true, cancelable:true, relatedTarget: menu });
+                    domClass.remove(targetNode, 'open');
+                    on.emit(targetNode, 'hidden.bs.dropdown', { bubbles:true, cancelable:true, relatedTarget: menu });
+                }
+            });
+        };
+        checkContext(context);
+        if (context && domClass.contains(context, "dropdown")) {
+            var parent = query(context).parents(".dropdown")[0] || undefined;
+            query(".dropdown", parent).forEach(function(menu) {
+                if (menu != context) {
+                    checkContext(menu);
+                }
+            })
+        }
     }
 
     function _getParent(node){

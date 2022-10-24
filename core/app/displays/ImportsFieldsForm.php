@@ -8,6 +8,7 @@ class ImportsFieldsForm extends FormDisplay {
   public $source_keys = [];
   public $source_values = [];
   public $model = "imports_fields";
+  public $cancelable = false;
   protected $layoutDisplay = "ModalFormLayout";
   public function setFilesystems(MountManager $filesystems) {
     $this->filesystems = $filesystems;
@@ -38,7 +39,7 @@ class ImportsFieldsForm extends FormDisplay {
     $this->add($dest_ops);
     $this->add(["update_key", "input_type" => "checkbox", "value" => "1", "label" => "Use this field as a key to update records"]);
     $this->actions->attributes["class"] = "modal-footer flex flex-row-reverse";
-    $this->actions->add(["cancel", "class" => "cancel mr2 btn-default"]);
+    $this->actions->add(["cancel", "class" => "cancel mr2 btn-default", "type" => "button"]);
   }
   protected function parseSource($id) {
     $file = $this->db->get("files", $id);
