@@ -3,7 +3,7 @@ namespace Starbug\Intl;
 
 use Starbug\Core\DatabaseInterface;
 
-class Translation {
+class Translation implements TranslationInterface {
   // @var DatabaseInterface
   protected $db;
   // @var string

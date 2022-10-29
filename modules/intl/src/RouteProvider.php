@@ -10,7 +10,7 @@ class RouteProvider extends AdminRouteProvider {
     $address = $this->addCrudRoutes($routes->addRoute("address"), "address");
     $address->setController(null); // no list
     $address->setOption("groups", "user");
-    $address->addRoute("/form[/{locale}]", "Starbug\Intl\AddressController");
+    $address->addRoute("/form[/{locale}]", "Starbug\Intl\AddressController", ["format" => "xhr"]);
 
     $admin = $routes->getRoute("admin");
     $this->addCrudRoutes($admin->addRoute("/countries"), "countries");

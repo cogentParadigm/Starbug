@@ -10,6 +10,5 @@ return [
   "db.schema.migrations" => DI\add([
     DI\get("Starbug\Intl\Migration")
   ]),
-  "Starbug\Intl\AddressForm" => DI\autowire()
-    ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface"))
+  "Starbug\Intl\*Interface" => DI\autowire("Starbug\Intl\*")
 ];

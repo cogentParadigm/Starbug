@@ -20,7 +20,7 @@ class AddressController extends Controller {
     $country = $this->db->query("countries")->condition("id", $locale)->orCondition("code", $locale)->one();
 
     // if we have just saved an address or an id has been provided, then load it
-    if ($this->db->success("address", "create")) {
+    if (!empty($bodyParams) && !$this->db->errors()) {
       $id = $bodyParams["address"]["id"] ?? $this->db->getInsertId("address");
       $address = $this->db->query("address")->condition("id", $id)->one();
     } elseif (!empty($queryParams["id"])) {
@@ -32,7 +32,10 @@ class AddressController extends Controller {
     $this->assign("formatted_address", $formatted);
     $this->assign("address", $address);
     $this->assign("edit", $edit);
-    $options = ["code" => $country['code'], 'id' => $queryParams["id"]];
+    $options = ["code" => $country['code']];
+    if (!empty($queryParams["id"])) {
+      $options["id"] = $queryParams["id"];
+    }
     if (!empty($queryParams["keys"])) {
       $options["input_name"] = $queryParams["keys"];
     }
