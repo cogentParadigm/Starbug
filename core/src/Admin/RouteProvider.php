@@ -1,9 +1,10 @@
 <?php
 namespace Starbug\Core\Admin;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Core\Controller\ViewController;
 use Starbug\Core\Routing\Route;
 use Starbug\Core\Routing\RouteProviderInterface;
+use Starbug\Users\Operation\UpdateProfile;
 
 class RouteProvider implements RouteProviderInterface {
 
@@ -15,6 +16,7 @@ class RouteProvider implements RouteProviderInterface {
       "title" => "Admin",
       "groups" => "admin",
       "theme" => "storm",
+      "menu" => "admin",
       "view" => "admin.html"
     ]);
 
@@ -34,9 +36,11 @@ class RouteProvider implements RouteProviderInterface {
 
     // Profile
     $routes->addRoute("profile", "Starbug\Core\Controller\ViewController", [
-      "view" => "profile.html"
+      "view" => "profile.html",
+      "groups" => "user"
     ])
-    ->resolve("id", "Starbug\Core\Routing\Resolvers\UserId");
+    ->resolve("id", "Starbug\Core\Routing\Resolvers\UserId")
+    ->onPost(UpdateProfile::class);
 
     // Robots
     $routes->addRoute("robots.{format:txt}", "Starbug\Core\Controller\ViewController", [
@@ -44,19 +48,20 @@ class RouteProvider implements RouteProviderInterface {
     ]);
   }
   protected function addCrudRoutes(Route $routes, $model) {
-    $routes->setController("Starbug\Core\Crud\ListController");
+    $routes->setController(ViewController::class);
+    $routes->setOption("view", "admin/list.html");
     $routes->setOption("model", $model);
     $routes->setOption("successUrl", $routes->getPath());
     $routes->setOption("cancelUrl", $routes->getPath());
 
-    $create = $routes->addRoute("/create", "Starbug\Core\Crud\CreateController")
+    $create = $routes->addRoute("/create", ViewController::class, ["view" => "admin/create.html"])
       ->onPost("Starbug\Core\Operation\Save");
 
-    $update = $routes->addRoute("/update/{id:[0-9]+}", "Starbug\Core\Crud\UpdateController")
+    $update = $routes->addRoute("/update/{id:[0-9]+}", ViewController::class, ["view" => "admin/update.html"])
       ->onPost("Starbug\Core\Operation\Save")
       ->resolve("row", "Starbug\Core\Routing\Resolvers\RowById");
 
-    $routes->addRoute("/delete/{id:[0-9]+}", "Starbug\Core\Crud\DeleteController")
+    $routes->addRoute("/delete/{id:[0-9]+}", ViewController::class, ["view" => "admin/delete.html"])
       ->onPost("Starbug\Core\Operation\Delete");
 
     $routes->addRoute("/import", "Starbug\Core\Crud\ImportController");
@@ -64,8 +69,7 @@ class RouteProvider implements RouteProviderInterface {
     $this->addXhr($create)
       ->onPost("Starbug\Core\Operation\Save");
     $this->addXhr($update)
-      ->onPost("Starbug\Core\Operation\Save")
-      ->resolve("row", "Starbug\Core\Routing\Resolvers\RowById");
+      ->onPost("Starbug\Core\Operation\Save");
 
     return $routes;
   }
