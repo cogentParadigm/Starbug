@@ -12,8 +12,12 @@ trait Resolvers {
     return $this->resolvers[$name];
   }
   public function getResolvers($type = false) {
-    if (false == $type) return $this->resolvers;
-    return array_filter($this->resolvers, function ($resolver) use ($type) {
+    $resolvers = $this->resolvers;
+    if ($this->hasParent()) {
+      $resolvers = $resolvers + $this->parent->getResolvers();
+    }
+    if (false == $type) return $resolvers;
+    return array_filter($resolvers, function ($resolver) use ($type) {
       return $resolver["type"] == $type;
     });
   }
