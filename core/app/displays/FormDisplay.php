@@ -24,6 +24,7 @@ class FormDisplay extends ItemDisplay {
   protected $layoutDisplay = "LayoutDisplay";
   protected $hook_builder;
   protected $displays;
+  protected $showSuccessMessage = true;
   /**
    * PSR-7 Server Request
    *
@@ -154,6 +155,13 @@ class FormDisplay extends ItemDisplay {
 
   public function failure() {
     return $this->request->getAttribute("state") && !$this->errors->isEmpty();
+  }
+
+  public function showSuccessMessage() {
+    return $this->showSuccessMessage
+      && !empty($this->model)
+      && !empty($this->defaultAction)
+      && $this->success();
   }
 
   public function hasPost(...$keys) {

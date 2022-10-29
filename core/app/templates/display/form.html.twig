@@ -1,5 +1,5 @@
 <form {{ helper("filter").attributes(display.attributes)|raw }} novalidate>
-  {% if display.model is not empty and display.defaultAction is not empty and display.success(display.defaultAction) %}
+  {% if display.showSuccessMessage() %}
     <p class="alert alert-success">Saved</p>
   {% endif %}
   {% if display.errors("global") %}
