@@ -5,5 +5,10 @@
 {% endif %}
 {% block title %}{{ form_header }}{% endblock %}
 {% block body %}
-    {{ helper("displays").render(form ?? ((model|title) ~ "Form"), request.getQueryParams()|merge({"operation": action ?? "create"})) }}
+  {% if formParams is empty %}
+    {% set formParams = {} %}
+  {% endif %}
+  {% set formParams = formParams|merge({"operation": action ?? "create"}) %}
+  {% set formParams = request.getQueryParams()|merge(formParams) %}
+  {{ helper("displays").render(form ?? ((model|title) ~ "Form"), formParams) }}
 {% endblock %}
