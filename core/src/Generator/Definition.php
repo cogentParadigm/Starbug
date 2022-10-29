@@ -31,6 +31,11 @@ class Definition {
   public function setModule($module) {
     $this->module = $this->modules->get($module) + ["name" => $module];
     $this->setParameter("module", $this->module);
+    $namespace = $this->module["namespace"];
+    if ($this->hasParameter("dir")) {
+      $namespace .= "\\".$this->getParameter("dir");
+    }
+    $this->setParameter("namespace", $namespace);
   }
   public function getModule() {
     return $this->module;
