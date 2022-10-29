@@ -1,6 +1,6 @@
 <?php
 return [
-  'db.schema.migrations' => DI\add([
-    DI\get('Starbug\Comments\Migration')
+  "db.schema.migrations" => DI\add([
+    DI\get("Starbug\Comments\Migration")
   ])
 ];
