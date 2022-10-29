@@ -4,7 +4,7 @@ namespace Starbug\Db\Query;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Db\Schema\SchemerInterface;
 
-class Entity {
+class Entity implements EntityInterface {
 
   protected $db;
   protected $schema;
