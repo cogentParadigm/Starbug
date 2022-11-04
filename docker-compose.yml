@@ -56,7 +56,7 @@ services:
       - DEFAULT_DATABASE_USERNAME=root
       - DEFAULT_DATABASE_NAME=starbug
       - DEFAULT_DATABASE_PREFIX=sb_
-    command: ["precreate-user.sh", "php", "sb", "process-queue"]
+    command: ["precreate-user.sh", "runuser", "-u", "${PHP_USER}", "--", "php", "sb", "process-queue"]
 
 volumes:
   mariadb-data:
