@@ -13,9 +13,10 @@ class CollectionFactory implements CollectionFactoryInterface {
     $this->container = $container;
   }
   public function get($collection) {
-    $className = $this->locator->className($collection, "Collection");
-    if (false == $className) {
-      $className = "Starbug\\Core\\Collection";
+    if (false !== strpos($collection, "\\")) {
+      $className = $collection;
+    } else {
+      $className = $this->locator->className($collection, "Collection");
     }
     $object = $this->container->get($className);
     if ($object instanceof CollectionInterface) {

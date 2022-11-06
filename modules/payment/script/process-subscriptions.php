@@ -9,7 +9,7 @@ class ProcessSubscriptionsCommand {
     $this->collections = $collections;
   }
   public function run($argv) {
-    $subscriptions = $this->collections->get("ExpiredSubscriptions")->query();
+    $subscriptions = $this->collections->get(ExpiredSubscriptionsCollection::class)->query();
     foreach ($subscriptions as $subscription) {
       $this->gateway->processSubscription($subscription);
     }

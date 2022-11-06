@@ -1,4 +1,7 @@
 <?php
+namespace Starbug\Db;
+
+use DI;
 use Psr\Container\ContainerInterface;
 use Starbug\Db\Schema\QueryCompilerHook;
 
@@ -70,5 +73,8 @@ return [
   ],
   "databases.active" => function (ContainerInterface $container) {
     return $container->get("databases.".$container->get("db"));
-  }
+  },
+  "template.helpers" => DI\add([
+    "schema" => SchemaHelper::class
+  ])
 ];

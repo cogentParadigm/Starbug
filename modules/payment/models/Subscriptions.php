@@ -65,7 +65,7 @@ class Subscriptions extends Table {
 
   public function payment($data) {
     $this->update($data, false);
-    $subscription = $this->collections->get("ExpiredSubscriptions")->one(["id" => $data["bill"]]);
+    $subscription = $this->collections->get(ExpiredSubscriptionsCollection::class)->one(["id" => $data["bill"]]);
     $this->gateway->processSubscription($subscription);
     if (!$this->db->errors()) {
       $subscription = $this->query()->condition("subscriptions.id", $data["id"])

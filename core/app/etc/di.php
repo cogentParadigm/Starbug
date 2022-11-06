@@ -118,6 +118,21 @@ return [
   'Starbug\Core\Database' => DI\autowire()
     ->method('setTimeZone', DI\get('time_zone'))
     ->method('setDatabase', DI\get("databases.active")),
+  "template.helpers" => [
+    "breadcrumbs" => BreadcrumbsHelper::class,
+    "collections" => CollectionsHelper::class,
+    "config" => ConfigHelper::class,
+    "csrf" => CsrfHelper::class,
+    "db" => DbHelper::class,
+    "displays" => DisplaysHelper::class,
+    "filesystems" => FilesystemsHelper::class,
+    "filter" => FilterHelper::class,
+    "images" => ImagesHelper::class,
+    "request" => RequestHelper::class,
+    "session" => SessionHelper::class,
+    "settings" => SettingsHelper::class,
+    "url" => UrlHelper::class
+  ],
   'Starbug\Core\GenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   'Psr\Log\LoggerInterface' => function (ContainerInterface $c) {
     $logger = new Logger("main");

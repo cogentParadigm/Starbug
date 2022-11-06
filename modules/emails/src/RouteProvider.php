@@ -3,6 +3,7 @@ namespace Starbug\Emails;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Core\Routing\Route;
+use Starbug\Core\SelectCollection;
 
 class RouteProvider extends AdminRouteProvider {
 
@@ -12,6 +13,6 @@ class RouteProvider extends AdminRouteProvider {
 
     $api = $routes->getRoute("api");
     $this->addAdminApiRoute($api->addRoute("/email-templates/admin.{format:csv|json}"), "email_templates");
-    $this->addApiRoute($api->addRoute("/email-templates/select.json"), "email_templates", "Select");
+    $this->addApiRoute($api->addRoute("/email-templates/select.json"), "email_templates", SelectCollection::class);
   }
 }

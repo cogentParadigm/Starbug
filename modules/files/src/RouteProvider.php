@@ -21,9 +21,9 @@ class RouteProvider extends AdminRouteProvider {
     ]);
 
     $api = $routes->getRoute("api");
-    $this->addAdminApiRoute($api->addRoute("/files/admin.{format:csv|json}"), "files", "AdminFiles")
+    $this->addAdminApiRoute($api->addRoute("/files/admin.{format:csv|json}"), "files", AdminFilesCollection::class)
       ->setController("Starbug\Files\ApiFilesController");
-    $this->addApiRoute($api->addRoute("/files/select.json"), "files", "FilesSelect")
+    $this->addApiRoute($api->addRoute("/files/select.json"), "files", FilesSelectCollection::class)
       ->setController("Starbug\Files\ApiFilesController");
   }
 }

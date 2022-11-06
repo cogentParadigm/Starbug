@@ -12,6 +12,9 @@ use Twig\TwigFunction;
 
 return [
   'theme' => 'tachyons',
+  "template.helpers" => DI\add([
+    "css" => CssHelper::class
+  ]),
   'Starbug\Css\CssLoader' => DI\autowire()
     ->constructorParameter('theme', DI\get('theme'))
     ->constructorParameter('baseUrl', DI\get('website_url')),
@@ -49,9 +52,9 @@ return [
       return false;
     }]);
     // Add helper function.
-    $helpers = $c->get("Starbug\Core\HelperFactoryInterface");
-    $helperFunction = new TwigFunction('helper', function ($name) use ($helpers) {
-      return $helpers->get($name)->helper();
+    $helpers = $c->get("template.helpers");
+    $helperFunction = new TwigFunction('helper', function ($name) use ($helpers, $c) {
+      return $c->get($helpers[$name])->helper();
     });
     $twig->addFunction($helperFunction);
     // Add publish function.

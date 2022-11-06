@@ -20,7 +20,7 @@ class ApiProductLinesController extends CollectionController {
     if (empty($queryParams["order"])) {
       $params["order"] = $this->cart->get("id");
     }
-    return $this->api->render("ProductLines", $params);
+    return $this->api->render(ProductLinesCollection::class, $params);
   }
   public function filterQuery($collection, $query, $ops) {
     $cid = $this->request->getCookieParams()["cid"];

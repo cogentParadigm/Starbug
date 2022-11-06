@@ -10,5 +10,8 @@ return [
   "db.schema.migrations" => DI\add([
     DI\get("Starbug\Intl\Migration")
   ]),
-  "Starbug\Intl\*Interface" => DI\autowire("Starbug\Intl\*")
+  "Starbug\Intl\*Interface" => DI\autowire("Starbug\Intl\*"),
+  "template.helpers" => DI\add([
+    "addressFormatter" => AddressFormatterHelper::class
+  ])
 ];

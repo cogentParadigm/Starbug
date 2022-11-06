@@ -177,7 +177,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
 
   public function selectShippingMethod($input) {
     $this->init();
-    $method = $this->collections->get("SelectShippingMethods")->one(["order" => $this->order["id"], "id" => $input["id"]]);
+    $method = $this->collections->get(SelectShippingMethodsCollection::class)->one(["order" => $this->order["id"], "id" => $input["id"]]);
     $line = [
       "method" => $method["id"],
       "description" => $method["name"],

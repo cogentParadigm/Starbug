@@ -3,6 +3,7 @@ namespace Starbug\Content;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Core\Routing\Route;
+use Starbug\Core\SelectCollection;
 
 class RouteProvider extends AdminRouteProvider {
 
@@ -16,16 +17,23 @@ class RouteProvider extends AdminRouteProvider {
 
     $api = $routes->getRoute("api");
 
+    // Update menu
+    $api->getRoute("/menus/tree.json")->setOption("collection", MenusTreeCollection::class);
+
     // Categories API
-    $this->addAdminApiRoute($api->addRoute("/categories/admin.{format:csv|json}"), "categories", "AdminCategories");
-    $this->addApiRoute($api->addRoute("/categories/select.json"), "categories", "Select");
+    $this->addAdminApiRoute(
+      $api->addRoute("/categories/admin.{format:csv|json}"),
+      "categories",
+      AdminCategoriesCollection::class
+    );
+    $this->addApiRoute($api->addRoute("/categories/select.json"), "categories", SelectCollection::class);
 
     // Pages API
-    $this->addAdminApiRoute($api->addRoute("/pages/admin.{format:csv|json}"), "pages", "AdminPages");
-    $this->addApiRoute($api->addRoute("/pages/select.json"), "pages", "Select");
+    $this->addAdminApiRoute($api->addRoute("/pages/admin.{format:csv|json}"), "pages", AdminPagesCollection::class);
+    $this->addApiRoute($api->addRoute("/pages/select.json"), "pages", SelectCollection::class);
 
     // Tags API
-    $this->addAdminApiRoute($api->addRoute("/tags/admin.{format:csv|json}"), "tags", "AdminTags");
-    $this->addApiRoute($api->addRoute("/tags/select.json"), "tags", "Select");
+    $this->addAdminApiRoute($api->addRoute("/tags/admin.{format:csv|json}"), "tags", AdminTagsCollection::class);
+    $this->addApiRoute($api->addRoute("/tags/select.json"), "tags", SelectCollection::class);
   }
 }

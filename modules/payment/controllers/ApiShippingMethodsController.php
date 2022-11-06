@@ -21,6 +21,6 @@ class ApiShippingMethodsController extends CollectionController {
     if (empty($queryParams["order"])) {
       $params["order"] = $this->cart->get("id");
     }
-    return $this->api->render("SelectShippingMethods", $params);
+    return $this->api->render(SelectShippingMethodsCollection::class, $params);
   }
 }

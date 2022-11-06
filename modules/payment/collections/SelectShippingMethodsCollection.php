@@ -21,7 +21,7 @@ class SelectShippingMethodsCollection extends SelectCollection {
     return $query;
   }
   public function filterRows($rows) {
-    $products = $this->collections->get("ProductLines")->query(["order" => $this->order]);
+    $products = $this->collections->get(ProductLinesCollection::class)->query(["order" => $this->order]);
 
     foreach ($rows as &$row) {
       $rates = $this->db->query("shipping_rates")

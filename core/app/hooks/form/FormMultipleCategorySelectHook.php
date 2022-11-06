@@ -20,7 +20,7 @@ class FormMultipleCategorySelectHook extends FormHook {
     if (empty($field["query"])) {
       $field["query"] = [];
     }
-    $terms = $this->collections->get("TermsTree")->query($field["query"] + ["taxonomy" => $field['taxonomy'], "parent" => $field['parent']]);
+    $terms = $this->collections->get(TermsTreeCollection::class)->query($field["query"] + ["taxonomy" => $field['taxonomy'], "parent" => $field['parent']]);
     $value = $form->get($field['name']);
     if (!is_array($value)) {
       $value = explode(",", $value);

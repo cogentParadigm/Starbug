@@ -16,7 +16,7 @@ class SubscriptionsController extends Controller {
     $this->assign("model", "orders");
   }
   public function defaultAction() {
-    $subscriptions = $this->collections->get("Subscriptions")->query(["owner" => $this->session->getUserId()]);
+    $subscriptions = $this->collections->get(SubscriptionsCollection::class)->query(["owner" => $this->session->getUserId()]);
     $this->assign("subscriptions", $subscriptions);
     $this->render("subscriptions/list.html");
   }
@@ -24,7 +24,7 @@ class SubscriptionsController extends Controller {
     if ($this->models->get("subscriptions")->success("payment")) {
       $this->response->redirect("subscriptions");
     }
-    $subscription = $this->collections->get("Subscriptions")->one(["id" => $id]);
+    $subscription = $this->collections->get(SubscriptionsCollection::class)->one(["id" => $id]);
     $this->assign("subscription", $subscription);
     $this->render("subscriptions/update.html");
   }
@@ -33,7 +33,7 @@ class SubscriptionsController extends Controller {
       $this->response->redirect("subscriptions");
     }
     $bill = $this->models->get("bills")->load($id);
-    $subscription = $this->collections->get("Subscriptions")->one(["id" => $bill["subscriptions_id"]]);
+    $subscription = $this->collections->get(SubscriptionsCollection::class)->one(["id" => $bill["subscriptions_id"]]);
     $this->assign("subscription", $subscription);
     $this->assign("bill", $bill);
     $this->render("subscriptions/payment.html");

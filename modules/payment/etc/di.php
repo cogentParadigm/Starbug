@@ -1,4 +1,7 @@
 <?php
+namespace Starbug\Payment;
+
+use DI;
 use Psr\Container\ContainerInterface;
 
 return [
@@ -7,6 +10,11 @@ return [
   ]),
   'db.schema.migrations' => DI\add([
     DI\get('Starbug\Payment\Migration')
+  ]),
+  "template.helpers" => DI\add([
+    "cart" => CartHelper::class,
+    "paymentSettings" => PaymentSettingsHelper::class,
+    "priceFormatter" => PriceFormatterHelper::class
   ]),
   'cart_token' => function (ContainerInterface $c) {
     $request = $c->get("Psr\Http\Message\ServerRequestInterface");
@@ -31,7 +39,7 @@ return [
   'Starbug\Payment\TokenGatewayInterface' => DI\autowire("Starbug\Payment\TokenGateway")->constructorParameter("gateway", DI\get('Omnipay\AuthorizeNet\CIMGateway')),
   'Omnipay\AuthorizeNet\AIMGateway' => function (ContainerInterface $c) {
     $settings = $c->get("Starbug\Payment\PaymentSettingsInterface");
-    $gateway = new Omnipay\AuthorizeNet\AIMGateway();
+    $gateway = new \Omnipay\AuthorizeNet\AIMGateway();
     $gateway->setApiLoginId($settings->get("Authorize.Net", 'login_id'));
     $gateway->setTransactionKey($settings->get("Authorize.Net", 'transaction_key'));
     if ($settings->testMode("Authorize.Net")) {
@@ -41,7 +49,7 @@ return [
   },
   'Omnipay\AuthorizeNet\CIMGateway' => function (ContainerInterface $c) {
     $settings = $c->get("Starbug\Payment\PaymentSettingsInterface");
-    $gateway = new Omnipay\AuthorizeNet\CIMGateway();
+    $gateway = new \Omnipay\AuthorizeNet\CIMGateway();
     $gateway->setApiLoginId($settings->get("Authorize.Net", 'login_id'));
     $gateway->setTransactionKey($settings->get("Authorize.Net", 'transaction_key'));
     if ($settings->testMode("Authorize.Net")) {

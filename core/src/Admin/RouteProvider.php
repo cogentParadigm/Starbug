@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Core\Admin;
 
+use Starbug\Core\AdminCollection;
 use Starbug\Core\Controller\ViewController;
 use Starbug\Core\Routing\Route;
 use Starbug\Core\Routing\RouteProviderInterface;
@@ -85,7 +86,7 @@ class RouteProvider implements RouteProviderInterface {
     return $route;
   }
 
-  protected function addAdminApiRoute(Route $route, $model, $collection = "Admin") {
+  protected function addAdminApiRoute(Route $route, $model, $collection = AdminCollection::class) {
     return $this->addApiRoute($route, $model, $collection)
       ->onPost("Starbug\Core\Operation\Save")
       ->onDelete("Starbug\Core\Operation\Delete");
