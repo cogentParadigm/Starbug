@@ -1,17 +1,19 @@
 --------------------------------------------------------------------------------------------------------------------------------
-TO SETUP WHEN CLONING THIS PROJECT:
+TO SETUP AFTER YOU CLONE THIS PROJECT:
 run command: composer install
-edit files : app/etc/db/default.json (db credentials), and etc/Host.php (URL sub-directory, Timezone)
-run command: php sb setup
+run command: php sb setup --host=http://sb.local.com --dbuser=root --dbname=starbug --dbprefix=sb_
 run command: composer dump-autoload
 
+NOTE: Setup variables above are defaults. You can also edit them afterwards in var/etc/di.php
+
 --------------------------------------------------------------------------------------------------------------------------------
-THE FIRST TIME YOU SETUP THE PROJECT, INSTALL AND COMMIT THE LIBRARIES:
+WHEN PULLING NEW CODE:
+run command: composer migrate
+
+--------------------------------------------------------------------------------------------------------------------------------
+WHEN YOU FIRST CREATE A PROJECT, INSTALL AND COMMIT THE LIBRARIES:
 run command: bower install
 run command: git add libraries
 run command: git commit -am "libraries"
 run command: git push
 
---------------------------------------------------------------------------------------------------------------------------------
-WHEN PULLING NEW CODE:
-run command: composer migrate
