@@ -4,7 +4,9 @@ namespace Starbug\Core\Routing\Traits;
 trait Resolvers {
   protected $resolvers = [];
   public function addResolver($name, $resolver, $type = "inbound") {
-    if (!is_array($resolver)) $resolver = ["resolver" => $resolver];
+    if (!is_array($resolver)) {
+      $resolver = ["resolver" => $resolver];
+    }
     $this->resolvers[$name] = $resolver + ["type" => $type];
     return $this;
   }
@@ -16,7 +18,9 @@ trait Resolvers {
     if ($this->hasParent()) {
       $resolvers = $resolvers + $this->parent->getResolvers();
     }
-    if (false == $type) return $resolvers;
+    if (false == $type) {
+      return $resolvers;
+    }
     return array_filter($resolvers, function ($resolver) use ($type) {
       return $resolver["type"] == $type;
     });

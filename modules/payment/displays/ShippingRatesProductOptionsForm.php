@@ -8,7 +8,9 @@ class ShippingRatesProductOptionsForm extends FormDisplay {
   public $model = "shipping_rates_product_options";
   public $cancel_url = "admin/shipping_rates_product_options";
   public function buildDisplay($options) {
-    if ($this->success("create") && !$this->hasPost("id")) $this->setPost("id", $this->db->getInsertId($this->model));
+    if ($this->success("create") && !$this->hasPost("id")) {
+      $this->setPost("id", $this->db->getInsertId($this->model));
+    }
     $tree = $this->getOptionsTree();
     $this->add(["product_options_id", "label" => "Product Option", "input_type" => "select", "div" => "col-sm-4"] + $tree);
     $this->add([
@@ -26,7 +28,9 @@ class ShippingRatesProductOptionsForm extends FormDisplay {
     $query = $this->db->query("product_options")->conditions(["parent" => $parent]);
     $items = $query->all();
     foreach ($items as $item) {
-      if (!empty($prefix)) $item['name'] = $prefix.$item['name'];
+      if (!empty($prefix)) {
+        $item['name'] = $prefix.$item['name'];
+      }
       $values[] = $item['id'];
       $options[] = $item['name'];
       $results = $this->getOptionsTree($item['id'], $item['name'].': ');

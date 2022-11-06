@@ -93,11 +93,15 @@ class Table {
     // build query.
     foreach ($chain as $idx => $name) {
       $collection = ($name === $entity) ? $entity : $entity."_".$name;
-      if ($idx === 0) $query = $this->db->query($name." as ".$collection);
-      else {
+      if ($idx === 0) {
+        $query = $this->db->query($name." as ".$collection);
+      } else {
         $query->join($name." as ".$collection, "INNER");
-        if ($idx == $root) $query->on($collection.".id=".$entity.".".$name."_id");
-        else $query->on($collection.".".$chain[$root]."_id=".$entity.".".$chain[$root]."_id");
+        if ($idx == $root) {
+          $query->on($collection.".id=".$entity.".".$name."_id");
+        } else {
+          $query->on($collection.".".$chain[$root]."_id=".$entity.".".$chain[$root]."_id");
+        }
       }
     }
 
@@ -119,7 +123,9 @@ class Table {
    * @param string $name the name of the entity
    */
   public function load($id, $reset = false, $name = "") {
-    if (empty($name)) $name = $this->type;
+    if (empty($name)) {
+      $name = $this->type;
+    }
     static $entities = [];
     $key = $name;
     if (is_array($id)) {
@@ -129,8 +135,9 @@ class Table {
       $key .= '-'.$id;
     }
     if ($reset || !$id || !isset($entities[$key])) {
-      if ($id) $entities[$key] = $this->query($name)->condition($name.".id", $id)->one();
-      elseif ($conditions) {
+      if ($id) {
+        $entities[$key] = $this->query($name)->condition($name.".id", $id)->one();
+      } elseif ($conditions) {
         $entity = $this->query($name)->conditions($conditions)->one();
         if ($entity) {
           $id = $entity["id"];
@@ -215,7 +222,9 @@ class Table {
       $name = $this->type;
     }
     $original = $this->load($id, false, $name);
-    if (!$original) return;
+    if (!$original) {
+      return;
+    }
 
     if (!$this->schema->getTable($name)->hasOption("base")) {
       $this->db->remove($name, ["id" => $id]);

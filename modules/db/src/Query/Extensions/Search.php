@@ -30,7 +30,9 @@ class Search {
       // split tokens (allowing escaped commas)
       $search_fields = preg_split('~(?<!\\\)' . preg_quote(",", '~') . '~', $fields);
       // unescape those commas
-      foreach ($search_fields as $sfk => $sfv) $search_fields[$sfk] = str_replace("\,", ",", $sfv);
+      foreach ($search_fields as $sfk => $sfv) {
+        $search_fields[$sfk] = str_replace("\,", ",", $sfv);
+      }
       // generate the conditions
       $builder->where($this->createSearchClause($keywords, $search_fields));
     }
@@ -56,10 +58,17 @@ class Search {
     $output2 = [];
     $arr = explode("&quot;", $text);
     for ($i = 0; $i < count($arr); $i++) {
-      if ($i % 2 == 0) $output = array_merge($output, explode(" ", $arr[$i]));
-      else $output[] = $arr[$i];
+      if ($i % 2 == 0) {
+        $output = array_merge($output, explode(" ", $arr[$i]));
+      } else {
+        $output[] = $arr[$i];
+      }
     }
-    foreach ($output as $token) if (trim($token) != "") $words[] = $token;
+    foreach ($output as $token) {
+      if (trim($token) != "") {
+        $words[] = $token;
+      }
+    }
     // generate condition string
     $conditions = "(";
     for ($word = 0; $word < count($words); $word++) {

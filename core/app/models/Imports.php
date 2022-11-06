@@ -19,16 +19,22 @@ class Imports extends Table {
     $index = $created = $updated = 0;
     $errors = [];
     $import = $this->db->query("imports")->condition("id", $import['id'])->one();
-    if (empty($import['action'])) $import['action'] = "create";
+    if (empty($import['action'])) {
+      $import['action'] = "create";
+    }
     $file = $this->db->query("files")->condition("id", $import['source'])->one();
     $fields = $this->db->query("imports_fields")->condition("imports_id", $import['id'])->sort("position")->all();
     $keys = $head = [];
     foreach ($fields as $field) {
-      if ($field['update_key']) $keys[] = $field['destination'];
+      if ($field['update_key']) {
+        $keys[] = $field['destination'];
+      }
     }
     if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file['id']."_".$file['filename']))) {
       $row = fgetcsv($handle);
-      foreach ($row as $idx => $column) $head[$column] = $idx;
+      foreach ($row as $idx => $column) {
+        $head[$column] = $idx;
+      }
       while (false !== ($row = fgetcsv($handle))) {
         $index++;
         $record = [];
@@ -38,7 +44,9 @@ class Imports extends Table {
         }
         if (!empty($keys)) {
           $query = $this->db->query($import['model']);
-          foreach ($keys as $key) $query->condition($import['model'].".".$key, $record[$key]);
+          foreach ($keys as $key) {
+            $query->condition($import['model'].".".$key, $record[$key]);
+          }
           $exists = $query->one();
           if ($exists) {
             $record['id'] = $exists['id'];

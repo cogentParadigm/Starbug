@@ -53,7 +53,9 @@ class ImportsForm extends FormDisplay {
     $count = 0;
     if (false !== ($handle = $this->filesystems->readStream($file["location"]."://".$file["id"]."_".$file["filename"]))) {
       while (!feof($handle)) {
-        if (fgets($handle)) $count++;
+        if (fgets($handle)) {
+          $count++;
+        }
       }
     }
     $count--;
@@ -65,14 +67,20 @@ class ImportsForm extends FormDisplay {
     $rows[] = fgetcsv($handle);
     while ($row = fgetcsv($handle)) {
       $line++;
-      if ($line <= $pager->start) continue;
-      if ($line > $pager->finish) break;
+      if ($line <= $pager->start) {
+        continue;
+      }
+      if ($line > $pager->finish) {
+        break;
+      }
       $rows[] = $row;
     }
     fclose($handle);
     unset($vars['pg']);
     $prefix = "?";
-    if (!empty($vars)) $prefix .= http_build_query($vars).'&';
+    if (!empty($vars)) {
+      $prefix .= http_build_query($vars).'&';
+    }
     $prefix .= "pg=";
     $half = floor($pager->range/2);
     // set $from to $current_page minus half of $range OR 1
@@ -85,7 +93,9 @@ class ImportsForm extends FormDisplay {
       $fromPage = $toPage - $pager->range;
     }
     // if there are not enough pages, bring up $from to 1
-    if ($fromPage < 1) $fromPage = 1;
+    if ($fromPage < 1) {
+      $fromPage = 1;
+    }
     return ["rows" => $rows, "pager" => $pager, "url" => $prefix, "fromPage" => $fromPage, "toPage" => $toPage];
   }
 }

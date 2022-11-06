@@ -28,10 +28,14 @@ class IntlSetupCommand {
       $exists = $this->db->query("countries")->condition("code", $c['code'])->one();
       $data = json_decode(file_get_contents($address_data.$c['code']), true);
       $record = ["name" => $c['name'], "code" => $c['code']];
-      if ($exists) $record["id"] = $exists["id"];
+      if ($exists) {
+        $record["id"] = $exists["id"];
+      }
       if (is_array($record)) {
         foreach ($address_map as $k => $v) {
-          if (isset($data[$k])) $record[$v] = $data[$k];
+          if (isset($data[$k])) {
+            $record[$v] = $data[$k];
+          }
         }
       }
       $this->db->store("countries", $record);
@@ -61,7 +65,9 @@ class IntlSetupCommand {
     $languages = $this->config->get("languages");
     foreach ($languages as $l) {
       $exists = $this->db->query("languages")->condition("language", $l['language']);
-      if (!$exists->one()) $this->db->store("languages", $l);
+      if (!$exists->one()) {
+        $this->db->store("languages", $l);
+      }
     }
 
     // populate strings

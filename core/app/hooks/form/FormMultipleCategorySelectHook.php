@@ -11,14 +11,24 @@ class FormMultipleCategorySelectHook extends FormHook {
       $form->set($field['name'], $field['default']);
       unset($field['default']);
     }
-    if (empty($field['taxonomy'])) $field['taxonomy'] = ((empty($form->model)) ? "" : $form->model."_").$field['name'];
-    if (empty($field['parent'])) $field['parent'] = 0;
-    if (empty($field["query"])) $field["query"] = [];
+    if (empty($field['taxonomy'])) {
+      $field['taxonomy'] = ((empty($form->model)) ? "" : $form->model."_").$field['name'];
+    }
+    if (empty($field['parent'])) {
+      $field['parent'] = 0;
+    }
+    if (empty($field["query"])) {
+      $field["query"] = [];
+    }
     $terms = $this->collections->get("TermsTree")->query($field["query"] + ["taxonomy" => $field['taxonomy'], "parent" => $field['parent']]);
     $value = $form->get($field['name']);
-    if (!is_array($value)) $value = explode(",", $value);
+    if (!is_array($value)) {
+      $value = explode(",", $value);
+    }
     foreach ($value as $idx => $v) {
-      if (substr($v, 0, 1) == "-") unset($value[$idx]);
+      if (substr($v, 0, 1) == "-") {
+        unset($value[$idx]);
+      }
     }
     $field['value'] = $value;
     $field['terms'] = $terms;

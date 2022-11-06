@@ -28,7 +28,9 @@ class MenuCollection extends Collection {
       } else {
         $chain = explode("-", trim($link["menu_path"], "-"));
         $parent = &$links[array_shift($chain)];
-        foreach ($chain as $c) $parent = &$parent['children'][$c];
+        foreach ($chain as $c) {
+          $parent = &$parent['children'][$c];
+        }
         $parent['children'][$link['id']] = $link;
       }
     }

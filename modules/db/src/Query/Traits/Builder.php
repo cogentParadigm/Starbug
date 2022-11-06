@@ -27,9 +27,13 @@ trait Builder {
    */
   public function select($field, $prefix = "") {
     if (is_array($field)) {
-      foreach ($field as $f) $this->select($f, $prefix);
+      foreach ($field as $f) {
+        $this->select($f, $prefix);
+      }
     } else {
-      if (!empty($prefix)) $field = $prefix.".".$field;
+      if (!empty($prefix)) {
+        $field = $prefix.".".$field;
+      }
       $field = $this->parseName($field);
       $this->query->addSelection($field['name'], $field["alias"]);
     }
@@ -61,8 +65,12 @@ trait Builder {
     $table = $this->parseName($table);
     $join = $this->query->addJoin($table["name"], $table["alias"]);
     $this->lastTableAlias = $join->getAlias();
-    if (!empty($type)) $join->setType($type);
-    if (!empty($table['on'])) $join->where($table['on']);
+    if (!empty($type)) {
+      $join->setType($type);
+    }
+    if (!empty($table['on'])) {
+      $join->where($table['on']);
+    }
     return $this;
   }
 
@@ -102,7 +110,9 @@ trait Builder {
    * @param string $collection the name of the table or collection
    */
   public function on($condition, $alias = "") {
-    if (empty($alias)) $alias = $this->lastTableAlias;
+    if (empty($alias)) {
+      $alias = $this->lastTableAlias;
+    }
     $this->query->getJoin($alias)->where($condition);
     return $this;
   }
@@ -132,7 +142,9 @@ trait Builder {
    */
   public function addCondition($conditions, $field, $value = "", $operator = "=", $options = []) {
     if (is_array($field)) {
-      foreach ($field as $k => $v) $this->addCondition($conditions, $k, $v, $operator, $options);
+      foreach ($field as $k => $v) {
+        $this->addCondition($conditions, $k, $v, $operator, $options);
+      }
       return $this;
     } else {
       if (is_object($field) && $field instanceof Closure) {
@@ -159,13 +171,18 @@ trait Builder {
     if ($condition instanceof BuilderInterface) {
       foreach ($condition->getHistory() as $set => $operations) {
         foreach ($operations as $operation) {
-          if ($operation['operation'] == "condition") $this->addCondition($conditions, $operation['field'], $operation['value'], $operation['operator'], $operation['options']);
-          elseif ($operation['operation'] == "where") $this->addWhere($conditions, $operation['condition'], $operation['options']);
+          if ($operation['operation'] == "condition") {
+            $this->addCondition($conditions, $operation['field'], $operation['value'], $operation['operator'], $operation['options']);
+          } elseif ($operation['operation'] == "where") {
+            $this->addWhere($conditions, $operation['condition'], $operation['options']);
+          }
         }
       }
       return $this;
     } elseif (is_array($condition)) {
-      foreach ($condition as $c) $this->addWhere($conditions, $c, $options);
+      foreach ($condition as $c) {
+        $this->addWhere($conditions, $c, $options);
+      }
       return $this;
     } else {
       $conditions->where($condition, $options);
@@ -256,7 +273,9 @@ trait Builder {
 
   public function set($field, $value = null) {
     if (is_array($field)) {
-      foreach ($field as $key => $value) $this->set($key, $value);
+      foreach ($field as $key => $value) {
+        $this->set($key, $value);
+      }
     } else {
       $this->query->setValue($field, $value);
     }

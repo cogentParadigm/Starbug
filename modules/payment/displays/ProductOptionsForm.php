@@ -33,7 +33,9 @@ class ProductOptionsForm extends FormDisplay {
     $options = $values = [""];
     $items = $this->db->query("product_options")->conditions(["product_types_id" => $type, "parent" => $parent])->all();
     foreach ($items as $item) {
-      if (!empty($prefix)) $item['name'] = $prefix.$item['name'];
+      if (!empty($prefix)) {
+        $item['name'] = $prefix.$item['name'];
+      }
       $values[] = $item['id'];
       $options[] = $item['name'];
       $results = $this->getOptionsTree($type, $item['id'], $item['name'].': ');

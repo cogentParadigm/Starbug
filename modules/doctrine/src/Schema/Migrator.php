@@ -91,7 +91,9 @@ class Migrator extends AbstractMigration {
   protected function getOptions($column) {
     $options = [];
     foreach (["default", "length"] as $key) {
-      if (isset($column[$key])) $options[$key] = $column[$key];
+      if (isset($column[$key])) {
+        $options[$key] = $column[$key];
+      }
     }
     if (isset($column["null"]) && $column["null"] !== false) {
       $options["notnull"] = false;
@@ -109,8 +111,12 @@ class Migrator extends AbstractMigration {
       $options["length"] = 11;
     }
     if ($column["type"] == "decimal") {
-      if (!empty($column["precision"])) $options["precision"] = $column["precision"];
-      if (!empty($column["scale"])) $options["scale"] = $column["scale"];
+      if (!empty($column["precision"])) {
+        $options["precision"] = $column["precision"];
+      }
+      if (!empty($column["scale"])) {
+        $options["scale"] = $column["scale"];
+      }
     }
     if (isset($options["default"]) && $options["default"] == "NULL") {
       $options["default"] = null;

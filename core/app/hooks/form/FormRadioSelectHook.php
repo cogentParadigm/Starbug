@@ -9,7 +9,9 @@ class FormRadioSelectHook extends FormHook {
       unset($field['default']);
     }
 
-    if (!empty($field["from"]) && empty($field["query"])) $field["query"] = "Select";
+    if (!empty($field["from"]) && empty($field["query"])) {
+      $field["query"] = "Select";
+    }
 
     $other_option = empty($field['other_option']) ? false : $field['other_option'];
     $display_options = empty($field['display_options']) ? [] : $field['display_options'];

@@ -14,9 +14,14 @@ class Translation implements TranslationInterface {
   }
   public function get($name, $target_language = "") {
     static $strings;
-    if (empty($target_language)) $target_language = $this->language;
-    if (!isset($strings[$target_language])) $strings[$target_language] = [];
-    elseif (isset($strings[$target_language][$name])) return $strings[$target_language][$name];
+    if (empty($target_language)) {
+      $target_language = $this->language;
+    }
+    if (!isset($strings[$target_language])) {
+      $strings[$target_language] = [];
+    } elseif (isset($strings[$target_language][$name])) {
+      return $strings[$target_language][$name];
+    }
 
     // no previously queried match was found, lets look for the translation in the target language
     $match = $this->db->query("strings")

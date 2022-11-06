@@ -15,8 +15,12 @@ class FormSelectHook extends FormHook {
     }
     if (isset($field['multiple'])) {
       $field['multiple'] = "multiple";
-      if (empty($field['size'])) $field['size'] = 5;
-      if (!is_array($value)) $value = explode(',', $value);
+      if (empty($field['size'])) {
+        $field['size'] = 5;
+      }
+      if (!is_array($value)) {
+        $value = explode(',', $value);
+      }
     }
     if (!empty($field['range'])) {
       $range = explode("-", $field['range']);
@@ -30,12 +34,22 @@ class FormSelectHook extends FormHook {
       if (!empty($field['from'])) {
         $list = $options;
         $options = $this->db->query($field['from'], $field)->all();
-      } else $list = [];
+      } else {
+        $list = [];
+      }
       $keys = [];
-      if (!empty($options)) foreach ($options[0] as $k => $v) if (false !== strpos($field['caption'], "%$k%")) $keys[] = $k;
+      if (!empty($options)) {
+        foreach ($options[0] as $k => $v) {
+          if (false !== strpos($field['caption'], "%$k%")) {
+                    $keys[] = $k;
+          }
+        }
+      }
       foreach ($options as $o) {
         $cap = $field['caption'];
-        foreach ($keys as $k) $cap = str_replace("%$k%", $o[$k], $cap);
+        foreach ($keys as $k) {
+          $cap = str_replace("%$k%", $o[$k], $cap);
+        }
         $list[$cap] = $o[$field['value']];
       }
       $options = $list;
@@ -46,17 +60,23 @@ class FormSelectHook extends FormHook {
       $values = (!empty($field['values'])) ? $field['values'] : $keys;
       $values = (is_array($values)) ? $values : explode(",", $field['values']);
       $options = [];
-      foreach ($keys as $i => $k) $options[$k] = $values[$i];
+      foreach ($keys as $i => $k) {
+        $options[$k] = $values[$i];
+      }
       unset($field['options']);
       unset($field['values']);
     } else {
-      if (!empty($field["from"]) && empty($field["query"])) $field["query"] = "Select";
+      if (!empty($field["from"]) && empty($field["query"])) {
+        $field["query"] = "Select";
+      }
       if (!empty($field['query']) && !empty($field['from'])) {
         $mode = "display";
       }
     }
     $optional = false;
-    if (isset($field['optional'])) $optional = $field['optional'];
+    if (isset($field['optional'])) {
+      $optional = $field['optional'];
+    }
     $other_option = empty($field['other_option']) ? false : $field['other_option'];
     $form->assign("optional", $optional);
     $form->assign("value", $value);

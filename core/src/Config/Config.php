@@ -26,7 +26,9 @@ class Config implements ConfigInterface {
    * providing first.second.third will open up the file first.json and look for the key "second" and within that, a key "third"
    */
   public function get($key, $scope = "etc") {
-    if (isset($this->providers[$scope])) return $this->providers[$scope]->get($key, $scope);
+    if (isset($this->providers[$scope])) {
+      return $this->providers[$scope]->get($key, $scope);
+    }
 
     $parts = explode(".", $key);
 
@@ -74,7 +76,9 @@ class Config implements ConfigInterface {
     $raw = explode("\n", $text);
     foreach ($raw as $idx => $item) {
       $first = substr(trim($item), 0, 1);
-      if (!(in_array($first, ['"', '{', '}', '[', ']']) || is_numeric($first))) unset($raw[$idx]);
+      if (!(in_array($first, ['"', '{', '}', '[', ']']) || is_numeric($first))) {
+        unset($raw[$idx]);
+      }
     }
     return json_decode(join("\n", $raw), true);
   }

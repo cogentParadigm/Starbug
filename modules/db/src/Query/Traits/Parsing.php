@@ -81,8 +81,11 @@ trait Parsing {
             if (!$query->hasTable($entity_alias)) {
               $base_entity = $this->schema->getEntityRoot($table);
               $join = $query->addJoin($schema["entity"], $entity_alias);
-              if ($schema['entity'] === $base_entity) $join->where($entity_alias.".id=".$alias.".".$base_entity."_id");
-              else $join->where($entity_alias.".".$base_entity."_id=".$alias.".".$base_entity."_id");
+              if ($schema['entity'] === $base_entity) {
+                $join->where($entity_alias.".id=".$alias.".".$base_entity."_id");
+              } else {
+                $join->where($entity_alias.".".$base_entity."_id=".$alias.".".$base_entity."_id");
+              }
             }
             $field = "`".$entity_alias."`.".$token;
             $alias = $entity_alias;
@@ -115,14 +118,19 @@ trait Parsing {
       $parsed = $this->parseName($token);
       $table = $query->getTable($alias)->getName();
       $schema = $this->schema->getColumn($table, $parsed["name"]);
-      if (empty($schema)) return $returnAlias ? $column : $this;
+      if (empty($schema)) {
+        return $returnAlias ? $column : $this;
+      }
       if ($schema["entity"] !== $table) {
         $parentAlias = $alias."_".$schema["entity"];
         if (!$query->hasTable($parentAlias) && $this->schema->hasTable($table)) {
           $root = $this->schema->getEntityRoot($table);
           $join = $query->addJoin($schema["entity"], $parentAlias);
-          if ($schema["entity"] == $root) $join->on($parentAlias.".id=".$alias.".".$root."_id");
-          else $join->on($parentAlias.".".$root."_id=".$alias.".".$root."_id");
+          if ($schema["entity"] == $root) {
+            $join->on($parentAlias.".id=".$alias.".".$root."_id");
+          } else {
+            $join->on($parentAlias.".".$root."_id=".$alias.".".$root."_id");
+          }
         }
         $table = $schema["entity"];
         $alias = $parentAlias;
@@ -136,7 +144,9 @@ trait Parsing {
           if (!empty($schema["table"]) && $schema["table"] == $schema["type"]) {
             $query->addJoinMany($alias, $schema["type"], $nextAlias);
           } else {
-            if (empty($schema["table"])) $schema["table"] = $schema["entity"]."_".$parsed["name"];
+            if (empty($schema["table"])) {
+              $schema["table"] = $schema["entity"]."_".$parsed["name"];
+            }
             $query->addJoinMany($alias, $schema["table"], $nextAlias."_lookup");
             $query->addJoinOne($nextAlias."_lookup.".$parsed["name"]."_id", $schema["type"], $nextAlias);
           }

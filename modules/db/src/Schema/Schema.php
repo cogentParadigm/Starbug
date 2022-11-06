@@ -45,7 +45,9 @@ class Schema implements SchemaInterface {
   }
   public function addRows($table, $rows) {
     foreach ($rows as $row) {
-      if (!isset($row[1])) $row[1] = [];
+      if (!isset($row[1])) {
+        $row[1] = [];
+      }
       $this->addRow($table, $row[0], $row[1]);
     }
   }
@@ -54,13 +56,19 @@ class Schema implements SchemaInterface {
   }
   public function retractRows($table, $retractKeys = []) {
     foreach ($this->rows as $idx => $row) {
-      if ($table != $row->get("table")) continue;
+      if ($table != $row->get("table")) {
+        continue;
+      }
       $keys = $row->get("keys");
       $retract = true;
       foreach ($retractKeys as $k => $v) {
-        if ($keys[$k] != $v) $retract = false;
+        if ($keys[$k] != $v) {
+          $retract = false;
+        }
       }
-      if ($retract) unset($this->rows[$idx]);
+      if ($retract) {
+        unset($this->rows[$idx]);
+      }
     }
   }
   public function getTable($table) {
@@ -110,15 +118,21 @@ class Schema implements SchemaInterface {
    */
   public function getColumn($table, $column = "") {
     $info = [];
-    if (!$this->hasTable($table)) return $info;
+    if (!$this->hasTable($table)) {
+      return $info;
+    }
     while (!empty($table)) {
       $table = $this->getTable($table);
       $columns = $table->getColumns();
-      foreach ($columns as $col => $properties) $columns[$col]["entity"] = $table->getName();
+      foreach ($columns as $col => $properties) {
+        $columns[$col]["entity"] = $table->getName();
+      }
       $info = array_merge($columns, $info);
       $table = $table->getOption("base");
     }
-    if (!empty($column)) return isset($info[$column]) ? $info[$column] : [];
+    if (!empty($column)) {
+      return isset($info[$column]) ? $info[$column] : [];
+    }
     return $info;
   }
   public function hasTable($table) {

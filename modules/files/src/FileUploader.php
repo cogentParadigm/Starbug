@@ -60,7 +60,9 @@ class FileUploader {
   }
   protected function mimeIsValid($path, $type) {
     $detected = $this->getMimeFromFile($path);
-    if ($detected == $type) return true;
+    if ($detected == $type) {
+      return true;
+    }
     if (isset($this->allowed[$type]) && in_array($detected, $this->allowed[$type])) {
       return true;
     }

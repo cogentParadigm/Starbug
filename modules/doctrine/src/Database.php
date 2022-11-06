@@ -18,7 +18,9 @@ class Database extends AbstractDatabase {
     $this->connection = DriverManager::getConnection($params, new Configuration());
     $this->database_name = $db['db'];
     $this->prefix = $db['prefix'];
-    if (false !== $this->timezone) $this->exec("SET time_zone='".$this->timezone."'");
+    if (false !== $this->timezone) {
+      $this->exec("SET time_zone='".$this->timezone."'");
+    }
   }
 
   public function exec($statement) {

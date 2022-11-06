@@ -18,24 +18,34 @@ trait Tables {
   }
 
   public function prefix($table) {
-    if (substr($table, 0, 1) == "(") return $table;
+    if (substr($table, 0, 1) == "(") {
+      return $table;
+    }
     return $this->prefix.$table;
   }
 
   public function getTable($alias = false) {
-    if (false === $alias) $alias = $this->baseTableAlias;
+    if (false === $alias) {
+      $alias = $this->baseTableAlias;
+    }
     return $this->tables[$alias] ?? null;
   }
 
   public function hasTable($alias = false) {
-    if (false === $alias) $alias = $this->baseTableAlias;
+    if (false === $alias) {
+      $alias = $this->baseTableAlias;
+    }
     return isset($this->tables[$alias]);
   }
 
   public function getAlias($table = false) {
-    if (false === $table) return $this->baseTableAlias;
+    if (false === $table) {
+      return $this->baseTableAlias;
+    }
     foreach ($this->tables as $alias => $entry) {
-      if ($entry->getName() == $table) return $alias;
+      if ($entry->getName() == $table) {
+        return $alias;
+      }
     }
     return false;
   }

@@ -23,13 +23,18 @@ class QueryCommand {
       call_user_func_array([$records, $key], [$value]);
     }
     echo $records->interpolate()."\n";
-    if (!empty($params['limit']) && $params['limit'] == 1) $records = [$records];
-    else $records = $records->execute();
+    if (!empty($params['limit']) && $params['limit'] == 1) {
+      $records = [$records];
+    } else {
+      $records = $records->execute();
+    }
     if (empty($records)) {
       echo "..no results\n";
     } else {
       $result = [];
-      foreach ($records as $record) $result[] = array_values($record);
+      foreach ($records as $record) {
+        $result[] = array_values($record);
+      }
       $table = new \cli\Table();
       $table->setHeaders(array_keys($records[0]));
       $table->setRows($result);

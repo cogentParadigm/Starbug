@@ -12,7 +12,10 @@ class CsvDisplay extends ItemDisplay {
     $this->action = $options['action'];
   }
   public function query($options = null) {
-    if (isset($this->options['data'])) $this->items = $this->options['data'];
-    else parent::query($options);
+    if (isset($this->options['data'])) {
+      $this->items = $this->options['data'];
+    } else {
+      parent::query($options);
+    }
   }
 }

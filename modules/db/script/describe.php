@@ -12,7 +12,9 @@ class DescribeCommand {
     $records = $this->db->exec("DESCRIBE `".$this->db->prefix($name)."`")->fetchAll();
     if (!empty($records)) {
       $result = [];
-      foreach ($records as $record) $result[] = array_values($record);
+      foreach ($records as $record) {
+        $result[] = array_values($record);
+      }
       $table = new \cli\Table();
       $table->setHeaders(array_keys($records[0]));
       $table->setRows($result);

@@ -21,7 +21,9 @@ class StorePathHook extends QueryHook {
     if (empty($value)) {
       $value = $this->generate($query, $column);
     }
-    if (!is_numeric($value)) $query->exclude($key);
+    if (!is_numeric($value)) {
+      $query->exclude($key);
+    }
     return $value;
   }
   public function beforeUpdate($query, $key, $value, $column, $argument) {

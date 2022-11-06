@@ -21,7 +21,9 @@ class PaymentSettings implements PaymentSettingsInterface {
     $gateway = $this->db->query("payment_gateways")
       ->select("is_test_mode")
       ->condition($field_name, $gateway)->one();
-    if ($gateway['is_test_mode']) return true;
+    if ($gateway['is_test_mode']) {
+      return true;
+    }
     return false;
   }
 

@@ -21,9 +21,13 @@ class GridDisplay extends ItemDisplay {
 
   public function build($options = []) {
     // set defaults
-    if (!empty($options['attributes'])) $this->attributes = $options['attributes'];
+    if (!empty($options['attributes'])) {
+      $this->attributes = $options['attributes'];
+    }
     $this->options = $options;
-    if (!empty($options['dnd'])) $this->dnd();
+    if (!empty($options['dnd'])) {
+      $this->dnd();
+    }
     $this->buildDisplay($options);
   }
 
@@ -34,7 +38,9 @@ class GridDisplay extends ItemDisplay {
   }
 
   public function columnAttributes($field, $options) {
-    if (empty($options["field"])) $options["field"] = $field;
+    if (empty($options["field"])) {
+      $options["field"] = $field;
+    }
     $options['data-dgrid-column'] = [];
     if (!empty($options['editor']) && empty($options['editOn'])) {
       $options['editOn'] = "'dblclick'";
@@ -64,8 +70,12 @@ class GridDisplay extends ItemDisplay {
   public function beforeRender() {
     $this->attributes['model'] = $this->model;
     $this->attributes['class'][] = "dgrid-autoheight dbootstrap-grid";
-    if (empty($this->attributes['id'])) $this->attributes['id'] = $this->model."_grid";
-    if (empty($this->attributes['data-dojo-id'])) $this->attributes['data-dojo-id'] = $this->attributes['id'];
+    if (empty($this->attributes['id'])) {
+      $this->attributes['id'] = $this->model."_grid";
+    }
+    if (empty($this->attributes['data-dojo-id'])) {
+      $this->attributes['data-dojo-id'] = $this->attributes['id'];
+    }
     $this->attributes['action'] = $this->action;
 
     // build data-dojo-props attribute

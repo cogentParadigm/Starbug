@@ -8,9 +8,13 @@ class FormTagSelectHook extends FormHook {
       $form->set($field['name'], $field['default']);
       unset($field['default']);
     }
-    if (!is_array($value)) $value = explode(",", $value);
+    if (!is_array($value)) {
+      $value = explode(",", $value);
+    }
     foreach ($value as $idx => $v) {
-      if (substr($v, 0, 1) == "-") unset($value[$idx]);
+      if (substr($v, 0, 1) == "-") {
+        unset($value[$idx]);
+      }
     }
     $form->assign("value", $value);
   }

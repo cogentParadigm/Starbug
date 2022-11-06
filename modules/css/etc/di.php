@@ -43,7 +43,9 @@ return [
       $parts = explode(",", $template);
       array_pop($parts);
       $ext = array_pop($parts);
-      if (in_array($ext, ["html", "css", "js"])) return $ext;
+      if (in_array($ext, ["html", "css", "js"])) {
+        return $ext;
+      }
       return false;
     }]);
     // Add helper function.

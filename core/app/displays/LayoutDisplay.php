@@ -55,8 +55,11 @@ class LayoutDisplay extends ItemDisplay {
   }
 
   public function append($parent, $html) {
-    if (empty($parent)) $parent = $this->lastCell;
-    else $this->lastCell = $parent;
+    if (empty($parent)) {
+      $parent = $this->lastCell;
+    } else {
+      $this->lastCell = $parent;
+    }
     $this->cells[$parent]->appendChild($html);
   }
 

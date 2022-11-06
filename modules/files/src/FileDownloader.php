@@ -13,7 +13,9 @@ class FileDownloader {
     $this->response = $response;
   }
   public function download($file) {
-    if (!is_array($file)) $file = $this->getFile($file);
+    if (!is_array($file)) {
+      $file = $this->getFile($file);
+    }
     $filesystem = $this->filesystems->getFilesystem($file["location"]);
     $path = $file["id"]."_".$file["filename"];
     $this->response

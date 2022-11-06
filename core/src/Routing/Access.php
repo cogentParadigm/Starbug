@@ -9,12 +9,16 @@ class Access implements AccessInterface {
   }
   public function hasAccess(Route $route) {
     $groups = $route->getOption("groups");
-    if (empty($groups)) return true;
+    if (empty($groups)) {
+      return true;
+    }
     if (!is_array($groups)) {
       $groups = [$groups];
     }
     foreach ($groups as $group) {
-      if ($this->session->loggedIn($group)) return true;
+      if ($this->session->loggedIn($group)) {
+        return true;
+      }
     }
     return false;
   }

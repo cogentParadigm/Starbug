@@ -45,7 +45,9 @@ class Builder implements BuilderInterface {
       $query->from($ref[0])->where($ref[0].'.'.$ref[1].'='.$alias.'.'.$token);
       $nextAlias = $ref[0];
     } elseif ($this->schema->hasTable($schema["type"])) {
-      if (empty($schema["table"])) $schema["table"] = $schema["entity"]."_".$parsed["name"];
+      if (empty($schema["table"])) {
+        $schema["table"] = $schema["entity"]."_".$parsed["name"];
+      }
       $query->from($schema["table"])->where($schema["table"].".".$schema["entity"]."_id=".$alias.".id");
       $nextAlias = $schema["table"];
       if ($schema["table"] != $schema["type"]) {
@@ -56,14 +58,18 @@ class Builder implements BuilderInterface {
     if (!empty($parts)) {
       $query->select($nextAlias.".".implode(".", $parts));
     }
-    if ($callable) call_user_func($callable, $query, $this);
+    if ($callable) {
+      call_user_func($callable, $query, $this);
+    }
     return $this;
   }
 
   public function query($table = false) {
     $builder = new static($this->db, $this->executor);
     $builder->setSchema($this->schema);
-    if ($table) $builder->from($table);
+    if ($table) {
+      $builder->from($table);
+    }
     return $builder;
   }
 }

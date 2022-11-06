@@ -57,11 +57,15 @@ class Macro implements MacroInterface {
   public function replace($text, $data = []) {
     // find out what tokens we need to replace
     $tokens = $this->search($text);
-    if (empty($tokens)) return $text;
+    if (empty($tokens)) {
+      return $text;
+    }
 
     // get the replacements from token_replacements
     $replacements = [];
-    foreach ($tokens as $type => $type_tokens) $replacements += $this->replacements($type, $type_tokens, $data);
+    foreach ($tokens as $type => $type_tokens) {
+      $replacements += $this->replacements($type, $type_tokens, $data);
+    }
 
     // replace tokens
     $search = array_keys($replacements);
@@ -92,7 +96,9 @@ class Macro implements MacroInterface {
     // populate overrides from data
     if (!empty($data[$type]) && is_array($data[$type])) {
       foreach ($tokens as $index => $token) {
-        if (!empty($data[$type][$index])) $replacements[$token] = $data[$type][$index];
+        if (!empty($data[$type][$index])) {
+          $replacements[$token] = $data[$type][$index];
+        }
       }
     }
     // return replacements

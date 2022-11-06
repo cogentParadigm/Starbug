@@ -11,7 +11,9 @@ class Images implements ImagesInterface {
     $this->base_directory = $base_directory;
   }
   public function info($file) {
-    if (!is_file($file)) return false;
+    if (!is_file($file)) {
+      return false;
+    }
 
     $details = false;
     $data = @getimagesize($file);
@@ -51,15 +53,21 @@ class Images implements ImagesInterface {
       $image->readImage($path);
       return $image;
     } else {
-      if ($format == "auto") $format = end(explode(".", $path));
+      if ($format == "auto") {
+        $format = end(explode(".", $path));
+      }
       $format = str_replace('jpg', 'jpeg', $format);
       $open_func = 'imageCreateFrom'. $format;
-      if (!function_exists($open_func)) return false;
+      if (!function_exists($open_func)) {
+        return false;
+      }
       return $open_func($path);
     }
   }
   public function save($image, $path, $format = "auto") {
-    if ($format == "auto") $format = end(explode(".", $path));
+    if ($format == "auto") {
+      $format = end(explode(".", $path));
+    }
     $format = str_replace('jpg', 'jpeg', $format);
     switch (gettype($image)) {
       case "object":
@@ -67,9 +75,14 @@ class Images implements ImagesInterface {
         return $image->writeImage($path);
       case "resource":
         $close_func = 'image'. $format;
-        if (!function_exists($close_func)) return false;
-        if ($format == 'jpeg') return $close_func($image, $path, 100);
-        else return $close_func($image, $path);
+        if (!function_exists($close_func)) {
+          return false;
+        }
+        if ($format == 'jpeg') {
+          return $close_func($image, $path, 100);
+        } else {
+          return $close_func($image, $path);
+        }
     }
   }
   public function thumb($url, $dimensions = [], $absolute = false) {
@@ -92,9 +105,14 @@ class Images implements ImagesInterface {
           }
         }
       }
-      if ($dimensions['a']) $thumb->adaptiveResize($dimensions['w'], $dimensions['h']);
-      else $thumb->resize($dimensions['w'], $dimensions['h']);
-      if (!$this->filesystems->has("tmp://thumbnails/".$dir)) $this->filesystems->createDir("tmp://thumbnails/".$dir);
+      if ($dimensions['a']) {
+        $thumb->adaptiveResize($dimensions['w'], $dimensions['h']);
+      } else {
+        $thumb->resize($dimensions['w'], $dimensions['h']);
+      }
+      if (!$this->filesystems->has("tmp://thumbnails/".$dir)) {
+        $this->filesystems->createDir("tmp://thumbnails/".$dir);
+      }
       $thumb->save($this->base_directory."/var/tmp/thumbnails/".$target);
       $this->filesystems->move("tmp://thumbnails/".$target, $filesystem."://thumbnails/".$target);
     }

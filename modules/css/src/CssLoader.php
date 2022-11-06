@@ -90,7 +90,9 @@ class CssLoader {
           if (!is_array($style)) {
             $style = ["href" => $style];
           }
-          if (empty($style["rel"])) $style["rel"] = "stylesheet";
+          if (empty($style["rel"])) {
+            $style["rel"] = "stylesheet";
+          }
           $style["href"] = $mid . "/" . $style["href"];
           $options[$media][] = $style;
         }
@@ -101,7 +103,9 @@ class CssLoader {
   public function has($property, $value) {
     foreach ($this->options as $media => $styles) {
       foreach ($styles as $style) {
-        if (isset($style[$property]) && $style[$property] == $value) return true;
+        if (isset($style[$property]) && $style[$property] == $value) {
+          return true;
+        }
       }
     }
     return false;

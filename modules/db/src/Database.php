@@ -13,7 +13,9 @@ class Database extends AbstractDatabase {
     $this->database_name = $params['db'];
     $this->prefix = $params['prefix'];
     $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if (false !== $this->timezone) $this->exec("SET TIME_ZONE='".$this->timezone."'");
+    if (false !== $this->timezone) {
+      $this->exec("SET TIME_ZONE='".$this->timezone."'");
+    }
   }
 
   public function exec($statement) {
@@ -29,7 +31,9 @@ class Database extends AbstractDatabase {
   }
 
   public function __call($method, $args) {
-    if (method_exists($this->pdo, $method)) return call_user_func_array([$this->pdo, $method], $args);
+    if (method_exists($this->pdo, $method)) {
+      return call_user_func_array([$this->pdo, $method], $args);
+    }
     throw new Exception('Call to undefined method/class function: ' . $method);
   }
 }

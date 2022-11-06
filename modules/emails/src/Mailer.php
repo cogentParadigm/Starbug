@@ -44,10 +44,18 @@ class Mailer implements MailerInterface {
         $mailer->Password = $this->password;    // SMTP password
       }
     }
-    if ($this->from_email) $mailer->From = $this->from_email;
-    if ($this->from_name) $mailer->FromName = $this->from_name;
-    if (!empty($this->port)) $mailer->Port = $this->port;
-    if (!empty($this->secure)) $mailer->SMTPSecure = $this->secure;
+    if ($this->from_email) {
+      $mailer->From = $this->from_email;
+    }
+    if ($this->from_name) {
+      $mailer->FromName = $this->from_name;
+    }
+    if (!empty($this->port)) {
+      $mailer->Port = $this->port;
+    }
+    if (!empty($this->secure)) {
+      $mailer->SMTPSecure = $this->secure;
+    }
     $mailer->WordWrap = 50;
     $mailer->IsHTML(true);
     return $mailer;
@@ -58,7 +66,9 @@ class Mailer implements MailerInterface {
     // get template params
     if (!empty($options['template'])) {
       $template = $this->db->query("email_templates")->condition("name", $options['template'])->one();
-      if (!empty($template)) $options = array_merge($template, $options);
+      if (!empty($template)) {
+        $options = array_merge($template, $options);
+      }
     }
     // set mailer params
     $arr = ["to", "cc", "bcc"];
@@ -69,7 +79,9 @@ class Mailer implements MailerInterface {
           $options[$key] = explode(",", $options[$key]);
         }
         if (is_array($options[$key])) {
-          foreach ($options[$key] as $idx => $value) $options[$key][$idx] = $this->macro->replace(trim($value), $data);
+          foreach ($options[$key] as $idx => $value) {
+            $options[$key][$idx] = $this->macro->replace(trim($value), $data);
+          }
         } else {
           $options[$key] = $this->macro->replace($options[$key], $data);
         }
@@ -86,7 +98,9 @@ class Mailer implements MailerInterface {
    */
   public function send($options = [], $data = [], $rendered = false) {
     $mailer = $this->create();
-    if (!$rendered) $options = $this->render($options, $data);
+    if (!$rendered) {
+      $options = $this->render($options, $data);
+    }
 
     if ($this->whitelistEnabled) {
       $validated = [];
@@ -105,24 +119,41 @@ class Mailer implements MailerInterface {
     }
 
     // set mailer params
-    if (!empty($options['from'])) $mailer->From = $options['from'];
-    if (!empty($options['from_name'])) $mailer->FromName = $options['from_name'];
-    if (!empty($options['subject'])) $mailer->Subject = $options['subject'];
-    if (!empty($options['body'])) $mailer->Body = $options['body'];
+    if (!empty($options['from'])) {
+      $mailer->From = $options['from'];
+    }
+    if (!empty($options['from_name'])) {
+      $mailer->FromName = $options['from_name'];
+    }
+    if (!empty($options['subject'])) {
+      $mailer->Subject = $options['subject'];
+    }
+    if (!empty($options['body'])) {
+      $mailer->Body = $options['body'];
+    }
     if (!empty($options['to'])) {
-      foreach ($options['to'] as $email) $mailer->AddAddress($email);
+      foreach ($options['to'] as $email) {
+        $mailer->AddAddress($email);
+      }
     }
     if (!empty($options['cc'])) {
-      foreach ($options['cc'] as $cc) $mailer->AddCC($cc);
+      foreach ($options['cc'] as $cc) {
+        $mailer->AddCC($cc);
+      }
     }
     if (!empty($options['bcc'])) {
-      foreach ($options['bcc'] as $bcc) $mailer->AddBCC($bcc);
+      foreach ($options['bcc'] as $bcc) {
+        $mailer->AddBCC($bcc);
+      }
     }
     if (!empty($options['attachments'])) {
       $attachments = $options['attachments'];
       foreach ($attachments as $a) {
-        if (is_array($a)) $mailer->AddAttachment($a[0], $a[1]);
-        else $mailer->AddAttachment($a);
+        if (is_array($a)) {
+          $mailer->AddAttachment($a[0], $a[1]);
+        } else {
+          $mailer->AddAttachment($a);
+        }
       }
     }
     // send mail

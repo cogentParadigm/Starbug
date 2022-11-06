@@ -20,7 +20,9 @@ class Taxonomy implements TaxonomyInterface {
   public function terms($taxonomy, $parent = 0, $depth = 0) {
     $terms = [];
     $parents = $this->db->query("terms")->condition("taxonomy", $taxonomy)->condition("parent", $parent)->sort("position");
-    if ($taxonomy == "groups" && !$this->session->loggedIn("root")) $parents->condition("slug", "root", "!=");
+    if ($taxonomy == "groups" && !$this->session->loggedIn("root")) {
+      $parents->condition("slug", "root", "!=");
+    }
     $parents = $parents->all();
     foreach ($parents as $idx => $term) {
       $term['depth'] = $depth;
@@ -56,7 +58,9 @@ class Taxonomy implements TaxonomyInterface {
       ->condition($table.".".$field.".slug", $tag)
       ->condition($table.".".$field.".term", $tag)
     );
-    if ($existing->one()) return true;
+    if ($existing->one()) {
+      return true;
+    }
 
     // IF THE TERM DOESN'T EXIST, ADD IT
     $term = $this->db->query("terms")->where("(terms.id=:tag || terms.slug=:tag || terms.term=:tag) AND taxonomy=:tax")->bind(["tag" => $tag, "tax" => $taxonomy])->one();

@@ -32,12 +32,21 @@ class ItemDisplay extends Display {
   public function add($options) {
     $args = func_get_args();
     foreach ($args as $options) {
-      if (!is_array($options)) $options = [$options];
+      if (!is_array($options)) {
+        $options = [$options];
+      }
       $field = array_shift($options);
-      if (empty($options['model']) && !empty($this->model)) $options['model'] = $this->model;
-      if (!isset($options['label'])) $options['label'] = ucwords(str_replace('_', ' ', $field));
-      if (empty($this->fields[$field])) $options = $this->filter($field, $options);
-      else $options = $this->filter($field, array_merge($this->fields[$field], $options));
+      if (empty($options['model']) && !empty($this->model)) {
+        $options['model'] = $this->model;
+      }
+      if (!isset($options['label'])) {
+        $options['label'] = ucwords(str_replace('_', ' ', $field));
+      }
+      if (empty($this->fields[$field])) {
+        $options = $this->filter($field, $options);
+      } else {
+        $options = $this->filter($field, array_merge($this->fields[$field], $options));
+      }
       $this->fields[$field] = $options;
     }
   }
@@ -70,7 +79,9 @@ class ItemDisplay extends Display {
   }
 
   public function query($options = null) {
-    if (is_null($options)) $options = $this->options;
+    if (is_null($options)) {
+      $options = $this->options;
+    }
     $collection = $this->collections->get($this->collection);
     $collection->setModel($this->model);
     $this->items = $collection->query($options);
@@ -80,7 +91,9 @@ class ItemDisplay extends Display {
    * Render the display with the specified items.
    */
   public function render($query = true) {
-    if ($query && !empty($this->model)) $this->query();
+    if ($query && !empty($this->model)) {
+      $this->query();
+    }
     parent::render();
   }
 }

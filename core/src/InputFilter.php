@@ -157,7 +157,11 @@ class InputFilter implements InputFilterInterface {
     ];
     $validate = true;
     $filtered = "";
-    foreach ($attributes as $k => $v) if (!is_array($v) && (!$validate || (in_array($k, $valid) || (0===strpos($k, "on")) || (0===strpos($k, "data"))))) $filtered .= " $k=\"$v\"";
+    foreach ($attributes as $k => $v) {
+      if (!is_array($v) && (!$validate || (in_array($k, $valid) || (0===strpos($k, "on")) || (0===strpos($k, "data"))))) {
+        $filtered .= " $k=\"$v\"";
+      }
+    }
     return $filtered;
   }
 

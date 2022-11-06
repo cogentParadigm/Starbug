@@ -13,7 +13,9 @@ class Action {
   public function action(BuilderInterface $query, array $arguments) {
     $action = array_shift($arguments);
     $collection = array_shift($arguments);
-    if (empty($collection)) $collection = $query->getQuery()->getAlias();
+    if (empty($collection)) {
+      $collection = $query->getQuery()->getAlias();
+    }
     if ($query->has($collection)) {
       $type = $query->getQuery()->getTable($collection)->getName();
       $join = true;
@@ -28,7 +30,9 @@ class Action {
 
     if ($join) {
       // join permits - match table and action
-      if (!$query->has("permits")) $query->innerJoin("permits")->on("'".$type."' LIKE permits.related_table && '".$action."' LIKE permits.action");
+      if (!$query->has("permits")) {
+        $query->innerJoin("permits")->on("'".$type."' LIKE permits.related_table && '".$action."' LIKE permits.action");
+      }
       // global or object permit
       $query->where("('global' LIKE permits.priv_type || (permits.priv_type='object' && permits.related_id=".$collection.".id))");
 
@@ -108,7 +112,9 @@ class Action {
 
     if ($join) {
       // self - permit for user actions
-      if ($type == "users") $roleConditions->where("permits.role='self' && ".$collection.".id='".$this->session->getUserId()."'");
+      if ($type == "users") {
+        $roleConditions->where("permits.role='self' && ".$collection.".id='".$this->session->getUserId()."'");
+      }
       // owner - grant access to owner of object
       $roleConditions->where("permits.role='owner' && ".$collection.".owner='".$this->session->getUserId()."'");
       // [user_access field] - requires users and objects to share the same terms for the given relationship

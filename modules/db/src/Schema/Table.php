@@ -40,9 +40,13 @@ class Table {
     $columns = $this->columns;
     $primary = [];
     foreach ($columns as $column => $options) {
-      if ((isset($options['key'])) && ("primary" == $options['key'])) $primary[] = $column;
+      if ((isset($options['key'])) && ("primary" == $options['key'])) {
+        $primary[] = $column;
+      }
     }
-    if (empty($primary)) $columns['id'] = ["type" => "int", "auto_increment" => true, "key" => "primary"];
+    if (empty($primary)) {
+      $columns['id'] = ["type" => "int", "auto_increment" => true, "key" => "primary"];
+    }
     return $columns;
   }
   public function setOption($name, $value) {

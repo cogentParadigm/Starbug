@@ -26,7 +26,9 @@ class AdminOrdersCollection extends AdminCollection {
       $query->condition("orders.order_status", "pending");
     }
     // sorting
-    if (empty($ops["sort"])) $ops["sort"] = "purchased DESC, orders.created DESC, orders.id DESC";
+    if (empty($ops["sort"])) {
+      $ops["sort"] = "purchased DESC, orders.created DESC, orders.id DESC";
+    }
     $query->sort($ops["sort"]);
     return $query;
   }

@@ -20,14 +20,20 @@ class Address extends Table {
     $country = $this->query("countries")->condition("id", $address['country'])->one();
     $req = str_split($country['require']);
     foreach ($req as $token) {
-      if (!in_array($token, ['N', 'A']) && empty($address[$this->map[$token]])) $this->error("This field is required", $this->map[$token]);
+      if (!in_array($token, ['N', 'A']) && empty($address[$this->map[$token]])) {
+        $this->error("This field is required", $this->map[$token]);
+      }
     }
     $this->store($address);
   }
 
   public function format($address, $country = false) {
-    if (is_numeric($address)) $address = $this->query("address")->condition("id", $address)->one();
-    if (!$country) $country = $this->query("countries")->condition("id", $address['country'])->one();
+    if (is_numeric($address)) {
+      $address = $this->query("address")->condition("id", $address)->one();
+    }
+    if (!$country) {
+      $country = $this->query("countries")->condition("id", $address['country'])->one();
+    }
     if (is_numeric($address['administrative_area'])) {
       $region = $this->query("provinces")->condition("id", $address['administrative_area'])->one();
         $address['administrative_area'] = $region['name'];

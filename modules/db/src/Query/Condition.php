@@ -10,7 +10,9 @@ class Condition implements ConditionInterface {
   }
 
   public function condition($field, $value = "", $operator = "=", $ops = []) {
-    if (is_null($value)) $value = "";
+    if (is_null($value)) {
+      $value = "";
+    }
     if ($field instanceof ConditionInterface) {
       $condition = array_merge(["condition" => $field], $ops);
       $this->conditions[] = $condition;
@@ -48,13 +50,19 @@ class Condition implements ConditionInterface {
       $remove = true;
       if (!empty($condition["condition"]) && $condition["condition"] instanceof ConditionInterface) {
         $condition["condition"]->removeCondition($properties);
-        if (!empty($condition)) $remove = false;
+        if (!empty($condition)) {
+          $remove = false;
+        }
       } else {
         foreach ($properties as $key => $value) {
-          if (empty($condition[$key]) || $condition[$key] != $value) $remove = false;
+          if (empty($condition[$key]) || $condition[$key] != $value) {
+            $remove = false;
+          }
         }
       }
-      if ($remove) unset($this->conditions[$idx]);
+      if ($remove) {
+        unset($this->conditions[$idx]);
+      }
     }
     return $this;
   }

@@ -10,7 +10,9 @@ class MenusTreeCollection extends ParentCollection {
   }
   public function filterRows($rows) {
     foreach ($rows as $idx => $item) {
-      if (empty($item['content']) && !empty($item['title'])) $rows[$idx]['content'] = $item['title'];
+      if (empty($item['content']) && !empty($item['title'])) {
+        $rows[$idx]['content'] = $item['title'];
+      }
     }
     return parent::filterRows($rows);
   }

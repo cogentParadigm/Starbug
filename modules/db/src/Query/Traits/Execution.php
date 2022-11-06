@@ -60,10 +60,12 @@ trait Execution {
     return $this->executor->count($this, $params);
   }
   public function getId() {
-    if ($this->query->isInsert()) return $this->query->getValue("id");
-    elseif ($this->query->isUpdate()) {
-      if ($this->query->hasValue("id")) return $this->query->getValue("id");
-      else {
+    if ($this->query->isInsert()) {
+      return $this->query->getValue("id");
+    } elseif ($this->query->isUpdate()) {
+      if ($this->query->hasValue("id")) {
+        return $this->query->getValue("id");
+      } else {
         $record = $this->query($this->model)->condition($this->query->getCondition())->one();
         return $record['id'];
       }

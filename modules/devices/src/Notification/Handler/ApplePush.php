@@ -34,7 +34,9 @@ class ApplePush implements HandlerInterface {
     // open a connection
     $handle = $this->openConnection($environment);
     // iterate over tokens
-    if (!is_array($tokens)) $tokens = [$tokens];
+    if (!is_array($tokens)) {
+      $tokens = [$tokens];
+    }
     foreach ($tokens as $token) {
       // encode the message
       $message = $this->encodeMessage($token, $message, $data);
@@ -51,7 +53,9 @@ class ApplePush implements HandlerInterface {
   }
 
   protected function encodeMessage($deviceToken, $message, $data = []) {
-    if (is_string($message)) $message = ["alert" => $message, "badge" => 1, "sound" => "default"];
+    if (is_string($message)) {
+      $message = ["alert" => $message, "badge" => 1, "sound" => "default"];
+    }
     $message = $message + $data;
     $payload = json_encode(['aps' => $message]);
     // build the binary notification
@@ -68,7 +72,9 @@ class ApplePush implements HandlerInterface {
     }
     $handle = stream_socket_client($this->environments[$environment], $err, $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
     stream_set_blocking($handle, 0);
-    if (!$handle) $this->logger->error("Failed to connect: $err $errstr" . PHP_EOL);
+    if (!$handle) {
+      $this->logger->error("Failed to connect: $err $errstr" . PHP_EOL);
+    }
     return $handle;
   }
 

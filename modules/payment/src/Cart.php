@@ -30,7 +30,9 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
   }
 
   public function init($create = true) {
-    if (!empty($this->order)) return;
+    if (!empty($this->order)) {
+      return;
+    }
     $this->load();
     if (empty($this->order) && $create) {
       $this->db->store("orders", $this->conditions);
@@ -118,14 +120,18 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
   public function count() {
     $this->init(false);
     $count = 0;
-    foreach ($this->lines['product'] as $line) $count += intval($line['qty']);
+    foreach ($this->lines['product'] as $line) {
+      $count += intval($line['qty']);
+    }
     return $count;
   }
 
   public function getTotal() {
     $this->init(false);
     $total = 0;
-    foreach ($this->lines['product'] as $line) $total += intval($line["qty"]) * intval($line["price"]);
+    foreach ($this->lines['product'] as $line) {
+      $total += intval($line["qty"]) * intval($line["price"]);
+    }
     return $total;
   }
 

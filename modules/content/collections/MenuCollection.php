@@ -11,8 +11,11 @@ class MenuCollection extends ParentCollection {
   public function filterRows($rows) {
     foreach ($rows as &$row) {
       if (!empty($row['pages_id'])) {
-        if (!empty($row["breadcrumb"])) $row["content"] = $row["breadcrumb"];
-        elseif (!empty($row["title"])) $row["content"] = $row["title"];
+        if (!empty($row["breadcrumb"])) {
+          $row["content"] = $row["breadcrumb"];
+        } elseif (!empty($row["title"])) {
+          $row["content"] = $row["title"];
+        }
         $row["href"] = $row["path"];
       }
     }

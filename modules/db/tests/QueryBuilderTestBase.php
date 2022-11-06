@@ -27,7 +27,9 @@ class QueryBuilderTestBase extends TestCase {
   }
 
   protected function compile(Builder $builder = null) {
-    if (is_null($builder)) $builder = $this->builder;
+    if (is_null($builder)) {
+      $builder = $this->builder;
+    }
     $query = $builder->getQuery();
     return $this->compiler->build($query)->getSql();
   }

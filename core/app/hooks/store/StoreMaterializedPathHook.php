@@ -6,8 +6,9 @@ class StoreMaterializedPathHook extends QueryHook {
     $this->db = $db;
   }
   public function validate($query, $key, $value, $column, $argument) {
-    if (empty($value) || $value == "NULL") $query->set($argument, "");
-    else {
+    if (empty($value) || $value == "NULL") {
+      $query->set($argument, "");
+    } else {
       $parent = $this->db->get($query->model, $value);
       $query->set($argument, (empty($parent[$argument]) ? '-' : $parent[$argument]).$parent['id']."-");
     }

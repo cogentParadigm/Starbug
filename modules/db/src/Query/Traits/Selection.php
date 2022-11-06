@@ -17,7 +17,9 @@ trait Selection {
     if ($selection instanceof QueryInterface && empty($alias)) {
       throw new Exception("You must specify an alias when adding a subquery as a selection.");
     }
-    if (false === $alias) $alias = $selection;
+    if (false === $alias) {
+      $alias = $selection;
+    }
     $this->selection[$alias] = $selection;
     return $alias;
   }

@@ -7,7 +7,9 @@ class DropdownDisplay extends ItemDisplay {
   public function buildDisplay($options) {
     $this->attributes['class'][] = $this->template;
     if (!empty($options['attributes'])) {
-      if (!empty($options['attributes']['class']) && !is_array($options['attributes']['class'])) $options['attributes']['class'] = [$options['attributes']['class']];
+      if (!empty($options['attributes']['class']) && !is_array($options['attributes']['class'])) {
+        $options['attributes']['class'] = [$options['attributes']['class']];
+      }
       $this->attributes = array_merge_recursive($this->attributes, $options['attributes']);
     }
     if (!empty($options['model']) && !empty($options['collection'])) {

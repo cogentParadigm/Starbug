@@ -16,7 +16,9 @@ class FormAddressHook extends FormHook {
       $value = $field["default"];
       unset($field['default']);
     }
-    if (empty($field['data-dojo-type'])) $field['data-dojo-type'] = 'starbug/form/Address';
+    if (empty($field['data-dojo-type'])) {
+      $field['data-dojo-type'] = 'starbug/form/Address';
+    }
     if (!isset($field['data-dojo-props']) || !is_array($field['data-dojo-props'])) {
       $field['data-dojo-props'] = [];
     }

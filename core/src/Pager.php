@@ -13,12 +13,17 @@ class Pager {
     $this->count = $total;
     $this->per = $items_per_page;
     $this->range = $range;
-    if (empty($current_pg) || !is_numeric($current_pg)) $current_pg = 1;
+    if (empty($current_pg) || !is_numeric($current_pg)) {
+      $current_pg = 1;
+    }
     $this->current_page = $current_pg;
     $this->last = ceil($total/$items_per_page);
     $this->start = (($current_pg-1)*$items_per_page);
-    if ($this->current_page < 1) $this->current_page = 1;
-    elseif ($this->current_page > $this->last) $this->current_page = $this->last;
+    if ($this->current_page < 1) {
+      $this->current_page = 1;
+    } elseif ($this->current_page > $this->last) {
+      $this->current_page = $this->last;
+    }
     $remaining = $total - $this->start;
     $shown = ($remaining<$items_per_page) ? ($remaining % $items_per_page) : $items_per_page;
     $this->finish = $this->start + $shown;

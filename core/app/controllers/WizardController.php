@@ -35,7 +35,9 @@ class WizardController extends Controller {
    * @return void
    */
   protected function getDisplayOptions($options = []) {
-    if (empty($options["step"])) $options["step"] = 1;
+    if (empty($options["step"])) {
+      $options["step"] = 1;
+    }
 
     // Set the correct step.
     $queryParams = $this->request->getQueryParams();

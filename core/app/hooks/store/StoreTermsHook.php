@@ -13,11 +13,15 @@ class StoreTermsHook extends QueryHook {
     $name = $query->model;
     $id = $query->getId();
     $category_column_info = $this->schema->getColumn($name, $column);
-    if (empty($category_column_info['taxonomy'])) $category_column_info['taxonomy'] = $name."_".$column;
+    if (empty($category_column_info['taxonomy'])) {
+      $category_column_info['taxonomy'] = $name."_".$column;
+    }
     $tags = empty($category_column_info['table']) ? $name."_".$column : $category_column_info['table'];
     $mentioned_tags = [];
     $remove_unmentioned = true;
-    if (!is_array($value)) $value = explode(",", preg_replace("/[,]+[,\s]*/", ",", $value));
+    if (!is_array($value)) {
+      $value = explode(",", preg_replace("/[,]+[,\s]*/", ",", $value));
+    }
     foreach ($value as $tag) {
       if (0 === strpos($tag, "-")) {
         // remove tag

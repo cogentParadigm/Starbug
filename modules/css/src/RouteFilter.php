@@ -11,8 +11,12 @@ class RouteFilter implements RouteFilterInterface {
     $this->theme = $theme;
   }
   public function filterRoute(Route $route, ServerRequestInterface $request) {
-    if (!$route->hasOption("theme")) $route->setOption("theme", $this->theme);
-    if (!$route->hasOption("layout")) $route->setOption("layout", "views");
+    if (!$route->hasOption("theme")) {
+      $route->setOption("theme", $this->theme);
+    }
+    if (!$route->hasOption("layout")) {
+      $route->setOption("layout", "views");
+    }
     $this->css->setTheme($route->getOption("theme"));
     return $route;
   }

@@ -5,7 +5,9 @@ trait Parameters {
   protected $parameters = [];
 
   public function setParameter($name, $value = null) {
-    if (!is_array($name)) $name = [$name => $value];
+    if (!is_array($name)) {
+      $name = [$name => $value];
+    }
     foreach ($name as $k => $v) {
       if (0 !== strpos($k, ":")) {
         $k = ":" . $k;

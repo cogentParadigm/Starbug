@@ -9,7 +9,9 @@ class Compiler implements CompilerInterface {
   protected $hooks = [];
 
   public function build(QueryInterface $query, $reset = true) {
-    if ($reset) $this->parameterCount = [];
+    if ($reset) {
+      $this->parameterCount = [];
+    }
 
     $this->invokeHooks("beforeCompileQuery", [$query, $this]);
 
@@ -35,7 +37,9 @@ class Compiler implements CompilerInterface {
       unset($sql['GROUP BY']);
       $sqlCountQuery = implode(' ', $sql);
     } else {
-      if (!$query->isSelect()) $components['SELECT'] = "*";
+      if (!$query->isSelect()) {
+        $components['SELECT'] = "*";
+      }
       $sql['SELECT'] = "SELECT COUNT(".((false !== strpos(strtolower($components['SELECT']), 'distinct')) ? $components['SELECT'] : "*").") as count";
       $sqlCountQuery = implode(' ', $sql);
     }
@@ -79,39 +83,64 @@ class Compiler implements CompilerInterface {
     ];
 
     // select, delete, or set
-    if ($query->isSelect()) $components['SELECT'] = $this->buildSelect($query);
-    elseif ($query->isDelete()) $components['DELETE'] = $this->buildSelect($query);
-    elseif ($query->isInsert() || $query->isUpdate()) $components['SET'] = $this->buildSet($query);
+    if ($query->isSelect()) {
+      $components['SELECT'] = $this->buildSelect($query);
+    } elseif ($query->isDelete()) {
+      $components['DELETE'] = $this->buildSelect($query);
+    } elseif ($query->isInsert() || $query->isUpdate()) {
+      $components['SET'] = $this->buildSet($query);
+    }
 
     // where
-    if ($query->isSelect() || $query->isUpdate() || $query->isDelete()) $components['WHERE'] = $this->buildCondition($query, $query->getCondition());
+    if ($query->isSelect() || $query->isUpdate() || $query->isDelete()) {
+      $components['WHERE'] = $this->buildCondition($query, $query->getCondition());
+    }
 
     // group
-    if ($query->isSelect()) $components['GROUP BY'] = $this->buildGroup($query);
+    if ($query->isSelect()) {
+      $components['GROUP BY'] = $this->buildGroup($query);
+    }
 
     // having
-    if ($query->isSelect()) $components['HAVING'] = $this->buildCondition($query, $query->getHavingCondition());
+    if ($query->isSelect()) {
+      $components['HAVING'] = $this->buildCondition($query, $query->getHavingCondition());
+    }
 
     // order
-    if ($query->isSelect() || $query->isUpdate() || $query->isDelete()) $components['ORDER BY'] = $this->buildSort($query);
+    if ($query->isSelect() || $query->isUpdate() || $query->isDelete()) {
+      $components['ORDER BY'] = $this->buildSort($query);
+    }
 
     // limit
-    if ($query->isSelect() || $query->isUpdate() || $query->isDelete()) $components['LIMIT'] = $query->getLimit();
+    if ($query->isSelect() || $query->isUpdate() || $query->isDelete()) {
+      $components['LIMIT'] = $query->getLimit();
+    }
 
     // offset
-    if ($query->isSelect() || $query->isUpdate() || $query->isDelete()) $components['OFFSET'] = $query->getSkip();
+    if ($query->isSelect() || $query->isUpdate() || $query->isDelete()) {
+      $components['OFFSET'] = $query->getSkip();
+    }
 
     // from
-    if ($query->isSelect() || $query->isDelete()) $components['FROM'] = $this->buildFrom($query);
-    elseif ($query->isInsert()) $components['INSERT INTO'] = $this->buildFrom($query);
-    elseif ($query->isUpdate()) $components['UPDATE'] = $this->buildFrom($query);
-    elseif ($query->isTruncate()) $components['TRUNCATE TABLE'] = $this->buildFrom($query);
+    if ($query->isSelect() || $query->isDelete()) {
+      $components['FROM'] = $this->buildFrom($query);
+    } elseif ($query->isInsert()) {
+      $components['INSERT INTO'] = $this->buildFrom($query);
+    } elseif ($query->isUpdate()) {
+      $components['UPDATE'] = $this->buildFrom($query);
+    } elseif ($query->isTruncate()) {
+      $components['TRUNCATE TABLE'] = $this->buildFrom($query);
+    }
 
     if ($query->isSelect() && $query->isForUpdate()) {
       $components["FOR UPDATE"] = true;
     }
 
-    foreach ($components as $key => $clause) if (empty($clause)) unset($components[$key]);
+    foreach ($components as $key => $clause) {
+      if (empty($clause)) {
+        unset($components[$key]);
+      }
+    }
 
     return $components;
   }
@@ -119,13 +148,16 @@ class Compiler implements CompilerInterface {
   protected function buildSelect($query) {
     $component = $query->getSelection();
     $select = [];
-    if (empty($component)) $select[] = $query->quoteIdentifier($query->getAlias()).".*";
-    else {
+    if (empty($component)) {
+      $select[] = $query->quoteIdentifier($query->getAlias()).".*";
+    } else {
       foreach ($component as $alias => $field) {
         if ($field instanceof QueryInterface) {
           $field = "(".$this->buildQuery($field).")";
         }
-        if ($alias != $field) $field .= " AS ".$alias;
+        if ($alias != $field) {
+          $field .= " AS ".$alias;
+        }
         $select[] = $field;
       }
     }
@@ -138,9 +170,13 @@ class Compiler implements CompilerInterface {
     $baseTableAlias = $baseTable->getAlias();
     $tables = $query->getTables();
     $from = $query->quoteIdentifier($query->prefix($baseTableName));
-    if (!$query->isInsert() && !$query->isTruncate()) $from .= " AS ".$query->quoteIdentifier($baseTableAlias);
+    if (!$query->isInsert() && !$query->isTruncate()) {
+      $from .= " AS ".$query->quoteIdentifier($baseTableAlias);
+    }
     foreach ($tables as $alias => $table) {
-      if ($alias == $baseTableAlias) continue;
+      if ($alias == $baseTableAlias) {
+        continue;
+      }
       $tableSegment = ("(" === substr($table->getName(), 0, 1)) ? $table->getName() : $query->quoteIdentifier($query->prefix($table->getName()));
       $joinType = $table->getJoinType();
       $joinType = $joinType ? " ".$joinType : "";
@@ -162,7 +198,9 @@ class Compiler implements CompilerInterface {
         if (false === strpos($name, ".") && $query->isUpdate()) {
           $name = $baseTableAlias . "." . $name;
         }
-        if ($value == "NULL") $value = null;
+        if ($value == "NULL") {
+          $value = null;
+        }
         $idx = $this->incrementParameterIndex("set");
         $char = $query->getIdentifierQuoteCharacter();
         $set[] = $query->quoteIdentifier(str_replace(".", $char.".".$char, str_replace($char, '', $name)))." = :set".$idx;
@@ -175,7 +213,9 @@ class Compiler implements CompilerInterface {
   protected function buildCondition($query, $set) {
     $conjunction = $set->getConjunction();
     $set = $set->getConditions();
-    if (empty($set)) return "";
+    if (empty($set)) {
+      return "";
+    }
     $segments = [];
     foreach ($set as $idx => $condition) {
       if (!empty($condition["condition"])) {
@@ -193,8 +233,12 @@ class Compiler implements CompilerInterface {
           $condition["field"] = "(".$this->buildSubquery($condition["field"], $query)->getSql().")";
           $condition["invert"] = true;
         }
-        if (!empty($condition['ornull'])) $conditions .= "(".$condition['field']." is NULL OR ";
-        if (empty($condition['invert'])) $conditions .= $condition['field'];
+        if (!empty($condition['ornull'])) {
+          $conditions .= "(".$condition['field']." is NULL OR ";
+        }
+        if (empty($condition['invert'])) {
+          $conditions .= $condition['field'];
+        }
         if (!is_null($condition['value'])) {
           if (is_array($condition['value'])) {
             $condition['operator'] = str_replace(['!', '='], ["NOT ", "IN"], $condition['operator']);
@@ -202,7 +246,9 @@ class Compiler implements CompilerInterface {
               $conditions .= "(";
               foreach ($condition['value'] as $vdx => $condition_value) {
                 $index = $this->incrementParameterIndex();
-                if ($vdx > 0) $conditions .= " OR ";
+                if ($vdx > 0) {
+                  $conditions .= " OR ";
+                }
                 $conditions .= ":default".$index." ".$condition['operator']." ".$condition['field'];
                 $query->setParameter("default".$index, $condition_value);
               }
@@ -211,7 +257,9 @@ class Compiler implements CompilerInterface {
               $conditions .= ' '.$condition['operator'].' (';
               foreach ($condition['value'] as $vdx => $condition_value) {
                 $index = $this->incrementParameterIndex();
-                if ($vdx > 0) $conditions .= ", ";
+                if ($vdx > 0) {
+                  $conditions .= ", ";
+                }
                 $conditions .= ":default".$index;
                 $query->setParameter("default".$index, $condition_value);
               }
@@ -239,11 +287,17 @@ class Compiler implements CompilerInterface {
               } else {
                 $conditions .= ":default".$index." ".$condition['operator']." ".$condition['field'];
               }
-            } else $conditions .= ' '.$condition['operator'].' :default'.$index;
-            if (!$unary) $query->setParameter("default".$index, $condition['value']);
+            } else {
+              $conditions .= ' '.$condition['operator'].' :default'.$index;
+            }
+            if (!$unary) {
+              $query->setParameter("default".$index, $condition['value']);
+            }
           }
         }
-        if (!empty($condition['ornull'])) $conditions .= ")";
+        if (!empty($condition['ornull'])) {
+          $conditions .= ")";
+        }
         $set[$idx] = $conditions;
       }
       if (!empty($segments)) {
@@ -261,8 +315,11 @@ class Compiler implements CompilerInterface {
   protected function buildSort($query) {
     $sort = [];
     foreach ($query->getSort() as $column => $direction) {
-      if ($direction === -1) $column .= " DESC";
-      elseif ($direction === 1) $column .= " ASC";
+      if ($direction === -1) {
+        $column .= " DESC";
+      } elseif ($direction === 1) {
+        $column .= " ASC";
+      }
       $sort[] = $column;
     }
     return implode(', ', $sort);
@@ -270,15 +327,23 @@ class Compiler implements CompilerInterface {
 
   protected function buildLimit($query) {
     $limit = [];
-    if (!empty($query->getSkip())) $limit[] = $query->getSkip();
-    if (!empty($query->getLimit())) $limit[] = $query->getLimit();
+    if (!empty($query->getSkip())) {
+      $limit[] = $query->getSkip();
+    }
+    if (!empty($query->getLimit())) {
+      $limit[] = $query->getLimit();
+    }
     return implode(', ', $limit);
   }
 
   protected function buildOffset($query) {
     $limit = [];
-    if (!empty($query->getSkip())) $limit[] = $query->getSkip();
-    if (!empty($query->getLimit())) $limit[] = $query->getLimit();
+    if (!empty($query->getSkip())) {
+      $limit[] = $query->getSkip();
+    }
+    if (!empty($query->getLimit())) {
+      $limit[] = $query->getLimit();
+    }
     return implode(', ', $limit);
   }
 
@@ -288,7 +353,9 @@ class Compiler implements CompilerInterface {
    * @return int the next number
    */
   protected function incrementParameterIndex($set = "default") {
-    if (!isset($this->parameterCount[$set])) $this->parameterCount[$set] = 0;
+    if (!isset($this->parameterCount[$set])) {
+      $this->parameterCount[$set] = 0;
+    }
     return $this->parameterCount[$set]++;
   }
 

@@ -16,9 +16,13 @@ class TokenGateway extends Gateway implements TokenGatewayInterface {
       $subscription["card"] = $card["id"];
     }
     foreach (['amount', 'unit', 'interval'] as $field) {
-      if (empty($subscription[$field])) $this->db->error("This field is required", $field, "orders");
+      if (empty($subscription[$field])) {
+        $this->db->error("This field is required", $field, "orders");
+      }
     }
-    if (empty($subscription["start_date"])) $subscription["start_date"] = date("Y-m-d");
+    if (empty($subscription["start_date"])) {
+      $subscription["start_date"] = date("Y-m-d");
+    }
     if (!$this->db->errors("orders")) {
       // prevent attempts to update subscriptions using this method
       unset($subscription["id"]);

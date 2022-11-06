@@ -13,7 +13,9 @@ class QueryCompilerTest extends TestCase {
   }
 
   protected function compile(Query $query = null) {
-    if (is_null($query)) $query = $this->query;
+    if (is_null($query)) {
+      $query = $this->query;
+    }
     return $this->compiler->build($query)->getSql();
   }
 

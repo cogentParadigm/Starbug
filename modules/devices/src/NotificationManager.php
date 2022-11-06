@@ -75,7 +75,9 @@ class NotificationManager implements NotificationManagerInterface {
       if ($owner && !empty($owner["notification_batch_frequency"])) {
         $batchable = true;
         $freq = intval($owner["notification_batch_frequency"]);
-        if ($hour % $freq == 0 && $minute == 0) $batch = true;
+        if ($hour % $freq == 0 && $minute == 0) {
+          $batch = true;
+        }
       }
       foreach ($user["notifications"] as $batch_key => $notifications) {
         if (!empty($batch_key) && $batchable) {

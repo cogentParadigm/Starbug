@@ -33,7 +33,9 @@ class Generator {
     $definition->build($options);
     // CREATE DIRECTORIES.
     foreach ($definition->getDirectories() as $dir) {
-      if (!file_exists($this->base_directory."/".$dir)) passthru("mkdir ".$this->base_directory."/".$dir);
+      if (!file_exists($this->base_directory."/".$dir)) {
+        passthru("mkdir ".$this->base_directory."/".$dir);
+      }
     }
     // CREATE FILES.
     foreach ($definition->getTemplates() as $output => $template) {

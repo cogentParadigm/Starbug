@@ -20,16 +20,24 @@ class StoreAliasHook extends QueryHook {
       while (!empty($alias)) {
         $next = array_pop($alias);
         if ($num % 2 == 0) { // match column
-          if (empty($match)) $match = "$next";
-          else $match = "concat($next, $match)";
+          if (empty($match)) {
+            $match = "$next";
+          } else {
+            $match = "concat($next, $match)";
+          }
         } elseif (!empty($next)) { // in between string
-          if (empty($match)) $match = "'$next'";
-          else $match = "concat('$next', $match)";
+          if (empty($match)) {
+            $match = "'$next'";
+          } else {
+            $match = "concat('$next', $match)";
+          }
         }
         $num++;
       }
       $row = $this->db->query($referenced_model[0])->select($referenced_model[1])->condition($match, $value)->one();
-      if (!empty($row)) $value = $row[$referenced_model[1]];
+      if (!empty($row)) {
+        $value = $row[$referenced_model[1]];
+      }
     }
     return $value;
   }

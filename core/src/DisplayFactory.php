@@ -16,7 +16,9 @@ class DisplayFactory implements DisplayFactoryInterface {
     $this->locator = $locator;
   }
   public function get($displays) {
-    if (!is_array($displays)) $displays = [$displays];
+    if (!is_array($displays)) {
+      $displays = [$displays];
+    }
     foreach ($displays as $display) {
       if ($display = $this->locator->className($display)) {
         $object = $this->container->make($display);

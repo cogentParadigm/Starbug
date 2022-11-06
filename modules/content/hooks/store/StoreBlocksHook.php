@@ -18,7 +18,9 @@ class StoreBlocksHook extends QueryHook {
       $blocks = $this->db->query("blocks")->select("blocks.*")->condition($query->model."_id", $query->getId())->all();
       foreach ($blocks as $block) {
         $key = $block['region'].'-'.$block['position'];
-        if (isset($value[$key])) $this->db->queue("blocks", ["id" => $block['id'], "content" => $this->filter->html($value[$key])]);
+        if (isset($value[$key])) {
+          $this->db->queue("blocks", ["id" => $block['id'], "content" => $this->filter->html($value[$key])]);
+        }
       }
     }
     return $value;

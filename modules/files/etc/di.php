@@ -51,7 +51,9 @@ return [
     foreach ($adapters as $prefix) {
       $adapter = $c->get('filesystem.adapter.'.$prefix);
       $config = $c->has('filesystem.config.'.$prefix) ? $c->get('filesystem.config.'.$prefix) : [];
-      if (is_string($adapter)) $adapter = $c->get("filesystem.adapter.".$adapter);
+      if (is_string($adapter)) {
+        $adapter = $c->get("filesystem.adapter.".$adapter);
+      }
       $manager->mountFilesystem($prefix, new Filesystem($adapter, $config));
     }
     return $manager;

@@ -28,14 +28,18 @@ class TemplateRenderer implements TemplateInterface {
    */
   public function assign($key, $value = "") {
     if (is_array($key)) {
-      foreach ($key as $k => $v) $this->assign($k, $v);
+      foreach ($key as $k => $v) {
+        $this->assign($k, $v);
+      }
     } else {
       $this->twig->addGlobal($key, $value);
     }
   }
 
   public function render($paths = [""], $params = [], $options = []) {
-    if (!is_array($paths)) $paths = [$paths];
+    if (!is_array($paths)) {
+      $paths = [$paths];
+    }
     $options = $options + $this->defaults;
 
     // Apply the correct namespace if needed.
@@ -54,7 +58,9 @@ class TemplateRenderer implements TemplateInterface {
   }
 
   public function capture($paths = [""], $params = [], $options = []) {
-    if (!is_array($paths)) $paths = [$paths];
+    if (!is_array($paths)) {
+      $paths = [$paths];
+    }
     $options = $options + $this->defaults;
 
     // Apply the correct namespace if needed.

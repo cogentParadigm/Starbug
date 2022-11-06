@@ -35,7 +35,9 @@ class Collection implements CollectionInterface {
     if (isset($ops['id'])) {
       $query->condition($this->model.".id", explode(",", $ops['id']));
     }
-    if (!empty($ops['keywords']) && $this->search_fields) $query->search($ops['keywords'], $this->search_fields);
+    if (!empty($ops['keywords']) && $this->search_fields) {
+      $query->search($ops['keywords'], $this->search_fields);
+    }
     return $query;
   }
   public function query($ops = []) {

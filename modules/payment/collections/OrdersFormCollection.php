@@ -10,9 +10,13 @@ class OrdersFormCollection extends FormCollection {
     $this->cart = $cart;
   }
   public function build($query, $ops) {
-    if (empty($ops["action"])) $ops["action"] = "checkout";
+    if (empty($ops["action"])) {
+      $ops["action"] = "checkout";
+    }
     if (in_array($ops["action"], ["checkout", "payment"])) {
-      if ($ops["id"] !== $this->cart->get("id")) $query->action($ops["action"], "orders");
+      if ($ops["id"] !== $this->cart->get("id")) {
+        $query->action($ops["action"], "orders");
+      }
     } else {
       $query->action($ops["action"], "orders");
     }

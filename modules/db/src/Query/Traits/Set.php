@@ -30,7 +30,9 @@ trait Set {
   }
 
   public function getUnvalidatedValue($field) {
-    if (isset($this->unvalidatedValues[$field])) return $this->unvalidatedValues[$field];
+    if (isset($this->unvalidatedValues[$field])) {
+      return $this->unvalidatedValues[$field];
+    }
     return $this->getValue($field);
   }
 }

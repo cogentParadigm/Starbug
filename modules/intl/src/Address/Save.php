@@ -20,7 +20,9 @@ class Save extends ParentOperation {
     $country = $this->db->query("countries")->condition("id", $address['country'])->one();
     $req = str_split($country['require']);
     foreach ($req as $token) {
-      if (!in_array($token, ['N', 'A']) && empty($address[$this->map[$token]])) $this->db->error("This field is required", $this->map[$token], $this->model);
+      if (!in_array($token, ['N', 'A']) && empty($address[$this->map[$token]])) {
+        $this->db->error("This field is required", $this->map[$token], $this->model);
+      }
     }
     $this->db->store($this->model, $address);
     return $this->getErrorState($state);

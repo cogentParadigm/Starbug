@@ -92,10 +92,15 @@ class FormDisplay extends ItemDisplay {
    */
   public function query($options = null) {
     // set options
-    if (is_null($options)) $options = $this->options;
+    if (is_null($options)) {
+      $options = $this->options;
+    }
 
-    if (empty($options['id'])) $this->items = [];
-    else parent::query(["action" => $this->defaultAction] + $options);
+    if (empty($options['id'])) {
+      $this->items = [];
+    } else {
+      parent::query(["action" => $this->defaultAction] + $options);
+    }
 
     $queryParams = $this->request->getQueryParams();
 
@@ -109,9 +114,13 @@ class FormDisplay extends ItemDisplay {
 
     // load POST data
     if (!empty($this->items)) {
-      if (!$this->hasPost()) $this->setPost([]);
+      if (!$this->hasPost()) {
+        $this->setPost([]);
+      }
       foreach ($this->items[0] as $k => $v) {
-        if (!$this->hasPost($k)) $this->setPost($k, $v);
+        if (!$this->hasPost($k)) {
+          $this->setPost($k, $v);
+        }
       }
     }
   }
@@ -122,8 +131,11 @@ class FormDisplay extends ItemDisplay {
     $this->attributes["method"] = $this->method;
     $this->attributes["accept-charset"] = "UTF-8";
     if (!empty($this->model) && !empty($this->defaultAction)) {
-      if ($this->success($this->defaultAction)) $this->attributes['class'][] = "submitted";
-      elseif ($this->failure($this->defaultAction)) $this->attributes['class'][] = "errors";
+      if ($this->success($this->defaultAction)) {
+        $this->attributes['class'][] = "submitted";
+      } elseif ($this->failure($this->defaultAction)) {
+        $this->attributes['class'][] = "errors";
+      }
     }
   }
 
@@ -182,7 +194,9 @@ class FormDisplay extends ItemDisplay {
     $keys = array_merge($this->input_name, $keys);
     $value = $this->request->getParsedBody();
     foreach ($keys as $key) {
-      if (!isset($value[$key])) return null;
+      if (!isset($value[$key])) {
+        return null;
+      }
       $value = $value[$key];
     }
     return $value;
@@ -194,7 +208,9 @@ class FormDisplay extends ItemDisplay {
     $value = array_pop($keys);
     $target = &$data;
     foreach ($keys as $key) {
-      if (!is_array($target)) $target = [];
+      if (!is_array($target)) {
+        $target = [];
+      }
       $target = &$target[$key];
     }
     $target = $value;
@@ -212,10 +228,13 @@ class FormDisplay extends ItemDisplay {
    */
   public function getName($name) {
     $key = $this->input_name;
-    if (empty($key) || $this->method == "get") return $name;
-    else {
+    if (empty($key) || $this->method == "get") {
+      return $name;
+    } else {
       foreach ($key as $i => &$k) {
-        if ($i > 0) $k = "[".$k."]";
+        if ($i > 0) {
+          $k = "[".$k."]";
+        }
       }
       $key = implode("", $key);
       if (false !== strpos($name, "[")) {
@@ -237,9 +256,16 @@ class FormDisplay extends ItemDisplay {
   public function get($name) {
     $parts = explode("[", $name);
     $var = ($this->method == "post") ? $this->getPost() : $this->request->getQueryParams();
-    foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")] ?? null;
-    if (is_array($var)) return $var;
-    else return stripslashes($var);
+    foreach ($parts as $p) {
+      if (is_array($var)) {
+        $var = $var[rtrim($p, "]")] ?? null;
+      }
+    }
+    if (is_array($var)) {
+      return $var;
+    } else {
+      return stripslashes($var);
+    }
   }
 
   /**
@@ -273,20 +299,32 @@ class FormDisplay extends ItemDisplay {
    */
   public function fillOps(&$ops, $control = "") {
     $name = array_shift($ops);
-    if (empty($ops['name'])) $ops['name'] = $name;
+    if (empty($ops['name'])) {
+      $ops['name'] = $name;
+    }
     // model
-    if (empty($ops['model'])) $ops['model'] = $this->model;
+    if (empty($ops['model'])) {
+      $ops['model'] = $this->model;
+    }
     // id, label, and class
-    if (empty($ops['id'])) $ops['id'] = $ops['name'];
+    if (empty($ops['id'])) {
+      $ops['id'] = $ops['name'];
+    }
     $ops['nolabel'] = (isset($ops['nolabel'])) ? true : false;
-    if (empty($ops['label'])) $ops['label'] = ucwords(str_replace("_", " ", $ops['name']));
+    if (empty($ops['label'])) {
+      $ops['label'] = ucwords(str_replace("_", " ", $ops['name']));
+    }
     $ops['class'] = ((empty($ops['class'])) ? "" : $ops['class']." ").$ops['name']."-field";
-    if (in_array($control, ["autocomplete", "category_select", "file_select", "select", "tag_select", "textarea", "file", "input", "password", "text"])) $ops['class'] .= " form-control";
+    if (in_array($control, ["autocomplete", "category_select", "file_select", "select", "tag_select", "textarea", "file", "input", "password", "text"])) {
+      $ops['class'] .= " form-control";
+    }
   }
 
   public function assign($key, $value = null) {
     if (is_array($key)) {
-      foreach ($key as $k => $v) $this->assign($k, $v);
+      foreach ($key as $k => $v) {
+        $this->assign($k, $v);
+      }
     } else {
       $this->vars[$key] = $value;
     }
@@ -310,9 +348,13 @@ class FormDisplay extends ItemDisplay {
     }
 
     $capture = "field";
-    if (empty($field['field'])) $field['field'] = explode("[", $field['name'])[0];
+    if (empty($field['field'])) {
+      $field['field'] = explode("[", $field['name'])[0];
+    }
     $field['name'] = $this->getName($field['name']);
-    foreach ($field as $k => $v) $this->assign($k, $v);
+    foreach ($field as $k => $v) {
+      $this->assign($k, $v);
+    }
     if (isset($field['nofield'])) {
       unset($field['nofield']);
       $capture = $control;
@@ -323,7 +365,9 @@ class FormDisplay extends ItemDisplay {
   }
 
   public function __call($name, $arguments) {
-    if (empty($arguments[1])) $arguments[1] = [];
+    if (empty($arguments[1])) {
+      $arguments[1] = [];
+    }
     return $this->formControl($name, $arguments[0], $arguments[1]);
   }
 }

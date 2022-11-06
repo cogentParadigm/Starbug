@@ -32,11 +32,15 @@ class Entity implements EntityInterface {
     // build query.
     foreach ($chain as $idx => $name) {
       $collection = ($name === $entity) ? $entity : $entity."_".$name;
-      if ($idx === 0) $query = $this->db->query($name." as ".$collection);
-      else {
+      if ($idx === 0) {
+        $query = $this->db->query($name." as ".$collection);
+      } else {
         $query->join($name." as ".$collection, "INNER");
-        if ($idx == $root) $query->on($collection.".id=".$entity.".".$name."_id");
-        else $query->on($collection.".".$chain[$root]."_id=".$entity.".".$chain[$root]."_id");
+        if ($idx == $root) {
+          $query->on($collection.".id=".$entity.".".$name."_id");
+        } else {
+          $query->on($collection.".".$chain[$root]."_id=".$entity.".".$chain[$root]."_id");
+        }
       }
     }
 
@@ -67,8 +71,9 @@ class Entity implements EntityInterface {
       $key .= '-'.$id;
     }
     if ($reset || !$id || !isset($entities[$key])) {
-      if ($id) $entities[$key] = $this->query($name)->condition($name.".id", $id)->one();
-      elseif ($conditions) {
+      if ($id) {
+        $entities[$key] = $this->query($name)->condition($name.".id", $id)->one();
+      } elseif ($conditions) {
         $entity = $this->query($name)->conditions($conditions)->one();
         if ($entity) {
           $id = $entity["id"];
@@ -147,7 +152,9 @@ class Entity implements EntityInterface {
    */
   public function remove($name, $id) {
     $original = $this->load($name, $id, false);
-    if (!$original) return;
+    if (!$original) {
+      return;
+    }
 
     if (!$this->schema->getTable($name)->hasOption("base")) {
       $this->db->remove($name, ["id" => $id]);
