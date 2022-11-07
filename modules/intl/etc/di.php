@@ -13,5 +13,8 @@ return [
   "Starbug\Intl\*Interface" => DI\autowire("Starbug\Intl\*"),
   "template.helpers" => DI\add([
     "addressFormatter" => AddressFormatterHelper::class
+  ]),
+  "form.hooks" => DI\add([
+    "address" => FormAddressHook::class
   ])
 ];

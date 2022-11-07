@@ -31,9 +31,9 @@ class FormDisplay extends ItemDisplay {
    * @var ServerRequestInterface
    */
   protected $request;
-  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, HookFactoryInterface $hooks, DisplayFactoryInterface $displays, ServerRequestInterface $request) {
+  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, FormHookFactoryInterface $hookFactory, DisplayFactoryInterface $displays, ServerRequestInterface $request) {
     parent::__construct($output, $collections);
-    $this->hook_builder = $hooks;
+    $this->hookFactory = $hookFactory;
     $this->displays = $displays;
     $this->request = $request;
     $this->errors = $this->request->getAttribute("state") ?? new Bundle();
@@ -342,8 +342,7 @@ class FormDisplay extends ItemDisplay {
     $this->vars = ["display" => $this];
     $this->fillOps($field, $control);
     // run filters
-    $hooks = $this->hook_builder->get("form/".$control);
-    foreach ($hooks as $hook) {
+    if ($hook = $this->hookFactory->get($control)) {
       $hook->build($this, $control, $field);
     }
 

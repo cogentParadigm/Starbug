@@ -6,7 +6,7 @@ use Starbug\Core\CollectionFactoryInterface;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Core\DisplayFactoryInterface;
 use Starbug\Core\FormDisplay;
-use Starbug\Core\HookFactoryInterface;
+use Starbug\Core\FormHookFactoryInterface;
 use Starbug\Core\TemplateInterface;
 
 class AddressForm extends FormDisplay {
@@ -15,13 +15,13 @@ class AddressForm extends FormDisplay {
   public function __construct(
     TemplateInterface $output,
     CollectionFactoryInterface $collections,
-    HookFactoryInterface $hooks,
+    FormHookFactoryInterface $hookFactory,
     DisplayFactoryInterface $displays,
     ServerRequestInterface $request,
     DatabaseInterface $db,
     TranslationInterface $translation
   ) {
-    parent::__construct($output, $collections, $hooks, $displays, $request);
+    parent::__construct($output, $collections, $hookFactory, $displays, $request);
     $this->db = $db;
     $this->translation = $translation;
   }

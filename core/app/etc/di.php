@@ -133,6 +133,29 @@ return [
     "settings" => SettingsHelper::class,
     "url" => UrlHelper::class
   ],
+  "form.hooks" => [
+    "category_select" => FormCategorySelectHook::class,
+    "checkbox" => FormCheckboxHook::class,
+    "file" => FormFileHook::class,
+    "hidden" => FormHiddenHook::class,
+    "html" => FormHtmlHook::class,
+    "input" => FormInputHook::class,
+    "multiple_category_select" => FormMultipleCategorySelectHook::class,
+    "multiple_select" => FormMultipleSelectHook::class,
+    "password" => FormPasswordHook::class,
+    "radio" => FormRadioHook::class,
+    "radio_select" => FormRadioSelectHook::class,
+    "select" => FormSelectHook::class,
+    "submit" => FormSubmitHook::class,
+    "tag_select" => FormTagSelectHook::class,
+    "template" => FormTemplateHook::class,
+    "textarea" => FormTextareaHook::class,
+    "text" => FormTextHook::class
+  ],
+  "macro.hooks" => [
+    "site" => MacroSiteHook::class,
+    "url" => MacroUrlHook::class
+  ],
   'Starbug\Core\GenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   'Psr\Log\LoggerInterface' => function (ContainerInterface $c) {
     $logger = new Logger("main");
@@ -163,5 +186,9 @@ return [
       return $container->make("Starbug\Queue\Driver\Sql", ["name" => "default"]);
     });
     return $factory;
-  }
+  },
+  FormHookFactoryInterface::class => DI\autowire(FormHookFactory::class)
+    ->constructorParameter("hooks", DI\get("form.hooks")),
+  MacroHookFactoryInterface::class => DI\autowire(MacroHookFactory::class)
+    ->constructorParameter("hooks", DI\get("macro.hooks"))
 ];

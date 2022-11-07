@@ -6,10 +6,10 @@ namespace Starbug\Core;
  */
 class Macro implements MacroInterface {
 
-  private $hook_builder;
+  private $hookFactory;
 
-  public function __construct(HookFactoryInterface $hooks) {
-    $this->hook_builder = $hooks;
+  public function __construct(MacroHookFactoryInterface $hookFactory) {
+    $this->hookFactory = $hookFactory;
   }
 
   /**
@@ -84,11 +84,7 @@ class Macro implements MacroInterface {
    */
   private function replacements($type, $tokens, $data = []) {
     $replacements = [];
-    // gather replacements
-    if (!isset($this->hooks[$type])) {
-      $this->hooks[$type] = $this->hook_builder->get("macro/".$type);
-    }
-    foreach ($this->hooks[$type] as $hook) {
+    if ($hook = $this->hookFactory->get($type)) {
       foreach ($tokens as $name => $token) {
         $replacements[$token] = $hook->replace($this, $name, $token, $data);
       }

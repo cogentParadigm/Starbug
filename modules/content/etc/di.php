@@ -18,5 +18,8 @@ return [
   "db.query.executor.hooks" => DI\add([
     "path" => "Starbug\Content\StorePathHook",
     "blocks" => "Starbug\Content\StoreBlocksHook"
+  ]),
+  "form.hooks" => DI\add([
+    "blocks" => FormBlocksHook::class
   ])
 ];

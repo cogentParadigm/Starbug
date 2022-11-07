@@ -12,17 +12,12 @@ class CollectionFactory implements CollectionFactoryInterface {
     $this->locator = $locator;
     $this->container = $container;
   }
-  public function get($collection) {
+  public function get($collection): CollectionInterface {
     if (false !== strpos($collection, "\\")) {
       $className = $collection;
     } else {
       $className = $this->locator->className($collection, "Collection");
     }
-    $object = $this->container->get($className);
-    if ($object instanceof CollectionInterface) {
-      return $object;
-    } else {
-      throw new Exception("CollectionFactoryInterface contract violation. ".$className." is not an instance of Starbug\Core\Collection.");
-    }
+    return $this->container->get($className);
   }
 }
