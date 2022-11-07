@@ -4,7 +4,7 @@ namespace Starbug\Core;
 use Psr\Container\ContainerInterface;
 use Starbug\Core\MacroHook;
 
-class MacroHookFactory implements FormHookFactoryInterface {
+class MacroHookFactory implements MacroHookFactoryInterface {
   protected $container;
   protected $hooks = [];
   public function __construct(ContainerInterface $container, $hooks = []) {
