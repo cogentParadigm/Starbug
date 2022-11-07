@@ -13,11 +13,7 @@ class CollectionFactory implements CollectionFactoryInterface {
     $this->container = $container;
   }
   public function get($collection): CollectionInterface {
-    if (false !== strpos($collection, "\\")) {
-      $className = $collection;
-    } else {
-      $className = $this->locator->className($collection, "Collection");
-    }
+    $className = $this->locator->className($collection, "Collection");
     return $this->container->get($className);
   }
 }
