@@ -6,7 +6,6 @@ use Starbug\Core\FormDisplay;
 
 class EmailTemplatesForm extends FormDisplay {
   public $model = "email_templates";
-  public $cancel_url = "admin/emails";
   public function buildDisplay($options) {
     $this->layout->add(["top", "left" => "div.col-6", "right" => "div.col-6"]);
     $this->layout->add(["bottom", "body" => "div.col-12"]);
