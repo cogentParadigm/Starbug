@@ -13,6 +13,9 @@ trait Operations {
     return $this->operations[$method];
   }
   public function getOperations() {
+    if ($this->hasParent()) {
+      return $this->operations + $this->parent->getOperations();
+    }
     return $this->operations;
   }
   public function hasOperation($method) {

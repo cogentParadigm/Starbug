@@ -4,7 +4,7 @@ namespace Starbug\Core\Routing;
 class Configuration {
   protected $isBuilt = false;
   protected $providers = [];
-  public function __construct(RouteGroup $root = null) {
+  public function __construct(Route $root = null) {
     $this->root = $root ?? new Route("/");
   }
   public function addProvider(RouteProviderInterface $provider) {
