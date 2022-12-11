@@ -39,7 +39,7 @@ class StoreCommand {
   public function parse($args) {
     $params = [];
     foreach ($args as $arg) {
-      $arg = explode(":", $arg);
+      $arg = explode(":", $arg, 2);
       $params[$arg[0]] = $arg[1];
     }
     return $params;
