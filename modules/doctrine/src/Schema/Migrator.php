@@ -5,15 +5,13 @@ use Starbug\Core\DatabaseInterface;
 use Starbug\Db\Schema\AbstractMigration;
 use Starbug\Db\Schema\SchemaInterface;
 use Starbug\Core\Generator\Generator;
-use Starbug\Core\Generator\Definitions\Model;
 use Starbug\Bundle\BundleInterface;
 
 class Migrator extends AbstractMigration {
-  public function __construct(DatabaseInterface $db, SchemaInterface $schema, Generator $generator, Model $definition) {
+  public function __construct(DatabaseInterface $db, SchemaInterface $schema, Generator $generator) {
     $this->db = $db;
     $this->schema = $schema;
     $this->generator = $generator;
-    $this->definition = $definition;
   }
   public function migrate() {
     $conn = $this->db->getConnection();
