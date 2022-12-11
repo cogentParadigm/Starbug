@@ -1,13 +1,13 @@
 <?php
-namespace Starbug\Db;
+namespace Starbug\Db\Script;
 
 use Starbug\Core\DatabaseInterface;
 
-class DescribeCommand {
+class Describe {
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }
-  public function run($argv) {
+  public function __invoke($argv) {
     $name = array_shift($argv);
     $records = $this->db->exec("DESCRIBE `".$this->db->prefix($name)."`")->fetchAll();
     if (!empty($records)) {

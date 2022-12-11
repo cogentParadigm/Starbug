@@ -2,6 +2,7 @@
 namespace Starbug\Js;
 
 use DI;
+use Starbug\Js\Script\DojoBuild;
 
 return [
   "template.helpers" => DI\add([
@@ -9,6 +10,7 @@ return [
   ]),
   'Starbug\Js\DojoConfiguration' => DI\autowire()
     ->constructorParameter('environment', DI\get('environment')),
-  'Starbug\Js\DojoBuildCommand' => DI\autowire()
-    ->constructorParameter('base_directory', DI\get('base_directory'))
+  DojoBuild::class => DI\autowire()
+    ->constructorParameter('base_directory', DI\get('base_directory')),
+    "scripts.dojo-build" => DojoBuild::class
 ];

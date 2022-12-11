@@ -1,13 +1,13 @@
 <?php
-namespace Starbug\Db;
+namespace Starbug\Db\Script;
 
 use Starbug\Core\DatabaseInterface;
 
-class StoreCommand {
+class Store {
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }
-  public function run($argv) {
+  public function __invoke($argv) {
     $name = array_shift($argv);
     $params = $this->parse($argv);
     $this->db->store($name, $params);

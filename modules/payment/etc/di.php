@@ -3,6 +3,7 @@ namespace Starbug\Payment;
 
 use DI;
 use Psr\Container\ContainerInterface;
+use Starbug\Payment\Script\ProcessSubscriptions;
 
 return [
   "route.providers" => DI\add([
@@ -30,6 +31,7 @@ return [
   'currency_locale' => 'en_US.UTF-8',
   'currency_minor_unit' => 2,
   'payment.cart.hooks' => [],
+  "scripts.process-subscriptions" => ProcessSubscriptions::class,
   'Starbug\Payment\*Interface' => DI\autowire('Starbug\Payment\*'),
   'Starbug\Payment\Cart' => DI\autowire()->constructorParameter('conditions', DI\get('cart_token'))->method("addHooks", DI\get('payment.cart.hooks')),
   'Starbug\Payment\PriceFormatterInterface' => DI\autowire("Starbug\Payment\PriceFormatter")

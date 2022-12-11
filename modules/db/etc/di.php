@@ -4,6 +4,12 @@ namespace Starbug\Db;
 use DI;
 use Psr\Container\ContainerInterface;
 use Starbug\Db\Schema\QueryCompilerHook;
+use Starbug\Db\Script\Describe;
+use Starbug\Db\Script\Migrate;
+use Starbug\Db\Script\Query;
+use Starbug\Db\Script\QueryCollection;
+use Starbug\Db\Script\Remove;
+use Starbug\Db\Script\Store;
 
 return [
   'Starbug\Db\Schema\*Interface' => DI\autowire('Starbug\Db\Schema\*'),
@@ -76,5 +82,11 @@ return [
   },
   "template.helpers" => DI\add([
     "schema" => SchemaHelper::class
-  ])
+  ]),
+  "scripts.describe" => Describe::class,
+  "scripts.migrate" => Migrate::class,
+  "scripts.query" => Query::class,
+  "scripts.query-collection" => QueryCollection::class,
+  "scripts.remove" => Remove::class,
+  "scripts.store" => Store::class
 ];

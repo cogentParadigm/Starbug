@@ -1,30 +1,18 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Core\Script;
 
 use Psr\Container\ContainerInterface;
 use Starbug\Core\Generator\Definitions\Host;
 use Starbug\Core\Generator\Generator;
 use Starbug\Db\Schema\SchemerInterface;
 
-class SetupCommand {
+class Setup {
   public function __construct(Generator $generator, Host $host, ContainerInterface $container) {
     $this->generator = $generator;
     $this->host = $host;
     $this->container = $container;
   }
-  public function run($argv) {
-    $positional = [];
-    $named = [];
-    foreach ($argv as $i => $arg) {
-      if (0 === strpos($arg, "-")) {
-        $arg = ltrim($arg, "-");
-        $parts = (false !== strpos($arg, "=")) ? explode("=", $arg, 2) : [$arg, true];
-        $named[$parts[0]] = $parts[1];
-      } else {
-        $positional[] = $arg;
-      }
-    }
-
+  public function __invoke($named) {
     if (!file_exists("var/etc/di.php")) {
       // Generate host configuration
       $this->generator->generate($this->host, $named);

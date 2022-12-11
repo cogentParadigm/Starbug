@@ -9,6 +9,11 @@ use FastRoute\RouteCollector;
 use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Core\Script\Generate;
+use Starbug\Core\Script\ListScripts;
+use Starbug\Core\Script\ProcessQueue;
+use Starbug\Core\Script\Queue;
+use Starbug\Core\Script\Setup;
 use Starbug\Http\UriBuilder;
 use Starbug\Queue\QueueFactory;
 use Starbug\ResourceLocator\ResourceLocator;
@@ -68,7 +73,6 @@ return [
   "Psr\Http\Message\ServerRequestInterface" => function (ContainerInterface $container) {
     return new ServerRequest("GET", $container->get("website_host").$container->get("website_url"));
   },
-  'Starbug\Core\CssGenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   "Whoops\Run" => DI\decorate(function ($whoops, $container) {
     $textHandler = new PlainTextHandler($container->get("Psr\Log\LoggerInterface"));
     $whoops->appendHandler($textHandler);
@@ -157,7 +161,12 @@ return [
     "site" => MacroSiteHook::class,
     "url" => MacroUrlHook::class
   ],
-  'Starbug\Core\GenerateCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
+  "scripts.generate" => Generate::class,
+  "scripts.process-queue" => ProcessQueue::class,
+  "scripts.queue" => Queue::class,
+  "scripts.setup" => Setup::class,
+  "scripts.list-scripts" => ListScripts::class,
+  'Starbug\Core\Script\Generate' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   'Psr\Log\LoggerInterface' => function (ContainerInterface $c) {
     $logger = new Logger("main");
     $env = $c->get("environment");

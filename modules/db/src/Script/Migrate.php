@@ -1,13 +1,13 @@
 <?php
-namespace Starbug\Db;
+namespace Starbug\Db\Script;
 
 use Starbug\Db\Schema\SchemerInterface;
 
-class MigrateCommand {
+class Migrate {
   public function __construct(SchemerInterface $schemer) {
     $this->schemer = $schemer;
   }
-  public function run($argv) {
+  public function __invoke() {
     $this->schemer->migrate();
   }
 }

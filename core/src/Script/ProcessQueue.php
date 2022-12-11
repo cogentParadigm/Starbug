@@ -1,13 +1,13 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Core\Script;
 
 use Starbug\Queue\QueueManagerInterface;
 
-class ProcessQueueCommand {
+class ProcessQueue {
   public function __construct(QueueManagerInterface $queues) {
     $this->queues = $queues;
   }
-  public function run($argv) {
+  public function __invoke($argv) {
     $this->queues->processQueue($argv[0] ?? "default");
   }
 }

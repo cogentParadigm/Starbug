@@ -1,15 +1,15 @@
 <?php
-namespace Starbug\Intl;
+namespace Starbug\Intl\Script;
 
 use Starbug\Config\ConfigInterface;
 use Starbug\Core\DatabaseInterface;
 
-class IntlSetupCommand {
+class IntlSetup {
   public function __construct(ConfigInterface $config, DatabaseInterface $db) {
     $this->config = $config;
     $this->db = $db;
   }
-  public function run($argv) {
+  public function __invoke() {
     $address_data = "http://i18napis.appspot.com/address/data/";
     $address_map = [
       "fmt" => "format",

@@ -2,6 +2,11 @@
 <?php
 namespace Starbug\Core;
 
+// Remove this file and script name
+array_shift($argv);
+$script = array_shift($argv);
+
+// Split remaining arguments into positional and named.
 $positional = [];
 $named = [];
 foreach ($argv as $i => $arg) {
@@ -13,6 +18,8 @@ foreach ($argv as $i => $arg) {
     $positional[] = $arg;
   }
 }
+
+// Bootstrap application container.
 $args = $named;
 chdir(dirname(__FILE__));
 if (!empty($args["t"])) {
@@ -20,10 +27,11 @@ if (!empty($args["t"])) {
 } else {
   include("vendor/starbug/di/bootstrap/default.php");
 }
-$command = array_shift($argv);
-$script = array_shift($argv);
-$path = $namespace = false;
-$locator = $container->get('Starbug\ResourceLocator\ResourceLocatorInterface');
-$className = $locator->className($script, "Command");
-$command = $container->get($className);
-$command->run($argv);
+
+// Execute script
+$className = $container->get("scripts.".$script);
+$container->call($className, [
+  "argv" => $argv,
+  "positional" => $positional,
+  "named" => $named
+]);

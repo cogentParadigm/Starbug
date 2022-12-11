@@ -2,6 +2,7 @@
 namespace Starbug\Intl;
 
 use DI;
+use Starbug\Intl\Script\IntlSetup;
 
 return [
   "route.providers" => DI\add([
@@ -16,5 +17,6 @@ return [
   ]),
   "form.hooks" => DI\add([
     "address" => FormAddressHook::class
-  ])
+  ]),
+  "scripts.intl-setup" => IntlSetup::class
 ];

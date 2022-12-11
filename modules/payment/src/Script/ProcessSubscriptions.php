@@ -1,14 +1,16 @@
 <?php
-namespace Starbug\Payment;
+namespace Starbug\Payment\Script;
 
 use Starbug\Core\CollectionFactoryInterface;
+use Starbug\Payment\ExpiredSubscriptionsCollection;
+use Starbug\Payment\TokenGatewayInterface;
 
-class ProcessSubscriptionsCommand {
+class ProcessSubscriptions {
   public function __construct(TokenGatewayInterface $gateway, CollectionFactoryInterface $collections) {
     $this->gateway = $gateway;
     $this->collections = $collections;
   }
-  public function run($argv) {
+  public function __invoke() {
     $subscriptions = $this->collections->get(ExpiredSubscriptionsCollection::class)->query();
     foreach ($subscriptions as $subscription) {
       $this->gateway->processSubscription($subscription);

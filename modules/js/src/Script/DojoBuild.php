@@ -1,12 +1,14 @@
 <?php
-namespace Starbug\Js;
+namespace Starbug\Js\Script;
 
-class DojoBuildCommand {
+use Starbug\Js\DojoConfiguration;
+
+class DojoBuild {
   public function __construct(DojoConfiguration $dojo, $base_directory) {
     $this->dojo = $dojo;
     $this->base_directory = $base_directory;
   }
-  public function run($argv) {
+  public function __invoke() {
     if (!file_exists($this->base_directory."/var/etc")) {
       passthru("mkdir ".$this->base_directory."/var/etc");
     }

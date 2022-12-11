@@ -19,7 +19,6 @@ return [
     ->constructorParameter('theme', DI\get('theme'))
     ->constructorParameter('baseUrl', DI\get('website_url')),
   'Starbug\Css\RouteFilter' => DI\autowire()->constructorParameter('theme', DI\get('theme')),
-  'Starbug\Css\CssBuildCommand' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
   'Starbug\Core\Routing\RouterInterface' => DI\decorate(function ($router, ContainerInterface $container) {
     $router->addFilter($container->get('Starbug\Css\RouteFilter'));
     return $router;

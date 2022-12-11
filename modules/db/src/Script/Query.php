@@ -1,12 +1,12 @@
 <?php
-namespace Starbug\Db;
+namespace Starbug\Db\Script;
 
 use Starbug\Core\DatabaseInterface;
 
 /**
  * Run queries from the command line.
  */
-class QueryCommand {
+class Query {
   /**
    * Command dependencies are just the DatabaseInterface to run queries.
    *
@@ -15,7 +15,7 @@ class QueryCommand {
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }
-  public function run($argv) {
+  public function __invoke($argv) {
     $name = array_shift($argv);
     $params = $this->parse($argv);
     $records = $this->db->query($name);
