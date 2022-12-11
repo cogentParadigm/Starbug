@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Intl;
 
-use Starbug\Core\ConfigInterface;
+use Starbug\Config\ConfigInterface;
 use Starbug\Core\DatabaseInterface;
 
 class IntlSetupCommand {

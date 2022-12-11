@@ -1,0 +1,5 @@
+---
+config:
+  packages:
+    - name: devices
+      location: ../../modules/devices/public/js

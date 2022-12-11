@@ -32,6 +32,7 @@
     "starbug/auth": "^0.9.2",
     "starbug/operation": "^0.8.0",
     "starbug/queue": "^0.8.0",
+    "starbug/config": "^0.9.0",
     "phpmailer/phpmailer": "dev-master",
     "masterexploder/phpthumb": "dev-master",
     "ezyang/htmlpurifier":"dev-master",

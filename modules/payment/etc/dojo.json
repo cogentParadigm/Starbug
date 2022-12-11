@@ -1,7 +1,0 @@
-{
-  "config": {
-    "packages": [
-      {"name": "payment", "location": "../../modules/payment/public/js"}
-    ]
-  }
-}

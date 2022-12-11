@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32cccf85eecb71a207f9c93c8a224a2b",
+    "content-hash": "82da00fe0cb5c4b90de8f80f39caf8ea",
     "packages": [
         {
             "name": "composer/installers",
@@ -2545,6 +2545,52 @@
                 "source": "https://github.com/cogentParadigm/composer-modules-plugin/tree/v0.8.1"
             },
             "time": "2021-02-03T22:29:11+00:00"
+        },
+        {
+            "name": "starbug/config",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-config.git",
+                "reference": "2b6bc75a65038b818cf25eee72f1db1c5bd398de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-config/zipball/2b6bc75a65038b818cf25eee72f1db1c5bd398de",
+                "reference": "2b6bc75a65038b818cf25eee72f1db1c5bd398de",
+                "shasum": ""
+            },
+            "require": {
+                "starbug/resource-locator": "^0.9.1"
+            },
+            "require-dev": {
+                "starbug/devel": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Config\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "A configuration data loader.",
+            "keywords": [
+                "template"
+            ],
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-config/issues",
+                "source": "https://github.com/cogentParadigm/starbug-config/tree/v0.9.0"
+            },
+            "time": "2022-12-11T00:02:15+00:00"
         },
         {
             "name": "starbug/content",

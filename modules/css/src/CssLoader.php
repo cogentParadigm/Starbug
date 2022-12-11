@@ -81,20 +81,29 @@ class CssLoader {
   }
   public function readConfiguration() {
     $options = [];
-    $resources = $this->locator->locate("stylesheets.json", "etc");
-    $resources = array_reverse($resources);
-    foreach ($resources as $mid => $resource) {
-      $stylesheets = json_decode(file_get_contents($resource), true);
-      foreach ($stylesheets as $media => $styles) {
-        foreach ($styles as $style) {
-          if (!is_array($style)) {
-            $style = ["href" => $style];
+    $resourceTypes = [
+      "yml" => $this->locator->locate("stylesheets.yml", "etc"),
+      "json" => $this->locator->locate("stylesheets.json", "etc")
+    ];
+    foreach ($resourceTypes as $type => $resources) {
+      $resources = array_reverse($resources);
+      foreach ($resources as $mid => $resource) {
+        if ($type == "json") {
+          $stylesheets = json_decode(file_get_contents($resource), true);
+        } else {
+          $stylesheets = yaml_parse_file($resource);
+        }
+        foreach ($stylesheets as $media => $styles) {
+          foreach ($styles as $style) {
+            if (!is_array($style)) {
+              $style = ["href" => $style];
+            }
+            if (empty($style["rel"])) {
+              $style["rel"] = "stylesheet";
+            }
+            $style["href"] = $mid . "/" . $style["href"];
+            $options[$media][] = $style;
           }
-          if (empty($style["rel"])) {
-            $style["rel"] = "stylesheet";
-          }
-          $style["href"] = $mid . "/" . $style["href"];
-          $options[$media][] = $style;
         }
       }
     }

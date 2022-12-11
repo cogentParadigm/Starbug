@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Js;
 
-use Starbug\Core\ConfigInterface;
+use Starbug\Config\ConfigInterface;
 
 class DojoConfiguration {
   protected $configuration = false;

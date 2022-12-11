@@ -1,0 +1,28 @@
+---
+config:
+  async: true
+  parseOnLoad: true
+  serverTime: "{{ 'now'|date('Y-m-d H:i:s') }}"
+  theme: "{{ helper('css').getTheme() }}"
+  websiteUrl: "{{ helper('url').build('') }}"
+  packages:
+    - name: dijit
+      location: ../dijit
+    - name: dstore
+      location: ../dstore
+    - name: dgrid
+      location: ../dgrid
+    - name: put-selector
+      location: ../put-selector
+    - name: xstyle
+      location: ../xstyle
+    - name: dbootstrap
+      location: ../dbootstrap
+    - name: bootstrap
+      location: ../dojo-bootstrap
+    - name: sb
+      location: ../../core/app/public/js/sb
+    - name: starbug
+      location: ../../core/app/public/js/starbug
+    - name: app
+      location: ../../app/public/js

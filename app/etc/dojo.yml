@@ -1,0 +1,9 @@
+---
+require:
+  - dbootstrap
+  - sb
+  - dojo/parser
+  - sb/bootstrap/Dropdown
+layers:
+  - name: dojo.js
+    dependencies: []

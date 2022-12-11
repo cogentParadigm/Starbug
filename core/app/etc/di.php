@@ -40,6 +40,7 @@ return [
   "Starbug\Core\Routing\Configuration" => DI\autowire()->method("addProviders", DI\get("route.providers")),
   'Starbug\Core\SettingsInterface' => DI\autowire('Starbug\Core\DatabaseSettings'),
   'Starbug\Core\*Interface' => DI\autowire('Starbug\Core\*'),
+  'Starbug\Config\*Interface' => DI\autowire('Starbug\Config\*'),
   'Starbug\Http\*Interface' => DI\autowire('Starbug\Http\*'),
   "Starbug\Auth\*RepositoryInterface" => DI\autowire("Starbug\Auth\Repository\*Repository"),
   "Starbug\Auth\SessionExchangeInterface" => DI\autowire("Starbug\Auth\Http\CookieSessionExchange")

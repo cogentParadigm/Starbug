@@ -51,7 +51,7 @@ return [
   "Starbug\Devices\Notification\Handler\ApplePush" => DI\autowire()
     ->constructorParameter("certificateDirectory", "notification.handler.apple.certificateDirectory")
     ->constructorParameter("passphrase", "notification.handler.apple.passphrase"),
-  "Starbug\Core\ConfigInterface" => DI\decorate(function ($config, ContainerInterface $container) {
+  "Starbug\Config\ConfigInterface" => DI\decorate(function ($config, ContainerInterface $container) {
     $config->set("notification.handler.web.registration.enabled", $container->get("notification.handler.web.registration.enabled"));
     $config->set("notification.handler.web.publicKey", $container->get("notification.handler.web.publicKey"));
     return $config;

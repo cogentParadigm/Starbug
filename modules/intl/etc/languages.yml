@@ -1,0 +1,365 @@
+---
+- language: ab
+  name: Abkhaz
+- language: aa
+  name: Afar
+- language: af
+  name: Afrikaans
+- language: ak
+  name: Akan
+- language: sq
+  name: Albanian
+- language: am
+  name: Amharic
+- language: ar
+  name: Arabic
+- language: an
+  name: Aragonese
+- language: hy
+  name: Armenian
+- language: as
+  name: Assamese
+- language: av
+  name: Avaric
+- language: ae
+  name: Avestan
+- language: ay
+  name: Aymara
+- language: az
+  name: Azerbaijani
+- language: bm
+  name: Bambara
+- language: ba
+  name: Bashkir
+- language: eu
+  name: Basque
+- language: be
+  name: Belarusian
+- language: bn
+  name: Bengali
+- language: bh
+  name: Bihari
+- language: bi
+  name: Bislama
+- language: bs
+  name: Bosnian
+- language: br
+  name: Breton
+- language: bg
+  name: Bulgarian
+- language: my
+  name: Burmese
+- language: ca
+  name: Catalan; Valencian
+- language: ch
+  name: Chamorro
+- language: ce
+  name: Chechen
+- language: ny
+  name: Chichewa; Chewa; Nyanja
+- language: zh
+  name: Chinese
+- language: cv
+  name: Chuvash
+- language: kw
+  name: Cornish
+- language: co
+  name: Corsican
+- language: cr
+  name: Cree
+- language: hr
+  name: Croatian
+- language: cs
+  name: Czech
+- language: da
+  name: Danish
+- language: dv
+  name: Divehi; Dhivehi; Maldivian;
+- language: nl
+  name: Dutch
+- language: en
+  name: English
+- language: eo
+  name: Esperanto
+- language: et
+  name: Estonian
+- language: ee
+  name: Ewe
+- language: fo
+  name: Faroese
+- language: fj
+  name: Fijian
+- language: fi
+  name: Finnish
+- language: fr
+  name: French
+- language: ff
+  name: Fula; Fulah; Pulaar; Pular
+- language: gl
+  name: Galician
+- language: ka
+  name: Georgian
+- language: de
+  name: German
+- language: el
+  name: Greek, Modern
+- language: gn
+  name: GuaranÃ­
+- language: gu
+  name: Gujarati
+- language: ht
+  name: Haitian; Haitian Creole
+- language: ha
+  name: Hausa
+- language: he
+  name: Hebrew (modern)
+- language: hz
+  name: Herero
+- language: hi
+  name: Hindi
+- language: ho
+  name: Hiri Motu
+- language: hu
+  name: Hungarian
+- language: ia
+  name: Interlingua
+- language: id
+  name: Indonesian
+- language: ie
+  name: Interlingue
+- language: ga
+  name: Irish
+- language: ig
+  name: Igbo
+- language: ik
+  name: Inupiaq
+- language: io
+  name: Ido
+- language: is
+  name: Icelandic
+- language: it
+  name: Italian
+- language: iu
+  name: Inuktitut
+- language: ja
+  name: Japanese
+- language: jv
+  name: Javanese
+- language: kl
+  name: Kalaallisut, Greenlandic
+- language: kn
+  name: Kannada
+- language: kr
+  name: Kanuri
+- language: ks
+  name: Kashmiri
+- language: kk
+  name: Kazakh
+- language: km
+  name: Khmer
+- language: ki
+  name: Kikuyu, Gikuyu
+- language: rw
+  name: Kinyarwanda
+- language: ky
+  name: Kirghiz, Kyrgyz
+- language: kv
+  name: Komi
+- language: kg
+  name: Kongo
+- language: ko
+  name: Korean
+- language: ku
+  name: Kurdish
+- language: kj
+  name: Kwanyama, Kuanyama
+- language: la
+  name: Latin
+- language: lb
+  name: Luxembourgish, Letzeburgesch
+- language: lg
+  name: Luganda
+- language: li
+  name: Limburgish, Limburgan, Limburger
+- language: ln
+  name: Lingala
+- language: lo
+  name: Lao
+- language: lt
+  name: Lithuanian
+- language: lu
+  name: Luba-Katanga
+- language: lv
+  name: Latvian
+- language: gv
+  name: Manx
+- language: mk
+  name: Macedonian
+- language: mg
+  name: Malagasy
+- language: ms
+  name: Malay
+- language: ml
+  name: Malayalam
+- language: mt
+  name: Maltese
+- language: mi
+  name: Māori
+- language: mr
+  name: Marathi
+- language: mh
+  name: Marshallese
+- language: mn
+  name: Mongolian
+- language: na
+  name: Nauru
+- language: nv
+  name: Navajo, Navaho
+- language: nb
+  name: Norwegian BokmÃ¥l
+- language: nd
+  name: North Ndebele
+- language: ne
+  name: Nepali
+- language: ng
+  name: Ndonga
+- language: nn
+  name: Norwegian Nynorsk
+- language: 'no'
+  name: Norwegian
+- language: ii
+  name: Nuosu
+- language: nr
+  name: South Ndebele
+- language: oc
+  name: Occitan
+- language: oj
+  name: Ojibwe, Ojibwa
+- language: cu
+  name: Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old Slavonic
+- language: om
+  name: Oromo
+- language: or
+  name: Oriya
+- language: os
+  name: Ossetian, Ossetic
+- language: pa
+  name: Panjabi, Punjabi
+- language: pi
+  name: Pali
+- language: fa
+  name: Persian
+- language: pl
+  name: Polish
+- language: ps
+  name: Pashto, Pushto
+- language: pt
+  name: Portuguese
+- language: qu
+  name: Quechua
+- language: rm
+  name: Romansh
+- language: rn
+  name: Kirundi
+- language: ro
+  name: Romanian, Moldavian, Moldovan
+- language: ru
+  name: Russian
+- language: sa
+  name: Sanskrit
+- language: sc
+  name: Sardinian
+- language: sd
+  name: Sindhi
+- language: se
+  name: Northern Sami
+- language: sm
+  name: Samoan
+- language: sg
+  name: Sango
+- language: sr
+  name: Serbian
+- language: gd
+  name: Scottish Gaelic; Gaelic
+- language: sn
+  name: Shona
+- language: si
+  name: Sinhala, Sinhalese
+- language: sk
+  name: Slovak
+- language: sl
+  name: Slovene
+- language: so
+  name: Somali
+- language: st
+  name: Southern Sotho
+- language: es
+  name: Spanish; Castilian
+- language: su
+  name: Sundanese
+- language: sw
+  name: Swahili
+- language: ss
+  name: Swati
+- language: sv
+  name: Swedish
+- language: ta
+  name: Tamil
+- language: te
+  name: Telugu
+- language: tg
+  name: Tajik
+- language: th
+  name: Thai
+- language: ti
+  name: Tigrinya
+- language: bo
+  name: Tibetan Standard, Tibetan, Central
+- language: tk
+  name: Turkmen
+- language: tl
+  name: Tagalog
+- language: tn
+  name: Tswana
+- language: to
+  name: Tonga (Tonga Islands)
+- language: tr
+  name: Turkish
+- language: ts
+  name: Tsonga
+- language: tt
+  name: Tatar
+- language: tw
+  name: Twi
+- language: ty
+  name: Tahitian
+- language: ug
+  name: Uighur, Uyghur
+- language: uk
+  name: Ukrainian
+- language: ur
+  name: Urdu
+- language: uz
+  name: Uzbek
+- language: ve
+  name: Venda
+- language: vi
+  name: Vietnamese
+- language: vo
+  name: VolapÃ¼k
+- language: wa
+  name: Walloon
+- language: cy
+  name: Welsh
+- language: wo
+  name: Wolof
+- language: fy
+  name: Western Frisian
+- language: xh
+  name: Xhosa
+- language: yi
+  name: Yiddish
+- language: yo
+  name: Yoruba
+- language: za
+  name: Zhuang, Chuang

@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Config\ConfigInterface;
+
 class ConfigHelper {
   public function __construct(ConfigInterface $config) {
     $this->config = $config;

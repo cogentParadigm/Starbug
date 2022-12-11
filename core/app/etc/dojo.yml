@@ -1,0 +1,6 @@
+---
+config:
+  csrfToken: "{{ helper('csrf').getRequestToken() }}"
+  map:
+    '*':
+      sb/modal/theme/default: sb/modal/theme/bootstrap
