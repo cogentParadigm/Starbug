@@ -10,7 +10,8 @@ trait Operations {
   }
   public function getOperation($method) {
     $method = $this->normalizeMethod($method);
-    return $this->operations[$method];
+    $operations = $this->getOperations();
+    return $operations[$method];
   }
   public function getOperations() {
     if ($this->hasParent()) {
@@ -20,10 +21,12 @@ trait Operations {
   }
   public function hasOperation($method) {
     $method = $this->normalizeMethod($method);
-    return isset($this->operations[$method]);
+    $operations = $this->getOperations();
+    return isset($operations[$method]);
   }
   public function hasOperations() {
-    return !empty($this->operations);
+    $operations = $this->getOperations();
+    return !empty($operations);
   }
   public function removeOperation($method) {
     $method = $this->normalizeMethod($method);
