@@ -45,7 +45,6 @@ return [
       "Starbug\Http\TemplateRenderingMiddleware",
       "Starbug\Core\Routing\ResolutionMiddleware",
       "Starbug\Operation\Http\OperationMiddleware",
-      "Starbug\Core\FormHandlerMiddleware",
       "Starbug\Core\ControllerMiddleware"
     ];
   },
