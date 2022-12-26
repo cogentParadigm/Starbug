@@ -2,6 +2,7 @@
 namespace Starbug\Files;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Core\Controller\ViewController;
 use Starbug\Core\Routing\Route;
 
 class RouteProvider extends AdminRouteProvider {
@@ -15,7 +16,8 @@ class RouteProvider extends AdminRouteProvider {
       "view" => "media-browser.html",
       "template" => false
     ]);
-    $admin->addRoute("/media/update/{id:[0-9]+}", "Starbug\Core\Crud\UpdateController", [
+    $admin->addRoute("/media/update/{id:[0-9]+}", ViewController::class, [
+      "view" => "admin/update.html",
       "model" => "files",
       "action" => "update"
     ]);

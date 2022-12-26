@@ -64,5 +64,6 @@ return [
   },
   'db.schema.migrations' => DI\add([
     DI\get('Starbug\Files\Migration')
-  ])
+  ]),
+  "Starbug\Files\*Interface" => DI\autowire("Starbug\Files\*")
 ];

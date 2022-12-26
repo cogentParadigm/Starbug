@@ -2,16 +2,19 @@
 namespace Starbug\Files;
 
 use Exception;
-use GuzzleHttp\Psr7\MimeType;
 use League\Flysystem\MountManager;
 use Mimey\MimeTypes;
 use Psr\Http\Message\UploadedFileInterface;
 use Starbug\Core\ImagesInterface;
 use Starbug\Core\InputFilterInterface;
 
-class FileUploader {
+class FileUploader implements FileUploaderInterface {
+  protected $extensions = [
+    "gpg" => "application/pgp"
+  ];
   protected $allowed = [
-    "text/csv" => ["text/plain"]
+    "text/csv" => ["text/plain"],
+    "application/pgp" => ["application/octet-stream"]
   ];
   public function __construct(
     FilesRepository $repository,
@@ -26,7 +29,7 @@ class FileUploader {
     $this->filter = $filter;
     $this->mimeTypes = $mimeTypes;
   }
-  public function upload($record, UploadedFileInterface $file) {
+  public function upload($record, UploadedFileInterface $file): ?array {
     $filename = $file->getClientFilename();
     $tmpName = $file->getStream()->getMetadata("uri");
     $error = $file->getError();
@@ -39,7 +42,7 @@ class FileUploader {
     $record["filename"] = $this->filter->normalize(str_replace(" ", "_", $filename), "a-zA-Z0-9\-_\.");
     $record["mime_type"] = $this->getMimeFromExtension($record["filename"]);
     if (!$this->mimeIsValid($tmpName, $record["mime_type"])) {
-      throw new Exception("Incorrect file type");
+      throw new Exception("Incorrect file type. Expected {$record["mime_type"]}, but detected {$this->getMimeFromFile($tmpName)}.");
     }
     $record["size"] = filesize($tmpName);
     if ($record = $this->repository->save($record)) {
@@ -74,6 +77,9 @@ class FileUploader {
   }
   protected function getMimeFromExtension($path) {
     $ext = $this->getExtension($path);
+    if (isset($this->extensions[$ext])) {
+      return $this->extensions[$ext];
+    }
     return $this->mimeTypes->getMimeType($ext);
   }
   protected function getExtension($path) {
