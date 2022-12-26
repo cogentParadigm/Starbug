@@ -1,16 +1,19 @@
 {% extends "panel."~ route.getOption("format")|default("html") ~ ".twig" %}
 
 {% set label = helper("schema").getTable(model).getOption("label") %}
+{% if listParams is empty %}
+  {% set listParams = {} %}
+{% endif %}
 {% if dialog is not empty %}
-  {% if grid_attributes is empty %}
-    {% set grid_attributes = {} %}
+  {% if listParams.attributes is empty %}
+    {% set listParams = listParams|merge({"attributes": {}}) %}
   {% endif %}
-  {% set grid_attributes = grid_attributes|merge({"dialog": model ~ "_form"}) %}
+  {% set listParams = listParams|merge({"attributes": listParams.attributes|merge({"dialog": model ~ "_form"})}) %}
 {% endif %}
 {% block title %}{{ label }}{% endblock %}
 {% block body %}
     {{ include([model ~ "/admin-toolbar.html.twig", "admin-toolbar.html.twig"]) }}
-  {{ helper("displays").render((model|title) ~ "Grid", {"attributes": grid_attributes}) }}
+  {{ helper("displays").render(grid ?? ((model|title) ~ "Grid"), listParams) }}
 {% endblock %}
 
 {% block after %}
