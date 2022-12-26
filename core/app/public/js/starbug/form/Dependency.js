@@ -22,7 +22,7 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 			ready(lang.hitch(this, function() {
-				query('[data-depend="'+this.key+'"]').forEach(lang.hitch(this, function(node) {
+				query('[data-depend~="'+this.key+'"]').forEach(lang.hitch(this, function(node) {
 					this.dependents.push(registry.byNode(node));
 				}));
 				this.execute();
