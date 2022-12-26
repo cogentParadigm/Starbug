@@ -8,7 +8,7 @@
   "devDependencies": {
     "@lodder/grunt-postcss": "^1.0.10",
     "css-mqpacker": "^7.0.0",
-    "cssnano": "^4.0.0",
+    "cssnano": "^5.1.14",
     "grunt": "^1.5.3",
     "grunt-contrib-watch": "^1.0.0",
     "postcss": "^7.0.36",
