@@ -1,9 +1,11 @@
 <?php
 namespace Starbug\Core;
 
+use Invoker\InvokerInterface;
+
 class FormSelectHook extends FormHook {
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(InvokerInterface $invoker) {
+    $this->invoker = $invoker;
   }
   public function build($form, &$control, &$field) {
     $name = $field['name'];
@@ -29,48 +31,25 @@ class FormSelectHook extends FormHook {
       }
       unset($field['range']);
     }
-    $mode = "template";
-    if (!empty($field['caption'])) {
-      if (!empty($field['from'])) {
-        $list = $options;
-        $options = $this->db->query($field['from'], $field)->all();
-      } else {
-        $list = [];
-      }
-      $keys = [];
-      if (!empty($options)) {
-        foreach ($options[0] as $k => $v) {
-          if (false !== strpos($field['caption'], "%$k%")) {
-                    $keys[] = $k;
-          }
+    if (!empty($field["resolve_options"])) {
+      $field["options"] = $this->invoker->call($field["resolve_options"], [$field]);
+    }
+    if (!empty($field['options'])) {
+      $options = is_array($field['options']) ? $field['options'] : explode(",", $field['options']);
+      if (isset($options[0])) {
+        $keys = $options;
+        $values = (!empty($field['values'])) ? $field['values'] : $keys;
+        $values = (is_array($values)) ? $values : explode(",", $field['values']);
+        $options = [];
+        foreach ($keys as $i => $k) {
+          $options[$k] = $values[$i];
         }
-      }
-      foreach ($options as $o) {
-        $cap = $field['caption'];
-        foreach ($keys as $k) {
-          $cap = str_replace("%$k%", $o[$k], $cap);
-        }
-        $list[$cap] = $o[$field['value']];
-      }
-      $options = $list;
-      unset($field['caption']);
-      unset($field['value']);
-    } elseif (!empty($field['options'])) {
-      $keys = is_array($field['options']) ? $field['options'] : explode(",", $field['options']);
-      $values = (!empty($field['values'])) ? $field['values'] : $keys;
-      $values = (is_array($values)) ? $values : explode(",", $field['values']);
-      $options = [];
-      foreach ($keys as $i => $k) {
-        $options[$k] = $values[$i];
       }
       unset($field['options']);
       unset($field['values']);
     } else {
       if (!empty($field["from"]) && empty($field["query"])) {
         $field["query"] = "Select";
-      }
-      if (!empty($field['query']) && !empty($field['from'])) {
-        $mode = "display";
       }
     }
     $optional = false;
@@ -81,7 +60,6 @@ class FormSelectHook extends FormHook {
     $form->assign("optional", $optional);
     $form->assign("value", $value);
     $form->assign("options", $options ?? []);
-    $form->assign("mode", $mode);
     $form->assign("other_option", $other_option);
   }
 }
