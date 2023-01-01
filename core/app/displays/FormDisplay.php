@@ -21,17 +21,25 @@ class FormDisplay extends ItemDisplay {
   public $actions;
   protected $vars = [];
   public $horizontal = false;
-  protected $layoutDisplay = "LayoutDisplay";
+  protected $layoutDisplay = FormLayout::class;
+  protected $actionsDisplay = FormActions::class;
   protected $hook_builder;
   protected $displays;
   protected $showSuccessMessage = true;
+  protected $isXhr = false;
   /**
    * PSR-7 Server Request
    *
    * @var ServerRequestInterface
    */
   protected $request;
-  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, FormHookFactoryInterface $hookFactory, DisplayFactoryInterface $displays, ServerRequestInterface $request) {
+  public function __construct(
+    TemplateInterface $output,
+    CollectionFactoryInterface $collections,
+    FormHookFactoryInterface $hookFactory,
+    DisplayFactoryInterface $displays,
+    ServerRequestInterface $request
+  ) {
     parent::__construct($output, $collections);
     $this->hookFactory = $hookFactory;
     $this->displays = $displays;
@@ -41,6 +49,7 @@ class FormDisplay extends ItemDisplay {
     if ($route->hasOption("cancelUrl") && empty($this->cancel_url)) {
       $this->cancel_url = $route->getOption("cancelUrl");
     }
+    $this->isXhr = $route->getOption("format") == "xhr";
   }
 
   public function build($options = []) {
@@ -57,10 +66,14 @@ class FormDisplay extends ItemDisplay {
 
     // create layout display
     $this->layout = $this->displays->get($this->layoutDisplay);
-    $this->layout->build();
+    $this->layout->build(["modal" => $this->isXhr]);
     // create actions display
-    $this->actions = $this->displays->get("ItemDisplay");
-    $this->actions->add([$this->defaultAction, "label" => $this->submit_label, "template" => "button/primary.html"]);
+    $this->actions = $this->displays->get($this->actionsDisplay);
+    $this->actions->build([
+      "modal" => $this->isXhr,
+      "defaultAction" => $this->defaultAction,
+      "defaultActionLabel" => $this->submit_label
+    ]);
 
     // run query
     $this->beforeQuery($options);
