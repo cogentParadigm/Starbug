@@ -35,7 +35,7 @@
     "starbug/config": "^0.9.0",
     "phpmailer/phpmailer": "dev-master",
     "masterexploder/phpthumb": "dev-master",
-    "ezyang/htmlpurifier":"dev-master",
+    "ezyang/htmlpurifier":"^4.13",
     "psr/log": "^1.0",
     "monolog/monolog": "^1.17",
     "wp-cli/php-cli-tools": "^0.10.5",
