@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e25f6044600e03bfbe1b00186e04ff8",
+    "content-hash": "d95cbddd21edfb1f575a2f3f0446767f",
     "packages": [
         {
             "name": "composer/installers",
@@ -3640,21 +3640,26 @@
         },
         {
             "name": "starbug/storm",
-            "version": "v0.8.2",
+            "version": "v0.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-storm.git",
-                "reference": "8bc256740ce74a2284ea52c2056b43af841516a7"
+                "reference": "a8fd5ee40d4671c077c864bcacd08b153ef4f7c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/8bc256740ce74a2284ea52c2056b43af841516a7",
-                "reference": "8bc256740ce74a2284ea52c2056b43af841516a7",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/a8fd5ee40d4671c077c864bcacd08b153ef4f7c0",
+                "reference": "a8fd5ee40d4671c077c864bcacd08b153ef4f7c0",
                 "shasum": ""
             },
             "type": "starbug-theme",
             "extra": {
                 "namespace": "Starbug\\Storm"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Storm\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3669,9 +3674,9 @@
             "description": "Administrative theme for Starbug.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-storm/issues",
-                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v0.8.2"
+                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v0.9.0"
             },
-            "time": "2021-03-05T16:48:16+00:00"
+            "time": "2023-01-01T21:44:33+00:00"
         },
         {
             "name": "starbug/tachyons",
