@@ -1,0 +1,14 @@
+{
+  "name": "starbug/imports",
+  "type": "starbug-module",
+  "description": "Imports module.",
+  "extra": {
+    "namespace": "Starbug\\Imports"
+  },
+  "require": {
+    "starbug/state": "*",
+    "starbug/db": "*",
+    "starbug/log": "*",
+    "phpoffice/phpspreadsheet": "^1.12"
+  }
+}

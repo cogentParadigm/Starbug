@@ -5,6 +5,8 @@ use Starbug\Core\AdminCollection;
 use Starbug\Core\Controller\ViewController;
 use Starbug\Core\Routing\Route;
 use Starbug\Core\Routing\RouteProviderInterface;
+use Starbug\Core\SelectCollection;
+use Starbug\Imports\Admin\ImportsGrid;
 use Starbug\Users\Operation\UpdateProfile;
 
 class RouteProvider implements RouteProviderInterface {
@@ -54,6 +56,7 @@ class RouteProvider implements RouteProviderInterface {
     $routes->setOption("model", $model);
     $routes->setOption("successUrl", $routes->getPath());
     $routes->setOption("cancelUrl", $routes->getPath());
+    $routes->setOption("formParams", ["model" => $model]);
 
     $create = $routes->addRoute("/create", ViewController::class, ["view" => "admin/create.html"])
       ->onPost("Starbug\Core\Operation\Save");
@@ -65,12 +68,15 @@ class RouteProvider implements RouteProviderInterface {
     $routes->addRoute("/delete/{id:[0-9]+}", ViewController::class, ["view" => "admin/delete.html"])
       ->onPost("Starbug\Core\Operation\Delete");
 
-    $routes->addRoute("/import", "Starbug\Core\Crud\ImportController");
+    $routes->addRoute("/import", ViewController::class, [
+      "model" => "imports",
+      "view" => "admin/list.html",
+      "grid" => ImportsGrid::class,
+      "listParams" => ["model" => $model]
+    ]);
 
-    $this->addXhr($create)
-      ->onPost("Starbug\Core\Operation\Save");
-    $this->addXhr($update)
-      ->onPost("Starbug\Core\Operation\Save");
+    $this->addXhr($create);
+    $this->addXhr($update);
 
     return $routes;
   }
@@ -96,5 +102,21 @@ class RouteProvider implements RouteProviderInterface {
     $route->setController("Starbug\Core\Controller\CollectionController");
     $route->setOptions($options + compact('model', 'collection'));
     return $route;
+  }
+
+  protected function addCrud(Route $routes, $model) {
+    $urlName = str_replace("_", "-", $model);
+    $crud = [];
+
+    $admin = $routes->getRoute("admin");
+    $crud["list"] = $this->addCrudRoutes($admin->addRoute("/{$urlName}"), $model);
+    $crud["create"] = $crud["list"]->getRoute("/create");
+    $crud["update"] = $crud["list"]->getRoute("/update/{id:[0-9]+}");
+
+    $api = $routes->getRoute("api");
+    $crud["adminApi"] = $this->addAdminApiRoute($api->addRoute("/{$urlName}/admin.{format:json|csv}"), $model);
+    $crud["selectApi"] = $api->addRoute("/{$urlName}/select.{format:json}");
+    $this->addApiRoute($crud["selectApi"], $model, SelectCollection::class);
+    return $crud;
   }
 }

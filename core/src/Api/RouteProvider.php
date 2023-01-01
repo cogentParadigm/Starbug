@@ -2,7 +2,6 @@
 namespace Starbug\Core\Api;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
-use Starbug\Core\AdminImportsCollection;
 use Starbug\Core\AdminMenusCollection;
 use Starbug\Core\AdminTermsCollection;
 use Starbug\Core\MenusTreeCollection;
@@ -31,11 +30,5 @@ class RouteProvider extends AdminRouteProvider {
       ->onDelete(DeleteMenus::class);
     $this->addApiRoute($api->addRoute("/menus/select.json"), "menus", SelectCollection::class);
     $this->addApiRoute($api->addRoute("/menus/tree.json"), "menus", MenusTreeCollection::class);
-
-    // Imports
-    $this->addAdminApiRoute($api->addRoute("/imports/admin.{format:csv|json}"), "imports", AdminImportsCollection::class);
-    $this->addApiRoute($api->addRoute("/imports/select.json"), "imports", SelectCollection::class);
-    $this->addAdminApiRoute($api->addRoute("/imports-fields/admin.json"), "imports_fields");
-    $this->addApiRoute($api->addRoute("/imports-fields/select.json"), "imports_fields", SelectCollection::class);
   }
 }

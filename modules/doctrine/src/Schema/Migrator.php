@@ -26,7 +26,7 @@ class Migrator extends AbstractMigration {
       $indexes = $table->getIndexes();
       $primary = [];
       foreach ($columns as $column => $options) {
-        if (!$this->schema->hasTable($options["type"])) {
+        if (!$this->schema->hasTable($options["type"]) && $options["type"] != "virtual") {
           $t->addColumn($column, $this->getType($options), $this->getOptions($options));
           if (isset($options["key"]) && $options["key"] == "primary") {
             $primary[] = $column;

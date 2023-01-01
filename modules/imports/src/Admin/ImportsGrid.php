@@ -1,5 +1,7 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Imports\Admin;
+
+use Starbug\Core\GridDisplay;
 
 class ImportsGrid extends GridDisplay {
   public $model = "imports";

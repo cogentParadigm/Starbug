@@ -39,7 +39,6 @@ return [
   "route.providers" => [
     DI\get("Starbug\Core\Admin\RouteProvider"),
     DI\get("Starbug\Core\Admin\Menus\RouteProvider"),
-    DI\get("Starbug\Core\Admin\Imports\RouteProvider"),
     DI\get("Starbug\Core\Api\RouteProvider")
   ],
   "Starbug\Core\Routing\Configuration" => DI\autowire()->method("addProviders", DI\get("route.providers")),
@@ -106,14 +105,6 @@ return [
   'Starbug\Core\Routing\*Interface' => DI\autowire('Starbug\Core\Routing\*'),
   'Starbug\Core\ImagesInterface' => DI\autowire('Starbug\Core\Images')
     ->constructorParameter('base_directory', DI\get('base_directory')),
-  'Starbug\Core\ImportsForm' => DI\autowire()
-    ->method('setFilesystems', DI\get('League\Flysystem\MountManager'))
-    ->method('setDatabase', DI\get('Starbug\Core\DatabaseInterface')),
-  'Starbug\Core\ImportsFieldsForm' => DI\autowire()
-    ->method('setFilesystems', DI\get('League\Flysystem\MountManager'))
-    ->method("setModels", DI\get("Starbug\Core\ModelFactoryInterface"))
-    ->method("setSchema", DI\get("Starbug\Db\Schema\SchemerInterface"))
-    ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface")),
   'db.schema.migrations' => [
     DI\get('Starbug\Core\Migration')
   ],

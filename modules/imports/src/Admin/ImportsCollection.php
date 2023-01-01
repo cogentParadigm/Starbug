@@ -1,7 +1,9 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Imports\Admin;
 
-class AdminImportsCollection extends AdminCollection {
+use Starbug\Core\AdminCollection;
+
+class ImportsCollection extends AdminCollection {
   public function build($query, $ops) {
     $query = parent::build($query, $ops);
     if (!empty($ops["model"])) {

@@ -1,5 +1,5 @@
 {% set new_label = "New Import <b class=\"fa fa-plus\"></b>" %}
-{% set path = helper("url").build("admin/imports/create?model=" ~ model) %}
+{% set path = helper("url").build("admin/imports/create?model=" ~ listParams.model) %}
 <div class="btn-group pull-right">
   <a class="btn btn-default" href="{{ path }}">{{ new_label }}</a>
   <a class="btn btn-default" href="javascript:window.location.href = imports_grid.collection._renderUrl().replace('json', 'csv');">

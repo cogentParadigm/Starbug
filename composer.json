@@ -56,7 +56,10 @@
     "starbug/js": "dev-master",
     "starbug/content": "dev-master",
     "starbug/storm": "^0.8.2",
-    "starbug/redis": "dev-master"
+    "starbug/redis": "dev-master",
+    "starbug/state": "dev-master",
+    "starbug/log": "dev-master",
+    "starbug/imports": "dev-master"
   },
   "require-dev": {
     "starbug/devel": "^1.0"
