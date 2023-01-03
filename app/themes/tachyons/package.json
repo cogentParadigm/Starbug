@@ -3,7 +3,7 @@
     "animate.css": "^3.7.2",
     "font-awesome": "^4.7.0",
     "sanitize.css": "^11.0.0",
-    "tachyons": "^4.11.1"
+    "tachyons": "^4.12.0"
   },
   "devDependencies": {
     "@lodder/grunt-postcss": "^1.0.10",
