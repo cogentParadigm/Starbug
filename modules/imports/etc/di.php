@@ -65,6 +65,7 @@ return [
   "scripts.spreadsheet-info" => SpreadsheetInfo::class,
   "Starbug\Imports\*Interface" => DI\autowire("Starbug\Imports\*"),
   "Starbug\Imports\Read\*Interface" => DI\autowire("Starbug\Imports\Read\*"),
+  "Starbug\Imports\Write\*Interface" => DI\autowire("Starbug\Imports\Write\*"),
   Factory::class => DI\autowire()
     ->constructorParameter("transformers", DI\get("importer.transformers"))
 ];

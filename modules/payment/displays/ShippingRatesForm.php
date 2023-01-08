@@ -6,7 +6,6 @@ use Starbug\Core\FormDisplay;
 
 class ShippingRatesForm extends FormDisplay {
   public $model = "shipping_rates";
-  protected $layoutDisplay = "ModalFormLayout";
   public function buildDisplay($options) {
     if ($this->success("create") && !$this->hasPost("id")) {
       $this->setPost("id", $this->db->getInsertId($this->model));
@@ -16,7 +15,5 @@ class ShippingRatesForm extends FormDisplay {
     $this->add(["price", "info" => "Enter price in cents. For example, enter 5000 for $50."]);
     $this->add(["product_types", "input_type" => "multiple_select", "from" => "product_types", "query" => "Select"]);
     $this->add(["product_options", "input_type" => "text", "data-dojo-type" => "sb/form/CRUDList", "data-dojo-props" => "model:'shipping_rates_product_options', newItemLabel:'Add Product Option Condition'"]);
-    $this->actions->attributes["class"] = "modal-footer flex flex-row-reverse";
-    $this->actions->add(["cancel", "class" => "cancel mr2 btn-default"]);
   }
 }

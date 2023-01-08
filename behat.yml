@@ -8,6 +8,9 @@ default:
         - Starbug\Behat\Context\MailContext
         - Starbug\Behat\Context\CsvContext
         - Starbug\Behat\Context\ScreenshotsContext
+        - Starbug\Behat\Context\DatabaseContext:
+            fixtures:
+                - app/fixtures/db/reset.yml
         - Starbug\Features\DebuggingContext
         - Starbug\Features\CrudListContext
   extensions:

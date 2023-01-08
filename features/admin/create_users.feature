@@ -1,11 +1,11 @@
+@database
 Feature: Admin manages users
   In order to facilitate different users accessing the system
   As an admin
   I can add new users
 
   Background:
-    Given I have the fixture "core/app/fixtures/users.xml"
-    And I login as an admin
+    Given I login as an admin
 
   Scenario: Create a new user
     Given I am on "/admin/users"

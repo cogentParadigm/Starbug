@@ -6,17 +6,22 @@ use Starbug\Core\DatabaseInterface;
 use Starbug\Core\Operation\Save;
 use Starbug\Imports\Import;
 use Starbug\Imports\Importer;
+use Starbug\Imports\OperationsRepository;
 use Starbug\Imports\Read\TabularSpreadsheetStrategy;
+use Starbug\Imports\Write\DatabaseStrategy;
 
 class Run extends Save {
   public function __construct(
     DatabaseInterface $db,
-    Importer $importer
+    Importer $importer,
+    OperationsRepository $operations
   ) {
     $this->db = $db;
     $this->importer = $importer;
+    $this->operations = $operations;
   }
   public function handle(array $data, BundleInterface $state): BundleInterface {
+    // First, retrieve data from database.
     $import = $this->db->query("imports")->condition("id", $data["id"])->one();
     $fields = $this->db->query("imports_fields")
       ->condition("imports_id", $import["id"])
@@ -44,9 +49,13 @@ class Run extends Save {
     if (!empty($keys)) {
       $transformers[] = ["type" => "lookup", "field" => "id", "by" => $keys];
     }
-    $config = new Import($import["model"], $import["operation"]);
+    // Second, construct import from data and run
+    $config = new Import($import["model"]);
     $config->setReadStrategy(TabularSpreadsheetStrategy::class, [
       "files_id" => $import["source"]
+    ]);
+    $config->setWriteStrategy(DatabaseStrategy::class, [
+      "operation" => $this->operations->getOperation($import["model"], $import["operation"])
     ]);
     $config->setFields($fields);
     $config->setTransformers($transformers);

@@ -1,15 +1,14 @@
 <?php
 namespace Starbug\Core;
 
-use PHPUnit\Framework\TestCase;
-
-class ModelTest extends TestCase {
+class ModelTest extends DatabaseTestCase {
 
   public $model;
   protected $db;
   protected $operations;
 
-  public function setUp() {
+  public function setUp(): void {
+    parent::setUp();
     global $container;
     $this->db = $container->get("Starbug\Core\DatabaseInterface");
     $this->operations = $container->get("Starbug\Operation\OperationFactoryInterface");

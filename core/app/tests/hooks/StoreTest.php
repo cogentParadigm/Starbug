@@ -8,8 +8,10 @@ use Starbug\Auth\Identity;
  */
 class StoreTest extends DatabaseTestCase {
 
-  public function getDataSet() {
-    return $this->createMySQLXMLDataSet(dirname(__FILE__).'/../fixture.xml');
+  protected function getDataSets() {
+    return [
+      $this->createYamlDataSet(dirname(__FILE__)."/../fixture.yml")
+    ];
   }
 
   public function setUp() : void {

@@ -25,10 +25,12 @@ class OperationsRepository {
     }
     return $operations;
   }
-  public function getOperation($model, $name) {
+  public function getOperation($model, $name, $params = []) {
     $operations = $this->getAvailableOperations($model);
     if (isset($operations[$name])) {
-      return $this->factory->get($operations[$name]["class"]);
+      $operation = $this->factory->get($operations[$name]["class"]);
+      $operation->configure($params + ["model" => $model]);
+      return $operation;
     }
     throw new Exception("Operation '{$name}' not found.");
   }

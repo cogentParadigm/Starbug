@@ -3,17 +3,14 @@ namespace Starbug\Imports;
 
 class Import {
   protected $model;
-  protected $strategy;
-  protected $strategyParameters = [];
-  protected $operation;
-  protected $operationParameters = [];
+  protected $readStrategy;
+  protected $readStrategyParameters = [];
+  protected $writeStrategy;
+  protected $writeStrategyParameters = [];
   protected $fields = [];
   protected $transformers = [];
-  public function __construct($model, $operation = false, $operationParameters = []) {
+  public function __construct($model) {
     $this->setModel($model);
-    if (false !== $operation) {
-      $this->setOperation($operation, $operationParameters);
-    }
   }
   public function setModel($model) {
     $this->model = $model;
@@ -22,28 +19,28 @@ class Import {
     return $this->model;
   }
   public function setReadStrategy($strategy, $params = false) {
-    $this->strategy = $strategy;
+    $this->readStrategy = $strategy;
     if (false !== $params) {
-      $this->strategyParameters = $params;
+      $this->readStrategyParameters = $params;
     }
   }
   public function getReadStrategy() {
-    return $this->strategy;
+    return $this->readStrategy;
   }
   public function getReadStrategyParameters() {
-    return $this->strategyParameters;
+    return $this->readStrategyParameters;
   }
-  public function setOperation($operation, $params = false) {
-    $this->operation = $operation;
+  public function setWriteStrategy($strategy, $params = false) {
+    $this->writeStrategy = $strategy;
     if (false !== $params) {
-      $this->operationParameters = $params;
+      $this->writeStrategyParameters = $params;
     }
   }
-  public function getOperation() {
-    return $this->operation;
+  public function getWriteStrategy() {
+    return $this->writeStrategy;
   }
-  public function getOperationParameters() {
-    return $this->operationParameters + ["model" => $this->model];
+  public function getWriteStrategyParameters() {
+    return $this->writeStrategyParameters;
   }
   public function setFields($fields) {
     $this->fields = $fields;

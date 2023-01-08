@@ -5,7 +5,6 @@ use Iterator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\Row;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use Starbug\Imports\Import;
 
 class TabularSpreadsheetStrategy extends FileStrategy {
   protected $worksheet;
@@ -14,14 +13,14 @@ class TabularSpreadsheetStrategy extends FileStrategy {
     $this->path = $path;
     $this->worksheet = $worksheet;
   }
-  public function getRows(Import $import, $params = []) : Iterator {
+  public function getRows($options = []) : Iterator {
     $spreadsheet = $this->getSpreadsheet($this->path, $this->worksheet);
     $worksheet = $spreadsheet->getActiveSheet();
     $head = $this->getHeadRow($worksheet);
     foreach ($worksheet->getRowIterator(2) as $row) {
       $this->currentRow = $row->getRowIndex();
       $source = $this->getRowArray($worksheet, $row, $head);
-      $dest = $this->getMappedValues($source, $import->getFields());
+      $dest = $this->getMappedValues($source);
       yield $dest;
     }
     unset($worksheet);

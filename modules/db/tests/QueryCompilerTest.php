@@ -7,7 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 class QueryCompilerTest extends TestCase {
 
-  public function setUp() {
+  public function setUp(): void {
+    parent::setUp();
     $this->query = $this->createQuery();
     $this->compiler = $this->createCompiler();
   }

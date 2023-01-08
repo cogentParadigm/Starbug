@@ -9,7 +9,7 @@ class CollectionStrategy extends Strategy {
   public function __construct(CollectionFactoryInterface $collections) {
     $this->collections = $collections;
   }
-  public function getRows(Import $import, $options = []) : Iterator {
+  public function getRows($options = []) : Iterator {
     $collection = $options["collection"];
     $options = $this->getDefaultOptions($options);
     $collection = $this->collections->get($collection);
@@ -19,7 +19,7 @@ class CollectionStrategy extends Strategy {
       foreach ($records as $idx => $source) {
         $this->currentRow = $idx;
         $source = (array) $source;
-        $dest = $this->getMappedValues($source, $import->getFields());
+        $dest = $this->getMappedValues($source);
         yield $dest;
       }
       $options["page"]++;

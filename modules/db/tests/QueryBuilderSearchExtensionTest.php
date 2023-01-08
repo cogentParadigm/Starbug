@@ -5,7 +5,7 @@ use Starbug\Db\Query\Extensions\Search;
 
 class QueryBuilderSearchExtensionTest extends QueryBuilderTestBase {
 
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->search = new Search($this->createSchema());
   }

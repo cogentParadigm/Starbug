@@ -8,7 +8,6 @@ use Starbug\Db\Schema\SchemerInterface;
 
 class ProductOptionsForm extends FormDisplay {
   public $model = "product_options";
-  protected $layoutDisplay = "ModalFormLayout";
   public function setTableSchema(SchemerInterface $schemer) {
     $this->tableSchema = $schemer->getSchema();
   }
@@ -26,8 +25,6 @@ class ProductOptionsForm extends FormDisplay {
     $this->add(["parent", "input_type" => "select"] + $tree);
     $this->add("position");
     $this->add(["columns", "input_type" => "select", "options" => "1,2,3,4,5,6,7,8,9,10,11,12"]);
-    $this->actions->attributes["class"] = "modal-footer flex flex-row-reverse";
-    $this->actions->add(["cancel", "class" => "cancel mr2 btn-default"]);
   }
   public function getOptionsTree($type, $parent = 0, $prefix = "") {
     $options = $values = [""];

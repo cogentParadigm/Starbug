@@ -5,7 +5,7 @@ use Starbug\Db\Query\Extensions\Action;
 
 class QueryBuilderActionExtensionTest extends QueryBuilderTestBase {
 
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $sessionHandler = new MockSessionHandler();
     $this->action = new Action($sessionHandler, $this->createSchema());

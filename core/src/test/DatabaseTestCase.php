@@ -2,41 +2,51 @@
 namespace Starbug\Core;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit\DbUnit\TestCaseTrait;
-use PHPUnit\DbUnit\Operation\Composite;
-use PHPunit\DbUnit\Operation\Factory;
-use PDO;
-use Starbug\Behat\DbUnit\DataSet\PrefixedMysqlXmlDataSet;
+use Starbug\Db\Operation\Migrate;
+use Starbug\Imports\Import;
+use Starbug\Imports\Importer;
+use Starbug\Imports\Read\YamlFixtureStrategy;
+use Starbug\Imports\Write\FixtureStrategy;
 
 abstract class DatabaseTestCase extends TestCase {
 
-  use TestCaseTrait;
+  protected $importer;
+  protected $operation;
 
-  protected $conn = null;
-  protected $db = null;
+  protected function setUp(): void {
+    parent::setUp();
+    if ($imports = $this->getDataSets()) {
+      foreach ($imports as $import) {
+        $this->getImporter()->run($import);
+      }
+    }
 
-  protected function createMySQLXMLDataSet($xmlFile) {
-    return new PrefixedMysqlXmlDataSet($xmlFile, $this->db->getPrefix());
   }
 
-  public function getSetUpOperation() {
-    return new Composite([
-      Factory::TRUNCATE(true),
-      Factory::INSERT()
-    ]);
+  protected function getImporter() {
+    if (empty($this->importer)) {
+      global $container;
+      $this->importer = $container->get(Importer::class);
+    }
+    return $this->importer;
   }
 
-  final public function getConnection() {
-    global $container;
-    if ($this->conn === null) {
-      $name = $container->get("db");
-      $params = $container->get("databases.".$name);
-      $pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
-      $this->conn = $this->createDefaultDBConnection($pdo, $name);
+  protected function getDataSets() {
+    return false;
+  }
+
+  protected function createYamlDataSet($ymlFile) {
+    $import = new Import(false);
+    $import->setReadStrategy(YamlFixtureStrategy::class, ["path" => $ymlFile]);
+    $import->setWriteStrategy(FixtureStrategy::class, ["operation" => $this->getOperation()]);
+    return $import;
+  }
+
+  protected function getOperation() {
+    if (empty($this->operation)) {
+      global $container;
+      $this->operation = $container->get(Migrate::class);
     }
-    if ($this->db === null) {
-      $this->db = $container->get("Starbug\Core\DatabaseInterface");
-    }
-    return $this->conn;
+    return $this->operation;
   }
 }

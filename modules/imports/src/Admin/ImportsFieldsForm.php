@@ -17,8 +17,6 @@ class ImportsFieldsForm extends FormDisplay {
   protected $source_keys = [];
   protected $source_values = [];
   public $model = "imports_fields";
-  public $cancelable = false;
-  protected $layoutDisplay = "ModalFormLayout";
   public function __construct(
     TemplateInterface $output,
     CollectionFactoryInterface $collections,
@@ -45,8 +43,6 @@ class ImportsFieldsForm extends FormDisplay {
     $dest_ops["resolve_options"] = ImportsFieldOptions::class;
     $this->add($dest_ops);
     $this->add(["update_key", "input_type" => "checkbox", "value" => "1", "label" => "Use this field as a key to update records"]);
-    $this->actions->attributes["class"] = "modal-footer flex flex-row-reverse";
-    $this->actions->add(["cancel", "class" => "cancel mr2 btn-default", "type" => "button"]);
   }
   protected function parseSource($options) {
     $id = $options["source"];

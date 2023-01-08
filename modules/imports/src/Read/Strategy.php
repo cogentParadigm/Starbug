@@ -5,18 +5,23 @@ use Starbug\Imports\Read\Traits\Transformers;
 
 abstract class Strategy implements StrategyInterface {
   protected $currentRow;
+  protected $fields = [];
 
   use Transformers;
+
+  public function setFields($fields = []) {
+    $this->fields = $fields;
+  }
 
   public function getLocation($record) {
     return "row ".$this->currentRow;
   }
-  protected function getMappedValues($source, $fields) {
-    if (empty($fields)) {
+  protected function getMappedValues($source) {
+    if (empty($this->fields)) {
       return $source;
     }
     $mapped = [];
-    foreach ($fields as $field) {
+    foreach ($this->fields as $field) {
       $treePath = explode(": ", $field["destination"]);
       $target = &$mapped;
       while (count($treePath) > 1) {
