@@ -119,17 +119,5 @@ class Migration extends AbstractMigration {
         ["new_value", "type" => "text"]
       );
     */
-    $this->schema->addTable(["imports_fields", "label_select" => "CONCAT(imports_fields.source, ' => ', imports_fields.destination, CASE WHEN update_key=1 THEN ' (update key)' ELSE '' END)"],
-      ["source", "type" => "text"],
-      ["destination", "type" => "text"],
-      ["update_key", "type" => "bool", "default" => "0"]
-    );
-    $this->schema->addTable(["imports"],
-      ["name", "type" => "string", "length" => "128"],
-      ["model", "type" => "string", "length" => "128"],
-      ["action", "type" => "string", "length" => "128", "default" => ""],
-      ["source", "type" => "int", "references" => "files id"],
-      ["fields", "type" => "imports_fields", "table" => "imports_fields"]
-    );
   }
 }
