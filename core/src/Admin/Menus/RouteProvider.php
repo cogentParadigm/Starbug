@@ -11,7 +11,7 @@ class RouteProvider extends AdminRouteProvider {
     $menus = $this->addCrudRoutes($admin->addRoute("/menus"), "menus");
     $this->addStatefulRedirects($menus, $menus->getPath()."/menu/{{ row.menu }}");
 
-    $menus->addRoute("/menu/{menu}", "Starbug\Core\Controller\ViewController", [
+    $menus->addRoute("/menu/{menuName}", "Starbug\Core\Controller\ViewController", [
       "view" => "admin/menus/menu.html"
     ]);
   }

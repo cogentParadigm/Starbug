@@ -5,6 +5,8 @@ use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Core\AdminMenusCollection;
 use Starbug\Core\AdminTermsCollection;
 use Starbug\Core\MenusTreeCollection;
+use Starbug\Core\Operation\Save;
+use Starbug\Core\Operation\Delete;
 use Starbug\Core\Operation\DeleteMenus;
 use Starbug\Core\Operation\DeleteTerms;
 use Starbug\Core\Routing\Route;
@@ -29,6 +31,8 @@ class RouteProvider extends AdminRouteProvider {
     $this->addAdminApiRoute($api->addRoute("/menus/admin.{format:csv|json}"), "menus", AdminMenusCollection::class)
       ->onDelete(DeleteMenus::class);
     $this->addApiRoute($api->addRoute("/menus/select.json"), "menus", SelectCollection::class);
-    $this->addApiRoute($api->addRoute("/menus/tree.json"), "menus", MenusTreeCollection::class);
+    $this->addApiRoute($api->addRoute("/menus/tree.json"), "menus", MenusTreeCollection::class)
+      ->onPost(Save::class)
+      ->onDelete(Delete::class);
   }
 }
