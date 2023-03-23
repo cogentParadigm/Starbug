@@ -148,7 +148,7 @@ define([
 			}
 			args.oid = config.csrfToken;
 
-			this.results = request(this.target, {
+			this.results = request(this._renderUrl(), {
 				method: 'DELETE',
 				data: args,
 				headers: lang.mixin({}, this.headers, options.headers)

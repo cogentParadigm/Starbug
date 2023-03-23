@@ -5,14 +5,14 @@
   <div class="success">Menu saved successfully</div>
 {% endif %}
 {% endblock %}
-{% block title %}Update Menu {{ menu }}{% endblock %}
+{% block title %}Update Menu {{ menuName }}{% endblock %}
 {% block body %}
   <div class="clearfix cf">
     <p class="pull-right">
-      <a class="btn btn-default" href="{{ helper("url").build("admin/menus/create?menu=" ~ menu) }}">
+      <a class="btn btn-default" href="{{ helper("url").build("admin/menus/create?menu=" ~ menuName) }}">
         Add Menu Item <b class="fa fa-plus"></b>
       </a>
     </p>
   </div>
-  {{ helper("displays").render("MenusTreeGrid", {"menu": menu}) }}
+  {{ helper("displays").render("MenusTreeGrid", {"menu": menuName}) }}
 {% endblock %}
