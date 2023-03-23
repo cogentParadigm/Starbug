@@ -4,6 +4,7 @@ namespace Starbug\Core;
 use Starbug\Db\Query\BuilderFactory;
 use Starbug\Bundle\Bundle;
 use Starbug\Db\Query\BuilderInterface;
+use Starbug\Log\LoggerFactory;
 
 abstract class AbstractDatabase implements DatabaseInterface {
   public $errors;
@@ -52,6 +53,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
   protected $models;
   protected $insertIds = [];
   protected $timezone = false;
+  protected $logger;
 
   const PHASE_VALIDATION = 0;
   const PHASE_STORE = 1;
@@ -59,10 +61,11 @@ abstract class AbstractDatabase implements DatabaseInterface {
   const PHASE_BEFORE_DELETE = 3;
   const PHASE_AFTER_DELETE = 4;
 
-  public function __construct(BuilderFactory $queryBuilderFactory) {
+  public function __construct(BuilderFactory $queryBuilderFactory, LoggerFactory $loggerFactory) {
     $this->queryBuilderFactory = $queryBuilderFactory;
     $this->queue = new QueryQueue();
     $this->errors = new Bundle();
+    $this->logger = $loggerFactory->create("db");
   }
 
   public function getPrefix() {
@@ -243,8 +246,7 @@ abstract class AbstractDatabase implements DatabaseInterface {
     $parts = array_merge([$scope], explode(".", $field));
     $parts[] = is_array($error) ? $error : [$error];
     $this->errors->set(...$parts);
-    $statement = $this->prepare("INSERT INTO ".$this->prefix."errors (type, field, message, created, modified) VALUES (?, ?, ?, NOW(), NOW())");
-    $statement->execute([$scope, $field, $error]);
+    $this->logger->info("{$scope}.{$field}: {$error}");
   }
 
   public function setInsertId($table, $id) {

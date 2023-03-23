@@ -2,7 +2,6 @@
 namespace Starbug\Core;
 
 use Psr\Container\ContainerInterface;
-use Monolog\Logger;
 use DI;
 use FastRoute\Dispatcher\GroupCountBased;
 use FastRoute\RouteCollector;
@@ -72,28 +71,6 @@ return [
   "Psr\Http\Message\ServerRequestInterface" => function (ContainerInterface $container) {
     return new ServerRequest("GET", $container->get("website_host").$container->get("website_url"));
   },
-  "Whoops\Run" => DI\decorate(function ($whoops, $container) {
-    $textHandler = new PlainTextHandler($container->get("Psr\Log\LoggerInterface"));
-    $whoops->appendHandler($textHandler);
-    $cli = $container->get("cli");
-    if (!\Whoops\Util\Misc::isCommandLine() && !$cli) {
-      $textHandler->loggerOnly(true);
-      if ($container->get("environment") == "production") {
-        $whoops->appendHandler(function ($e) use ($container) {
-          $response = $container->get("Starbug\Http\ResponseBuilderInterface");
-          $response = $response->create(500)
-          ->render("exception.html")
-          ->getResponse();
-          $emitter = new SapiEmitter();
-          $emitter->emit($response);
-          return Handler::QUIT;
-        });
-      } else {
-        $whoops->appendHandler(new PrettyPageHandler());
-      }
-    }
-    return $whoops;
-  }),
   "FastRoute\RouteParser" => DI\autowire("FastRoute\RouteParser\Std"),
   "FastRoute\DataGenerator" => DI\autowire("FastRoute\DataGenerator\GroupCountBased"),
   "FastRoute\Dispatcher" => function (ContainerInterface $c) {
@@ -158,15 +135,6 @@ return [
   "scripts.setup" => Setup::class,
   "scripts.list-scripts" => ListScripts::class,
   'Starbug\Core\Script\Generate' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
-  'Psr\Log\LoggerInterface' => function (ContainerInterface $c) {
-    $logger = new Logger("main");
-    $env = $c->get("environment");
-    $handlers = $c->get("log.handlers.".$env);
-    foreach ($handlers as $handler) {
-      $logger->pushHandler($handler);
-    }
-    return $logger;
-  },
   "Starbug\ResourceLocator\ResourceLocatorInterface" => function (ContainerInterface $container) {
     $modules = $container->get("Starbug\Modules\Configuration")->getEnabled();
     $locator = new ResourceLocator($container->get("base_directory"));

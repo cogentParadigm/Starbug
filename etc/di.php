@@ -1,7 +1,6 @@
 <?php
 
 use Psr\Container\ContainerInterface;
-use Monolog\Handler\StreamHandler;
 
 return [
   'modules' => [
@@ -50,17 +49,5 @@ return [
   },
   "Psr\Http\Server\RequestHandlerInterface" => DI\autowire("Middleland\Dispatcher")
     ->constructorParameter("middleware", DI\get("application.middleware"))
-    ->constructorParameter("container", DI\get(ContainerInterface::class)),
-  'log.handlers.development' => [
-    DI\get('Monolog\Handler\StreamHandler')
-  ],
-  'log.handlers.production' => [
-    DI\get('Monolog\Handler\StreamHandler')
-  ],
-  'Monolog\Handler\StreamHandler' => function (ContainerInterface $c) {
-    $name = $c->get("environment");
-    $handler = new StreamHandler("php://stdout");
-    return $handler;
-  },
-  "error_handler" => DI\get("Whoops\Run")
+    ->constructorParameter("container", DI\get(ContainerInterface::class))
 ];

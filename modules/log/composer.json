@@ -11,5 +11,10 @@
   ],
   "extra": {
     "namespace": "Starbug\\Log"
+  },
+  "require": {
+    "psr/log": "^1.0",
+    "monolog/monolog": "^2.5",
+    "filp/whoops": "^2.9"
   }
 }

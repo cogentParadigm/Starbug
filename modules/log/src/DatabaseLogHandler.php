@@ -2,9 +2,10 @@
 
 namespace Starbug\Log;
 
+use DateTime;
+use Doctrine\DBAL\Connection;
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
-use Starbug\Core\DatabaseInterface;
 
 /**
  * Monolog handler which writes to error_log table.
@@ -23,19 +24,19 @@ class DatabaseLogHandler extends AbstractProcessingHandler {
    *
    * @var array
    */
-  protected $defaultFields = ['channel', 'level', 'message', 'time'];
+  protected $defaultFields = ["channel", "level", "message", "time", "context"];
 
 
   /**
    * Constructor of this class, sets the PDO and calls parent constructor
    *
-   * @param DatabaseInterface $db Database connection.
+   * @param Connection $db Database connection.
    * @param string $table The name of the table.
    * @param array $additionalFields Additional fields to store in the database.
    * @param integer|string $level The minimum logging level at which this handler will be triggered.
    * @param boolean $bubble Whether the messages that are handled can bubble up the stack or not.
    */
-  public function __construct(DatabaseInterface $db, $table, $additionalFields = [], $level = Logger::DEBUG, $bubble = true) {
+  public function __construct(Connection $db, $table, $additionalFields = [], $level = Logger::DEBUG, $bubble = true) {
     $this->db = $db;
     $this->table = $table;
     $this->fields = array_merge($this->defaultFields, $additionalFields);
@@ -49,24 +50,35 @@ class DatabaseLogHandler extends AbstractProcessingHandler {
    *
    * @return void
    */
-  protected function write(array $record) {
+  protected function write(array $record): void {
     if (isset($record['extra'])) {
       $record['context'] = array_merge($record['context'], $record['extra']);
     }
-
-    $write = array_merge([
-      'channel' => $record['channel'],
-      'level' => $record['level'],
-      'message' => $record['message'],
-      'time' => $record['datetime']->format('Y-m-d H:i:s')
-    ], $record['context']);
-
-    foreach ($write as $key => $value) {
-      if (!in_array($key, $this->fields)) {
-        unset($write[$key]);
-      }
+    if (isset($record["datetime"])) {
+      $record["time"] = $record["datetime"];
     }
 
-    $this->db->store($this->table, $write);
+    $placeholders = [];
+    $values = [];
+    foreach ($this->fields as $key) {
+      $value = "NULL";
+      if (isset($record[$key])) {
+        $value = $record[$key];
+      } elseif (isset($record["context"][$key])) {
+        $value = $record["context"][$key];
+      }
+      if ($value instanceof DateTime) {
+        $value = $value->format("Y-m-d H:i:s");
+      }
+      if (is_array($value)) {
+        $value = json_encode($value, JSON_PRETTY_PRINT);
+      }
+      $placeholders[] = "?";
+      $values[] = $value;
+    }
+    $keys = implode(", ", $this->fields);
+    $placeholders = implode(", ", $placeholders);
+    $statement = $this->db->prepare("INSERT INTO {$this->table} ({$keys}) VALUES ({$placeholders})");
+    $statement->execute($values);
   }
 }

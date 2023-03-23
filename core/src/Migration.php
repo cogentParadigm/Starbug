@@ -99,25 +99,5 @@ class Migration extends AbstractMigration {
     $this->schema->addRow("settings", ["name" => "email_username"], ["category" => "settings_category email", "type" => "text", "label" => "Email Username"]);
     $this->schema->addRow("settings", ["name" => "email_password"], ["category" => "settings_category email", "type" => "text", "label" => "Email Password"]);
     $this->schema->addRow("settings", ["name" => "email_secure"], ["category" => "settings_category email", "type" => "select", "options" => "{\"options\":\",ssl,tls\"}", "label" => "Secure SMTP"]);
-
-    // LOGGING TABLES
-    // ERROR LOG
-    $this->schema->addTable(["errors"],
-      ["type", "type" => "string", "length" => "64"],
-      ["action", "type" => "string", "length" => "64", "default" => ""],
-      ["field", "type" => "string", "length" => "64"],
-      ["message", "type" => "text", "length" => "512"]
-    );
-    // SQL TRANSACTION LOG
-    /*
-      $schema->addTable("log",
-        ["table_name", "type" => "string", "length" => "100"],
-        ["object_id", "type" => "int", "default" => "0"],
-        ["action", "type" => "string", "length" => "16"],
-        ["column_name", "type" => "string", "length" => "128"],
-        ["old_value", "type" => "text"],
-        ["new_value", "type" => "text"]
-      );
-    */
   }
 }
