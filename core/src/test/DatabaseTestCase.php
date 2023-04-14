@@ -20,7 +20,6 @@ abstract class DatabaseTestCase extends TestCase {
         $this->getImporter()->run($import);
       }
     }
-
   }
 
   protected function getImporter() {

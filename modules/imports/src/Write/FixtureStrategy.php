@@ -10,7 +10,6 @@ class FixtureStrategy extends DatabaseStrategy {
     $this->options = $options;
 
     foreach ($readStrategy->getRows($options) as $data) {
-
       $table = $data["table"];
       $rows = $data["rows"];
       $this->db->query($table)->unsafeTruncate();
