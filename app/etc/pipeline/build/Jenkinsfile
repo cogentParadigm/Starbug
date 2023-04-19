@@ -90,7 +90,7 @@ pipeline {
           sh "sed -i'' -e 's/\\/var\\/www\\/html\\///' build/logs/*.*"
           xunit testTimeMargin: '3000', thresholdMode: 1,
             thresholds: [ failed(failureThreshold: '0') ],
-            tools: [ JUnit(pattern: 'build/logs/behat/*.xml'), JUnit(pattern: 'build/logs/phpunit.xml') ]
+            tools: [ PHPUnit(pattern: 'build/logs/phpunit.xml'), JUnit(pattern: 'build/logs/behat/*.xml') ]
           recordIssues enabledForFailure: true,
             aggregatingResults: true,
             tools: [
