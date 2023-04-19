@@ -101,7 +101,7 @@ class DojoConfiguration {
     if ($this->environment == "production") {
       unset($config["packages"]);
     }
-    return json_encode($this->get("config"));
+    return json_encode($config);
   }
   /**
    * Get the environment mode.
