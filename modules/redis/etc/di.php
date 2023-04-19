@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Redis;
 
+use function DI\autowire;
 use DI;
 use Predis\Client;
 use Psr\Container\ContainerInterface;
@@ -25,7 +26,7 @@ return [
       ]
     );
   },
-  "Starbug\Queue\*Interface" => DI\autowire("Starbug\Queue\*"),
+  "Starbug\Queue\*Interface" => autowire("Starbug\Queue\*"),
   "Starbug\Queue\QueueFactoryInterface" => function (ContainerInterface $container) {
     $factory = new QueueFactory();
     $factory->addQueue("default", function () use ($container) {

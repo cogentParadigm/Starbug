@@ -1,6 +1,9 @@
 <?php
 namespace Starbug\Files;
 
+use function DI\add;
+use function DI\get;
+use function DI\autowire;
 use Psr\Container\ContainerInterface;
 use League\Flysystem\MountManager;
 use Starbug\Core\Storage\Filesystem;
@@ -10,8 +13,8 @@ use DI;
 use Starbug\Http\UriBuilder;
 
 return [
-  "route.providers" => DI\add([
-    DI\get("Starbug\Files\RouteProvider")
+  "route.providers" => add([
+    get("Starbug\Files\RouteProvider")
   ]),
   'filesystem.adapters' => ['default', 'public', 'private', 'tmp'],
   'filesystem.adapter.default' => 'public',
@@ -62,8 +65,8 @@ return [
     $manager = $c->get("League\Flysystem\MountManager");
     return $manager->getFilesystem("default");
   },
-  'db.schema.migrations' => DI\add([
-    DI\get('Starbug\Files\Migration')
+  'db.schema.migrations' => add([
+    get('Starbug\Files\Migration')
   ]),
-  "Starbug\Files\*Interface" => DI\autowire("Starbug\Files\*")
+  "Starbug\Files\*Interface" => autowire("Starbug\Files\*")
 ];

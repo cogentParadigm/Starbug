@@ -1,21 +1,24 @@
 <?php
 namespace Starbug\Intl;
 
+use function DI\add;
+use function DI\get;
+use function DI\autowire;
 use DI;
 use Starbug\Intl\Script\IntlSetup;
 
 return [
-  "route.providers" => DI\add([
-    DI\get("Starbug\Intl\RouteProvider")
+  "route.providers" => add([
+    get("Starbug\Intl\RouteProvider")
   ]),
-  "db.schema.migrations" => DI\add([
-    DI\get("Starbug\Intl\Migration")
+  "db.schema.migrations" => add([
+    get("Starbug\Intl\Migration")
   ]),
-  "Starbug\Intl\*Interface" => DI\autowire("Starbug\Intl\*"),
-  "template.helpers" => DI\add([
+  "Starbug\Intl\*Interface" => autowire("Starbug\Intl\*"),
+  "template.helpers" => add([
     "addressFormatter" => AddressFormatterHelper::class
   ]),
-  "form.hooks" => DI\add([
+  "form.hooks" => add([
     "address" => FormAddressHook::class
   ]),
   "scripts.intl-setup" => IntlSetup::class

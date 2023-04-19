@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Core;
 
+use PHPThumb\GD;
 use League\Flysystem\MountManager;
 
 class Images implements ImagesInterface {
@@ -92,7 +93,7 @@ class Images implements ImagesInterface {
     $target = $dir."/".$filename;
     if (!$this->filesystems->has($filesystem."://thumbnails/".$target) || $dimensions['f']) {
       $this->filesystems->put("tmp://images/".$filename, $this->filesystems->read($url));
-      $thumb = new \PHPThumb\GD($this->base_directory."/var/tmp/images/".$filename);
+      $thumb = new GD($this->base_directory."/var/tmp/images/".$filename);
       if (function_exists("exif_read_data")) {
         $exif = @exif_read_data($this->base_directory."/var/tmp/images/".$filename);
         if (!empty($exif['Orientation'])) {

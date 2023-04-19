@@ -1,9 +1,13 @@
 <?php
+
+use function DI\add;
+use function DI\get;
+
 return [
-  "route.providers" => DI\add([
-    DI\get("Starbug\App\Page\RouteProvider")
+  "route.providers" => add([
+    get("Starbug\App\Page\RouteProvider")
   ]),
-  "db.schema.migrations" => DI\add([
-    DI\get("Starbug\App\Migration")
+  "db.schema.migrations" => add([
+    get("Starbug\App\Migration")
   ])
 ];

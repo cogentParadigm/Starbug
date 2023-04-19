@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Doctrine\Schema;
 
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Comparator;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Db\Schema\AbstractMigration;
 use Starbug\Db\Schema\SchemaInterface;
@@ -17,8 +19,8 @@ class Migrator extends AbstractMigration {
     $conn = $this->db->getConnection();
     $sm = $conn->getSchemaManager();
     $from = $sm->createSchema();
-    $to = new \Doctrine\DBAL\Schema\Schema();
-    $comparator = new \Doctrine\DBAL\Schema\Comparator();
+    $to = new Schema();
+    $comparator = new Comparator();
     $tables = $this->schema->getTables();
     foreach ($tables as $name => $table) {
       $t = $to->createTable($this->db->prefix($name));

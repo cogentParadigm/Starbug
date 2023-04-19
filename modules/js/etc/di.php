@@ -1,17 +1,20 @@
 <?php
 namespace Starbug\Js;
 
+use function DI\add;
+use function DI\autowire;
+use function DI\get;
 use DI;
 use Starbug\Js\Script\DojoBuild;
 
 return [
   "js.build" => false,
-  "template.helpers" => DI\add([
+  "template.helpers" => add([
     "dojo" => DojoHelper::class
   ]),
-  'Starbug\Js\DojoConfiguration' => DI\autowire()
-    ->constructorParameter('isBuild', DI\get('js.build')),
-  DojoBuild::class => DI\autowire()
-    ->constructorParameter('base_directory', DI\get('base_directory')),
+  'Starbug\Js\DojoConfiguration' => autowire()
+    ->constructorParameter('isBuild', get('js.build')),
+  DojoBuild::class => autowire()
+    ->constructorParameter('base_directory', get('base_directory')),
     "scripts.dojo-build" => DojoBuild::class
 ];

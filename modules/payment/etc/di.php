@@ -1,18 +1,23 @@
 <?php
 namespace Starbug\Payment;
 
+use Omnipay\AuthorizeNet\AIMGateway;
+use Omnipay\AuthorizeNet\CIMGateway;
+use function DI\add;
+use function DI\get;
+use function DI\autowire;
 use DI;
 use Psr\Container\ContainerInterface;
 use Starbug\Payment\Script\ProcessSubscriptions;
 
 return [
-  "route.providers" => DI\add([
-    DI\get("Starbug\Payment\RouteProvider")
+  "route.providers" => add([
+    get("Starbug\Payment\RouteProvider")
   ]),
-  'db.schema.migrations' => DI\add([
-    DI\get('Starbug\Payment\Migration')
+  'db.schema.migrations' => add([
+    get('Starbug\Payment\Migration')
   ]),
-  "template.helpers" => DI\add([
+  "template.helpers" => add([
     "cart" => CartHelper::class,
     "paymentSettings" => PaymentSettingsHelper::class,
     "priceFormatter" => PriceFormatterHelper::class
@@ -32,16 +37,16 @@ return [
   'currency_minor_unit' => 2,
   'payment.cart.hooks' => [],
   "scripts.process-subscriptions" => ProcessSubscriptions::class,
-  'Starbug\Payment\*Interface' => DI\autowire('Starbug\Payment\*'),
-  'Starbug\Payment\Cart' => DI\autowire()->constructorParameter('conditions', DI\get('cart_token'))->method("addHooks", DI\get('payment.cart.hooks')),
-  'Starbug\Payment\PriceFormatterInterface' => DI\autowire("Starbug\Payment\PriceFormatter")
-    ->constructorParameter('locale', DI\get('currency_locale'))
-    ->constructorParameter('minorUnit', DI\get('currency_minor_unit')),
-  'Starbug\Payment\GatewayInterface' => DI\autowire("Starbug\Payment\Gateway")->constructorParameter("gateway", DI\get('Omnipay\AuthorizeNet\AIMGateway')),
-  'Starbug\Payment\TokenGatewayInterface' => DI\autowire("Starbug\Payment\TokenGateway")->constructorParameter("gateway", DI\get('Omnipay\AuthorizeNet\CIMGateway')),
+  'Starbug\Payment\*Interface' => autowire('Starbug\Payment\*'),
+  'Starbug\Payment\Cart' => autowire()->constructorParameter('conditions', get('cart_token'))->method("addHooks", get('payment.cart.hooks')),
+  'Starbug\Payment\PriceFormatterInterface' => autowire("Starbug\Payment\PriceFormatter")
+    ->constructorParameter('locale', get('currency_locale'))
+    ->constructorParameter('minorUnit', get('currency_minor_unit')),
+  'Starbug\Payment\GatewayInterface' => autowire("Starbug\Payment\Gateway")->constructorParameter("gateway", get('Omnipay\AuthorizeNet\AIMGateway')),
+  'Starbug\Payment\TokenGatewayInterface' => autowire("Starbug\Payment\TokenGateway")->constructorParameter("gateway", get('Omnipay\AuthorizeNet\CIMGateway')),
   'Omnipay\AuthorizeNet\AIMGateway' => function (ContainerInterface $c) {
     $settings = $c->get("Starbug\Payment\PaymentSettingsInterface");
-    $gateway = new \Omnipay\AuthorizeNet\AIMGateway();
+    $gateway = new AIMGateway();
     $gateway->setApiLoginId($settings->get("Authorize.Net", 'login_id'));
     $gateway->setTransactionKey($settings->get("Authorize.Net", 'transaction_key'));
     if ($settings->testMode("Authorize.Net")) {
@@ -51,7 +56,7 @@ return [
   },
   'Omnipay\AuthorizeNet\CIMGateway' => function (ContainerInterface $c) {
     $settings = $c->get("Starbug\Payment\PaymentSettingsInterface");
-    $gateway = new \Omnipay\AuthorizeNet\CIMGateway();
+    $gateway = new CIMGateway();
     $gateway->setApiLoginId($settings->get("Authorize.Net", 'login_id'));
     $gateway->setTransactionKey($settings->get("Authorize.Net", 'transaction_key'));
     if ($settings->testMode("Authorize.Net")) {
@@ -59,11 +64,11 @@ return [
     }
     return $gateway;
   },
-  'Starbug\Payment\ProductOptionsForm' => DI\autowire()
-    ->method('setTableSchema', DI\get('Starbug\Db\Schema\SchemerInterface'))
-    ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface")),
-  "Starbug\Payment\ProductsForm" => DI\autowire()
-    ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface")),
-  "Starbug\Payment\ProductConfigurationForm" => DI\autowire()
-    ->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface")),
+  'Starbug\Payment\ProductOptionsForm' => autowire()
+    ->method('setTableSchema', get('Starbug\Db\Schema\SchemerInterface'))
+    ->method("setDatabase", get("Starbug\Core\DatabaseInterface")),
+  "Starbug\Payment\ProductsForm" => autowire()
+    ->method("setDatabase", get("Starbug\Core\DatabaseInterface")),
+  "Starbug\Payment\ProductConfigurationForm" => autowire()
+    ->method("setDatabase", get("Starbug\Core\DatabaseInterface")),
 ];

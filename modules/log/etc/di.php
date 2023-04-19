@@ -1,6 +1,10 @@
 <?php
 namespace Starbug\Log;
 
+use function DI\get;
+use function DI\add;
+use function DI\autowire;
+use function DI\decorate;
 use DI;
 use Doctrine\DBAL\DriverManager;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -18,23 +22,23 @@ use Whoops\Util\Misc;
 return [
   "log.environment" => "default",
   "debug" => false,
-  "error_handler" => DI\get(Run::class),
+  "error_handler" => get(Run::class),
   "log.handlers.default" => [
-    DI\get(StreamHandler::class),
-    DI\get(DatabaseLogHandler::class)
+    get(StreamHandler::class),
+    get(DatabaseLogHandler::class)
   ],
   "log.handlers.bootstrap" => [
-    DI\get(StreamHandler::class)
+    get(StreamHandler::class)
   ],
   "log.handlers.active" => function (ContainerInterface $container) {
     $env = $container->has("databases.default") ? $container->get("log.environment") : "bootstrap";
     return $container->get("log.handlers.".$env);
   },
-  "route.providers" => DI\add([
-    DI\get("Starbug\Log\RouteProvider")
+  "route.providers" => add([
+    get("Starbug\Log\RouteProvider")
   ]),
-  "db.schema.migrations" => DI\add([
-    DI\get("Starbug\Log\Migration")
+  "db.schema.migrations" => add([
+    get("Starbug\Log\Migration")
   ]),
   DatabaseLogHandler::class => function (ContainerInterface $container) {
     $db = $container->get("databases.active");
@@ -53,14 +57,14 @@ return [
     }
     return new DatabaseLogHandler($conn, $db["prefix"]."error_log");
   },
-  StreamHandler::class => DI\autowire()
+  StreamHandler::class => autowire()
     ->constructorParameter("stream", "php://stdout"),
-  LoggerInterface::class => DI\autowire(Logger::class)
+  LoggerInterface::class => autowire(Logger::class)
     ->constructorParameter("name", "main")
-    ->constructorParameter("handlers", DI\get("log.handlers.active")),
-  LoggerFactory::class => DI\autowire()
-    ->constructorParameter("handlers", DI\get("log.handlers.active")),
-  Run::class => DI\decorate(function ($whoops, $container) {
+    ->constructorParameter("handlers", get("log.handlers.active")),
+  LoggerFactory::class => autowire()
+    ->constructorParameter("handlers", get("log.handlers.active")),
+  Run::class => decorate(function ($whoops, $container) {
     $textHandler = new PlainTextHandler($container->get(LoggerInterface::class));
     $whoops->appendHandler($textHandler);
     $cli = $container->get("cli");

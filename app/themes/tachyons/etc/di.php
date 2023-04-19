@@ -1,10 +1,11 @@
 <?php
 namespace Starbug\Tachyons;
 
-use DI;
+use function DI\add;
+use function DI\get;
 
 return [
-  "route.providers" => DI\add([
-    DI\get("Starbug\Tachyons\RouteProvider")
+  "route.providers" => add([
+    get("Starbug\Tachyons\RouteProvider")
   ])
 ];

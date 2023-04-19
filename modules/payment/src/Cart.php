@@ -1,6 +1,10 @@
 <?php
 namespace Starbug\Payment;
 
+use IteratorAggregate;
+use ArrayAccess;
+use Countable;
+use ArrayIterator;
 use Starbug\Core\CollectionFactoryInterface;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Db\Query\EntityInterface;
@@ -8,7 +12,7 @@ use Starbug\Db\Query\EntityInterface;
 /**
  * A wrapper around orders intended for mediating shopping cart behavior.
  */
-class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
+class Cart implements IteratorAggregate, ArrayAccess, Countable {
 
   protected $order = false;
   protected $lines = [
@@ -114,7 +118,7 @@ class Cart implements \IteratorAggregate, \ArrayAccess, \Countable {
 
   public function getIterator() {
     $this->init(false);
-    return new \ArrayIterator($this->lines['product']);
+    return new ArrayIterator($this->lines['product']);
   }
 
   public function count() {

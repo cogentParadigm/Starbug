@@ -1,6 +1,9 @@
 <?php
 namespace Starbug\Db;
 
+use function DI\autowire;
+use function DI\get;
+use function DI\add;
 use DI;
 use Psr\Container\ContainerInterface;
 use Starbug\Db\Schema\QueryCompilerHook;
@@ -12,8 +15,8 @@ use Starbug\Db\Script\Remove;
 use Starbug\Db\Script\Store;
 
 return [
-  'Starbug\Db\Schema\*Interface' => DI\autowire('Starbug\Db\Schema\*'),
-  'Starbug\Db\Query\*Interface' => DI\autowire('Starbug\Db\Query\*'),
+  'Starbug\Db\Schema\*Interface' => autowire('Starbug\Db\Schema\*'),
+  'Starbug\Db\Query\*Interface' => autowire('Starbug\Db\Query\*'),
   'Starbug\Db\Schema\SchemaInterface' => function (ContainerInterface $c) {
     $schema = $c->get('Starbug\Db\Schema\Schema');
     $hooks = $c->get('db.schema.hooks');
@@ -35,16 +38,16 @@ return [
     $schemer = $c->get('Starbug\Db\Schema\SchemerInterface');
     return new QueryCompilerHook($schemer->getSchema());
   },
-  'Starbug\Db\Query\CompilerInterface' => DI\autowire('Starbug\Db\Query\Compiler')->method('addHooks', DI\get('db.query.compiler.hooks')),
-  "Starbug\Db\Query\ExecutorHookFactoryInterface" => DI\autowire("Starbug\Db\Query\ExecutorHookFactory")
-    ->constructorParameter("hooks", DI\get("db.query.executor.hooks")),
+  'Starbug\Db\Query\CompilerInterface' => autowire('Starbug\Db\Query\Compiler')->method('addHooks', get('db.query.compiler.hooks')),
+  "Starbug\Db\Query\ExecutorHookFactoryInterface" => autowire("Starbug\Db\Query\ExecutorHookFactory")
+    ->constructorParameter("hooks", get("db.query.executor.hooks")),
   'db.query.compiler.hooks' => [
-    DI\get('Starbug\Db\Schema\QueryCompilerHook')
+    get('Starbug\Db\Schema\QueryCompilerHook')
   ],
   'db.query.builder.extensions' => [
-    'search' => DI\get('Starbug\Db\Query\Extensions\Search'),
-    'getSearchFields' => DI\get('Starbug\Db\Query\Extensions\Search'),
-    'action' => DI\get('Starbug\Db\Query\Extensions\Action')
+    'search' => get('Starbug\Db\Query\Extensions\Search'),
+    'getSearchFields' => get('Starbug\Db\Query\Extensions\Search'),
+    'action' => get('Starbug\Db\Query\Extensions\Action')
   ],
   "db.query.executor.hooks" => [
     "addslashes" => "Starbug\Core\StoreAddslashesHook",
@@ -80,7 +83,7 @@ return [
   "databases.active" => function (ContainerInterface $container) {
     return $container->get("databases.".$container->get("db"));
   },
-  "template.helpers" => DI\add([
+  "template.helpers" => add([
     "schema" => SchemaHelper::class
   ]),
   "scripts.describe" => Describe::class,

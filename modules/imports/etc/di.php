@@ -1,6 +1,9 @@
 <?php
 namespace Starbug\Imports;
 
+use function DI\add;
+use function DI\get;
+use function DI\autowire;
 use DI;
 use Starbug\Core\Operation\Delete;
 use Starbug\Core\Operation\Save;
@@ -11,8 +14,8 @@ use Starbug\Imports\Transform\Factory;
 use Starbug\Imports\Transform\Lookup;
 
 return [
-  "route.providers" => DI\add([
-    DI\get(RouteProvider::class)
+  "route.providers" => add([
+    get(RouteProvider::class)
   ]),
   "importer.operations" => [
     "import" => [
@@ -59,13 +62,13 @@ return [
       ]
     ]
   ],
-  "db.schema.migrations" => DI\add([
-    DI\get("Starbug\Imports\Migration\ImportsMigration")
+  "db.schema.migrations" => add([
+    get("Starbug\Imports\Migration\ImportsMigration")
   ]),
   "scripts.spreadsheet-info" => SpreadsheetInfo::class,
-  "Starbug\Imports\*Interface" => DI\autowire("Starbug\Imports\*"),
-  "Starbug\Imports\Read\*Interface" => DI\autowire("Starbug\Imports\Read\*"),
-  "Starbug\Imports\Write\*Interface" => DI\autowire("Starbug\Imports\Write\*"),
-  Factory::class => DI\autowire()
-    ->constructorParameter("transformers", DI\get("importer.transformers"))
+  "Starbug\Imports\*Interface" => autowire("Starbug\Imports\*"),
+  "Starbug\Imports\Read\*Interface" => autowire("Starbug\Imports\Read\*"),
+  "Starbug\Imports\Write\*Interface" => autowire("Starbug\Imports\Write\*"),
+  Factory::class => autowire()
+    ->constructorParameter("transformers", get("importer.transformers"))
 ];

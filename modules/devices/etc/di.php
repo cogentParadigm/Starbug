@@ -1,23 +1,28 @@
 <?php
+use Minishlink\WebPush\WebPush;
+use function DI\add;
+use function DI\get;
+use function DI\autowire;
+use function DI\decorate;
 use Psr\Container\ContainerInterface;
 
 return [
-  "route.providers" => DI\add([
-    DI\get("Starbug\Devices\RouteProvider")
+  "route.providers" => add([
+    get("Starbug\Devices\RouteProvider")
   ]),
   "notification.handlers" => ["email"],
   "notification.channels" => ["system"],
   "notification.handlers.default" => ["email"],
   "notification.channels.default" => ["system"],
-  "notification.handler.email" => DI\autowire('Starbug\Devices\Notification\Handler\Email'),
-  "notification.channel.system" => DI\autowire('Starbug\Devices\Notification\Channel\System'),
-  "notification.handler.web" => DI\autowire("Starbug\Devices\Notification\Handler\WebPush"),
+  "notification.handler.email" => autowire('Starbug\Devices\Notification\Handler\Email'),
+  "notification.channel.system" => autowire('Starbug\Devices\Notification\Channel\System'),
+  "notification.handler.web" => autowire("Starbug\Devices\Notification\Handler\WebPush"),
   "notification.handler.web.registration.enabled" => false,
   "notification.handler.web.publicKey" => false,
   "notification.handler.web.privateKey" => false,
-  "notification.handler.android" => DI\autowire("Starbug\Devices\Notification\Handler\AndroidPush"),
+  "notification.handler.android" => autowire("Starbug\Devices\Notification\Handler\AndroidPush"),
   "notification.handler.android.apiKey" => false,
-  "notification.handler.apple" => DI\autowire("Starbug\Devices\Notification\Handler\ApplePush"),
+  "notification.handler.apple" => autowire("Starbug\Devices\Notification\Handler\ApplePush"),
   "notification.handler.apple.certificateDirectory" => false,
   "notification.handler.apple.passphrase" => false,
   "notification.handler.push.handlers" => [],
@@ -41,29 +46,29 @@ return [
       ]
     ];
     if ($publicKey && $privateKey) {
-      return new Minishlink\WebPush\WebPush($auth);
+      return new WebPush($auth);
     } else {
-      return new Minishlink\WebPush\WebPush();
+      return new WebPush();
     }
   },
-  "Starbug\Devices\Notification\Handler\AndroidPush" => DI\autowire()
-    ->constructorParameter("apiKey", DI\get("notification.handler.android.apiKey")),
-  "Starbug\Devices\Notification\Handler\ApplePush" => DI\autowire()
+  "Starbug\Devices\Notification\Handler\AndroidPush" => autowire()
+    ->constructorParameter("apiKey", get("notification.handler.android.apiKey")),
+  "Starbug\Devices\Notification\Handler\ApplePush" => autowire()
     ->constructorParameter("certificateDirectory", "notification.handler.apple.certificateDirectory")
     ->constructorParameter("passphrase", "notification.handler.apple.passphrase"),
-  "Starbug\Config\ConfigInterface" => DI\decorate(function ($config, ContainerInterface $container) {
+  "Starbug\Config\ConfigInterface" => decorate(function ($config, ContainerInterface $container) {
     $config->set("notification.handler.web.registration.enabled", $container->get("notification.handler.web.registration.enabled"));
     $config->set("notification.handler.web.publicKey", $container->get("notification.handler.web.publicKey"));
     return $config;
   }),
-  'db.schema.migrations' => DI\add([
-    DI\get('Starbug\Devices\Migration')
+  'db.schema.migrations' => add([
+    get('Starbug\Devices\Migration')
   ]),
-  'Starbug\Devices\Migration' => DI\autowire()
-    ->constructorParameter("handlers", DI\get("notification.handlers"))
-    ->constructorParameter("channels", DI\get("notification.channels"))
-    ->constructorParameter("defaultHandlers", DI\get("notification.handlers.default"))
-    ->constructorParameter("defaultChannels", DI\get("notification.channels.default")),
+  'Starbug\Devices\Migration' => autowire()
+    ->constructorParameter("handlers", get("notification.handlers"))
+    ->constructorParameter("channels", get("notification.channels"))
+    ->constructorParameter("defaultHandlers", get("notification.handlers.default"))
+    ->constructorParameter("defaultChannels", get("notification.channels.default")),
   'Starbug\Devices\NotificationManagerInterface' => function (ContainerInterface $c) {
     $manager = $c->get("Starbug\Devices\NotificationManager");
     $handlers = $c->get("notification.handlers");

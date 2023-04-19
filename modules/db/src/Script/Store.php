@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Db\Script;
 
+use cli\Table;
 use Starbug\Core\DatabaseInterface;
 
 class Store {
@@ -18,7 +19,7 @@ class Store {
       foreach ($records as $record) {
         $result[] = array_values($record);
       }
-      $table = new \cli\Table();
+      $table = new Table();
       $table->setHeaders(array_keys($records[0]));
       $table->setRows($result);
       $table->display();
@@ -30,7 +31,7 @@ class Store {
           $result[] = [$col, $m];
         }
       }
-      $table = new \cli\Table();
+      $table = new Table();
       $table->setHeaders(["field", "message"]);
       $table->setRows($result);
       $table->display();

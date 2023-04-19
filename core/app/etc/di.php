@@ -1,12 +1,14 @@
 <?php
 namespace Starbug\Core;
 
+use function DI\decorate;
+use function DI\get;
+use function DI\autowire;
+use function DI\factory;
 use Psr\Container\ContainerInterface;
-use DI;
 use FastRoute\Dispatcher\GroupCountBased;
 use FastRoute\RouteCollector;
 use GuzzleHttp\Psr7\ServerRequest;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Script\Generate;
 use Starbug\Core\Script\ListScripts;
@@ -16,9 +18,6 @@ use Starbug\Core\Script\Setup;
 use Starbug\Http\UriBuilder;
 use Starbug\Queue\QueueFactory;
 use Starbug\ResourceLocator\ResourceLocator;
-use Whoops\Handler\Handler;
-use Whoops\Handler\PlainTextHandler;
-use Whoops\Handler\PrettyPageHandler;
 
 return [
   "environment" => "development",
@@ -28,7 +27,7 @@ return [
   "db" => "default",
   "hmac_key" => "",
   "cli" => false,
-  "FastRoute\RouteCollector" => DI\decorate(function (RouteCollector $r, ContainerInterface $c) {
+  "FastRoute\RouteCollector" => decorate(function (RouteCollector $r, ContainerInterface $c) {
     $routes = $c->get("Starbug\Core\Routing\Configuration")->getRoutes();
     foreach ($routes as $route) {
       $r->addRoute("GET", $route->getPath(), $route);
@@ -36,61 +35,61 @@ return [
     return $r;
   }),
   "route.providers" => [
-    DI\get("Starbug\Core\Admin\RouteProvider"),
-    DI\get("Starbug\Core\Admin\Menus\RouteProvider"),
-    DI\get("Starbug\Core\Api\RouteProvider")
+    get("Starbug\Core\Admin\RouteProvider"),
+    get("Starbug\Core\Admin\Menus\RouteProvider"),
+    get("Starbug\Core\Api\RouteProvider")
   ],
-  "Starbug\Core\Routing\Configuration" => DI\autowire()->method("addProviders", DI\get("route.providers")),
-  'Starbug\Core\SettingsInterface' => DI\autowire('Starbug\Core\DatabaseSettings'),
-  'Starbug\Core\*Interface' => DI\autowire('Starbug\Core\*'),
-  'Starbug\Config\*Interface' => DI\autowire('Starbug\Config\*'),
-  'Starbug\Http\*Interface' => DI\autowire('Starbug\Http\*'),
-  "Starbug\Auth\*RepositoryInterface" => DI\autowire("Starbug\Auth\Repository\*Repository"),
-  "Starbug\Auth\SessionExchangeInterface" => DI\autowire("Starbug\Auth\Http\CookieSessionExchange")
-    ->constructorParameter("path", DI\get("website_url"))
-    ->constructorParameter("key", DI\get("hmac_key")),
-  "Starbug\Auth\Http\CsrfExchangeInterface" => DI\autowire("Starbug\Auth\Http\CookieCsrfExchange")
-    ->constructorParameter("path", DI\get("website_url")),
-  "Starbug\Auth\SessionHandlerInterface" => DI\autowire("Starbug\Auth\SessionHandler")
-    ->method("addHook", DI\get("Starbug\Auth\Http\CsrfHandlerInterface")),
-  "Starbug\Auth\*Interface" => DI\autowire("Starbug\Auth\*"),
-  "Starbug\Auth\Http\CsrfHandlerInterface" => DI\autowire("Starbug\Auth\Http\CsrfHandler")
-  ->constructorParameter("key", DI\get("hmac_key")),
-  "Starbug\Http\UriBuilderInterface" => DI\factory(function (ContainerInterface $container, $siteUrl) {
+  "Starbug\Core\Routing\Configuration" => autowire()->method("addProviders", get("route.providers")),
+  'Starbug\Core\SettingsInterface' => autowire('Starbug\Core\DatabaseSettings'),
+  'Starbug\Core\*Interface' => autowire('Starbug\Core\*'),
+  'Starbug\Config\*Interface' => autowire('Starbug\Config\*'),
+  'Starbug\Http\*Interface' => autowire('Starbug\Http\*'),
+  "Starbug\Auth\*RepositoryInterface" => autowire("Starbug\Auth\Repository\*Repository"),
+  "Starbug\Auth\SessionExchangeInterface" => autowire("Starbug\Auth\Http\CookieSessionExchange")
+    ->constructorParameter("path", get("website_url"))
+    ->constructorParameter("key", get("hmac_key")),
+  "Starbug\Auth\Http\CsrfExchangeInterface" => autowire("Starbug\Auth\Http\CookieCsrfExchange")
+    ->constructorParameter("path", get("website_url")),
+  "Starbug\Auth\SessionHandlerInterface" => autowire("Starbug\Auth\SessionHandler")
+    ->method("addHook", get("Starbug\Auth\Http\CsrfHandlerInterface")),
+  "Starbug\Auth\*Interface" => autowire("Starbug\Auth\*"),
+  "Starbug\Auth\Http\CsrfHandlerInterface" => autowire("Starbug\Auth\Http\CsrfHandler")
+  ->constructorParameter("key", get("hmac_key")),
+  "Starbug\Http\UriBuilderInterface" => factory(function (ContainerInterface $container, $siteUrl) {
     $request = $container->get("Psr\Http\Message\ServerRequestInterface");
     $baseUri = $request->getUri()
       ->withPath($siteUrl)
       ->withQuery("")
       ->withFragment("");
     return new UriBuilder($baseUri);
-  })->parameter("siteUrl", DI\get("website_url")),
-  "Psr\Http\Message\UriInterface" => DI\factory(function (ContainerInterface $container, ServerRequestInterface $request) {
+  })->parameter("siteUrl", get("website_url")),
+  "Psr\Http\Message\UriInterface" => factory(function (ContainerInterface $container, ServerRequestInterface $request) {
     return $request->getUri();
   }),
-  "Psr\Http\Message\ResponseFactoryInterface" => DI\autowire("Http\Factory\Guzzle\ResponseFactory"),
+  "Psr\Http\Message\ResponseFactoryInterface" => autowire("Http\Factory\Guzzle\ResponseFactory"),
   "Psr\Http\Message\ServerRequestInterface" => function (ContainerInterface $container) {
     return new ServerRequest("GET", $container->get("website_host").$container->get("website_url"));
   },
-  "FastRoute\RouteParser" => DI\autowire("FastRoute\RouteParser\Std"),
-  "FastRoute\DataGenerator" => DI\autowire("FastRoute\DataGenerator\GroupCountBased"),
+  "FastRoute\RouteParser" => autowire("FastRoute\RouteParser\Std"),
+  "FastRoute\DataGenerator" => autowire("FastRoute\DataGenerator\GroupCountBased"),
   "FastRoute\Dispatcher" => function (ContainerInterface $c) {
     $collector = $c->get("FastRoute\RouteCollector");
     return new GroupCountBased($collector->getData());
   },
-  'Starbug\Core\Routing\RouterInterface' => DI\autowire('Starbug\Core\Routing\Router')
-    ->method('addStorage', DI\get('Starbug\Core\Routing\FastRouteStorage')),
-  'Starbug\Core\Routing\*Interface' => DI\autowire('Starbug\Core\Routing\*'),
-  'Starbug\Core\ImagesInterface' => DI\autowire('Starbug\Core\Images')
-    ->constructorParameter('base_directory', DI\get('base_directory')),
+  'Starbug\Core\Routing\RouterInterface' => autowire('Starbug\Core\Routing\Router')
+    ->method('addStorage', get('Starbug\Core\Routing\FastRouteStorage')),
+  'Starbug\Core\Routing\*Interface' => autowire('Starbug\Core\Routing\*'),
+  'Starbug\Core\ImagesInterface' => autowire('Starbug\Core\Images')
+    ->constructorParameter('base_directory', get('base_directory')),
   'db.schema.migrations' => [
-    DI\get('Starbug\Core\Migration')
+    get('Starbug\Core\Migration')
   ],
   'db.schema.hooks' => [
-    DI\get('Starbug\Core\SchemaHook')
+    get('Starbug\Core\SchemaHook')
   ],
-  'Starbug\Core\Database' => DI\autowire()
-    ->method('setTimeZone', DI\get('time_zone'))
-    ->method('setDatabase', DI\get("databases.active")),
+  'Starbug\Core\Database' => autowire()
+    ->method('setTimeZone', get('time_zone'))
+    ->method('setDatabase', get("databases.active")),
   "template.helpers" => [
     "breadcrumbs" => BreadcrumbsHelper::class,
     "collections" => CollectionsHelper::class,
@@ -134,7 +133,7 @@ return [
   "scripts.queue" => Queue::class,
   "scripts.setup" => Setup::class,
   "scripts.list-scripts" => ListScripts::class,
-  'Starbug\Core\Script\Generate' => DI\autowire()->constructorParameter('base_directory', DI\get('base_directory')),
+  'Starbug\Core\Script\Generate' => autowire()->constructorParameter('base_directory', get('base_directory')),
   "Starbug\ResourceLocator\ResourceLocatorInterface" => function (ContainerInterface $container) {
     $modules = $container->get("Starbug\Modules\Configuration")->getEnabled();
     $locator = new ResourceLocator($container->get("base_directory"));
@@ -142,13 +141,13 @@ return [
     $locator->setPaths(array_column($modules, "path"));
     return $locator;
   },
-  "Middlewares\Https" => DI\autowire()
-    ->constructorParameter("responseFactory", DI\get("Http\Factory\Guzzle\ResponseFactory"))
+  "Middlewares\Https" => autowire()
+    ->constructorParameter("responseFactory", get("Http\Factory\Guzzle\ResponseFactory"))
     ->method("includeSubdomains"),
-  "Starbug\Bundle\*Interface" => DI\autowire("Starbug\Bundle\*"),
-  "Starbug\Operation\*Interface" => DI\autowire("Starbug\Operation\*"),
-  "Starbug\Core\SettingsForm" => DI\autowire()->method("setDatabase", DI\get("Starbug\Core\DatabaseInterface")),
-  "Starbug\Queue\*Interface" => DI\autowire("Starbug\Queue\*"),
+  "Starbug\Bundle\*Interface" => autowire("Starbug\Bundle\*"),
+  "Starbug\Operation\*Interface" => autowire("Starbug\Operation\*"),
+  "Starbug\Core\SettingsForm" => autowire()->method("setDatabase", get("Starbug\Core\DatabaseInterface")),
+  "Starbug\Queue\*Interface" => autowire("Starbug\Queue\*"),
   "Starbug\Queue\QueueFactoryInterface" => function (ContainerInterface $container) {
     $factory = new QueueFactory();
     $factory->addQueue("default", function () use ($container) {
@@ -156,8 +155,8 @@ return [
     });
     return $factory;
   },
-  FormHookFactoryInterface::class => DI\autowire(FormHookFactory::class)
-    ->constructorParameter("hooks", DI\get("form.hooks")),
-  MacroHookFactoryInterface::class => DI\autowire(MacroHookFactory::class)
-    ->constructorParameter("hooks", DI\get("macro.hooks"))
+  FormHookFactoryInterface::class => autowire(FormHookFactory::class)
+    ->constructorParameter("hooks", get("form.hooks")),
+  MacroHookFactoryInterface::class => autowire(MacroHookFactory::class)
+    ->constructorParameter("hooks", get("macro.hooks"))
 ];

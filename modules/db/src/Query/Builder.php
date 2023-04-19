@@ -1,16 +1,20 @@
 <?php
 namespace Starbug\Db\Query;
 
+use Starbug\Db\Query\Traits\Hooks;
+use Starbug\Db\Query\Traits\Parsing;
+use Starbug\Db\Query\Traits\Pagination;
+use Starbug\Db\Query\Traits\Execution;
 use Starbug\Db\Schema\Schema;
 use Starbug\Core\DatabaseInterface;
 
 class Builder implements BuilderInterface {
 
-  use Traits\Hooks;
-  use Traits\Parsing;
+  use Hooks;
+  use Parsing;
   use Traits\Builder;
-  use Traits\Pagination;
-  use Traits\Execution;
+  use Pagination;
+  use Execution;
 
   protected $schema;
 

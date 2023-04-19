@@ -1,7 +1,11 @@
 <?php
 namespace Starbug\Core;
 
-class Breadcrumbs implements \IteratorAggregate, \ArrayAccess {
+use IteratorAggregate;
+use ArrayAccess;
+use ArrayIterator;
+
+class Breadcrumbs implements IteratorAggregate, ArrayAccess {
   protected $crumbs = [];
   public function add($crumb) {
     $this->crumbs[] = $crumb;
@@ -16,7 +20,7 @@ class Breadcrumbs implements \IteratorAggregate, \ArrayAccess {
     return $this->crumbs[$index];
   }
   public function getIterator() {
-    return new \ArrayIterator($this->crumbs);
+    return new ArrayIterator($this->crumbs);
   }
   public function offsetExists($offset) {
     return isset($this->crumbs[$offset]);
