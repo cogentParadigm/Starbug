@@ -71,7 +71,6 @@ class Migration extends AbstractMigration {
     );
 
     // groups
-    $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Root"]);
     $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "User"]);
     $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Admin"]);
 

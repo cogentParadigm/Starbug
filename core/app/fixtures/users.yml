@@ -1,0 +1,5 @@
+---
+users:
+  - id: 1
+    email: root
+    groups: admin

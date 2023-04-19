@@ -327,7 +327,7 @@ class StoreTest extends DatabaseTestCase {
     $this->assertSame(null, $record['value']);
 
     // become root
-    $rootIdentity = new Identity(1, "", ["admin", "root"]);
+    $rootIdentity = new Identity(1, "", ["admin"]);
     $this->session->createSession($rootIdentity, false);
 
     // store the record

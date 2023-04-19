@@ -22,7 +22,7 @@ hook_store_unique:
 users:
   - id: 1
     email: root
-    groups: root
+    groups: admin
   - id: 2
     first_name: Omar
     last_name: Admin
