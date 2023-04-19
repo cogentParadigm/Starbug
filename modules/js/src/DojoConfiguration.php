@@ -6,9 +6,9 @@ use Starbug\Config\ConfigInterface;
 class DojoConfiguration {
   protected $configuration = false;
   protected $dependencies = [];
-  public function __construct(ConfigInterface $config, $environment) {
+  public function __construct(ConfigInterface $config, $isBuild = false) {
     $this->config = $config;
-    $this->environment = $environment;
+    $this->isBuild = $isBuild;
   }
   /**
    * Add a dependency.
@@ -98,19 +98,19 @@ class DojoConfiguration {
    */
   public function getDojoConfig() {
     $config = $this->get("config");
-    if ($this->environment == "production") {
+    if ($this->isBuild) {
       unset($config["packages"]);
     }
     return json_encode($config);
   }
   /**
-   * Get the environment mode.
+   * Get the build mode.
    *
-   * @return string
-   *   The environment mode, 'development' or 'production'.
+   * @return bool
+   *   true if using build.
    */
-  public function getEnvironment() {
-    return $this->environment;
+  public function isBuild() {
+    return $this->isBuild;
   }
   /**
    * Internal method to load the configuration data.

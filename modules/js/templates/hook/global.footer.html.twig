@@ -2,7 +2,7 @@
   var dojoConfig = {{ include(template_from_string(helper("dojo").getDojoConfig())) }}
 </script>
 
-{% if helper("dojo").getEnvironment() == "production" %}
+{% if helper("dojo").isBuild() %}
 
   <script type="text/javascript" src="{{ helper("url").build("libraries/release/dojo/dojo/dojo.js") }}"></script>
 
