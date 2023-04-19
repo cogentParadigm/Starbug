@@ -23,8 +23,12 @@ return [
     DI\get(StreamHandler::class),
     DI\get(DatabaseLogHandler::class)
   ],
+  "log.handlers.bootstrap" => [
+    DI\get(StreamHandler::class)
+  ],
   "log.handlers.active" => function (ContainerInterface $container) {
-    return $container->get("log.handlers.".$container->get("log.environment"));
+    $env = $container->has("databases.default") ? $container->get("log.environment") : "bootstrap";
+    return $container->get("log.handlers.".$env);
   },
   "route.providers" => DI\add([
     DI\get("Starbug\Log\RouteProvider")
