@@ -89,6 +89,7 @@ pipeline {
         always {
           sh "sed -i'' -e 's/\\/var\\/www\\/html\\///' build/logs/*.*"
           sh "yq -i 'del(.testsuites.testsuite[].testcase[].+@status)' build/logs/behat/default.xml"
+          sh "yq -i 'del(.testsuites.testsuite[].testcase[].+@file)' build/logs/behat/default.xml"
           xunit testTimeMargin: '3000', thresholdMode: 1,
             thresholds: [ skipped(failureThreshold: '0'), failed(failureThreshold: '0') ],
             tools: [ PHPUnit(pattern: 'build/logs/phpunit.xml'), JUnit(pattern: 'build/logs/behat/*.xml') ]
