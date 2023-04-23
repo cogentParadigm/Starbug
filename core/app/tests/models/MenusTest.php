@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Core\Operation\DeleteMenus;
 use Starbug\Core\Operation\Save;
+use Starbug\Menus\Operation\DeleteMenus;
 
 class MenusTest extends ModelTest {
 
