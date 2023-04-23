@@ -1,7 +1,9 @@
 <?php
 namespace Starbug\Core;
 
-class StoreDefaultHook extends QueryHook {
+use Starbug\Db\Query\ExecutorHook;
+
+class StoreDefaultHook extends ExecutorHook {
   public function emptyBeforeInsert($query, $column, $argument) {
     $query->set($column, $argument);
   }

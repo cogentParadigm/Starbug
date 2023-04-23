@@ -1,7 +1,9 @@
 <?php
 namespace Starbug\Core;
 
-class StoreUniqueHook extends QueryHook {
+use Starbug\Db\Query\ExecutorHook;
+
+class StoreUniqueHook extends ExecutorHook {
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }

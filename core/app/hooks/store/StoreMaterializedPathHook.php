@@ -1,7 +1,9 @@
 <?php
 namespace Starbug\Core;
 
-class StoreMaterializedPathHook extends QueryHook {
+use Starbug\Db\Query\ExecutorHook;
+
+class StoreMaterializedPathHook extends ExecutorHook {
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
   }

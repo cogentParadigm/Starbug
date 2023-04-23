@@ -1,13 +1,13 @@
 <?php
 namespace Starbug\Content;
 
-use Starbug\Core\QueryHook;
+use Starbug\Db\Query\ExecutorHook;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Core\MacroInterface;
 use Starbug\Core\InputFilterInterface;
 use Starbug\Db\Schema\SchemaInterface;
 
-class StorePathHook extends QueryHook {
+class StorePathHook extends ExecutorHook {
   public function __construct(DatabaseInterface $db, SchemaInterface $schema, MacroInterface $macro, InputFilterInterface $filter) {
     $this->db = $db;
     $this->macro = $macro;

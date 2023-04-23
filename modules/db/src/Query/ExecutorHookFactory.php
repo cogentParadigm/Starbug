@@ -2,7 +2,6 @@
 namespace Starbug\Db\Query;
 
 use Psr\Container\ContainerInterface;
-use Starbug\Core\QueryHook;
 
 class ExecutorHookFactory implements ExecutorHookFactoryInterface {
   protected $container;
@@ -11,7 +10,7 @@ class ExecutorHookFactory implements ExecutorHookFactoryInterface {
     $this->container = $container;
     $this->hooks = $hooks;
   }
-  public function get($hook): ?QueryHook {
+  public function get($hook): ?ExecutorHook {
     if (isset($this->hooks[$hook])) {
       return $this->container->get($this->hooks[$hook]);
     }

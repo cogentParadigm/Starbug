@@ -1,7 +1,9 @@
 <?php
 namespace Starbug\Core;
 
-class StoreTimestampHook extends QueryHook {
+use Starbug\Db\Query\ExecutorHook;
+
+class StoreTimestampHook extends ExecutorHook {
   public function emptyBeforeInsert($query, $column, $argument) {
     $query->set($column, date("Y-m-d H:i:s"));
   }

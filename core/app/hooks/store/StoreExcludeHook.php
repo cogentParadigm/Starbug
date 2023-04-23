@@ -1,7 +1,9 @@
 <?php
 namespace Starbug\Core;
 
-class StoreExcludeHook extends QueryHook {
+use Starbug\Db\Query\ExecutorHook;
+
+class StoreExcludeHook extends ExecutorHook {
   public function insert($query, $key, $value, $column, $argument) {
     if ($argument == "insert") {
       $query->exclude($key);

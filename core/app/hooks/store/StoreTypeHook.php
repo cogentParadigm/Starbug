@@ -1,9 +1,10 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Query\ExecutorHook;
 use Starbug\Db\Schema\SchemaInterface;
 
-class StoreTypeHook extends QueryHook {
+class StoreTypeHook extends ExecutorHook {
   public function __construct(DatabaseInterface $db, SchemaInterface $schema) {
     $this->db = $db;
     $this->schema = $schema;

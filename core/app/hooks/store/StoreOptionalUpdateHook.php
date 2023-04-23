@@ -1,7 +1,9 @@
 <?php
 namespace Starbug\Core;
 
-class StoreOptionalUpdateHook extends QueryHook {
+use Starbug\Db\Query\ExecutorHook;
+
+class StoreOptionalUpdateHook extends ExecutorHook {
   public function beforeUpdate($query, $key, $value, $column, $argument) {
     if (empty($value)) {
       $query->exclude($key);

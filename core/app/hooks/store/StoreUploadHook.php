@@ -1,10 +1,11 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Query\ExecutorHook;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Files\FileUploader;
 
-class StoreUploadHook extends QueryHook {
+class StoreUploadHook extends ExecutorHook {
   protected $db;
   protected $request;
   protected $files;

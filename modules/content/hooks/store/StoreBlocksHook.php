@@ -1,11 +1,11 @@
 <?php
 namespace Starbug\Content;
 
-use Starbug\Core\QueryHook;
+use Starbug\Db\Query\ExecutorHook;
 use Starbug\Core\DatabaseInterface;
 use Starbug\Core\InputFilterInterface;
 
-class StoreBlocksHook extends QueryHook {
+class StoreBlocksHook extends ExecutorHook {
   public function __construct(DatabaseInterface $db, InputFilterInterface $filter) {
     $this->db = $db;
     $this->filter = $filter;

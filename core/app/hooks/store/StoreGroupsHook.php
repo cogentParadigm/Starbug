@@ -1,7 +1,9 @@
 <?php
 namespace Starbug\Core;
 
-class StoreGroupsHook extends QueryHook {
+use Starbug\Db\Query\ExecutorHook;
+
+class StoreGroupsHook extends ExecutorHook {
   public function emptyBeforeInsert($query, $column, $argument) {
     $query->set($column, $this->validate($query, $column, "", $column, $argument));
   }
