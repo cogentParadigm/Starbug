@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Content;
 
-use Starbug\Core\MenuCollection as ParentCollection;
+use Starbug\Menus\Collection\MenuCollection as ParentCollection;
 
 class MenuCollection extends ParentCollection {
   public function build($query, $ops) {

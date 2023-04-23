@@ -1,5 +1,7 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Menus\Display;
+
+use Starbug\Core\GridDisplay;
 
 class MenusGrid extends GridDisplay {
   public $model = "menus";

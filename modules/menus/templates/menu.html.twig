@@ -13,7 +13,7 @@
 {% if subMenuAttributes is not defined %}
   {% set subMenuAttributes = {} %}
 {% endif %}
-{% set links = helper("collections").get("Menu").query({"menu": menu}) %}
+{% set links = helper("collections").get("Starbug\\Menus\\Collection\\MenuCollection").query({"menu": menu}) %}
 <ul {{ helper("filter").attributes(attributes)|raw }}>
   {% for link in links %}
     {{

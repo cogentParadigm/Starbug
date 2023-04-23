@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e8c0b5cb04b3b2ce34dbb5735edd7791",
+    "content-hash": "f42eb812c7ef2043872897ee912997d1",
     "packages": [
         {
             "name": "composer/installers",
@@ -3098,11 +3098,12 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/content",
-                "reference": "02ba2ad6a586289632a23c8ce1f7eadee7e7e9cc"
+                "reference": "bf2a568e7c9ff488890cfdea51f9de55fa2c7ffd"
             },
             "require": {
                 "starbug/db": "*",
-                "starbug/files": "*"
+                "starbug/files": "*",
+                "starbug/menus": "*"
             },
             "type": "starbug-module",
             "extra": {
@@ -3439,6 +3440,41 @@
             }
         },
         {
+            "name": "starbug/menus",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/menus",
+                "reference": "e38aeb2f0cee1ceb6d0444144af93445a88ac3ef"
+            },
+            "require": {
+                "starbug/db": "*",
+                "starbug/files": "*"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Menus"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Menus\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug menus module.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "starbug/modules",
             "version": "v0.8.1",
             "source": {
@@ -3670,16 +3706,16 @@
         },
         {
             "name": "starbug/storm",
-            "version": "v0.9.0",
+            "version": "v0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-storm.git",
-                "reference": "a8fd5ee40d4671c077c864bcacd08b153ef4f7c0"
+                "reference": "65e315ac15efff34fa0f61794cdfa2d3ff01065f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/a8fd5ee40d4671c077c864bcacd08b153ef4f7c0",
-                "reference": "a8fd5ee40d4671c077c864bcacd08b153ef4f7c0",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/65e315ac15efff34fa0f61794cdfa2d3ff01065f",
+                "reference": "65e315ac15efff34fa0f61794cdfa2d3ff01065f",
                 "shasum": ""
             },
             "type": "starbug-theme",
@@ -3704,9 +3740,9 @@
             "description": "Administrative theme for Starbug.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-storm/issues",
-                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v0.9.0"
+                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v0.9.1"
             },
-            "time": "2023-01-01T21:44:33+00:00"
+            "time": "2023-04-23T21:58:41+00:00"
         },
         {
             "name": "starbug/tachyons",
@@ -10906,7 +10942,8 @@
         "starbug/redis": 20,
         "starbug/state": 20,
         "starbug/log": 20,
-        "starbug/imports": 20
+        "starbug/imports": 20,
+        "starbug/menus": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -1,7 +1,8 @@
 <?php
-namespace Starbug\Core\Operation;
+namespace Starbug\Menus\Operation;
 
 use Starbug\Bundle\BundleInterface;
+use Starbug\Core\Operation\Save;
 
 class DeleteMenus extends Save {
   protected $model = "menus";

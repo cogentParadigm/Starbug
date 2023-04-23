@@ -1,7 +1,7 @@
 {
-  "name": "starbug/content",
+  "name": "starbug/menus",
   "type": "starbug-module",
-  "description": "Starbug content module.",
+  "description": "Starbug menus module.",
   "license": "GPL-3.0-or-later",
   "authors": [
     {
@@ -10,11 +10,15 @@
     }
   ],
   "extra": {
-    "namespace": "Starbug\\Content"
+    "namespace": "Starbug\\Menus"
   },
   "require": {
     "starbug/db": "*",
-    "starbug/files": "*",
-    "starbug/menus": "*"
+    "starbug/files": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Menus\\": "src/"
+    }
   }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Content;
 
-use Starbug\Core\MenusForm as ParentForm;
+use Starbug\Menus\Display\MenusForm as ParentForm;
 
 class MenusForm extends ParentForm {
   public function buildDisplay($ops) {

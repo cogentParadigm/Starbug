@@ -1,5 +1,7 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Menus\Collection;
+
+use Starbug\Core\Collection;
 
 class MenusTreeCollection extends Collection {
   public function build($query, $ops) {

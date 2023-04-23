@@ -36,7 +36,6 @@ return [
   }),
   "route.providers" => [
     get("Starbug\Core\Admin\RouteProvider"),
-    get("Starbug\Core\Admin\Menus\RouteProvider"),
     get("Starbug\Core\Api\RouteProvider")
   ],
   "Starbug\Core\Routing\Configuration" => autowire()->method("addProviders", get("route.providers")),

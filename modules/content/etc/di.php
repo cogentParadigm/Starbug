@@ -2,10 +2,12 @@
 namespace Starbug\Content;
 
 use function DI\add;
+use function DI\autowire;
 use function DI\get;
 use function DI\decorate;
-use DI;
 use Psr\Container\ContainerInterface;
+use Starbug\Content\MenuCollection as ContentMenuCollection;
+use Starbug\Menus\Collection\MenuCollection;
 
 return [
   "route.providers" => add([
@@ -24,5 +26,6 @@ return [
   ]),
   "form.hooks" => add([
     "blocks" => FormBlocksHook::class
-  ])
+  ]),
+  MenuCollection::class => autowire(ContentMenuCollection::class)
 ];

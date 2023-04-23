@@ -50,17 +50,6 @@ class Migration extends AbstractMigration {
       ["category", "type" => "category", "null" => ""],
       ["autoload", "type" => "bool", "default" => "0"]
     );
-    $this->schema->addTable(["menus", "groups" => true, "label_select" => "CONCAT(menus.menu, ': ', menus.content)"],
-      ["menu", "type" => "string", "length" => "32", "list" => "true", "display" => "false"],
-      ["parent", "type" => "int", "default" => "0", "materialized_path" => "menu_path"],
-      ["href", "type" => "string", "length" => "255", "label" => "URL", "default" => ""],
-      ["content", "type" => "string", "length" => "255", "default" => ""],
-      ["icon", "type" => "string", "default" => ""],
-      ["target", "type" => "string", "default" => ""],
-      ["template", "type" => "string", "length" => "128", "default" => ""],
-      ["position", "type" => "int", "ordered" => "menu parent", "default" => "0"],
-      ["menu_path", "type" => "string", "length" => "255", "default" => "", "display" => "false"]
-    );
     $this->schema->addTable(["queues"],
       ["queue", "type" => "string"],
       ["worker", "type" => "string"],
@@ -73,13 +62,6 @@ class Migration extends AbstractMigration {
     // groups
     $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "User"]);
     $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "Admin"]);
-
-    // admin menu
-    $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/users"], ["content" => "Users", "icon" => "fa-users"]);
-    $configuration = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Configuration"], ["icon" => "fa-cogs"]);
-    $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/menus"], ["parent" => $configuration, "content" => "Menus", "icon" => "fa-list"]);
-    $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/email-templates"], ["parent" => $configuration, "content" => "Email Templates", "icon" => "fa-envelope"]);
-    $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/settings"], ["parent" => $configuration, "content" => "Settings", "icon" => "fa-cog"]);
 
     // settings categories
     $this->schema->addRow("terms", ["taxonomy" => "settings_category", "term" => "General"]);

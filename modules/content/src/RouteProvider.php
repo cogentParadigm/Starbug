@@ -18,6 +18,7 @@ class RouteProvider extends AdminRouteProvider {
     $api = $routes->getRoute("api");
 
     // Update menu
+    $admin->getRoute("/menus")->setOption("form", MenusForm::class);
     $api->getRoute("/menus/tree.json")->setOption("collection", MenusTreeCollection::class);
 
     // Categories API

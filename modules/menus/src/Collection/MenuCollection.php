@@ -1,5 +1,7 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Menus\Collection;
+
+use Starbug\Core\Collection;
 
 class MenuCollection extends Collection {
   public $model = "menus";
