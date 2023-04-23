@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Devices;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 
 class NotifyCommand {
   public function __construct(NotificationManagerInterface $notifications, DatabaseInterface $db) {

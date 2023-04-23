@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Intl;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 
 class AddressFormatter {
   protected $map = [

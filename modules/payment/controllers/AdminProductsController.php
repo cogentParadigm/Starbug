@@ -2,7 +2,6 @@
 namespace Starbug\Payment;
 
 use Starbug\Core\WizardController;
-use Starbug\Core\DatabaseInterface;
 
 class AdminProductsController extends WizardController {
   protected $model = "products";

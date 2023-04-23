@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Db\Query;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Schema\SchemerInterface;
 
 class Entity implements EntityInterface {

@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Doctrine\Schema;
 
+use Starbug\Db\DatabaseInterface;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Comparator;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Db\Schema\AbstractMigration;
 use Starbug\Db\Schema\SchemaInterface;
 use Starbug\Core\Generator\Generator;

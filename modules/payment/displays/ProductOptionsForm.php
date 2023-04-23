@@ -2,7 +2,7 @@
 
 namespace Starbug\Payment;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 use Starbug\Core\FormDisplay;
 use Starbug\Db\Schema\SchemerInterface;
 

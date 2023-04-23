@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Intl;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 
 class Translation implements TranslationInterface {
   // @var DatabaseInterface

@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\CollectionFilterInterface;
+
 class ApiController extends Controller implements CollectionFilterInterface {
   protected $model;
   public function __construct(ApiRequest $api) {

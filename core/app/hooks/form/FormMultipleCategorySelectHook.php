@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\CollectionFactoryInterface;
+
 class FormMultipleCategorySelectHook extends FormHook {
   public function __construct(CollectionFactoryInterface $collections) {
     $this->collections = $collections;

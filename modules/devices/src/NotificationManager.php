@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Devices;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 use Psr\Log\LoggerAwareTrait;
 use Exception;
 use Starbug\Devices\Notification\HandlerInterface;

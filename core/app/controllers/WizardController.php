@@ -2,6 +2,7 @@
 
 namespace Starbug\Core;
 
+use Starbug\Db\DatabaseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class WizardController extends Controller {

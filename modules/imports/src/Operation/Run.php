@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Imports\Operation;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Bundle\BundleInterface;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Core\Operation\Save;
 use Starbug\Imports\Import;
 use Starbug\Imports\Importer;

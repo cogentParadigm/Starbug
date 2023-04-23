@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Db\Query\Traits;
 
+use Starbug\Db\DatabaseInterface;
 use ArrayIterator;
-use Starbug\Core\DatabaseInterface;
 
 trait Execution {
   public function getDatabase(): DatabaseInterface {

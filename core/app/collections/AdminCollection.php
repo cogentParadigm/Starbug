@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Collection;
+
 class AdminCollection extends Collection {
   public function build($query, $ops) {
     if (isset($ops["deleted"])) {

@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\CollectionFactoryInterface;
+
 class CsvDisplay extends ItemDisplay {
   public $template = "csv";
   public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections) {

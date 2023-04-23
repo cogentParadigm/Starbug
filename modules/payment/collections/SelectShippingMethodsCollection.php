@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Payment;
 
-use Starbug\Core\CollectionFactoryInterface;
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
+use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Core\SelectCollection;
 use Starbug\Db\Schema\SchemerInterface;
 

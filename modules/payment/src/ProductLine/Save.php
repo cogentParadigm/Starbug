@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Payment\ProductLine;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Bundle\BundleInterface;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Core\Operation\Save as ParentOperation;
 use Starbug\Db\Query\EntityInterface;
 

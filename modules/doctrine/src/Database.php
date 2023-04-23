@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Doctrine;
 
-use Starbug\Core\AbstractDatabase;
+use Starbug\Db\AbstractDatabase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Configuration;

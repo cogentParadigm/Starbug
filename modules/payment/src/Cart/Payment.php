@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Payment\Cart;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Bundle\BundleInterface;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Core\Operation\Save;
 use Starbug\Payment\Cart;
 use Starbug\Payment\GatewayInterface;

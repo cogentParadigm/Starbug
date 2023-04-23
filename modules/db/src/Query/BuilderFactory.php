@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Db\Query;
 
+use Starbug\Db\DatabaseInterface;
 use Psr\Container\ContainerInterface;
-use Starbug\Core\DatabaseInterface;
 
 class BuilderFactory implements BuilderFactoryInterface {
   protected $extensions = null;

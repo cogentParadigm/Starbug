@@ -1,11 +1,11 @@
 <?php
 namespace Starbug\Imports\Admin;
 
+use Starbug\Db\CollectionFactoryInterface;
+use Starbug\Db\DatabaseInterface;
 use League\Flysystem\MountManager;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\CollectionFactoryInterface;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Core\DisplayFactoryInterface;
 use Starbug\Core\FormDisplay;
 use Starbug\Core\FormHookFactoryInterface;

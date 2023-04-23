@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Core\Routing\Resolvers;
 
+use Starbug\Db\DatabaseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Core\Routing\Route;
 
 class RowById {

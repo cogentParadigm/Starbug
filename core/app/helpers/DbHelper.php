@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\DatabaseInterface;
+
 class DbHelper {
   public function __construct(DatabaseInterface $db) {
     $this->target = $db;

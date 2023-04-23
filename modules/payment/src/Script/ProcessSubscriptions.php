@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Payment\Script;
 
-use Starbug\Core\CollectionFactoryInterface;
+use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Payment\ExpiredSubscriptionsCollection;
 use Starbug\Payment\TokenGatewayInterface;
 

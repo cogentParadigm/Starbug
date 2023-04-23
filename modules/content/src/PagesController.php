@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Content;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\Controller;
-use Starbug\Core\DatabaseInterface;
 
 class PagesController extends Controller {
   public function __construct(DatabaseInterface $db, SessionHandlerInterface $session) {

@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Intl\Script;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Config\ConfigInterface;
-use Starbug\Core\DatabaseInterface;
 
 class IntlSetup {
   public function __construct(ConfigInterface $config, DatabaseInterface $db) {

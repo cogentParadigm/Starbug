@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Content;
 
+use Starbug\Db\DatabaseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Routing\AliasStorageInterface;
-use Starbug\Core\DatabaseInterface;
 
 class AliasStorage implements AliasStorageInterface {
   public function __construct(DatabaseInterface $db) {

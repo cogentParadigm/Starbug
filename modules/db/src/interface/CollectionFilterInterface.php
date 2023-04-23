@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Db;
 
 interface CollectionFilterInterface {
   public function filterQuery($collection, $query, $ops);

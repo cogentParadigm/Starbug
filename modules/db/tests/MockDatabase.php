@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Db\Tests;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Query\BuilderInterface;
 
 class MockDatabase implements DatabaseInterface {

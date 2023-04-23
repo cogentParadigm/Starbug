@@ -1,10 +1,10 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\Controller;
 use Starbug\Core\ModelFactoryInterface;
-use Starbug\Core\CollectionFactoryInterface;
 
 class SubscriptionsController extends Controller {
   public function __construct(ModelFactoryInterface $models, CollectionFactoryInterface $collections, SessionHandlerInterface $session) {

@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\CollectionFactoryInterface;
+
 class ItemDisplay extends Display {
 
   public $model = "";

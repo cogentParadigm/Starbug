@@ -1,12 +1,12 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Db\DatabaseInterface;
+use Starbug\Db\CollectionFactoryInterface;
 use IteratorAggregate;
 use ArrayAccess;
 use Countable;
 use ArrayIterator;
-use Starbug\Core\CollectionFactoryInterface;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Db\Query\EntityInterface;
 
 /**

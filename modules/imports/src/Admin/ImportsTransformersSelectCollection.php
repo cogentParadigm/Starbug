@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Imports\Admin;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 use Starbug\Core\SelectCollection;
 use Starbug\Db\Schema\SchemerInterface;
 use Starbug\Imports\Transform\Factory;

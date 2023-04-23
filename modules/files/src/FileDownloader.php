@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Files;
 
+use Starbug\Db\DatabaseInterface;
 use GuzzleHttp\Psr7\Utils;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Http\ResponseBuilderInterface;
 use League\Flysystem\MountManager;
 

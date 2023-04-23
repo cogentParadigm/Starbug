@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Imports\Write;
 
+use Starbug\Db\DatabaseInterface;
 use Exception;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Imports\Read\StrategyInterface as ReadStrategyInterface;
 use Starbug\Operation\OperationInterface;
 

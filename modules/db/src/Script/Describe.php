@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Db\Script;
 
+use Starbug\Db\DatabaseInterface;
 use cli\Table;
-use Starbug\Core\DatabaseInterface;
 
 class Describe {
   public function __construct(DatabaseInterface $db) {

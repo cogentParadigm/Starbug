@@ -1,10 +1,10 @@
 <?php
 namespace Starbug\Devices\Notification\Handler;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Devices\Notification\HandlerInterface;
 use Minishlink\WebPush\WebPush as WebPushClient;
 use Minishlink\WebPush\Subscription;
-use Starbug\Core\DatabaseInterface;
 
 class WebPush implements HandlerInterface {
   public function __construct(WebPushClient $webpush, DatabaseInterface $db) {

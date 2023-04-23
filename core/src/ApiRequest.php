@@ -1,6 +1,9 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\DatabaseInterface;
+use Starbug\Db\CollectionFactoryInterface;
+use Starbug\Db\CollectionFilterInterface;
 use Exception;
 use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\ResponseFactoryInterface;

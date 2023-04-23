@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Query\ExecutorHook;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Files\FileUploader;

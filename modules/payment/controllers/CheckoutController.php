@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Core\Controller;
-use Starbug\Core\DatabaseInterface;
 
 class CheckoutController extends Controller {
   public function __construct(Cart $cart, SessionHandlerInterface $session, DatabaseInterface $db) {

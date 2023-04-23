@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Db;
 
 use Psr\Container\ContainerInterface;
 use Exception;

@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Collection;
+use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Schema\SchemerInterface;
 
 class SelectCollection extends Collection {

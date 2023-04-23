@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Payment\Cart;
 
+use Starbug\Db\DatabaseInterface;
+use Starbug\Emails\MailerInterface;
 use Starbug\Auth\SessionHandlerInterface;
-use Starbug\Core\DatabaseInterface;
-use Starbug\Core\MailerInterface;
 use Starbug\Payment\PriceFormatterInterface;
 use Starbug\Queue\TaskInterface;
 use Starbug\Queue\QueueInterface;

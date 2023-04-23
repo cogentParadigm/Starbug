@@ -1,11 +1,11 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Db\DatabaseInterface;
+use Starbug\Emails\MailerInterface;
 use Omnipay\Common\GatewayInterface as OmnipayInterface;
 use Omnipay\Common\CreditCard;
 use Starbug\Auth\SessionHandlerInterface;
-use Starbug\Core\DatabaseInterface;
-use Starbug\Core\MailerInterface;
 
 class Gateway implements GatewayInterface {
   public function __construct(DatabaseInterface $db, OmnipayInterface $gateway, MailerInterface $mailer, SessionHandlerInterface $session, PriceFormatterInterface $priceFormatter) {

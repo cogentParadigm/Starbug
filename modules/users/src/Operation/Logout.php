@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core\Operation;
+namespace Starbug\Users\Operation;
 
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Bundle\BundleInterface;

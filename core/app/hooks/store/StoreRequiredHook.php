@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Query\ExecutorHook;
 
 class StoreRequiredHook extends ExecutorHook {

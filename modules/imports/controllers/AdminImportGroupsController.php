@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Spreadsheet;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Core\Controller;
-use Starbug\Core\DatabaseInterface;
 
 class AdminImportGroupsController extends Controller {
   public $routes = [

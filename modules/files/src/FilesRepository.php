@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Files;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 
 class FilesRepository {
   public function __construct(DatabaseInterface $db) {

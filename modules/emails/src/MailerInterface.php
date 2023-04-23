@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Emails;
 
 interface MailerInterface {
   /**

@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Db\Script;
 
-use Starbug\Core\CollectionFactoryInterface;
+use Starbug\Db\CollectionFactoryInterface;
 
 class QueryCollection {
   public function __construct(CollectionFactoryInterface $collections) {

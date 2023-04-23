@@ -1,10 +1,10 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Db\DatabaseInterface;
+use Starbug\Db\CollectionFactoryInterface;
+use Starbug\Emails\MailerInterface;
 use Starbug\Auth\SessionHandlerInterface;
-use Starbug\Core\CollectionFactoryInterface;
-use Starbug\Core\DatabaseInterface;
-use Starbug\Core\MailerInterface;
 use Starbug\Core\Table;
 use Starbug\Db\Schema\SchemerInterface;
 

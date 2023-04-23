@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Db\DatabaseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Core\Table;
 use Starbug\Db\Schema\SchemerInterface;
 

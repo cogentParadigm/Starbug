@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Core\Operation;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Bundle\BundleInterface;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Operation\Operation;
 
 class Save extends Operation {

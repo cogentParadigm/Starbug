@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\DatabaseInterface;
+
 /**
  * An implementation of the ConfigInterface which reads name/value pairs from a database table
  */

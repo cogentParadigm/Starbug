@@ -2,7 +2,7 @@
 namespace Starbug\Db\Script;
 
 use cli\Table;
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 
 /**
  * Run queries from the command line.

@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Query\ExecutorHook;
 
 class StoreMaterializedPathHook extends ExecutorHook {

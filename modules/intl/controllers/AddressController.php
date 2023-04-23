@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Intl;
 
+use Starbug\Db\DatabaseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Controller;
-use Starbug\Core\DatabaseInterface;
 
 class AddressController extends Controller {
   public function __construct(DatabaseInterface $db, AddressFormatter $address) {

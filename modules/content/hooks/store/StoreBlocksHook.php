@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Content;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Query\ExecutorHook;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Core\InputFilterInterface;
 
 class StoreBlocksHook extends ExecutorHook {

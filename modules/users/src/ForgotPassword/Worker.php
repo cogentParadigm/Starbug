@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Users\ForgotPassword;
 
-use Starbug\Core\DatabaseInterface;
-use Starbug\Core\MailerInterface;
+use Starbug\Db\DatabaseInterface;
+use Starbug\Emails\MailerInterface;
 use Starbug\Http\UriBuilderInterface;
 use Starbug\Queue\TaskInterface;
 use Starbug\Queue\QueueInterface;

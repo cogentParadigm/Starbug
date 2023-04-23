@@ -1,8 +1,6 @@
 <?php
 namespace Starbug\Db\Query;
 
-use Starbug\Core\DatabaseInterface;
-
 class Compiler implements CompilerInterface {
   protected $parameterCount = [];
   protected $prefix;

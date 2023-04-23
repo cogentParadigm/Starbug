@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\State;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 
 class DatabaseState implements StateInterface {
 

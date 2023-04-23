@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Db\Query;
 
+use Starbug\Db\DatabaseInterface;
 use IteratorAggregate;
-use Starbug\Core\DatabaseInterface;
 
 interface BuilderInterface extends IteratorAggregate {
   /**

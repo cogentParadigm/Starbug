@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Imports\Transform;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Schema\SchemerInterface;
 
 class Lookup extends AbstractTransformer {

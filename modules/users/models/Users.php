@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Users;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Auth\SessionHandlerInterface;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Core\Table;
 use Starbug\Db\Schema\SchemerInterface;
 

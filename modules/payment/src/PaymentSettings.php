@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Payment;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 
 /**
  * An implementation of the PaymentSettingsInterface which reads name/value pairs from a database table

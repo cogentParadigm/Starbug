@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Db;
 
 use Starbug\Db\Query\BuilderFactory;
 use Starbug\Bundle\Bundle;

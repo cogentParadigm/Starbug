@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Payment;
 
-use Starbug\Core\Collection;
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\Collection;
+use Starbug\Db\DatabaseInterface;
 
 class ShippingLinesCollection extends Collection {
   protected $model = "shipping_lines";

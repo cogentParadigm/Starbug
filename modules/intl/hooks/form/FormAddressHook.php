@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Intl;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Core\FormHook;
-use Starbug\Core\DatabaseInterface;
 
 class FormAddressHook extends FormHook {
   public function __construct(DatabaseInterface $db) {

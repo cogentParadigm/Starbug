@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Core\FormCollection;
-use Starbug\Core\DatabaseInterface;
 
 class OrdersFormCollection extends FormCollection {
   public function __construct(DatabaseInterface $db, Cart $cart) {

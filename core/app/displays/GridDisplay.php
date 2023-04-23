@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Js\DojoConfiguration;
 
 class GridDisplay extends ItemDisplay {

@@ -1,12 +1,12 @@
 <?php
 namespace Starbug\Files;
 
+use Starbug\Db\DatabaseInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Starbug\Core\Table;
 use Starbug\Db\Schema\SchemerInterface;
 use League\Flysystem\MountManager;
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\DatabaseInterface;
 use Starbug\Core\ImagesInterface;
 
 class Files extends Table {

@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Imports\Read;
 
+use Starbug\Db\CollectionFactoryInterface;
 use Iterator;
-use Starbug\Core\CollectionFactoryInterface;
 use Starbug\Imports\Import;
 
 class CollectionStrategy extends Strategy {

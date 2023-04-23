@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core\Routing\Resolvers;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 
 class RowByInsertId {
   public function __invoke(DatabaseInterface $db, $model) {

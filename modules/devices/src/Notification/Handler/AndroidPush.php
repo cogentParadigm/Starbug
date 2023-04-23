@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Devices\Notification\Handler;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Devices\Notification\HandlerInterface;
-use Starbug\Core\DatabaseInterface;
 use Psr\Log\LoggerInterface;
 
 class AndroidPush implements HandlerInterface {

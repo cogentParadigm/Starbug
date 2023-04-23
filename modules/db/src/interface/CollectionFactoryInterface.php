@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Db;
 
 interface CollectionFactoryInterface {
   public function get($collection);

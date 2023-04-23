@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Imports\Read;
 
+use Starbug\Db\DatabaseInterface;
 use DI\FactoryInterface;
 use League\Flysystem\MountManager;
-use Starbug\Core\DatabaseInterface;
 
 class StrategyFactory implements StrategyFactoryInterface {
   protected $db;

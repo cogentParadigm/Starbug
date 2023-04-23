@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Payment;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 use Starbug\Core\FormDisplay;
 
 class ProductConfigurationForm extends FormDisplay {

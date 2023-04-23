@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Db\Script;
 
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 
 class Remove {
   public function __construct(DatabaseInterface $db) {

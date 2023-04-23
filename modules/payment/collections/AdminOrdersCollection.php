@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Core\AdminCollection;
-use Starbug\Core\DatabaseInterface;
 
 class AdminOrdersCollection extends AdminCollection {
   public function __construct(DatabaseInterface $db, PriceFormatterInterface $formatter) {

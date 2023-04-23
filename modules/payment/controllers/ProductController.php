@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Payment;
 
+use Starbug\Db\DatabaseInterface;
 use Starbug\Core\Controller;
-use Starbug\Core\DatabaseInterface;
 
 class ProductController extends Controller {
   public function __construct(DatabaseInterface $db) {

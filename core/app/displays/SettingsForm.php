@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\DatabaseInterface;
+
 class SettingsForm extends FormDisplay {
   public $model = "settings";
   public $cancel_url = "admin";
