@@ -1,5 +1,7 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Db;
+
+use Starbug\Core\Pager;
 
 class Collection implements CollectionInterface {
   protected $model;

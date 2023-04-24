@@ -5,9 +5,10 @@ use function DI\autowire;
 use function DI\get;
 use function DI\add;
 use DI;
+use Starbug\Db\DatabaseInterface;
 
 return [
-  'Starbug\Core\DatabaseInterface' => autowire('Starbug\Doctrine\Database')
+  DatabaseInterface::class => autowire(Database::class)
     ->method('setTimeZone', get('time_zone'))
     ->method('setDatabase', get("databases.active")),
   'db.schema.migrations' => add([

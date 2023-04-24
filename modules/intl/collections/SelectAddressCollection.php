@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Intl;
 
-use Starbug\Core\Collection;
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\Collection;
+use Starbug\Db\DatabaseInterface;
 
 class SelectAddressCollection extends Collection {
   public function __construct(DatabaseInterface $db, AddressFormatter $address) {

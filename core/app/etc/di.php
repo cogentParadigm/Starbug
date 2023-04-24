@@ -24,7 +24,6 @@ return [
   "website_url" => "/",
   "website_host" => "",
   "time_zone" => "UTC",
-  "db" => "default",
   "hmac_key" => "",
   "cli" => false,
   "FastRoute\RouteCollector" => decorate(function (RouteCollector $r, ContainerInterface $c) {
@@ -86,9 +85,6 @@ return [
   'db.schema.hooks' => [
     get('Starbug\Core\SchemaHook')
   ],
-  'Starbug\Core\Database' => autowire()
-    ->method('setTimeZone', get('time_zone'))
-    ->method('setDatabase', get("databases.active")),
   "template.helpers" => [
     "breadcrumbs" => BreadcrumbsHelper::class,
     "collections" => CollectionsHelper::class,
@@ -145,7 +141,7 @@ return [
     ->method("includeSubdomains"),
   "Starbug\Bundle\*Interface" => autowire("Starbug\Bundle\*"),
   "Starbug\Operation\*Interface" => autowire("Starbug\Operation\*"),
-  "Starbug\Core\SettingsForm" => autowire()->method("setDatabase", get("Starbug\Core\DatabaseInterface")),
+  "Starbug\Core\SettingsForm" => autowire()->method("setDatabase", get("Starbug\Db\DatabaseInterface")),
   "Starbug\Queue\*Interface" => autowire("Starbug\Queue\*"),
   "Starbug\Queue\QueueFactoryInterface" => function (ContainerInterface $container) {
     $factory = new QueueFactory();

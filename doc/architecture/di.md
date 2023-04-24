@@ -13,7 +13,7 @@ If you create a custom class, the container will try to resolve your constructor
 ```php
 <?php
 namespace Starbug\App;
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\DatabaseInterface;
 class MyCustomClass {
 	public function __construct(DatabaseInterface $db, $timezone, $name) {
 		$this->db = $db;

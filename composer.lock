@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f42eb812c7ef2043872897ee912997d1",
+    "content-hash": "5d88c24687dd9ea0edf03d1bb8df0455",
     "packages": [
         {
             "name": "composer/installers",
@@ -2921,16 +2921,16 @@
         },
         {
             "name": "starbug/auth",
-            "version": "v0.9.2",
+            "version": "v0.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-auth.git",
-                "reference": "eae0d9289ff68bcdfd4dffe7ce15e022499ec58f"
+                "reference": "5a16749281360972a17997d817216196ca16672b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-auth/zipball/eae0d9289ff68bcdfd4dffe7ce15e022499ec58f",
-                "reference": "eae0d9289ff68bcdfd4dffe7ce15e022499ec58f",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-auth/zipball/5a16749281360972a17997d817216196ca16672b",
+                "reference": "5a16749281360972a17997d817216196ca16672b",
                 "shasum": ""
             },
             "require-dev": {
@@ -2957,9 +2957,9 @@
             "description": "Authentication layer for Starbug framework.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-auth/issues",
-                "source": "https://github.com/cogentParadigm/starbug-auth/tree/v0.9.2"
+                "source": "https://github.com/cogentParadigm/starbug-auth/tree/v0.12.0"
             },
-            "time": "2021-02-26T22:01:01+00:00"
+            "time": "2023-04-23T23:40:37+00:00"
         },
         {
             "name": "starbug/bundle",

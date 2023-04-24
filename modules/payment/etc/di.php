@@ -8,6 +8,7 @@ use function DI\get;
 use function DI\autowire;
 use DI;
 use Psr\Container\ContainerInterface;
+use Starbug\Db\DatabaseInterface;
 use Starbug\Payment\Script\ProcessSubscriptions;
 
 return [
@@ -66,9 +67,9 @@ return [
   },
   'Starbug\Payment\ProductOptionsForm' => autowire()
     ->method('setTableSchema', get('Starbug\Db\Schema\SchemerInterface'))
-    ->method("setDatabase", get("Starbug\Core\DatabaseInterface")),
+    ->method("setDatabase", get(DatabaseInterface::class)),
   "Starbug\Payment\ProductsForm" => autowire()
-    ->method("setDatabase", get("Starbug\Core\DatabaseInterface")),
+    ->method("setDatabase", get(DatabaseInterface::class)),
   "Starbug\Payment\ProductConfigurationForm" => autowire()
-    ->method("setDatabase", get("Starbug\Core\DatabaseInterface")),
+    ->method("setDatabase", get(DatabaseInterface::class)),
 ];

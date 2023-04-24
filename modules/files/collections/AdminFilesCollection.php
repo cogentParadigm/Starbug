@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Files;
 
-use Starbug\Core\Collection;
+use Starbug\Db\Collection;
 
 class AdminFilesCollection extends Collection {
   protected $model = "files";

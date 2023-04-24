@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\App;
 
-use Starbug\Core\Collection;
+use Starbug\Db\Collection;
 
 class AdminProductOptionsCollection extends Collection {
   protected $model = "product_options";

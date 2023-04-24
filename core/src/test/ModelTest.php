@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\DatabaseInterface;
+
 class ModelTest extends DatabaseTestCase {
 
   public $model;
@@ -10,7 +12,7 @@ class ModelTest extends DatabaseTestCase {
   public function setUp(): void {
     parent::setUp();
     global $container;
-    $this->db = $container->get("Starbug\Core\DatabaseInterface");
+    $this->db = $container->get(DatabaseInterface::class);
     $this->operations = $container->get("Starbug\Operation\OperationFactoryInterface");
   }
 

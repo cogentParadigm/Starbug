@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Content;
 
-use Starbug\Core\Collection;
+use Starbug\Db\Collection;
 
 class AdminPagesCollection extends Collection {
   public function build($query, $ops) {

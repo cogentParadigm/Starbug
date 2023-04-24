@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Menus\Collection;
 
-use Starbug\Core\Collection;
+use Starbug\Db\Collection;
 
 class MenusAdminCollection extends Collection {
   public function build($query, $ops) {

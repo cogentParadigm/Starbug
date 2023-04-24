@@ -15,8 +15,13 @@ use Starbug\Db\Script\Remove;
 use Starbug\Db\Script\Store;
 
 return [
+  "db" => "default",
+  "Starbug\Db\*Interface" => autowire("Starbug\Db\*"),
   'Starbug\Db\Schema\*Interface' => autowire('Starbug\Db\Schema\*'),
   'Starbug\Db\Query\*Interface' => autowire('Starbug\Db\Query\*'),
+  Database::class => autowire()
+    ->method('setTimeZone', get('time_zone'))
+    ->method('setDatabase', get("databases.active")),
   'Starbug\Db\Schema\SchemaInterface' => function (ContainerInterface $c) {
     $schema = $c->get('Starbug\Db\Schema\Schema');
     $hooks = $c->get('db.schema.hooks');

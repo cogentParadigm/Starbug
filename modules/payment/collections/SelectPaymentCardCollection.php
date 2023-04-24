@@ -2,8 +2,8 @@
 namespace Starbug\Payment;
 
 use Starbug\Auth\SessionHandlerInterface;
-use Starbug\Core\Collection;
-use Starbug\Core\DatabaseInterface;
+use Starbug\Db\Collection;
+use Starbug\Db\DatabaseInterface;
 
 class SelectPaymentCardCollection extends Collection {
   protected $model = "payment_cards";

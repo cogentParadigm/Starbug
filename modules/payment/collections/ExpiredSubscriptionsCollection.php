@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Payment;
 
-use Starbug\Core\Collection;
+use Starbug\Db\Collection;
 
 class ExpiredSubscriptionsCollection extends Collection {
   protected $model = "bills";

@@ -2,6 +2,7 @@
 namespace Starbug\Core;
 
 use Starbug\Auth\Identity;
+use Starbug\Db\DatabaseInterface;
 
 /**
  * The Fixture class. Fixtures hold data sets used by the testing harness.
@@ -17,7 +18,7 @@ class StoreTest extends DatabaseTestCase {
   public function setUp() : void {
     parent::setUp();
     global $container;
-    $this->db = $container->get("Starbug\Core\DatabaseInterface");
+    $this->db = $container->get(DatabaseInterface::class);
     $this->session = $container->get("Starbug\Auth\SessionHandlerInterface");
   }
 
