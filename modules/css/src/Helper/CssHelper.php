@@ -1,5 +1,7 @@
 <?php
-namespace Starbug\Css;
+namespace Starbug\Css\Helper;
+
+use Starbug\Css\CssLoader;
 
 class CssHelper {
   public function __construct(CssLoader $target) {
