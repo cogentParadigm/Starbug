@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Db;
+namespace Starbug\Db\Helper;
 
 use Starbug\Db\Schema\SchemerInterface;
 

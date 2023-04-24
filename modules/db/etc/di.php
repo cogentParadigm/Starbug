@@ -6,6 +6,7 @@ use function DI\get;
 use function DI\add;
 use DI;
 use Psr\Container\ContainerInterface;
+use Starbug\Db\Helper\SchemaHelper;
 use Starbug\Db\Schema\QueryCompilerHook;
 use Starbug\Db\Script\Describe;
 use Starbug\Db\Script\Migrate;
