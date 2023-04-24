@@ -1,7 +1,11 @@
 <?php
+namespace Starbug\Emails\Tests;
+
+use Starbug\Emails\MailerInterface;
+use Starbug\Emails\MockMailer;
 
 use function DI\autowire;
 
 return [
-  'Starbug\Core\MailerInterface' => autowire('Starbug\Core\MockMailer')
+  MailerInterface::class => autowire(MockMailer::class)
 ];

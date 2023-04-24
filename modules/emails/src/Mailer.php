@@ -1,8 +1,7 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Emails;
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 class Mailer implements MailerInterface {
 
