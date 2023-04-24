@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Content;
+namespace Starbug\Content\Tests;
 
 use Starbug\Core\ModelTest;
 use Starbug\Core\Operation\Delete;

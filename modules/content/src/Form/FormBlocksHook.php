@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Content;
+namespace Starbug\Content\Form;
 
 use Starbug\Core\FormHook;
 

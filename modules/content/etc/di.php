@@ -6,7 +6,10 @@ use function DI\autowire;
 use function DI\get;
 use function DI\decorate;
 use Psr\Container\ContainerInterface;
+use Starbug\Content\Form\FormBlocksHook;
 use Starbug\Content\MenuCollection as ContentMenuCollection;
+use Starbug\Content\Query\StoreBlocksHook;
+use Starbug\Content\Query\StorePathHook;
 use Starbug\Menus\Collection\MenuCollection;
 
 return [
@@ -21,8 +24,8 @@ return [
     return $router;
   }),
   "db.query.executor.hooks" => add([
-    "path" => "Starbug\Content\StorePathHook",
-    "blocks" => "Starbug\Content\StoreBlocksHook"
+    "path" => StorePathHook::class,
+    "blocks" => StoreBlocksHook::class
   ]),
   "form.hooks" => add([
     "blocks" => FormBlocksHook::class
