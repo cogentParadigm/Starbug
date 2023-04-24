@@ -1,5 +1,5 @@
 {% macro tab(path, label, active) %}
-  <a href="{{ helper("url").build("styleguide/" ~ path) }}" class="btn btn-default br--top link{% if active %} b--black z-1{% else %} z-2-focus{% endif %}" style="margin-right:-1px">{{ label }}</a>
+  <a href="{{ helper("url").build("styleguide/tachyons/" ~ path) }}" class="btn btn-default br--top link{% if active %} b--black z-1{% else %} z-2-focus{% endif %}" style="margin-right:-1px">{{ label }}</a>
 {% endmacro %}
 
 {% import _self as macros %}

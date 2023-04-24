@@ -63,7 +63,10 @@
     "starbug/devel": "^1.0"
   },
   "autoload": {
-    "classmap":["core", "app", "modules", "var", "features"]
+    "psr-4": {
+      "Starbug\\App\\": "app/src/"
+    },
+    "classmap":["core", "modules", "var", "features"]
   },
   "scripts": {
     "pre-install-cmd": "mkdir -p var/tmp var/log var/public/uploads var/private/uploads",

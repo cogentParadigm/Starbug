@@ -3745,11 +3745,16 @@
             "dist": {
                 "type": "path",
                 "url": "./app/themes/tachyons",
-                "reference": "ea86208a3b8cfce1aedb1ea09da0842905e58cdd"
+                "reference": "43d60fcbd46b8617807af3839af3bb1cf82ec24c"
             },
             "type": "starbug-custom-theme",
             "extra": {
                 "namespace": "Starbug\\Tachyons"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Tachyons\\": "src/"
+                }
             },
             "license": [
                 "GPL-3.0-or-later"

@@ -48,7 +48,7 @@ class StyleguideController extends Controller {
     $this->dojo = $dojo;
   }
   public function defaultAction() {
-    return $this->redirect("styleguide/colors");
+    return $this->redirect("styleguide/tachyons/colors");
   }
   public function colors() {
     return $this->render("styleguide/template.html", ["page" => "colors", "sections" => $this->colors]);

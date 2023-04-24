@@ -11,5 +11,10 @@
   ],
   "extra": {
     "namespace": "Starbug\\Tachyons"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Tachyons\\": "src/"
+    }
   }
 }
