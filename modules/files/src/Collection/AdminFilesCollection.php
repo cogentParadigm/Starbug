@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Files;
+namespace Starbug\Files\Collection;
 
 use Starbug\Db\Collection;
 

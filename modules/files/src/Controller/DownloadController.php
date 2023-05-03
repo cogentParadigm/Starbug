@@ -1,7 +1,8 @@
 <?php
-namespace Starbug\Files;
+namespace Starbug\Files\Controller;
 
 use Starbug\Core\Controller;
+use Starbug\Files\FileDownloader;
 
 class DownloadController extends Controller {
   public function __construct(FileDownloader $fileDownloader) {
