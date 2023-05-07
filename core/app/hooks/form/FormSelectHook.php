@@ -42,7 +42,7 @@ class FormSelectHook extends FormHook {
         $values = (is_array($values)) ? $values : explode(",", $field['values']);
         $options = [];
         foreach ($keys as $i => $k) {
-          $options[$k] = $values[$i];
+          $options[] = ["id" => $values[$i], "label" => $k];
         }
       }
       unset($field['options']);
