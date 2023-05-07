@@ -23,12 +23,6 @@ class RouteProvider implements RouteProviderInterface {
       "view" => "admin.html"
     ]);
 
-    // Settings
-    $admin->addRoute("/settings", "Starbug\Core\Controller\ViewController", [
-      "view" => "settings.html",
-      "model" => "settings"
-    ])->onPost("Starbug\Core\Operation\UpdateSettings");
-
     // Taxonomy
     $terms = $this->addCrudRoutes($admin->addRoute("/taxonomies"), "terms");
     $this->addStatefulRedirects($terms, $terms->getPath()."/taxonomy/{{ row.taxonomy }}");
@@ -104,12 +98,12 @@ class RouteProvider implements RouteProviderInterface {
     return $route;
   }
 
-  protected function addCrud(Route $routes, $model) {
+  protected function addCrud(Route $routes, $model, $listOptions = []) {
     $urlName = str_replace("_", "-", $model);
     $crud = [];
 
     $admin = $routes->getRoute("admin");
-    $crud["list"] = $this->addCrudRoutes($admin->addRoute("/{$urlName}"), $model);
+    $crud["list"] = $this->addCrudRoutes($admin->addRoute("/{$urlName}"), $model)->setOptions($listOptions);
     $crud["create"] = $crud["list"]->getRoute("/create");
     $crud["update"] = $crud["list"]->getRoute("/update/{id:[0-9]+}");
 

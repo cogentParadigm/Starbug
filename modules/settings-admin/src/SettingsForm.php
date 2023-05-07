@@ -1,27 +1,43 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Settings\Admin;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Core\DisplayFactoryInterface;
+use Starbug\Core\FormDisplay;
+use Starbug\Core\FormHookFactoryInterface;
+use Starbug\Core\TemplateInterface;
+use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Db\DatabaseInterface;
 
 class SettingsForm extends FormDisplay {
   public $model = "settings";
   public $cancel_url = "admin";
   public $defaultAction = "update";
-  public function setDatabase(DatabaseInterface $db) {
+  public function __construct(
+    TemplateInterface $output,
+    CollectionFactoryInterface $collections,
+    FormHookFactoryInterface $hookFactory,
+    DisplayFactoryInterface $displays,
+    ServerRequestInterface $request,
+    DatabaseInterface $db
+  ) {
+    parent::__construct($output, $collections, $hookFactory, $displays, $request);
     $this->db = $db;
   }
   public function buildDisplay($options) {
     $settings = $this->db->query("settings")
-      ->select("settings.*,category.term,category.slug")
-      ->sort("settings_category.term_path, settings_category.position")
+      ->select("settings.*")
+      ->select("category.name as term")
+      ->select("category.slug")
+      ->sort("settings_category.position")
       ->all();
     $this->setPost([]);
     $last = "";
     foreach ($settings as $idx => $setting) {
       $this->setPost($setting['name'], $setting['value']);
-      if ($setting['term'] != $last) {
+      if ($setting["term"] != $last) {
         $marginTop = $last ? "mt4" : "mt0";
-        $last = $setting['term'];
+        $last = $setting["term"];
         $this->add([$setting["slug"], "input_type" => "html", "value" => "<h2 class=\"f7 mb2 {$marginTop} ttu\">".$setting["term"]."</h1>"]);
       }
       $field = [$setting['name'], "input_type" => $setting['type']];

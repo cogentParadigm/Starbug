@@ -20,10 +20,13 @@ class Grid extends Definition {
     }
     $this->setParameter("fields", $table->getColumns());
     $this->setParameter("className", $className);
-    $this->addDirectory($this->module["path"]."/displays");
+    $this->addDirectory($this->getSourcePath($options));
     $this->addTemplate(
       "generate/grid/grid.php",
-      $this->module["path"]."/displays/".$className."Grid.php"
+      $this->getSourcePath($options)."/".$className."Grid.php"
     );
+  }
+  protected function getSourcePath($options) {
+    return implode("/", array_filter([$this->module["path"]."/src", $options["dir"] ?? ""]));
   }
 }

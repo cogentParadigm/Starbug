@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "70f20839e3d740a1057ed2dd9ff35dab",
+    "content-hash": "48b344396e899df8984cae6038abadc7",
     "packages": [
         {
             "name": "composer/installers",
@@ -3739,6 +3739,41 @@
                 }
             ],
             "description": "Starbug settings module.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "starbug/settings-admin",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/settings-admin",
+                "reference": "9884b22d0c827006b5b891b4215ca74598c86ad3"
+            },
+            "require": {
+                "starbug/menus": "*",
+                "starbug/settings": "*"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Settings\\Admin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Settings\\Admin\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Admin UI for Starbug settings module.",
             "transport-options": {
                 "relative": true
             }
@@ -11120,7 +11155,8 @@
         "starbug/imports": 20,
         "starbug/menus": 20,
         "starbug/queues": 20,
-        "starbug/settings": 20
+        "starbug/settings": 20,
+        "starbug/settings-admin": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

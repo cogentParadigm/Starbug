@@ -1,0 +1,24 @@
+{
+  "name": "starbug/settings-admin",
+  "type": "starbug-module",
+  "description": "Admin UI for Starbug settings module.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Settings\\Admin"
+  },
+  "require": {
+    "starbug/settings": "*",
+    "starbug/menus": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Settings\\Admin\\": "src/"
+    }
+  }
+}

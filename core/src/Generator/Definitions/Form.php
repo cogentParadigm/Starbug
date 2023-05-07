@@ -20,11 +20,14 @@ class Form extends Definition {
     }
     $this->setParameter("fields", $this->getFields($table->getColumns()));
     $this->setParameter("className", $className);
-    $this->addDirectory($this->module["path"]."/displays");
+    $this->addDirectory($this->getSourcePath($options));
     $this->addTemplate(
       "generate/form/form.php",
-      $this->module["path"]."/displays/".$className."Form.php"
+      $this->getSourcePath($options)."/".$className."Form.php"
     );
+  }
+  protected function getSourcePath($options) {
+    return implode("/", array_filter([$this->module["path"]."/src", $options["dir"] ?? ""]));
   }
   protected function getFields($columns) {
     return array_filter($columns, function ($key) {

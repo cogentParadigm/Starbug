@@ -55,7 +55,7 @@ class CompositeDefinition extends Definition {
       return true;
     }
     foreach ($this->definitions as $definition) {
-      if ($defitition->hasParameter($key)) {
+      if ($definition->hasParameter($key)) {
         return true;
       }
     }

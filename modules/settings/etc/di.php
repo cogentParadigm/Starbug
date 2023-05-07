@@ -11,8 +11,8 @@ return [
   "db.schema.migrations" => add([
     get(Migration::class)
   ]),
-  "template.helpers" => [
+  "template.helpers" => add([
     "settings" => SettingsHelper::class
-  ],
+  ]),
   SettingsInterface::class => autowire(DatabaseSettings::class)
 ];
