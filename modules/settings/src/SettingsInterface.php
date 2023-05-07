@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Settings;
 
 /**
  * A simple interface for retrieving settings

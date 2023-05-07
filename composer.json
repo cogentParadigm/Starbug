@@ -57,7 +57,8 @@
     "starbug/log": "dev-master",
     "starbug/imports": "dev-master",
     "starbug/menus": "dev-master",
-    "starbug/queues": "dev-master"
+    "starbug/queues": "dev-master",
+    "starbug/settings": "dev-master"
   },
   "require-dev": {
     "starbug/devel": "^1.0"

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "876702979b313d618b3166684d87c06c",
+    "content-hash": "70f20839e3d740a1057ed2dd9ff35dab",
     "packages": [
         {
             "name": "composer/installers",
@@ -3708,6 +3708,40 @@
                 "source": "https://github.com/cogentParadigm/starbug-resource-locator/tree/v0.9.1"
             },
             "time": "2021-01-12T07:17:05+00:00"
+        },
+        {
+            "name": "starbug/settings",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/settings",
+                "reference": "7afb57123fe9041f10a78ec3018bc419e9a9a124"
+            },
+            "require": {
+                "starbug/db": "*"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Settings"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Settings\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug settings module.",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "starbug/state",
@@ -11085,7 +11119,8 @@
         "starbug/log": 20,
         "starbug/imports": 20,
         "starbug/menus": 20,
-        "starbug/queues": 20
+        "starbug/queues": 20,
+        "starbug/settings": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

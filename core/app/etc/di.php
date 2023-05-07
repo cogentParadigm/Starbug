@@ -35,7 +35,6 @@ return [
     get("Starbug\Core\Api\RouteProvider")
   ],
   "Starbug\Core\Routing\Configuration" => autowire()->method("addProviders", get("route.providers")),
-  'Starbug\Core\SettingsInterface' => autowire('Starbug\Core\DatabaseSettings'),
   'Starbug\Core\*Interface' => autowire('Starbug\Core\*'),
   'Starbug\Config\*Interface' => autowire('Starbug\Config\*'),
   'Starbug\Http\*Interface' => autowire('Starbug\Http\*'),
@@ -94,7 +93,6 @@ return [
     "images" => ImagesHelper::class,
     "request" => RequestHelper::class,
     "session" => SessionHelper::class,
-    "settings" => SettingsHelper::class,
     "url" => UrlHelper::class
   ],
   "form.hooks" => [

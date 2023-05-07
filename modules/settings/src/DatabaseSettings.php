@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Settings;
 
 use Starbug\Db\DatabaseInterface;
 
@@ -8,12 +8,10 @@ use Starbug\Db\DatabaseInterface;
  */
 class DatabaseSettings implements SettingsInterface {
 
-  private $db;
-  private $settings;
+  protected $db;
 
   public function __construct(DatabaseInterface $db) {
     $this->db = $db;
-    $this->settings = [];
   }
 
   /**

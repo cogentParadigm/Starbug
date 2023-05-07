@@ -1,0 +1,23 @@
+{
+  "name": "starbug/settings",
+  "type": "starbug-module",
+  "description": "Starbug settings module.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Settings"
+  },
+  "require": {
+    "starbug/db": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Settings\\": "src/"
+    }
+  }
+}
