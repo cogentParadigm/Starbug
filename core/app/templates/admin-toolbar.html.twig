@@ -20,5 +20,5 @@
   {% set searchFormParams = {} %}
 {% endif %}
 {% set searchFormParams = searchFormParams|merge({"model": model}) %}
-{{ helper("displays").render([(model|title) ~ "SearchForm", "SearchForm"], searchFormParams) }}
+{{ helper("displays").render(searchForm ?? [(model|title) ~ "SearchForm", "SearchForm"], searchFormParams) }}
 <br/>

@@ -52,7 +52,7 @@
     "starbug/css": "dev-master",
     "starbug/js": "dev-master",
     "starbug/content": "dev-master",
-    "starbug/storm": "^0.9.1",
+    "starbug/storm": "^0.9.2",
     "starbug/redis": "dev-master",
     "starbug/state": "dev-master",
     "starbug/log": "dev-master",
