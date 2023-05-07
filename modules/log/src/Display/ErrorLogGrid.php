@@ -1,6 +1,5 @@
 <?php
-
-namespace Starbug\App;
+namespace Starbug\Log\Display;
 
 use Starbug\Core\GridDisplay;
 
@@ -12,5 +11,6 @@ class ErrorLogGrid extends GridDisplay {
     $this->add("level");
     $this->add(["message", "plugin" => "starbug.grid.columns.html", "sortable" => false]);
     $this->add("time");
+    $this->remove("row_options");
   }
 }

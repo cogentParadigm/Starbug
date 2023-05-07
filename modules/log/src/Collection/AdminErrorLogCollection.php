@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Log;
+namespace Starbug\Log\Collection;
 
 use Starbug\Core\AdminCollection;
 
@@ -20,7 +20,7 @@ class AdminErrorLogCollection extends AdminCollection {
     if (!empty($ops["level"])) {
       $query->condition("level", $ops["level"]);
     }
-    if (!$ops["sort"]) {
+    if (!empty($ops["sort"])) {
       $query->sort("time DESC");
     }
     return $query;

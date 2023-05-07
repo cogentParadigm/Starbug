@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Log;
+namespace Starbug\Log\Display;
 
 use Starbug\Core\SearchForm;
 
