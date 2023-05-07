@@ -1,5 +1,7 @@
 <?php
-namespace Starbug\Js;
+namespace Starbug\Js\Helper;
+
+use Starbug\Js\DojoConfiguration;
 
 class DojoHelper {
   public function __construct(DojoConfiguration $target) {

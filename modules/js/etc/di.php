@@ -4,7 +4,7 @@ namespace Starbug\Js;
 use function DI\add;
 use function DI\autowire;
 use function DI\get;
-use DI;
+use Starbug\Js\Helper\DojoHelper;
 use Starbug\Js\Script\DojoBuild;
 
 return [
