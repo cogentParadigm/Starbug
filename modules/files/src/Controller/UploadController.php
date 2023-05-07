@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Files;
+namespace Starbug\Files\Controller;
 
 use Starbug\Db\DatabaseInterface;
 use Exception;

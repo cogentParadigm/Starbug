@@ -4,12 +4,17 @@ namespace Starbug\Files;
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Core\Controller\ViewController;
 use Starbug\Core\Routing\Route;
+use Starbug\Files\Collection\AdminFilesCollection;
+use Starbug\Files\Collection\FilesSelectCollection;
+use Starbug\Files\Controller\ApiFilesController;
+use Starbug\Files\Controller\DownloadController;
+use Starbug\Files\Controller\UploadController;
 
 class RouteProvider extends AdminRouteProvider {
 
   public function configure(Route $routes) {
-    $routes->addRoute("upload", "Starbug\Files\UploadController", ["groups" => "user"]);
-    $routes->addRoute("files/download/{id:[0-9]+}", "Starbug\Files\DownloadController", ["groups" => ["admin"]]);
+    $routes->addRoute("upload", UploadController::class, ["groups" => "user"]);
+    $routes->addRoute("files/download/{id:[0-9]+}", DownloadController::class, ["groups" => ["admin"]]);
 
     $admin = $routes->getRoute("admin");
     $admin->addRoute("/media", "Starbug\Core\Controller\ViewController", [
@@ -24,8 +29,8 @@ class RouteProvider extends AdminRouteProvider {
 
     $api = $routes->getRoute("api");
     $this->addAdminApiRoute($api->addRoute("/files/admin.{format:csv|json}"), "files", AdminFilesCollection::class)
-      ->setController("Starbug\Files\ApiFilesController");
+      ->setController(ApiFilesController::class);
     $this->addApiRoute($api->addRoute("/files/select.json"), "files", FilesSelectCollection::class)
-      ->setController("Starbug\Files\ApiFilesController");
+      ->setController(ApiFilesController::class);
   }
 }
