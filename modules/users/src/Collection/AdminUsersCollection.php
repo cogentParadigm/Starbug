@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Users;
+namespace Starbug\Users\Collection;
 
 use Starbug\Core\AdminCollection;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Users;
+namespace Starbug\Users\Display;
 
 use Starbug\Core\FormDisplay;
 

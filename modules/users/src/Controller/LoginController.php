@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Users;
+namespace Starbug\Users\Controller;
 
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\ServerRequestInterface;
