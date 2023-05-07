@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core\Script;
+namespace Starbug\Queues\Script;
 
 use Starbug\Queue\QueueManagerInterface;
 

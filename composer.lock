@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8824b14fc802fd4e7ee232cc951a8161",
+    "content-hash": "876702979b313d618b3166684d87c06c",
     "packages": [
         {
             "name": "composer/installers",
@@ -3605,15 +3605,51 @@
             "time": "2021-02-11T04:16:36+00:00"
         },
         {
+            "name": "starbug/queues",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/queues",
+                "reference": "5545d235dfbcf4e95d8084ede6d772ada98163e0"
+            },
+            "require": {
+                "starbug/db": "*",
+                "starbug/queue": "^0.8.0"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Queues"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Queues\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug queues module.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "starbug/redis",
             "version": "dev-master",
             "dist": {
                 "type": "path",
                 "url": "./modules/redis",
-                "reference": "f0e0d0743500300e12d3d764bfcb81cd990cbab2"
+                "reference": "6d722c7aab39673becbd2136b1edf83432e0145a"
             },
             "require": {
-                "predis/predis": "^1.1.6"
+                "predis/predis": "^1.1.6",
+                "starbug/queues": "*"
             },
             "type": "starbug-module",
             "extra": {
@@ -11048,7 +11084,8 @@
         "starbug/state": 20,
         "starbug/log": 20,
         "starbug/imports": 20,
-        "starbug/menus": 20
+        "starbug/menus": 20,
+        "starbug/queues": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

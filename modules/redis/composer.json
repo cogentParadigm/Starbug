@@ -13,6 +13,7 @@
     "namespace": "Starbug\\Redis"
   },
   "require": {
-    "predis/predis": "^1.1.6"
+    "predis/predis": "^1.1.6",
+    "starbug/queues": "*"
   }
 }

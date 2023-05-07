@@ -50,14 +50,6 @@ class Migration extends AbstractMigration {
       ["category", "type" => "category", "null" => ""],
       ["autoload", "type" => "bool", "default" => "0"]
     );
-    $this->schema->addTable(["queues"],
-      ["queue", "type" => "string"],
-      ["worker", "type" => "string"],
-      ["data", "type" => "text", "default" => ""],
-      ["position", "type" => "int", "ordered" => "queue", "default" => "0"],
-      ["status", "type" => "string", "default" => "ready"],
-      ["message", "type" => "text", "default" => ""]
-    );
 
     // groups
     $this->schema->addRow("terms", ["taxonomy" => "groups", "term" => "User"]);

@@ -12,11 +12,8 @@ use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Script\Generate;
 use Starbug\Core\Script\ListScripts;
-use Starbug\Core\Script\ProcessQueue;
-use Starbug\Core\Script\Queue;
 use Starbug\Core\Script\Setup;
 use Starbug\Http\UriBuilder;
-use Starbug\Queue\QueueFactory;
 use Starbug\ResourceLocator\ResourceLocator;
 
 return [
@@ -124,8 +121,6 @@ return [
     "url" => MacroUrlHook::class
   ],
   "scripts.generate" => Generate::class,
-  "scripts.process-queue" => ProcessQueue::class,
-  "scripts.queue" => Queue::class,
   "scripts.setup" => Setup::class,
   "scripts.list-scripts" => ListScripts::class,
   'Starbug\Core\Script\Generate' => autowire()->constructorParameter('base_directory', get('base_directory')),
@@ -142,14 +137,6 @@ return [
   "Starbug\Bundle\*Interface" => autowire("Starbug\Bundle\*"),
   "Starbug\Operation\*Interface" => autowire("Starbug\Operation\*"),
   "Starbug\Core\SettingsForm" => autowire()->method("setDatabase", get("Starbug\Db\DatabaseInterface")),
-  "Starbug\Queue\*Interface" => autowire("Starbug\Queue\*"),
-  "Starbug\Queue\QueueFactoryInterface" => function (ContainerInterface $container) {
-    $factory = new QueueFactory();
-    $factory->addQueue("default", function () use ($container) {
-      return $container->make("Starbug\Queue\Driver\Sql", ["name" => "default"]);
-    });
-    return $factory;
-  },
   FormHookFactoryInterface::class => autowire(FormHookFactory::class)
     ->constructorParameter("hooks", get("form.hooks")),
   MacroHookFactoryInterface::class => autowire(MacroHookFactory::class)

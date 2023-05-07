@@ -1,0 +1,24 @@
+{
+  "name": "starbug/queues",
+  "type": "starbug-module",
+  "description": "Starbug queues module.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Queues"
+  },
+  "require": {
+    "starbug/queue": "^0.8.0",
+    "starbug/db": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Queues\\": "src/"
+    }
+  }
+}

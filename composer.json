@@ -31,7 +31,6 @@
     "starbug/http": "^0.9",
     "starbug/auth": "^0.12.0",
     "starbug/operation": "^0.8.0",
-    "starbug/queue": "^0.8.0",
     "starbug/config": "^0.9.0",
     "phpmailer/phpmailer": "dev-master",
     "masterexploder/phpthumb": "dev-master",
@@ -57,7 +56,8 @@
     "starbug/state": "dev-master",
     "starbug/log": "dev-master",
     "starbug/imports": "dev-master",
-    "starbug/menus": "dev-master"
+    "starbug/menus": "dev-master",
+    "starbug/queues": "dev-master"
   },
   "require-dev": {
     "starbug/devel": "^1.0"
