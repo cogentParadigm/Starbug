@@ -2,6 +2,9 @@
 namespace Starbug\Emails;
 
 use PHPMailer\PHPMailer\PHPMailer;
+use Starbug\Core\MacroInterface;
+use Starbug\Db\DatabaseInterface;
+use Starbug\Settings\SettingsInterface;
 
 class Mailer implements MailerInterface {
 

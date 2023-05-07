@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Settings\SettingsInterface;
+
 class MacroSiteHook extends MacroHook {
   public function __construct(SettingsInterface $settings) {
     $this->settings = $settings;
