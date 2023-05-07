@@ -4,5 +4,5 @@
   <a href="javascript:;" class="edit btn btn-default">Edit</a>
   <input type="hidden" class="address-value" value="{{ address.id }}"/>
 {% else %}
-  {{ helper("displays").render("AddressForm", options) }}
+  {{ helper("displays").render(form, options) }}
 {% endif %}

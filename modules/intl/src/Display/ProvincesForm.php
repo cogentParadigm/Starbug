@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Intl;
+namespace Starbug\Intl\Display;
 
 use Starbug\Core\FormDisplay;
 

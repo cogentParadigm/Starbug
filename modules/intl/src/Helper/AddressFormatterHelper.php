@@ -1,5 +1,7 @@
 <?php
-namespace Starbug\Intl;
+namespace Starbug\Intl\Helper;
+
+use Starbug\Intl\AddressFormatter;
 
 class AddressFormatterHelper {
   public function __construct(AddressFormatter $target) {

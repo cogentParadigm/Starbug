@@ -1,10 +1,10 @@
 <?php
-namespace Starbug\Intl;
+namespace Starbug\Intl\Display;
 
 use Starbug\Core\GridDisplay;
 
-class ProvincesGrid extends GridDisplay {
-  public $model = "provinces";
+class CountriesGrid extends GridDisplay {
+  public $model = "countries";
   public $action = "admin";
   public function buildDisplay($options) {
     $this->add("name");

@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Intl;
+namespace Starbug\Intl\Collection;
 
 use Starbug\Core\SelectCollection;
 

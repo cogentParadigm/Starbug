@@ -4,7 +4,8 @@ namespace Starbug\Intl;
 use function DI\add;
 use function DI\get;
 use function DI\autowire;
-use DI;
+use Starbug\Intl\Form\Hook\FormAddressHook;
+use Starbug\Intl\Helper\AddressFormatterHelper;
 use Starbug\Intl\Script\IntlSetup;
 
 return [

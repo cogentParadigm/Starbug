@@ -1,9 +1,11 @@
 <?php
-namespace Starbug\Intl;
+namespace Starbug\Intl\Controller;
 
 use Starbug\Db\DatabaseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Controller;
+use Starbug\Intl\AddressFormatter;
+use Starbug\Intl\Display\AddressForm;
 
 class AddressController extends Controller {
   public function __construct(DatabaseInterface $db, AddressFormatter $address) {
@@ -40,6 +42,6 @@ class AddressController extends Controller {
       $options["input_name"] = $queryParams["keys"];
     }
     $this->assign("options", $options);
-    return $this->render("address/form.html");
+    return $this->render("address/form.html", ["form" => AddressForm::class]);
   }
 }
