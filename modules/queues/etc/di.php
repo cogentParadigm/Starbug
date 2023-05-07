@@ -8,6 +8,7 @@ use Starbug\Queues\Script\ProcessQueue;
 use Starbug\Queues\Script\Queue;
 
 use function DI\add;
+use function DI\autowire;
 use function DI\get;
 
 return [
