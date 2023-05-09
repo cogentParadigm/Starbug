@@ -7,6 +7,33 @@ use function DI\add;
 use DI;
 use Psr\Container\ContainerInterface;
 use Starbug\Db\Helper\SchemaHelper;
+use Starbug\Db\Query\Hook\StoreAddslashesHook;
+use Starbug\Db\Query\Hook\StoreAliasHook;
+use Starbug\Db\Query\Hook\StoreConfirmHook;
+use Starbug\Db\Query\Hook\StoreDateHook;
+use Starbug\Db\Query\Hook\StoreDatetimeHook;
+use Starbug\Db\Query\Hook\StoreDefaultHook;
+use Starbug\Db\Query\Hook\StoreEmailHook;
+use Starbug\Db\Query\Hook\StoreExcludeHook;
+use Starbug\Db\Query\Hook\StoreFilterVarHook;
+use Starbug\Db\Query\Hook\StoreGroupsHook;
+use Starbug\Db\Query\Hook\StoreLengthHook;
+use Starbug\Db\Query\Hook\StoreMaterializedPathHook;
+use Starbug\Db\Query\Hook\StoreMd5Hook;
+use Starbug\Db\Query\Hook\StoreOperationHook;
+use Starbug\Db\Query\Hook\StoreOptionalUpdateHook;
+use Starbug\Db\Query\Hook\StoreOrderedHook;
+use Starbug\Db\Query\Hook\StoreOwnerHook;
+use Starbug\Db\Query\Hook\StorePasswordHook;
+use Starbug\Db\Query\Hook\StoreReferencesHook;
+use Starbug\Db\Query\Hook\StoreRequiredHook;
+use Starbug\Db\Query\Hook\StoreSelectionHook;
+use Starbug\Db\Query\Hook\StoreSlugHook;
+use Starbug\Db\Query\Hook\StoreTimeHook;
+use Starbug\Db\Query\Hook\StoreTimestampHook;
+use Starbug\Db\Query\Hook\StoreTypeHook;
+use Starbug\Db\Query\Hook\StoreUniqueHook;
+use Starbug\Db\Query\Hook\StoreUploadHook;
 use Starbug\Db\Schema\QueryCompilerHook;
 use Starbug\Db\Script\Describe;
 use Starbug\Db\Script\Migrate;
@@ -56,33 +83,33 @@ return [
     'action' => get('Starbug\Db\Query\Extensions\Action')
   ],
   "db.query.executor.hooks" => [
-    "addslashes" => "Starbug\Core\StoreAddslashesHook",
-    "alias" => "Starbug\Core\StoreAliasHook",
-    "confirm" => "Starbug\Core\StoreConfirmHook",
-    "date" => "Starbug\Core\StoreDateHook",
-    "datetime" => "Starbug\Core\StoreDatetimeHook",
-    "default" => "Starbug\Core\StoreDefaultHook",
-    "email" => "Starbug\Core\StoreEmailHook",
-    "exclude" => "Starbug\Core\StoreExcludeHook",
-    "filter_var" => "Starbug\Core\StoreFilterVarHook",
-    "user_groups" => "Starbug\Core\StoreGroupsHook",
-    "length" => "Starbug\Core\StoreLengthHook",
-    "materialized_path" => "Starbug\Core\StoreMaterializedPathHook",
-    "md5" => "Starbug\Core\StoreMd5Hook",
-    "operation" => "Starbug\Core\StoreOperationHook",
-    "optional_update" => "Starbug\Core\StoreOptionalUpdateHook",
-    "ordered" => "Starbug\Core\StoreOrderedHook",
-    "owner" => "Starbug\Core\StoreOwnerHook",
-    "password" => "Starbug\Core\StorePasswordHook",
-    "references" => "Starbug\Core\StoreReferencesHook",
-    "required" => "Starbug\Core\StoreRequiredHook",
-    "selection" => "Starbug\Core\StoreSelectionHook",
-    "slug" => "Starbug\Core\StoreSlugHook",
-    "time" => "Starbug\Core\StoreTimeHook",
-    "timestamp" => "Starbug\Core\StoreTimestampHook",
-    "type" => "Starbug\Core\StoreTypeHook",
-    "unique" => "Starbug\Core\StoreUniqueHook",
-    "upload" => "Starbug\Core\StoreUploadHook"
+    "addslashes" => StoreAddslashesHook::class,
+    "alias" => StoreAliasHook::class,
+    "confirm" => StoreConfirmHook::class,
+    "date" => StoreDateHook::class,
+    "datetime" => StoreDatetimeHook::class,
+    "default" => StoreDefaultHook::class,
+    "email" => StoreEmailHook::class,
+    "exclude" => StoreExcludeHook::class,
+    "filter_var" => StoreFilterVarHook::class,
+    "user_groups" => StoreGroupsHook::class,
+    "length" => StoreLengthHook::class,
+    "materialized_path" => StoreMaterializedPathHook::class,
+    "md5" => StoreMd5Hook::class,
+    "operation" => StoreOperationHook::class,
+    "optional_update" => StoreOptionalUpdateHook::class,
+    "ordered" => StoreOrderedHook::class,
+    "owner" => StoreOwnerHook::class,
+    "password" => StorePasswordHook::class,
+    "references" => StoreReferencesHook::class,
+    "required" => StoreRequiredHook::class,
+    "selection" => StoreSelectionHook::class,
+    "slug" => StoreSlugHook::class,
+    "time" => StoreTimeHook::class,
+    "timestamp" => StoreTimestampHook::class,
+    "type" => StoreTypeHook::class,
+    "unique" => StoreUniqueHook::class,
+    "upload" => StoreUploadHook::class
   ],
   "databases.active" => function (ContainerInterface $container) {
     return $container->get("databases.".$container->get("db"));

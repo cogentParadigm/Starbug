@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Db\Query\Hook;
 
 use Starbug\Db\Query\ExecutorHook;
 
