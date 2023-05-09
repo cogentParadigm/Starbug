@@ -8,6 +8,8 @@ use Starbug\Users\Collection\AdminUsersCollection;
 use Starbug\Users\Controller\LoginController;
 use Starbug\Users\Display\ForgotPasswordForm;
 use Starbug\Users\Display\PasswordResetForm;
+use Starbug\Users\Display\UsersForm;
+use Starbug\Users\Display\UsersGrid;
 use Starbug\Users\Display\UsersSearchForm;
 
 class RouteProvider extends AdminRouteProvider {
@@ -15,7 +17,11 @@ class RouteProvider extends AdminRouteProvider {
   public function configure(Route $routes) {
     $users = $this->addCrudRoutes($routes->getRoute("admin")->addRoute("/users"), "users");
     $users->getRoute("/delete/{id:[0-9]+}")->onPost("Starbug\Core\Operation\SoftDelete");
-    $users->setOption("searchForm", UsersSearchForm::class);
+    $users->setOptions([
+      "grid" => UsersGrid::class,
+      "form" => UsersForm::class,
+      "searchForm" => UsersSearchForm::class
+    ]);
 
     $api = $routes->getRoute("api");
     $this->addApiRoute($api->addRoute("/groups/select.json"), "groups", SelectCollection::class);
