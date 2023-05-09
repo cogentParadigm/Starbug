@@ -6,7 +6,7 @@ use Starbug\Bundle\Bundle;
 
 class Migration extends AbstractMigration {
   public function up() {
-    $admin = new Bundle(["table" => "terms", "keys" => ["taxonomy" => "groups", "slug" => "admin"]]);
+    $admin = new Bundle(["table" => "groups", "keys" => ["slug" => "admin"]]);
     // GLOBAL READ AND WRITE PERMITS FOR ADMIN
     $this->schema->addRow("permits", ["related_table" => "%", "action" => "%", "role" => "everyone", "priv_type" => "%", "user_groups" => $admin]);
   }

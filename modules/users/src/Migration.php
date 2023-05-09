@@ -5,6 +5,40 @@ use Starbug\Db\Schema\AbstractMigration;
 
 class Migration extends AbstractMigration {
   public function up() {
+    $this->schema->addTable(["users", "label_select" => "CONCAT(first_name, ' ', last_name)", "groups" => true],
+      ["first_name", "type" => "string", "length" => "64", "list" => "true"],
+      ["last_name", "type" => "string", "length" => "64", "list" => "true"],
+      ["email", "type" => "string", "length" => "128", "unique" => "", "null" => true],
+      ["password", "type" => "password", "confirm" => "password_confirm", "optional_update" => ""],
+      ["last_visit", "type" => "datetime", "default" => "0000-00-00 00:00:00", "list" => "true", "display" => "false"],
+      ["password_token", "type" => "string", "default" => ""]
+    );
+    $this->schema->addTable(["sessions"],
+      ["users_id", "type" => "int", "references" => "users id", "update" => "cascade", "delete" => "cascade"],
+      ["token", "type" => "string"],
+      ["expires", "type" => "datetime"]
+    );
+    $this->schema->addTable(["groups", "label_select" => "groups.name"],
+      ["name", "type" => "string", "length" => "128", "unique" => ""],
+      ["slug", "type" => "string", "length" => "128", "unique" => "", "slug" => "name"],
+      ["position", "type" => "int", "ordered" => ""]
+    );
+    $this->schema->addColumn("users",
+      ["groups", "type" => "groups", "user_access" => true, "alias" => "%slug%", "user_groups" => true]
+    );
+    $this->schema->addUniqueIndex("users_groups", ["users_id", "groups_id"]);
+    $this->schema->addTable(["permits"],
+      ["role", "type" => "string", "length" => "30"],
+      ["who", "type" => "int", "default" => "0"],
+      ["action", "type" => "string", "length" => "100"],
+      ["priv_type", "type" => "string", "length" => "30", "default" => "table"],
+      ["related_table", "type" => "string", "length" => "100"],
+      ["related_id", "type" => "int", "default" => "0"]
+    );
+
+    // groups
+    $this->schema->addRow("groups", ["name" => "User"]);
+    $this->schema->addRow("groups", ["name" => "Admin"]);
     // USER PERMITS
     $this->schema->addRow("permits", ["related_table" => "users", "action" => "login", "role" => "everyone", "priv_type" => "table"]);
     $this->schema->addRow("permits", ["related_table" => "users", "action" => "logout", "role" => "everyone", "priv_type" => "table"]);

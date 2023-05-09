@@ -8,10 +8,7 @@ use Starbug\Db\Schema\Table as SchemaTable;
 class SchemaHook implements HookInterface {
   public function addColumn($column, SchemaTable $table, SchemaInterface $schema) {
     $name = array_shift($column);
-    if ($column['type'] == "category") {
-      $table->set($name, "references", "terms id");
-      $table->set($name, "alias", "%taxonomy% %slug%");
-    } elseif ($column["type"] == "path") {
+    if ($column["type"] == "path") {
       $table->set($name, "references", "aliases id");
     }
     $access_col = false;
@@ -71,7 +68,7 @@ class SchemaHook implements HookInterface {
       }
       if (!$table->hasColumn("groups") && $table->hasOption("groups") && $table->getOption("groups")) {
         $schema->addColumn($table->getName(),
-          ["groups", "type" => "terms", "taxonomy" => "groups", "user_access" => true, "optional" => true]
+          ["groups", "type" => "groups", "user_access" => true, "optional" => true]
         );
       }
       if (!$table->hasColumn("deleted")) {

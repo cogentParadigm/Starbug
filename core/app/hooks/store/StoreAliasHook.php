@@ -14,7 +14,12 @@ class StoreAliasHook extends ExecutorHook {
   }
   public function validate($query, $key, $value, $column, $alias) {
     if (!empty($value) && !is_numeric($value) && $value != "NULL") {
-      $referenced_model = explode(" ", $this->schema->getColumn($query->model, $column)["references"]);
+      $hooks = $this->schema->getColumn($query->model, $column);
+      if ($this->schema->hasTable($hooks["type"])) {
+        $referenced_model = [$hooks["type"], "id"];
+      } else {
+        $referenced_model = explode(" ", $hooks["references"]);
+      }
       // $alias might be '%first_name% %last_name%'
       $alias = explode("%", $alias);
       $match = '';
@@ -36,10 +41,20 @@ class StoreAliasHook extends ExecutorHook {
         }
         $num++;
       }
-      $row = $this->db->query($referenced_model[0])->select($referenced_model[1])->condition($match, $value)->one();
-      if (!empty($row)) {
-        $value = $row[$referenced_model[1]];
+      if (empty($value)) {
+        $value = [];
+      } elseif (!is_array($value)) {
+        $value = explode(",", preg_replace("/[,\s]*,[,\s]*/", ",", $value));
       }
+      $values = [];
+      foreach ($value as $v) {
+        $row = $this->db->query($referenced_model[0])->select($referenced_model[1])->condition($match, $v)->one();
+        if (!empty($row)) {
+          $v = $row[$referenced_model[1]];
+        }
+        $values[] = $v;
+      }
+      $value = implode(",", $values);
     }
     return $value;
   }

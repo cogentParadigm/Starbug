@@ -10,7 +10,7 @@ class FilesRepository {
   public function save($record) {
     if (empty($record["id"])) {
       if (empty($record['category'])) {
-        $record['category'] = "files_category uncategorized";
+        $record['category'] = "uncategorized";
       }
       if (empty($record["location"])) {
         $record["location"] = "default";

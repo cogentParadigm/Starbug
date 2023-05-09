@@ -23,14 +23,6 @@ class RouteProvider implements RouteProviderInterface {
       "view" => "admin.html"
     ]);
 
-    // Taxonomy
-    $terms = $this->addCrudRoutes($admin->addRoute("/taxonomies"), "terms");
-    $this->addStatefulRedirects($terms, $terms->getPath()."/taxonomy/{{ row.taxonomy }}");
-
-    $terms->addRoute("/taxonomy/{taxonomy}", "Starbug\Core\Controller\ViewController", [
-      "view" => "admin/taxonomies/taxonomy.html"
-    ]);
-
     // Profile
     $routes->addRoute("profile", "Starbug\Core\Controller\ViewController", [
       "view" => "profile.html",

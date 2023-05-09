@@ -3,6 +3,7 @@ namespace Starbug\Users;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Core\Routing\Route;
+use Starbug\Core\SelectCollection;
 use Starbug\Users\Collection\AdminUsersCollection;
 use Starbug\Users\Controller\LoginController;
 use Starbug\Users\Display\ForgotPasswordForm;
@@ -17,6 +18,8 @@ class RouteProvider extends AdminRouteProvider {
     $users->setOption("searchForm", UsersSearchForm::class);
 
     $api = $routes->getRoute("api");
+    $this->addApiRoute($api->addRoute("/groups/select.json"), "groups", SelectCollection::class);
+
     $api->addRoute("/users/admin.{format:csv|json}", "Starbug\Core\ApiUsersController", [
       "collection" => AdminUsersCollection::class,
       "model" => "users"

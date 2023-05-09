@@ -23,16 +23,6 @@ class TestsMigration extends AbstractMigration {
     );
 
     /*****************************************
-     * Table for testing category
-     ****************************************/
-    // category field type
-    // you can optionally specify taxonomy:taxonomy_name
-    // the default taxonomy will be [table_name]_[column_name]
-    $this->schema->addTable(["hook_store_category"],
-      ["value", "type" => "category", "taxonomy" => "groups"]
-    );
-
-    /*****************************************
      * Table for testing confirm
      ****************************************/
     // will require value and value_confirm fields to be equal.
@@ -156,17 +146,6 @@ class TestsMigration extends AbstractMigration {
     $this->schema->addTable(["hook_store_slug"],
       ["title_field", "type" => "string"],
       ["slug_field", "type" => "string", "slug" => "title_field"]
-    );
-
-    /*****************************************
-     * Table for testing terms
-     ****************************************/
-    // you can store terms by id, slug or title
-    // you can comma separate multiple terms - published,pending
-    // you can use minus/plus signs to remove/add terms - -pending,+published
-    // if no minus or plus sign is included, terms will be replaced
-    $this->schema->addTable(["hook_store_terms"],
-      ["value", "type" => "terms", "taxonomy" => "groups"]
     );
 
     /*****************************************

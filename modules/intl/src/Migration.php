@@ -37,7 +37,7 @@ class Migration extends AbstractMigration {
       ["code", "type" => "string", "length" => "2", "index" => ""]
     );
 
-    foreach (["settings", "terms", "countries"] as $m) {
+    foreach (["settings", "countries"] as $m) {
       $this->schema->addColumn($m, ["language", "type" => "string", "default" => "", "input_type" => "select", "select" => "languages.*", "from" => "languages", "caption" => "%name%", "value" => "language", "optional" => "", "index" => ""]);
       $this->schema->addColumn($m, ["source", "type" => "int", "references" => "$m id", "null" => "", "index" => "", "constraint" => false, "default" => "NULL", "display" => false]);
     }

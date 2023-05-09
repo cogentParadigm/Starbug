@@ -72,45 +72,6 @@ class StoreTest extends DatabaseTestCase {
   }
 
   /**
-   * StoreCategoryHook
-   */
-  public function testGroup() {
-    // get the user term
-    $user = $this->db->query("terms")->conditions([
-      "taxonomy" => "groups",
-      "slug" => "user"
-    ])->one();
-
-    // get the admin term
-    $admin = $this->db->query("terms")->conditions([
-      "taxonomy" => "groups",
-      "slug" => "admin"
-    ])->one();
-
-    // store a category
-    // category fields have an alias of %taxonomy% %slug% (see the alias hook)
-    // this means we can use the alias instead of an id, but we'll use the id
-    // since we only want to test the category hook
-    $this->db->store("hook_store_category", ["value" => "user"]);
-
-    // retrieve the record
-    $rid = $this->db->getInsertId("hook_store_category");
-    $record = $this->db->get("hook_store_category", $rid);
-
-    // verify the correct id is set
-    $this->assertSame($user['id'], $record["value"]);
-
-    // update the record
-    $this->db->store("hook_store_category", ["id" => $rid, "value" => "admin"]);
-
-    // retrieve the updated record
-    $record = $this->db->get("hook_store_category", $rid);
-
-    // verify the term id was updated
-    $this->assertSame($admin['id'], $record["value"]);
-  }
-
-  /**
    * StoreConfirmHook
    */
   public function testConfirm() {
@@ -441,42 +402,6 @@ class StoreTest extends DatabaseTestCase {
 
     // assert that the slug is stored correctly
     $this->assertSame("abduls-house-of-rugs", $record['slug_field']);
-  }
-
-  /**
-   * StoreTermsHook
-   */
-  public function testTerms() {
-    // store terms
-    $this->db->store("hook_store_terms", ["value" => "user,admin"]);
-
-    // get the id
-    $id = $this->db->getInsertId("hook_store_terms");
-
-    // retrieve the entries
-    $terms = $this->db->query("hook_store_terms_value")->conditions(["hook_store_terms_id" => $id])->select("value_id.slug as slug")->sort("slug")->all();
-
-    // verify the records are what we expect
-    $this->assertSame("admin", $terms[0]["slug"]);
-    $this->assertSame("user", $terms[1]["slug"]);
-
-    // update the terms (remove deleted)
-    $this->db->store("hook_store_terms", ["id" => $id, "value" => "-admin"]);
-
-    // retrieve the entries
-    $terms = $this->db->query("hook_store_terms_value")->conditions(["hook_store_terms_id" => $id])->select("value_id.slug as slug")->sort("slug")->all();
-
-    // verify the records are what we expect
-    $this->assertSame("user", $terms[0]["slug"]);
-
-    // update the terms (add deleted, remove others)
-    $this->db->store("hook_store_terms", ["id" => $id, "value" => "admin"]);
-
-    // retrieve the entries
-    $terms = $this->db->query("hook_store_terms_value")->conditions(["hook_store_terms_id" => $id])->select("value_id.slug as slug")->sort("slug")->all();
-
-    // verify the records are what we expect
-    $this->assertSame("admin", $terms[0]["slug"]);
   }
 
   /**

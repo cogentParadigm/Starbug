@@ -1,7 +1,6 @@
 ---
 hook_store_addslashes:
 hook_store_alias:
-hook_store_category:
 hook_store_confirm:
 hook_store_datetime:
 hook_store_default:
@@ -15,8 +14,6 @@ hook_store_password:
 hook_store_references:
 hook_store_required:
 hook_store_slug:
-hook_store_terms:
-hook_store_terms_value:
 hook_store_time:
 hook_store_unique:
 users:

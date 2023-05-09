@@ -75,9 +75,6 @@ return [
   'Starbug\Core\Routing\*Interface' => autowire('Starbug\Core\Routing\*'),
   'Starbug\Core\ImagesInterface' => autowire('Starbug\Core\Images')
     ->constructorParameter('base_directory', get('base_directory')),
-  'db.schema.migrations' => [
-    get('Starbug\Core\Migration')
-  ],
   'db.schema.hooks' => [
     get('Starbug\Core\SchemaHook')
   ],
