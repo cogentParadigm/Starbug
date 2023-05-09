@@ -33,7 +33,8 @@ class Migration extends AbstractMigration {
       ["action", "type" => "string", "length" => "100"],
       ["priv_type", "type" => "string", "length" => "30", "default" => "table"],
       ["related_table", "type" => "string", "length" => "100"],
-      ["related_id", "type" => "int", "default" => "0"]
+      ["related_id", "type" => "int", "default" => "0"],
+      ["user_groups", "type" => "int", "references" => "groups id", "alias" => "%slug%"]
     );
 
     // groups
