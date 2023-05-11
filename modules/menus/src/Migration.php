@@ -22,5 +22,16 @@ class Migration extends AbstractMigration {
     $content = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Content"]);
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/menus"], ["parent" => $content, "content" => "Menus", "icon" => "fa-list"]);
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/email-templates"], ["parent" => $content, "content" => "Email Templates", "icon" => "fa-envelope"]);
+
+    // main menu
+    $this->schema->addRow("menus", ["menu" => "anonymous", "href" => "/"], ["content" => "Home"]);
+    $this->schema->addRow("menus", ["menu" => "anonymous", "href" => "login"], ["content" => "Log In"]);
+
+    // user menu
+    $this->schema->addRow("menus", ["menu" => "user", "href" => "/"], ["content" => "Home"]);
+    $this->schema->addRow("menus", ["menu" => "user", "href" => "logout"], ["content" => "Log Out"]);
+
+    // footer menu
+    $this->schema->addRow("menus", ["menu" => "footer"], ["content" => "Home", "href" => "/"]);
   }
 }

@@ -1,4 +1,7 @@
 config:
+  packages:
+    - name: tachyons
+      location: ../../app/themes/tachyons/public/js
   map:
     '*':
       sb/form/theme/dropdown/default: sb/form/theme/dropdown/tachyons

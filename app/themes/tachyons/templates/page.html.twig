@@ -1,18 +1,7 @@
-<div class="page layout--{{ route.layout }} ph3 ph5-ns pv4">
-  <header class="mw9 center flex-ns justify-between-ns items-center-ns">
-    <h1 class="mt0 mb0-ns tc"><a class="link silver dim" href="{{ helper("url").build("") }}">{{ helper("settings").get("site_name") }}</a></h1>
-    <nav id="navigation">
-      <ul class="list pl0 ma0 flex justify-center items-center">
-        <li><a class="btn btn-gray" href="{{ helper("url").build("") }}">Home</a></li>
-        {% if helper("session").loggedIn() %}
-          <li class="ml2"><a class="btn btn-gray" href="{{ helper("url").build("logout") }}">Log Out</a></li>
-        {% else %}
-          <li class="ml2"><a class="btn btn-gray" href="{{ helper("url").build("login") }}">Log In</a></li>
-        {% endif %}
-      </ul>
-    </nav>
-  </header>
-  <div id="content" class="mw9 center pt4">
-    {{ include("layout.html.twig") }}
-  </div>
+<a href="#navigation" class="link sr-only sr-only-focusable">Skip to navigation</a>
+<a href="#content" class="link sr-only sr-only-focusable">Skip to main content</a>
+<div class="page layout--{{ route.layout }}">
+  {{ include("header.html.twig") }}
+  {{ include("layout.html.twig") }}
+  {{ include("footer.html.twig") }}
 </div>

@@ -3,16 +3,25 @@
   --input-padding-horizontal: var(--spacing-medium);
   --input-padding: var(--input-padding-vertical) var(--input-padding-horizontal);
   --input-bg: var(--white);
+  --input-hover-bg: var(--white);
+  --input-selected-bg: var(--white);
+  --input-error-bg: var(--white);
   --input-border-color: var(--moon-gray);
+  --input-border-hover-color: color-mod(var(--input-border-color) blend(black 20%));
+  --input-border-selected-color: var(--input-border-hover-color);
   --input-border: 1px solid var(--input-border-color);
   --input-border-radius: 0.25rem;
 
   --required-input-asterisk-color: var(--dark-red);
   --input-error-color: var(--dark-red);
-  --input-hover-bg: var(--near-white);
-  --input-focus-bg: var(--light-gray);
-  --input-selected-color: inherit;
-  --input-selected-bg: color-mod(var(--link-color) alpha(10%));
+  --input-option-hover-bg: var(--near-white);
+  --input-option-focus-bg: var(--light-gray);
+  --input-option-selected-color: inherit;
+  --input-option-selected-bg: color-mod(var(--link-color) alpha(10%));
+
+  --checkbox-color: var(--input-border-color);
+  --checkbox-hover-color: var(--checkbox-color);
+  --checkbox-checked-color: var(--link-color);
 }
 
 .input-reset, .form-control {
@@ -42,12 +51,24 @@
   border-radius: var(--input-border-radius);
   transition: border-color 0.2s, box-shadow 0.2s;
   &:hover {
-    border-color: color-mod(var(--input-border-color) blend(black 20%));
+    background: var(--input-hover-bg);
+    border-color: var(--input-border-hover-color);
+  }
+  &:valid, &.filled {
+    background: var(--input-selected-bg);
+    border-color: var(--input-border-selected-color);
   }
 }
 
 .form-control:focus, .form-control.focused {
-  box-shadow: inset 0 0 0 3px var(--link-color);
+  box-shadow: inset 0 0 0 2px var(--focus-shadow-color);
+}
+
+.form-control.form-error {
+  &, &:focus {
+    background: var(--input-error-bg);
+    border-color: var(--input-error-color);
+  }
 }
 
 label {
@@ -101,7 +122,7 @@ label {
     transition: border-color 0.2s;
   }
   &:hover:before {
-    color: color-mod(var(--input-border-color) blend(black 20%));
+    color: var(--input-border-hover-color);
   }
 }
 select.form-control, .form-control.dropdown-indicator {
@@ -113,19 +134,16 @@ select.form-control, .form-control.dropdown-indicator {
   position: absolute;
   &:indeterminate + .checkbox-label:before {
     content: "indeterminate_check_box";
-    color: var(--link-color);
+    color: var(--checkbox-checked-color);
   }
   &:checked + .checkbox-label:before {
     content: "check_box";
-    color: var(--link-color);
+    color: var(--checkbox-checked-color);
   }
-  &:checked + .checkbox-label:not(:hover) {
-    background: var(--input-selected-bg);
-  }
-  &:focus + .checkbox-label:not(:hover),
-  .focus-wrapper:focus & + .checkbox-label:not(:hover),
-  .dgrid-selected & + .checkbox-label:not(:hover) {
-    background: var(--input-focus-bg);
+  &:focus + .checkbox-label,
+  .focus-wrapper:focus & + .checkbox-label,
+  .dgrid-selected & + .checkbox-label {
+    box-shadow: inset 0 0 0 2px var(--focus-shadow-color);
   }
 }
 
@@ -137,16 +155,17 @@ select.form-control, .form-control.dropdown-indicator {
   position: relative;
   display: inline-block;
   width: 100%;
+  border-radius: var(--input-border-radius);
   transition: background-color 0.2s;
   &:before {
     @extend .material-icons;
     content: "check_box_outline_blank";
-    color: var(--input-border-color);
+    color: var(--checkbox-color);
     position: absolute;
     left: var(--input-padding-horizontal);
   }
-  &:hover {
-    background: var(--input-hover-bg);
+  &:hover:before {
+    color: var(--checkbox-hover-color);
   }
 }
 
@@ -169,15 +188,12 @@ select.form-control, .form-control.dropdown-indicator {
   position: absolute;
   &:checked + .radio-label:before {
     content: "radio_button_checked";
-    color: var(--link-color);
+    color: var(--checkbox-checked-color);
   }
-  &:checked + .radio-label:not(:hover) {
-    background: var(--input-selected-bg);
-  }
-  &:focus + .radio-label:not(:hover),
-  .focus-wrapper:focus & + .radio-label:not(:hover),
-  .dgrid-selected & + .radio-label:not(:hover) {
-    background: var(--input-focus-bg);
+  &:focus + .radio-label,
+  .focus-wrapper:focus & + .radio-label,
+  .dgrid-selected & + .radio-label {
+    box-shadow: inset 0 0 0 2px var(--focus-shadow-color);
   }
 }
 
@@ -193,12 +209,12 @@ select.form-control, .form-control.dropdown-indicator {
   &:before {
     @extend .material-icons;
     content: "radio_button_unchecked";
-    color: var(--input-border-color);
+    color: var(--checkbox-color);
     position: absolute;
     left: var(--input-padding-horizontal);
   }
-  &:hover {
-    background: var(--input-hover-bg);
+  &:hover:before {
+    color: var(--checkbox-hover-color);
   }
 }
 

@@ -51,6 +51,7 @@
 @import "./components/loading.css";
 @import "./bootstrap/modals.css";
 @import "./dijit/index.css";
+@import "./horizontal-rules/components/horizontal-rules.css";
 
 
 // 4. Atomic Styles
@@ -75,6 +76,7 @@
 @import "./letter-spacing/atoms/default.css";
 @import "./position/atoms/default.css";
 @import "./colors/atoms/default.css";
+@import "./margin/atoms/default.css";
 
 
 // 5. Media Queried Atomic Styles

@@ -18,6 +18,9 @@
   --btn-danger-color: var(--white);
   --btn-danger-bg: var(--red);
   --btn-danger-border-color: var(--red);
+
+  --btn-font-family: var(--headings-font-family);
+  --btn-border-radius: .25rem;
 }
 
 .btn {
@@ -35,11 +38,21 @@
   font-size: var(--base-font-size);
 
   // Default appearance.
-  border-radius: .25rem;
+  font-family: var(--btn-font-family);
+  border-radius: var(--btn-border-radius);
   border: none;
 }
 
 // Style Variants.
+
+.btn-link {
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+  color: var(--link-color);
+  &:hover, &.active, &:focus {
+    color: color-mod(var(--link-color) blend(white 35%));
+  }
+}
 
 .btn-default {
   @include btn-variant(var(--btn-default-color), var(--btn-default-bg), var(--btn-default-border-color));

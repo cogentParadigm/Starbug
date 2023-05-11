@@ -1,0 +1,22 @@
+<footer>
+  <hr class="gradient-hr"/>
+  <div class="container pa3 flex-l justify-between tc-m">
+    <a class="dib link f5 b near-black" href="{{ helper("url").build("") }}">
+      {{ helper("settings").get("site_name") }}
+    </a>
+    <div class="flex flex-column flex-row-ns justify-center pl0">
+        {{
+          include("menu.html.twig", {
+            "attributes":{
+              "class": "flex-ns justify-between-ns items-center mv2 mv0-ns list pl0",
+            },
+            "itemAttributes": {"class": "f8 brand-dark-blue pv2"},
+            "anchorAttributes": {"class": "f8 link brand-dark-blue hover-brand-green ph3 pv2"},
+            "iconAttributes": {"class": ""},
+            "subMenuAttributes": {"class": ""},
+            "menu": "footer"
+          })
+        }}
+      </div>
+  </div>
+</footer>

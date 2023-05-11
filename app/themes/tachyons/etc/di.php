@@ -6,6 +6,6 @@ use function DI\get;
 
 return [
   "route.providers" => add([
-    get("Starbug\Tachyons\RouteProvider")
+    get(RouteProvider::class)
   ])
 ];

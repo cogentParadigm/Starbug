@@ -1,53 +1,13 @@
 
     <article class="mt5">
       <h3 class="f8 ttu fw6 mt0 mb3 bb pb2">Buttons</h3>
-      <div style="overflow-x:auto" class="nl2 nr2">
-        <div style="min-width:80rem" class="pa2">
-          <div class="row">
-            <div class="col-2 mb3">
-            </div>
-            <div class="col-2 mb3">
-              <code class="f8 truncate mid-gray">link</code>
-            </div>
-            <div class="col-2 mb3">
-              <code class="f8 truncate mid-gray">btn</code>
-            </div>
-            <div class="col-2 mb3">
-              <code class="f8 truncate mid-gray">btn btn-gray</code>
-            </div>
-            <div class="col-2 mb3">
-              <code class="f8 truncate mid-gray">btn btn-success</code>
-            </div>
-            <div class="col-2 mb3">
-              <code class="f8 truncate mid-gray">btn btn-danger</code>
-            </div>
-          </div>
-          {% set rows = ["", "pointer underline", "pointer underline-hover", "pointer dim", "pointer o-50 glow", "pointer grow", "pointer grow-large", "pointer shadow-hover"] %}
-          {% for row in rows %}
-          <div class="row">
-            <div class="col-2 mb3">
-              {% if row is not empty %}
-                <code class="f8 truncate mid-gray">{{ row }}</code>
-              {% endif %}
-            </div>
-            <div class="col-2 mb3">
-              <a class="link {{ row }}">Link</a>
-            </div>
-            <div class="col-2 mb3">
-              <button class="btn {{ row }}">Default</button>
-            </div>
-            <div class="col-2 mb3">
-              <button class="btn btn-gray {{ row }}">Gray</button>
-            </div>
-            <div class="col-2 mb3">
-              <button class="btn btn-success {{ row }}">Success</button>
-            </div>
-            <div class="col-2 mb3">
-              <button class="btn btn-danger {{ row }}">Danger</button>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
+      <div>
+        <button class="btn link">Link</button>
+        <button class="btn btn-default">Default</button>
+        <button class="btn btn-brand-green">Green</button>
+        <button class="btn btn-gray">Gray</button>
+        <button class="btn btn-success">Success</button>
+        <button class="btn btn-danger">Danger</button>
       </div>
     </article>
 
@@ -56,33 +16,40 @@
       <div class="measure-wide">
 
         <div class="form-group">
-          <label class="mb2">Textbox</label>
-          <input type="text" class="form-control"/>
+          <label class="b mb2">Textbox</label>
+          <input type="text" class="form-control" required/>
           <div class="pv2 gray f9">This is a plain textbox.</div>
         </div>
 
         <div class="form-group">
-          <label class="mb2">Number</label>
-          <input type="text" class="form-control" data-dojo-type="sb/form/Number"/>
+          <label class="b mb2">Textbox error</label>
+          <p class="alert alert-danger">This field is required</p>
+          <input type="text" class="form-control form-error" required/>
+          <div class="pv2 gray f9">This is a plain textbox.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="b mb2">Number</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/Number" required/>
           <div class="pv2 gray f9">This is a numeric input textbox.</div>
         </div>
 
         <div class="form-group">
-          <label class="mb2">Phone Number</label>
-          <input type="text" class="form-control" data-dojo-type="sb/form/PhoneNumber"/>
+          <label class="b mb2">Phone Number</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/PhoneNumber" required/>
           <div class="pv2 gray f9">This is a phone number input textbox.</div>
         </div>
 
         <div class="form-group">
-          <label class="mb2">Currency</label>
-          <input type="text" class="form-control" data-dojo-type="sb/form/Currency"/>
+          <label class="b mb2">Currency</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/Currency" required/>
           <div class="pv2 gray f9">This is a currency input textbox.</div>
         </div>
 
         <div class="form-group">
-          <label class="mb2">Native Select</label>
+          <label class="b mb2">Native Select</label>
           <div class="dropdown-indicator fa-caret-down">
-            <select class="form-control">
+            <select class="form-control" required>
               <option value=""></option>
               <option value="1">Yes</option>
               <option value="0">No</option>
@@ -92,31 +59,31 @@
         </div>
 
         <div class="form-group">
-          <label class="mb2">Dynamic Select</label>
-          <input type="text" class="form-control" data-dojo-type="sb/form/Select" data-dojo-props="collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})"/>
+          <label class="b mb2">Dynamic Select</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/Select" data-dojo-props="collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})" required/>
            <div class="pv2 gray f9">This is a dynamic selection widget.</div>
         </div>
 
         <div class="form-group">
-          <label class="mb2">Dynamic Select</label>
-          <input type="text" class="form-control" data-dojo-type="sb/form/Select" data-dojo-props="searchable: true, collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})"/>
+          <label class="b mb2">Dynamic Select</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/Select" data-dojo-props="searchable: true, collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})" required/>
            <div class="pv2 gray f9">This is a dynamic selection widget with searching enabled.</div>
         </div>
 
         <div class="form-group">
-          <label class="mb2">Gender</label>
-          <input type="text" class="form-control" data-dojo-type="sb/form/MultipleSelect" data-dojo-props="collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})"/>
+          <label class="b mb2">Gender</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/MultipleSelect" data-dojo-props="collection:new (require('dstore/Memory'))({data:[{id:'', label:''}, {id:'Male', label:'Male'}, {id:'Female', label:'Female'}, {id:'Other', label:'Other'}]})" required/>
            <div class="pv2 gray f9">This is a multiple select widget.</div>
         </div>
 
         <div class="form-group">
-          <label class="mb2">Date of Birth</label>
-          <input type="text" class="form-control" data-dojo-type="starbug/form/DateTextBox" value="0000-00-00"/>
+          <label class="b mb2">Date of Birth</label>
+          <input type="text" class="form-control" data-dojo-type="sb/form/DateSelect" required/>
            <div class="pv2 gray f9">This is a date picker.</div>
         </div>
 
         <div class="form-group">
-          <label class="mb2">Date</label>
+          <label class="b mb2">Date</label>
           <input type="text" name="date" data-dojo-type="sb/form/DatePicker"/>
           <div class="pv2 gray f9">This is an inline date picker.</div>
         </div>
@@ -128,7 +95,7 @@
           </label>
         </div>
 
-        <label class="mb2">Radio Buttons</label>
+        <label class="b mb2">Radio Buttons</label>
         <div class="form-group">
           <div class="mb1">
             <label><input type="radio" name="radio1" value="1" class="radio"/><span class="radio-label">Yes</span></label>
@@ -141,7 +108,7 @@
           </div>
         </div>
 
-        <label class="mb2">Radio Button Group</label>
+        <label class="b mb2">Radio Button Group</label>
         <div class="form-group">
           <div class="list-group">
             <div class="list-group-item list-group-item-action pa0">

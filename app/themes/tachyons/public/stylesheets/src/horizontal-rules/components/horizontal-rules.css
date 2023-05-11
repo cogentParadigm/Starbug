@@ -1,0 +1,7 @@
+.gradient-hr {
+  margin: 0;
+  height: var(--spacing-large);
+  border: none;
+  background: linear-gradient(#000, #FFF);
+  opacity: 0.05;
+}

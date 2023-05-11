@@ -4,7 +4,11 @@
 {{ publish("hook/global.head.html.twig") }}
   </head>
   <body class="sans-serif near-black bg-white">
-    {{ include('page.html.twig') }}
+    {% if route.hasOption("pageTemplate") %}
+      {{ include([route.getOption("pageTemplate") ~ ".html.twig", "page.html.twig"]) }}
+    {% else %}
+      {{ include('page.html.twig') }}
+    {% endif %}
 {{ publish("hook/global.footer.html.twig") }}
   </body>
 </html>

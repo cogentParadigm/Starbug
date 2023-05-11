@@ -48,8 +48,15 @@
 @include make-color(transparent);
 
 .color-inherit { color: inherit; }
-.hover-color-inherit:hover, .hover-color-inherit:focus { color: inherit; }
 .bg-inherit { background-color: inherit; }
-.hover-bg-inherit:hover, .hover-bg-inherit:focus { background-color: inherit; }
 .b--inherit { border-color: inherit; }
+
+// Hover
+@include make-color-hover(brand-green);
+
+.hover-color-inherit:hover, .hover-color-inherit:focus { color: inherit; }
+.hover-bg-inherit:hover, .hover-bg-inherit:focus { background-color: inherit; }
 .hover-b--inherit:hover, .hover-b--inherit:focus { border-color: inherit; }
+
+// Focus
+@include make-color-focus(brand-green);

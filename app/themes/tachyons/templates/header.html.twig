@@ -1,0 +1,42 @@
+<header class="fixed top-0 bg-brand-green white z-1 w-100">
+  <div class="container flex justify-between items-center pv3 mv1">
+    <a class="db white f5 b" href="{{ helper("url").build("") }}">
+      {{ helper("settings").get("site_name") }}
+    </a>
+    <div class="flex-grow-1 justify-center dn db-l">
+      <div id="navigation" class="flex flex-column flex-row-l items-center justify-center pl0">
+        {{
+          include("menu.html.twig", {
+            "attributes":{
+              "class": "flex justify-between items-center list pl0 ma0 tc",
+            },
+            "itemAttributes": {"class": "f7 pv2"},
+            "anchorAttributes": {"class": "f7 link white hover-white ph2"},
+            "iconAttributes": {"class": ""},
+            "subMenuAttributes": {"class": ""},
+            "menu": route.getOption("menu")
+          })
+        }}
+      </div>
+    </div>
+    <div data-dojo-type="tachyons/Menu" data-dojo-id="menu" class="bg-white mt5 ph4 pv3 scroll-y fixed dn-l top-1 right-0 left-0 z-5 o-0 translateX-100 translateX-0-open o-100-open shadow-1" style="transition: transform 400ms cubic-bezier(0.7, 0, 0.3, 1), opacity 400ms cubic-bezier(0.7, 0, 0.3, 1)">
+      <div id="mobile-navigation">
+        {{
+          include("menu.html.twig", {
+            "attributes":{
+              "class": "mv2 list pl0",
+            },
+            "itemAttributes": {"class": "f6"},
+            "anchorAttributes": {"class": "f6 fw6 link db pa2 bb b--light-gray"},
+            "iconAttributes": {"class": ""},
+            "subMenuAttributes": {"class": ""},
+            "menu": route.getOption("menu")
+          })
+        }}
+      </div>
+    </div>
+    <div class="ph2 dn-l">
+      <a href="javascript:;" onclick="this.firstChild.innerText = (menu.toggle() == 'close') ? 'menu' : 'close';" class="db link white"><span class="material-icons f3">menu</span></a>
+    </div>
+  </div>
+</header>

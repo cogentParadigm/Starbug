@@ -1,3 +1,7 @@
-<div class="dropdown-indicator fa-caret-down">
+{% set attributes = attributes|merge({required:"required"}) %}
+{% if input_size is defined %}
+  {% set attributes = attributes|merge({"class": attributes.class ~ " form-control-" ~ input_size}) %}
+{% endif %}
+<div class="dropdown-indicator fa-caret-down{% if input_size is defined %} dropdown-indicator-{{ input_size }}{% endif %}">
   {{ include("@core/form/select.html.twig") }}
 </div>

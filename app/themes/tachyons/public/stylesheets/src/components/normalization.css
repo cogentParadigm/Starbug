@@ -6,6 +6,8 @@
   --link-color: var(--dark-green);
   --link-text-decoration: none;
   --paragraph-margin: var(--spacing-medium);
+  --headings-font-family: inherit;
+  --heading-font-weight: 700;
 }
 
 // Document
@@ -25,6 +27,7 @@ body {
 // -------------------------
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--headings-font-family);
   font-weight: var(--headings-font-weight);
   &, p {
     margin-top: var(--paragraph-margin);

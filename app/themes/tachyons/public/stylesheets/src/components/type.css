@@ -1,17 +1,27 @@
 //
 // Typography
+//
+// 1rem  = 16px
+// 1/16  = 0.0625, 2/16  = 0.125
+// 3/16  = 0.1875, 4/16  = 0.25
+// 5/16  = 0.3125, 6/16  = 0.375
+// 7/16  = 0.4375, 8/16  = 0.5
+// 9/16  = 0.5625, 10/16 = 0.625
+// 11/16 = 0.6875, 12/16 = 0.75
+// 13/16 = 0.8125, 14/16 = 0.875
+// 15/16 = 0.9375, 16/16 = 1
 // -----------------------------------------------------------
 
 :root {
-  --f1-size: 3rem;
-  --f2-size: 2.5rem;
-  --f3-size: 2.25rem;
-  --f4-size: 2rem;
-  --f5-size: 1.5rem;
-  --f6-size: 1.25rem;
-  --f7-size: 1rem;
-  --f8-size: 0.875rem;
-  --f9-size: 0.75rem;
+  --f1-size: 3rem; // 48px
+  --f2-size: 2.5rem; // 40px
+  --f3-size: 2.25rem; // 36px
+  --f4-size: 2rem; // 32px
+  --f5-size: 1.5rem; // 24px
+  --f6-size: 1.25rem; // 20px
+  --f7-size: 1rem; // 16px
+  --f8-size: 0.875rem; // 14px
+  --f9-size: 0.75rem; // 12px
   --base-font-size: var(--f7-size);
   --base-line-height: 1.5;
   --headings-font-weight: 700;
@@ -21,19 +31,23 @@
   --font-size-h4: var(--f6-size);
   --font-size-h5: var(--f7-size);
   --font-size-h6: var(--f8-size);
+
+  --font-family-lato: 'Lato', -apple-system, BlinkMacSystemFont,
+                      'avenir next', avenir,
+                      ubuntu,
+                      roboto, noto,
+                      'segoe ui',
+                      'helvetica neue', helvetica,
+                      arial, sans-serif;
+
+  --headings-font-family: var(--font-family-lato);
 }
 
 // Font Family
 // -------------------------
 
-.sans-serif {
-  font-family: 'Lato', -apple-system, BlinkMacSystemFont,
-               'avenir next', avenir,
-               ubuntu,
-               roboto, noto,
-               'segoe ui',
-               'helvetica neue', helvetica,
-               arial, sans-serif;
+.sans-serif, .lato {
+  font-family: var(--font-family-lato);
 }
 
 // Type Scale

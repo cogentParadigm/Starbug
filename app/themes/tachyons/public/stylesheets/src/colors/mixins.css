@@ -1,9 +1,18 @@
 @mixin make-color($name) {
   .$(name) { color: var(--$(name)); }
-  .hover-$(name):hover, .hover-$(name):focus { color: var(--$(name)); }
   .bg-$(name) { background-color: var(--$(name)); }
-  .hover-bg-$(name):hover, .hover-bg-$(name):focus { background-color: var(--$(name)); }
   .b--$(name) { border-color: var(--$(name)); }
-  .hover-b--$(name):hover, .hover-b--$(name):focus { border-color: var(--$(name)); }
   .$(name)-focus:focus { box-shadow: inset 0 0 0 3px var(--$(name)); }
+}
+
+@mixin make-color-hover($name) {
+  .hover-$(name):hover, .hover-$(name):focus { color: var(--$(name)); }
+  .hover-bg-$(name):hover, .hover-bg-$(name):focus { background-color: var(--$(name)); }
+  .hover-b--$(name):hover, .hover-b--$(name):focus { border-color: var(--$(name)); }
+}
+
+@mixin make-color-focus($name) {
+  .focus-$(name):focus { color: var(--$(name)); }
+  .focus-bg-$(name):focus { background-color: var(--$(name)); }
+  .focus-b--$(name):focus { border-color: var(--$(name)); }
 }

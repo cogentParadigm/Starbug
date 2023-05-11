@@ -1,6 +1,9 @@
 {% if display is not empty %}
   {% set form = display %}
 {% endif %}
+{% if form.errors(name) %}
+  {% set attributes = attributes|merge({"class":attributes.class ~ " form-error"}) %}
+{% endif %}
 {% if prepend is not empty %}
   {{ prepend|raw }}
 {% endif %}
@@ -40,7 +43,7 @@
   {{ after|raw }}
 {% endif %}
 {% if info is not empty %}
-  <span class="brand-gray db mt2">{{ info|nl2br }}</span>
+  <span class="brand-gray db mt2 f9 ph3">{{ info|nl2br }}</span>
 {% endif %}
 {% if not nodiv %}
   </div>
