@@ -1,9 +1,0 @@
-@media (--breakpoint-not-small) {
-  @include make-position-atoms(-ns);
-}
-@media (--breakpoint-medium) {
-  @include make-position-atoms(-m);
-}
-@media (--breakpoint-large) {
-  @include make-position-atoms(-l);
-}

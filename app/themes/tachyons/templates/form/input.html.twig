@@ -1,8 +1,0 @@
-{% if type == "checkbox" %}
-  <input {{ helper("filter").attributes({"type": "hidden", "id": attributes.id ~ "-hidden", "value": unchecked, "name": attributes.name})|raw }}/>
-  {% set attributes = attributes|merge({"class": attributes.class ~ " checkbox"}) %}
-{% endif %}
-{% if input_size is defined %}
-  {% set attributes = attributes|merge({"class": attributes.class ~ " form-control-" ~ input_size}) %}
-{% endif %}
-<input {{ helper("filter").attributes(attributes)|raw }} required/>

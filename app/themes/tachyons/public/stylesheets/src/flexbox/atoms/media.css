@@ -1,9 +1,0 @@
-@media (--breakpoint-not-small) {
-  @include make-flexbox-atoms(-ns);
-}
-@media (--breakpoint-medium) {
-  @include make-flexbox-atoms(-m);
-}
-@media (--breakpoint-large) {
-  @include make-flexbox-atoms(-l);
-}

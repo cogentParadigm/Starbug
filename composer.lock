@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "48b344396e899df8984cae6038abadc7",
+    "content-hash": "a3a052886799929797b922963eeafbde",
     "packages": [
         {
             "name": "composer/installers",
@@ -3846,13 +3846,23 @@
         },
         {
             "name": "starbug/tachyons",
-            "version": "dev-master",
-            "dist": {
-                "type": "path",
-                "url": "./app/themes/tachyons",
-                "reference": "43d60fcbd46b8617807af3839af3bb1cf82ec24c"
+            "version": "v0.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-tachyons.git",
+                "reference": "7e0d30f7ff0ab2690ad33fdad2a0a3be2ff77e38"
             },
-            "type": "starbug-custom-theme",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-tachyons/zipball/7e0d30f7ff0ab2690ad33fdad2a0a3be2ff77e38",
+                "reference": "7e0d30f7ff0ab2690ad33fdad2a0a3be2ff77e38",
+                "shasum": ""
+            },
+            "require": {
+                "starbug/db": "*",
+                "starbug/menus": "*"
+            },
+            "type": "starbug-theme",
             "extra": {
                 "namespace": "Starbug\\Tachyons"
             },
@@ -3861,6 +3871,7 @@
                     "Starbug\\Tachyons\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -3871,9 +3882,11 @@
                 }
             ],
             "description": "Tachyons theme for Starbug.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-tachyons/issues",
+                "source": "https://github.com/cogentParadigm/starbug-tachyons/tree/v0.9.1"
+            },
+            "time": "2023-05-11T20:44:19+00:00"
         },
         {
             "name": "starbug/users",
@@ -11143,7 +11156,6 @@
         "starbug/db": 20,
         "starbug/doctrine": 20,
         "starbug/users": 20,
-        "starbug/tachyons": 20,
         "starbug/files": 20,
         "starbug/emails": 20,
         "starbug/css": 20,

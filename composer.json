@@ -45,7 +45,6 @@
     "starbug/db": "dev-master",
     "starbug/doctrine": "dev-master",
     "starbug/users": "dev-master",
-    "starbug/tachyons": "dev-master",
     "starbug/files": "dev-master",
     "starbug/emails": "dev-master",
     "starbug/css": "dev-master",
@@ -59,7 +58,8 @@
     "starbug/menus": "dev-master",
     "starbug/queues": "dev-master",
     "starbug/settings": "dev-master",
-    "starbug/settings-admin": "dev-master"
+    "starbug/settings-admin": "dev-master",
+    "starbug/tachyons": "v0.9.1"
   },
   "require-dev": {
     "starbug/devel": "^1.0"
