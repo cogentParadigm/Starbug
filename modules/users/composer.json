@@ -13,6 +13,7 @@
     "namespace": "Starbug\\Users"
   },
   "require": {
-    "starbug/db": "*"
+    "starbug/db": "*",
+    "bjeavons/zxcvbn-php": "^1.0"
   }
 }
