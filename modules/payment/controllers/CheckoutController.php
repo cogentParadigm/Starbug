@@ -3,7 +3,7 @@ namespace Starbug\Payment;
 
 use Starbug\Db\DatabaseInterface;
 use Starbug\Auth\SessionHandlerInterface;
-use Starbug\Core\Controller;
+use Starbug\Routing\Controller;
 
 class CheckoutController extends Controller {
   public function __construct(Cart $cart, SessionHandlerInterface $session, DatabaseInterface $db) {

@@ -2,7 +2,7 @@
 namespace Starbug\Spreadsheet;
 
 use Starbug\Db\DatabaseInterface;
-use Starbug\Core\Controller;
+use Starbug\Routing\Controller;
 
 class AdminImportGroupsController extends Controller {
   public $routes = [

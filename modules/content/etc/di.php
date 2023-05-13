@@ -11,6 +11,7 @@ use Starbug\Content\MenuCollection as ContentMenuCollection;
 use Starbug\Content\Query\StoreBlocksHook;
 use Starbug\Content\Query\StorePathHook;
 use Starbug\Menus\Collection\MenuCollection;
+use Starbug\Routing\RouterInterface;
 
 return [
   "route.providers" => add([
@@ -19,7 +20,7 @@ return [
   'db.schema.migrations' => add([
     get('Starbug\Content\Migration')
   ]),
-  'Starbug\Core\Routing\RouterInterface' => decorate(function ($router, ContainerInterface $container) {
+  RouterInterface::class => decorate(function ($router, ContainerInterface $container) {
     $router->addAliasStorage($container->get('Starbug\Content\AliasStorage'));
     return $router;
   }),

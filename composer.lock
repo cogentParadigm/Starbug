@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a3a052886799929797b922963eeafbde",
+    "content-hash": "de70927dac6d13d00bed0bd8e6b89073",
     "packages": [
         {
             "name": "composer/installers",
@@ -1805,12 +1805,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "FastRoute\\": "src/"
-                },
                 "files": [
                     "src/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "FastRoute\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1827,6 +1827,10 @@
                 "router",
                 "routing"
             ],
+            "support": {
+                "issues": "https://github.com/nikic/FastRoute/issues",
+                "source": "https://github.com/nikic/FastRoute/tree/master"
+            },
             "time": "2018-02-13T20:26:39+00:00"
         },
         {
@@ -3708,6 +3712,55 @@
                 "source": "https://github.com/cogentParadigm/starbug-resource-locator/tree/v0.9.1"
             },
             "time": "2021-01-12T07:17:05+00:00"
+        },
+        {
+            "name": "starbug/routing",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-routing.git",
+                "reference": "eeefc77b8d6ea34ee6990a85e9acde709d082019"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-routing/zipball/eeefc77b8d6ea34ee6990a85e9acde709d082019",
+                "reference": "eeefc77b8d6ea34ee6990a85e9acde709d082019",
+                "shasum": ""
+            },
+            "require": {
+                "nikic/fast-route": "^1.3",
+                "php-di/invoker": "^2.0",
+                "starbug/http": "^0.9"
+            },
+            "require-dev": {
+                "starbug/devel": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Routing\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "A router designed for Starbug PHP framework.",
+            "keywords": [
+                "router",
+                "routing"
+            ],
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-routing/issues",
+                "source": "https://github.com/cogentParadigm/starbug-routing/tree/v0.9.0"
+            },
+            "time": "2023-05-13T20:10:45+00:00"
         },
         {
             "name": "starbug/settings",

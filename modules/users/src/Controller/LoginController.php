@@ -4,8 +4,8 @@ namespace Starbug\Users\Controller;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Auth\SessionHandlerInterface;
-use Starbug\Core\Controller;
-use Starbug\Core\Routing\RouterInterface;
+use Starbug\Routing\Controller;
+use Starbug\Routing\RouterInterface;
 
 class LoginController extends Controller {
   public function __construct(SessionHandlerInterface $session, RouterInterface $router, ServerRequestInterface $request) {

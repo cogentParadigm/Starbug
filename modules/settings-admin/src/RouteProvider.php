@@ -2,8 +2,8 @@
 namespace Starbug\Settings\Admin;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
-use Starbug\Core\Controller\ViewController;
-use Starbug\Core\Routing\Route;
+use Starbug\Routing\Controller\ViewController;
+use Starbug\Routing\Route;
 
 class RouteProvider extends AdminRouteProvider {
 

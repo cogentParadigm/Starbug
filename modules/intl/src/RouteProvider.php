@@ -2,7 +2,7 @@
 namespace Starbug\Intl;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
-use Starbug\Core\Routing\Route;
+use Starbug\Routing\Route;
 use Starbug\Intl\Collection\ProvincesSelectCollection;
 use Starbug\Intl\Collection\SelectAddressCollection;
 use Starbug\Intl\Controller\AddressController;

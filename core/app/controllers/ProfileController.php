@@ -2,6 +2,7 @@
 namespace Starbug\Core;
 
 use Starbug\Auth\SessionHandlerInterface;
+use Starbug\Routing\Controller;
 
 class ProfileController extends Controller {
   public function __construct(SessionHandlerInterface $session) {

@@ -1,15 +1,13 @@
 <?php
 namespace Starbug\Core;
 
-use function DI\decorate;
 use function DI\get;
 use function DI\autowire;
 use function DI\factory;
 use Psr\Container\ContainerInterface;
-use FastRoute\Dispatcher\GroupCountBased;
-use FastRoute\RouteCollector;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Routing\FastRouteStorage;
 use Starbug\Core\Script\Generate;
 use Starbug\Core\Script\ListScripts;
 use Starbug\Core\Script\Setup;
@@ -23,18 +21,11 @@ return [
   "time_zone" => "UTC",
   "hmac_key" => "",
   "cli" => false,
-  "FastRoute\RouteCollector" => decorate(function (RouteCollector $r, ContainerInterface $c) {
-    $routes = $c->get("Starbug\Core\Routing\Configuration")->getRoutes();
-    foreach ($routes as $route) {
-      $r->addRoute("GET", $route->getPath(), $route);
-    }
-    return $r;
-  }),
   "route.providers" => [
     get("Starbug\Core\Admin\RouteProvider"),
     get("Starbug\Core\Api\RouteProvider")
   ],
-  "Starbug\Core\Routing\Configuration" => autowire()->method("addProviders", get("route.providers")),
+  "Starbug\Routing\Configuration" => autowire()->method("addProviders", get("route.providers")),
   'Starbug\Core\*Interface' => autowire('Starbug\Core\*'),
   'Starbug\Config\*Interface' => autowire('Starbug\Config\*'),
   'Starbug\Http\*Interface' => autowire('Starbug\Http\*'),
@@ -64,15 +55,13 @@ return [
   "Psr\Http\Message\ServerRequestInterface" => function (ContainerInterface $container) {
     return new ServerRequest("GET", $container->get("website_host").$container->get("website_url"));
   },
-  "FastRoute\RouteParser" => autowire("FastRoute\RouteParser\Std"),
-  "FastRoute\DataGenerator" => autowire("FastRoute\DataGenerator\GroupCountBased"),
   "FastRoute\Dispatcher" => function (ContainerInterface $c) {
-    $collector = $c->get("FastRoute\RouteCollector");
-    return new GroupCountBased($collector->getData());
+    $config = $c->get("Starbug\Routing\Configuration");
+    return FastRouteStorage::createDispatcher($config);
   },
-  'Starbug\Core\Routing\RouterInterface' => autowire('Starbug\Core\Routing\Router')
-    ->method('addStorage', get('Starbug\Core\Routing\FastRouteStorage')),
-  'Starbug\Core\Routing\*Interface' => autowire('Starbug\Core\Routing\*'),
+  'Starbug\Routing\RouterInterface' => autowire('Starbug\Routing\Router')
+    ->method('addStorage', get(FastRouteStorage::class)),
+  'Starbug\Routing\*Interface' => autowire('Starbug\Routing\*'),
   'Starbug\Core\ImagesInterface' => autowire('Starbug\Core\Images')
     ->constructorParameter('base_directory', get('base_directory')),
   'db.schema.hooks' => [

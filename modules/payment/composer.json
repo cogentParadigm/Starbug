@@ -1,5 +1,5 @@
 {
-  "name": "starbug/payment",
+  "name": "starbug/payment-legacy",
   "type": "starbug-module",
   "description": "Starbug payment module.",
   "license": "GPL-3.0-or-later",

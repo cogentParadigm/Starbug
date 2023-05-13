@@ -2,7 +2,7 @@
 namespace Starbug\Core\Api;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
-use Starbug\Core\Routing\Route;
+use Starbug\Routing\Route;
 
 class RouteProvider extends AdminRouteProvider {
   public function configure(Route $routes) {

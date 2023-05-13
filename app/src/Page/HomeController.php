@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\App\Page;
 
-use Starbug\Core\Controller;
+use Starbug\Routing\Controller;
 
 class HomeController extends Controller {
   public function __invoke() {

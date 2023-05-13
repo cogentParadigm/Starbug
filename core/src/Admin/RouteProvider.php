@@ -2,20 +2,21 @@
 namespace Starbug\Core\Admin;
 
 use Starbug\Core\AdminCollection;
-use Starbug\Core\Controller\ViewController;
-use Starbug\Core\Routing\Route;
-use Starbug\Core\Routing\RouteProviderInterface;
+use Starbug\Routing\Controller\ViewController;
+use Starbug\Routing\Route;
+use Starbug\Routing\RouteProviderInterface;
 use Starbug\Core\SelectCollection;
 use Starbug\Imports\Admin\ImportsGrid;
+use Starbug\Routing\Controller;
 use Starbug\Users\Operation\UpdateProfile;
 
 class RouteProvider implements RouteProviderInterface {
 
   public function configure(Route $routes) {
-    $routes->addRoute("missing", ["Starbug\Core\Controller", "missing"]);
-    $routes->addRoute("forbidden", ["Starbug\Core\Controller", "forbidden"]);
+    $routes->addRoute("missing", [Controller::class, "missing"]);
+    $routes->addRoute("forbidden", [Controller::class, "forbidden"]);
     // admin group
-    $admin = $routes->addRoute("admin", "Starbug\Core\Controller\ViewController", [
+    $admin = $routes->addRoute("admin", ViewController::class, [
       "title" => "Admin",
       "groups" => "admin",
       "theme" => "storm",
@@ -24,15 +25,15 @@ class RouteProvider implements RouteProviderInterface {
     ]);
 
     // Profile
-    $routes->addRoute("profile", "Starbug\Core\Controller\ViewController", [
+    $routes->addRoute("profile", ViewController::class, [
       "view" => "profile.html",
       "groups" => "user"
     ])
-    ->resolve("id", "Starbug\Core\Routing\Resolvers\UserId")
+    ->resolve("id", "Starbug\Routing\Resolvers\UserId")
     ->onPost(UpdateProfile::class);
 
     // Robots
-    $routes->addRoute("robots.{format:txt}", "Starbug\Core\Controller\ViewController", [
+    $routes->addRoute("robots.{format:txt}", ViewController::class, [
       "view" => "robots.txt"
     ]);
   }
@@ -49,7 +50,7 @@ class RouteProvider implements RouteProviderInterface {
 
     $update = $routes->addRoute("/update/{id:[0-9]+}", ViewController::class, ["view" => "admin/update.html"])
       ->onPost("Starbug\Core\Operation\Save")
-      ->resolve("row", "Starbug\Core\Routing\Resolvers\RowById");
+      ->resolve("row", "Starbug\Routing\Resolvers\RowById");
 
     $routes->addRoute("/delete/{id:[0-9]+}", ViewController::class, ["view" => "admin/delete.html"])
       ->onPost("Starbug\Core\Operation\Delete");
@@ -73,8 +74,8 @@ class RouteProvider implements RouteProviderInterface {
 
   protected function addStatefulRedirects(Route $route, $url) {
     $route->setOption("successUrl", $url);
-    $route->getRoute("/create")->resolve("row", "Starbug\Core\Routing\Resolvers\RowByInsertId", "outbound");
-    $route->getRoute("/update/{id:[0-9]+}")->resolve("row", "Starbug\Core\Routing\Resolvers\RowById");
+    $route->getRoute("/create")->resolve("row", "Starbug\Routing\Resolvers\RowByInsertId", "outbound");
+    $route->getRoute("/update/{id:[0-9]+}")->resolve("row", "Starbug\Routing\Resolvers\RowById");
     return $route;
   }
 

@@ -3,7 +3,7 @@ namespace Starbug\Payment;
 
 use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Auth\SessionHandlerInterface;
-use Starbug\Core\Controller;
+use Starbug\Routing\Controller;
 use Starbug\Core\ModelFactoryInterface;
 
 class SubscriptionsController extends Controller {

@@ -5,7 +5,7 @@ use Starbug\Db\DatabaseInterface;
 use Exception;
 use GuzzleHttp\Psr7\Utils;
 use Starbug\Auth\SessionHandlerInterface;
-use Starbug\Core\Controller;
+use Starbug\Routing\Controller;
 use League\Flysystem\MountManager;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;

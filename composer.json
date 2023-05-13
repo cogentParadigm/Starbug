@@ -41,7 +41,6 @@
     "twig/twig": "~2.0",
     "litipk/flysystem-fallback-adapter": "^0.1.2",
     "twistor/flysystem-http": "^0.2.0",
-    "nikic/fast-route": "^1.3",
     "starbug/db": "dev-master",
     "starbug/doctrine": "dev-master",
     "starbug/users": "dev-master",
@@ -59,7 +58,8 @@
     "starbug/queues": "dev-master",
     "starbug/settings": "dev-master",
     "starbug/settings-admin": "dev-master",
-    "starbug/tachyons": "v0.9.1"
+    "starbug/tachyons": "v0.9.1",
+    "starbug/routing": "0.9.0"
   },
   "require-dev": {
     "starbug/devel": "^1.0"

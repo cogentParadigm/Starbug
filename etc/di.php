@@ -37,14 +37,14 @@ return [
       "Starbug\Auth\Http\AuthenticationMiddleware",
       "Starbug\Auth\Http\CsrfMiddleware",
       "Starbug\Http\RequestInjectionMiddleware",
-      "Starbug\Core\RoutingMiddleware",
+      "Starbug\Routing\RoutingMiddleware",
       [$env !== "development", "Starbug\Core\SecureJsonErrorHandlerMiddleware"],
       [$env === "development", "Starbug\Core\JsonErrorHandlerMiddleware"],
       "Starbug\Http\RequestInjectionMiddleware",
       "Starbug\Http\TemplateRenderingMiddleware",
-      "Starbug\Core\Routing\ResolutionMiddleware",
+      "Starbug\Routing\ResolutionMiddleware",
       "Starbug\Operation\Http\OperationMiddleware",
-      "Starbug\Core\ControllerMiddleware"
+      "Starbug\Routing\ControllerMiddleware"
     ];
   },
   "Psr\Http\Server\RequestHandlerInterface" => DI\autowire("Middleland\Dispatcher")

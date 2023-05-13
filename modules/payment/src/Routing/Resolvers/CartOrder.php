@@ -1,7 +1,6 @@
 <?php
 namespace Starbug\Payment\Routing\Resolvers;
 
-use Starbug\Core\Routing\Route;
 use Starbug\Payment\Cart;
 
 class CartOrder {

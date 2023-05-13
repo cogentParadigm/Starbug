@@ -2,6 +2,7 @@
 namespace Starbug\Core;
 
 use Starbug\Db\CollectionFilterInterface;
+use Starbug\Routing\Controller;
 
 class ApiController extends Controller implements CollectionFilterInterface {
   protected $model;

@@ -3,7 +3,7 @@ namespace Starbug\Imports;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
-use Starbug\Core\Routing\Route;
+use Starbug\Routing\Route;
 use Starbug\Imports\Admin\ImportsCollection;
 use Starbug\Imports\Admin\ImportsFieldsForm;
 use Starbug\Imports\Admin\ImportsForm;
@@ -12,6 +12,7 @@ use Starbug\Imports\Admin\ImportsTransformersForm;
 use Starbug\Imports\Admin\ImportsTransformersSelectCollection;
 use Starbug\Imports\Operation\Run;
 use Starbug\Imports\Operation\SaveTransformer;
+use Starbug\Routing\Controller\ViewController;
 
 class RouteProvider extends AdminRouteProvider {
 
@@ -27,12 +28,12 @@ class RouteProvider extends AdminRouteProvider {
       return ["model" => $request->getQueryParams()["model"]];
     });
     $imports["create"]->setOption("successUrl", "admin/imports/update/{{ row.id }}");
-    $imports["create"]->resolve("row", "Starbug\Core\Routing\Resolvers\RowByInsertId", "outbound");
+    $imports["create"]->resolve("row", "Starbug\Routing\Resolvers\RowByInsertId", "outbound");
 
     $imports["update"]->setOption("successUrl", "admin/{{ row.model }}/import");
-    $imports["update"]->resolve("row", "Starbug\Core\Routing\Resolvers\RowById");
+    $imports["update"]->resolve("row", "Starbug\Routing\Resolvers\RowById");
 
-    $imports["list"]->addRoute("/run/{id:[0-9]+}", "Starbug\Core\Controller\ViewController", [
+    $imports["list"]->addRoute("/run/{id:[0-9]+}", ViewController::class, [
       "view" => "admin/update.html",
       "form_header" => "Run Import",
       "action" => "run"

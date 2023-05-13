@@ -7,6 +7,7 @@ use function DI\get;
 use function DI\decorate;
 use Psr\Container\ContainerInterface;
 use Starbug\Css\Helper\CssHelper;
+use Starbug\Routing\RouterInterface;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Extension\StringLoaderExtension;
@@ -23,7 +24,7 @@ return [
     ->constructorParameter('theme', get('theme'))
     ->constructorParameter('baseUrl', get('website_url')),
   'Starbug\Css\RouteFilter' => autowire()->constructorParameter('theme', get('theme')),
-  'Starbug\Core\Routing\RouterInterface' => decorate(function ($router, ContainerInterface $container) {
+  RouterInterface::class => decorate(function ($router, ContainerInterface $container) {
     $router->addFilter($container->get('Starbug\Css\RouteFilter'));
     return $router;
   }),

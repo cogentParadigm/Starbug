@@ -2,13 +2,13 @@
 namespace Starbug\Files;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
-use Starbug\Core\Controller\ViewController;
-use Starbug\Core\Routing\Route;
+use Starbug\Routing\Route;
 use Starbug\Files\Collection\AdminFilesCollection;
 use Starbug\Files\Collection\FilesSelectCollection;
 use Starbug\Files\Controller\ApiFilesController;
 use Starbug\Files\Controller\DownloadController;
 use Starbug\Files\Controller\UploadController;
+use Starbug\Routing\Controller\ViewController;
 
 class RouteProvider extends AdminRouteProvider {
 
@@ -17,7 +17,7 @@ class RouteProvider extends AdminRouteProvider {
     $routes->addRoute("files/download/{id:[0-9]+}", DownloadController::class, ["groups" => ["admin"]]);
 
     $admin = $routes->getRoute("admin");
-    $admin->addRoute("/media", "Starbug\Core\Controller\ViewController", [
+    $admin->addRoute("/media", ViewController::class, [
       "view" => "media-browser.html",
       "template" => false
     ]);

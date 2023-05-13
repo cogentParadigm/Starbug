@@ -2,7 +2,7 @@
 namespace Starbug\Payment;
 
 use Starbug\Db\DatabaseInterface;
-use Starbug\Core\Controller;
+use Starbug\Routing\Controller;
 
 class AdminOrdersController extends Controller {
   public function __construct(DatabaseInterface $db) {

@@ -62,7 +62,9 @@ Here is the corresponding controller.
 ```php
 <?php
 namespace Starbug\App;
-use Starbug\Core\Controller;
+
+use Starbug\Routing\Controller;
+
 class PhotosController extends Controller {
   public function init() {
     $this->assign("model", "photos");

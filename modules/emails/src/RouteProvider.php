@@ -2,7 +2,7 @@
 namespace Starbug\Emails;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
-use Starbug\Core\Routing\Route;
+use Starbug\Routing\Route;
 use Starbug\Core\SelectCollection;
 
 class RouteProvider extends AdminRouteProvider {

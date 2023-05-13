@@ -2,8 +2,8 @@
 namespace Starbug\Log;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
-use Starbug\Core\Controller\ViewController;
-use Starbug\Core\Routing\Route;
+use Starbug\Routing\Controller\ViewController;
+use Starbug\Routing\Route;
 use Starbug\Log\Collection\AdminErrorLogCollection;
 use Starbug\Log\Display\ErrorLogGrid;
 use Starbug\Log\Display\ErrorLogSearchForm;

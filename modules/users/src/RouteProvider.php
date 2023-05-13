@@ -2,8 +2,9 @@
 namespace Starbug\Users;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
-use Starbug\Core\Routing\Route;
+use Starbug\Routing\Route;
 use Starbug\Core\SelectCollection;
+use Starbug\Routing\Controller\ViewController;
 use Starbug\Users\Collection\AdminUsersCollection;
 use Starbug\Users\Controller\LoginController;
 use Starbug\Users\Display\ForgotPasswordForm;
@@ -40,23 +41,23 @@ class RouteProvider extends AdminRouteProvider {
     $routes->addRoute("logout", [LoginController::class, "logout"])
       ->onPost("Starbug\Users\Operation\Logout");
 
-    $routes->addRoute("forgot-password", "Starbug\Core\Controller\ViewController", [
+    $routes->addRoute("forgot-password", ViewController::class, [
       "view" => "forgot-password.html",
       "form" => ForgotPasswordForm::class,
       "successUrl" => "forgot-password/submitted"
     ])->onPost("Starbug\Users\Operation\ForgotPassword");
 
-    $routes->addRoute("forgot-password/submitted", "Starbug\Core\Controller\ViewController", [
+    $routes->addRoute("forgot-password/submitted", ViewController::class, [
       "view" => "forgot-password/submitted.html"
     ]);
 
-    $routes->addRoute("reset-password", "Starbug\Core\Controller\ViewController", [
+    $routes->addRoute("reset-password", ViewController::class, [
       "view" => "reset-password.html",
       "form" => PasswordResetForm::class,
       "successUrl" => "reset-password/submitted"
     ])->onPost("Starbug\Users\Operation\ResetPassword");
 
-    $routes->addRoute("reset-password/submitted", "Starbug\Core\Controller\ViewController", [
+    $routes->addRoute("reset-password/submitted", ViewController::class, [
       "view" => "reset-password/submitted.html"
     ]);
   }

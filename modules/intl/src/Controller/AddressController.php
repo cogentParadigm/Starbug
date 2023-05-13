@@ -3,7 +3,7 @@ namespace Starbug\Intl\Controller;
 
 use Starbug\Db\DatabaseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\Controller;
+use Starbug\Routing\Controller;
 use Starbug\Intl\AddressFormatter;
 use Starbug\Intl\Display\AddressForm;
 

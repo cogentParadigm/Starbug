@@ -2,7 +2,7 @@
 namespace Starbug\Payment;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\Controller;
+use Starbug\Routing\Controller;
 use Starbug\Core\InputFilterInterface;
 
 class CartController extends Controller {
