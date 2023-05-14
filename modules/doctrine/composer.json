@@ -13,6 +13,7 @@
     "namespace": "Starbug\\Doctrine"
   },
   "require": {
-    "starbug/db": "*"
+    "starbug/db": "*",
+    "doctrine/dbal": "^2.8"
   }
 }
