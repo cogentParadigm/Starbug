@@ -1,0 +1,24 @@
+{
+  "name": "starbug/products",
+  "type": "starbug-module",
+  "description": "Starbug products module.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Products"
+  },
+  "require": {
+    "starbug/price-formatter": "^0.9.1",
+    "starbug/files": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Products\\": "src/"
+    }
+  }
+}

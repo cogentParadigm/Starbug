@@ -1,0 +1,25 @@
+{
+  "name": "starbug/products-admin",
+  "type": "starbug-module",
+  "description": "Starbug products administration module.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Products\\Admin"
+  },
+  "require": {
+    "starbug/products": "*",
+    "starbug/menus": "*",
+    "starbug/wizard": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Products\\Admin\\": "src/"
+    }
+  }
+}

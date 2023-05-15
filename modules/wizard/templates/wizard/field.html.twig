@@ -1,0 +1,6 @@
+<div {% if not options.readonly %}data-submit="next" {% endif %}class="pa1 hover-bg-black-02 hover-wrapper flex justify-between items-center p">
+  <span>{{ field.value|default("&nbsp;") }}</span>
+  {% if not options.readonly %}
+  <span class="material-icons f6 dn hover-target-dib">edit</span>
+  {% endif %}
+</div>

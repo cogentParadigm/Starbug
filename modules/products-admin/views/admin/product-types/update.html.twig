@@ -1,0 +1,10 @@
+{{ include("@views/admin/update.html.twig") }}
+<br/>
+<div class="b--brand-light-silver ba br2">
+  <div class="b--brand-light-silver bb pv2 ph3 bg-near-white br2 br--top ttu silver"><strong> <span>Product Options</span></strong></div>
+  <div class="pa3">
+    {{ include(["product_options/admin-toolbar.html.twig", "admin-toolbar.html.twig"], {"model":"product_options", "dialog":true}) }}
+    {{ helper("displays").render(product_options_grid, {"product_types_id":id, "attributes":{"dialog":"product_options_form"}}) }}
+  </div>
+</div>
+<div id="product_options_dialog" data-dojo-type="sb/modal/Form" data-dojo-id="product_options_form" data-dojo-props="url:'{{ helper("url").build("admin/product-options/") }}', title: 'New Product Option', callback:function(){product_options_grid.refresh();}, urlParams:{'product_types_id':'{{ id }}'}, formData:{'product_types_id':'{{ id }}'}"></div>
