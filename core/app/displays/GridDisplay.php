@@ -3,6 +3,7 @@ namespace Starbug\Core;
 
 use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Js\DojoConfiguration;
+use Starbug\Templates\TemplateInterface;
 
 class GridDisplay extends ItemDisplay {
   public $type = "grid";

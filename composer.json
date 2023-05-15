@@ -5,6 +5,7 @@
   "extra": {
     "modules-plugin": {
       "types": {
+        "starbug-library": "module",
         "starbug-module": "module",
         "starbug-theme": "theme",
         "starbug-custom-module": "module",
@@ -36,7 +37,6 @@
     "ezyang/htmlpurifier":"^4.13",
     "wp-cli/php-cli-tools": "^0.10.5",
     "league/flysystem": "^1.0",
-    "twig/twig": "~2.0",
     "litipk/flysystem-fallback-adapter": "^0.1.2",
     "twistor/flysystem-http": "^0.2.0",
     "starbug/db": "dev-master",
@@ -56,8 +56,9 @@
     "starbug/queues": "dev-master",
     "starbug/settings": "dev-master",
     "starbug/settings-admin": "dev-master",
-    "starbug/tachyons": "v0.9.1",
-    "starbug/routing": "0.9.0"
+    "starbug/tachyons": "^0.9.1",
+    "starbug/routing": "^0.9.1",
+    "starbug/templates": "^0.9.2"
   },
   "require-dev": {
     "starbug/devel": "^1.0"

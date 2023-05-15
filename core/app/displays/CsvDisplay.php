@@ -2,6 +2,7 @@
 namespace Starbug\Core;
 
 use Starbug\Db\CollectionFactoryInterface;
+use Starbug\Templates\TemplateInterface;
 
 class CsvDisplay extends ItemDisplay {
   public $template = "csv";

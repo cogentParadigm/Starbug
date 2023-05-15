@@ -4,6 +4,7 @@ namespace Starbug\Core;
 use Starbug\Db\CollectionFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Bundle\Bundle;
+use Starbug\Templates\TemplateInterface;
 
 class FormDisplay extends ItemDisplay {
   public $type = "form";

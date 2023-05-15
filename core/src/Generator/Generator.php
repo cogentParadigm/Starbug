@@ -2,7 +2,7 @@
 
 namespace Starbug\Core\Generator;
 
-use Starbug\Core\TemplateInterface;
+use Starbug\Templates\TemplateInterface;
 
 /**
  * Generator runs Definition objects to create directories, copy files, and generate files from templates.

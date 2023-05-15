@@ -41,7 +41,7 @@ return [
       [$env !== "development", "Starbug\Core\SecureJsonErrorHandlerMiddleware"],
       [$env === "development", "Starbug\Core\JsonErrorHandlerMiddleware"],
       "Starbug\Http\RequestInjectionMiddleware",
-      "Starbug\Http\TemplateRenderingMiddleware",
+      "Starbug\Templates\Http\TemplateRenderingMiddleware",
       "Starbug\Routing\ResolutionMiddleware",
       "Starbug\Operation\Http\OperationMiddleware",
       "Starbug\Routing\ControllerMiddleware"

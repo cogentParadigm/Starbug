@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\DisplayFactoryInterface;
 use Starbug\Core\FormDisplay;
 use Starbug\Core\FormHookFactoryInterface;
-use Starbug\Core\TemplateInterface;
+use Starbug\Templates\TemplateInterface;
 use Starbug\Imports\Transform\Factory;
 
 class ImportsTransformersForm extends FormDisplay {
