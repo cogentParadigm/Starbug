@@ -310,7 +310,7 @@ class StoreTest extends DatabaseTestCase {
    * StorePasswordHook
    */
   public function testPassword() {
-    $pass = "myPassword";
+    $pass = "AGwT55y3F7!I";
 
     // Store record.
     $this->db->store("hook_store_password", ["value" => $pass]);

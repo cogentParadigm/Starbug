@@ -5,7 +5,9 @@ Feature: Admin manages users
   I can add new users
 
   Background:
-    Given I login as an admin
+    Given I am logged in with:
+      | groups | admin |
+      | password | AGwT55y3F7!I |
 
   Scenario: Create a new user
     Given I am on "/admin/users"

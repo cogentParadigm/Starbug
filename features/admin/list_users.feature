@@ -4,7 +4,9 @@ Feature: Admin manages users
   I can see a list of users
 
   Background:
-    Given I login as an admin
+    Given I am logged in with:
+      | groups | admin |
+      | password | AGwT55y3F7!I |
 
   Scenario: View users
     When I go to "/admin/users"
