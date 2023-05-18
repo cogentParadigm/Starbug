@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "795fe41c880399fddd2ea4847c06b30d",
+    "content-hash": "d0380c00eda96de47ff2ea0ca79d4952",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -4011,21 +4011,22 @@
         },
         {
             "name": "starbug/tachyons",
-            "version": "v0.9.1",
+            "version": "v0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-tachyons.git",
-                "reference": "7e0d30f7ff0ab2690ad33fdad2a0a3be2ff77e38"
+                "reference": "0c75b372035a770000b1c0e713fc9a5f68d52652"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-tachyons/zipball/7e0d30f7ff0ab2690ad33fdad2a0a3be2ff77e38",
-                "reference": "7e0d30f7ff0ab2690ad33fdad2a0a3be2ff77e38",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-tachyons/zipball/0c75b372035a770000b1c0e713fc9a5f68d52652",
+                "reference": "0c75b372035a770000b1c0e713fc9a5f68d52652",
                 "shasum": ""
             },
             "require": {
                 "starbug/db": "*",
-                "starbug/menus": "*"
+                "starbug/menus": "*",
+                "starbug/routing": "^0.9.1"
             },
             "type": "starbug-theme",
             "extra": {
@@ -4049,9 +4050,9 @@
             "description": "Tachyons theme for Starbug.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-tachyons/issues",
-                "source": "https://github.com/cogentParadigm/starbug-tachyons/tree/v0.9.1"
+                "source": "https://github.com/cogentParadigm/starbug-tachyons/tree/v0.10.0"
             },
-            "time": "2023-05-11T20:44:19+00:00"
+            "time": "2023-05-18T22:07:17+00:00"
         },
         {
             "name": "starbug/templates",
