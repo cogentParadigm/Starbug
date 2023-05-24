@@ -1,0 +1,24 @@
+{
+  "name": "starbug/shipping-methods",
+  "type": "starbug-module",
+  "description": "Starbug shipping methods module.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\ShippingMethods"
+  },
+  "require": {
+    "starbug/db": "*",
+    "starbug/products": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\ShippingMethods\\": "src/"
+    }
+  }
+}

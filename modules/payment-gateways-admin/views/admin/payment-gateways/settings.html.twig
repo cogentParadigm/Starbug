@@ -1,0 +1,9 @@
+{% extends "panel."~ route.getOption("format")|default("html") ~ ".twig" %}
+
+{% set model = "payment_gateway_settings" %}
+
+{% block title %}{{ gateway.name }} Settings{% endblock %}
+{% block body %}
+  {{ include([model ~ "/admin-toolbar.html.twig", "admin-toolbar.html.twig"]) }}
+  {{ helper("displays").render(grid, {"gateway": gateway.id}) }}
+{% endblock %}
