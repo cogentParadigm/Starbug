@@ -10,6 +10,7 @@ use League\Flysystem\MountManager;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\ImagesInterface;
+use Starbug\Files\FileUploaderInterface;
 
 class UploadController extends Controller {
   protected $db;
@@ -19,7 +20,7 @@ class UploadController extends Controller {
   protected $response;
   public function __construct(
     DatabaseInterface $db,
-    FileUploader $uploader,
+    FileUploaderInterface $uploader,
     MountManager $filesystems,
     ImagesInterface $images,
     SessionHandlerInterface $session,
