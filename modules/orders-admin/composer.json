@@ -1,0 +1,24 @@
+{
+  "name": "starbug/orders-admin",
+  "type": "starbug-module",
+  "description": "Starbug orders administration module.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Orders\\Admin"
+  },
+  "require": {
+    "starbug/orders": "*",
+    "starbug/menus": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Orders\\Admin\\": "src/"
+    }
+  }
+}

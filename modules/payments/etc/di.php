@@ -2,6 +2,7 @@
 namespace Starbug\Payments;
 
 use Omnipay\AuthorizeNet\AIMGateway;
+use Omnipay\AuthorizeNet\CIMGateway;
 use Psr\Container\ContainerInterface;
 
 use function DI\add;
@@ -23,6 +24,16 @@ return [
     $gateway = new AIMGateway();
     $gateway->setApiLoginId($settings->get("Authorize.Net", "login_id"));
     $gateway->setTransactionKey($settings->get("Authorize.Net", "transaction_key"));
+    if ($settings->testMode("Authorize.Net")) {
+      $gateway->setDeveloperMode(true);
+    }
+    return $gateway;
+  },
+  CIMGateway::class => function (ContainerInterface $c) {
+    $settings = $c->get(SettingsInterface::class);
+    $gateway = new CIMGateway();
+    $gateway->setApiLoginId($settings->get("Authorize.Net", 'login_id'));
+    $gateway->setTransactionKey($settings->get("Authorize.Net", 'transaction_key'));
     if ($settings->testMode("Authorize.Net")) {
       $gateway->setDeveloperMode(true);
     }

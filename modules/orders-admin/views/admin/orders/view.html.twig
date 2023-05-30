@@ -1,0 +1,31 @@
+<div class="panel panel-default">
+  <div class="panel-heading"><strong> <span>Order #{{ id }}</span></strong></div>
+  <div class="panel-body">
+    {{ helper("displays").render(productsGrid, {"order":id, "attributes":{"base_url":"admin/orders"}}) }}
+    <br/>
+    {# helper("ShippingLinesGrid", {"id":id, "attributes":{"base_url":"admin/orders"}}) #}
+    <br/>
+<div class="row">
+  <div class="col-4">
+    {{ include("@views/admin/orders/panel.html.twig", {title: "Contact Information", body: order.email ~ "<br/>" ~ order.phone}) }}
+  </div>
+  <div class="col-4">
+    {{ include("@views/admin/orders/panel.html.twig", {title: "Shipping Address", body: helper("addressFormatter").format(order.shipping_address)}) }}
+  </div>
+  <div class="col-4">
+    {% if order.billing_same %}
+      {% set billingAddress = "Same as shipping address" %}
+    {% else %}
+      {% set billingAddress = helper("addressFormatter").format(order.billing_address) %}
+    {% endif %}
+    {{ include("@views/admin/orders/panel.html.twig", {title: "Billing Address", body: billingAddress}) }}
+  </div>
+</div>
+    <div clas="totals" style="margin:20px 0">
+      <div class="total">Subtotal: <strong>{{ helper("priceFormatter").format(products.total) }}</strong></div>
+      <div class="total">Shipping: <strong>{{ helper("priceFormatter").format(shipping.total) }}</strong></div>
+      <div class="total">Total: <strong>{{ helper("priceFormatter").format(products.total + shipping.total) }}</strong></div>
+    </div>
+
+  </div>
+</div>
