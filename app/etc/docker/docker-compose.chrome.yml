@@ -9,6 +9,7 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /dev/shm:/dev/shm
       - $HOME/.docker/certs/rootCA.pem:/home/chrome/CA.pem
+      - ./var/chrome/Downloads:/home/chrome/Downloads
     environment:
       - DISPLAY=unix$DISPLAY
     devices:
