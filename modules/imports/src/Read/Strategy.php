@@ -18,21 +18,22 @@ abstract class Strategy implements StrategyInterface {
   }
   protected function getMappedValues($source) {
     if (empty($this->fields)) {
-      return $source;
-    }
-    $mapped = [];
-    foreach ($this->fields as $field) {
-      $treePath = explode(": ", $field["destination"]);
-      $target = &$mapped;
-      while (count($treePath) > 1) {
-        $key = array_shift($treePath);
-        if (!isset($target[$key])) {
-          $target[$key] = [];
+      $mapped = $source;
+    } else {
+      $mapped = [];
+      foreach ($this->fields as $field) {
+        $treePath = explode(": ", $field["destination"]);
+        $target = &$mapped;
+        while (count($treePath) > 1) {
+          $key = array_shift($treePath);
+          if (!isset($target[$key])) {
+            $target[$key] = [];
+          }
+          $target = &$target[$key];
         }
-        $target = &$target[$key];
+        $key = array_shift($treePath);
+        $target[$key] = $source[$field["source"]];
       }
-      $key = array_shift($treePath);
-      $target[$key] = $source[$field["source"]];
     }
     return $this->applyTransformers($source, $mapped);
   }
