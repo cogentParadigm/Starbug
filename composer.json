@@ -29,7 +29,7 @@
     "starbug/modules": "^0.8.1",
     "starbug/bundle": "^1.0",
     "starbug/resource-locator": "^0.9",
-    "starbug/http": "^0.9",
+    "starbug/http": "^0.9.13",
     "starbug/auth": "^0.12.0",
     "starbug/operation": "^0.8.0",
     "starbug/config": "^0.9.0",
@@ -87,7 +87,8 @@
   "config": {
     "allow-plugins": {
       "composer/installers": true,
-      "starbug/composer-modules-plugin": true
+      "starbug/composer-modules-plugin": true,
+      "php-http/discovery": true
     }
   }
 }

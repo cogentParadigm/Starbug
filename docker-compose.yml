@@ -11,7 +11,7 @@ services:
       - ~/.docker/certs/server.key:/etc/pki/tls/private/localhost.key
       - ~/.docker/certs/server.crt:/etc/pki/tls/certs/localhost.crt
   php:
-    image: agangji/php:7.4
+    image: agangji/php:8.2
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
     volumes:
@@ -39,7 +39,7 @@ services:
   mailcatcher:
     image: schickling/mailcatcher
   default-queue:
-    image: agangji/php:7.4
+    image: agangji/php:8.2
     restart: always
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
