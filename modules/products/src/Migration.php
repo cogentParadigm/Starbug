@@ -67,7 +67,8 @@ class Migration extends AbstractMigration {
       ["photos", "type" => "files", "optional" => ""],
       ["meta_keywords", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
       ["meta_description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
-      ["position", "type" => "int", "default" => "0"]
+      ["position", "type" => "int", "default" => "0"],
+      ["categories", "type" => "product_categories"]
     );
 
     $this->schema->addTable(["products_options"],
