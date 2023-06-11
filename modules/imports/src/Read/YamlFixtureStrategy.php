@@ -18,6 +18,6 @@ class YamlFixtureStrategy extends FileStrategy {
     }
   }
   public function getLocation($record) {
-    return $this->currentTabe." row ".$this->currentRow;
+    return $this->currentTable." row ".$this->currentRow;
   }
 }

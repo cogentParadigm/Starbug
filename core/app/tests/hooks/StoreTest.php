@@ -265,11 +265,11 @@ class StoreTest extends DatabaseTestCase {
     $record5 = $this->db->get("hook_store_ordered", $id5);
 
     // assert that they have incrementing values
-    $this->assertSame("1", $record1['value']);
-    $this->assertSame("2", $record2['value']);
-    $this->assertSame("3", $record3['value']);
-    $this->assertSame("4", $record4['value']);
-    $this->assertSame("5", $record5['value']);
+    $this->assertSame(1, $record1["value"]);
+    $this->assertSame(2, $record2["value"]);
+    $this->assertSame(3, $record3["value"]);
+    $this->assertSame(4, $record4["value"]);
+    $this->assertSame(5, $record5["value"]);
   }
 
   /**
@@ -300,7 +300,7 @@ class StoreTest extends DatabaseTestCase {
     $record = $this->db->get("hook_store_owner", $id);
 
     // assert that the owner was stored
-    $this->assertSame("1", $record['value']);
+    $this->assertSame(1, $record['value']);
 
     // restore nobody
     $this->session->destroy();
@@ -329,7 +329,7 @@ class StoreTest extends DatabaseTestCase {
   public function testReferences() {
     // store a user
     $this->db->store("users", ["email" => "hook_store_references"]);
-    $uid = $this->db->getInsertId("users");
+    $uid = (int) $this->db->getInsertId("users");
 
     // store a record
     $this->db->store("hook_store_references", ["value" => ""]);
@@ -339,7 +339,7 @@ class StoreTest extends DatabaseTestCase {
     $record = $this->db->get("hook_store_references", $id);
 
     // assert that the record contains the last inserted users id
-    $this->assertSame($uid, $record['value']);
+    $this->assertSame($uid, $record["value"]);
 
     // remove uri and truncate table
     $this->db->query("hook_store_references")->unsafeTruncate();
