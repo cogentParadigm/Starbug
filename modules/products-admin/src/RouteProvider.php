@@ -13,6 +13,8 @@ use Starbug\Products\Admin\ProductOptions\ProductOptionsGrid;
 use Starbug\Products\Admin\Products\AdminProductsController;
 use Starbug\Products\Admin\Products\ProductsForm;
 use Starbug\Products\Admin\Products\ProductsGrid;
+use Starbug\Products\Admin\ProductTags\ProductTagsForm;
+use Starbug\Products\Admin\ProductTags\ProductTagsGrid;
 use Starbug\Products\Admin\ProductTypes\ProductTypesForm;
 use Starbug\Products\Admin\ProductTypes\ProductTypesGrid;
 use Starbug\Routing\Controller\ViewController;
@@ -58,5 +60,11 @@ class RouteProvider extends AdminRouteProvider {
         "view" => "admin/product-types/update.html",
         "product_options_grid" => ProductOptionsGrid::class
       ]);
+
+    // Tags
+    $tages = $this->addCrud($routes, "product_tags", [
+      "grid" => ProductTagsGrid::class,
+      "form" => ProductTagsForm::class
+    ]);
   }
 }

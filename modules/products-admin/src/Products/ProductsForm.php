@@ -81,6 +81,7 @@ class ProductsForm extends FormDisplay {
     ]);
 
     $this->add(["categories", "input_type" => "multiple_select", "from" => "product_categories", "pane" => "right"]);
+    $this->add(["tags", "input_type" => "text", "data-dojo-type" => "sb/form/MultipleSelect", "data-dojo-props" => "model:'product_tags'", "pane" => "right"]);
     $this->add(["position", "pane" => "right"]);
     $this->add(["path", "label" => "URL path", "info" => "Leave empty to generate automatically", "pane" => "path"]);
     $this->add(["meta_description", "label" => "Meta Description", "input_type" => "textarea", "class" => "plain", "style" => "width:100%", "data-dojo-type" => "dijit/form/Textarea", "pane" => "meta"]);
