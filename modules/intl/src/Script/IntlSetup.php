@@ -10,35 +10,14 @@ class IntlSetup {
     $this->db = $db;
   }
   public function __invoke() {
-    $address_data = "http://i18napis.appspot.com/address/data/";
-    $address_map = [
-      "fmt" => "format",
-      "upper" => "upper",
-      "require" => "require",
-      "postprefix" => "postal_code_prefix",
-      "zip" => "postal_code_format",
-      "zip_name_type" => "postal_code_label",
-      "state_name_type" => "province_label",
-      "posturl" => "postal_url"
-    ];
-
     // populate countries
     $countries = $this->config->get("countries");
-    foreach ($countries as $c) {
-      $exists = $this->db->query("countries")->condition("code", $c['code'])->one();
-      $data = json_decode(file_get_contents($address_data.$c['code']), true);
-      $record = ["name" => $c['name'], "code" => $c['code']];
+    foreach ($countries as $country) {
+      $exists = $this->db->query("countries")->condition("code", $country["code"])->one();
       if ($exists) {
-        $record["id"] = $exists["id"];
+        $country["id"] = $exists["id"];
       }
-      if (is_array($record)) {
-        foreach ($address_map as $k => $v) {
-          if (isset($data[$k])) {
-            $record[$v] = $data[$k];
-          }
-        }
-      }
-      $this->db->store("countries", $record);
+      $this->db->store("countries", $country);
     }
 
     // populate regions
