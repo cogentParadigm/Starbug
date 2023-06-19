@@ -21,5 +21,10 @@ class Migration extends AbstractMigration {
       ["menu" => "admin", "href" => "admin/product-categories"],
       ["parent" => $store, "content" => "Product Categories"]
     );
+    $this->schema->addRow(
+      "menus",
+      ["menu" => "admin", "href" => "admin/product-tags"],
+      ["parent" => $store, "content" => "Product Tags"]
+    );
   }
 }

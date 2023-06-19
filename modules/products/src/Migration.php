@@ -83,6 +83,5 @@ class Migration extends AbstractMigration {
     $store = $this->schema->addRow("menus", ["menu" => "admin", "content" => "Store"]);
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/products"], ["parent" => $store, "content" => "Products"]);
     $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/product-types"], ["parent" => $store, "content" => "Product Types"]);
-    $this->schema->addRow("menus", ["menu" => "admin", "href" => "admin/product-tags"], ["parent" => $store, "content" => "Product Tags"]);
   }
 }
