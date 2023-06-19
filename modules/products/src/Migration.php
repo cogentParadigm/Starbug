@@ -47,6 +47,9 @@ class Migration extends AbstractMigration {
       ["content", "type" => "text", "default" => ""],
       ["options", "type" => "product_options", "table" => "product_options"]
     );
+    $this->schema->addTable(["product_tags", "label_select" => "product_tags.name"],
+      ["name", "type" => "string", "length" => "128"]
+    );
     $this->schema->addTable(["products", "label_select" => "products.name"],
       ["type", "type" => "int", "references" => "product_types id", "alias" => "%slug%", "null" => ""],
       ["sku", "type" => "string", "unique" => ""],
@@ -68,7 +71,8 @@ class Migration extends AbstractMigration {
       ["meta_keywords", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
       ["meta_description", "type" => "string", "length" => "255", "input_type" => "textarea", "default" => ""],
       ["position", "type" => "int", "default" => "0"],
-      ["categories", "type" => "product_categories"]
+      ["categories", "type" => "product_categories"],
+      ["tags", "type" => "product_tags"]
     );
 
     $this->schema->addTable(["products_options"],
