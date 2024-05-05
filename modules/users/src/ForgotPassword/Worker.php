@@ -9,10 +9,11 @@ use Starbug\Queue\QueueInterface;
 use Starbug\Queue\WorkerInterface;
 
 class Worker implements WorkerInterface {
-  public function __construct(DatabaseInterface $db, MailerInterface $mailer, UriBuilderInterface $uri) {
-    $this->db = $db;
-    $this->mailer = $mailer;
-    $this->uri = $uri;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected MailerInterface $mailer,
+    protected UriBuilderInterface $uri
+  ) {
   }
   public function process(TaskInterface $task, QueueInterface $queue) {
     $email = $task->getData()["email"];

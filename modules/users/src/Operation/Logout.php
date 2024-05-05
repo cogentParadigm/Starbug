@@ -6,8 +6,9 @@ use Starbug\Bundle\BundleInterface;
 use Starbug\Operation\Operation;
 
 class Logout extends Operation {
-  public function __construct(SessionHandlerInterface $session) {
-    $this->session = $session;
+  public function __construct(
+    protected SessionHandlerInterface $session
+  ) {
   }
   public function handle(array $data, BundleInterface $state): BundleInterface {
     $this->session->destroy();

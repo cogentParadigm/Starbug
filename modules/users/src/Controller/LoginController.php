@@ -8,10 +8,11 @@ use Starbug\Routing\Controller;
 use Starbug\Routing\RouterInterface;
 
 class LoginController extends Controller {
-  public function __construct(SessionHandlerInterface $session, RouterInterface $router, ServerRequestInterface $request) {
-    $this->session = $session;
-    $this->router = $router;
-    $this->request = $request;
+  public function __construct(
+    protected SessionHandlerInterface $session,
+    protected RouterInterface $router,
+    protected ServerRequestInterface $request
+  ) {
   }
   public function defaultAction() {
     if ($this->session->loggedIn()) {
@@ -39,7 +40,7 @@ class LoginController extends Controller {
     }
     $request = $this->request->withUri($uri);
     $route = $this->router->route($request);
-    if ($route->getPath() == "/missing") {
+    if (in_array($route->getPath(), ["/missing", "/forbidden"])) {
       return $default;
     }
     return (string) $uri;

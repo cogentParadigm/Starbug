@@ -12,6 +12,7 @@ use Starbug\Templates\TemplateInterface;
 
 class ProductOptionsForm extends FormDisplay {
   public $model = "product_options";
+  protected $tableSchema;
   public function __construct(
     TemplateInterface $output,
     CollectionFactoryInterface $collections,
@@ -19,11 +20,10 @@ class ProductOptionsForm extends FormDisplay {
     DisplayFactoryInterface $displays,
     ServerRequestInterface $request,
     SchemerInterface $schemer,
-    DatabaseInterface $db
+    protected DatabaseInterface $db
   ) {
     parent::__construct($output, $collections, $hookFactory, $displays, $request);
     $this->tableSchema = $schemer->getSchema();
-    $this->db = $db;
   }
   public function buildDisplay($options) {
     $tree = $this->getOptionsTree($options["product_types_id"] ?? $this->get("product_types_id"));

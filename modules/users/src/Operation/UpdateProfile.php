@@ -8,9 +8,10 @@ use Starbug\Core\Operation\Save;
 
 class UpdateProfile extends Save {
   protected $model = "users";
-  public function __construct(DatabaseInterface $db, SessionHandlerInterface $session) {
-    $this->db = $db;
-    $this->session = $session;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected SessionHandlerInterface $session
+  ) {
   }
   public function handle(array $profile, BundleInterface $state): BundleInterface {
     // force the user to enter their current password to update their profile

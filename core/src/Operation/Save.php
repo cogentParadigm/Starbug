@@ -7,8 +7,9 @@ use Starbug\Operation\Operation;
 
 class Save extends Operation {
   protected $model;
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(
+    protected DatabaseInterface $db
+  ) {
   }
   public function setModel($model) {
     $this->model = $model;

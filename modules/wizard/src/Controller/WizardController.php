@@ -9,9 +9,10 @@ class WizardController extends Controller {
   protected $model;
   protected $pageTemplate;
   protected $formTemplate;
-  public function __construct(DatabaseInterface $db, ServerRequestInterface $request) {
-    $this->db = $db;
-    $this->request = $request;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected ServerRequestInterface $request
+  ) {
   }
   public function __invoke() {
     return $this->render($this->pageTemplate, $this->getViewParams());
@@ -38,8 +39,6 @@ class WizardController extends Controller {
    *
    * Additionally, if a an ID is in the $_POST data or has just been created, we also
    * want to pass that ID through.
-   *
-   * @return void
    */
   protected function getDisplayOptions($options = []) {
     if (empty($options["step"])) $options["step"] = 1;

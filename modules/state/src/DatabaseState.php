@@ -13,8 +13,9 @@ class DatabaseState implements StateInterface {
   protected $cache = [];
 
 
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(
+    protected DatabaseInterface $db
+  ) {
   }
 
   public function get($key, $default = null) {

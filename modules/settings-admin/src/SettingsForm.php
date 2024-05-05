@@ -19,10 +19,9 @@ class SettingsForm extends FormDisplay {
     FormHookFactoryInterface $hookFactory,
     DisplayFactoryInterface $displays,
     ServerRequestInterface $request,
-    DatabaseInterface $db
+    protected DatabaseInterface $db
   ) {
     parent::__construct($output, $collections, $hookFactory, $displays, $request);
-    $this->db = $db;
   }
   public function buildDisplay($options) {
     $settings = $this->db->query("settings")

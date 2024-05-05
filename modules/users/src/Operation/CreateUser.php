@@ -7,9 +7,10 @@ use Starbug\Bundle\BundleInterface;
 use Starbug\Core\Operation\Save;
 
 class CreateUser extends Save {
-  public function __construct(DatabaseInterface $db, MailerInterface $mailer) {
-    $this->db = $db;
-    $this->mailer = $mailer;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected MailerInterface $mailer
+  ) {
   }
   public function handle(array $user, BundleInterface $state): BundleInterface {
     $this->setModel("users");

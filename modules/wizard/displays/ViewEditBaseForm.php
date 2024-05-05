@@ -2,7 +2,7 @@
 namespace Starbug\Wizard;
 
 abstract class ViewEditBaseForm extends FormWizard {
-  protected $steps = [
+  protected array $steps = [
     1 => "viewStep",
     2 => "editStep"
   ];

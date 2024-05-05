@@ -1,7 +1,6 @@
 <?php
 namespace Starbug\Db\Tests;
 
-use Starbug\Db\Query\Query;
 use Starbug\Db\Query\Builder;
 use Starbug\Db\Query\Compiler;
 use Starbug\Db\Schema\Schema;
@@ -9,6 +8,9 @@ use Starbug\Db\Schema\QueryCompilerHook;
 use PHPUnit\Framework\TestCase;
 
 class QueryBuilderTestBase extends TestCase {
+
+  protected Builder $builder;
+  protected Compiler $compiler;
 
   public function setUp(): void {
     parent::setUp();

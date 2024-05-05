@@ -7,9 +7,10 @@ use Starbug\Bundle\BundleInterface;
 use Starbug\Core\Operation\Save;
 
 class Login extends Save {
-  public function __construct(DatabaseInterface $db, SessionHandlerInterface $session) {
-    $this->db = $db;
-    $this->session = $session;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected SessionHandlerInterface $session
+  ) {
   }
   public function handle(array $login, BundleInterface $state): BundleInterface {
     $this->setModel("users");

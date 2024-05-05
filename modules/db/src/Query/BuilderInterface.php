@@ -72,6 +72,7 @@ interface BuilderInterface extends IteratorAggregate {
    */
   public function addWhere($conditions, $condition, $options = []);
   public function condition($field, $value = "", $operator = "=", $options = []);
+  public function conditions($fields, $operator = "=", $options = []);
   public function where($condition, $options = []);
   public function havingCondition($field, $value = "", $operator = "=", $options = []);
   public function havingWhere($condition, $options = []);

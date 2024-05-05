@@ -4,12 +4,11 @@ namespace Starbug\Wizard;
 use Starbug\Core\FormDisplay;
 
 class FormWizard extends FormDisplay {
+  protected array $steps = [];
   /**
    * Entry point to build up the form.
    *
    * @param array $options Input parameters.
-   *
-   * @return void
    */
   public function buildDisplay($options) {
     $this->actions->remove($this->defaultAction);

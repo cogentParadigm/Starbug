@@ -7,9 +7,10 @@ use Starbug\Db\Schema\SchemaInterface;
 
 class FormCollection extends Collection {
   public $copying = false;
-  public function __construct(DatabaseInterface $db, SchemaInterface $schema) {
-    $this->db = $db;
-    $this->schema = $schema;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected SchemaInterface $schema
+  ) {
   }
   public function build($query, $ops) {
     $query->select($query->model.".*");

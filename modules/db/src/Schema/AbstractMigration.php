@@ -2,8 +2,9 @@
 namespace Starbug\Db\Schema;
 
 class AbstractMigration implements MigrationInterface {
-  public function __construct(SchemaInterface $schema) {
-    $this->schema = $schema;
+  public function __construct(
+    protected SchemaInterface $schema
+  ) {
   }
   public function up() {
   }

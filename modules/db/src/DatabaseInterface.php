@@ -15,11 +15,7 @@ interface DatabaseInterface {
   /**
    * Query the database.
    *
-   * @param string $froms comma delimeted list of tables to join. 'users' or 'users,permits'
-   * @param string $args starbug query string for params: select, where, limit, and action/priv_type
-   * @param bool $mine optional. if true, joining models will be checked for relationships and ON statements will be added
-   *
-   * @return array record or records
+   * @param string $collection table to query
    */
   public function query($collection) : BuilderInterface;
   /**
