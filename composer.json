@@ -61,7 +61,8 @@
     "starbug/templates": "^0.9.2"
   },
   "require-dev": {
-    "starbug/devel": "^1.0"
+    "starbug/devel": "^1.0",
+    "phpunit/phpunit": "^9.0"
   },
   "autoload": {
     "psr-4": {
