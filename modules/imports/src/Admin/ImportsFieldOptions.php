@@ -5,9 +5,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Db\Schema\SchemerInterface;
 
 class ImportsFieldOptions {
-  public function __construct(SchemerInterface $schemer, ServerRequestInterface $request) {
+  protected $schema;
+  public function __construct(
+    SchemerInterface $schemer,
+    protected ServerRequestInterface $request
+  ) {
     $this->schema = $schemer->getSchema();
-    $this->request = $request;
   }
   public function __invoke($options) {
     $model = $this->request->getQueryParams()["model"] ?? $options["model"];

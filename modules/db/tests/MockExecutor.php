@@ -18,7 +18,7 @@ class MockExecutor implements ExecutorInterface {
    * {@inheritDoc}
    */
   public function count(BuilderInterface $builder, array $params = []) {
-    // Empty method.
+    return 0;
   }
 
   /**
@@ -29,6 +29,6 @@ class MockExecutor implements ExecutorInterface {
   }
 
   public function interpolate(QueryInterface $query, $params = null) {
-    // Empty method.
+    return "";
   }
 }

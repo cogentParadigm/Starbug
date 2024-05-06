@@ -7,7 +7,11 @@ use Starbug\Core\Generator\Generator;
 use Starbug\Db\Schema\SchemerInterface;
 
 class Setup {
-  public function __construct(Generator $generator, Host $host, ContainerInterface $container) {
+  public function __construct(
+    protected Generator $generator,
+    protected Host $host,
+    protected ContainerInterface $container
+  ) {
     $this->generator = $generator;
     $this->host = $host;
     $this->container = $container;

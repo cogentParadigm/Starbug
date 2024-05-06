@@ -4,8 +4,9 @@ namespace Starbug\Db\Schema;
 class Schemer implements SchemerInterface {
   protected $isUp = false;
   protected $migrations = [];
-  public function __construct(SchemaInterface $schema) {
-    $this->schema = $schema;
+  public function __construct(
+    protected SchemaInterface $schema
+  ) {
   }
   public function addMigration(MigrationInterface $migration) {
     $this->migrations[] = $migration;

@@ -8,9 +8,10 @@ use Starbug\Intl\AddressFormatter;
 use Starbug\Intl\Display\AddressForm;
 
 class AddressController extends Controller {
-  public function __construct(DatabaseInterface $db, AddressFormatter $address) {
-    $this->db = $db;
-    $this->address = $address;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected AddressFormatter $address
+  ) {
   }
   public function __invoke(ServerRequestInterface $request, $locale = "US") {
     $address = [];

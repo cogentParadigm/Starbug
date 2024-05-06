@@ -7,14 +7,14 @@ use Starbug\ResourceLocator\ResourceLocatorInterface;
 use Twig\Environment;
 
 class CssLoader {
-  protected $theme;
-  protected $options = false;
-  public function __construct(ResourceLocatorInterface $locator, Environment $twig, Configuration $modules, $theme, $baseUrl = "/") {
-    $this->locator = $locator;
-    $this->twig = $twig;
-    $this->modules = $modules;
-    $this->theme = $theme;
-    $this->baseUrl = $baseUrl;
+  protected array|false $options = false;
+  public function __construct(
+    protected ResourceLocatorInterface $locator,
+    protected Environment $twig,
+    protected Configuration $modules,
+    protected $theme,
+    protected $baseUrl = "/"
+  ) {
   }
   public function getConfiguration($reload = false) {
     $this->load($reload);

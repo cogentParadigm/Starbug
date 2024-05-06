@@ -7,9 +7,10 @@ use Starbug\Price\FormatterInterface;
 
 class ProductLinesAdminCollection extends Collection {
   protected $model = "product_lines";
-  public function __construct(DatabaseInterface $db, FormatterInterface $formatter) {
-    $this->db = $db;
-    $this->formatter = $formatter;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected FormatterInterface $formatter
+  ) {
   }
   public function build($query, $ops) {
     $query->innerJoin("lines")->on("lines.id=product_lines.lines_id");

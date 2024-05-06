@@ -4,8 +4,9 @@ namespace Starbug\Files;
 use Starbug\Db\DatabaseInterface;
 
 class FilesRepository {
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(
+    protected DatabaseInterface $db
+  ) {
   }
   public function save($record) {
     if (empty($record["id"])) {

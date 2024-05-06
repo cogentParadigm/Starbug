@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\DisplayFactoryInterface;
 use Starbug\Core\FormDisplay;
 use Starbug\Core\FormHookFactoryInterface;
+use Starbug\Intl\TranslationInterface;
 use Starbug\Templates\TemplateInterface;
 
 class AddressForm extends FormDisplay {
@@ -18,15 +19,13 @@ class AddressForm extends FormDisplay {
     FormHookFactoryInterface $hookFactory,
     DisplayFactoryInterface $displays,
     ServerRequestInterface $request,
-    DatabaseInterface $db,
-    TranslationInterface $translation
+    protected DatabaseInterface $db,
+    protected TranslationInterface $translation
   ) {
     parent::__construct($output, $collections, $hookFactory, $displays, $request);
-    $this->db = $db;
-    $this->translation = $translation;
   }
   public function buildDisplay($ops) {
-    if ($this->success("create") && !$this->hasPost("id")) {
+    if ($this->success() && !$this->hasPost("id")) {
       $this->setPost("id", $this->db->getInsertId($this->model));
     }
     if (!empty($ops["input_name"])) {

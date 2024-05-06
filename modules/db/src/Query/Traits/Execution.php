@@ -3,6 +3,7 @@ namespace Starbug\Db\Query\Traits;
 
 use Starbug\Db\DatabaseInterface;
 use ArrayIterator;
+use Traversable;
 
 trait Execution {
   public function getDatabase(): DatabaseInterface {
@@ -66,10 +67,10 @@ trait Execution {
       if ($this->query->hasValue("id")) {
         return $this->query->getValue("id");
       } else {
-        $record = $this->query($this->model)->condition($this->query->getCondition())->one();
+        $record = $this->query($this->query->getTable()->getName())->condition($this->query->getCondition())->one();
         return $record['id'];
       }
-    } elseif ($this->mode == "delete") {
+    } elseif ($this->query->isDelete()) {
       return $this->query->getValue("id");
     }
   }
@@ -78,7 +79,7 @@ trait Execution {
     return $this->executor->interpolate($this->query, $params);
   }
 
-  public function getIterator() {
+  public function getIterator(): Traversable {
     return new ArrayIterator($this->execute());
   }
 }

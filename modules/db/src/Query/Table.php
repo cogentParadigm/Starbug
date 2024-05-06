@@ -58,7 +58,11 @@ class Table extends Condition {
    * @param string $table The name of the table.
    * @param string|false $alias An optional alias for the table.
    */
-  public function __construct(QueryInterface $query, $table, $alias = false) {
+  public function __construct(
+    protected QueryInterface $query,
+    $table,
+    $alias = false
+  ) {
     $this->query = $query;
     $this->table = $table;
     $this->alias = (false == $alias) ? $table : $alias;
@@ -119,7 +123,7 @@ class Table extends Condition {
     $this->buildRelationshipConditions();
     return array_merge($this->relationshipConditions, $this->conditions);
   }
-  public function count() {
+  public function count(): int {
     $this->buildRelationshipConditions();
     return count($this->relationshipConditions) + count($this->conditions);
   }

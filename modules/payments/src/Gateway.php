@@ -8,9 +8,10 @@ use Starbug\Bundle\Bundle;
 
 class Gateway implements GatewayInterface {
   protected $errors;
-  public function __construct(DatabaseInterface $db, OmnipayInterface $gateway) {
-    $this->db = $db;
-    $this->gateway = $gateway;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected OmnipayInterface $gateway
+  ) {
     $this->errors = new Bundle();
   }
   public function getName() {

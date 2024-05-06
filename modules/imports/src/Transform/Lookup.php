@@ -5,7 +5,11 @@ use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Schema\SchemerInterface;
 
 class Lookup extends AbstractTransformer {
-  public function __construct(DatabaseInterface $db, SchemerInterface $schemer) {
+  protected $schema;
+  public function __construct(
+    protected DatabaseInterface $db,
+    SchemerInterface $schemer
+  ) {
     $this->db = $db;
     $this->schema = $schemer->getSchema();
   }

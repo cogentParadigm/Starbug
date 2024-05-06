@@ -6,8 +6,9 @@ use Starbug\Db\Query\ExecutorHook;
 
 class StoreLengthHook extends ExecutorHook {
   protected $models;
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(
+    protected DatabaseInterface $db
+  ) {
   }
   public function validate($query, $key, $value, $column, $argument) {
     $length = explode("-", $argument);

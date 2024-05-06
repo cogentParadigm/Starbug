@@ -25,7 +25,7 @@ class CompiledQuery {
   }
 
   public function setCountSql($sql) {
-    $this->countSql = $countSql;
+    $this->countSql = $sql;
   }
 
   public function isExecutable() {

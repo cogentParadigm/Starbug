@@ -8,10 +8,12 @@ use Starbug\Core\ImagesInterface;
 
 class ApiFilesController extends CollectionController {
   protected $model = "files";
-  public function __construct(ApiRequest $api, ImagesInterface $images, MountManager $filesystems) {
+  public function __construct(
+    ApiRequest $api,
+    protected ImagesInterface $images,
+    protected MountManager $filesystems
+  ) {
     parent::__construct($api);
-    $this->images = $images;
-    $this->filesystems = $filesystems;
   }
   public function filterRow($collection, $file) {
     if (in_array($file["mime_type"], ["image/gif", "image/jpeg", "image/png"])) {

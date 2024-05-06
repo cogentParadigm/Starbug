@@ -20,6 +20,7 @@ class FixtureStrategy extends DatabaseStrategy {
         $this->operation->execute($row);
 
         if ($errors = $this->db->errors(true)) {
+          // @phpstan-ignore-next-line
           $this->db->errors->set([]);
           throw new Exception(json_encode($errors, JSON_PRETTY_PRINT));
         }

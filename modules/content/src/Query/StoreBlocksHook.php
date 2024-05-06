@@ -6,9 +6,10 @@ use Starbug\Db\Query\ExecutorHook;
 use Starbug\Core\InputFilterInterface;
 
 class StoreBlocksHook extends ExecutorHook {
-  public function __construct(DatabaseInterface $db, InputFilterInterface $filter) {
-    $this->db = $db;
-    $this->filter = $filter;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected InputFilterInterface $filter
+  ) {
   }
   public function validate($query, $key, $value, $column, $argument) {
     $query->exclude($key);

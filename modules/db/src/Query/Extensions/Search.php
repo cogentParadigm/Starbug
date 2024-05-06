@@ -5,8 +5,9 @@ use Starbug\Db\Query\BuilderInterface;
 use Starbug\Db\Schema\SchemaInterface;
 
 class Search {
-  public function __construct(SchemaInterface $schema) {
-    $this->schema = $schema;
+  public function __construct(
+    protected SchemaInterface $schema
+  ) {
   }
   public function getSearchFields(BuilderInterface $builder, array $arguments) {
     $table = array_shift($arguments);
@@ -55,7 +56,6 @@ class Search {
     $text = strtolower(trim(str_replace("\\\"", "&quot;", $text)));
     // tokenize the text
     $output = [];
-    $output2 = [];
     $arr = explode("&quot;", $text);
     for ($i = 0; $i < count($arr); $i++) {
       if ($i % 2 == 0) {
@@ -64,6 +64,7 @@ class Search {
         $output[] = $arr[$i];
       }
     }
+    $words = [];
     foreach ($output as $token) {
       if (trim($token) != "") {
         $words[] = $token;

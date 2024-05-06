@@ -3,10 +3,13 @@ namespace Starbug\Db\Schema;
 
 interface SchemaInterface {
   public function addHook(HookInterface $hook);
-  public function addTable($table);
-  public function addColumn($table);
+  public function addTable($table, ...$columns);
+  public function addColumn($table, ...$columns);
   public function getTable($table);
   public function getTables();
+  public function addRow($table, $keys, $defaults = []);
+  public function addRows($table, $rows);
+  public function getRows();
   public function getEntityRoot($table);
   public function getEntityChain($table);
   public function getColumn($table, $column = "");

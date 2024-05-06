@@ -6,9 +6,10 @@ use Starbug\Db\Query\ExecutorHook;
 use Starbug\Db\Schema\SchemaInterface;
 
 class StoreTypeHook extends ExecutorHook {
-  public function __construct(DatabaseInterface $db, SchemaInterface $schema) {
-    $this->db = $db;
-    $this->schema = $schema;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected SchemaInterface $schema
+  ) {
   }
   public function emptyValidate($query, $column, $argument) {
     if ($this->schema->hasTable($argument)) {

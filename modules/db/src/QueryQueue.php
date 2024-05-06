@@ -17,7 +17,7 @@ class QueryQueue extends SplQueue {
    *
    * @param query $query the query to push onto the queue
    */
-  public function push($query) {
+  public function push($query): void {
     $query->validate();
     parent::push($query);
   }
@@ -26,7 +26,7 @@ class QueryQueue extends SplQueue {
    *
    * @param query $query the query to prepend to the queue
    */
-  public function unshift($query) {
+  public function unshift($query): void {
     $query->validate();
     parent::unshift($query);
   }

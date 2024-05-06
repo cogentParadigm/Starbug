@@ -4,6 +4,7 @@ namespace Starbug\Core;
 use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
+use Traversable;
 
 class Breadcrumbs implements IteratorAggregate, ArrayAccess {
   protected $crumbs = [];
@@ -19,19 +20,19 @@ class Breadcrumbs implements IteratorAggregate, ArrayAccess {
   public function get($index) {
     return $this->crumbs[$index];
   }
-  public function getIterator() {
+  public function getIterator(): Traversable {
     return new ArrayIterator($this->crumbs);
   }
-  public function offsetExists($offset) {
+  public function offsetExists($offset): bool {
     return isset($this->crumbs[$offset]);
   }
-  public function offsetGet($offset) {
+  public function offsetGet($offset): mixed {
     return $this->crumbs[$offset];
   }
-  public function offsetSet($offset, $value) {
+  public function offsetSet($offset, $value): void {
     $this->crumbs[$offset] = $value;
   }
-  public function offsetUnset($offset) {
+  public function offsetUnset($offset): void {
     unset($this->crumbs[$offset]);
   }
 }

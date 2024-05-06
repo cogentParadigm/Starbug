@@ -17,7 +17,7 @@ use Starbug\Db\Query\Traits\Tagging;
 use Starbug\Db\Query\Traits\Quotation;
 use Starbug\Db\Query\Traits\Metadata;
 
-class Query implements QueryInterface {
+final class Query implements QueryInterface {
 
   public function __construct($prefix = "", $identifierQuoteCharacter = "\"") {
     $this->prefix = $prefix;

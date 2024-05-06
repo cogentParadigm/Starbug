@@ -6,9 +6,10 @@ use Starbug\Routing\Route;
 use Starbug\Routing\RouteFilterInterface;
 
 class RouteFilter implements RouteFilterInterface {
-  public function __construct(CssLoader $css, $theme) {
-    $this->css = $css;
-    $this->theme = $theme;
+  public function __construct(
+    protected CssLoader $css,
+    protected $theme
+  ) {
   }
   public function filterRoute(Route $route, ServerRequestInterface $request) {
     if (!$route->hasOption("theme")) {

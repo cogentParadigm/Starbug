@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Queues;
 
+use DI\FactoryInterface;
 use Psr\Container\ContainerInterface;
 use Starbug\Queue\Driver\Sql;
 use Starbug\Queue\QueueFactory;
@@ -18,11 +19,11 @@ return [
   "scripts.process-queue" => ProcessQueue::class,
   "scripts.queue" => Queue::class,
   "Starbug\Queue\*Interface" => autowire("Starbug\Queue\*"),
-  "Starbug\Queue\QueueFactoryInterface" => function (ContainerInterface $container) {
-    $factory = new QueueFactory();
-    $factory->addQueue("default", function () use ($container) {
-      return $container->make(Sql::class, ["name" => "default"]);
+  "Starbug\Queue\QueueFactoryInterface" => function (FactoryInterface $factory) {
+    $queues = new QueueFactory();
+    $queues->addQueue("default", function () use ($factory) {
+      return $factory->make(Sql::class, ["name" => "default"]);
     });
-    return $factory;
+    return $queues;
   }
 ];

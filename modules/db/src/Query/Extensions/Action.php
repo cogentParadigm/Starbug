@@ -6,9 +6,10 @@ use Starbug\Db\Query\BuilderInterface;
 use Starbug\Db\Schema\SchemaInterface;
 
 class Action {
-  public function __construct(SessionHandlerInterface $session, SchemaInterface $schema) {
-    $this->session = $session;
-    $this->schema = $schema;
+  public function __construct(
+    protected SessionHandlerInterface $session,
+    protected SchemaInterface $schema
+  ) {
   }
   public function action(BuilderInterface $query, array $arguments) {
     $action = array_shift($arguments);

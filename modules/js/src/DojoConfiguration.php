@@ -6,9 +6,10 @@ use Starbug\Config\ConfigInterface;
 class DojoConfiguration {
   protected $configuration = false;
   protected $dependencies = [];
-  public function __construct(ConfigInterface $config, $isBuild = false) {
-    $this->config = $config;
-    $this->isBuild = $isBuild;
+  public function __construct(
+    protected ConfigInterface $config,
+    protected $isBuild = false
+  ) {
   }
   /**
    * Add a dependency.
@@ -78,9 +79,6 @@ class DojoConfiguration {
   }
   /**
    * Retrieve dependencies which should be required on load.
-   *
-   * @param string $name
-   *   The layer name for which you want the dependencies.
    *
    * @return string
    *   A javascript array of dependencies for the Dojo loader.

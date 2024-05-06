@@ -6,8 +6,9 @@ use Starbug\Routing\Controller;
 
 class ApiController extends Controller implements CollectionFilterInterface {
   protected $model;
-  public function __construct(ApiRequest $api) {
-    $this->api = $api;
+  public function __construct(
+    protected ApiRequest $api
+  ) {
     $api->setModel($this->model);
     $api->addFilter($this);
   }

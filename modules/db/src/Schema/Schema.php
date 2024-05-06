@@ -11,12 +11,11 @@ class Schema implements SchemaInterface {
     $this->hooks[] = $hook;
     return $this;
   }
-  public function addTable($table) {
-    $args = func_get_args();
-    call_user_func_array([$this, "addColumn"], $args);
+  public function addTable($table, ...$args) {
+    $this->addColumn($table, ...$args);
     return $this;
   }
-  public function addColumn($table) {
+  public function addColumn($table, ...$args) {
     $args = func_get_args();
     $table = array_shift($args);
     if (is_array($table)) {

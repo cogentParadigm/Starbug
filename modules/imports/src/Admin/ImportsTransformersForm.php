@@ -18,16 +18,14 @@ class ImportsTransformersForm extends FormDisplay {
     FormHookFactoryInterface $hookFactory,
     DisplayFactoryInterface $displays,
     ServerRequestInterface $request,
-    Factory $transformers,
-    DatabaseInterface $db
+    protected Factory $transformers,
+    protected DatabaseInterface $db
   ) {
     parent::__construct($output, $collections, $hookFactory, $displays, $request);
-    $this->transformers = $transformers;
-    $this->db = $db;
   }
   public function buildDisplay($options) {
     $data = $this->getPost();
-    if ($this->success("create") && empty($data["id"])) {
+    if ($this->success() && empty($data["id"])) {
       $this->setPost("id", $this->db->getInsertId($this->model));
     }
     $transformers = $this->transformers->getTransformers();

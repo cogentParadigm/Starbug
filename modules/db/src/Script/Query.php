@@ -8,13 +8,9 @@ use Starbug\Db\DatabaseInterface;
  * Run queries from the command line.
  */
 class Query {
-  /**
-   * Command dependencies are just the DatabaseInterface to run queries.
-   *
-   * @param DatabaseInterface $db
-   */
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(
+    protected DatabaseInterface $db
+  ) {
   }
   public function __invoke($argv) {
     $name = array_shift($argv);

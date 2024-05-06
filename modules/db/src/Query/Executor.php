@@ -12,6 +12,7 @@ class Executor implements ExecutorInterface {
   protected $hookFactory;
   protected $compiler;
   protected $schema;
+  protected $record_count;
 
   public function __construct(ExecutorHookFactoryInterface $hookFactory, CompilerInterface $compiler, SchemerInterface $schemer) {
     $this->hookFactory = $hookFactory;

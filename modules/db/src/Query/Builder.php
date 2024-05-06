@@ -8,7 +8,7 @@ use Starbug\Db\Query\Traits\Pagination;
 use Starbug\Db\Query\Traits\Execution;
 use Starbug\Db\Schema\Schema;
 
-class Builder implements BuilderInterface {
+final class Builder implements BuilderInterface {
 
   use Hooks;
   use Parsing;
@@ -18,9 +18,10 @@ class Builder implements BuilderInterface {
 
   protected $schema;
 
-  public function __construct(DatabaseInterface $db, ExecutorInterface $executor) {
-    $this->db = $db;
-    $this->executor = $executor;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected ExecutorInterface $executor
+  ) {
     $this->reset();
   }
 

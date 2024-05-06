@@ -5,8 +5,9 @@ use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Query\ExecutorHook;
 
 class StoreReferencesHook extends ExecutorHook {
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(
+    protected DatabaseInterface $db
+  ) {
   }
   public function validate($query, $key, $value, $column, $argument) {
     $query->setMeta("{$column}.references.replace", $query->getUnvalidatedValue($key) === "");

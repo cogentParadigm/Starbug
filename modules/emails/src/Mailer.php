@@ -15,15 +15,14 @@ class Mailer implements MailerInterface {
   protected $from_name;
   protected $port;
   protected $secure;
-  protected $macro;
-  protected $db;
-  protected $whitelistEnabled = false;
-  protected $whitelist = [];
 
-  public function __construct(SettingsInterface $settings, MacroInterface $macro, DatabaseInterface $db, $whitelistEnabled = false, $whitelist = []) {
-    $this->settings = $settings;
-    $this->macro = $macro;
-    $this->db = $db;
+  public function __construct(
+    protected SettingsInterface $settings,
+    protected MacroInterface $macro,
+    protected DatabaseInterface $db,
+    protected $whitelistEnabled = false,
+    protected $whitelist = []
+  ) {
     $this->host = $settings->get("email_host");
     $this->username = $settings->get("email_username");
     $this->password = $settings->get("email_password");
@@ -31,8 +30,6 @@ class Mailer implements MailerInterface {
     $this->from_name = $settings->get("site_name");
     $this->port = $settings->get("email_port");
     $this->secure = $settings->get("email_secure");
-    $this->whitelistEnabled = $whitelistEnabled;
-    $this->whitelist = $whitelist;
   }
 
   public function create() {

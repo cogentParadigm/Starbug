@@ -2,6 +2,7 @@
 namespace Starbug\Db\Query\Traits;
 
 use Exception;
+use Starbug\Db\Query\QueryInterface;
 
 trait Selection {
 

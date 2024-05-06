@@ -11,10 +11,9 @@ class ImportsTransformersSelectCollection extends SelectCollection {
   public function __construct(
     DatabaseInterface $db,
     SchemerInterface $schemer,
-    Factory $transformers
+    protected Factory $transformers
   ) {
     parent::__construct($db, $schemer);
-    $this->transformers = $transformers;
   }
   public function build($query, $ops) {
     $query = parent::build($query, $ops);

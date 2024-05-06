@@ -6,9 +6,10 @@ use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Routing\Controller;
 
 class PagesController extends Controller {
-  public function __construct(DatabaseInterface $db, SessionHandlerInterface $session) {
-    $this->db = $db;
-    $this->session = $session;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected SessionHandlerInterface $session
+  ) {
   }
   public function __invoke($id, $route) {
     $page = $this->db->query("pages")->condition("id", $id)->one();

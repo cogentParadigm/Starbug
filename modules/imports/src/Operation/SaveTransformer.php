@@ -9,11 +9,9 @@ use Starbug\Imports\Transform\Factory;
 class SaveTransformer extends Save {
   protected $model = "imports_transformers";
   public function __construct(
-    DatabaseInterface $db,
-    Factory $transformers
+    protected DatabaseInterface $db,
+    protected Factory $transformers
   ) {
-    $this->db = $db;
-    $this->transformers = $transformers;
   }
   public function handle(array $data, BundleInterface $state): BundleInterface {
     $record = [];

@@ -12,9 +12,12 @@ class Generator {
    * Constructor.
    *
    * @param TemplateInterface $renderer Template renderer.
-   * @param boolean $base_directory Project root.
+   * @param string|false $base_directory Project root.
    */
-  public function __construct(TemplateInterface $renderer, $base_directory = false) {
+  public function __construct(
+    protected TemplateInterface $renderer,
+    protected $base_directory = false
+  ) {
     $this->renderer = $renderer;
     $this->base_directory = $base_directory;
     if (false == $this->base_directory) {
@@ -34,7 +37,7 @@ class Generator {
     // CREATE DIRECTORIES.
     foreach ($definition->getDirectories() as $dir) {
       if (!file_exists($this->base_directory."/".$dir)) {
-        passthru("mkdir ".$this->base_directory."/".$dir);
+        passthru("mkdir -p ".$this->base_directory."/".$dir);
       }
     }
     // CREATE FILES.

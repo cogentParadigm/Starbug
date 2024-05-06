@@ -16,10 +16,10 @@ class Definition {
   protected $copy = [];
   protected $parameters = [];
   protected $module = "app";
-  protected $modules;
 
-  public function __construct(Configuration $modules) {
-    $this->modules = $modules;
+  public function __construct(
+    protected Configuration $modules
+  ) {
   }
   /**
    * Set module.
@@ -36,6 +36,7 @@ class Definition {
       $namespace .= "\\".$this->getParameter("dir");
     }
     $this->setParameter("namespace", $namespace);
+    $this->setParameter("path", $this->module["path"]);
   }
   public function getModule() {
     return $this->module;
@@ -66,8 +67,8 @@ class Definition {
   public function setParameter($key, $value) {
     $this->parameters[$key] = $value;
   }
-  public function getParameter($key) {
-    return $this->parameters[$key];
+  public function getParameter($key, $default = null) {
+    return $this->parameters[$key] ?? $default;
   }
   public function hasParameter($key) {
     return isset($this->parameters[$key]);
@@ -86,5 +87,16 @@ class Definition {
     $this->templates = [];
     $this->copy = [];
     $this->parameters = [];
+  }
+  public function getPath($path, $dirs = []) {
+    return implode("/", array_filter(
+      array_merge([$this->getParameter("path")], $dirs, [$path])
+    ));
+  }
+  public function getSrcPath($path, $dirs = []) {
+    return $this->getPath($path, array_merge(
+      ["src", $this->getParameter("dir", "")],
+      $dirs
+    ));
   }
 }

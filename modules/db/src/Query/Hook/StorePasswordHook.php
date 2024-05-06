@@ -7,12 +7,13 @@ use Starbug\Db\DatabaseInterface;
 use ZxcvbnPhp\Zxcvbn;
 
 class StorePasswordHook extends ExecutorHook {
-  public function __construct(SessionHandlerInterface $session, DatabaseInterface $db, Zxcvbn $zxcvbn, $passingScore, $performStrengthTests) {
-    $this->session = $session;
-    $this->db = $db;
-    $this->zxcvbn = $zxcvbn;
-    $this->passingScore = $passingScore;
-    $this->performStrengthTests = $performStrengthTests;
+  public function __construct(
+    protected SessionHandlerInterface $session,
+    protected DatabaseInterface $db,
+    protected Zxcvbn $zxcvbn,
+    protected $passingScore,
+    protected $performStrengthTests
+  ) {
   }
   public function validate($query, $key, $value, $column, $argument) {
     if (empty($value)) return $value;

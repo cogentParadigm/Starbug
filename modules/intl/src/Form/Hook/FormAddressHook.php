@@ -5,8 +5,9 @@ use Starbug\Db\DatabaseInterface;
 use Starbug\Core\FormHook;
 
 class FormAddressHook extends FormHook {
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(
+    protected DatabaseInterface $db
+  ) {
   }
   public function build($form, &$control, &$field) {
     $options = ["code" => "US", "input_name" => array_merge($form->input_name, [$field["name"]])];

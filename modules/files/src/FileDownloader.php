@@ -7,7 +7,11 @@ use Starbug\Http\ResponseBuilderInterface;
 use League\Flysystem\MountManager;
 
 class FileDownloader {
-  public function __construct(DatabaseInterface $db, MountManager $filesystems, ResponseBuilderInterface $response) {
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected MountManager $filesystems,
+    protected ResponseBuilderInterface $response
+  ) {
     $this->db = $db;
     $this->filesystems = $filesystems;
     $this->response = $response;

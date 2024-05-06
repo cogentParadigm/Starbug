@@ -15,8 +15,9 @@ class AddressFormatter {
     'Z' => 'postal_code',
     'X' => 'sorting_code'
   ];
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(
+    protected DatabaseInterface $db
+  ) {
   }
   public function format($address, $country = false) {
     if (is_numeric($address)) {

@@ -5,9 +5,10 @@ use Starbug\Db\DatabaseInterface;
 use Starbug\Config\ConfigInterface;
 
 class IntlSetup {
-  public function __construct(ConfigInterface $config, DatabaseInterface $db) {
-    $this->config = $config;
-    $this->db = $db;
+  public function __construct(
+    protected ConfigInterface $config,
+    protected DatabaseInterface $db
+  ) {
   }
   public function __invoke() {
     // populate countries

@@ -1,11 +1,12 @@
 <?php
 namespace Starbug\Imports;
 
-use Psr\Container\ContainerInterface;
+use DI\FactoryInterface;
 
 class ImporterFactory {
-  public function __construct(ContainerInterface $container) {
-    $this->container = $container;
+  public function __construct(
+    protected FactoryInterface $container
+  ) {
   }
   public function create($model, $operation, $keys = []) {
     return $this->container->make(Importer::class, [

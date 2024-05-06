@@ -6,8 +6,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Routing\AliasStorageInterface;
 
 class AliasStorage implements AliasStorageInterface {
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(
+    protected DatabaseInterface $db
+  ) {
   }
   public function addAlias($alias, $path) {
     $this->db->store("aliases", ["path" => $path, "alias" => $alias]);

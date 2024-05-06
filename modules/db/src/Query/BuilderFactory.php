@@ -6,8 +6,9 @@ use Psr\Container\ContainerInterface;
 
 class BuilderFactory implements BuilderFactoryInterface {
   protected $extensions = null;
-  public function __construct(ContainerInterface $container) {
-    $this->container = $container;
+  public function __construct(
+    protected ContainerInterface $container
+  ) {
   }
   public function create(DatabaseInterface $db) {
     if (is_null($this->extensions)) {

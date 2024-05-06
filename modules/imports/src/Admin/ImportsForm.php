@@ -23,14 +23,11 @@ class ImportsForm extends FormDisplay {
     FormHookFactoryInterface $hookFactory,
     DisplayFactoryInterface $displays,
     ServerRequestInterface $request,
-    DatabaseInterface $db,
-    MountManager $filesystems,
-    OperationsRepository $operations
+    protected DatabaseInterface $db,
+    protected MountManager $filesystems,
+    protected OperationsRepository $operations
   ) {
     parent::__construct($output, $collections, $hookFactory, $displays, $request);
-    $this->db = $db;
-    $this->filesystems = $filesystems;
-    $this->operations = $operations;
   }
   public function buildDisplay($options) {
     if ($options['operation'] == "run") {
@@ -74,7 +71,7 @@ class ImportsForm extends FormDisplay {
     $this->actions->remove($this->defaultAction);
     $source = $this->get("source");
     $output = $this->preparePaginatedOutput($source);
-    if ($this->success("run")) {
+    if ($this->success()) {
       $this->add(["success", "input_type" => "html", "value" => '<p class="alert alert-success">Import completed</p>']);
     }
     $this->add(["table", "input_type" => "template", "value" => "csv-table.html", "class" => "table table-striped"] + $output);

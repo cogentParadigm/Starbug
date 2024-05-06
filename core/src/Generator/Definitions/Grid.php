@@ -6,9 +6,11 @@ use Starbug\Db\Schema\SchemerInterface;
 use Starbug\Modules\Configuration;
 
 class Grid extends Definition {
-  public function __construct(Configuration $modules, SchemerInterface $schemer) {
+  public function __construct(
+    Configuration $modules,
+    protected SchemerInterface $schemer
+  ) {
     parent::__construct($modules);
-    $this->schemer = $schemer;
   }
   public function build(array $options = []) {
     parent::build($options);

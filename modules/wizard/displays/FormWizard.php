@@ -57,7 +57,7 @@ class FormWizard extends FormDisplay {
    * @param string $action The model action to submit to.
    * @param string $label The button label.
    * @param array $attributes Additional attributes to put on the button node.
-   * @param string $id An identifier for the button, defaults to the value of $action.
+   * @param string|false $id An identifier for the button, defaults to the value of $action.
    *
    * @return void
    */
@@ -79,7 +79,7 @@ class FormWizard extends FormDisplay {
    * @param integer $step The step number to go to.
    * @param string $label The button label.
    * @param array $attributes Additional attributes to put on the button node.
-   * @param string $id An identifier for the button, defaults to the step number.
+   * @param string|false $id An identifier for the button, defaults to the step number.
    *
    * @return void
    */
@@ -102,7 +102,7 @@ class FormWizard extends FormDisplay {
    * @param string $url The url to direct to.
    * @param string $label The button label.
    * @param array $attributes Additional attributes to put on the button node.
-   * @param string $id An identifier for the button, defaults to value of $url parameter.
+   * @param string|false $id An identifier for the button, defaults to value of $url parameter.
    *
    * @return void
    */

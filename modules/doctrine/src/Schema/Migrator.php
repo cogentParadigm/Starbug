@@ -10,7 +10,11 @@ use Starbug\Core\Generator\Generator;
 use Starbug\Bundle\BundleInterface;
 
 class Migrator extends AbstractMigration {
-  public function __construct(DatabaseInterface $db, SchemaInterface $schema, Generator $generator) {
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected SchemaInterface $schema,
+    protected Generator $generator
+  ) {
     $this->db = $db;
     $this->schema = $schema;
     $this->generator = $generator;

@@ -28,10 +28,7 @@ class Settings implements SettingsInterface {
   }
 
   /**
-   * Get a configuration value
-   *
-   * @param string $name the name of the configuration entry, such as 'site_name'
-   * @param string $scope the scope/category of the configuration item
+   * {@inheritDoc}
    */
   public function get($gateway, $setting, $reset = false) {
     $field_name = (is_numeric($gateway)) ? "id" : "name";

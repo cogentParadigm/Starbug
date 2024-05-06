@@ -5,10 +5,17 @@ use Starbug\Db\DatabaseInterface;
 use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Core\SelectCollection;
 use Starbug\Db\Schema\SchemerInterface;
+use Starbug\Price\FormatterInterface;
 
 class ShippingMethodsSelectCollection extends SelectCollection {
   protected $model = "shipping_methods";
-  public function __construct(DatabaseInterface $db, SchemerInterface $schemer, CollectionFactoryInterface $collections, PriceFormatterInterface $priceFormatter) {
+  protected $order;
+  public function __construct(
+    DatabaseInterface $db,
+    SchemerInterface $schemer,
+    protected CollectionFactoryInterface $collections,
+    protected FormatterInterface $priceFormatter
+  ) {
     parent::__construct($db, $schemer);
     $this->collections = $collections;
     $this->priceFormatter = $priceFormatter;

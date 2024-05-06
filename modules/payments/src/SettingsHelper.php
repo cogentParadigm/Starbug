@@ -2,8 +2,9 @@
 namespace Starbug\Payments;
 
 class SettingsHelper {
-  public function __construct(SettingsInterface $settings) {
-    $this->target = $settings;
+  public function __construct(
+    protected SettingsInterface $target
+  ) {
   }
   public function helper() {
     return $this->target;

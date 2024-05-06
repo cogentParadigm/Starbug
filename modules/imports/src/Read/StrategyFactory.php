@@ -6,16 +6,11 @@ use DI\FactoryInterface;
 use League\Flysystem\MountManager;
 
 class StrategyFactory implements StrategyFactoryInterface {
-  protected $db;
-  protected $filesystems;
   public function __construct(
-    DatabaseInterface $db,
-    MountManager $filesystems,
-    FactoryInterface $container
+    protected DatabaseInterface $db,
+    protected MountManager $filesystems,
+    protected FactoryInterface $container
   ) {
-    $this->db = $db;
-    $this->filesystems = $filesystems;
-    $this->container = $container;
   }
   public function create($strategy, $params = []) : StrategyInterface {
     if (!empty($params["files_id"])) {

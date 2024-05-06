@@ -13,25 +13,14 @@ use Starbug\Core\ImagesInterface;
 use Starbug\Files\FileUploaderInterface;
 
 class UploadController extends Controller {
-  protected $db;
-  protected $filesystems;
-  protected $images;
-  protected $session;
-  protected $response;
   public function __construct(
-    DatabaseInterface $db,
-    FileUploaderInterface $uploader,
-    MountManager $filesystems,
-    ImagesInterface $images,
-    SessionHandlerInterface $session,
-    ResponseFactoryInterface $response
+    protected DatabaseInterface $db,
+    protected FileUploaderInterface $uploader,
+    protected MountManager $filesystems,
+    protected ImagesInterface $images,
+    protected SessionHandlerInterface $session,
+    protected ResponseFactoryInterface $response
   ) {
-    $this->db = $db;
-    $this->uploader = $uploader;
-    $this->filesystems = $filesystems;
-    $this->images = $images;
-    $this->session = $session;
-    $this->response = $response;
   }
   public function __invoke(ServerRequestInterface $request) {
     $htmldata = [];
@@ -63,7 +52,7 @@ class UploadController extends Controller {
           $_post['mime_type'] = $record["mime_type"];
           $image = in_array($record["mime_type"], ["image/gif", "image/jpeg", "image/png"]);
           if ($image) {
-            $_post['thumbnail'] = (string) $this->images->thumb($record["location"]."://".$_post['name'], ["w" => 100, "w" => 100]);
+            $_post['thumbnail'] = (string) $this->images->thumb($record["location"]."://".$_post['name'], ["w" => 100, "h" => 100]);
           }
           $_post['width'] = $width;
           $_post['height'] = $height;

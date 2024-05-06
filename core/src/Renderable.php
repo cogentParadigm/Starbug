@@ -12,9 +12,10 @@ class Renderable {
   public $innerHTML = "";
 
   public $vars = [];
+  public $children = [];
 
 
-  public function __construct($selector, $children = [], $content = "") {
+  public function __construct($selector, $content = "") {
     // get tag name and attributes
     if (!is_array($selector)) {
       $selector = $this->parseSelector($selector);

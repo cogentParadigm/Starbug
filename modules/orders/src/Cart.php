@@ -14,7 +14,10 @@ class Cart {
   /**
    * Constructor.
    */
-  public function __construct(DatabaseInterface $db, $conditions) {
+  public function __construct(
+    protected DatabaseInterface $db,
+    $conditions
+  ) {
     $this->db = $db;
     $this->conditions = $conditions;
   }

@@ -61,7 +61,10 @@ abstract class AbstractDatabase implements DatabaseInterface {
   const PHASE_BEFORE_DELETE = 3;
   const PHASE_AFTER_DELETE = 4;
 
-  public function __construct(BuilderFactory $queryBuilderFactory, LoggerFactory $loggerFactory) {
+  public function __construct(
+    protected BuilderFactory $queryBuilderFactory,
+    LoggerFactory $loggerFactory
+  ) {
     $this->queryBuilderFactory = $queryBuilderFactory;
     $this->queue = new QueryQueue();
     $this->errors = new Bundle();
@@ -157,8 +160,6 @@ abstract class AbstractDatabase implements DatabaseInterface {
    * @param string $name the name of the table
    * @param string/array $fields keypairs of columns/values to be stored
    * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
-   *
-   * @return array validation errors
    */
   public function store($name, $fields = [], $from = "auto") {
     $this->queue($name, $fields, $from, true);
@@ -173,8 +174,6 @@ abstract class AbstractDatabase implements DatabaseInterface {
    * @param string $name the name of the table
    * @param string/array $fields keypairs of columns/values to be stored
    * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
-   *
-   * @return array validation errors
    */
   public function queue($name, $fields = [], $from = "auto", $unshift = false) {
     $query = $this->queryBuilderFactory->create($this)->from($name)->set($fields);

@@ -17,17 +17,12 @@ class FileUploader implements FileUploaderInterface {
     "application/pgp" => ["application/octet-stream"]
   ];
   public function __construct(
-    FilesRepository $repository,
-    MountManager $filesystems,
-    ImagesInterface $images,
-    InputFilterInterface $filter,
-    MimeTypes $mimeTypes
+    protected FilesRepository $repository,
+    protected MountManager $filesystems,
+    protected ImagesInterface $images,
+    protected InputFilterInterface $filter,
+    protected MimeTypes $mimeTypes
   ) {
-    $this->repository = $repository;
-    $this->filesystems = $filesystems;
-    $this->images = $images;
-    $this->filter = $filter;
-    $this->mimeTypes = $mimeTypes;
   }
   public function upload($record, UploadedFileInterface $file): ?array {
     $filename = $file->getClientFilename();
@@ -60,6 +55,7 @@ class FileUploader implements FileUploaderInterface {
         throw new Exception("File could not be moved");
       }
     }
+    return null;
   }
   protected function mimeIsValid($path, $type) {
     $detected = $this->getMimeFromFile($path);

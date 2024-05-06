@@ -4,8 +4,9 @@ namespace Starbug\Core;
 use Invoker\InvokerInterface;
 
 class FormSelectHook extends FormHook {
-  public function __construct(InvokerInterface $invoker) {
-    $this->invoker = $invoker;
+  public function __construct(
+    protected InvokerInterface $invoker
+  ) {
   }
   public function build($form, &$control, &$field) {
     $name = $field['name'];

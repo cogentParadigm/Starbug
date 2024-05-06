@@ -15,10 +15,12 @@ class GridDisplay extends ItemDisplay {
     "row_options" => ["field" => "id", "label" => "Options", "class" => "field-options", "plugin" => "starbug.grid.columns.options"]
   ];
 
-  public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections, DojoConfiguration $dojo) {
-    $this->output = $output;
-    $this->collections = $collections;
-    $this->dojo = $dojo;
+  public function __construct(
+    TemplateInterface $output,
+    CollectionFactoryInterface $collections,
+    protected DojoConfiguration $dojo
+  ) {
+    parent::__construct($output, $collections);
   }
 
   public function build($options = []) {

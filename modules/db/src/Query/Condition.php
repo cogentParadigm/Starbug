@@ -79,7 +79,7 @@ class Condition implements ConditionInterface {
     $this->conditions = $conditions;
   }
 
-  public function count() {
+  public function count(): int {
     return count($this->conditions);
   }
 }

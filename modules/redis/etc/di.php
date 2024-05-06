@@ -1,11 +1,12 @@
 <?php
 namespace Starbug\Redis;
 
-use function DI\autowire;
-use DI;
+use DI\FactoryInterface;
 use Predis\Client;
 use Psr\Container\ContainerInterface;
 use Starbug\Queue\QueueFactory;
+
+use function DI\autowire;
 
 return [
   "redis.scheme" => "tcp",
@@ -27,14 +28,17 @@ return [
     );
   },
   "Starbug\Queue\*Interface" => autowire("Starbug\Queue\*"),
-  "Starbug\Queue\QueueFactoryInterface" => function (ContainerInterface $container) {
-    $factory = new QueueFactory();
-    $factory->addQueue("default", function () use ($container) {
-      return $container->make("Starbug\Queue\Driver\Predis", [
+  "Starbug\Queue\QueueFactoryInterface" => function (
+    ContainerInterface $container,
+    FactoryInterface $factory
+  ) {
+    $queues = new QueueFactory();
+    $queues->addQueue("default", function () use ($container, $factory) {
+      return $factory->make("Starbug\Queue\Driver\Predis", [
         "name" => "default",
         "redis" => $container->get("Predis\Client")
       ]);
     });
-    return $factory;
+    return $queues;
   }
 ];

@@ -117,4 +117,20 @@ interface BuilderInterface extends IteratorAggregate {
   public function reset();
   public function getQuery();
   public function getDatabase(): DatabaseInterface;
+
+  /**
+   * Execution functions
+   */
+  public function validate();
+  public function execute();
+  public function one();
+  public function all();
+  public function insert($run = true);
+  public function update($run = true);
+  public function delete($run = true);
+  public function truncate($run = true);
+  public function unsafeTruncate();
+  public function count(array $params = []);
+  public function getId();
+  public function interpolate($params = null);
 }

@@ -8,11 +8,12 @@ use Starbug\Db\Query\ExecutorHook;
 use Starbug\Db\Schema\SchemaInterface;
 
 class StoreSlugHook extends ExecutorHook {
-  public function __construct(DatabaseInterface $db, MacroInterface $macro, InputFilterInterface $filter, SchemaInterface $schema) {
-    $this->db = $db;
-    $this->macro = $macro;
-    $this->filter = $filter;
-    $this->schema = $schema;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected MacroInterface $macro,
+    protected InputFilterInterface $filter,
+    protected SchemaInterface $schema
+  ) {
   }
   public function emptyBeforeInsert($query, $column, $argument) {
     $query->set($column, $this->validate($query, $column, "", $column, $argument));

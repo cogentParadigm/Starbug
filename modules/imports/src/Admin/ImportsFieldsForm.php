@@ -17,14 +17,15 @@ class ImportsFieldsForm extends FormDisplay {
   protected $source_keys = [];
   protected $source_values = [];
   public $model = "imports_fields";
+  protected $schema;
   public function __construct(
     TemplateInterface $output,
     CollectionFactoryInterface $collections,
     FormHookFactoryInterface $hookFactory,
     DisplayFactoryInterface $displays,
     ServerRequestInterface $request,
-    DatabaseInterface $db,
-    MountManager $filesystems,
+    protected DatabaseInterface $db,
+    protected MountManager $filesystems,
     SchemerInterface $schemer
   ) {
     parent::__construct($output, $collections, $hookFactory, $displays, $request);
@@ -34,7 +35,7 @@ class ImportsFieldsForm extends FormDisplay {
   }
   public function buildDisplay($options) {
     $data = $this->getPost();
-    if ($this->success("create") && empty($data["id"])) {
+    if ($this->success() && empty($data["id"])) {
       $this->setPost("id", $this->db->getInsertId($this->model));
     }
     $this->parseSource($options);

@@ -4,6 +4,7 @@ namespace Starbug\Db\Query\Traits;
 use Starbug\Core\Pager;
 
 trait Pagination {
+  protected ?Pager $pager = null;
   /**
    * Page the results.
    *

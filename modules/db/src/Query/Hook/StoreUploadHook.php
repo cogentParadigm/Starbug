@@ -7,13 +7,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Files\FileUploader;
 
 class StoreUploadHook extends ExecutorHook {
-  protected $db;
-  protected $request;
-  protected $files;
-  public function __construct(DatabaseInterface $db, FileUploader $uploader, ServerRequestInterface $request) {
-    $this->db = $db;
-    $this->uploader = $uploader;
-    $this->request = $request;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected FileUploader $uploader,
+    protected ServerRequestInterface $request
+  ) {
   }
   public function emptyValidate($query, $column, $argument) {
     $files = $this->request->getUploadedFiles();

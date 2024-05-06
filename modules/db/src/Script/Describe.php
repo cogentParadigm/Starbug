@@ -5,8 +5,9 @@ use Starbug\Db\DatabaseInterface;
 use cli\Table;
 
 class Describe {
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(
+    protected DatabaseInterface $db
+  ) {
   }
   public function __invoke($argv) {
     $name = array_shift($argv);

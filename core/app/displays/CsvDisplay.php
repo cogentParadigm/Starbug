@@ -6,6 +6,7 @@ use Starbug\Templates\TemplateInterface;
 
 class CsvDisplay extends ItemDisplay {
   public $template = "csv";
+  protected $action;
   public function __construct(TemplateInterface $output, CollectionFactoryInterface $collections) {
     $this->output = $output;
     $this->collections = $collections;

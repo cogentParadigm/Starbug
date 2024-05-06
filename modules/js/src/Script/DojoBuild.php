@@ -4,9 +4,10 @@ namespace Starbug\Js\Script;
 use Starbug\Js\DojoConfiguration;
 
 class DojoBuild {
-  public function __construct(DojoConfiguration $dojo, $base_directory) {
-    $this->dojo = $dojo;
-    $this->base_directory = $base_directory;
+  public function __construct(
+    protected DojoConfiguration $dojo,
+    protected $base_directory
+  ) {
   }
   public function __invoke() {
     if (!file_exists($this->base_directory."/var/etc")) {

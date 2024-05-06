@@ -14,8 +14,11 @@ class DatabaseStrategy implements StrategyInterface {
   protected $readStrategy;
   protected $options = [];
   protected $record;
-  protected $operation;
-  public function __construct(DatabaseInterface $db, OperationInterface $operation) {
+
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected OperationInterface $operation
+  ) {
     $this->db = $db;
     $this->operation = $operation;
   }
@@ -26,6 +29,7 @@ class DatabaseStrategy implements StrategyInterface {
     foreach ($readStrategy->getRows($options) as $record) {
       $this->record = $record;
 
+      // @phpstan-ignore-next-line
       $conn = $this->db->getConnection();
       $conn->beginTransaction();
 
@@ -33,6 +37,7 @@ class DatabaseStrategy implements StrategyInterface {
 
       if ($errors = $this->db->errors(true)) {
         trigger_error(json_encode($errors, JSON_PRETTY_PRINT));
+        // @phpstan-ignore-next-line
         $this->db->errors->set([]);
       }
 
@@ -63,12 +68,14 @@ class DatabaseStrategy implements StrategyInterface {
     return $message;
   }
   protected function rollBack() {
+    // @phpstan-ignore-next-line
     $conn = $this->db->getConnection();
     if ($conn->isTransactionActive()) {
       $conn->rollBack();
     }
   }
   protected function commit() {
+    // @phpstan-ignore-next-line
     $conn = $this->db->getConnection();
     if ($conn->isTransactionActive()) {
       $conn->commit();

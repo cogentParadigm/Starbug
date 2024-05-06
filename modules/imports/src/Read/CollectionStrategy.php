@@ -6,8 +6,9 @@ use Iterator;
 use Starbug\Imports\Import;
 
 class CollectionStrategy extends Strategy {
-  public function __construct(CollectionFactoryInterface $collections) {
-    $this->collections = $collections;
+  public function __construct(
+    protected CollectionFactoryInterface $collections
+  ) {
   }
   public function getRows($options = []) : Iterator {
     $collection = $options["collection"];

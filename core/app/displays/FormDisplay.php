@@ -25,27 +25,16 @@ class FormDisplay extends ItemDisplay {
   public $horizontal = false;
   protected $layoutDisplay = FormLayout::class;
   protected $actionsDisplay = FormActions::class;
-  protected $hook_builder;
-  protected $displays;
   protected $showSuccessMessage = true;
   protected $isXhr = false;
-  /**
-   * PSR-7 Server Request
-   *
-   * @var ServerRequestInterface
-   */
-  protected $request;
   public function __construct(
     TemplateInterface $output,
     CollectionFactoryInterface $collections,
-    FormHookFactoryInterface $hookFactory,
-    DisplayFactoryInterface $displays,
-    ServerRequestInterface $request
+    protected FormHookFactoryInterface $hookFactory,
+    protected DisplayFactoryInterface $displays,
+    protected ServerRequestInterface $request
   ) {
     parent::__construct($output, $collections);
-    $this->hookFactory = $hookFactory;
-    $this->displays = $displays;
-    $this->request = $request;
     $this->errors = $this->request->getAttribute("state") ?? new Bundle();
     $route = $this->request->getAttribute("route");
     if ($route->hasOption("cancelUrl") && empty($this->cancel_url)) {
@@ -146,9 +135,9 @@ class FormDisplay extends ItemDisplay {
     $this->attributes["method"] = $this->method;
     $this->attributes["accept-charset"] = "UTF-8";
     if (!empty($this->model) && !empty($this->defaultAction)) {
-      if ($this->success($this->defaultAction)) {
+      if ($this->success()) {
         $this->attributes['class'][] = "submitted";
-      } elseif ($this->failure($this->defaultAction)) {
+      } elseif ($this->failure()) {
         $this->attributes['class'][] = "errors";
       }
     }
@@ -238,10 +227,8 @@ class FormDisplay extends ItemDisplay {
    * eg. name[] becomes users[name][]
    *
    * @param string $name the relative name
-   *
-   * @return the full name
    */
-  public function getName($name) {
+  public function getName($name): string {
     $key = $this->input_name;
     if (empty($key) || $this->method == "get") {
       return $name;
@@ -309,8 +296,6 @@ class FormDisplay extends ItemDisplay {
 
   /**
    * Converts the option string given to form elements into an array and sets up default values
-   *
-   * @param star $ops the option string
    */
   public function fillOps(&$ops, $control = "") {
     $name = array_shift($ops);
@@ -351,7 +336,6 @@ class FormDisplay extends ItemDisplay {
    * @param string $control the name of the form control, usually the tag (input, select, textarea, file)
    * @param array $field the attributes for the html tag - special ones below
    *                  name: the relative name, eg. 'group[]' might become 'users[group][]'
-   * @param bool $self if true, will use a self closing tag. If false, will use an opening tag and a closing tag (default is false)
    */
   public function formControl($control, $field) {
     $this->vars = ["display" => $this];
@@ -379,9 +363,6 @@ class FormDisplay extends ItemDisplay {
   }
 
   public function __call($name, $arguments) {
-    if (empty($arguments[1])) {
-      $arguments[1] = [];
-    }
-    return $this->formControl($name, $arguments[0], $arguments[1]);
+    return $this->formControl($name, $arguments[0]);
   }
 }

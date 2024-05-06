@@ -5,17 +5,18 @@ use Starbug\Core\Generator\Generator;
 use Psr\Container\ContainerInterface;
 
 class Generate {
-  public function __construct(Generator $generator, ContainerInterface $container, $base_directory) {
-    $this->generator = $generator;
-    $this->base_directory = $base_directory;
-    $this->container = $container;
+  public function __construct(
+    protected Generator $generator,
+    protected ContainerInterface $container,
+    protected $base_directory
+  ) {
   }
   public function __invoke($positional, $named) {
     $generator = ucwords(array_shift($positional));
-    if (empty($named["namespace"])) {
-      $named["namespace"] = 'Starbug\Core\Generator\Definitions';
+    if (false == strpos($generator, "\\")) {
+      $generator = "Starbug\Core\Generator\Definitions"."\\".$generator;
     }
-    $definition = $this->container->get($named["namespace"]."\\".$generator);
+    $definition = $this->container->get($generator);
     $this->generator->generate($definition, $named);
   }
 }

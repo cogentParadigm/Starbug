@@ -1,8 +1,14 @@
 <?php
 namespace Starbug\Db;
 
+use Starbug\Bundle\BundleInterface;
 use Starbug\Db\Query\BuilderInterface;
 
+/**
+ * Interface for Database access
+ *
+ * @property BundleInterface $errors;
+ */
 interface DatabaseInterface {
   /**
    * Get records or columns.
@@ -24,8 +30,6 @@ interface DatabaseInterface {
    * @param string $name the name of the table
    * @param string/array $fields keypairs of columns/values to be stored
    * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
-   *
-   * @return array validation errors
    */
   public function store($name, $fields = [], $from = "auto");
   /**
@@ -34,8 +38,6 @@ interface DatabaseInterface {
    * @param string $name the name of the table
    * @param string/array $fields keypairs of columns/values to be stored
    * @param string/array $from optional. keypairs of columns/values to be used in an UPDATE query as the WHERE clause
-   *
-   * @return array validation errors
    */
   public function queue($name, $fields = [], $from = "auto", $unshift = false);
   /**

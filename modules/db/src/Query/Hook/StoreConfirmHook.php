@@ -5,9 +5,9 @@ use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Query\ExecutorHook;
 
 class StoreConfirmHook extends ExecutorHook {
-  protected $models;
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(
+    protected DatabaseInterface $db
+  ) {
   }
   public function validate($query, $key, $value, $column, $argument) {
     if ($query->hasValue($argument) && $value != $query->getValue($argument)) {

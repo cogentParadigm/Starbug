@@ -11,17 +11,14 @@ use Starbug\Log\LoggerFactory;
 use Starbug\State\StateInterface;
 
 class Importer {
+  protected $logger;
   public function __construct(
-    StrategyFactoryInterface $readStrategyFactory,
-    WriteStrategyFactoryInterface $writeStrategyFactory,
-    Factory $transformerFactory,
-    StateInterface $state,
+    protected StrategyFactoryInterface $readStrategyFactory,
+    protected WriteStrategyFactoryInterface $writeStrategyFactory,
+    protected Factory $transformerFactory,
+    protected StateInterface $state,
     LoggerFactory $loggerFactory
   ) {
-    $this->readStrategyFactory = $readStrategyFactory;
-    $this->writeStrategyFactory = $writeStrategyFactory;
-    $this->transformerFactory = $transformerFactory;
-    $this->state = $state;
     $this->logger = $loggerFactory->create("imports");
   }
   protected function getReadStrategy(Import $import): StrategyInterface {

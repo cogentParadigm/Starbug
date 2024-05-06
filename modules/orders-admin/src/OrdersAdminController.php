@@ -6,8 +6,9 @@ use Starbug\Db\DatabaseInterface;
 use Starbug\Routing\Controller;
 
 class OrdersAdminController extends Controller {
-  public function __construct(DatabaseInterface $db) {
-    $this->db = $db;
+  public function __construct(
+    protected DatabaseInterface $db
+  ) {
   }
   public function __invoke($id, ServerRequestInterface $request) {
     $order = $this->db->get("orders", $id);

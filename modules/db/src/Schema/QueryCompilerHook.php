@@ -11,8 +11,9 @@ class QueryCompilerHook implements CompilerHookInterface {
 
   use Parsing;
 
-  public function __construct(SchemaInterface $schema) {
-    $this->schema = $schema;
+  public function __construct(
+    protected SchemaInterface $schema
+  ) {
   }
   public function beforeCompileQuery(QueryInterface $query, CompilerInterface $compiler) {
     $this->parse($query);

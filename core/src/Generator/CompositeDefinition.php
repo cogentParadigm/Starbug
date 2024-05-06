@@ -41,14 +41,14 @@ class CompositeDefinition extends Definition {
     }
     return $templates;
   }
-  public function getParameter($key) {
+  public function getParameter($key, $default = null) {
     $value = parent::hasParameter($key) ? parent::getParameter($key) : null;
     foreach ($this->definitions as $definition) {
       if ($definition->hasParameter($key)) {
         $value = $definition->getParameter($key);
       }
     }
-    return $value;
+    return $value ?? $default;
   }
   public function hasParameter($key) {
     if (parent::hasParameter($key)) {

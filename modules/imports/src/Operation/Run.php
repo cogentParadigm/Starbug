@@ -12,13 +12,10 @@ use Starbug\Imports\Write\DatabaseStrategy;
 
 class Run extends Save {
   public function __construct(
-    DatabaseInterface $db,
-    Importer $importer,
-    OperationsRepository $operations
+    protected DatabaseInterface $db,
+    protected Importer $importer,
+    protected OperationsRepository $operations
   ) {
-    $this->db = $db;
-    $this->importer = $importer;
-    $this->operations = $operations;
   }
   public function handle(array $data, BundleInterface $state): BundleInterface {
     // First, retrieve data from database.

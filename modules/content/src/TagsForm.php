@@ -11,7 +11,7 @@ class TagsForm extends FormDisplay {
     $this->layout->add(["top", "left" => "div.col-md-9", "right" => "div.col-md-3"]);
     $this->layout->add(["bottom", "tabs" => "div.col-sm-12"]);
     $this->layout->put("tabs", 'div[data-dojo-type="dijit/layout/TabContainer"][data-dojo-props="doLayout:false, tabPosition:\'left-h\'"][style="width:100%;height:100%"]', '', 'tc');
-    $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Machine Name"]'.((empty($ops['tab'])) ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'path');
+    $this->layout->put("tc", 'div[data-dojo-type="dijit/layout/ContentPane"][title="Machine Name"]'.((empty($options['tab'])) ? '[data-dojo-props="selected:true"]' : '').'[style="min-height:200px"]', '', 'path');
     // left
     $this->add(["title", "input_type" => "text", "pane" => "left"]);
     $this->add(["description", "input_type" => "textarea", "pane" => "left", "class" => "rich-text"]);

@@ -26,6 +26,12 @@ class DatabaseLogHandler extends AbstractProcessingHandler {
    */
   protected $defaultFields = ["channel", "level", "message", "time", "context"];
 
+  /**
+   * Fields thate are stored in db.
+   *
+   * @var array
+   */
+  protected $fields;
 
   /**
    * Constructor of this class, sets the PDO and calls parent constructor
@@ -36,8 +42,13 @@ class DatabaseLogHandler extends AbstractProcessingHandler {
    * @param integer|string $level The minimum logging level at which this handler will be triggered.
    * @param boolean $bubble Whether the messages that are handled can bubble up the stack or not.
    */
-  public function __construct(Connection $db, $table, $additionalFields = [], $level = Logger::DEBUG, $bubble = true) {
-    $this->db = $db;
+  public function __construct(
+    protected Connection $db,
+    $table,
+    $additionalFields = [],
+    $level = Logger::DEBUG,
+    $bubble = true
+  ) {
     $this->table = $table;
     $this->fields = array_merge($this->defaultFields, $additionalFields);
     parent::__construct($level, $bubble);

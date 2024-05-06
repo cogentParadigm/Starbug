@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Core;
 
+use Imagick;
 use PHPThumb\GD;
 use League\Flysystem\MountManager;
 
@@ -20,7 +21,7 @@ class Images implements ImagesInterface {
     $data = @getimagesize($file);
     $file_size = @filesize($file);
 
-    if (isset($data) && is_array($data)) {
+    if (!empty($data) && is_array($data)) {
       $extensions = ['1' => 'gif', '2' => 'jpg', '3' => 'png'];
       $extension = array_key_exists($data[2], $extensions) ?  $extensions[$data[2]] : '';
       $details = ['width'=> $data[0],
@@ -54,9 +55,7 @@ class Images implements ImagesInterface {
       $image->readImage($path);
       return $image;
     } else {
-      if ($format == "auto") {
-        $format = end(explode(".", $path));
-      }
+      $format = end(explode(".", $path));
       $format = str_replace('jpg', 'jpeg', $format);
       $open_func = 'imageCreateFrom'. $format;
       if (!function_exists($open_func)) {

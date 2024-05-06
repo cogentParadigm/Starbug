@@ -1,12 +1,11 @@
 <?php
 namespace Starbug\Db\Query\Traits;
 
-use Starbug\Db\Query\BuilderHookInterface;
-
 trait Hooks {
   protected $hooks = [];
   protected $extensions = [];
 
+/*
   public function addHook(BuilderHookInterface $hook) {
     $this->hooks[] = $hook;
     return $this;
@@ -17,6 +16,7 @@ trait Hooks {
       call_user_func_array([$hook, $method], $args);
     }
   }
+*/
 
   public function addExtension($method, $extension) {
     $this->extensions[$method] = $extension;
@@ -32,7 +32,7 @@ trait Hooks {
       $trace = debug_backtrace();
       trigger_error('Call to undefined method via __call(): '.$name.' in '.$trace[0]['file'].' on line '.$trace[0]['line'], E_USER_WARNING);
     }
-    if (!is_null($result)) {
+    if (isset($result)) {
       return $result;
     }
     return $this;

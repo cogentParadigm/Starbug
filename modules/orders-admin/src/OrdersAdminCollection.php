@@ -6,9 +6,10 @@ use Starbug\Core\AdminCollection;
 use Starbug\Price\FormatterInterface;
 
 class OrdersAdminCollection extends AdminCollection {
-  public function __construct(DatabaseInterface $db, FormatterInterface $formatter) {
-    $this->db = $db;
-    $this->formatter = $formatter;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected FormatterInterface $formatter
+  ) {
   }
   public function build($query, $ops) {
     $query->select(["id", "order_status", "created"], "orders");

@@ -7,10 +7,11 @@ use Starbug\Db\Schema\SchemaInterface;
 use Starbug\Operation\OperationFactoryInterface;
 
 class StoreOperationHook extends ExecutorHook {
-  public function __construct(DatabaseInterface $db, SchemaInterface $schema, OperationFactoryInterface $operations) {
-    $this->db = $db;
-    $this->schema = $schema;
-    $this->operations = $operations;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected SchemaInterface $schema,
+    protected OperationFactoryInterface $operations
+  ) {
   }
   public function validate($query, $key, $value, $column, $argument) {
     if (is_array($value)) {

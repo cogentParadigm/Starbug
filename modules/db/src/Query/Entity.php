@@ -30,11 +30,10 @@ class Entity implements EntityInterface {
     $root = count($chain)-1;
 
     // build query.
+    $query = $this->db->query($chain[0]);
     foreach ($chain as $idx => $name) {
-      $collection = ($name === $entity) ? $entity : $entity."_".$name;
-      if ($idx === 0) {
-        $query = $this->db->query($name." as ".$collection);
-      } else {
+      if ($idx > 0) {
+        $collection = $entity."_".$name;
         $query->join($name." as ".$collection, "INNER");
         if ($idx == $root) {
           $query->on($collection.".id=".$entity.".".$name."_id");
@@ -64,6 +63,7 @@ class Entity implements EntityInterface {
   public function load($name, $id, $reset = false) {
     static $entities = [];
     $key = $name;
+    $conditions = [];
     if (is_array($id)) {
       $conditions = $id;
       $id = false;

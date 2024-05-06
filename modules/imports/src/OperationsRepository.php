@@ -7,7 +7,10 @@ use Starbug\Operation\OperationFactoryInterface;
 
 class OperationsRepository {
   protected $operations = [];
-  public function __construct(ContainerInterface $container, OperationFactoryInterface $factory) {
+  public function __construct(
+    protected ContainerInterface $container,
+    protected OperationFactoryInterface $factory
+  ) {
     $this->container = $container;
     $this->operations = $container->get("importer.operations");
     $this->factory = $factory;

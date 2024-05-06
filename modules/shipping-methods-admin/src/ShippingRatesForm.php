@@ -22,7 +22,7 @@ class ShippingRatesForm extends FormDisplay {
     parent::__construct($output, $collections, $hookFactory, $displays, $request);
   }
   public function buildDisplay($options) {
-    if ($this->success("create") && !$this->hasPost("id")) {
+    if ($this->success() && !$this->hasPost("id")) {
       $this->setPost("id", $this->db->getInsertId($this->model));
     }
     // $this->add(["additive", "info" => "Check to make this an add-on rather than the base rate."]);

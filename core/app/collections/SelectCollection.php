@@ -7,6 +7,7 @@ use Starbug\Db\Schema\SchemerInterface;
 
 class SelectCollection extends Collection {
   protected $optional = false;
+  protected $schema;
   public function __construct(DatabaseInterface $db, SchemerInterface $schemer) {
     $this->db = $db;
     $this->schema = $schemer->getSchema();

@@ -4,8 +4,9 @@ namespace Starbug\Db\Script;
 use Starbug\Db\CollectionFactoryInterface;
 
 class QueryCollection {
-  public function __construct(CollectionFactoryInterface $collections) {
-    $this->collections = $collections;
+  public function __construct(
+    protected CollectionFactoryInterface $collections
+  ) {
   }
   public function __invoke($positional, $named) {
     $options = $named;

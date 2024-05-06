@@ -5,8 +5,9 @@ use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Routing\Controller;
 
 class ProfileController extends Controller {
-  public function __construct(SessionHandlerInterface $session) {
-    $this->session = $session;
+  public function __construct(
+    protected SessionHandlerInterface $session
+  ) {
   }
   public function init() {
     $this->assign("model", "users");

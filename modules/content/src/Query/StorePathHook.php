@@ -8,11 +8,12 @@ use Starbug\Core\InputFilterInterface;
 use Starbug\Db\Schema\SchemaInterface;
 
 class StorePathHook extends ExecutorHook {
-  public function __construct(DatabaseInterface $db, SchemaInterface $schema, MacroInterface $macro, InputFilterInterface $filter) {
-    $this->db = $db;
-    $this->macro = $macro;
-    $this->schema = $schema;
-    $this->filter = $filter;
+  public function __construct(
+    protected DatabaseInterface $db,
+    protected SchemaInterface $schema,
+    protected MacroInterface $macro,
+    protected InputFilterInterface $filter
+  ) {
   }
   public function emptyBeforeInsert($query, $column, $argument) {
     $query->set($column, $this->beforeInsert($query, $column, "", $column, $argument));
