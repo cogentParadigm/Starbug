@@ -3,6 +3,7 @@
 namespace Starbug\Log;
 
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
@@ -78,7 +79,7 @@ class DatabaseLogHandler extends AbstractProcessingHandler {
       } elseif (isset($record["context"][$key])) {
         $value = $record["context"][$key];
       }
-      if ($value instanceof DateTime) {
+      if ($value instanceof DateTime || $value instanceof DateTimeImmutable) {
         $value = $value->format("Y-m-d H:i:s");
       }
       if (is_array($value)) {
