@@ -15,7 +15,7 @@ class Migration extends AbstractMigration {
     $this->schema->addTable(["payment_gateway_settings", "label_select" => "payment_gateway_settings.name"],
       ["payment_gateway_id", "type" => "int", "references" => "payment_gateways id", "alias" => "%name%"],
       ["name", "type" => "string", "length" => "256"],
-      ["type", "type" => "string", "input_type" => "select", "options" => "text,textarea,select,checkbox,radio,password"],
+      ["type", "type" => "string", "default" => "text"],
       ["options", "type" => "text", "default" => ""],
       ["test_mode_value", "type" => "text", "default" => ""],
       ["live_mode_value", "type" => "text", "default" => ""],
