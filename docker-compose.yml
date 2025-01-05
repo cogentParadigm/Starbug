@@ -29,7 +29,7 @@ services:
       - DEFAULT_DATABASE_PREFIX=sb_
     command: ["precreate-user.sh", "php-fpm", "-F"]
   mariadb:
-    image: agangji/mariadb:10.2
+    image: agangji/mariadb:10.6
     volumes:
       - mariadb-data:/var/lib/mysql
     environment:

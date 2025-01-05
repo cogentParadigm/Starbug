@@ -2,14 +2,18 @@ pipeline {
   agent {
     node {
       label ""
-      customWorkspace "${env.JOB_NAME}/${params.branch}"
+      customWorkspace "workspace/${env.JOB_NAME}/${params.branch}"
     }
+  }
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr: "50", artifactNumToKeepStr: "5"))
   }
 
   parameters {
     string(name: "branch", defaultValue: "master")
     string(name: "host", defaultValue: "local.com")
-    string(name: "project", defaultValue: "starbug")
+    string(name: "project", defaultValue: "sb")
   }
 
   environment {
@@ -49,7 +53,7 @@ pipeline {
 
         // Setup/migrate database
         sh """
-          docker-compose exec -u ${env.UID}: -T php php sb setup --host=http://${env.DOMAIN} --dbuser=root --dbname=${env.DB_NAME} --dbprefix=${env.DB_PREFIX}
+          docker-compose exec -u ${env.UID}: -T php php sb setup --host=http://${env.DOMAIN} --dbuser=root --dbpassword=root --dbname=${env.DB_NAME} --dbprefix=${env.DB_PREFIX}
           docker-compose exec -u ${env.UID}: -T php composer dump-autoload
         """
 
@@ -68,7 +72,6 @@ pipeline {
 
         // Configure behat
         sh """
-          sed -i'' -e 's/localhost:1080/mailcatcher:1080/' behat.yml
           sed -i'' -e \"s/sb.local.com/${env.DOMAIN}/\" behat.yml
         """
       }
