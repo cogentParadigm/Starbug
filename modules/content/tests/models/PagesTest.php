@@ -10,7 +10,7 @@ class PagesTest extends ModelTest {
   public function testCreate() {
     $this->db->query("pages")->unsafeTruncate();
     $this->db->query("aliases")->unsafeTruncate();
-    $this->operation(Save::class, ["path" => "phpunit", "blocks" => ["content-1" => "test"]]);
+    $this->operation(Save::class, ["title" => "PHPUnit", "path" => "phpunit", "blocks" => ["content-1" => "test"]]);
     $object = $this->db->query($this->model)->condition("pages.id", $this->db->getInsertId("pages"))->select("pages.path.alias as path")->one();
     // lets verify the explicit values were set
     $this->assertEquals("phpunit", $object['path']);

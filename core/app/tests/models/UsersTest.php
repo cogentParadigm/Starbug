@@ -10,7 +10,13 @@ class UsersTest extends ModelTest {
 
   public function testCreate() {
     $this->db->remove("users", ["email" => "phpunit@neonrain.com"]);
-    $this->operation(CreateUser::class, ["email" => "phpunit@neonrain.com", "groups" => "user"]);
+    $this->operation(CreateUser::class, [
+      "first_name" => "PHPUnit",
+      "last_name" => "User",
+      "email" => "phpunit@neonrain.com",
+      "password" => "Mz2&cssMy@9tclan",
+      "groups" => "user"
+    ]);
     $user = $this->db->query("users")->select("users.*,GROUP_CONCAT(users.groups.slug) as groups")
               ->condition("users.id", $this->db->getInsertId("users"))->condition("users.deleted", "0")->one();
     // lets verify the explicit values were set

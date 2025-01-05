@@ -18,14 +18,19 @@ hook_store_time:
 hook_store_unique:
 users:
   - id: 1
+    first_name: Root
+    last_name: User
     email: root
+    password: Mz2&cssMy@9tclan
     groups: admin
   - id: 2
     first_name: Omar
     last_name: Admin
     email: admin@localhost
+    password: Mz2&cssMy@9tclan
     groups: admin
   - id: 3
     first_name: Abdul
     last_name: User
     email: abdul@localhost
+    password: Mz2&cssMy@9tclan

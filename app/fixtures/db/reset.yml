@@ -1,5 +1,8 @@
 ---
 users:
   - id: 1
+    first_name: Root
+    last_name: User
     email: root
+    password: Mz2&cssMy@9tclan
     groups: admin

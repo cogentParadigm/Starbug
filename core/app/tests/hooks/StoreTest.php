@@ -332,7 +332,12 @@ class StoreTest extends DatabaseTestCase {
    */
   public function testReferences() {
     // store a user
-    $this->db->store("users", ["email" => "hook_store_references"]);
+    $this->db->store("users", [
+      "first_name" => "Test",
+      "last_name" => "User",
+      "email" => "hook_store_references",
+      "password" => "Mz2&cssMy@9tclan"
+    ]);
     $uid = (int) $this->db->getInsertId("users");
 
     // store a record
