@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+## Description: Run sb CLI inside the web container
+## Usage: sb [script] [args]
+## Example: "ddev sb list-scripts" or "ddev sb query settings"
+
+php ./sb "$@"
