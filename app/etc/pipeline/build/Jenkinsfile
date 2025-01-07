@@ -17,15 +17,9 @@ pipeline {
   }
 
   environment {
-    JOB_ID = "${params.project}_${params.branch.replaceAll(/[-\.]/, '_').toLowerCase()}"
-    DOMAIN = "${params.project}-${params.branch.replaceAll(/[.]/, '-').toLowerCase()}.${params.host}"
-    UID = sh(script: "id -u ${env.USER}", returnStdout: true).trim()
-    GID = sh(script: "id -g ${env.USER}", returnStdout: true).trim()
-    PHP_UID = "${env.UID}"
-    PHP_GID = "${env.GID}"
-    PHP_USER = "${env.USER}"
-    PHP_GROUP = sh(script: "id -gn ${env.USER}", returnStdout: true).trim()
-    DB_NAME = "${params.project}"
+    JOB_ID = "${params.project}-${params.branch.replaceAll(/[\.]/, '-').toLowerCase()}"
+    DOMAIN = "${env.JOB_ID}.${params.host}"
+    DB_NAME = "db"
     DB_PREFIX = "sb_"
   }
 
@@ -34,40 +28,33 @@ pipeline {
     stage("Start services") {
       steps {
         sh """
-          sed -i'' -e \"s/sb.local.com/${env.DOMAIN}/\" app/etc/docker/nginx/proxy.conf
-          sed -i'' -e \"s/sb.local.com/${env.DOMAIN}/\" docker-compose.yml
-          sed -i'' -e \"s/COMPOSE_PROJECT_NAME=.*/COMPOSE_PROJECT_NAME=${env.JOB_ID}/\" .env
-          sed -i'' -e \"s/docker-compose.chrome.yml/docker-compose.chrome-headless.yml/\" .env
-          docker-compose down --volumes
-          docker-compose up -d
-          sleep 0.3
-          docker-compose exec -T mariadb mysql -e \"DROP DATABASE IF EXISTS ${env.DB_NAME}; CREATE DATABASE IF NOT EXISTS ${env.DB_NAME}\"
-          docker-compose exec -T mariadb mysql -e \"DROP DATABASE IF EXISTS ${env.DB_NAME}_test; CREATE DATABASE IF NOT EXISTS ${env.DB_NAME}_test\"
+          ddev config --project-name=${env.JOB_ID} --project-tld=${params.host}
+          ddev delete
+          ddev start
+          ddev mysql -uroot -proot -e \"CREATE DATABASE IF NOT EXISTS ${env.DB_NAME}\"
+          ddev mysql -uroot -proot -e \"CREATE DATABASE IF NOT EXISTS ${env.DB_NAME}_test\"
         """
       }
     }
 
     stage("Install application") {
       steps {
-        sh "docker-compose exec -u ${env.UID}: -T php composer install"
+        sh "ddev composer install"
 
         // Setup/migrate database
         sh """
-          docker-compose exec -u ${env.UID}: -T php php sb setup --host=http://${env.DOMAIN} --dbuser=root --dbpassword=root --dbname=${env.DB_NAME} --dbprefix=${env.DB_PREFIX}
-          docker-compose exec -u ${env.UID}: -T php composer dump-autoload
+          ddev sb setup --host=https://${env.DOMAIN}
+          ddev composer dump-autoload
         """
 
         // Migrate test database
         sh """
-          docker-compose exec -u ${env.UID}: -T php php sb migrate -t
-          docker-compose exec -u ${env.UID}: -T php composer dump-autoload
+          ddev sb migrate -t
         """
 
         // Update settings
         sh """
-          docker-compose exec -u ${env.UID}: -T php php sb store settings id:4 value:no-reply@${env.DOMAIN}
-          docker-compose exec -u ${env.UID}: -T php php sb store settings id:5 value:mailcatcher
-          docker-compose exec -u ${env.UID}: -T php php sb store settings id:6 value:1025
+          ddev sb store settings id:4 value:no-reply@${env.DOMAIN}
         """
 
         // Configure behat
@@ -80,12 +67,12 @@ pipeline {
     stage("Run tests") {
       steps {
         sh "mkdir -p build/logs"
-        sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phpcs --extensions=php --standard=vendor/starbug/standard/phpcs.xml --ignore=views,templates,layouts --report=checkstyle --report-file=build/logs/checkstyle.xml core app modules || true"
-        sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phploc --log-csv build/logs/phploc.csv --count-tests app core modules"
-        sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phpmd . xml vendor/starbug/standard/phpmd.xml --reportfile build/logs/phpmd.xml --exclude libraries,var,node_modules,vendor || true"
-        sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules || true"
-        sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/phpunit -c etc/phpunit.xml || true"
-        sh "docker-compose exec -u ${env.UID}: -T php vendor/bin/behat --format=junit --out=build/logs/behat --format=pretty --out=std || true"
+        sh "ddev exec vendor/bin/phpcs --extensions=php --standard=vendor/starbug/standard/phpcs.xml --ignore=views,templates,layouts --report=checkstyle --report-file=build/logs/checkstyle.xml core app modules || true"
+        sh "ddev exec vendor/bin/phploc --log-csv build/logs/phploc.csv --count-tests app core modules"
+        sh "ddev exec vendor/bin/phpmd . xml vendor/starbug/standard/phpmd.xml --reportfile build/logs/phpmd.xml --exclude libraries,var,node_modules,vendor || true"
+        sh "ddev exec vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules || true"
+        sh "ddev exec vendor/bin/phpunit -c etc/phpunit.xml || true"
+        sh "ddev exec vendor/bin/behat --format=junit --out=build/logs/behat --format=pretty --out=std || true"
       }
 
       post {
@@ -131,7 +118,7 @@ pipeline {
 
   post {
     always {
-      sh "docker-compose stop || true"
+      sh "ddev stop || true"
     }
   }
 }

@@ -1,22 +1,28 @@
 <?php
+{% macro env(value, variable, defaultValue) %}
+  {% if value %}"{{ value }}"{% else %}getenv("{{ variable }}") ?: "{{ defaultValue}}"{% endif %}
+{% endmacro %}
+
+{% import _self as macros %}
 return [
   "website_host" => "{{ host }}",
   "environment" => "development",
   "hmac_key" => "{{ hmac_key }}",
   "databases.default" => [
-    "type" => "{{ dbtype|default("mysql") }}",
-    "host" => "{{ dbhost|default("localhost") }}",
-    "username" => "{{ dbuser|default("root") }}",
-    "password" => "{{ dbpassword|default("") }}",
-    "db" => "{{ dbname|default("starbug") }}",
-    "prefix" => "{{ dbprefix|default("sb_") }}"
+    "type" => {{ macros.env(dbtype, "DEFAULT_DATABASE_TYPE", "mysql") }},
+    "host" => {{ macros.env(dbhost, "DEFAULT_DATABASE_HOST", "localhost") }},
+    "username" => {{ macros.env(dbuser, "DEFAULT_DATABASE_USERNAME", "root") }},
+    "password" => {{ macros.env(dbpassword, "DEFAULT_DATABASE_PASSWORD", "root") }},
+    "db" => {{ macros.env(dbname, "DEFAULT_DATABASE_NAME", "starbug") }},
+    "prefix" => {{ macros.env(dbprefix, "DEFAULT_DATABASE_PREFIX", "sb_") }}
   ],
   "databases.test" => [
-    "type" => "{{ dbtype|default("mysql") }}",
-    "host" => "{{ dbhost|default("localhost") }}",
-    "username" => "{{ dbuser|default("root") }}",
-    "password" => "{{ dbpassword|default("") }}",
-    "db" => "{{ dbname|default("starbug") }}_test",
-    "prefix" => "{{ dbprefix|default("sb_") }}"
-  ]
+    "type" => {{ macros.env(dbtype, "TEST_DATABASE_TYPE", "mysql") }},
+    "host" => {{ macros.env(dbhost, "TEST_DATABASE_HOST", "localhost") }},
+    "username" => {{ macros.env(dbuser, "TEST_DATABASE_USERNAME", "root") }},
+    "password" => {{ macros.env(dbpassword, "TEST_DATABASE_PASSWORD", "root") }},
+    "db" => {{ macros.env(testdbname, "TEST_DATABASE_NAME", "starbug_test") }},
+    "prefix" => {{ macros.env(dbprefix, "TEST_DATABASE_PREFIX", "sb_") }}
+  ],
+  "redis.host" => "redis"
 ];
