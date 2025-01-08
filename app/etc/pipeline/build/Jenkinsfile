@@ -59,7 +59,7 @@ pipeline {
 
         // Configure behat
         sh """
-          sed -i'' -e \"s/sb.local.com/${env.DOMAIN}/\" behat.yml
+          sed -i'' -e \"s/sb.local.com/${env.DOMAIN}:8443/\" behat.yml
         """
       }
     }
