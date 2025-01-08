@@ -28,8 +28,8 @@ pipeline {
     stage("Start services") {
       steps {
         sh """
-          ddev config --project-name=${env.JOB_ID} --project-tld=${params.host}
           ddev stop --unlist --remove-data --omit-snapshot ${env.JOB_ID}
+          ddev config --project-name=${env.JOB_ID} --project-tld=${params.host}
           ddev start
           ddev mysql -uroot -proot -e \"CREATE DATABASE IF NOT EXISTS ${env.DB_NAME}\"
           ddev mysql -uroot -proot -e \"CREATE DATABASE IF NOT EXISTS ${env.DB_NAME}_test\"
