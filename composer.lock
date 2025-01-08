@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af45146f26d90bb9c48dcb00098f238d",
+    "content-hash": "2215daae94c1aa0b76fda666e2d3b811",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3297,16 +3297,16 @@
         },
         {
             "name": "starbug/http",
-            "version": "v0.9.13",
+            "version": "v0.9.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-http.git",
-                "reference": "5258c043c29be7a24d1168a94b9a5eaf52dd074d"
+                "reference": "aa96193ea972c2c43ef44d61fa7166dcd6f37d59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/5258c043c29be7a24d1168a94b9a5eaf52dd074d",
-                "reference": "5258c043c29be7a24d1168a94b9a5eaf52dd074d",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/aa96193ea972c2c43ef44d61fa7166dcd6f37d59",
+                "reference": "aa96193ea972c2c43ef44d61fa7166dcd6f37d59",
                 "shasum": ""
             },
             "require": {
@@ -3344,9 +3344,9 @@
             "description": "Basic HTTP message components.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-http/issues",
-                "source": "https://github.com/cogentParadigm/starbug-http/tree/v0.9.13"
+                "source": "https://github.com/cogentParadigm/starbug-http/tree/v0.9.14"
             },
-            "time": "2023-06-09T16:38:21+00:00"
+            "time": "2024-12-29T01:58:09+00:00"
         },
         {
             "name": "starbug/imports",
@@ -11171,26 +11171,26 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "masterexploder/phpthumb": 20,
+        "starbug/content": 20,
+        "starbug/css": 20,
         "starbug/db": 20,
         "starbug/doctrine": 20,
-        "starbug/users": 20,
-        "starbug/files": 20,
         "starbug/emails": 20,
-        "starbug/css": 20,
-        "starbug/js": 20,
-        "starbug/content": 20,
-        "starbug/redis": 20,
-        "starbug/state": 20,
-        "starbug/log": 20,
+        "starbug/files": 20,
         "starbug/imports": 20,
+        "starbug/js": 20,
+        "starbug/log": 20,
         "starbug/menus": 20,
         "starbug/queues": 20,
+        "starbug/redis": 20,
         "starbug/settings": 20,
-        "starbug/settings-admin": 20
+        "starbug/settings-admin": 20,
+        "starbug/state": 20,
+        "starbug/users": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
