@@ -13,6 +13,6 @@
     "namespace": "Starbug\\Css"
   },
   "require": {
-    "starbug/templates": "^0.9.1"
+    "starbug/templates": "^1.0"
   }
 }
