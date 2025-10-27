@@ -92,6 +92,7 @@ class InputFilter implements InputFilterInterface {
       "enctype",
       "face",
       "for",
+      "form",
       "formaction",
       "frame",
       "frameborder",
