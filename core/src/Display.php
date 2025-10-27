@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Templates\TemplateInterface;
+
 class Display {
 
   public $template = "default";
