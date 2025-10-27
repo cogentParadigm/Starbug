@@ -5,14 +5,16 @@ use function DI\get;
 use function DI\add;
 use function DI\autowire;
 use function DI\decorate;
-use DI;
+
 use Doctrine\DBAL\DriverManager;
+use GuzzleHttp\Psr7\Utils;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Starbug\Http\ResponseBuilderInterface;
+use Starbug\Templates\TemplateInterface;
 use Whoops\Handler\Handler;
 use Whoops\Handler\PlainTextHandler;
 use Whoops\Handler\PrettyPageHandler;
@@ -74,10 +76,12 @@ return [
         $whoops->appendHandler(new PrettyPageHandler());
       } else {
         $whoops->appendHandler(function ($e) use ($container) {
-          $response = $container->get(ResponseBuilderInterface::class);
-          $response = $response->create(500)
-          ->render("exception.html")
-          ->getResponse();
+          $responses = $container->get(ResponseFactoryInterface::class);
+          $templates = $container->get(TemplateInterface::class);
+          $content = $templates->capture("exception.html", ["exception" => $e], ["scope" => "views"]);
+          $body = Utils::streamFor($content);
+          $response = $responses->createResponse(500)
+            ->withBody($body);
           $emitter = new SapiEmitter();
           $emitter->emit($response);
           return Handler::QUIT;
