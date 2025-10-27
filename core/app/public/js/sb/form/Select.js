@@ -22,7 +22,7 @@ define([
       this.selectionNode = this.controlNode;
     },
     onSelect: function () {
-      if (this.closeOnSelect) {
+      if (this.closeOnSelect && this.isOpened()) {
         this.close();
         this.controlNode.focus();
       }

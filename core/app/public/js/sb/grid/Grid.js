@@ -4,6 +4,7 @@ define([
 ], function (declare, Grid) {
 	return declare([Grid], {
 		keepScrollPosition:true,
-		addUiClasses:false
+		addUiClasses:false,
+		allowTextSelection: true
 	});
 });

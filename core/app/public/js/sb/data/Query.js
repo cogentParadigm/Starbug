@@ -6,8 +6,9 @@ define([
   "dojo/dom-class",
   "dojo/dom-attr",
   "dojo/query",
-  "dijit/registry"
-], function (declare, Evented, lang, on, domclass, attr, query, registry) {
+  "dijit/registry",
+  "dojo/ready"
+], function (declare, Evented, lang, on, domclass, attr, query, registry, ready) {
   return declare([Evented], {
     scope:'default',
     saveScope: false,
@@ -25,7 +26,7 @@ define([
           localStorage.setItem("savedScopes", JSON.stringify(savedScopes));
         }
       }
-      this.listen();
+      ready(lang.hitch(this, "listen"));
     },
 
     listen: function(callback) {
@@ -50,20 +51,26 @@ define([
         });
         this.applyFilterFromInput(e.target, callback);
       }));
-      //SAVE VALUES FOR RESETTING
-      query('[data-filter=' + this.scope + ']').forEach(lang.hitch(this, function(input) {
-        var value = this.getInputValue(input);
-        attr.set(input, 'data-reset-value', value);
-        this.resetQuery[name] = value;
-        if (this.saveScope) {
-          var name = attr.get(input, 'name');
-          if (typeof this.savedQuery[name] !== "undefined") {
-            value = this.savedQuery[name];
-            this.setInputValue(input, value);
-            this.query[name] = value;
+      //INITIALIZE INPUTS
+      var observer = new MutationObserver(lang.hitch(this, function(mutations, observer) {
+        for (var i in mutations) {
+          var mutation = mutations[i];
+          if (mutation.type == "childList") {
+            for (var n = 0; n < mutation.addedNodes.length; n++) {
+              var node = mutation.addedNodes[n];
+              if (node.hasAttribute && node.hasAttribute("data-filter")) {
+                this.initializeInput(node);
+              }
+            }
+          } else if (mutation.type == "attributes" && mutation.target.getAttribute("data-filter") != mutation.oldValue) {
+            this.initializeInput(mutation.target);
           }
         }
       }));
+      if (document.forms.length) {
+        observer.observe(document.forms[0], {subtree: true, childList: true, attributeFilter: ["data-filter"], attributeOldValue: true});
+      }
+      query('[data-filter=' + this.scope + ']').forEach(lang.hitch(this, "initializeInput"));
       //ATTACH RESET
       on(window.document, '[data-reset=' + self.scope + ']:click', function(e) {
         self.changeListener.pause();
@@ -81,6 +88,7 @@ define([
         self.emit('reset', {query:self.query});
         self.emit('change', {query:self.query});
       });
+      this.emit("init", {query:this.query});
     },
 
     save: function(key, value) {
@@ -95,6 +103,32 @@ define([
     remove: function(key) {
       delete this.savedQuery[key];
       localStorage.setItem(this.saveScope, JSON.stringify(this.savedQuery));
+    },
+
+    /**
+     * Save values for resetting and apply values from saved query.
+     *
+     * @param {DOMNode} input The input
+     */
+    initializeInput: function(input) {
+      var name = this.getInputName(input);
+      var value = this.getInputValue(input);
+      attr.set(input, 'data-reset-value', value);
+      this.resetQuery[name] = value;
+      var params = {};
+      if (value) {
+        params[name] = value;
+      }
+      if (this.saveScope) {
+        if (typeof this.savedQuery[name] !== "undefined") {
+          value = this.savedQuery[name];
+          this.setInputValue(input, value);
+          params[name] = value;
+        }
+      }
+      if (Object.keys(params).length) {
+        this.filter(params);
+      }
     },
 
     applyFilterFromInput: function(node) {
@@ -153,7 +187,18 @@ define([
     setInputValue: function(input, value) {
       var widget = registry.byNode(input);
       if (typeof widget == "undefined" || typeof widget.get == "undefined") {
-        attr.set(input, 'value', value);
+        if (input.tagName == "INPUT" && (input.type == "radio" || input.type == "checkbox")) {
+          input.checked = input.value == value;
+          if (input.checked) {
+            on.emit(input, "change", {bubbles: true, cancelable: true});
+          }
+        } else {
+          attr.set(input, 'value', value);
+          if (input.tagName == "INPUT" || input.tagName == "TEXTAREA") {
+            on.emit(input, "input", {bubbles: true, cancelable: true});
+          }
+          on.emit(input, "change", {bubbles: true, cancelable: true});
+        }
       } else {
         widget.set('value', value);
       }

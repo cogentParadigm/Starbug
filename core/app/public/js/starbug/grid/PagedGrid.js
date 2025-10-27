@@ -21,6 +21,7 @@ return dojo.declare('starbug.grid.PagedGrid', [GridFromHtml, List, Keyboard, Sel
 	query:{},
 	deselectOnRefresh:false,
 	allowSelectAll:true,
+	allowTextSelection: true,
 	postCreate: function() {
 		this.query = this.query || {};
 		this.query = new Query({scope: this.model, saveScope: this.model + "Query", query: this.query});

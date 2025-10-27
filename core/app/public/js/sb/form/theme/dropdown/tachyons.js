@@ -15,11 +15,14 @@ define(["dojo/_base/declare", "sb/css/Theme", "put-selector/put"], function(decl
         put(this.controlNode, ".form-control-" + this.themeOptions.size);
       }
     },
+    createRootNode: function() {
+      this.rootNode = this.domNode.parentNode;
+    },
     createToggleNode: function() {
       return false;
     },
     createDropdownNode: function() {
-      this.dropdownNode = put(this.domNode.parentNode, 'div.bg-white.br2.br--bottom.shadow-4.hidden');
+      this.dropdownNode = put(this.rootNode, 'div.bg-white.br2.br--bottom.shadow-4.hidden');
     }
   }))();
   return theme;

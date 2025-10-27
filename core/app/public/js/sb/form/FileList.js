@@ -1,6 +1,7 @@
 define([
   "dojo/_base/declare",
   "dojo/_base/lang",
+  "dojo/_base/config",
   "dijit/_WidgetBase",
   "dijit/_AttachMixin",
   "./_CollectionMixin",
@@ -10,9 +11,10 @@ define([
   "dojo/on",
   "sb/grid/Grid",
   "sb/grid/_DnDMixin",
+  "sb/modal/Form",
   "starbug/grid/columns/handle",
   "starbug/grid/columns/filesize"
-], function (declare, lang, Widget, Templated, _CollectionMixin, _SelectionListMixin, _UploadButtonMixin, put, on, Grid, _DnDMixin) {
+], function (declare, lang, config, Widget, Templated, _CollectionMixin, _SelectionListMixin, _UploadButtonMixin, put, on, Grid, _DnDMixin, Dialog) {
 
   var MemoryGrid = declare([Grid, _DnDMixin]);
 
@@ -21,6 +23,10 @@ define([
     postMixInProperties: function() {
       this.listParams = this.listParams || {};
       this.listParams.editor = this.listParams.editor || this;
+      this.dialog = new Dialog({
+        url: config.websiteUrl + 'admin/files/',
+        title: "Update File"
+      });
       this.columns = this.columns || [
         starbug.grid.columns.handle({field: "id", label: "-", className: "field-drag"}),
         {
@@ -44,6 +50,10 @@ define([
           label: "Options",
           renderCell: function (object, value, cell) {
             var div = put(cell, 'div.btn-group');
+            edit = put(div, 'button.btn.btn-default[title=Edit][role=button][type=button]', put('span.fa.fa-edit'));
+            on(edit, 'click', lang.hitch(this, function() {
+              this.grid.editor.dialog.show(object.id);
+            }));
             remove = put(div, 'button.btn.btn-default[title=Remove][role=button]', put('span.fa.fa-times'));
             on(remove, 'click', lang.hitch(this, function() {
               if (confirm('Are you sure you want to remove this item?')) {

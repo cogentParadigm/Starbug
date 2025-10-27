@@ -30,7 +30,7 @@ define(["dojo/_base/declare", "sb/css/Theme", "put-selector/put"], function(decl
     },
     renderSelectionItem: function(item) {
       if (item.mime_type.split('/')[0] == "image") {
-        put(this.displayNode, "img.mb2[src=$]", item.thumbnail);
+        put(this.displayNode, "img.mb2[src=$]", item.thumbnail || item.url);
       }
       put(this.displayNode, "div.mb2", item.filename);
     },

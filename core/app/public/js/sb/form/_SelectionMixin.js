@@ -27,6 +27,10 @@ define([
         this.selection.on('change', lang.hitch(this, 'refresh'))
       ];
     },
+    postCreate: function() {
+      this.inherited(arguments);
+      this._setValueAttr = this._setValueAttrHandler;
+    },
     createSelectionParams: function() {
       this.selectionParams = this.selectionParams || {};
     },
@@ -37,6 +41,7 @@ define([
       if (!event.suppress) {
         on.emit(this.domNode, "change", {bubbles: true, cancelable: true});
       }
+      on.emit(this.domNode, "refresh", {bubbles: true, cancelable: true});
       this.renderSelection();
       if (typeof this.updateStyles == "function") {
         this.updateStyles();
@@ -56,15 +61,15 @@ define([
       if (false !== this.collection && this.domNode.hasAttribute("value")) {
         this.collection.filter({id:this.domNode.value}).fetch().then(function(results) {
           if (results.length && self.domNode) {
-            self.selection.add(results);
+            self.selection.add(results, {suppress: true});
           }
         });
       }
     },
-    _setValueAttr: function(value, suppress) {
+    _setValueAttrHandler: function(value, suppress) {
       suppress = suppress || false;
       this.selection.selection.setData([]);
-      if (value.length) {
+      if (typeof value == "string" || typeof value == "number") {
         if (false === this.collection) {
           this.selection.add(value);
         } else {

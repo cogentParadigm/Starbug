@@ -21,6 +21,7 @@ define([
       if (this.domNode.hasAttribute("autofocus")) {
         this.autofocus = true;
       }
+      this.createRootNode();
       this.createControlGroup();
       this.createDropdownNode();
     },
@@ -36,6 +37,9 @@ define([
       if (this.autofocus) {
         this.focus();
       }
+    },
+    createRootNode: function() {
+      this.dropdownTheme.createRootNode.apply(this);
     },
     createControlGroup: function() {
       this.createControlGroupNode();
@@ -60,14 +64,22 @@ define([
     },
     open: function() {
       this.updateStyles();
-      domclass.remove(this.dropdownNode, 'hidden');
+      if (typeof this.dropdownTheme.open != "undefined") {
+        this.dropdownTheme.open.apply(this);
+      } else {
+        domclass.remove(this.dropdownNode, 'hidden');
+      }
       this.focusTargetNode.focus();
       if (this.focusTargetNode != this.controlNode) {
         this.controlNode.tabIndex = -1;
       }
     },
     close: function() {
-      domclass.add(this.dropdownNode, 'hidden');
+      if (typeof this.dropdownTheme.close != "undefined") {
+        this.dropdownTheme.close.apply(this);
+      } else {
+        domclass.add(this.dropdownNode, 'hidden');
+      }
       if (this.controlNode.tabIndex == -1) {
         this.controlNode.removeAttribute('tabindex');
       }
@@ -77,7 +89,7 @@ define([
         e.preventDefault();
         e.stopPropagation();
       }
-      if (domclass.contains(this.dropdownNode, "hidden")) {
+      if (this.isClosed()) {
         this.open();
       } else {
         this.close();
@@ -87,6 +99,9 @@ define([
       return !this.isClosed();
     },
     isClosed: function() {
+      if (typeof this.dropdownTheme.isClosed != "undefined") {
+        return this.dropdownTheme.isClosed.apply(this);
+      }
       return domclass.contains(this.dropdownNode, "hidden");
     },
     addStyles: function() {
@@ -112,7 +127,7 @@ define([
         }
       } else if (this.toggleNode && (e.target == this.toggleNode || this.toggleNode.contains(e.target))) {
         this.toggle();
-      } else if (this.isOpened() && !this.domNode.parentNode.contains(e.target)) {
+      } else if (this.isOpened() && e.target.parentNode && !this.domNode.parentNode.contains(e.target)) {
         this.close();
       }
     },

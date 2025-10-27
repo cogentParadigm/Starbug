@@ -1,12 +1,13 @@
 define([
   "dojo/_base/declare",
+  "dojo/_base/config",
   "dojo/_base/lang",
   "put-selector/put",
   "dojo/on",
   "dojo/query",
   "sb/store/Api",
   "sb/modal/Form"
-], function (declare, lang, put, on, query, Api, Dialog) {
+], function (declare, config, lang, put, on, query, Api, Dialog) {
   return declare(null, {
     model: false,
     collection: false,
@@ -17,7 +18,7 @@ define([
       this.inherited(arguments);
       this.dialogClass = this.dialogClass || Dialog;
       this.dialogParams = this.dialogParams || {};
-      this.dialogParams.url = this.dialogParams.url || WEBSITE_URL + 'admin/' + this.model.replace(/_/g, "-") + '/';
+      this.dialogParams.url = this.dialogParams.url || config.websiteUrl + 'admin/' + this.model.replace(/_/g, "-") + '/';
       if (false == this.collection && false !== this.model) {
         this.collectionParams = this.collectionParams || {};
         this.collectionParams.model = this.collectionParams.model || this.model;

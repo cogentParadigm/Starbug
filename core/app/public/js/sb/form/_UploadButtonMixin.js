@@ -17,6 +17,9 @@ define([
     location: "default",
     url: config.websiteUrl + "upload",
     uploadButtonTheme: theme,
+    allowedFileTypes: false,
+    allowedFilesErrorMessage: "Please choose a valid file type.",
+    maxAllowedSize: 2 * 1024 * 1024,
     buildRendering: function() {
       this.inherited(arguments);
       //this.domNode should be a text input with name and value set appropriately
@@ -27,8 +30,10 @@ define([
     postCreate: function() {
       this.inherited(arguments);
       on(this.fileInput, "change", lang.hitch(this, function() {
-        this._files = this.fileInput.files;
-        this.onChange(this.getFileList());
+        if (this.validateFiles(this.fileInput.files)) {
+          this._files = this.fileInput.files;
+          this.onChange(this.getFileList());
+        }
       }));
       on(this.uploadButton, "keypress", lang.hitch(this, "onKeyPress"));
       if (this.browseEnabled) {
@@ -73,7 +78,7 @@ define([
           this.selection.add([object]);
         }
       });
-      window.open(WEBSITE_URL + 'admin/media?modal=true','media','modal,width=1020,height=600');
+      window.open(config.websiteUrl + 'admin/media?modal=true','media','modal,width=1020,height=600');
     },
     reset: function() {
       delete this._files;
@@ -150,6 +155,20 @@ define([
       // summary:
       //    Fires on errors
       console.log(error);
+    },
+    validateFiles: function(files) {
+      for (file of files) {
+        var ext = file.name.split(".").pop();
+        if (this.allowedFileTypes && this.allowedFileTypes.indexOf(ext) < 0) {
+          alert(this.allowedFilesErrorMessage);
+          return false;
+        }
+        if (this.maxAllowedSize && file.size > this.maxAllowedSize) {
+          alert("File size exceeds the maximum allowed size of " + this.formatSize(this.maxAllowedSize) + ".");
+          return false;
+        }
+      }
+      return true;
     },
     getFileList: function() {
       var fileArray = [];
@@ -245,6 +264,15 @@ define([
         }
         this.onProgress(o);
       }
-    }
+    },
+    formatSize: function(bytes) {
+      if (bytes >= 1073741824) bytes = Math.round((bytes / 1073741824)*100)/100 + ' GB';
+      else if (bytes >= 1048576) bytes = Math.round((bytes / 1048576)*100)/100 + ' MB';
+      else if (bytes >= 1024) bytes = Math.round((bytes / 1024)*100)/100 + ' KB';
+      else if (bytes > 1) bytes = bytes + ' bytes';
+      else if (bytes == 1) bytes = bytes + ' byte';
+      else bytes = '0 bytes';
+      return bytes;
+  }
   });
 });

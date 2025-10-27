@@ -18,6 +18,7 @@ define([
     collection: false,
     pagingMode: "virtual",
     listClass: false,
+    updateAllOnRefresh: false,
     postMixInProperties: function() {
       this.inherited(arguments);
       this.query = this.query || {};
@@ -57,13 +58,20 @@ define([
     refresh: function(event) {
       this.inherited(arguments);
       if (event && this.list && this.list.collection) {
-        if (this.list.collection.track == undefined || (event.selection == undefined && event.previous == undefined)) {
-          this.list.refresh();
-        } else {
+        const trackable = this.list.shouldTrackCollection && this.list.collection.track != undefined;
+        const targetable = !(event.selection == undefined && event.previous == undefined);
+        if (this.updateAllOnRefresh) {
+          let results = this.list.collection.results || this.list.collection.fetch();
+          results.forEach((item) => {
+            this.list.collection.emit("update", {target: item});
+          });
+        } else if (trackable && targetable) {
           var target = (event.selection.length > event.previous.length) ? event.selection : event.previous;
           for (var i in target) {
             this.list.collection.emit("update", {target:target[i]});
           }
+        } else {
+          this.list.refresh()
         }
       }
     },
