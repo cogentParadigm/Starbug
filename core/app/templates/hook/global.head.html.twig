@@ -1,9 +1,19 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>{{ route.title|striptags }} - {{ helper('settings').get('site_name') }}</title>
-    <meta name="description" content="{{ route.description }}"/>
+    {% set title = helper('settings').get('site_name') %}
+    {% if route.getOption("title") is not empty %}
+      {% set title = route.getOption("title")|striptags ~ " | " ~ title %}
+    {% endif %}
+    <title>{{ title }}</title>
+    <meta name="description" content="{{ route.getOption("description") }}"/>
+    <meta property="og:title" content="{{ title }}"/>
+    <meta property="og:description" content="{{ route.getOption("description") }}"/>
+    {% if route.getOption("image") is not empty %}
+    <meta property="og:image" content="{{ route.getOption("image") }}"/>
+    {% endif %}
+    <meta property="og:type" content="website"/>
     {{ route.meta|raw }}
     {% if route.canonical %}
       <link rel="canonical" href="{{ route.canonical }}"/>
     {% endif %}
     {{ helper('settings').get('meta')|raw }}
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
