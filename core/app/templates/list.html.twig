@@ -1,6 +1,8 @@
 {% extends "panel."~ route.getOption("format")|default("html") ~ ".twig" %}
 
-{% set label = helper("schema").getTable(model).getOption("label") %}
+{% if listHeader is empty and model is not empty %}
+  {% set listHeader = helper("schema").getTable(model).getOption("label") %}
+{% endif %}
 {% if listParams is empty %}
   {% set listParams = {} %}
 {% endif %}
@@ -10,7 +12,7 @@
   {% endif %}
   {% set listParams = listParams|merge({"attributes": listParams.attributes|merge({"dialog": model ~ "_form"})}) %}
 {% endif %}
-{% block title %}{{ label }}{% endblock %}
+{% block title %}{{ listHeader }}{% endblock %}
 {% block body %}
     {{ include([model ~ "/admin-toolbar.html.twig", "admin-toolbar.html.twig"]) }}
   {{ helper("displays").render(grid ?? ((model|title) ~ "Grid"), listParams) }}
