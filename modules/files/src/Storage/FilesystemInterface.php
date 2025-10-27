@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core\Storage;
+namespace Starbug\Files\Storage;
 
 use League\Flysystem\FilesystemInterface as ParentInterface;
 

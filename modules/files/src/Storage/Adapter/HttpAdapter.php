@@ -1,7 +1,7 @@
 <?php
-namespace Starbug\Core\Storage\Adapter;
+namespace Starbug\Files\Storage\Adapter;
 
-use Starbug\Core\Storage\AdapterInterface;
+use Starbug\Files\Storage\AdapterInterface;
 use Starbug\Http\UriBuilderInterface;
 use Twistor\Flysystem\Http\HttpAdapter as ParentAdapter;
 

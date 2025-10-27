@@ -6,9 +6,9 @@ use function DI\get;
 use function DI\autowire;
 use Psr\Container\ContainerInterface;
 use League\Flysystem\MountManager;
-use Starbug\Core\Storage\Filesystem;
-use Starbug\Core\Storage\Adapter\Local;
-use Starbug\Core\Storage\Adapter\LocalPrivate;
+use Starbug\Files\Storage\Filesystem;
+use Starbug\Files\Storage\Adapter\Local;
+use Starbug\Files\Storage\Adapter\LocalPrivate;
 use DI;
 use Starbug\Http\UriBuilder;
 
@@ -61,7 +61,7 @@ return [
     }
     return $manager;
   },
-  'Starbug\Core\Storage\FilesystemInterface' => function (ContainerInterface $c) {
+  'Starbug\Files\Storage\FilesystemInterface' => function (ContainerInterface $c) {
     $manager = $c->get("League\Flysystem\MountManager");
     return $manager->getFilesystem("default");
   },

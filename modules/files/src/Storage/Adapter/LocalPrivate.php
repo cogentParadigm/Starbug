@@ -1,7 +1,7 @@
 <?php
-namespace Starbug\Core\Storage\Adapter;
+namespace Starbug\Files\Storage\Adapter;
 
-use Starbug\Core\Storage\AdapterInterface;
+use Starbug\Files\Storage\AdapterInterface;
 use League\Flysystem\Adapter\Local as ParentAdapter;
 use League\Flysystem\Config;
 use Starbug\Http\UriBuilderInterface;

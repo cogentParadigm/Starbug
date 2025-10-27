@@ -8,6 +8,7 @@ use Starbug\Files\Collection\FilesSelectCollection;
 use Starbug\Files\Controller\ApiFilesController;
 use Starbug\Files\Controller\DownloadController;
 use Starbug\Files\Controller\UploadController;
+use Starbug\Files\Display\FilesForm;
 use Starbug\Routing\Controller\ViewController;
 
 class RouteProvider extends AdminRouteProvider {
@@ -27,10 +28,10 @@ class RouteProvider extends AdminRouteProvider {
       "action" => "update"
     ]);
 
-    $api = $routes->getRoute("api");
-    $this->addAdminApiRoute($api->addRoute("/files/admin.{format:csv|json}"), "files", AdminFilesCollection::class)
-      ->setController(ApiFilesController::class);
-    $this->addApiRoute($api->addRoute("/files/select.json"), "files", FilesSelectCollection::class)
-      ->setController(ApiFilesController::class);
+    $adminFiles = $this->addCrud($routes, "files", [
+      "form" => FilesForm::class
+    ]);
+    $adminFiles["adminApi"]->setController(ApiFilesController::class)->setOption("collection", AdminFilesCollection::class);
+    $adminFiles["selectApi"]->setController(ApiFilesController::class)->setOption("collection", FilesSelectCollection::class);
   }
 }
