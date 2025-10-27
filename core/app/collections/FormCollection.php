@@ -28,7 +28,10 @@ class FormCollection extends Collection {
         if (empty($field['column'])) {
           $field['column'] = "id";
         }
-        $query->select("GROUP_CONCAT(".$query->model.'.'.$fieldname.'.'.$field['column'].') as '.$fieldname);
+        $query->subquery($query->model.".".$fieldname, function ($column, $query) use ($fieldname, $field) {
+          $column->select("GROUP_CONCAT(".$field["type"].".".$field["column"].")");
+          $query->addSelection($column->getQuery(), "`".$fieldname."`");
+        });
       }
     }
     $parent = $table->getOption("base");
@@ -38,7 +41,7 @@ class FormCollection extends Collection {
           if (empty($field['column'])) {
             $field['column'] = "id";
           }
-          $query->select("GROUP_CONCAT(".$query->model.'.'.$column.'.'.$field['column'].') as '.$column);
+          $query->select("GROUP_CONCAT(".$query->model.'.'.$column.'.'.$field['column'].') as `'.$column."`");
         }
       }
       $parent = $this->schema->getTable($parent)->getOption("base");
