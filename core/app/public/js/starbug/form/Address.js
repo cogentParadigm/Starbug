@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/config",
 	"dojo/_base/lang",
 	"dojo/request/xhr",
 	"dojo/query",
@@ -8,7 +9,7 @@ define([
 	"put-selector/put",
 	"dojo/dom-form",
 	"dojo/dom-class"
-], function(declare, lang, xhr, query, Widget, Templated, put, domForm, domclass) {
+], function(declare, config, lang, xhr, query, Widget, Templated, put, domForm, domclass) {
 	return declare([Widget], {
 		dialog:null,
 		url:'',
@@ -19,8 +20,9 @@ define([
 		store:null,
 		keys:false,
 		updateOnLoad:true,
+		query: null,
 		postCreate: function() {
-			this.url = WEBSITE_URL + 'address/form/';
+			this.url = config.websiteUrl + 'address/form';
 			if (this.updateOnLoad) {
 				this.show(this.item_id);
 			} else {
@@ -54,8 +56,11 @@ define([
 		},
 		show: function(edit) {
 			this.inherited(arguments);
-			var request_url = this.url + this.country;
-			var options = {query:{}};
+			var request_url = this.url;
+			if (this.country) {
+				request_url += '/' + this.country;
+			}
+			var options = {query: this.query || {}};
 			if (this.item_id) options.query.id = this.item_id;
 			if (edit) options.query.edit = true;
 			if (this.keys && this.keys.length) {

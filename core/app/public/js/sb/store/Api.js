@@ -279,6 +279,6 @@ define([
 		}
 	});
 
-	return declare([Api, SimpleQuery, Trackable]);
+	return declare([Api, Trackable]);
 
 });
