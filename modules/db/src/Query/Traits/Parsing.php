@@ -65,7 +65,7 @@ trait Parsing {
    */
   public function parseColumn(QueryInterface $query, $field) {
     // split the column into parts
-    $parts = explode(".", $field);
+    $parts = array_filter(explode(".", $field));
     if (count($parts) > 1) {
       $token = array_pop($parts);
       $alias = $this->expand($query, implode(".", $parts), true);
