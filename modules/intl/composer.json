@@ -11,5 +11,10 @@
   ],
   "extra": {
     "namespace": "Starbug\\Intl"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Intl\\": "src/"
+    }
   }
 }
