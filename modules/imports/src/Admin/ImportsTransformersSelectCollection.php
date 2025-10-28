@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Imports\Admin;
 
+use Starbug\Db\Collection\SelectCollection;
 use Starbug\Db\DatabaseInterface;
-use Starbug\Core\SelectCollection;
 use Starbug\Db\Schema\SchemerInterface;
 use Starbug\Imports\Transform\Factory;
 

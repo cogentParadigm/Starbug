@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\ShippingMethods\Admin;
 
+use Starbug\Db\Collection\SelectCollection;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Db\CollectionFactoryInterface;
-use Starbug\Core\SelectCollection;
 use Starbug\Db\Schema\SchemerInterface;
 use Starbug\Price\FormatterInterface;
 

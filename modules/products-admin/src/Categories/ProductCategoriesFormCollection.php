@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Products\Admin\Categories;
 
-use Starbug\Core\FormCollection;
+use Starbug\Admin\Db\Query\FormCollection;
 
 class ProductCategoriesFormCollection extends FormCollection {
   protected $model = "product_categories";

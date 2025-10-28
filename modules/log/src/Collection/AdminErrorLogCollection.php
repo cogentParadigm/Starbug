@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Log\Collection;
 
-use Starbug\Core\AdminCollection;
+use Starbug\Admin\Db\Query\AdminCollection;
 
 class AdminErrorLogCollection extends AdminCollection {
   protected $model = "error_log";

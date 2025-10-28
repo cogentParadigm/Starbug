@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Admin\Db\Query;
 
 use Starbug\Db\Collection;
 use Starbug\Db\DatabaseInterface;

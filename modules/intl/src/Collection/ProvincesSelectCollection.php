@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Intl\Collection;
 
-use Starbug\Core\SelectCollection;
+use Starbug\Db\Collection\SelectCollection;
 
 class ProvincesSelectCollection extends SelectCollection {
   protected $model = "provinces";

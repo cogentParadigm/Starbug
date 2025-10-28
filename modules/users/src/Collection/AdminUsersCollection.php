@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Users\Collection;
 
-use Starbug\Core\AdminCollection;
+use Starbug\Admin\Db\Query\AdminCollection;
 
 class AdminUsersCollection extends AdminCollection {
   public $model = "users";

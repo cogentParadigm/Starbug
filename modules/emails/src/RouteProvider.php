@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Emails;
 
+use Starbug\Db\Collection\SelectCollection;
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Routing\Route;
-use Starbug\Core\SelectCollection;
 
 class RouteProvider extends AdminRouteProvider {
 

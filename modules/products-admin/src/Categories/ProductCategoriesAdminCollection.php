@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Products\Admin\Categories;
 
-use Starbug\Core\AdminCollection as ParentCollection;
+use Starbug\Admin\Db\Query\AdminCollection;
 
-class ProductCategoriesAdminCollection extends ParentCollection {
+class ProductCategoriesAdminCollection extends AdminCollection {
   protected $model = "product_categories";
   public function build($query, $ops) {
     $query->select("product_categories.*");

@@ -2,6 +2,9 @@
 
 use Psr\Container\ContainerInterface;
 
+use function DI\autowire;
+use function DI\get;
+
 return [
   'modules' => [
     "core" => [
@@ -23,10 +26,10 @@ return [
       "namespace" => "Starbug\Var"
     ]
   ],
-  "Starbug\Modules\Configuration" => DI\autowire("Starbug\Modules\Configuration")
-    ->constructorParameter("modules", DI\get("modules"))
+  "Starbug\Modules\Configuration" => autowire("Starbug\Modules\Configuration")
+    ->constructorParameter("modules", get("modules"))
     ->method("enableAll", ["type" => "module"])
-    ->method("enable", DI\get("theme")),
+    ->method("enable", get("theme")),
   "application.middleware" => function (ContainerInterface $container) {
     $env = $container->get("environment");
     return [
@@ -47,7 +50,7 @@ return [
       "Starbug\Routing\ControllerMiddleware"
     ];
   },
-  "Psr\Http\Server\RequestHandlerInterface" => DI\autowire("Middleland\Dispatcher")
-    ->constructorParameter("middleware", DI\get("application.middleware"))
-    ->constructorParameter("container", DI\get(ContainerInterface::class))
+  "Psr\Http\Server\RequestHandlerInterface" => autowire("Middleland\Dispatcher")
+    ->constructorParameter("middleware", get("application.middleware"))
+    ->constructorParameter("container", get(ContainerInterface::class))
 ];

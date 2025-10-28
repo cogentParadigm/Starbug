@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Orders\Admin;
 
+use Starbug\Admin\Db\Query\AdminCollection;
 use Starbug\Db\DatabaseInterface;
-use Starbug\Core\AdminCollection;
 use Starbug\Price\FormatterInterface;
 
 class OrdersAdminCollection extends AdminCollection {

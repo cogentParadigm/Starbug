@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Files\Collection;
 
-use Starbug\Core\SelectCollection;
+use Starbug\Db\Collection\SelectCollection;
 
 class FilesSelectCollection extends SelectCollection {
   protected $model = "files";

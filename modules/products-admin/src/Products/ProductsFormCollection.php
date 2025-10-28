@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Products\Admin\Products;
 
-use Starbug\Core\FormCollection;
+use Starbug\Admin\Db\Query\FormCollection;
 
 class ProductsFormCollection extends FormCollection {
   public function build($query, $ops) {

@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Payments\Gateways\Admin;
 
-use Starbug\Core\AdminCollection;
+use Starbug\Admin\Db\Query\AdminCollection;
 
 class PaymentGatewaySettingsAdminCollection extends AdminCollection {
   public function build($query, $ops) {

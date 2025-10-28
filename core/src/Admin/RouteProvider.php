@@ -1,11 +1,11 @@
 <?php
 namespace Starbug\Core\Admin;
 
-use Starbug\Core\AdminCollection;
+use Starbug\Admin\Db\Query\AdminCollection;
+use Starbug\Db\Collection\SelectCollection;
 use Starbug\Routing\Controller\ViewController;
 use Starbug\Routing\Route;
 use Starbug\Routing\RouteProviderInterface;
-use Starbug\Core\SelectCollection;
 use Starbug\Imports\Admin\ImportsGrid;
 use Starbug\Routing\Controller;
 use Starbug\Users\Operation\UpdateProfile;

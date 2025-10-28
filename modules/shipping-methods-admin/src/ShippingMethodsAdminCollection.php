@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\ShippingMethods\Admin;
 
-use Starbug\Core\AdminCollection;
+use Starbug\Admin\Db\Query\AdminCollection;
 
 class ShippingMethodsAdminCollection extends AdminCollection {
   public function build($query, $ops) {

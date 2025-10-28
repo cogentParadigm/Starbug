@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Users;
 
+use Starbug\Db\Collection\SelectCollection;
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Routing\Route;
-use Starbug\Core\SelectCollection;
 use Starbug\Routing\Controller\ViewController;
 use Starbug\Users\Collection\AdminUsersCollection;
 use Starbug\Users\Controller\LoginController;
