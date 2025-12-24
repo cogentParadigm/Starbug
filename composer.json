@@ -61,8 +61,9 @@
     "starbug/templates": "^1.0"
   },
   "require-dev": {
-    "starbug/devel": "^1.0",
-    "phpunit/phpunit": "^9.0"
+    "starbug/devel": "^1.5",
+    "phpunit/phpunit": "^9.0",
+    "php-forge/foxy": "*"
   },
   "autoload": {
     "psr-4": {
@@ -73,7 +74,7 @@
   "scripts": {
     "pre-install-cmd": "mkdir -p var/tmp var/log var/public/uploads var/private/uploads",
     "migrate": [
-      "php sb migrate",
+      "@php sb migrate",
       "@composer dump-autoload"
     ],
     "phploc": "vendor/bin/phploc --count-tests app core modules",
@@ -89,7 +90,8 @@
     "allow-plugins": {
       "composer/installers": true,
       "starbug/composer-modules-plugin": true,
-      "php-http/discovery": true
+      "php-http/discovery": true,
+      "php-forge/foxy": true
     }
   }
 }
