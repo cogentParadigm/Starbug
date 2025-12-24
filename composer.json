@@ -58,7 +58,8 @@
     "starbug/settings-admin": "dev-master",
     "starbug/tachyons": "^1.0",
     "starbug/routing": "^1.0",
-    "starbug/templates": "^1.0"
+    "starbug/templates": "^1.0",
+    "starbug/admin": "dev-master"
   },
   "require-dev": {
     "starbug/devel": "^1.5",

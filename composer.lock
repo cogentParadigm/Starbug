@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c1dbb1fbec43c9a845651ae7e1f64e85",
+    "content-hash": "fb4c29e15b3976c7dbb0e9a45f6b07c7",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -2980,6 +2980,37 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "starbug/admin",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./modules/admin",
+                "reference": "10fb8d90f4b5f2a02ebdb13b9a8518825cfa063f"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Admin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Admin\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug core administration module.",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "starbug/auth",
@@ -12405,6 +12436,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "masterexploder/phpthumb": 20,
+        "starbug/admin": 20,
         "starbug/content": 20,
         "starbug/css": 20,
         "starbug/db": 20,

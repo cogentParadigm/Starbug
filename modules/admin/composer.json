@@ -1,0 +1,20 @@
+{
+  "name": "starbug/admin",
+  "type": "starbug-module",
+  "description": "Starbug core administration module.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Admin"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Admin\\": "src/"
+    }
+  }
+}
