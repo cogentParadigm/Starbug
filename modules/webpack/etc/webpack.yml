@@ -1,0 +1,6 @@
+---
+plugins:
+  - modules/webpack/js/webpack.config.js
+options:
+  mode: development
+  devtool: inline-source-map

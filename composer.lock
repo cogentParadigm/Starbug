@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb4c29e15b3976c7dbb0e9a45f6b07c7",
+    "content-hash": "4bc31019d9ad5b2947bf85c3566aca25",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -2564,6 +2564,56 @@
             "time": "2021-11-05T16:50:12+00:00"
         },
         {
+            "name": "psr/event-dispatcher",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/event-dispatcher.git",
+                "reference": "dbefd12671e8a14ec7f180cab83036ed26714bb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/event-dispatcher/zipball/dbefd12671e8a14ec7f180cab83036ed26714bb0",
+                "reference": "dbefd12671e8a14ec7f180cab83036ed26714bb0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\EventDispatcher\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Standard interfaces for event handling.",
+            "keywords": [
+                "events",
+                "psr",
+                "psr-14"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/event-dispatcher/issues",
+                "source": "https://github.com/php-fig/event-dispatcher/tree/1.0.0"
+            },
+            "time": "2019-01-08T18:20:26+00:00"
+        },
+        {
             "name": "psr/http-client",
             "version": "1.0.3",
             "source": {
@@ -3345,6 +3395,51 @@
             }
         },
         {
+            "name": "starbug/dojo",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-dojo.git",
+                "reference": "7a4d2fb6d3bc8b7b7c0845efc61a83fde71f0bb4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-dojo/zipball/7a4d2fb6d3bc8b7b7c0845efc61a83fde71f0bb4",
+                "reference": "7a4d2fb6d3bc8b7b7c0845efc61a83fde71f0bb4",
+                "shasum": ""
+            },
+            "require": {
+                "starbug/config": "*",
+                "starbug/webpack": "*"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "foxy": true,
+                "namespace": "Starbug\\Dojo"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Dojo\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Dojo module for Starbug.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-dojo/issues",
+                "source": "https://github.com/cogentParadigm/starbug-dojo/tree/v1.0.0"
+            },
+            "time": "2025-12-29T23:21:35+00:00"
+        },
+        {
             "name": "starbug/emails",
             "version": "dev-master",
             "dist": {
@@ -3373,6 +3468,50 @@
             "transport-options": {
                 "relative": true
             }
+        },
+        {
+            "name": "starbug/event-dispatcher",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-event-dispatcher.git",
+                "reference": "e917f16746e6df40a6eae6be78f93e89cc489eeb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-event-dispatcher/zipball/e917f16746e6df40a6eae6be78f93e89cc489eeb",
+                "reference": "e917f16746e6df40a6eae6be78f93e89cc489eeb",
+                "shasum": ""
+            },
+            "require": {
+                "starbug/di": "^0.8",
+                "symfony/event-dispatcher": "^4.4 || ^5.0 || ^6.0 || ^7.0"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\EventDispatcher"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\EventDispatcher\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "PSR-14 event dispatcher configuration.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-event-dispatcher/issues",
+                "source": "https://github.com/cogentParadigm/starbug-event-dispatcher/tree/v1.0.0"
+            },
+            "time": "2025-10-27T21:05:19+00:00"
         },
         {
             "name": "starbug/files",
@@ -3481,32 +3620,6 @@
                 "namespace": "Starbug\\Imports"
             },
             "description": "Imports module.",
-            "transport-options": {
-                "relative": true
-            }
-        },
-        {
-            "name": "starbug/js",
-            "version": "dev-master",
-            "dist": {
-                "type": "path",
-                "url": "./modules/js",
-                "reference": "9ebed3b85742fdd50e20dccf9d92ff9714a15357"
-            },
-            "type": "starbug-module",
-            "extra": {
-                "namespace": "Starbug\\Js"
-            },
-            "license": [
-                "GPL-3.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Ali Gangji",
-                    "homepage": "https://github.com/cogentParadigm"
-                }
-            ],
-            "description": "Starbug js module.",
             "transport-options": {
                 "relative": true
             }
@@ -3964,16 +4077,16 @@
         },
         {
             "name": "starbug/storm",
-            "version": "v0.9.4",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-storm.git",
-                "reference": "b905b0316ad23ebbce7f41ca8950649bec6fc1ef"
+                "reference": "5191dd4e53e94bd60ef0e4c5268bc53360da2591"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/b905b0316ad23ebbce7f41ca8950649bec6fc1ef",
-                "reference": "b905b0316ad23ebbce7f41ca8950649bec6fc1ef",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/5191dd4e53e94bd60ef0e4c5268bc53360da2591",
+                "reference": "5191dd4e53e94bd60ef0e4c5268bc53360da2591",
                 "shasum": ""
             },
             "type": "starbug-theme",
@@ -3998,28 +4111,29 @@
             "description": "Administrative theme for Starbug.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-storm/issues",
-                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v0.9.4"
+                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v1.0.0"
             },
-            "time": "2024-10-04T23:34:31+00:00"
+            "time": "2025-12-29T23:18:27+00:00"
         },
         {
             "name": "starbug/tachyons",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-tachyons.git",
-                "reference": "21ac714d82721a447caca72be215161d0eac8362"
+                "reference": "d8ff88fb2fb6fc20f4d082fd85846bfeccc2c89e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-tachyons/zipball/21ac714d82721a447caca72be215161d0eac8362",
-                "reference": "21ac714d82721a447caca72be215161d0eac8362",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-tachyons/zipball/d8ff88fb2fb6fc20f4d082fd85846bfeccc2c89e",
+                "reference": "d8ff88fb2fb6fc20f4d082fd85846bfeccc2c89e",
                 "shasum": ""
             },
             "require": {
                 "starbug/db": "*",
                 "starbug/menus": "*",
-                "starbug/routing": "^1.0"
+                "starbug/routing": "^1.0",
+                "starbug/webpack": "*"
             },
             "type": "starbug-theme",
             "extra": {
@@ -4043,9 +4157,9 @@
             "description": "Tachyons theme for Starbug.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-tachyons/issues",
-                "source": "https://github.com/cogentParadigm/starbug-tachyons/tree/v1.0.0"
+                "source": "https://github.com/cogentParadigm/starbug-tachyons/tree/v1.1.0"
             },
-            "time": "2025-10-23T22:30:05+00:00"
+            "time": "2025-12-29T23:16:05+00:00"
         },
         {
             "name": "starbug/templates",
@@ -4124,6 +4238,51 @@
             }
         },
         {
+            "name": "starbug/webpack",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-webpack.git",
+                "reference": "06d2cd85fb945611aaa55d5ffa10d5f1d17fb0b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-webpack/zipball/06d2cd85fb945611aaa55d5ffa10d5f1d17fb0b3",
+                "reference": "06d2cd85fb945611aaa55d5ffa10d5f1d17fb0b3",
+                "shasum": ""
+            },
+            "require": {
+                "starbug/config": "*",
+                "starbug/event-dispatcher": "^1.0"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "foxy": true,
+                "namespace": "Starbug\\Webpack"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Webpack\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Starbug module for Webpack.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-webpack/issues",
+                "source": "https://github.com/cogentParadigm/starbug-webpack/tree/v1.0.0"
+            },
+            "time": "2025-12-29T23:20:59+00:00"
+        },
+        {
             "name": "symfony/deprecation-contracts",
             "version": "v3.6.0",
             "source": {
@@ -4173,6 +4332,166 @@
             "homepage": "https://symfony.com",
             "support": {
                 "source": "https://github.com/symfony/deprecation-contracts/tree/v3.6.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-09-25T14:21:43+00:00"
+        },
+        {
+            "name": "symfony/event-dispatcher",
+            "version": "v7.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/event-dispatcher.git",
+                "reference": "b7dc69e71de420ac04bc9ab830cf3ffebba48191"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/b7dc69e71de420ac04bc9ab830cf3ffebba48191",
+                "reference": "b7dc69e71de420ac04bc9ab830cf3ffebba48191",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "symfony/event-dispatcher-contracts": "^2.5|^3"
+            },
+            "conflict": {
+                "symfony/dependency-injection": "<6.4",
+                "symfony/service-contracts": "<2.5"
+            },
+            "provide": {
+                "psr/event-dispatcher-implementation": "1.0",
+                "symfony/event-dispatcher-implementation": "2.0|3.0"
+            },
+            "require-dev": {
+                "psr/log": "^1|^2|^3",
+                "symfony/config": "^6.4|^7.0",
+                "symfony/dependency-injection": "^6.4|^7.0",
+                "symfony/error-handler": "^6.4|^7.0",
+                "symfony/expression-language": "^6.4|^7.0",
+                "symfony/http-foundation": "^6.4|^7.0",
+                "symfony/service-contracts": "^2.5|^3",
+                "symfony/stopwatch": "^6.4|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\EventDispatcher\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides tools that allow your application components to communicate with each other by dispatching events and listening to them",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/event-dispatcher/tree/v7.3.3"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-08-13T11:49:31+00:00"
+        },
+        {
+            "name": "symfony/event-dispatcher-contracts",
+            "version": "v3.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/event-dispatcher-contracts.git",
+                "reference": "59eb412e93815df44f05f342958efa9f46b1e586"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/59eb412e93815df44f05f342958efa9f46b1e586",
+                "reference": "59eb412e93815df44f05f342958efa9f46b1e586",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "psr/event-dispatcher": "^1"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/contracts",
+                    "name": "symfony/contracts"
+                },
+                "branch-alias": {
+                    "dev-main": "3.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Contracts\\EventDispatcher\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Generic abstractions related to dispatching event",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "abstractions",
+                "contracts",
+                "decoupling",
+                "interfaces",
+                "interoperability",
+                "standards"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/event-dispatcher-contracts/tree/v3.6.0"
             },
             "funding": [
                 {
@@ -8383,56 +8702,6 @@
             "time": "2024-05-31T13:43:32+00:00"
         },
         {
-            "name": "psr/event-dispatcher",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/event-dispatcher.git",
-                "reference": "dbefd12671e8a14ec7f180cab83036ed26714bb0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/event-dispatcher/zipball/dbefd12671e8a14ec7f180cab83036ed26714bb0",
-                "reference": "dbefd12671e8a14ec7f180cab83036ed26714bb0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\EventDispatcher\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Standard interfaces for event handling.",
-            "keywords": [
-                "events",
-                "psr",
-                "psr-14"
-            ],
-            "support": {
-                "issues": "https://github.com/php-fig/event-dispatcher/issues",
-                "source": "https://github.com/php-fig/event-dispatcher/tree/1.0.0"
-            },
-            "time": "2019-01-08T18:20:26+00:00"
-        },
-        {
             "name": "react/promise",
             "version": "v3.3.0",
             "source": {
@@ -10548,166 +10817,6 @@
             "time": "2025-08-05T18:56:08+00:00"
         },
         {
-            "name": "symfony/event-dispatcher",
-            "version": "v7.3.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "b7dc69e71de420ac04bc9ab830cf3ffebba48191"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/b7dc69e71de420ac04bc9ab830cf3ffebba48191",
-                "reference": "b7dc69e71de420ac04bc9ab830cf3ffebba48191",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.2",
-                "symfony/event-dispatcher-contracts": "^2.5|^3"
-            },
-            "conflict": {
-                "symfony/dependency-injection": "<6.4",
-                "symfony/service-contracts": "<2.5"
-            },
-            "provide": {
-                "psr/event-dispatcher-implementation": "1.0",
-                "symfony/event-dispatcher-implementation": "2.0|3.0"
-            },
-            "require-dev": {
-                "psr/log": "^1|^2|^3",
-                "symfony/config": "^6.4|^7.0",
-                "symfony/dependency-injection": "^6.4|^7.0",
-                "symfony/error-handler": "^6.4|^7.0",
-                "symfony/expression-language": "^6.4|^7.0",
-                "symfony/http-foundation": "^6.4|^7.0",
-                "symfony/service-contracts": "^2.5|^3",
-                "symfony/stopwatch": "^6.4|^7.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\EventDispatcher\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Provides tools that allow your application components to communicate with each other by dispatching events and listening to them",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/event-dispatcher/tree/v7.3.3"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/nicolas-grekas",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2025-08-13T11:49:31+00:00"
-        },
-        {
-            "name": "symfony/event-dispatcher-contracts",
-            "version": "v3.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/event-dispatcher-contracts.git",
-                "reference": "59eb412e93815df44f05f342958efa9f46b1e586"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/59eb412e93815df44f05f342958efa9f46b1e586",
-                "reference": "59eb412e93815df44f05f342958efa9f46b1e586",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1",
-                "psr/event-dispatcher": "^1"
-            },
-            "type": "library",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/contracts",
-                    "name": "symfony/contracts"
-                },
-                "branch-alias": {
-                    "dev-main": "3.6-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Contracts\\EventDispatcher\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Generic abstractions related to dispatching event",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "abstractions",
-                "contracts",
-                "decoupling",
-                "interfaces",
-                "interoperability",
-                "standards"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/event-dispatcher-contracts/tree/v3.6.0"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-09-25T14:21:43+00:00"
-        },
-        {
             "name": "symfony/filesystem",
             "version": "v7.3.2",
             "source": {
@@ -12444,7 +12553,6 @@
         "starbug/emails": 20,
         "starbug/files": 20,
         "starbug/imports": 20,
-        "starbug/js": 20,
         "starbug/log": 20,
         "starbug/menus": 20,
         "starbug/queues": 20,

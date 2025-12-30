@@ -45,9 +45,8 @@
     "starbug/files": "dev-master",
     "starbug/emails": "dev-master",
     "starbug/css": "dev-master",
-    "starbug/js": "dev-master",
     "starbug/content": "dev-master",
-    "starbug/storm": "^0.9.2",
+    "starbug/storm": "^1.0.0",
     "starbug/redis": "dev-master",
     "starbug/state": "dev-master",
     "starbug/log": "dev-master",
@@ -56,10 +55,12 @@
     "starbug/queues": "dev-master",
     "starbug/settings": "dev-master",
     "starbug/settings-admin": "dev-master",
-    "starbug/tachyons": "^1.0",
+    "starbug/tachyons": "^1.1.0",
     "starbug/routing": "^1.0",
     "starbug/templates": "^1.0",
-    "starbug/admin": "dev-master"
+    "starbug/admin": "dev-master",
+    "starbug/webpack": "^1.0.0",
+    "starbug/dojo": "^1.0.0"
   },
   "require-dev": {
     "starbug/devel": "^1.5",

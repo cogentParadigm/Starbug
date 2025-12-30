@@ -1,0 +1,24 @@
+{
+  "name": "starbug/event-dispatcher",
+  "type": "starbug-module",
+  "description": "PSR-14 event dispatcher configuration.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\EventDispatcher"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\EventDispatcher\\": "src/"
+    }
+  },
+  "require": {
+    "starbug/di": "^0.8",
+    "symfony/event-dispatcher": "^4.4 || ^5.0 || ^6.0 || ^7.0"
+  }
+}

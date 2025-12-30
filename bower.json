@@ -4,7 +4,6 @@
     "Ali Gangji <ali@neonrain.com>"
   ],
   "dependencies": {
-    "util": "dojo/util#~1.16.2",
     "dijit": "dojo/dijit#~1.16.2",
     "dojo": "dojo/dojo#~1.16.2",
     "dstore": "^1.2.1",

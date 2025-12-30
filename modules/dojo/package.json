@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "dojo-webpack-plugin": "^3.0.9"
+  }
+}

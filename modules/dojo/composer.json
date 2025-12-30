@@ -1,0 +1,25 @@
+{
+  "name": "starbug/dojo",
+  "type": "starbug-module",
+  "description": "Dojo module for Starbug.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Dojo",
+    "foxy": true
+  },
+  "require": {
+    "starbug/config": "*",
+    "starbug/webpack": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Dojo\\": "src/"
+    }
+  }
+}
