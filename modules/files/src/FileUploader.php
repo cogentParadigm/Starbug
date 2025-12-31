@@ -41,8 +41,13 @@ class FileUploader implements FileUploaderInterface {
     }
     $record["size"] = filesize($tmpName);
     if ($record = $this->repository->save($record)) {
+      $fs = $this->filesystems->getFilesystem($record["location"]);
+      $writePath = $record["id"]."_".$record["filename"];
+      if ($fs->has($writePath)) {
+        $fs->delete($writePath);
+      }
       $stream = fopen($tmpName, "r+");
-      $success = $this->filesystems->getFilesystem($record["location"])->writeStream($record["id"]."_".$record["filename"], $stream);
+      $success = $fs->writeStream($writePath, $stream);
       if (is_resource($stream)) {
         fclose($stream);
       }

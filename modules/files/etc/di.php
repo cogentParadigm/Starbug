@@ -9,7 +9,8 @@ use League\Flysystem\MountManager;
 use Starbug\Files\Storage\Filesystem;
 use Starbug\Files\Storage\Adapter\Local;
 use Starbug\Files\Storage\Adapter\LocalPrivate;
-use DI;
+use Starbug\Files\Command\CleanupDatabase;
+use Starbug\Files\Command\CleanupFilesystem;
 use Starbug\Http\UriBuilder;
 
 return [
@@ -68,5 +69,7 @@ return [
   'db.schema.migrations' => add([
     get('Starbug\Files\Migration')
   ]),
-  "Starbug\Files\*Interface" => autowire("Starbug\Files\*")
+  "Starbug\Files\*Interface" => autowire("Starbug\Files\*"),
+  "scripts.files-cleanup-filesystem" => CleanupFilesystem::class,
+  "scripts.files-cleanup-database" => CleanupDatabase::class
 ];
