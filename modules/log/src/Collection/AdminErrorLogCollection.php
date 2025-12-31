@@ -20,6 +20,9 @@ class AdminErrorLogCollection extends AdminCollection {
     if (!empty($ops["level"])) {
       $query->condition("level", $ops["level"]);
     }
+    if (!empty($ops["channel"])) {
+      $query->condition("channel", $ops["channel"]);
+    }
     if (!empty($ops["sort"])) {
       $query->sort("time DESC");
     }
