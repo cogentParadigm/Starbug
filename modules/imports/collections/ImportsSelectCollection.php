@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Imports;
 
-use Starbug\Core\SelectCollection;
+use Starbug\Db\Collection\SelectCollection;
 
 class ImportsSelectCollection extends SelectCollection {
   protected $model = "imports";

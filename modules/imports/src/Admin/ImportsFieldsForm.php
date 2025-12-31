@@ -34,6 +34,10 @@ class ImportsFieldsForm extends FormDisplay {
     $this->schema = $schemer->getSchema();
   }
   public function buildDisplay($options) {
+    $queryParams = $this->request->getQueryParams();
+    if (!empty($queryParams["model"])) {
+      $options["model"] = $queryParams["model"];
+    }
     $data = $this->getPost();
     if ($this->success() && empty($data["id"])) {
       $this->setPost("id", $this->db->getInsertId($this->model));

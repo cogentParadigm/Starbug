@@ -24,6 +24,10 @@ class ImportsTransformersForm extends FormDisplay {
     parent::__construct($output, $collections, $hookFactory, $displays, $request);
   }
   public function buildDisplay($options) {
+    $queryParams = $this->request->getQueryParams();
+    if (!empty($queryParams["model"])) {
+      $options["model"] = $queryParams["model"];
+    }
     $data = $this->getPost();
     if ($this->success() && empty($data["id"])) {
       $this->setPost("id", $this->db->getInsertId($this->model));
@@ -47,6 +51,7 @@ class ImportsTransformersForm extends FormDisplay {
           $field["data-dojo-type"] = "starbug/form/Dependent";
           $field["data-dojo-props"] = "values: {'type': ['{$type}']}, clearDisabled: false";
           $field["data-depend"] = "type";
+          $field["model"] = $options["model"];
           $this->add($field);
         }
       }
