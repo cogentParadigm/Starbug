@@ -59,7 +59,7 @@ class Importer {
       restore_error_handler();
     } catch (Exception $e) {
       if ($message = $writeStrategy->handleException($e)) {
-        $this->logger->error($message);
+        $this->logger->error($message, ["trace" => $e->getTrace()]);
       }
       restore_error_handler();
     }
