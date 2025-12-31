@@ -39,7 +39,7 @@ class SettingsForm extends FormDisplay {
         $last = $setting["term"];
         $this->add([$setting["slug"], "input_type" => "html", "value" => "<h2 class=\"f7 mb2 {$marginTop} ttu\">".$setting["term"]."</h1>"]);
       }
-      $field = [$setting['name'], "input_type" => $setting['type']];
+      $field = [$setting['name'], "input_type" => $setting['type'], "autocomplete" => "off"];
       if (!empty($setting['label'])) {
         $field['label'] = $setting['label'];
       }
