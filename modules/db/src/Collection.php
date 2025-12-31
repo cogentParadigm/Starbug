@@ -9,6 +9,7 @@ class Collection implements CollectionInterface {
   public $results = [];
   protected $filters = [];
   protected $pager;
+  protected $searchWithId = false;
   public function __construct(
     protected DatabaseInterface $db
   ) {
@@ -38,7 +39,10 @@ class Collection implements CollectionInterface {
     if (isset($ops['id'])) {
       $query->condition($this->model.".id", explode(",", $ops['id']));
     }
-    if (!empty($ops['keywords']) && $this->search_fields) {
+    $searchable = $this->searchWithId || !isset($ops["id"]);
+    $searchable = $searchable && $this->search_fields !== false;
+    $searchable = $searchable && !empty($ops['keywords']);
+    if ($searchable) {
       $query->search($ops['keywords'], $this->search_fields);
     }
     return $query;

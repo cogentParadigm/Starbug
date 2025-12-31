@@ -41,7 +41,9 @@ class StoreAliasHook extends ExecutorHook {
         }
         $num++;
       }
-      if (!is_array($value)) {
+      if (empty($value)) {
+        $value = [];
+      } elseif (!is_array($value)) {
         $value = explode(",", preg_replace("/[,\s]*,[,\s]*/", ",", $value));
       }
       $values = [];
