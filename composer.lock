@@ -3143,16 +3143,16 @@
         },
         {
             "name": "starbug/composer-modules-plugin",
-            "version": "v0.8.1",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/composer-modules-plugin.git",
-                "reference": "346cc8438872434825d7de3ceb4d6c2cfc8c064c"
+                "reference": "cc96c801c50d05a264a65c753280dc0fba4afc01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/composer-modules-plugin/zipball/346cc8438872434825d7de3ceb4d6c2cfc8c064c",
-                "reference": "346cc8438872434825d7de3ceb4d6c2cfc8c064c",
+                "url": "https://api.github.com/repos/cogentParadigm/composer-modules-plugin/zipball/cc96c801c50d05a264a65c753280dc0fba4afc01",
+                "reference": "cc96c801c50d05a264a65c753280dc0fba4afc01",
                 "shasum": ""
             },
             "require": {
@@ -3185,9 +3185,9 @@
             "description": "A composer plugin for generating a module list.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/composer-modules-plugin/issues",
-                "source": "https://github.com/cogentParadigm/composer-modules-plugin/tree/v0.8.1"
+                "source": "https://github.com/cogentParadigm/composer-modules-plugin/tree/v1.0.0"
             },
-            "time": "2021-02-03T22:29:11+00:00"
+            "time": "2026-01-02T20:14:48+00:00"
         },
         {
             "name": "starbug/config",
@@ -3692,21 +3692,21 @@
         },
         {
             "name": "starbug/modules",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-modules.git",
-                "reference": "051d29090fb1b4d3b0b60f37ece3f8854c99fea7"
+                "reference": "d7747318719407306e787109309b7310af78b465"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-modules/zipball/051d29090fb1b4d3b0b60f37ece3f8854c99fea7",
-                "reference": "051d29090fb1b4d3b0b60f37ece3f8854c99fea7",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-modules/zipball/d7747318719407306e787109309b7310af78b465",
+                "reference": "d7747318719407306e787109309b7310af78b465",
                 "shasum": ""
             },
             "require": {
                 "composer/installers": "^2.3.0",
-                "starbug/composer-modules-plugin": "^0.8"
+                "starbug/composer-modules-plugin": "^1.0"
             },
             "require-dev": {
                 "starbug/devel": "^1.0"
@@ -3730,9 +3730,9 @@
             "description": "A very simple module management layer.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-modules/issues",
-                "source": "https://github.com/cogentParadigm/starbug-modules/tree/v1.0.0"
+                "source": "https://github.com/cogentParadigm/starbug-modules/tree/v1.1.0"
             },
-            "time": "2025-10-23T20:08:30+00:00"
+            "time": "2026-01-02T20:19:25+00:00"
         },
         {
             "name": "starbug/operation",
@@ -12566,5 +12566,5 @@
     "prefer-lowest": false,
     "platform": {},
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
