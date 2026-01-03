@@ -1,37 +1,78 @@
 !https://travis-ci.org/cogentParadigm/Starbug.svg?branch=master!:https://travis-ci.org/cogentParadigm/Starbug
 
-h1. Starbug PHP Web Development Framework
+h1. Starbug PHP
 
-Starbug PHP is an open source framework for PHP that employs an MVC design pattern. Here are some of the core features provided:
+Starbug PHP is a collection a packages designed to provide a modular and extensible framework for web development.
 
-* Controller based routing
-* Role-based access control (RBAC)
-* Model layer includes:
-	- schema management/migration
-	- robust validation and hook system
-	- query builder with fluent API
-	- built-in REST API
-* Modular architecture
-* extensible command line interface
-* Code generation
-* Utilities for data grids, form building, pagination, thumbnailing and more..
-* Integration with dojo toolkit providing:
-	- dstore implementation for REST API
-	- bootstrap theme for dijit
-	- media browser
-	- form control widgets include file selection, autocomplete, tag input, and more..
-	- dgrid column plugins including dnd and tree expansion
+It follows a number of "PHP-FIG Standards":https://www.php-fig.org/psr/ including:
 
-h2. Project Info
-
-* *Source*: "github.com/cogentParadigm/Starbug":http://github.com/cogentParadigm/Starbug
-* *Author*: "Ali Gangji":http://aligangji.com
+- PSR-3:https://www.php-fig.org/psr/psr-3/ Logger Interface
+- PSR-4:https://www.php-fig.org/psr/psr-4/ Autoloading Standard
+- PSR-7:https://www.php-fig.org/psr/psr-7/ HTTP Message Interface
+- PSR-11:https://www.php-fig.org/psr/psr-11/ Container Interface
+- PSR-14:https://www.php-fig.org/psr/psr-14/ Event Dispatcher
+- PSR-15:https://www.php-fig.org/psr/psr-15/ HTTP Handlers
+- PSR-17:https://www.php-fig.org/psr/psr-17/ HTTP Factories
 
 h2. Getting Started
 
 This repository is itself a base application. To get started you will most likely want to clone it and push it up to your own project repository.
 
 Visit "Getting Started":doc/getting-started/index.md for installation instructions.
+
+h2. Modules
+
+These modules provide higher level functionality. These will all eventually be extracted out into their own packages.
+
+- starbug/core:core/app - Initializes lower level packages and other built in components.
+- starbug/users:modules/users - Users storage and management UI.
+- starbug/settings:modules/settings - Settings storage and interfaces.
+- starbug/settings-admin:modules/settings-admin - Settings management UI.
+- starbug/files:modules/files - Filesystem abstraction and files management.
+- starbug/emails:modules/emails - Email handling and email template management.
+- starbug/content:modules/content - CMS pages and management UI.
+- starbug/menus:modules/menus - Menu system and menu management UI.
+- starbug/imports:modules/imports - Import system and management UI.
+- starbug/queues:modules/queues - Background queue configuration and processing commands.
+- starbug/webpack:https://github.com/cogentParadigm/starbug-webpack - Webpack build integration layer.
+
+h2. Themes
+
+The following pre-built themes are included.
+
+- starbug/tachyons:https://github.com/cogentParadigm/starbug-tachyons - A minimal front end theme.
+- starbug/storm:https://github.com/cogentParadigm/starbug-storm - An atomic admin theme.
+
+
+h2. Packages
+
+These are some of the lower level packages included.
+
+- starbug/modules:https://github.com/cogentParadigm/starbug-modules - A module system on top of composer.
+- starbug/di:https://github.com/cogentParadigm/starbug-di - Initializes a dependency injection container and allows modular configuration.
+- starbug/config:https://github.com/cogentParadigm/starbug-config - Modular configuration data loader.
+- starbug/state:modules/state - Persistent state management.
+- starbug/log:modules/log - Logging with PSR-3 and Monolog.
+- starbug/queue:https://github.com/cogentParadigm/starbug-queue - Background queue abstraction library.
+- starbug/auth:https://github.com/cogentParadigm/starbug-auth - Authentication library.
+- starbug/http:https://github.com/cogentParadigm/starbug-http - PSR-7 and PSR-15 based HTTP message layer.
+- starbug/routing:https://github.com/cogentParadigm/starbug-routing - HTTP request routing system with controller execution.
+- starbug/operation:https://github.com/cogentParadigm/starbug-operation - PSR-15 middleware for abstracting form submissions.
+- starbug/templates:https://github.com/cogentParadigm/starbug-templates - Template renderer using Twig.
+- starbug/db:modules/db - Database abstraction layer with schema management and query builder.
+
+h2. Development Packages
+
+These packages are for development use.
+
+- starbug/standard:https://github.com/cogentParadigm/starbug-standard - Coding standard specification and validation tools.
+- starbug/devel:https://github.com/cogentParadigm/starbug-devel - Testing and static analysis tools.
+
+
+h2. Project Info
+
+* *Source*: "github.com/cogentParadigm/Starbug":http://github.com/cogentParadigm/Starbug
+* *Author*: "Ali Gangji":http://aligangji.com
 
 h2. License
 
