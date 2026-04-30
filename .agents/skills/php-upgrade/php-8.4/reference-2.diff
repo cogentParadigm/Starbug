@@ -1,0 +1,15 @@
+diff --git a/composer.json b/composer.json
+index e2d2a4e6..e95c2208 100644
+--- a/composer.json
++++ b/composer.json
+@@ -108,7 +108,8 @@
+     "cweagans/composer-patches": "^1.7"
+   },
+   "require-dev": {
+-    "starbug/devel": "^1.0"
++    "phpunit/phpunit": "^9.0",
++    "starbug/devel": "^1.5"
+   },
+   "autoload": {
+     "psr-4": {
+

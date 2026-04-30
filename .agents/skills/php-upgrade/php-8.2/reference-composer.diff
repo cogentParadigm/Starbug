@@ -1,0 +1,44 @@
+diff --git a/composer.json b/composer.json
+index a5d04507..dd2a16ef 100644
+--- a/composer.json
++++ b/composer.json
+@@ -2,8 +2,8 @@
+ 	"minimum-stability": "dev",
+ 	"prefer-stable": true,
+ 	"config": {
+-		"platform": {
+-			"php": "7.1.3"
++		"allow-plugins": {
++			"dealerdirect/phpcodesniffer-composer-installer": true
+ 		}
+ 	},
+ 	"require": {
+@@ -15,7 +15,6 @@
+ 		"ezyang/htmlpurifier":"dev-master",
+ 		"psr/log": "^1.0",
+ 		"monolog/monolog": "^1.17",
+-		"php-console/php-console": "^3.1",
+ 		"wp-cli/php-cli-tools": "^0.10.5",
+ 		"doctrine/dbal": "^2.8",
+ 		"league/flysystem": "^1.0",
+@@ -24,13 +23,17 @@
+ 		"twistor/flysystem-http": "^0.2.0",
+ 		"phpforce/soap-client": "dev-master",
+ 		"onelogin/php-saml": "^3.3",
+-		"solarium/solarium": "^5.1",
++		"solarium/solarium": "^6.3",
+ 		"thunderer/shortcode": "^0.7.3",
+ 		"guzzlehttp/guzzle": "^6.5",
+-		"phpoffice/phpspreadsheet": "^1.12"
++		"phpoffice/phpspreadsheet": "^1.12",
++		"symfony/event-dispatcher": "^7.2",
++		"starbug/operation": "^0.8"
+ 	},
+ 	"require-dev": {
+-		"starbug/devel": "*"
++		"starbug/devel": "*",
++		"phpunit/phpunit": "^9.0",
++		"rector/rector": "^1.0.4"
+ 	},
+ 	"autoload": {
+ 		"classmap":["core", "app", "modules", "var", "features"]

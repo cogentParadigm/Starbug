@@ -1,0 +1,154 @@
+diff --git a/app/collections/AnswersCollection.php b/app/collections/AnswersCollection.php
+index 08fd5fd1..fc29b9be 100644
+--- a/app/collections/AnswersCollection.php
++++ b/app/collections/AnswersCollection.php
+@@ -6,6 +6,7 @@ use Starbug\Core\Collection;
+ class AnswersCollection extends Collection {
+   protected $model = "answers";
+   public function build($query, $ops) {
++    $ops += ["direction" => "ASC"];
+     if ($ops["questions"]) {
+       $query->condition("questions_id", $ops["questions"]);
+     }
+diff --git a/app/collections/StatesSelectCollection.php b/app/collections/StatesSelectCollection.php
+index b853d352..46583825 100644
+--- a/app/collections/StatesSelectCollection.php
++++ b/app/collections/StatesSelectCollection.php
+@@ -13,12 +13,12 @@ class StatesSelectCollection extends SelectCollection {
+   }
+   public function build($query, $ops) {
+     $query->select("provinces.name as label");
+-    if ($ops["surveys_id"]) {
++    if (!empty($ops["surveys_id"])) {
+       $query->leftJoin("answers")->on("answers.state=provinces.id");
+       $query->leftJoin("questions")->on("questions.id=answers.questions_id");
+       $query->condition("questions.surveys_id", $ops["surveys_id"]);
+     }
+-    if ($ops["comparisons_id"]) {
++    if (!empty($ops["comparisons_id"])) {
+       $stateFilters = $this->db->query("comparisons")
+         ->condition("comparisons.id", $ops["comparisons_id"])
+         ->condition("comparisons.parent", "0", "!=")
+diff --git a/app/controllers/ComparisonsController.php b/app/controllers/ComparisonsController.php
+index 704af33a..3c4c7c55 100644
+--- a/app/controllers/ComparisonsController.php
++++ b/app/controllers/ComparisonsController.php
+@@ -115,6 +115,7 @@ class ComparisonsController extends Controller {
+ 
+   public function viewByState($id, $state) {
+     $state = $this->db->query("provinces")->condition("code", $state)->one();
++    $isPdf = false;
+     if ($this->request->hasParameter('isPdf')) {
+       $isPdf = $this->request->getParameter('isPdf');
+     }
+diff --git a/app/script/sync-commissioners.php b/app/script/sync-commissioners.php
+index a66a1973..234b364a 100644
+--- a/app/script/sync-commissioners.php
++++ b/app/script/sync-commissioners.php
+@@ -19,7 +19,7 @@ class SyncCommissionersCommand {
+         $positional[] = $arg;
+       }
+     }
+-    $reset = (true === $named["reset"]);
++    $reset = (true === ($named["reset"] ?? false));
+     unset($named["reset"]);
+     $this->sync->run($named ?: false, $reset);
+   }
+diff --git a/app/src/Salesforce/Commissioners/Repository.php b/app/src/Salesforce/Commissioners/Repository.php
+index 5ecd9173..c8747854 100644
+--- a/app/src/Salesforce/Commissioners/Repository.php
++++ b/app/src/Salesforce/Commissioners/Repository.php
+@@ -27,8 +27,8 @@ class Repository {
+       "SELECT" => $this->buildSelect(),
+       "FROM" => "Contact",
+       "WHERE" => $this->buildConditions($options),
+-      "ORDER BY" => $options["sort"] ?: "",
+-      "LIMIT" => $options["limit"] ?: ""
++      "ORDER BY" => $options["sort"] ?? "",
++      "LIMIT" => $options["limit"] ?? ""
+     ];
+     foreach ($components as $key => $clause) if (empty($clause)) unset($components[$key]);
+     return $components;
+diff --git a/app/src/StatesImport/StateCsvReader.php b/app/src/StatesImport/StateCsvReader.php
+index 8c3b77f4..d88843c2 100644
+--- a/app/src/StatesImport/StateCsvReader.php
++++ b/app/src/StatesImport/StateCsvReader.php
+@@ -20,6 +20,9 @@ class StateCsvReader {
+         // process csv rows
+         while (false !== ($row = fgetcsv($handle, escape: ""))) {
+           $states[trim($row[0])]["abbreviation"] = trim($row[0]);
++          if (!isset($states[trim($row[0])]["terms"])) {
++            $states[trim($row[0])]["terms"] = [];
++          }
+           $states[trim($row[0])]["terms"][] .= trim($row[1]);
+ 
+           if ($row[0] == "DC") {
+diff --git a/app/src/Survey/Report/ComparisonRepository.php b/app/src/Survey/Report/ComparisonRepository.php
+index 149dfba5..c8405a73 100644
+--- a/app/src/Survey/Report/ComparisonRepository.php
++++ b/app/src/Survey/Report/ComparisonRepository.php
+@@ -193,15 +193,17 @@ class ComparisonRepository {
+       foreach ($state["recipients"] as $recipient) {
+         $row = [$state["state_name"]];
+         foreach ($questions as $question) {
+-          $answer = $recipient["answers"][$question["id"]]["answer"];
+-          $notes = $recipient["answers"][$question["id"]]["citations_notes"];
+-          $comments = $recipient["answers"][$question["id"]]["internal_comment"];
++          $answer = $recipient["answers"][$question["id"]]["answer"] ?? "";
++          $notes = $recipient["answers"][$question["id"]]["citations_notes"] ?? "";
++          $comments = $recipient["answers"][$question["id"]]["internal_comment"] ?? "";
+           if (!$showHtml) {
+             $answer = $this->filterHtmlValues($answer);
+             $notes = $this->filterHtmlValues($notes);
+             $comments = $this->filterHtmlValues($comments);
+           }
+           $row[] = $answer;
++          $question["hasCitations"] ??= false;
++          $question["hasInternalComment"] ??= false;
+           if ($question["hasCitations"]) $row[] = $notes;
+           if ($showNotes && $question["hasInternalComment"]) $row[] = $comments;
+         }
+diff --git a/app/modules/saml/src/Auth/ServiceFactory.php b/app/modules/saml/src/Auth/ServiceFactory.php
+index 780cb755..b117d451 100644
+--- a/app/modules/saml/src/Auth/ServiceFactory.php
++++ b/app/modules/saml/src/Auth/ServiceFactory.php
+@@ -16,6 +16,9 @@ class ServiceFactory {
+    */
+   protected $config;
+ 
++  protected $client = null;
++  protected $samlSettings = null;
++
+   /**
+    * Create the service provider.
+    *
+diff --git a/app/src/Salesforce/InformationRequests/Sync.php b/app/src/Salesforce/InformationRequests/Sync.php
+index 2d5f545d..89edad77 100644
+--- a/app/src/Salesforce/InformationRequests/Sync.php
++++ b/app/src/Salesforce/InformationRequests/Sync.php
+@@ -29,18 +29,21 @@ class Sync {
+     foreach ($results as $result) {
+       $exists = $this->db->query("information_requests")->condition("remote_id", $result->Id)->one();
+       $record = $exists ? ["id" => $exists["id"]] : [];
+-      $states = $this->db->query("provinces")->condition("name", explode(";", $result->States_Highlighted__c))->all();
++      $states = [];
++      if (!empty($result->States_Highlighted__c)) {
++        $states = $this->db->query("provinces")->condition("name", explode(";", $result->States_Highlighted__c))->all();
++      }
+       $record += [
+         "remote_id" => $result->Id,
+         "name" => $result->Name,
+         "year" => $result->Year__c,
+         "states" => array_column($states, "id"),
+         "issue" => $result->Issue__c,
+-        "sub_issue" => $result->Sub_Issue__c,
++        "sub_issue" => $result->Sub_Issue__c ?? "",
+         "brief_description" => $result->Brief_Description__c,
+         "caller_inquiry_description" => $result->Caller_Inquiry_Description__c,
+-        "solution" => $result->Solution__c,
+-        "extended_notes" => $result->Extended_Notes__c,
++        "solution" => $result->Solution__c ?? "",
++        "extended_notes" => $result->Extended_Notes__c ?? "",
+         "status" => $result->Status__c,
+         "request_date" => $result->Request_Date__c->format("Y-m-d H:i:s"),
+         "last_modified_date" => $result->LastModifiedDate->format("Y-m-d H:i:s"),

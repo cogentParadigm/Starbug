@@ -1,0 +1,47 @@
+diff --git a/etc/phpunit.xml b/etc/phpunit.xml
+index 7f7fafe5..a312d1fd 100644
+--- a/etc/phpunit.xml
++++ b/etc/phpunit.xml
+@@ -1,5 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+-<phpunit backupGlobals="false"
++<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++  backupGlobals="false"
+   backupStaticAttributes="false"
+   colors="true"
+   convertErrorsToExceptions="true"
+@@ -8,20 +9,23 @@
+   processIsolation="false"
+   stopOnFailure="false"
+   bootstrap="../core/test.php"
++  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+ >
+-  <filter>
+-    <whitelist>
++  <coverage>
++    <include>
+       <directory suffix=".php">../</directory>
+-      <exclude>
+-        <directory suffix=".php">../libraries/</directory>
+-        <directory suffix=".php">../vendor/</directory>
+-        <directory suffix=".php">../node_modules/</directory>
+-      </exclude>
+-    </whitelist>
+-  </filter>
++    </include>
++    <exclude>
++      <directory suffix=".php">../libraries/</directory>
++      <directory suffix=".php">../vendor/</directory>
++      <directory suffix=".php">../node_modules/</directory>
++    </exclude>
++    <report>
++      <clover outputFile="../build/logs/clover.xml"/>
++    </report>
++  </coverage>
+   <logging>
+-    <log type="junit" target="../build/logs/phpunit.xml"/>
+-    <log type="coverage-clover" target="../build/logs/clover.xml"/>
++    <junit outputFile="../build/logs/phpunit.xml"/>
+   </logging>
+   <testsuites>
+     <testsuite name="core">

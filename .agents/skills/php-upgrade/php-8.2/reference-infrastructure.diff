@@ -1,0 +1,65 @@
+diff --git a/.ddev/config.yaml b/.ddev/config.yaml
+index a7191ef3..47258e9e 100644
+--- a/.ddev/config.yaml
++++ b/.ddev/config.yaml
+@@ -1,7 +1,7 @@
+ name: sb
+ type: php
+ docroot: ""
+-php_version: "7.4"
++php_version: "8.2"
+ webserver_type: nginx-fpm
+ xdebug_enabled: false
+ additional_hostnames: []
+@@ -9,7 +9,7 @@ additional_fqdns: []
+ database:
+     type: mariadb
+     version: "10.6"
+-webimage_extra_packages: [php7.4-yaml]
++webimage_extra_packages: [php8.2-yaml]
+ use_dns_when_possible: true
+ composer_version: "2"
+ web_environment: []
+diff --git a/docker-compose.yml b/docker-compose.yml
+index 5c2ade97..68e625e8 100644
+--- a/docker-compose.yml
++++ b/docker-compose.yml
+@@ -11,7 +11,7 @@ services:
+       - ~/.docker/certs/server.key:/etc/pki/tls/private/localhost.key
+       - ~/.docker/certs/server.crt:/etc/pki/tls/certs/localhost.crt
+   php:
+-    image: agangji/php:7.1
++    image: agangji/php:8.2
+     extra_hosts:
+       - "host.docker.internal:172.17.0.1"
+     volumes:
+@@ -38,4 +38,4 @@ services:
+ 
+ volumes:
+   mariadb-data:
+-  solr-data:
+\ No newline at end of file
++  solr-data:
+diff --git a/behat.yml b/behat.yml
+index 6d6062a6..8b1ab195 100644
+--- a/behat.yml
++++ b/behat.yml
+diff --git a/behat.yml b/behat.yml
+@@ -11,7 +11,9 @@ default:
+         - Starbug\Behat\Context\MailContext
+         - Starbug\Behat\Context\ScreenshotsContext
+         - Starbug\Features\FeatureContext
+-        - Starbug\Features\DatabaseContext
++        - Starbug\Behat\Context\DatabaseContext:
++          fixtures:
++            - app/fixtures/state.yml
+         - Starbug\Features\SearchContext
+         - Starbug\Features\SolrStatesSearchContext
+         - Starbug\Features\ImportGroupContext
+@@ -28,5 +30,5 @@ default:
+             chrome:
+                 api_url: "http://localhost:9222"
+     Alex\MailCatcher\Behat\MailCatcherExtension\Extension:
+-      url: http://localhost:1080
++      url: http://mailcatcher:1080
+     Starbug\Behat\ServiceContainer\StarbugExtension: ~

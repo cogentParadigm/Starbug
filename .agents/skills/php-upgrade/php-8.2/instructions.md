@@ -1,0 +1,139 @@
+# Upgrading from PHP 7.4 to PHP 8.2
+
+This is a significant upgrade. It involves adding new core prerequisites from a newer starbug version, updating dependencies, updating infrastructure configs, running a PHPCompatibility scan, running rector, updating PHPUnit configuration, and addressing runtime issues that surface during testing.
+
+## Directions
+
+### 0. Run tests before the upgrade
+
+Before making any changes, run the existing test suite and record the test and pass counts. This establishes a baseline and helps detect tests that silently stop running during the upgrade.
+
+Use the project's Jenkinsfile (located via the `team-conventions` skill) to identify which tests and test suites should be run. Typical commands:
+
+```bash
+# PHPUnit
+ddev exec vendor/bin/phpunit -c etc/phpunit.xml
+
+# Behat
+ddev exec vendor/bin/behat
+```
+
+Record the total test count and pass count. Compare against these numbers after the upgrade is complete. If the count drops, some tests may have been skipped or broken.
+
+### 1. Check prerequisites in the current project
+
+Before upgrading, check that the project has the newer core files that updated packages expect. These were added in newer starbug but may not exist in older projects. If any are missing, copy them from the latest starbug core repository:
+
+- `core/src/Operation/Delete.php`
+- `core/src/Operation/Save.php`
+- `core/src/Operation/SoftDelete.php`
+- `modules/db/src/Operation/Migrate.php`
+- `modules/db/src/Query/Traits/Metadata.php`
+- `modules/imports/` (entire module directory)
+- `modules/event-dispatcher/` (entire module directory)
+
+> **Note:** Only copy these if they are absent. Do not overwrite project-specific modifications.
+
+### 2. Update `composer.json`
+
+Apply the changes shown in `reference-composer.diff`. Key changes:
+
+- Remove `config.platform.php` (was likely pinned to `7.1.3` or similar)
+- Remove `php-console/php-console` (deprecated/incompatible)
+- Add new dependencies:
+  - `symfony/event-dispatcher: ^7.2`
+  - `starbug/operation: ^0.8`
+- Add/update dev dependencies:
+  - `phpunit/phpunit: ^9.0` (lock to v9, do not go past 9.x)
+  - `rector/rector: ^1.0.4`
+
+> **Note:** The diff also updates `solarium/solarium` from `^5.1` to `^6.3`. Only apply this if your project uses Solr. Skip it otherwise.
+
+### 3. Update infrastructure configs
+
+Apply the changes shown in `reference-infrastructure.diff`:
+
+- `.ddev/config.yaml`: change `php_version` from `7.4` to `8.2`, update `webimage_extra_packages` if needed (e.g. `php8.2-yaml`)
+- `docker-compose.yml`: update PHP image tag if applicable
+- `behat.yml`: update context class references if namespaces changed
+
+### 4. Run `composer update`
+
+```bash
+ddev exec composer update -W
+```
+
+You may need to run this **twice** — old plugins may error the first time and resolve on the second pass.
+
+> **Note:** You will probably need to delete `modules/webpack` and `modules/dojo` so that composer can re-install them when you update.
+
+### 5. Restart DDEV for the new PHP version
+
+```bash
+ddev restart
+```
+
+### 6. Run PHPCompatibility scan
+
+Install PHPCompatibility temporarily, scan the codebase, then remove it:
+
+```bash
+ddev exec composer require --dev "phpcompatibility/phpcompatibility:dev-develop as 9.6.x-dev"
+ddev exec vendor/bin/phpcs --extensions=php --standard=PHPCompatibility core app modules
+ddev exec composer remove --dev phpcompatibility/phpcompatibility
+```
+
+Review the scan output. It will flag PHP 8.2 incompatibilities that rector may not cover. Address any critical issues before proceeding.
+
+### 7. Create rector config
+
+Create `rector.php` in the project root. Use the provided `rector.php` from this directory as a template. Adjust the `withPaths()` array if your project structure differs.
+
+### 8. Run rector
+
+```bash
+ddev exec vendor/bin/rector process
+```
+
+Rector will apply mechanical PHP 8.0+ changes across the codebase:
+- `get_class($x)` → `$x::class`
+- Large `switch` statements → `match()`
+- `isset($x) ? $y : $z` → `$x ?? $z`
+- Trait use statements: `use Traits\Foo;` → `use Foo;`
+- DI container strings: `DI\object('Foo')` → `object(Foo::class)`
+
+Review the rector output. You may need to run it a second time or apply manual fixes where rector could not safely transform code.
+
+### 9. Update PHPUnit configuration
+
+Migrate `etc/phpunit.xml` (or wherever your config lives) from PHPUnit 8 to 9 format. See `reference-phpunit-config.diff` for the expected changes:
+
+- Add `xmlns:xsi` and `xsi:noNamespaceSchemaLocation`
+- Replace `<filter><whitelist>` with `<coverage><include>`
+- Replace `<log type="...">` with `<junit outputFile="...">`
+- Move coverage clover inside `<coverage><report>`
+
+### 10. Run tests and fix runtime issues iteratively
+
+This is a critical step. Rector handles mechanical syntax but many runtime issues only surface during execution. After running PHPUnit or Behat, apply fixes using the patterns in `reference-post-upgrade-fixes.diff`.
+
+Common post-upgrade issues:
+
+| Issue | Example fix |
+|-------|-------------|
+| Undefined array key in conditions | `if ($ops["key"])` → `if (!empty($ops["key"]))` |
+| Undefined array key in assignments | `$named["reset"]` → `$named["reset"] ?? false` |
+| Ternary on null (`?` / `?:`) | `$options["sort"] ?: ""` → `$options["sort"] ?? ""` |
+| Uninitialized variable | Add `$isPdf = false;` before conditional use |
+| Appending to undefined array key | Initialize with `$arr["key"] = [];` first |
+| Nullable object properties | `$result->Foo__c` → `$result->Foo__c ?? ""` |
+| Uninitialized dynamic properties | Add `protected $prop = null;` to class |
+| Missing default for loop/array access | `$ops += ["direction" => "ASC"];` before use |
+
+Run tests repeatedly, fixing each error as it appears, until the test suite passes.
+
+Compare the final test and pass counts against the baseline recorded in Step 0. If counts differ, investigate whether tests were skipped, removed, or broken.
+
+## Notes
+
+- This upgrade path was extracted from a real production upgrade (ECS-602). Project-specific code may have additional issues not covered here. The key is to test iteratively.
