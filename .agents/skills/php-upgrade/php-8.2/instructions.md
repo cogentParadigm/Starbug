@@ -113,7 +113,22 @@ Migrate `etc/phpunit.xml` (or wherever your config lives) from PHPUnit 8 to 9 fo
 - Replace `<log type="...">` with `<junit outputFile="...">`
 - Move coverage clover inside `<coverage><report>`
 
-### 10. Run tests and fix runtime issues iteratively
+### 10. Update the test fixture system (if using legacy DbUnit)
+
+If the project uses the old PHPUnit DbUnit-based `DatabaseTestCase` (common in older starbug projects), it will not run under PHP 8. Rewrite it to use the YAML fixture import system from the newer starbug core before attempting to run tests with PHP 8:
+
+- Replace `PHPUnit\DbUnit\TestCaseTrait`, `PDO`, `Composite`, and `Factory` with `Starbug\Imports\Importer`, `Starbug\Imports\Read\YamlFixtureStrategy`, `Starbug\Imports\Write\FixtureStrategy`, and `Starbug\Db\Operation\Migrate`.
+- Replace `getSetUpOperation()` / `getConnection()` / `getDataSet()` with `setUp()`, `getImporter()`, `getDataSets()`, and `createYamlDataSet()`.
+- Convert XML fixture files to YAML.
+- See `reference-post-upgrade-fixes.diff` for a concrete example.
+
+### 11. Update cron scripts and development tooling
+
+- Search `app/bin/cron/` (or wherever cron jobs live) for hardcoded PHP binary paths like `ea-php71` and update them to the target PHP version (e.g. `ea-php82`).
+- Update `.vscode/launch.json` XDebug port from `9000` to `9003` if using Xdebug 3.
+- If the jenkinsfile uses legacy custom docker-compose environment, load the ddev skill to help upgrade it to ddev
+
+### 12. Run tests and fix runtime issues iteratively
 
 This is a critical step. Rector handles mechanical syntax but many runtime issues only surface during execution. After running PHPUnit or Behat, apply fixes using the patterns in `reference-post-upgrade-fixes.diff`.
 
@@ -129,6 +144,20 @@ Common post-upgrade issues:
 | Nullable object properties | `$result->Foo__c` → `$result->Foo__c ?? ""` |
 | Uninitialized dynamic properties | Add `protected $prop = null;` to class |
 | Missing default for loop/array access | `$ops += ["direction" => "ASC"];` before use |
+
+#### Starbug core patterns that often need manual fixes
+
+| Issue | Example fix |
+|-------|-------------|
+| `create_function()` removed in PHP 8 | Replace with real anonymous function. Often found in `modules/db/src/Query/Executor.php`. |
+| `E_STRICT` deprecated | Remove `E_STRICT` from custom error handler level maps and `getErrorName()` switch statements. |
+| `fgetcsv`/`fputcsv` default escape changed | Pass `escape: ""` explicitly: `fgetcsv($handle, escape: "")`. |
+| `StoreOrderedHook` dynamic properties | Rewrite from object properties (`$this->conditions`, `$this->value`, `$this->increment`) to query metadata (`$query->setMeta()` / `$query->getMeta()` / `$query->removeMeta()`). Requires `modules/db/src/Query/Traits/Metadata.php`. See diff for example. |
+| `StoreUniqueHook` / `StoreSlugHook` field access | Replace direct `$query->fields[$c]` with `$query->hasValue($c)` / `$query->getValue($c)` guards. |
+| `Table::get()` entity lookup null safety | Initialize `$conditions = false;` and add empty/isset guards before returning. |
+| `FormDisplay::get()` array access | Add `?? null` fallback: `$var = $var[rtrim($p, "]")] ?? null;`. |
+| `GridDisplay` option guards | Wrap `$options['attributes']` and `$options['dnd']` with `!empty()`. |
+| Test assertion strict types | Change `assertSame("1", ...)` → `assertSame(1, ...)` when PHP 8 returns strict ints. |
 
 Run tests repeatedly, fixing each error as it appears, until the test suite passes.
 

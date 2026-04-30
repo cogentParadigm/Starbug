@@ -152,3 +152,478 @@ index 2d5f545d..89edad77 100644
          "status" => $result->Status__c,
          "request_date" => $result->Request_Date__c->format("Y-m-d H:i:s"),
          "last_modified_date" => $result->LastModifiedDate->format("Y-m-d H:i:s"),
+
+
+# --- PHP 8.0 breaking changes ---
+
+# create_function() removed
+diff --git a/modules/db/src/Query/Executor.php b/modules/db/src/Query/Executor.php
+index 858e3324..939156aa 100644
+--- a/modules/db/src/Query/Executor.php
++++ b/modules/db/src/Query/Executor.php
+@@ -118,12 +120,20 @@ class Executor implements ExecutorInterface {
+         $keys[] = '/[?]/';
+       }
+ 
+-      if (is_array($value)) $values[$key] = implode(',', $value);
++      if (is_array($value)) {
++        $values[$key] = implode(',', $value);
++      }
+ 
+-      if (is_null($value)) $values[$key] = 'NULL';
++      if (is_null($value)) {
++        $values[$key] = 'NULL';
++      }
+     }
+     // Walk the array to see if we can add single-quotes to strings
+-    array_walk($values, create_function('&$v, $k', 'if (!is_numeric($v) && $v!="NULL") $v = "\'".$v."\'";'));
++    array_walk($values, function (&$value, $key) {
++      if (!is_numeric($value) && $value != "NULL") {
++        $value = "'".$value."'";
++      }
++    });
+ 
+     $interpolation = preg_replace($keys, $values, $result->getSql());
+
+# E_STRICT deprecated
+diff --git a/core/src/ErrorHandler.php b/core/src/ErrorHandler.php
+index 1ae5b549..66982194 100644
+--- a/core/src/ErrorHandler.php
++++ b/core/src/ErrorHandler.php
+@@ -25,7 +25,6 @@ class ErrorHandler {
+     E_USER_ERROR        => LogLevel::ERROR,
+     E_USER_WARNING      => LogLevel::WARNING,
+     E_USER_NOTICE       => LogLevel::NOTICE,
+-    E_STRICT            => LogLevel::NOTICE,
+     E_RECOVERABLE_ERROR => LogLevel::ERROR,
+     E_DEPRECATED        => LogLevel::NOTICE,
+     E_USER_DEPRECATED   => LogLevel::NOTICE,
+@@ -142,7 +141,7 @@ class ErrorHandler {
+    */
+   public static function renderSource($file, $line, $max) {
+     $line--; // adjust line number to 0-based from 1-based
+-    if ($line<0 || ($lines=@file($file))===false || ($count=count($lines))<=$line) return '';
++    if (empty($file) || $line<0 || ($lines=@file($file))===false || ($count=count($lines))<=$line) return '';
+ 
+     $half = (int)($max/2);
+     $start = ($line-$half>0) ? $line-$half : 0;
+@@ -229,8 +228,6 @@ class ErrorHandler {
+         return 'E_USER_WARNING';
+       case E_USER_NOTICE:
+         return 'E_USER_NOTICE';
+-      case E_STRICT:
+-        return 'E_STRICT';
+       case E_RECOVERABLE_ERROR:
+         return 'E_RECOVERABLE_ERROR';
+       case E_DEPRECATED:
+
+# fgetcsv/fputcsv escape parameter default changed
+diff --git a/app/src/StatesImport/StateCsvReader.php b/app/src/StatesImport/StateCsvReader.php
+index 8c3b77f4..d88843c2 100644
+--- a/app/src/StatesImport/StateCsvReader.php
++++ b/app/src/StatesImport/StateCsvReader.php
+@@ -18,7 +18,7 @@ class StateCsvReader {
+       $headers = fgetcsv($handle, escape: "");
+       if ($headers) {
+         // process csv rows
+-        while (false !== ($row = fgetcsv($handle))) {
++        while (false !== ($row = fgetcsv($handle, escape: ""))) {
+           $states[trim($row[0])]["abbreviation"] = trim($row[0]);
+
+
+# --- Starbug core store hooks ---
+
+# StoreOrderedHook: rewrite dynamic properties to query metadata
+diff --git a/core/app/hooks/store/StoreOrderedHook.php b/core/app/hooks/store/StoreOrderedHook.php
+index a9f83826..1bcd28c0 100644
+--- a/core/app/hooks/store/StoreOrderedHook.php
++++ b/core/app/hooks/store/StoreOrderedHook.php
+@@ -2,35 +2,43 @@ class StoreOrderedHook extends QueryHook {
+-  protected $conditions = false;
+-  protected $value = false;
+-  protected $increment = 1;
+   public function __construct(DatabaseInterface $db) {
+     $this->db = $db;
+   }
+   public function setConditions($query, $column, $argument, $value = "insert") {
+-    if (false === $this->conditions) {
+-      $this->conditions = [];
++    if (!$query->hasMeta("{$column}.ordered.conditions")) {
++      $conditions = [];
+       if (!empty($argument)) {
+         $fields = explode(" ", $argument);
+         if ($value === "insert") {
+-          foreach ($fields as $field) if ($query->hasValue($field)) $this->conditions[$query->model.".".$field] = $query->getValue($field);
++          foreach ($fields as $field) {
++            if ($query->hasValue($field)) {
++              $conditions[$query->model.".".$field] = $query->getValue($field);
++            }
++          }
+         } else {
+           $id = $query->getId();
+           $row = $this->db->query($query->model)->select($query->model.".*")->condition("id", $id)->one();
+           $same_level = true;
+           foreach ($fields as $field) {
+-            if (is_null($row[$field])) $row[$field] = "NULL";
+-            $this->conditions[$query->model.".".$field] = $row[$field];
+-            if (isset($query->fields[$field]) && $query->fields[$field] != $row[$field]) $same_level = false;
++            if (is_null($row[$field])) {
++              $row[$field] = "NULL";
++            }
++            $conditions[$query->model.".".$field] = $row[$field];
++            if (isset($query->fields[$field]) && $query->fields[$field] != $row[$field]) {
++              $same_level = false;
++            }
++          }
++          if ($same_level) {
++            $query->setMeta("{$column}.ordered.increment", ($row[$column] < $value) ? -1 : 1);
+           }
+-          if ($same_level) $this->increment = ($row[$column] < $value) ? -1 : 1;
+         }
+       } elseif ($value != "insert") {
+         $id = $query->getId();
+         $row = $this->db->query($query->model)->select($query->model.".*")->condition("id", $id)->one();
+-        $this->increment = ($row[$column] < $value) ? -1 : 1;
++        $query->setMeta("{$column}.ordered.increment", ($row[$column] < $value) ? -1 : 1);
+       }
++      $query->setMeta("{$column}.ordered.conditions", $conditions);
+     }
+   }
+   public function emptyBeforeInsert($query, $column, $argument) {
+@@ -38,8 +46,13 @@ class StoreOrderedHook extends QueryHook {
+   }
+   public function insert($query, $key, $value, $column, $argument) {
+     $this->setConditions($query, $column, $argument, "insert");
+-    if (!empty($value) && is_numeric($value)) $this->value = $value;
+-    $highest = $this->db->query($query->model)->select("MAX(".$query->model.".$column) as highest")->conditions($this->conditions)->condition($query->model.".deleted", "0")->one();
++    if (!empty($value) && is_numeric($value)) {
++      $query->setMeta("{$column}.ordered.value", $value);
++    }
++    $highest = $this->db->query($query->model)
++      ->select("MAX(".$query->model.".$column) as highest")
++      ->conditions($query->getMeta("{$column}.ordered.conditions"))
++      ->condition($query->model.".deleted", "0")->one();
+     return $highest['highest']+1;
+   }
+   public function update($query, $key, $value, $column, $argument) {
+@@ -47,10 +60,16 @@ class StoreOrderedHook extends QueryHook {
+     return $value;
+   }
+   public function afterStore($query, $key, $value, $column, $argument) {
+-    if (false !== $this->value) $value = $this->value;
+-    if (empty($value)) return;
++    if ($query->hasMeta("{$column}.ordered.value")) {
++      $value = $query->getMeta("{$column}.ordered.value");
++    }
++    if (empty($value)) {
++      return;
++    }
+     $select = ["id", $column];
+-    if (!empty($argument)) $select = array_merge($select);
++    if (!empty($argument)) {
++      $select = array_merge($select);
++    }
+     $id = $query->getId();
+     $row = ["id" => $id];
+     $ids = [$row['id']];
+@@ -58,15 +77,17 @@ class StoreOrderedHook extends QueryHook {
+       $this->db->query($query->model)->condition("id", $row['id'])->set($column, $value)->raw()->update();
+       $row = $this->db->query($query->model)
+         ->select($select, $query->model)
+-        ->select(array_keys($this->conditions))
+-        ->conditions($this->conditions)
++        ->select(array_keys($query->getMeta("{$column}.ordered.conditions")))
++        ->conditions($query->getMeta("{$column}.ordered.conditions"))
+         ->condition($query->model.".id", $ids, "!=")
+         ->condition($query->model.".deleted", "0")
+         ->condition($query->model.".".$column, $value)->one();
+-      $ids[] = $row['id'];
+-      $value += $this->increment;
++      if (!empty($row)) {
++        $ids[] = $row['id'];
++      }
++      $value += $query->getMeta("{$column}.ordered.increment", 1);
+     }
+-    $this->conditions = false;
+-    $this->value = false;
++    $query->removeMeta("{$column}.ordered.conditions");
++    $query->removeMeta("{$column}.ordered.value");
+   }
+ }
+
+# Query.php needs the Metadata trait
+diff --git a/modules/db/src/Query/Query.php b/modules/db/src/Query/Query.php
+index a22e043c..102e990f 100644
+--- a/modules/db/src/Query/Query.php
++++ b/modules/db/src/Query/Query.php
+@@ -20,4 +20,5 @@ class Query implements QueryInterface {
+   use Traits\Set;
+   use Traits\Exclusion;
+   use Traits\Tagging;
++  use Traits\Metadata;
+ }
+
+# StoreUniqueHook: guard against NULL and use query API
+diff --git a/core/app/hooks/store/StoreUniqueHook.php b/core/app/hooks/store/StoreUniqueHook.php
+index 9898b6d3..38d9fb51 100644
+--- a/core/app/hooks/store/StoreUniqueHook.php
++++ b/core/app/hooks/store/StoreUniqueHook.php
+@@ -7,12 +7,21 @@ class StoreUniqueHook extends QueryHook {
+     $this->models = $models;
+   }
+   public function validate($query, $key, $value, $column, $argument) {
++    if ($value == "NULL") {
++      return $value;
++    }
+     $argument = explode(" ", $argument);
+     $existing = $this->db->query($query->model)->select("id")->select($column)->condition($column, $value);
+-    foreach ($argument as $c) if (!empty($c)) $existing->condition($c, $query->fields[$c]);
++    foreach ($argument as $c) {
++      if (!empty($c) && $query->hasValue($c)) {
++        $existing->condition($c, $query->getValue($c));
++      }
++    }
+     $row = $existing->one();
+     $id = $query->getId();
+-    if ($row && (empty($id) || $id != $row["id"])) $this->models->get($query->model)->error("That $column already exists.", $column);
++    if ($row && (empty($id) || $id != $row["id"])) {
++      $this->db->error("That $column already exists.", $column, $query->model);
++    }
+     return $value;
+   }
+ }
+
+# StoreSlugHook: use query API for field access
+diff --git a/core/app/hooks/store/StoreSlugHook.php b/core/app/hooks/store/StoreSlugHook.php
+index 93dd8d52..57c501ef 100644
+--- a/core/app/hooks/store/StoreSlugHook.php
++++ b/core/app/hooks/store/StoreSlugHook.php
+@@ -44,7 +44,11 @@ class StoreSlugHook extends QueryHook {
+     }
+     if (!empty($this->models->get($query->model)->hooks[$column]["unique"])) {
+       $parts = explode(" ", $this->models->get($query->model)->hooks[$column]["unique"]);
+-      foreach ($parts as $c) if (!empty($c)) $exists->condition($c, $query->fields[$c]);
++      foreach ($parts as $c) {
++        if (!empty($c) && $query->hasValue($c)) {
++          $exists->condition($c, $query->getValue($c));
++        }
++      }
+     }
+     return $exists;
+   }
+
+
+# --- Starbug core null-safety fixes ---
+
+# Table.php entity lookup
+diff --git a/modules/db/classes/Table.php b/modules/db/classes/Table.php
+index 7d936b0e..cb314d57 100644
+--- a/modules/db/classes/Table.php
++++ b/modules/db/classes/Table.php
+@@ -205,6 +205,7 @@ class Table implements CollectionFilterInterface {
+     if (empty($name)) $name = $this->type;
+     static $entities = [];
+     $key = $name;
++    $conditions = false;
+     if (is_array($id)) {
+       $conditions = $id;
+       $id = false;
+@@ -215,11 +216,16 @@ class Table implements CollectionFilterInterface {
+       if ($id) $entities[$key] = $this->query($name)->condition($name.".id", $id)->one();
+       elseif ($conditions) {
+         $entity = $this->query($name)->conditions($conditions)->one();
+-        $id = $entity["id"];
+-        $entities[$name."-".$id] = $entity;
++        if (!empty($entity)) {
++          $id = $entity["id"];
++          $entities[$name."-".$id] = $entity;
++        }
+       }
+     }
+-    return $entities[$name."-".$id];
++    if (!empty($id) && isset($entities[$name."-".$id])) {
++      return $entities[$name."-".$id];
++    }
++    return false;
+   }
+
+# FormDisplay.php get() null coalescing
+diff --git a/core/app/displays/FormDisplay.php b/core/app/displays/FormDisplay.php
+index ad6a2bba..16cc9329 100644
+--- a/core/app/displays/FormDisplay.php
++++ b/core/app/displays/FormDisplay.php
+@@ -68,17 +68,19 @@ class FormDisplay extends ItemDisplay {
+    * Filter columns to set the input type and some other defaults.
+    */
+   public function filter($field, $options, $column) {
++    if (empty($options['input_type']) && !empty($column["type"])) {
++        if ($column["type"] == "text") $options["input_type"] = "textarea";
++        elseif ($column['type'] == "password") $options['input_type'] = "password";
++        elseif ($column['type'] == "bool") $options['input_type'] = "checkbox";
++        elseif ($column['type'] == "category") $options['input_type'] = "category_select";
++        elseif ($column['type'] == "tags") $options['input_type'] = "tag_input";
++        elseif (isset($column['upload'])) $options['input_type'] = "file_select";
++        elseif ($column['type'] == "terms") $options['input_type'] = "multiple_category_select";
++        elseif ($this->models->has($column['type'])) $options['input_type'] = "multiple_select";
++        elseif (isset($column['references'])) $options['input_type'] = "select";
++    }
+     if (empty($options['input_type'])) {
+-      if ($column["type"] == "text") $options["input_type"] = "textarea";
+-      elseif ($column['type'] == "password") $options['input_type'] = "password";
+-      elseif ($column['type'] == "bool") $options['input_type'] = "checkbox";
+-      elseif ($column['type'] == "category") $options['input_type'] = "category_select";
+-      elseif ($column['type'] == "tags") $options['input_type'] = "tag_input";
+-      elseif (isset($column['upload'])) $options['input_type'] = "file_select";
+-      elseif ($column['type'] == "terms") $options['input_type'] = "multiple_category_select";
+-      elseif ($this->models->has($column['type'])) $options['input_type'] = "multiple_select";
+-      elseif (isset($column['references'])) $options['input_type'] = "select";
+-      else $options['input_type'] = "text";
++      $options['input_type'] = "text";
+     }
+     if (!empty($column["type"]) && $column['type'] == "bool" && $options["input_type"] == "checkbox") $options['value'] = 1;
+     elseif ($options['input_type'] == "datetime") $options['data-dojo-type'] = "starbug/form/DateTextBox";
+@@ -229,7 +228,7 @@ class FormDisplay extends ItemDisplay {
+   public function get($name) {
+     $parts = explode("[", $name);
+     $var = ($this->method == "post") ? $this->getPost() : $this->request->getParameters();
+-    foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")];
++    foreach ($parts as $p) if (is_array($var)) $var = $var[rtrim($p, "]")] ?? null;
+     if (is_array($var)) return $var;
+     else return stripslashes($var);
+   }
+
+# GridDisplay option guards
+diff --git a/core/app/displays/GridDisplay.php b/core/app/displays/GridDisplay.php
+index 48ac0ad4..834978c4 100644
+--- a/core/app/displays/GridDisplay.php
++++ b/core/app/displays/GridDisplay.php
+@@ -26,9 +26,13 @@ class GridDisplay extends ItemDisplay {
+ 
+   public function build($options = []) {
+     // set defaults
+-    if ($options['attributes']) $this->attributes = $options['attributes'];
++    if (!empty($options['attributes'])) {
++      $this->attributes = $options['attributes'];
++    }
+     $this->options = $options;
+-    if ($options['dnd']) $this->dnd();
++    if (!empty($options['dnd'])) {
++      $this->dnd();
++    }
+     $this->buildDisplay($options);
+   }
+
+
+# --- Test infrastructure overhaul ---
+
+# DatabaseTestCase.php rewritten from DbUnit to YAML fixtures
+diff --git a/core/src/test/DatabaseTestCase.php b/core/src/test/DatabaseTestCase.php
+index 9104ce50..13b4d4cd 100644
+--- a/core/src/test/DatabaseTestCase.php
++++ b/core/src/test/DatabaseTestCase.php
+@@ -2,37 +2,50 @@ namespace Starbug\Core;
+ 
+ use PHPUnit\Framework\TestCase;
+-use PHPUnit\DbUnit\TestCaseTrait;
+-use PHPUnit\DbUnit\Operation\Composite;
+-use PHPunit\DbUnit\Operation\Factory;
+-use PDO;
++use Starbug\Db\Operation\Migrate;
++use Starbug\Imports\Import;
++use Starbug\Imports\Importer;
++use Starbug\Imports\Read\YamlFixtureStrategy;
++use Starbug\Imports\Write\FixtureStrategy;
+ 
+ abstract class DatabaseTestCase extends TestCase {
+ 
+-  use TestCaseTrait;
++  protected $importer;
++  protected $operation;
+ 
+-  protected $conn = null;
+-  protected $db = null;
+-
+-  public function getSetUpOperation() {
+-    return new Composite([
+-      Factory::TRUNCATE(true),
+-      Factory::INSERT()
+-    ]);
++  protected function setUp(): void {
++    parent::setUp();
++    if ($imports = $this->getDataSets()) {
++      foreach ($imports as $import) {
++        $this->getImporter()->run($import);
++      }
++    }
+   }
+ 
+-  final public function getConnection() {
+-    global $container;
+-    if ($this->conn === null) {
+-      $config = $container->get("Starbug\Core\ConfigInterface");
+-      $name = $container->get("database_name");
+-      $params = $config->get("db/".$name);
+-      $pdo = new PDO('mysql:host='.$params['host'].';dbname='.$params['db'], $params['username'], $params['password']);
+-      $this->conn = $this->createDefaultDBConnection($pdo, $name);
++  protected function getImporter() {
++    if (empty($this->importer)) {
++      global $container;
++      $this->importer = $container->get(Importer::class);
+     }
+-    if ($this->db === null) {
+-      $this->db = $container->get("Starbug\Core\DatabaseInterface");
++    return $this->importer;
++  }
++
++  protected function getDataSets() {
++    return false;
++  }
++
++  protected function createYamlDataSet($ymlFile) {
++    $import = new Import(false);
++    $import->setReadStrategy(YamlFixtureStrategy::class, ["path" => $ymlFile]);
++    $import->setWriteStrategy(FixtureStrategy::class, ["operation" => $this->getOperation()]);
++    return $import;
++  }
++
++  protected function getOperation() {
++    if (empty($this->operation)) {
++      global $container;
++      $this->operation = $container->get(Migrate::class);
+     }
+-    return $this->conn;
++    return $this->operation;
+   }
+ }
+
+# Test assertion strict type fix
+diff --git a/core/app/tests/hooks/StoreTest.php b/core/app/tests/hooks/StoreTest.php
+index e096c4cf..e6792800 100644
+--- a/core/app/tests/hooks/StoreTest.php
++++ b/core/app/tests/hooks/StoreTest.php
+@@ -301,11 +303,11 @@ class StoreTest extends DatabaseTestCase {
+     $record5 = $this->db->get("hook_store_ordered", $id5);
+ 
+     // assert that they have incrementing values
+-    $this->assertSame("1", $record1['value']);
+-    $this->assertSame("2", $record2['value']);
+-    $this->assertSame("3", $record3['value']);
+-    $this->assertSame("4", $record4['value']);
+-    $this->assertSame("5", $record5['value']);
++    $this->assertSame(1, $record1["value"]);
++    $this->assertSame(2, $record2["value"]);
++    $this->assertSame(3, $record3["value"]);
++    $this->assertSame(4, $record4["value"]);
++    $this->assertSame(5, $record5["value"]);
+   }
+ 
+   /**
+@@ -335,7 +337,7 @@ class StoreTest extends DatabaseTestCase {
+     $record = $this->db->get("hook_store_owner", $id);
+ 
+     // assert that the owner was stored
+-    $this->assertSame("1", $record['value']);
++    $this->assertSame(1, $record['value']);
+ 
+     // restore anonymous root
+     $this->user->setUser(["id" => "NULL", "groups" => ["root"]]);
