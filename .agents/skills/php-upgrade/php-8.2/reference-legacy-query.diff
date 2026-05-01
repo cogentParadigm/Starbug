@@ -1,0 +1,71 @@
+# Legacy query class upgrade path (Option B)
+#
+# Use this path when the project uses the older query class at
+# modules/db/classes/query.php instead of modules/db/src/Query/Query.php.
+#
+# In this path:
+# - Do NOT copy modules/db/src/Query/Traits/Metadata.php
+# - Do NOT apply the Metadata trait to the query class
+# - Skip the create_function() / Executor.php fix (that file does not exist)
+# - StoreOrderedHook needs no rewrite if properties are already declared
+
+# --- StoreOrderedHook ---
+#
+# If the hook already declares protected $conditions, $value, and $increment,
+# no changes are needed. PHP 8.2 will not flag these as dynamic properties.
+#
+# If they are NOT declared, add them:
+diff --git a/core/app/hooks/store/StoreOrderedHook.php b/core/app/hooks/store/StoreOrderedHook.php
+index 08fd5fd1..fc29b9be 100644
+--- a/core/app/hooks/store/StoreOrderedHook.php
++++ b/core/app/hooks/store/StoreOrderedHook.php
+@@ -1,5 +1,8 @@
+ class StoreOrderedHook extends QueryHook {
++  protected $conditions = false;
++  protected $value = false;
++  protected $increment = 1;
+   public function __construct(DatabaseInterface $db) {
+     $this->db = $db;
+   }
+
+# --- StoreUniqueHook ---
+# Guard access to $query->fields[$c] with isset() since legacy query
+# does not provide hasValue() / getValue() methods.
+
+diff --git a/core/app/hooks/store/StoreUniqueHook.php b/core/app/hooks/store/StoreUniqueHook.php
+index 9898b6d3..38d9fb51 100644
+--- a/core/app/hooks/store/StoreUniqueHook.php
++++ b/core/app/hooks/store/StoreUniqueHook.php
+@@ -7,7 +7,10 @@ class StoreUniqueHook extends QueryHook {
+   public function validate($query, $key, $value, $column, $argument) {
+     $argument = explode(" ", $argument);
+     $existing = $this->db->query($query->model)->select("id")->select($column)->condition($column, $value);
+-    foreach ($argument as $c) if (!empty($c)) $existing->condition($c, $query->fields[$c]);
++    foreach ($argument as $c) {
++      if (!empty($c) && isset($query->fields[$c])) {
++        $existing->condition($c, $query->fields[$c]);
++      }
++    }
+     $row = $existing->one();
+     $id = $query->getId();
+     if ($row && (empty($id) || $id != $row["id"])) {
+
+# --- StoreSlugHook ---
+# Same isset() guard for $query->fields[$c].
+
+diff --git a/core/app/hooks/store/StoreSlugHook.php b/core/app/hooks/store/StoreSlugHook.php
+index 93dd8d52..57c501ef 100644
+--- a/core/app/hooks/store/StoreSlugHook.php
++++ b/core/app/hooks/store/StoreSlugHook.php
+@@ -42,7 +42,11 @@ class StoreSlugHook extends QueryHook {
+     if (!empty($this->models->get($query->model)->hooks[$column]["unique"])) {
+       $parts = explode(" ", $this->models->get($query->model)->hooks[$column]["unique"]);
+-      foreach ($parts as $c) if (!empty($c)) $exists->condition($c, $query->fields[$c]);
++      foreach ($parts as $c) {
++        if (!empty($c) && isset($query->fields[$c])) {
++          $exists->condition($c, $query->fields[$c]);
++        }
++      }
+     }
+     return $exists;
+   }

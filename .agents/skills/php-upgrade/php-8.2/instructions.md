@@ -22,17 +22,30 @@ Record the total test count and pass count. Compare against these numbers after 
 
 ### 1. Check prerequisites in the current project
 
-Before upgrading, check that the project has the newer core files that updated packages expect. These were added in newer starbug but may not exist in older projects. If any are missing, copy them from the latest starbug core repository:
+Before upgrading, check that the project has the newer core files that updated packages expect. These were added in newer starbug but may not exist in older projects. If any are missing, ask the user where to source them from (e.g. a newer starbug checkout, a specific tag, or another project they consider compatible) and copy them in:
 
 - `core/src/Operation/Delete.php`
 - `core/src/Operation/Save.php`
 - `core/src/Operation/SoftDelete.php`
 - `modules/db/src/Operation/Migrate.php`
-- `modules/db/src/Query/Traits/Metadata.php`
+- `modules/db/src/Query/Traits/Metadata.php` (only for newer `modules/db/src/Query/` structure; skip for legacy `modules/db/classes/query.php`)
 - `modules/imports/` (entire module directory)
 - `modules/event-dispatcher/` (entire module directory)
 
 > **Note:** Only copy these if they are absent. Do not overwrite project-specific modifications.
+
+#### Query implementation compatibility
+
+Check which database Query implementation the project uses. This determines which set of diffs to apply in Step 12.
+
+- **Newer structure:** `modules/db/src/Query/Query.php` — copy the `Metadata.php` trait and apply the diffs in `reference-post-upgrade-fixes.diff`.
+- **Legacy structure:** `modules/db/classes/query.php` — skip the `Metadata.php` trait and apply the diffs in `reference-legacy-query.diff` instead. The hook fixes are simpler because the legacy query class exposes `public $fields` directly.
+
+#### Enable new modules
+
+For projects that do not auto-discover modules via composer, you must also enable the new modules in the project's root `etc/di.php`. See `reference-enable-modules.diff` for the expected changes to the `modules` array.
+
+> If the project already registers these modules via a composer-based discovery mechanism, this step can be skipped.
 
 ### 2. Update `composer.json`
 
@@ -149,11 +162,11 @@ Common post-upgrade issues:
 
 | Issue | Example fix |
 |-------|-------------|
-| `create_function()` removed in PHP 8 | Replace with real anonymous function. Often found in `modules/db/src/Query/Executor.php`. |
+| `create_function()` removed in PHP 8 | Replace with real anonymous function. Only applies to newer structure (`modules/db/src/Query/Executor.php`). |
 | `E_STRICT` deprecated | Remove `E_STRICT` from custom error handler level maps and `getErrorName()` switch statements. |
 | `fgetcsv`/`fputcsv` default escape changed | Pass `escape: ""` explicitly: `fgetcsv($handle, escape: "")`. |
-| `StoreOrderedHook` dynamic properties | Rewrite from object properties (`$this->conditions`, `$this->value`, `$this->increment`) to query metadata (`$query->setMeta()` / `$query->getMeta()` / `$query->removeMeta()`). Requires `modules/db/src/Query/Traits/Metadata.php`. See diff for example. |
-| `StoreUniqueHook` / `StoreSlugHook` field access | Replace direct `$query->fields[$c]` with `$query->hasValue($c)` / `$query->getValue($c)` guards. |
+| `StoreOrderedHook` dynamic properties | **Newer path:** Rewrite to query metadata (`$query->setMeta()` / `$query->getMeta()` / `$query->removeMeta()`). See `reference-post-upgrade-fixes.diff`. **Legacy path:** No rewrite needed if properties are already declared; otherwise add `protected $conditions = false; protected $value = false; protected $increment = 1;`. See `reference-legacy-query.diff`. |
+| `StoreUniqueHook` / `StoreSlugHook` field access | **Newer path:** Replace direct `$query->fields[$c]` with `$query->hasValue($c)` / `$query->getValue($c)` guards. See `reference-post-upgrade-fixes.diff`. **Legacy path:** Guard with `isset($query->fields[$c])`. See `reference-legacy-query.diff`. |
 | `Table::get()` entity lookup null safety | Initialize `$conditions = false;` and add empty/isset guards before returning. |
 | `FormDisplay::get()` array access | Add `?? null` fallback: `$var = $var[rtrim($p, "]")] ?? null;`. |
 | `GridDisplay` option guards | Wrap `$options['attributes']` and `$options['dnd']` with `!empty()`. |
