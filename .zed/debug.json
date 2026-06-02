@@ -1,0 +1,11 @@
+[
+  {
+    "label": "Listen for XDebug (Docker)",
+    "request": "launch",
+    "adapter": "Xdebug",
+    "port": 9003,
+    "pathMappings": {
+      "/var/www/html": "$ZED_WORKTREE_ROOT",
+    },
+  },
+]
