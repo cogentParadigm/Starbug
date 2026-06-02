@@ -11,7 +11,8 @@
         "starbug-custom-module": "module",
         "starbug-custom-theme": "theme"
       },
-      "parameters": ["namespace"]
+      "parameters": ["namespace"],
+      "key": "starbug"
     }
   },
   "repositories": [
