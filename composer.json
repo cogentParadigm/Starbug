@@ -31,7 +31,7 @@
     "starbug/bundle": "^1.0",
     "starbug/resource-locator": "^0.9",
     "starbug/http": "^0.9.14",
-    "starbug/auth": "^0.12.0",
+    "starbug/auth": "^1.0",
     "starbug/operation": "^0.8.0",
     "starbug/config": "^0.9.0",
     "masterexploder/phpthumb": "dev-master",
