@@ -18,7 +18,7 @@
     }
   },
   "require": {
-    "starbug/di": "^0.8",
+    "starbug/di": "^0.8 || ^1.0",
     "symfony/event-dispatcher": "^4.4 || ^5.0 || ^6.0 || ^7.0"
   }
 }
