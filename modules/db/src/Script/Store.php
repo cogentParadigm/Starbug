@@ -25,7 +25,7 @@ class Store {
       $table->setRows($result);
       $table->display();
     } else {
-      $errors = $this->db->errors(true);
+      $errors = $this->db->errors($name, true);
       $result = [];
       foreach ($errors as $col => $arr) {
         foreach ($arr as $e => $m) {
@@ -41,8 +41,11 @@ class Store {
   public function parse($args) {
     $params = [];
     foreach ($args as $arg) {
-      $arg = explode(":", $arg, 2);
-      $params[$arg[0]] = $arg[1];
+      if (strpos($arg, "-") === 0) {
+        continue;
+      }
+      $parts = explode(":", $arg, 2);
+      $params[$parts[0]] = $parts[1] ?? '';
     }
     return $params;
   }

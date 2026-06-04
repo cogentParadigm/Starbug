@@ -41,8 +41,11 @@ class Query {
   public function parse($args) {
     $params = [];
     foreach ($args as $arg) {
-      $arg = explode(":", $arg, 2);
-      $params[$arg[0]] = $arg[1];
+      if (strpos($arg, "-") === 0) {
+        continue;
+      }
+      $parts = explode(":", $arg, 2);
+      $params[$parts[0]] = $parts[1] ?? '';
     }
     return $params;
   }
