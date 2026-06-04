@@ -65,7 +65,7 @@
   },
   "require-dev": {
     "starbug/devel": "^1.5",
-    "phpunit/phpunit": "^9.0",
+    "starbug/testing": "^v1.0",
     "php-forge/foxy": "*"
   },
   "autoload": {
