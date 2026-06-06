@@ -54,23 +54,4 @@ class UserManagementShellAdapter extends ShellAdapter implements UserManagementA
     }
   }
 
-  public function navigateToCreateUser(): void {
-    // Shell transport has no page navigation equivalent.
-  }
-
-  public function assertOnCreateUserPage(): void {
-    Assert::assertNotEmpty($this->lastOutput, 'Expected output from command');
-  }
-
-  public function exportUsersCsv(): string {
-    $result = $this->driver->run(['php', 'sb', 'query', 'users', '-t']);
-    $this->lastOutput = $result['stdout'] . $result['stderr'];
-    return $this->lastOutput;
-  }
-
-  public function assertPagedGridHasColumns(array $columns): void {
-    foreach ($columns as $column) {
-      Assert::assertStringContainsString($column, $this->lastOutput, "Expected column '{$column}' in shell output");
-    }
-  }
 }

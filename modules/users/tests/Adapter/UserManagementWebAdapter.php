@@ -45,27 +45,4 @@ class UserManagementWebAdapter extends WebAdapter implements UserManagementAdapt
     }
   }
 
-  public function navigateToCreateUser(): void {
-    $this->visit('/admin/users');
-    $this->driver->followLink('New User');
-  }
-
-  public function assertOnCreateUserPage(): void {
-    Assert::assertEquals('/admin/users/create', $this->driver->getCurrentPath());
-  }
-
-  public function exportUsersCsv(): string {
-    return $this->driver->download('/api/users/admin.csv');
-  }
-
-  public function assertPagedGridHasColumns(array $columns): void {
-    $headers = $this->driver->filter('table[data-dojo-type="starbug/grid/PagedGrid"] th');
-    $actual = [];
-    foreach ($headers as $node) {
-      $actual[] = trim($node->textContent);
-    }
-    foreach ($columns as $column) {
-      Assert::assertContains($column, $actual, "Expected column '{$column}' not found in grid.");
-    }
-  }
 }

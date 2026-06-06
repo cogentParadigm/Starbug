@@ -65,35 +65,4 @@ class UserManagement {
     $this->adapter->assertUserExists($criteria);
   }
 
-  /**
-   * Navigate to the create user page.
-   */
-  public function navigateToCreateUser(): void {
-    $this->adapter->navigateToCreateUser();
-  }
-
-  /**
-   * Assert the current view is the create user page.
-   */
-  public function assertOnCreateUserPage(): void {
-    $this->adapter->assertOnCreateUserPage();
-  }
-
-  /**
-   * Export users CSV and return the content.
-   *
-   * @return string The CSV response body.
-   */
-  public function exportUsersCsv(): string {
-    return $this->adapter->exportUsersCsv();
-  }
-
-  /**
-   * Assert the paged grid on the current page has the expected columns.
-   *
-   * @param array $columns List of expected column header texts.
-   */
-  public function assertPagedGridHasColumns(array $columns): void {
-    $this->adapter->assertPagedGridHasColumns($columns);
-  }
 }

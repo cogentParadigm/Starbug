@@ -69,9 +69,9 @@ class UserManagementTest extends WebTestCase {
    * An admin can navigate to the create user page from the users list.
    */
   public function testNavigateToCreateUser(): void {
-    $this->users->navigateToCreateUser();
-
-    $this->users->assertOnCreateUserPage();
+    $this->getDriver()->get('/admin/users');
+    $this->getDriver()->followLink('New User');
+    $this->assertPathEquals('/admin/users/create');
   }
 
   /**
@@ -80,22 +80,21 @@ class UserManagementTest extends WebTestCase {
   public function testListUsersGridColumns(): void {
     $this->users->listUsers();
 
-    $this->users->assertPagedGridHasColumns([
-      'First Name',
-      'Last Name',
-      'Email',
-      'Last Visit',
-      'Groups',
-      'Status',
-      'Options'
-    ]);
+    $headers = $this->getDriver()->filter('table[data-dojo-type="starbug/grid/PagedGrid"] th');
+    $actual = [];
+    foreach ($headers as $node) {
+      $actual[] = trim($node->textContent);
+    }
+    foreach (['First Name', 'Last Name', 'Email', 'Last Visit', 'Groups', 'Status', 'Options'] as $column) {
+      $this->assertContains($column, $actual, "Expected column '{$column}' not found in grid.");
+    }
   }
 
   /**
    * Users can be exported as CSV.
    */
   public function testExportUsersCsv(): void {
-    $csv = $this->users->exportUsersCsv();
+    $csv = $this->getDriver()->download('/api/users/admin.csv');
 
     $this->assertStringContainsString('First Name', $csv);
     $this->assertStringContainsString('Last Name', $csv);
