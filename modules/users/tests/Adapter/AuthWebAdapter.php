@@ -12,11 +12,11 @@ use Starbug\Testing\WebAdapter;
 class AuthWebAdapter extends WebAdapter implements AuthAdapterInterface {
 
   public function login(array $credentials): void {
-    $this->driver->submitForm('/login', $credentials);
+    $this->driver->submitForm('login', $credentials);
   }
 
   public function logout(): void {
-    $this->visit('/logout');
+    $this->visit('logout');
   }
 
   /**
@@ -26,14 +26,14 @@ class AuthWebAdapter extends WebAdapter implements AuthAdapterInterface {
    * if not redirected to the login page.
    */
   public function isLoggedIn(): bool {
-    $this->visit('/admin');
-    return $this->driver->getCurrentPath() !== '/login';
+    $this->visit('admin');
+    return !$this->driver->isOnPath('login');
   }
 
   /**
    * Navigate to the login page.
    */
   public function goToLogin(): void {
-    $this->visit('/login');
+    $this->visit('login');
   }
 }

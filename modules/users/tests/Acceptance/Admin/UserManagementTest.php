@@ -31,7 +31,6 @@ class UserManagementTest extends WebTestCase {
    */
   public function testListUsers(): void {
     $this->users->listUsers();
-    $this->assertPageContains('New User');
   }
 
   /**
@@ -67,15 +66,6 @@ class UserManagementTest extends WebTestCase {
   }
 
   /**
-   * An admin can navigate to the create user page from the users list.
-   */
-  public function testNavigateToCreateUser(): void {
-    $this->getDriver()->get('/admin/users');
-    $this->getDriver()->followLink('New User');
-    $this->assertPathEquals('/admin/users/create');
-  }
-
-  /**
    * The users list shows a paged grid with the expected columns.
    */
   public function testListUsersGridColumns(): void {
@@ -95,7 +85,7 @@ class UserManagementTest extends WebTestCase {
    * Users can be exported as CSV.
    */
   public function testExportUsersCsv(): void {
-    $csv = $this->getDriver()->download('/api/users/admin.csv');
+    $csv = $this->getDriver()->download('api/users/admin.csv');
 
     $this->assertStringContainsString('First Name', $csv);
     $this->assertStringContainsString('Last Name', $csv);

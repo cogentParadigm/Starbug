@@ -16,15 +16,15 @@ class UserManagementWebAdapter extends WebAdapter implements UserManagementAdapt
     $defaults = [
       'password_confirm' => $data['password'] ?? ''
     ];
-    $this->driver->submitForm('/admin/users/create', $data + $defaults);
+    $this->driver->submitForm('admin/users/create', $data + $defaults);
   }
 
   public function listUsers(): void {
-    $this->visit('/admin/users');
+    $this->visit('admin/users');
   }
 
   public function assertUserCreated(): void {
-    Assert::assertEquals('/admin/users', $this->driver->getCurrentPath());
+    $this->assertPathEquals('/admin/users');
   }
 
   public function assertValidationFailed(array $expectedErrors): void {
@@ -36,35 +36,37 @@ class UserManagementWebAdapter extends WebAdapter implements UserManagementAdapt
   }
 
   public function assertOnUsersList(): void {
-    Assert::assertEquals('/admin/users', $this->driver->getCurrentPath());
+    $this->assertPathEquals('/admin/users');
+    $this->assertPageContains('New User');
+    $this->assertLinkHrefEquals('New User', 'admin/users/create');
   }
 
   public function assertUserExists(array $criteria): void {
     foreach ($criteria as $value) {
-      Assert::assertStringContainsString((string) $value, $this->driver->getResponseBody());
+      $this->assertPageContains((string) $value);
     }
   }
 
   public function fetchUser(int $id): array {
-    $this->visit("/admin/users/update/{$id}");
+    $this->visit("admin/users/update/{$id}");
     $form = $this->driver->filterOne('form')->form();
     return $form->getValues();
   }
 
   public function editUser(int $id, array $data): void {
-    $this->driver->submitForm("/admin/users/update/{$id}", $data);
+    $this->driver->submitForm("admin/users/update/{$id}", $data);
   }
 
   public function deleteUser(int $id): void {
-    $this->driver->submitForm("/admin/users/delete/{$id}", []);
+    $this->driver->submitForm("admin/users/delete/{$id}", []);
   }
 
   public function assertUserUpdated(): void {
-    Assert::assertEquals('/admin/users', $this->driver->getCurrentPath());
+    $this->assertPathEquals('/admin/users');
   }
 
   public function assertUserDeleted(): void {
-    Assert::assertEquals('/admin/users', $this->driver->getCurrentPath());
+    $this->assertPathEquals('/admin/users');
   }
 
 }

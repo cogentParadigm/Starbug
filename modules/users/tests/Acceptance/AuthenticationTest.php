@@ -54,7 +54,7 @@ class AuthenticationTest extends WebTestCase {
   public function testSessionPersists(): void {
     $this->auth->login('root', 'Mz2&cssMy@9tclan');
 
-    $this->driver->get('/admin/users');
+    $this->driver->get('admin/users');
     $this->assertPathEquals('/admin/users');
   }
 
