@@ -3,13 +3,14 @@ namespace Starbug\Core;
 
 use Starbug\Db\CollectionFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Starbug\Admin\Db\Query\FormCollection;
 use Starbug\Bundle\Bundle;
 use Starbug\Templates\TemplateInterface;
 
 class FormDisplay extends ItemDisplay {
   public $type = "form";
   public $template = "form.html";
-  public $collection = "Form";
+  public $collection = FormCollection::class;
   public $input_name = false;
 
   public $url;
