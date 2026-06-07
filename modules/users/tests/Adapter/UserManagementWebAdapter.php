@@ -45,4 +45,26 @@ class UserManagementWebAdapter extends WebAdapter implements UserManagementAdapt
     }
   }
 
+  public function fetchUser(int $id): array {
+    $this->visit("/admin/users/update/{$id}");
+    $form = $this->driver->filterOne('form')->form();
+    return $form->getValues();
+  }
+
+  public function editUser(int $id, array $data): void {
+    $this->driver->submitForm("/admin/users/update/{$id}", $data);
+  }
+
+  public function deleteUser(int $id): void {
+    $this->driver->submitForm("/admin/users/delete/{$id}", []);
+  }
+
+  public function assertUserUpdated(): void {
+    Assert::assertEquals('/admin/users', $this->driver->getCurrentPath());
+  }
+
+  public function assertUserDeleted(): void {
+    Assert::assertEquals('/admin/users', $this->driver->getCurrentPath());
+  }
+
 }

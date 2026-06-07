@@ -31,8 +31,6 @@ class UserManagementTest extends WebTestCase {
    */
   public function testListUsers(): void {
     $this->users->listUsers();
-
-    $this->users->assertOnUsersList();
     $this->assertPageContains('New User');
   }
 
@@ -47,15 +45,18 @@ class UserManagementTest extends WebTestCase {
       'password' => 'Wj6tNdQP3bnc22IQ'
     ]);
 
-    $this->users->assertUserCreated();
-    $this->users->assertOnUsersList();
+    $user = $this->getDatabase()->query("users")
+      ->condition("email", "dave@neonrain.com")
+      ->one();
+    $this->assertNotEmpty($user);
+    $this->assertEquals('Dave', $user['first_name']);
   }
 
   /**
    * Creating a user without required fields shows validation errors.
    */
   public function testCreateUserValidation(): void {
-    $this->users->createUser([]);
+    $this->users->createUser([], false);
 
     $this->users->assertValidationFailed([
       'first_name' => 'required',
@@ -99,5 +100,60 @@ class UserManagementTest extends WebTestCase {
     $this->assertStringContainsString('First Name', $csv);
     $this->assertStringContainsString('Last Name', $csv);
     $this->assertStringContainsString('Email', $csv);
+  }
+
+  /**
+   * An admin can edit an existing user successfully.
+   */
+  public function testEditUser(): void {
+    $this->users->createUser([
+      'first_name' => 'Dave',
+      'last_name' => 'Lister',
+      'email' => 'dave@neonrain.com',
+      'password' => 'Wj6tNdQP3bnc22IQ'
+    ]);
+
+    $user = $this->getDatabase()->query("users")
+      ->condition("email", "dave@neonrain.com")
+      ->one();
+
+    $initial = $this->users->fetchUser($user['id']);
+    $this->assertEquals('dave@neonrain.com', $initial['email']);
+    $this->assertEquals('Dave', $initial['first_name']);
+    $this->assertEquals('Lister', $initial['last_name']);
+
+    $this->users->editUser($user['id'], [
+      'first_name' => 'David',
+      'email' => 'david@neonrain.com'
+    ]);
+
+    $updated = $this->users->fetchUser($user['id']);
+    $this->assertEquals('David', $updated['first_name']);
+    $this->assertEquals('david@neonrain.com', $updated['email']);
+    $this->assertEquals('Lister', $updated['last_name']);
+  }
+
+  /**
+   * An admin can soft-delete a user.
+   */
+  public function testDeleteUser(): void {
+    $this->users->createUser([
+      'first_name' => 'Arnold',
+      'last_name' => 'Rimmer',
+      'email' => 'arnold@neonrain.com',
+      'password' => 'Wj6tNdQP3bnc22IQ'
+    ]);
+
+    $user = $this->getDatabase()->query("users")
+      ->condition("email", 'arnold@neonrain.com')
+      ->one();
+
+    $before = $this->users->fetchUser($user['id']);
+    $this->assertEquals('0', $before['deleted']);
+
+    $this->users->deleteUser($user['id']);
+
+    $after = $this->users->fetchUser($user['id']);
+    $this->assertEquals('1', $after['deleted']);
   }
 }

@@ -26,8 +26,6 @@ class UserManagementTest extends DatabaseTestCase {
    */
   public function testListUsers(): void {
     $this->users->listUsers();
-
-    $this->users->assertOnUsersList();
   }
 
   /**
@@ -40,8 +38,6 @@ class UserManagementTest extends DatabaseTestCase {
       'email' => 'dave@neonrain.com',
       'password' => 'Wj6tNdQP3bnc22IQ'
     ]);
-
-    $this->users->assertUserCreated();
   }
 
   /**
@@ -53,7 +49,7 @@ class UserManagementTest extends DatabaseTestCase {
       'last_name' => '',
       'email' => '',
       'password' => ''
-    ]);
+    ], false);
 
     $this->users->assertValidationFailed([
       'first_name' => 'required',

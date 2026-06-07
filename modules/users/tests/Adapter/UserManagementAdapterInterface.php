@@ -45,4 +45,31 @@ interface UserManagementAdapterInterface {
    */
   public function assertUserExists(array $criteria): void;
 
+  /**
+   * Retrieve a single user's data by ID.
+   *
+   * @return array Associative array of field values.
+   */
+  public function fetchUser(int $id): array;
+
+  /**
+   * Submit an edit form for a user.
+   */
+  public function editUser(int $id, array $data): void;
+
+  /**
+   * Delete a user.
+   */
+  public function deleteUser(int $id): void;
+
+  /**
+   * Assert the last editUser operation succeeded.
+   */
+  public function assertUserUpdated(): void;
+
+  /**
+   * Assert the last deleteUser operation succeeded.
+   */
+  public function assertUserDeleted(): void;
+
 }
