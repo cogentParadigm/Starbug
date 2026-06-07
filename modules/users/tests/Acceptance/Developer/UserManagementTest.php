@@ -1,9 +1,11 @@
 <?php
 namespace Starbug\Users\Tests\Acceptance\Developer;
 
+use DI\Attribute\Inject;
+use Starbug\Testing\Attribute\Bind;
 use Starbug\Testing\Attribute\Fixture;
 use Starbug\Testing\DatabaseTestCase;
-use Starbug\Testing\ShellDriver;
+use Starbug\Users\Tests\Adapter\UserManagementAdapterInterface;
 use Starbug\Users\Tests\Adapter\UserManagementShellAdapter;
 use Starbug\Users\Tests\Domain\UserManagement;
 
@@ -12,17 +14,12 @@ use Starbug\Users\Tests\Domain\UserManagement;
  *
  * Covers user CRUD operations through the CLI.
  */
+#[Bind(UserManagementAdapterInterface::class, UserManagementShellAdapter::class)]
 #[Fixture('app/fixtures/db/reset.yml')]
 class UserManagementTest extends DatabaseTestCase {
 
+  #[Inject]
   protected UserManagement $users;
-
-  protected function setUp(): void {
-    parent::setUp();
-    $driver = new ShellDriver();
-    $adapter = new UserManagementShellAdapter($driver);
-    $this->users = new UserManagement($adapter);
-  }
 
   /**
    * Users can be listed through the shell query command.
