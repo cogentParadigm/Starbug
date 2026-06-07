@@ -41,6 +41,17 @@ These require a browser driver and are explicitly deferred until a concrete JS s
 **What changes:** If reusable helpers (e.g. `assertPagedGridHasColumns`, `assertCsvContains`) are promoted to `starbug/testing`, update the layer guidance to show them as domain or adapter patterns.
 **Doc to update:** `references/four-layer-architecture.md`
 
+## Completed
+
+### URL handling simplification
+**Status:** Completed. `AbstractWebDriver` and `DirectDriver` now use `UriBuilderInterface` directly.
+- `getBaseUrl()`, `getBasePath()`, and `getAppRelativePath()` removed from `WebDriverInterface`.
+- Added `build($path, $absolute)` and `relativize($path)` to `WebDriverInterface`.
+- `getCurrentPath()` now returns the root-relative path (including basePath if present).
+- `UriBuilderInterface::relativize()` added to `starbug/http` interface.
+- DI wiring in `testing/etc/di.php` simplified: no more `baseUrl`/`basePath` constructor parameters.
+**Doc updated:** `references/driver-capabilities.md`
+
 ## Cleanup Reminders
 
 - **Behat artifacts:** When Behat is fully removed (Track 6), verify no stale references remain in the skill.

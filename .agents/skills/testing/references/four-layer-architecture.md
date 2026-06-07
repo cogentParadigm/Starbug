@@ -31,7 +31,7 @@ Implements the actual tests. It can go directly to the driver for driver-specifi
 
 **What belongs here:**
 - Orchestrating domain actions into test scenarios
-- Driver-specific assertions that don't belong in the domain ("verify the New User button renders")
+- Driver-specific assertions that don't belong in the domain or adapter (e.g. "verify the CSV export contains the expected headers")
 - `#[Fixture()]` attributes
 
 **What does NOT belong here:**
@@ -39,6 +39,7 @@ Implements the actual tests. It can go directly to the driver for driver-specifi
 - Parsing HTML or JSON
 - Form field names or CSRF handling
 - URL paths
+- Assertions about domain-specific UI elements (links, buttons, grid columns) — those belong in the adapter
 
 ```php
 #[Fixture('app/fixtures/db/reset.yml')]
@@ -61,10 +62,11 @@ class UserManagementTest extends WebTestCase {
     $this->users->assertOnUsersList();
   }
 
-  // Direct driver use for a driver-specific check
-  public function testButtonRenders(): void {
-    $this->getDriver()->get('/admin/users');
-    $this->assertElementExists('a[href="/admin/users/create"]');
+  // Direct driver use for a driver-specific check that is not part of a routine domain flow
+  public function testCsvExportContainsExpectedHeaders(): void {
+    $csv = $this->getDriver()->download('api/users/admin.csv');
+    $this->assertStringContainsString('First Name', $csv);
+    $this->assertStringContainsString('Last Name', $csv);
   }
 }
 ```
@@ -105,7 +107,7 @@ class UserManagement {
 The translation layer. It translates domain actions into driver actions and should do as much heavy lifting as possible so the domain stays light.
 
 **What belongs here:**
-- URL paths and route names
+- URL paths and route names (app-relative, without leading slash)
 - Form submission logic
 - Parsing responses for domain-relevant data
 - Asserting the results of domain actions
@@ -114,14 +116,22 @@ The translation layer. It translates domain actions into driver actions and shou
 - Domain-level defaults or orchestration (that belongs in Domain)
 - Test-case-specific assertions
 
+> **Path convention:** Adapters pass app-relative paths to the driver (e.g. `admin/users/create`). The driver resolves them against `baseUrl + basePath` per RFC 3986. A leading slash (e.g. `/admin/users/create`) means domain-absolute and bypasses `basePath`.
+
 ```php
 class UserManagementWebAdapter extends WebAdapter implements UserManagementAdapterInterface {
   public function createUser(array $data): void {
-    $this->driver->submitForm('/admin/users/create', $data);
+    $this->driver->submitForm('admin/users/create', $data);
   }
 
   public function assertUserCreated(): void {
-    Assert::assertEquals('/admin/users', $this->driver->getCurrentPath());
+    $this->assertPathEquals('/admin/users');
+  }
+
+  public function assertOnUsersList(): void {
+    $this->assertPathEquals('/admin/users');
+    $this->assertPageContains('New User');
+    $this->assertLinkHrefEquals('New User', '/admin/users/create');
   }
 }
 ```
@@ -148,11 +158,12 @@ See `driver-capabilities.md` for the full method reference.
 |---|---|
 | "User was created in the database" | Domain (`assertUserCreated()`) |
 | "Current path is /admin/users" | Adapter (`assertOnUsersList()`) or Domain |
-| "Page contains text 'New User'" | TestCase (`assertPageContains()`) |
+| "Page contains text 'New User'" | Adapter (`assertOnUsersList()`) |
+| "Link 'New User' points to /admin/users/create" | Adapter (`assertOnUsersList()`) |
 | "Button with class .btn-primary exists" | TestCase (`assertElementExists()`) |
 | "Form field 'email' shows 'required' error" | Adapter (`assertValidationFailed()`) or Domain |
 
-The lower the layer can handle it, the better. The test case should not be parsing HTML for routine domain flows.
+The lower the layer can handle it, the better. The test case should not be parsing HTML for routine domain flows. Domain-specific UI assertions (link text, hrefs, page content tied to a domain view) belong in the adapter so they are validated for every test that exercises that view.
 
 ## Why Interfaces?
 
