@@ -44,10 +44,7 @@ class UserManagementTest extends WebTestCase {
       'password' => 'Wj6tNdQP3bnc22IQ'
     ]);
 
-    $user = $this->getDatabase()->query("users")
-      ->condition("email", "dave@neonrain.com")
-      ->one();
-    $this->assertNotEmpty($user);
+    $user = $this->assertRecordExists('users', ['email' => 'dave@neonrain.com']);
     $this->assertEquals('Dave', $user['first_name']);
   }
 
@@ -103,9 +100,7 @@ class UserManagementTest extends WebTestCase {
       'password' => 'Wj6tNdQP3bnc22IQ'
     ]);
 
-    $user = $this->getDatabase()->query("users")
-      ->condition("email", "dave@neonrain.com")
-      ->one();
+    $user = $this->assertRecordExists('users', ['email' => 'dave@neonrain.com']);
 
     $initial = $this->users->fetchUser($user['id']);
     $this->assertEquals('dave@neonrain.com', $initial['email']);
@@ -134,9 +129,7 @@ class UserManagementTest extends WebTestCase {
       'password' => 'Wj6tNdQP3bnc22IQ'
     ]);
 
-    $user = $this->getDatabase()->query("users")
-      ->condition("email", 'arnold@neonrain.com')
-      ->one();
+    $user = $this->assertRecordExists('users', ['email' => 'arnold@neonrain.com']);
 
     $before = $this->users->fetchUser($user['id']);
     $this->assertEquals('0', $before['deleted']);
