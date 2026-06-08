@@ -25,14 +25,14 @@ class UserManagementTest extends DatabaseTestCase {
    * Users can be listed through the shell query command.
    */
   public function testListUsers(): void {
-    $this->users->listUsers();
+    $this->users->list();
   }
 
   /**
    * A user can be created successfully through the shell store command.
    */
   public function testCreateUser(): void {
-    $this->users->createUser([
+    $this->users->create([
       'first_name' => 'Dave',
       'last_name' => 'Lister',
       'email' => 'dave@neonrain.com',
@@ -44,7 +44,7 @@ class UserManagementTest extends DatabaseTestCase {
    * Creating a user without required fields shows validation errors.
    */
   public function testCreateUserValidation(): void {
-    $this->users->createUser([
+    $this->users->create([
       'first_name' => '',
       'last_name' => '',
       'email' => '',

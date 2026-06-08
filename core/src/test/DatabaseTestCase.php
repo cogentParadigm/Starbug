@@ -8,6 +8,9 @@ use Starbug\Imports\Importer;
 use Starbug\Imports\Read\YamlFixtureStrategy;
 use Starbug\Imports\Write\FixtureStrategy;
 
+/**
+ * @deprecated Use \Starbug\Testing\DatabaseTestCase instead.
+ */
 abstract class DatabaseTestCase extends TestCase {
 
   protected $importer;

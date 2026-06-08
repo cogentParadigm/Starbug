@@ -30,14 +30,14 @@ class UserManagementTest extends WebTestCase {
    * An admin can view the users list.
    */
   public function testListUsers(): void {
-    $this->users->listUsers();
+    $this->users->list();
   }
 
   /**
    * An admin can create a new user successfully.
    */
   public function testCreateUser(): void {
-    $this->users->createUser([
+    $this->users->create([
       'first_name' => 'Dave',
       'last_name' => 'Lister',
       'email' => 'dave@neonrain.com',
@@ -52,7 +52,7 @@ class UserManagementTest extends WebTestCase {
    * Creating a user without required fields shows validation errors.
    */
   public function testCreateUserValidation(): void {
-    $this->users->createUser([], false);
+    $this->users->create([], false);
 
     $this->users->assertValidationFailed([
       'first_name' => 'required',
@@ -63,37 +63,17 @@ class UserManagementTest extends WebTestCase {
   }
 
   /**
-   * The users list shows a paged grid with the expected columns.
-   */
-  public function testListUsersGridColumns(): void {
-    $this->users->listUsers();
-
-    $headers = $this->getDriver()->filter('table[data-dojo-type="starbug/grid/PagedGrid"] th');
-    $actual = [];
-    foreach ($headers as $node) {
-      $actual[] = trim($node->textContent);
-    }
-    foreach (['First Name', 'Last Name', 'Email', 'Last Visit', 'Groups', 'Status', 'Options'] as $column) {
-      $this->assertContains($column, $actual, "Expected column '{$column}' not found in grid.");
-    }
-  }
-
-  /**
    * Users can be exported as CSV.
    */
   public function testExportUsersCsv(): void {
-    $csv = $this->getDriver()->download('api/users/admin.csv');
-
-    $this->assertStringContainsString('First Name', $csv);
-    $this->assertStringContainsString('Last Name', $csv);
-    $this->assertStringContainsString('Email', $csv);
+    $this->assertTextDownloadContains('api/users/admin.csv', ['First Name', 'Last Name', 'Email']);
   }
 
   /**
    * An admin can edit an existing user successfully.
    */
   public function testEditUser(): void {
-    $this->users->createUser([
+    $this->users->create([
       'first_name' => 'Dave',
       'last_name' => 'Lister',
       'email' => 'dave@neonrain.com',
@@ -102,17 +82,17 @@ class UserManagementTest extends WebTestCase {
 
     $user = $this->assertRecordExists('users', ['email' => 'dave@neonrain.com']);
 
-    $initial = $this->users->fetchUser($user['id']);
+    $initial = $this->users->read($user['id']);
     $this->assertEquals('dave@neonrain.com', $initial['email']);
     $this->assertEquals('Dave', $initial['first_name']);
     $this->assertEquals('Lister', $initial['last_name']);
 
-    $this->users->editUser($user['id'], [
+    $this->users->update($user['id'], [
       'first_name' => 'David',
       'email' => 'david@neonrain.com'
     ]);
 
-    $updated = $this->users->fetchUser($user['id']);
+    $updated = $this->users->read($user['id']);
     $this->assertEquals('David', $updated['first_name']);
     $this->assertEquals('david@neonrain.com', $updated['email']);
     $this->assertEquals('Lister', $updated['last_name']);
@@ -122,7 +102,7 @@ class UserManagementTest extends WebTestCase {
    * An admin can soft-delete a user.
    */
   public function testDeleteUser(): void {
-    $this->users->createUser([
+    $this->users->create([
       'first_name' => 'Arnold',
       'last_name' => 'Rimmer',
       'email' => 'arnold@neonrain.com',
@@ -131,12 +111,12 @@ class UserManagementTest extends WebTestCase {
 
     $user = $this->assertRecordExists('users', ['email' => 'arnold@neonrain.com']);
 
-    $before = $this->users->fetchUser($user['id']);
+    $before = $this->users->read($user['id']);
     $this->assertEquals('0', $before['deleted']);
 
-    $this->users->deleteUser($user['id']);
+    $this->users->delete($user['id']);
 
-    $after = $this->users->fetchUser($user['id']);
+    $after = $this->users->read($user['id']);
     $this->assertEquals('1', $after['deleted']);
   }
 }

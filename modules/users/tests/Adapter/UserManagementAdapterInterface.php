@@ -1,75 +1,13 @@
 <?php
 namespace Starbug\Users\Tests\Adapter;
 
+use Starbug\Testing\Adapter\CrudAdapterInterface;
+
 /**
- * Contract for user management protocol adapters.
+ * Marker interface for user management CRUD adapters.
  *
- * Implementations translate CRUD operations into
- * transport-specific calls (HTTP, shell, etc.).
+ * Extends CrudAdapterInterface so the domain layer can type-hint
+ * this interface while still benefiting from the generic CRUD base.
  */
-interface UserManagementAdapterInterface {
-
-  /**
-   * Create a user.
-   *
-   * @param array $data Field values.
-   */
-  public function createUser(array $data): void;
-
-  /**
-   * Navigate to or retrieve the users list.
-   */
-  public function listUsers(): void;
-
-  /**
-   * Assert that the last createUser operation succeeded.
-   */
-  public function assertUserCreated(): void;
-
-  /**
-   * Assert that the last createUser operation failed with expected validation errors.
-   *
-   * @param array $expectedErrors Map of field name => error message fragment.
-   */
-  public function assertValidationFailed(array $expectedErrors): void;
-
-  /**
-   * Assert the current view is the users list.
-   */
-  public function assertOnUsersList(): void;
-
-  /**
-   * Assert a user matching the given criteria exists in the current view.
-   *
-   * @param array $criteria Values to search for (e.g. ['email' => 'foo@bar.com']).
-   */
-  public function assertUserExists(array $criteria): void;
-
-  /**
-   * Retrieve a single user's data by ID.
-   *
-   * @return array Associative array of field values.
-   */
-  public function fetchUser(int $id): array;
-
-  /**
-   * Submit an edit form for a user.
-   */
-  public function editUser(int $id, array $data): void;
-
-  /**
-   * Delete a user.
-   */
-  public function deleteUser(int $id): void;
-
-  /**
-   * Assert the last editUser operation succeeded.
-   */
-  public function assertUserUpdated(): void;
-
-  /**
-   * Assert the last deleteUser operation succeeded.
-   */
-  public function assertUserDeleted(): void;
-
+interface UserManagementAdapterInterface extends CrudAdapterInterface {
 }

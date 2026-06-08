@@ -1,72 +1,20 @@
 <?php
 namespace Starbug\Users\Tests\Adapter;
 
-use PHPUnit\Framework\Assert;
-use Starbug\Testing\WebAdapter;
+use Starbug\Testing\Adapter\CrudWebAdapter;
 
 /**
  * HTTP-based protocol adapter for user management.
  *
- * Translates user CRUD operations into HTTP requests
- * via the underlying driver.
+ * Extends the generic CrudWebAdapter with user-specific paths.
  */
-class UserManagementWebAdapter extends WebAdapter implements UserManagementAdapterInterface {
+class UserManagementWebAdapter extends CrudWebAdapter implements UserManagementAdapterInterface {
 
-  public function createUser(array $data): void {
-    $defaults = [
-      'password_confirm' => $data['password'] ?? ''
-    ];
-    $this->driver->submitForm('admin/users/create', $data + $defaults);
-  }
-
-  public function listUsers(): void {
-    $this->visit('admin/users');
-  }
-
-  public function assertUserCreated(): void {
-    $this->assertPathEquals('/admin/users');
-  }
-
-  public function assertValidationFailed(array $expectedErrors): void {
-    $errors = $this->driver->getFormErrors();
-    foreach ($expectedErrors as $field => $message) {
-      Assert::assertArrayHasKey($field, $errors, "Expected error for field {$field}");
-      Assert::assertStringContainsString($message, $errors[$field]);
-    }
-  }
-
-  public function assertOnUsersList(): void {
-    $this->assertPathEquals('/admin/users');
-    $this->assertPageContains('New User');
-    $this->assertLinkHrefEquals('New User', 'admin/users/create');
-  }
-
-  public function assertUserExists(array $criteria): void {
-    foreach ($criteria as $value) {
-      $this->assertPageContains((string) $value);
-    }
-  }
-
-  public function fetchUser(int $id): array {
-    $this->visit("admin/users/update/{$id}");
-    $form = $this->driver->filterOne('form')->form();
-    return $form->getValues();
-  }
-
-  public function editUser(int $id, array $data): void {
-    $this->driver->submitForm("admin/users/update/{$id}", $data);
-  }
-
-  public function deleteUser(int $id): void {
-    $this->driver->submitForm("admin/users/delete/{$id}", []);
-  }
-
-  public function assertUserUpdated(): void {
-    $this->assertPathEquals('/admin/users');
-  }
-
-  public function assertUserDeleted(): void {
-    $this->assertPathEquals('/admin/users');
-  }
+  protected string $basePath = 'admin/users';
+  protected string $entityLabel = 'User';
+  protected string $tableSelector = 'table[data-dojo-type="starbug/grid/PagedGrid"]';
+  protected array $expectedColumns = [
+    'First Name', 'Last Name', 'Email', 'Last Visit', 'Groups', 'Status', 'Options'
+  ];
 
 }
