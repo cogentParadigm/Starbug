@@ -37,5 +37,8 @@
     <testsuite name="content">
       <directory>../modules/content/tests/</directory>
     </testsuite>
+    <testsuite name="users">
+      <directory>../modules/users/tests/</directory>
+    </testsuite>
   </testsuites>
 </phpunit>
