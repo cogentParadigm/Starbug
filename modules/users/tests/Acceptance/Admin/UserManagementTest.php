@@ -37,14 +37,13 @@ class UserManagementTest extends WebTestCase {
    * An admin can create a new user successfully.
    */
   public function testCreateUser(): void {
-    $this->users->create([
+    $user = $this->users->create([
       'first_name' => 'Dave',
       'last_name' => 'Lister',
       'email' => 'dave@neonrain.com',
       'password' => 'Wj6tNdQP3bnc22IQ'
     ]);
 
-    $user = $this->assertRecordExists('users', ['email' => 'dave@neonrain.com']);
     $this->assertEquals('Dave', $user['first_name']);
   }
 
@@ -63,24 +62,15 @@ class UserManagementTest extends WebTestCase {
   }
 
   /**
-   * Users can be exported as CSV.
-   */
-  public function testExportUsersCsv(): void {
-    $this->assertTextDownloadContains('api/users/admin.csv', ['First Name', 'Last Name', 'Email']);
-  }
-
-  /**
    * An admin can edit an existing user successfully.
    */
   public function testEditUser(): void {
-    $this->users->create([
+    $user = $this->users->create([
       'first_name' => 'Dave',
       'last_name' => 'Lister',
       'email' => 'dave@neonrain.com',
       'password' => 'Wj6tNdQP3bnc22IQ'
     ]);
-
-    $user = $this->assertRecordExists('users', ['email' => 'dave@neonrain.com']);
 
     $initial = $this->users->read($user['id']);
     $this->assertEquals('dave@neonrain.com', $initial['email']);
@@ -102,14 +92,12 @@ class UserManagementTest extends WebTestCase {
    * An admin can soft-delete a user.
    */
   public function testDeleteUser(): void {
-    $this->users->create([
+    $user = $this->users->create([
       'first_name' => 'Arnold',
       'last_name' => 'Rimmer',
       'email' => 'arnold@neonrain.com',
       'password' => 'Wj6tNdQP3bnc22IQ'
     ]);
-
-    $user = $this->assertRecordExists('users', ['email' => 'arnold@neonrain.com']);
 
     $before = $this->users->read($user['id']);
     $this->assertEquals('0', $before['deleted']);

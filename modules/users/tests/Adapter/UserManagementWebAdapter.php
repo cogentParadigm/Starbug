@@ -12,9 +12,14 @@ class UserManagementWebAdapter extends CrudWebAdapter implements UserManagementA
 
   protected string $basePath = 'admin/users';
   protected string $entityLabel = 'User';
+  protected string $entity = 'users';
   protected string $tableSelector = 'table[data-dojo-type="starbug/grid/PagedGrid"]';
-  protected array $expectedColumns = [
+  protected array $listColumns = [
     'First Name', 'Last Name', 'Email', 'Last Visit', 'Groups', 'Status', 'Options'
+  ];
+  protected string $exportUrl = 'api/users/admin.csv';
+  protected array $exportColumns = [
+    'First Name', 'Last Name', 'Email'
   ];
 
 }

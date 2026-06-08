@@ -22,12 +22,13 @@ class UserManagement extends Crud {
    * Create a user with sensible defaults.
    *
    * @param bool $expectSuccess Whether to assert the operation succeeded.
+   * @return array The created record if expectSuccess is true, otherwise empty.
    */
-  public function create(array $data, bool $expectSuccess = true): void {
+  public function create(array $data, bool $expectSuccess = true): array {
     $defaults = [
       'password_confirm' => $data['password'] ?? ''
     ];
-    parent::create($data + $defaults, $expectSuccess);
+    return parent::create($data + $defaults, $expectSuccess);
   }
 
   /**
