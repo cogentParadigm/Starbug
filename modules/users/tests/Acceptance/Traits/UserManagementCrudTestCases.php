@@ -23,14 +23,13 @@ trait UserManagementCrudTestCases {
    * A user can be created successfully.
    */
   public function testCreateUser(): void {
-    $user = $this->users->create([
+    $this->users->createAndMatch([
       'first_name' => 'Dave',
       'last_name' => 'Lister',
       'email' => 'dave@neonrain.com',
+    ], [
       'password' => 'Wj6tNdQP3bnc22IQ'
     ]);
-
-    $this->assertEquals('Dave', $user['first_name']);
   }
 
   /**
@@ -63,18 +62,7 @@ trait UserManagementCrudTestCases {
       'password' => 'Wj6tNdQP3bnc22IQ'
     ]);
 
-    $this->assertRecordMatches('users', $user['id'], [
-      'email' => 'dave@neonrain.com',
-      'first_name' => 'Dave',
-      'last_name' => 'Lister'
-    ]);
-
-    $this->users->update($user['id'], [
-      'first_name' => 'David',
-      'email' => 'david@neonrain.com'
-    ]);
-
-    $this->assertRecordMatches('users', $user['id'], [
+    $this->users->updateAndMatch($user['id'], [
       'first_name' => 'David',
       'email' => 'david@neonrain.com',
       'last_name' => 'Lister'

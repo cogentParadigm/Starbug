@@ -37,12 +37,13 @@ class UserManagement extends Crud {
    * The adapter's submitForm preserves all untouched form values.
    *
    * @param bool $expectSuccess Whether to assert the operation succeeded.
+   * @return array The updated record if expectSuccess is true, otherwise empty.
    */
-  public function update(int $id, array $data, bool $expectSuccess = true): void {
+  public function update(int $id, array $data, bool $expectSuccess = true): array {
     if (isset($data['password'])) {
       $data['password_confirm'] = $data['password'];
     }
-    parent::update($id, $data, $expectSuccess);
+    return parent::update($id, $data, $expectSuccess);
   }
 
 }
