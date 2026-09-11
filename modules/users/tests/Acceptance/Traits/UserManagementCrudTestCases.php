@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Users\Tests\Acceptance\Traits;
 
-use Starbug\Testing\Traits\DatabaseAssertions;
+use Starbug\Db\Testing\Traits\DatabaseAssertions;
 
 /**
  * Shared CRUD test cases for user management.

@@ -2,9 +2,9 @@
 namespace Starbug\Users\Tests\Acceptance\Developer;
 
 use DI\Attribute\Inject;
+use Starbug\Db\Testing\DatabaseTestCase;
 use Starbug\Testing\Attribute\Bind;
 use Starbug\Testing\Attribute\Fixture;
-use Starbug\Testing\DatabaseTestCase;
 use Starbug\Users\Tests\Acceptance\Traits\UserManagementCrudTestCases;
 use Starbug\Users\Tests\Adapter\UserManagementAdapterInterface;
 use Starbug\Users\Tests\Adapter\UserManagementShellAdapter;
