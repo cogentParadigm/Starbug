@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Users\Tests\Adapter;
 
-use Starbug\Testing\Adapter\CrudWebAdapter;
+use Starbug\Admin\Testing\Adapter\CrudWebAdapter;
 
 /**
  * HTTP-based protocol adapter for user management.

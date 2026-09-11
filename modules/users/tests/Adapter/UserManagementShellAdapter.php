@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Users\Tests\Adapter;
 
-use Starbug\Testing\Adapter\CrudShellAdapter;
+use Starbug\Db\Testing\Adapter\CrudShellAdapter;
 
 /**
  * Shell-based protocol adapter for user management.
