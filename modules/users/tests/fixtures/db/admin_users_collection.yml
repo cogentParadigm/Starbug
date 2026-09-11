@@ -1,0 +1,31 @@
+---
+users:
+  - id: 1
+    first_name: Root
+    last_name: User
+    email: root
+    password: Mz2&cssMy@9tclan
+    groups: admin
+    last_visit: "2024-01-01 00:00:00"
+  - id: 2
+    first_name: Regular
+    last_name: User
+    email: regular@example.com
+    password: Wj6tNdQP3bnc22IQ
+    groups: user
+    last_visit: "2024-01-02 00:00:00"
+  - id: 3
+    first_name: Another
+    last_name: Admin
+    email: another@example.com
+    password: Wj6tNdQP3bnc22IQ
+    groups: admin
+    last_visit: "2024-01-03 00:00:00"
+  - id: 4
+    first_name: Deleted
+    last_name: User
+    email: deleted@example.com
+    password: Wj6tNdQP3bnc22IQ
+    groups: user
+    deleted: 1
+    last_visit: "2024-01-04 00:00:00"
