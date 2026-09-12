@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Db\Testing\Traits;
 
+use LogicException;
 use PHPUnit\Framework\Assert;
 use Starbug\Db\CollectionInterface;
 
@@ -15,6 +16,9 @@ use Starbug\Db\CollectionInterface;
 trait CollectionAssertions {
 
   protected function getCollection(): CollectionInterface {
+    if (!isset($this->collection)) {
+      throw new LogicException('CollectionAssertions requires the test class to declare a $collection property.');
+    }
     return $this->collection;
   }
 
@@ -34,9 +38,9 @@ trait CollectionAssertions {
    *
    * @param array $ops Query options.
    *
-   * @return array The result row.
+   * @return array|false The result row, or false when the collection has no match.
    */
-  protected function one(array $ops = []): array {
+  protected function one(array $ops = []): array|false {
     return $this->getCollection()->one($ops);
   }
 
