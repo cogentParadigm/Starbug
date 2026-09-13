@@ -3,7 +3,7 @@ namespace Starbug\Users\Tests\Operation;
 
 use DI\Attribute\Inject;
 use Starbug\Db\Testing\DatabaseTestCase;
-use Starbug\Db\Testing\Traits\OperationAssertions;
+use Starbug\Operation\Testing\Traits\OperationAssertions;
 use Starbug\Emails\MailerInterface;
 use Starbug\Emails\MockMailer;
 use Starbug\Testing\Attribute\Bind;
