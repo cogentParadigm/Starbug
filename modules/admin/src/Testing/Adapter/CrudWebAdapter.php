@@ -95,5 +95,4 @@ abstract class CrudWebAdapter extends WebAdapter implements CrudAdapterInterface
   protected function getDatabase(): DatabaseInterface {
     return $this->db;
   }
-
 }

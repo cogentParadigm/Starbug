@@ -11,5 +11,32 @@
   ],
   "extra": {
     "namespace": "Starbug\\Db"
+  },
+  "require": {
+    "php": ">=8.0",
+    "starbug/bundle": "^1.0"
+  },
+  "require-dev": {
+    "starbug/auth": "^1.0",
+    "starbug/devel": "^1.5",
+    "phpunit/phpunit": "^9.0"
+  },
+  "suggest": {
+    "starbug/operation": "Operation-backed columns via StoreOperationHook.",
+    "starbug/auth": "Session-aware password, ownership, and action hooks.",
+    "starbug/files": "File upload handling via StoreUploadHook.",
+    "starbug/log": "Query logging via LoggerFactory.",
+    "starbug/resource-locator": "Collection resolution via ResourceLocatorInterface.",
+    "starbug/users": "Password strength validation via StorePasswordHook (provides zxcvbn-php)."
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Db\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Starbug\\Db\\Tests\\": "tests/"
+    }
   }
 }

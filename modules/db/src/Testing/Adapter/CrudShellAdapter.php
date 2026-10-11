@@ -120,5 +120,4 @@ abstract class CrudShellAdapter extends ShellAdapter implements CrudAdapterInter
   protected function getDatabase(): DatabaseInterface {
     return $this->db;
   }
-
 }

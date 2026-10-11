@@ -15,5 +15,4 @@ abstract class DatabaseTestCase extends BaseTestCase {
     parent::setUp();
     $this->databaseSetup();
   }
-
 }
