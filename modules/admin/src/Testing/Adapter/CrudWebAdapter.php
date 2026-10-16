@@ -24,6 +24,7 @@ abstract class CrudWebAdapter extends WebAdapter implements CrudAdapterInterface
   protected array $listColumns = [];
   protected string $exportUrl = '';
   protected array $exportColumns = [];
+  protected ?int $lastUpdatedId = null;
 
   public function __construct(
     WebDriverInterface $driver,
@@ -43,6 +44,7 @@ abstract class CrudWebAdapter extends WebAdapter implements CrudAdapterInterface
   }
 
   public function update(int $id, array $data): void {
+    $this->lastUpdatedId = $id;
     $this->driver->submitForm($this->basePath . '/update/' . $id, $data);
   }
 
@@ -65,7 +67,8 @@ abstract class CrudWebAdapter extends WebAdapter implements CrudAdapterInterface
 
   public function assertUpdated(): array {
     $this->assertPathEquals('/' . $this->basePath);
-    return $this->db->query($this->entity)->sort("modified DESC")->one();
+    Assert::assertNotNull($this->lastUpdatedId, 'No update has been performed.');
+    return $this->assertRecordExists($this->entity, ['id' => $this->lastUpdatedId]);
   }
 
   public function assertDeleted(): void {

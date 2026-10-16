@@ -19,6 +19,7 @@ abstract class CrudShellAdapter extends ShellAdapter implements CrudAdapterInter
 
   protected string $entity = '';
   protected string $lastOutput = '';
+  protected ?int $lastUpdatedId = null;
 
   public function __construct(
     ShellDriverInterface $driver,
@@ -43,6 +44,7 @@ abstract class CrudShellAdapter extends ShellAdapter implements CrudAdapterInter
   }
 
   public function update(int $id, array $data): void {
+    $this->lastUpdatedId = $id;
     $argv = ['php', 'sb', 'store', $this->entity, '-t'];
     $argv[] = "id:{$id}";
     foreach ($data as $key => $value) {
@@ -75,7 +77,8 @@ abstract class CrudShellAdapter extends ShellAdapter implements CrudAdapterInter
 
   public function assertUpdated(): array {
     $this->assertNoErrorsInOutput();
-    return $this->db->query($this->entity)->sort("modified DESC")->one();
+    Assert::assertNotNull($this->lastUpdatedId, 'No update has been performed.');
+    return $this->assertRecordExists($this->entity, ['id' => $this->lastUpdatedId]);
   }
 
   public function assertDeleted(): void {

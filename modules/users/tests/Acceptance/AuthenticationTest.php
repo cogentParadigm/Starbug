@@ -2,8 +2,8 @@
 namespace Starbug\Users\Tests\Acceptance;
 
 use DI\Attribute\Inject;
+use Starbug\Db\Testing\WebDatabaseTestCase;
 use Starbug\Testing\Attribute\Fixture;
-use Starbug\Testing\WebTestCase;
 use Starbug\Users\Tests\Domain\Authentication;
 
 /**
@@ -13,7 +13,7 @@ use Starbug\Users\Tests\Domain\Authentication;
  * behaviour using the Authentication domain object.
  */
 #[Fixture('app/fixtures/db/reset.yml')]
-class AuthenticationTest extends WebTestCase {
+class AuthenticationTest extends WebDatabaseTestCase {
 
   #[Inject]
   protected Authentication $auth;

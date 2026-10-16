@@ -21,5 +21,4 @@ class UserManagementWebAdapter extends CrudWebAdapter implements UserManagementA
   protected array $exportColumns = [
     'First Name', 'Last Name', 'Email'
   ];
-
 }

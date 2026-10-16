@@ -11,5 +11,4 @@ use Starbug\Db\Testing\Adapter\CrudShellAdapter;
 class UserManagementShellAdapter extends CrudShellAdapter implements UserManagementAdapterInterface {
 
   protected string $entity = 'users';
-
 }

@@ -2,8 +2,8 @@
 namespace Starbug\Users\Tests\Acceptance\Admin;
 
 use DI\Attribute\Inject;
+use Starbug\Db\Testing\WebDatabaseTestCase;
 use Starbug\Testing\Attribute\Fixture;
-use Starbug\Testing\WebTestCase;
 use Starbug\Users\Tests\Acceptance\Traits\UserManagementCrudTestCases;
 use Starbug\Users\Tests\Domain\Authentication;
 use Starbug\Users\Tests\Domain\UserManagement;
@@ -14,7 +14,7 @@ use Starbug\Users\Tests\Domain\UserManagement;
  * Covers user CRUD operations through the admin web UI.
  */
 #[Fixture('app/fixtures/db/reset.yml')]
-class UserManagementTest extends WebTestCase {
+class UserManagementTest extends WebDatabaseTestCase {
   use UserManagementCrudTestCases;
 
   #[Inject]

@@ -21,7 +21,7 @@ class UserManagement extends Crud {
   /**
    * Create a user with sensible defaults.
    *
-   * @param bool $expectSuccess Whether to assert the operation succeeded.
+   * @param  bool $expectSuccess Whether to assert the operation succeeded.
    * @return array The created record if expectSuccess is true, otherwise empty.
    */
   public function create(array $data, bool $expectSuccess = true): array {
@@ -36,7 +36,7 @@ class UserManagement extends Crud {
    *
    * The adapter's submitForm preserves all untouched form values.
    *
-   * @param bool $expectSuccess Whether to assert the operation succeeded.
+   * @param  bool $expectSuccess Whether to assert the operation succeeded.
    * @return array The updated record if expectSuccess is true, otherwise empty.
    */
   public function update(int $id, array $data, bool $expectSuccess = true): array {
@@ -45,5 +45,4 @@ class UserManagement extends Crud {
     }
     return parent::update($id, $data, $expectSuccess);
   }
-
 }
