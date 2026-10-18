@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Db\Query\Traits;
 
-use Starbug\Core\Pager;
+use Starbug\Db\Pager;
 
 trait Pagination {
   protected ?Pager $pager = null;

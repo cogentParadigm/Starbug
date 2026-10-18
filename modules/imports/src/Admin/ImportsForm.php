@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\DisplayFactoryInterface;
 use Starbug\Core\FormDisplay;
 use Starbug\Core\FormHookFactoryInterface;
-use Starbug\Core\Pager;
+use Starbug\Db\Pager;
 use Starbug\Templates\TemplateInterface;
 use Starbug\Imports\OperationsRepository;
 
