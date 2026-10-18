@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Core;
 
-use Starbug\Core\Operation\SoftDelete;
+use Starbug\Db\Operation\SoftDelete;
 use Starbug\Users\Operation\CreateUser;
 
 class UsersTest extends ModelTest {

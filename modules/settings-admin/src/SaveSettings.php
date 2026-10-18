@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Settings\Admin;
 
+use Starbug\Db\Operation\Save;
 use Starbug\Bundle\BundleInterface;
-use Starbug\Core\Operation\Save;
 
 class SaveSettings extends Save {
   public function handle(array $data, BundleInterface $state): BundleInterface {

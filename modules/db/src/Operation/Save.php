@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core\Operation;
+namespace Starbug\Db\Operation;
 
 use Starbug\Db\DatabaseInterface;
 use Starbug\Bundle\BundleInterface;

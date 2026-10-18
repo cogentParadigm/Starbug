@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Users\Operation;
 
+use Starbug\Db\Operation\Save;
 use Starbug\Bundle\BundleInterface;
-use Starbug\Core\Operation\Save;
 
 class ResetPassword extends Save {
   public function handle(array $data, BundleInterface $state): BundleInterface {

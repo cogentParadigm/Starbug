@@ -2,6 +2,8 @@
 namespace Starbug\Users;
 
 use Starbug\Db\Collection\SelectCollection;
+use Starbug\Db\Operation\Save;
+use Starbug\Db\Operation\SoftDelete;
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Routing\Route;
 use Starbug\Routing\Controller\ViewController;
@@ -17,7 +19,7 @@ class RouteProvider extends AdminRouteProvider {
 
   public function configure(Route $routes) {
     $users = $this->addCrudRoutes($routes->getRoute("admin")->addRoute("/users"), "users");
-    $users->getRoute("/delete/{id:[0-9]+}")->onPost("Starbug\Core\Operation\SoftDelete");
+    $users->getRoute("/delete/{id:[0-9]+}")->onPost(SoftDelete::class);
     $users->setOptions([
       "grid" => UsersGrid::class,
       "form" => UsersForm::class,
@@ -31,8 +33,8 @@ class RouteProvider extends AdminRouteProvider {
       "collection" => AdminUsersCollection::class,
       "model" => "users"
     ])
-    ->onPost("Starbug\Core\Operation\Save")
-    ->onDelete("Starbug\Core\Operation\SoftDelete");
+    ->onPost(Save::class)
+    ->onDelete(SoftDelete::class);
     $api->addRoute("/users/select.json", "Starbug\Core\ApiUsersController", ["collection" => SelectCollection::class]);
 
     $routes->addRoute("login", [LoginController::class, "defaultAction"])

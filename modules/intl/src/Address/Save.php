@@ -2,7 +2,7 @@
 namespace Starbug\Intl\Address;
 
 use Starbug\Bundle\BundleInterface;
-use Starbug\Core\Operation\Save as ParentOperation;
+use Starbug\Db\Operation\Save as ParentOperation;
 
 class Save extends ParentOperation {
   protected $map = [

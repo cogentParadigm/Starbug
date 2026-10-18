@@ -1,11 +1,11 @@
 <?php
-namespace Starbug\Core\Operation;
+namespace Starbug\Db\Operation;
 
 use Starbug\Bundle\BundleInterface;
 
-class Delete extends Save {
+class SoftDelete extends Save {
   public function handle(array $data, BundleInterface $state): BundleInterface {
-    $this->db->remove($this->model, ["id" => $data["id"]]);
+    $this->db->store($this->model, ["id" => $data["id"], "deleted" => "1"]);
     return $this->getErrorState($state);
   }
 }

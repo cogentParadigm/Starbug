@@ -1,10 +1,10 @@
 <?php
 namespace Starbug\Menus;
 
+use Starbug\Db\Operation\Save;
+use Starbug\Db\Operation\Delete;
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Routing\Controller\ViewController;
-use Starbug\Core\Operation\Delete;
-use Starbug\Core\Operation\Save;
 use Starbug\Routing\Route;
 use Starbug\Menus\Collection\MenusAdminCollection;
 use Starbug\Menus\Collection\MenusTreeCollection;

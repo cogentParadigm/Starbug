@@ -3,6 +3,8 @@ namespace Starbug\Core\Admin;
 
 use Starbug\Admin\Db\Query\AdminCollection;
 use Starbug\Db\Collection\SelectCollection;
+use Starbug\Db\Operation\Delete;
+use Starbug\Db\Operation\Save;
 use Starbug\Routing\Controller\ViewController;
 use Starbug\Routing\Route;
 use Starbug\Routing\RouteProviderInterface;
@@ -46,14 +48,14 @@ class RouteProvider implements RouteProviderInterface {
     $routes->setOption("formParams", ["model" => $model]);
 
     $create = $routes->addRoute("/create", ViewController::class, ["view" => "admin/create.html"])
-      ->onPost("Starbug\Core\Operation\Save");
+      ->onPost(Save::class);
 
     $update = $routes->addRoute("/update/{id:[0-9]+}", ViewController::class, ["view" => "admin/update.html"])
-      ->onPost("Starbug\Core\Operation\Save")
+      ->onPost(Save::class)
       ->resolve("row", "Starbug\Routing\Resolvers\RowById");
 
     $routes->addRoute("/delete/{id:[0-9]+}", ViewController::class, ["view" => "admin/delete.html"])
-      ->onPost("Starbug\Core\Operation\Delete");
+      ->onPost(Delete::class);
 
     $routes->addRoute("/import", ViewController::class, [
       "model" => "imports",
@@ -81,8 +83,8 @@ class RouteProvider implements RouteProviderInterface {
 
   protected function addAdminApiRoute(Route $route, $model, $collection = AdminCollection::class) {
     return $this->addApiRoute($route, $model, $collection)
-      ->onPost("Starbug\Core\Operation\Save")
-      ->onDelete("Starbug\Core\Operation\Delete");
+      ->onPost(Save::class)
+      ->onDelete(Delete::class);
   }
 
   protected function addApiRoute(Route $route, $model, $collection, $options = []) {

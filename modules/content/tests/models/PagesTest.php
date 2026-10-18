@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Content\Tests;
 
+use Starbug\Db\Operation\Save;
+use Starbug\Db\Operation\Delete;
 use Starbug\Core\ModelTest;
-use Starbug\Core\Operation\Delete;
-use Starbug\Core\Operation\Save;
 
 class PagesTest extends ModelTest {
   public $model = "pages";

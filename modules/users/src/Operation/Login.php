@@ -1,10 +1,10 @@
 <?php
 namespace Starbug\Users\Operation;
 
+use Starbug\Db\Operation\Save;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Bundle\BundleInterface;
-use Starbug\Core\Operation\Save;
 
 class Login extends Save {
   public function __construct(

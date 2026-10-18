@@ -1,10 +1,10 @@
 <?php
 namespace Starbug\Users\Operation;
 
+use Starbug\Db\Operation\Save;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Emails\MailerInterface;
 use Starbug\Bundle\BundleInterface;
-use Starbug\Core\Operation\Save;
 
 class CreateUser extends Save {
   public function __construct(
