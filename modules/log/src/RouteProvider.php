@@ -2,6 +2,7 @@
 namespace Starbug\Log;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Db\Collection\SelectCollection;
 use Starbug\Routing\Controller\ViewController;
 use Starbug\Routing\Route;
 use Starbug\Log\Collection\AdminErrorLogCollection;
@@ -25,6 +26,6 @@ class RouteProvider extends AdminRouteProvider {
       "error_log",
       AdminErrorLogCollection::class
     );
-    $this->addApiRoute($api->addRoute("/error-log/select.json"), "error_log", "Select");
+    $this->addApiRoute($api->addRoute("/error-log/select.json"), "error_log", SelectCollection::class);
   }
 }

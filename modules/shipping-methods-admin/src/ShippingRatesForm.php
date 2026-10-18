@@ -5,6 +5,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\DisplayFactoryInterface;
 use Starbug\Core\FormDisplay;
 use Starbug\Core\FormHookFactoryInterface;
+use Starbug\Db\Collection\SelectCollection;
 use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Templates\TemplateInterface;
@@ -28,7 +29,7 @@ class ShippingRatesForm extends FormDisplay {
     // $this->add(["additive", "info" => "Check to make this an add-on rather than the base rate."]);
     $this->add(["name"]);
     $this->add(["price", "info" => "Enter price in cents. For example, enter 5000 for $50."]);
-    $this->add(["product_types", "input_type" => "multiple_select", "from" => "product_types", "query" => "Select"]);
+    $this->add(["product_types", "input_type" => "multiple_select", "from" => "product_types", "query" => SelectCollection::class]);
     $this->add(["product_options", "input_type" => "text", "data-dojo-type" => "sb/form/CRUDList", "data-dojo-props" => "model:'shipping_rates_product_options', newItemLabel:'Add Product Option Condition'"]);
   }
 }

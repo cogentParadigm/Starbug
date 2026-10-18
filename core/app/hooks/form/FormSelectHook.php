@@ -2,6 +2,7 @@
 namespace Starbug\Core;
 
 use Invoker\InvokerInterface;
+use Starbug\Db\Collection\SelectCollection;
 
 class FormSelectHook extends FormHook {
   public function __construct(
@@ -50,7 +51,7 @@ class FormSelectHook extends FormHook {
       unset($field['values']);
     } else {
       if (!empty($field["from"]) && empty($field["query"])) {
-        $field["query"] = "Select";
+        $field["query"] = SelectCollection::class;
       }
     }
     $optional = false;

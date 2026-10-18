@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Collection\SelectCollection;
+
 class FormRadioSelectHook extends FormHook {
   public function build($form, &$control, &$field) {
     $value = $form->get($field["name"]);
@@ -11,7 +13,7 @@ class FormRadioSelectHook extends FormHook {
     }
 
     if (!empty($field["from"]) && empty($field["query"])) {
-      $field["query"] = "Select";
+      $field["query"] = SelectCollection::class;
     }
 
     $other_option = empty($field['other_option']) ? false : $field['other_option'];

@@ -2,6 +2,7 @@
 namespace Starbug\Intl;
 
 use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Db\Collection\SelectCollection;
 use Starbug\Routing\Route;
 use Starbug\Intl\Collection\ProvincesSelectCollection;
 use Starbug\Intl\Collection\SelectAddressCollection;
@@ -34,7 +35,7 @@ class RouteProvider extends AdminRouteProvider {
     $this->addApiRoute($api->addRoute("/address/select.json"), "address", SelectAddressCollection::class);
 
     $this->addAdminApiRoute($api->addRoute("/countries/admin.{format:csv|json}"), "countries");
-    $this->addApiRoute($api->addRoute("/countries/select.json"), "countries", "Select");
+    $this->addApiRoute($api->addRoute("/countries/select.json"), "countries", SelectCollection::class);
 
     $this->addAdminApiRoute($api->addRoute("/provinces/admin.{format:csv|json}"), "provinces");
     $this->addApiRoute($api->addRoute("/provinces/select.json"), "provinces", ProvincesSelectCollection::class);

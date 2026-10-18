@@ -2,6 +2,7 @@
 namespace Starbug\Content;
 
 use Starbug\Core\FormDisplay;
+use Starbug\Db\Collection\SelectCollection;
 
 class PagesForm extends FormDisplay {
   public $model = "pages";
@@ -22,7 +23,7 @@ class PagesForm extends FormDisplay {
     $this->add(["images", "input_type" => "text", "data-dojo-type" => "sb/form/FileList", "data-dojo-props" => "selectionParams: {size: 0}, browseEnabled: true"]);
     // right
     $this->add(["published", "input_type" => "checkbox", "value" => 1, "pane" => "right"]);
-    $this->add(["categories", "input_type" => "multiple_select", "from" => "categories", "query" => "Select", "pane" => "right"]);
+    $this->add(["categories", "input_type" => "multiple_select", "from" => "categories", "query" => SelectCollection::class, "pane" => "right"]);
     // tabs
     $this->add(["path", "label" => "URL path", "info" => "Leave empty to generate automatically", "input_type" => "text", "pane" => "path"]);
     $this->add(["description", "label" => "Meta Description", "input_type" => "textarea", "class" => "plain", "style" => "width:100%", "data-dojo-type" => "dijit/form/Textarea", "pane" => "meta"]);

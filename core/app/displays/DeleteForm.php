@@ -1,10 +1,12 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Db\Collection\SelectCollection;
+
 class DeleteForm extends FormDisplay {
   public $defaultAction = "delete";
   public $submit_label = "Delete";
-  public $collection = "Select";
+  public $collection = SelectCollection::class;
   public function buildDisplay($options) {
     $this->cancel_url = preg_replace("/\/delete\/.*/", "", $this->request->getUri()->getPath());
     $this->add(["label", "input_type" => "html", "value" => "<p>Are you sure you want to delete <em>".$this->get("label")."</em>?</p>"]);
