@@ -1,9 +1,9 @@
 <?php
 namespace Starbug\Content;
 
+use Starbug\Macro\MacroInterface;
 use Starbug\Core\Display;
 use Starbug\Templates\TemplateInterface;
-use Starbug\Core\MacroInterface;
 
 class BlockDisplay extends Display {
   public $template = "block.html";

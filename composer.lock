@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb5b90b499789e172cd69ddd4df822fb",
+    "content-hash": "4a0c879e14eee1b53c0ef22e6339c6bd",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -2993,7 +2993,7 @@
         },
         {
             "name": "starbug/admin",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/admin",
@@ -3203,15 +3203,16 @@
         },
         {
             "name": "starbug/content",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/content",
-                "reference": "bf2a568e7c9ff488890cfdea51f9de55fa2c7ffd"
+                "reference": "b08d96744f07831e23dd1c8a38fd762962b3fcbd"
             },
             "require": {
                 "starbug/db": "*",
                 "starbug/files": "*",
+                "starbug/macro": "^0.9",
                 "starbug/menus": "*"
             },
             "type": "starbug-module",
@@ -3234,7 +3235,7 @@
         },
         {
             "name": "starbug/css",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/css",
@@ -3263,15 +3264,43 @@
         },
         {
             "name": "starbug/db",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/db",
-                "reference": "ec104cef9c0332aad29f9055005e630a251b297f"
+                "reference": "4f0f7215cf33f7a7b48ecb42c35c2c3cc6251e12"
+            },
+            "require": {
+                "php": ">=8.0",
+                "starbug/bundle": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0",
+                "starbug/auth": "^1.0",
+                "starbug/devel": "^1.5"
+            },
+            "suggest": {
+                "starbug/auth": "Session-aware password, ownership, and action hooks.",
+                "starbug/files": "File upload handling via StoreUploadHook.",
+                "starbug/log": "Query logging via LoggerFactory.",
+                "starbug/macro": "Token replacement in column patterns via StoreSlugHook.",
+                "starbug/operation": "Operation-backed columns via StoreOperationHook.",
+                "starbug/resource-locator": "Collection resolution via ResourceLocatorInterface.",
+                "starbug/users": "Password strength validation via StorePasswordHook (provides zxcvbn-php)."
             },
             "type": "starbug-module",
             "extra": {
                 "namespace": "Starbug\\Db"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Db\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Starbug\\Db\\Tests\\": "tests/"
+                }
             },
             "license": [
                 "GPL-3.0-or-later"
@@ -3332,7 +3361,7 @@
         },
         {
             "name": "starbug/doctrine",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/doctrine",
@@ -3407,15 +3436,16 @@
         },
         {
             "name": "starbug/emails",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/emails",
-                "reference": "489855876cb0a1ba832333a7f1572f49d07c158c"
+                "reference": "8fbc02df19c0ed9a7bef696455bc772d533e2a48"
             },
             "require": {
                 "phpmailer/phpmailer": "^6.8.0",
-                "starbug/db": "*"
+                "starbug/db": "*",
+                "starbug/macro": "^0.9"
             },
             "type": "starbug-module",
             "extra": {
@@ -3481,7 +3511,7 @@
         },
         {
             "name": "starbug/files",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/files",
@@ -3569,7 +3599,7 @@
         },
         {
             "name": "starbug/imports",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/imports",
@@ -3592,7 +3622,7 @@
         },
         {
             "name": "starbug/log",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/log",
@@ -3622,8 +3652,57 @@
             }
         },
         {
+            "name": "starbug/macro",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-macro.git",
+                "reference": "cc992ecabc3c347cb36689a4b17492f717472f12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-macro/zipball/cc992ecabc3c347cb36689a4b17492f717472f12",
+                "reference": "cc992ecabc3c347cb36689a4b17492f717472f12",
+                "shasum": ""
+            },
+            "require": {
+                "psr/container": "^1.1 || ^2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0",
+                "starbug/devel": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "starbug": {
+                    "namespace": "Starbug\\Macro"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Macro\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "A token/macro parsing and replacement engine.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-macro/issues",
+                "source": "https://github.com/cogentParadigm/starbug-macro/tree/v0.9.0"
+            },
+            "time": "2026-11-06T22:41:30+00:00"
+        },
+        {
             "name": "starbug/menus",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/menus",
@@ -3702,16 +3781,16 @@
         },
         {
             "name": "starbug/operation",
-            "version": "v0.8.0",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-operation.git",
-                "reference": "596977a6d5a50e2380ae3a0c304774d1f5d0e841"
+                "reference": "733ffee5c101f98d3a8fcd93007d2e6029d0b379"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-operation/zipball/596977a6d5a50e2380ae3a0c304774d1f5d0e841",
-                "reference": "596977a6d5a50e2380ae3a0c304774d1f5d0e841",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-operation/zipball/733ffee5c101f98d3a8fcd93007d2e6029d0b379",
+                "reference": "733ffee5c101f98d3a8fcd93007d2e6029d0b379",
                 "shasum": ""
             },
             "require": {
@@ -3720,6 +3799,7 @@
                 "starbug/bundle": "^1.0"
             },
             "require-dev": {
+                "phpunit/phpunit": "^9.0",
                 "starbug/devel": "^1.0"
             },
             "type": "library",
@@ -3741,9 +3821,9 @@
             "description": "PSR-15 middleware for handling POST requests such as form submissions and API calls.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-operation/issues",
-                "source": "https://github.com/cogentParadigm/starbug-operation/tree/v0.8.0"
+                "source": "https://github.com/cogentParadigm/starbug-operation/tree/v0.8.1"
             },
-            "time": "2021-02-25T05:23:52+00:00"
+            "time": "2026-10-18T17:31:28+00:00"
         },
         {
             "name": "starbug/queue",
@@ -3793,7 +3873,7 @@
         },
         {
             "name": "starbug/queues",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/queues",
@@ -3828,7 +3908,7 @@
         },
         {
             "name": "starbug/redis",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/redis",
@@ -3948,7 +4028,7 @@
         },
         {
             "name": "starbug/settings",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/settings",
@@ -3982,7 +4062,7 @@
         },
         {
             "name": "starbug/settings-admin",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/settings-admin",
@@ -4017,7 +4097,7 @@
         },
         {
             "name": "starbug/state",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/state",
@@ -4175,7 +4255,7 @@
         },
         {
             "name": "starbug/users",
-            "version": "dev-master",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./modules/users",
@@ -10319,16 +10399,16 @@
         },
         {
             "name": "starbug/testing",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-testing.git",
-                "reference": "73f0eff790263365092cd467dfb145372cd847ef"
+                "reference": "0c5e83e4993438064b4d5a9bc1cda12a74b992af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-testing/zipball/73f0eff790263365092cd467dfb145372cd847ef",
-                "reference": "73f0eff790263365092cd467dfb145372cd847ef",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-testing/zipball/0c5e83e4993438064b4d5a9bc1cda12a74b992af",
+                "reference": "0c5e83e4993438064b4d5a9bc1cda12a74b992af",
                 "shasum": ""
             },
             "require": {
@@ -10339,6 +10419,7 @@
                 "psr/http-server-handler": "^1.0",
                 "starbug/auth": "^1.0",
                 "starbug/bundle": "^1.0",
+                "starbug/http": "^0.9.14",
                 "symfony/dom-crawler": "^5.4|^6.0|^7.0",
                 "symfony/process": "^5.4|^6.0|^7.0"
             },
@@ -10379,9 +10460,9 @@
             ],
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-testing/issues",
-                "source": "https://github.com/cogentParadigm/starbug-testing/tree/v1.0.1"
+                "source": "https://github.com/cogentParadigm/starbug-testing/tree/v1.1.0"
             },
-            "time": "2026-06-03T18:01:43+00:00"
+            "time": "2026-11-07T00:47:13+00:00"
         },
         {
             "name": "symfony/browser-kit",

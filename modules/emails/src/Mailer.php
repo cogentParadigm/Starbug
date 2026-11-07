@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Emails;
 
+use Starbug\Macro\MacroInterface;
 use PHPMailer\PHPMailer\PHPMailer;
-use Starbug\Core\MacroInterface;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Settings\SettingsInterface;
 

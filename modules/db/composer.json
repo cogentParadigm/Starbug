@@ -27,7 +27,8 @@
     "starbug/files": "File upload handling via StoreUploadHook.",
     "starbug/log": "Query logging via LoggerFactory.",
     "starbug/resource-locator": "Collection resolution via ResourceLocatorInterface.",
-    "starbug/users": "Password strength validation via StorePasswordHook (provides zxcvbn-php)."
+    "starbug/users": "Password strength validation via StorePasswordHook (provides zxcvbn-php).",
+    "starbug/macro": "Token replacement in column patterns via StoreSlugHook."
   },
   "autoload": {
     "psr-4": {

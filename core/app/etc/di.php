@@ -4,6 +4,7 @@ namespace Starbug\Core;
 use function DI\get;
 use function DI\autowire;
 use function DI\factory;
+use function DI\add;
 use Psr\Container\ContainerInterface;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
@@ -100,10 +101,10 @@ return [
     "textarea" => FormTextareaHook::class,
     "text" => FormTextHook::class
   ],
-  "macro.hooks" => [
+  "macro.hooks" => add([
     "site" => MacroSiteHook::class,
     "url" => MacroUrlHook::class
-  ],
+  ]),
   "scripts.generate" => Generate::class,
   "scripts.setup" => Setup::class,
   "scripts.list-scripts" => ListScripts::class,
@@ -122,7 +123,5 @@ return [
   "Starbug\Operation\*Interface" => autowire("Starbug\Operation\*"),
   "Starbug\Core\SettingsForm" => autowire()->method("setDatabase", get("Starbug\Db\DatabaseInterface")),
   FormHookFactoryInterface::class => autowire(FormHookFactory::class)
-    ->constructorParameter("hooks", get("form.hooks")),
-  MacroHookFactoryInterface::class => autowire(MacroHookFactory::class)
-    ->constructorParameter("hooks", get("macro.hooks"))
+    ->constructorParameter("hooks", get("form.hooks"))
 ];

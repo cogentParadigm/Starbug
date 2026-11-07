@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Db\Query\Hook;
 
+use Starbug\Macro\MacroInterface;
 use Starbug\Core\InputFilterInterface;
-use Starbug\Core\MacroInterface;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Query\ExecutorHook;
 use Starbug\Db\Schema\SchemaInterface;

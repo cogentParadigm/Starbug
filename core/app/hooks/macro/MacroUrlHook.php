@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Macro\MacroHook;
 use Starbug\Http\UriBuilderInterface;
 
 class MacroUrlHook extends MacroHook {
