@@ -12,7 +12,8 @@
   },
   "require": {
     "ext-yaml": "*",
-    "starbug/importer": "^0.9",
+    "starbug/importer": "^0.10",
+    "starbug/importer-spreadsheet": "^0.9",
     "starbug/db": "*",
     "starbug/log": "*",
     "phpoffice/phpspreadsheet": "^1.12"

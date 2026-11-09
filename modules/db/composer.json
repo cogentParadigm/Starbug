@@ -16,7 +16,7 @@
     "php": ">=8.0",
     "psr/simple-cache": "^1.0 || ^2.0 || ^3.0",
     "starbug/bundle": "^1.0",
-    "starbug/importer": "^0.9"
+    "starbug/importer": "^0.10"
   },
   "require-dev": {
     "starbug/auth": "^1.0",

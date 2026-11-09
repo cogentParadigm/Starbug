@@ -3283,13 +3283,13 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/db",
-                "reference": "b1e34b736986b833111cfa3030a8ee232b95d962"
+                "reference": "fb71b1b4b542639e59fc195915b0751a4f37370a"
             },
             "require": {
                 "php": ">=8.0",
                 "psr/simple-cache": "^1.0 || ^2.0 || ^3.0",
                 "starbug/bundle": "^1.0",
-                "starbug/importer": "^0.9"
+                "starbug/importer": "^0.10"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.0",
@@ -3627,23 +3627,22 @@
         },
         {
             "name": "starbug/importer",
-            "version": "v0.9.0",
+            "version": "v0.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-importer.git",
-                "reference": "f2bf16c05c9b79f20fea060677902e00f82f110b"
+                "reference": "8b5c1892cf9070c4fd7ab653d286202e44f2b4d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-importer/zipball/f2bf16c05c9b79f20fea060677902e00f82f110b",
-                "reference": "f2bf16c05c9b79f20fea060677902e00f82f110b",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-importer/zipball/8b5c1892cf9070c4fd7ab653d286202e44f2b4d7",
+                "reference": "8b5c1892cf9070c4fd7ab653d286202e44f2b4d7",
                 "shasum": ""
             },
             "require": {
                 "ext-yaml": "*",
                 "php": ">=8.0",
                 "php-di/php-di": "^7.0",
-                "phpoffice/phpspreadsheet": "^1.12",
                 "psr/container": "^1.0|^2.0",
                 "psr/log": "^1.0|^2.0|^3.0",
                 "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
@@ -3679,9 +3678,57 @@
             ],
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-importer/issues",
-                "source": "https://github.com/cogentParadigm/starbug-importer/tree/v0.9.0"
+                "source": "https://github.com/cogentParadigm/starbug-importer/tree/v0.10.1"
             },
-            "time": "2026-11-08T17:40:53+00:00"
+            "time": "2026-11-09T04:00:28+00:00"
+        },
+        {
+            "name": "starbug/importer-spreadsheet",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-importer-spreadsheet.git",
+                "reference": "b06e7f2f55a4ae61c06c73d12414bdb7cadabf54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-importer-spreadsheet/zipball/b06e7f2f55a4ae61c06c73d12414bdb7cadabf54",
+                "reference": "b06e7f2f55a4ae61c06c73d12414bdb7cadabf54",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0",
+                "phpoffice/phpspreadsheet": "^1.12",
+                "starbug/importer": "^0.10"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Importer\\Spreadsheet\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Spreadsheet read strategies for the Starbug import pipeline.",
+            "keywords": [
+                "Starbug",
+                "import",
+                "php",
+                "spreadsheet"
+            ],
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-importer-spreadsheet/issues",
+                "source": "https://github.com/cogentParadigm/starbug-importer-spreadsheet/tree/v0.9.0"
+            },
+            "time": "2026-11-09T03:58:34+00:00"
         },
         {
             "name": "starbug/imports",
@@ -3689,13 +3736,14 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/imports",
-                "reference": "960673ea68959d11686ed53025cefb3ffb8add99"
+                "reference": "84eff608a599ebfd756e6c9b78e91a436de0de82"
             },
             "require": {
                 "ext-yaml": "*",
                 "phpoffice/phpspreadsheet": "^1.12",
                 "starbug/db": "*",
-                "starbug/importer": "^0.9",
+                "starbug/importer": "^0.10",
+                "starbug/importer-spreadsheet": "^0.9",
                 "starbug/log": "*"
             },
             "type": "starbug-module",

@@ -11,7 +11,7 @@ use Starbug\Importer\Importer;
 use Starbug\Imports\Admin\ImportsFieldOptions;
 use Starbug\Importer\Read\StrategyFactoryInterface;
 use Starbug\Imports\Read\StrategyFactory;
-use Starbug\Importer\Script\SpreadsheetInfo;
+use Starbug\Importer\Spreadsheet\Script\SpreadsheetInfo;
 use Starbug\Importer\Transform\Constant;
 use Starbug\Imports\Transform\Lookup;
 use Starbug\Log\LoggerFactory;

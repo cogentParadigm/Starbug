@@ -6,7 +6,7 @@ use Starbug\Db\DatabaseInterface;
 use Starbug\Bundle\BundleInterface;
 use Starbug\Importer\Import;
 use Starbug\Importer\Importer;
-use Starbug\Importer\Read\TabularSpreadsheetStrategy;
+use Starbug\Importer\Spreadsheet\Read\TabularSpreadsheetStrategy;
 use Starbug\Imports\OperationsRepository;
 use Starbug\Db\Importer\Write\DatabaseStrategy;
 
