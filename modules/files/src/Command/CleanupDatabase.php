@@ -1,6 +1,7 @@
 <?php
 namespace Starbug\Files\Command;
 
+use Exception;
 use PDO;
 use Starbug\Db\DatabaseInterface;
 
@@ -45,7 +46,7 @@ class CleanupDatabase {
       } else {
         echo "Operation cancelled. No file records were deleted.\n";
       }
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         echo "Error: " . $e->getMessage() . "\n";
     }
   }
@@ -93,7 +94,7 @@ class CleanupDatabase {
           $deleted++;
           echo "Deleted file record: " . $fileId . "\n";
         }
-      } catch (\Exception $e) {
+      } catch (Exception $e) {
         echo "Failed to delete file record " . $fileId . ": " . $e->getMessage() . "\n";
       }
     }

@@ -1,8 +1,9 @@
 <?php
 namespace Starbug\Files\Command;
 
+use Exception;
 use League\Flysystem\MountManager;
-use Starbug\Core\Storage\FilesystemInterface;
+use Starbug\Files\Storage\FilesystemInterface;
 use Starbug\Db\DatabaseInterface;
 
 class CleanupFilesystem {
@@ -69,7 +70,7 @@ class CleanupFilesystem {
             $fs->delete($path);
             echo "Deleted: " . $path . "\n";
             $deleted++;
-          } catch (\Exception $e) {
+          } catch (Exception $e) {
             echo "Failed to delete " . $path . ": " . $e->getMessage() . "\n";
           }
         }
@@ -77,7 +78,7 @@ class CleanupFilesystem {
       } else {
         echo "Operation cancelled. No files were deleted.\n";
       }
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       echo "Error: " . $e->getMessage() . "\n";
     }
   }
