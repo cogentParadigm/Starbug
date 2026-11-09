@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c61e51b3b57efe7e9d80dc9be36c9a3",
+    "content-hash": "290cb0396fa3b2a7200a2f290bb26d2d",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3279,11 +3279,17 @@
         },
         {
             "name": "starbug/db",
-            "version": "dev-main",
+            "version": "v0.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-db.git",
+                "reference": "26746b8acdc49d7d7786bf34b2666ef1eb63e443"
+            },
             "dist": {
-                "type": "path",
-                "url": "./modules/db",
-                "reference": "dbaa76118bedb93271545f59115ac6ba2718cf9b"
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-db/zipball/26746b8acdc49d7d7786bf34b2666ef1eb63e443",
+                "reference": "26746b8acdc49d7d7786bf34b2666ef1eb63e443",
+                "shasum": ""
             },
             "require": {
                 "php": ">=8.0",
@@ -3309,20 +3315,19 @@
                 "starbug/testing": "DatabaseTestCase and WebDatabaseTestCase bases.",
                 "starbug/users": "Password strength validation via StorePasswordHook (provides zxcvbn-php)."
             },
-            "type": "starbug-module",
+            "type": "library",
             "extra": {
-                "namespace": "Starbug\\Db"
+                "starbug": {
+                    "type": "module",
+                    "namespace": "Starbug\\Db"
+                }
             },
             "autoload": {
                 "psr-4": {
                     "Starbug\\Db\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Starbug\\Db\\Tests\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -3333,9 +3338,11 @@
                 }
             ],
             "description": "Starbug database module.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-db/issues",
+                "source": "https://github.com/cogentParadigm/starbug-db/tree/v0.10.0"
+            },
+            "time": "2026-11-09T06:10:12+00:00"
         },
         {
             "name": "starbug/di",
@@ -12809,7 +12816,6 @@
         "starbug/admin": 20,
         "starbug/content": 20,
         "starbug/css": 20,
-        "starbug/db": 20,
         "starbug/doctrine": 20,
         "starbug/emails": 20,
         "starbug/files": 20,

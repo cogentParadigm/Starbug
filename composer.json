@@ -41,7 +41,7 @@
     "league/flysystem": "^1.0",
     "litipk/flysystem-fallback-adapter": "^0.1.2",
     "twistor/flysystem-http": "^0.2.0",
-    "starbug/db": "dev-main",
+    "starbug/db": "^0.10",
     "starbug/doctrine": "dev-main",
     "starbug/users": "dev-main",
     "starbug/files": "dev-main",
