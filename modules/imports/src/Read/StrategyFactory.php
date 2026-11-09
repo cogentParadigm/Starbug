@@ -4,6 +4,8 @@ namespace Starbug\Imports\Read;
 use Starbug\Db\DatabaseInterface;
 use DI\FactoryInterface;
 use League\Flysystem\MountManager;
+use Starbug\Importer\Read\StrategyFactoryInterface;
+use Starbug\Importer\Read\StrategyInterface;
 
 class StrategyFactory implements StrategyFactoryInterface {
   public function __construct(

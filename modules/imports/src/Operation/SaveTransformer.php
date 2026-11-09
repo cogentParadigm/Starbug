@@ -4,7 +4,7 @@ namespace Starbug\Imports\Operation;
 use Starbug\Db\Operation\Save;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Bundle\BundleInterface;
-use Starbug\Imports\Transform\Factory;
+use Starbug\Importer\Transform\Factory;
 
 class SaveTransformer extends Save {
   protected $model = "imports_transformers";

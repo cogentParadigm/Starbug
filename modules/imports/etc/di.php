@@ -6,12 +6,15 @@ use Starbug\Db\Operation\Delete;
 use function DI\add;
 use function DI\get;
 use function DI\autowire;
-use DI;
+use Psr\Container\ContainerInterface;
+use Starbug\Importer\Importer;
 use Starbug\Imports\Admin\ImportsFieldOptions;
-use Starbug\Imports\Script\SpreadsheetInfo;
-use Starbug\Imports\Transform\Constant;
-use Starbug\Imports\Transform\Factory;
+use Starbug\Importer\Read\StrategyFactoryInterface;
+use Starbug\Imports\Read\StrategyFactory;
+use Starbug\Importer\Script\SpreadsheetInfo;
+use Starbug\Importer\Transform\Constant;
 use Starbug\Imports\Transform\Lookup;
+use Starbug\Log\LoggerFactory;
 
 return [
   "route.providers" => add([
@@ -27,7 +30,7 @@ return [
       "class" => Delete::class
     ]
   ],
-  "importer.transformers" => [
+  "importer.transformers" => add([
     "lookup" => [
       "name" => "Lookup",
       "class" => Lookup::class,
@@ -61,14 +64,14 @@ return [
         ["name" => "value", "label" => "Value"]
       ]
     ]
-  ],
+  ]),
   "db.schema.migrations" => add([
     get("Starbug\Imports\Migration\ImportsMigration")
   ]),
   "scripts.spreadsheet-info" => SpreadsheetInfo::class,
-  "Starbug\Imports\*Interface" => autowire("Starbug\Imports\*"),
-  "Starbug\Imports\Read\*Interface" => autowire("Starbug\Imports\Read\*"),
-  "Starbug\Imports\Write\*Interface" => autowire("Starbug\Imports\Write\*"),
-  Factory::class => autowire()
-    ->constructorParameter("transformers", get("importer.transformers"))
+  "importer.logger" => function (ContainerInterface $c) {
+    return $c->get(LoggerFactory::class)->create("imports");
+  },
+  Importer::class => autowire()->method("setLogger", get("importer.logger")),
+  StrategyFactoryInterface::class => autowire(StrategyFactory::class)
 ];

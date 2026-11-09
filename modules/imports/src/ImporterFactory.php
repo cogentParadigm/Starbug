@@ -2,6 +2,7 @@
 namespace Starbug\Imports;
 
 use DI\FactoryInterface;
+use Starbug\Importer\Importer;
 
 class ImporterFactory {
   public function __construct(

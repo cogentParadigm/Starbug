@@ -3,6 +3,7 @@ namespace Starbug\Imports\Transform;
 
 use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Schema\SchemerInterface;
+use Starbug\Importer\Transform\AbstractTransformer;
 
 class Lookup extends AbstractTransformer {
   protected $schema;

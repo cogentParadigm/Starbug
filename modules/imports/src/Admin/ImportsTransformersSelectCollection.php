@@ -4,7 +4,7 @@ namespace Starbug\Imports\Admin;
 use Starbug\Db\Collection\SelectCollection;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Schema\SchemerInterface;
-use Starbug\Imports\Transform\Factory;
+use Starbug\Importer\Transform\Factory;
 
 class ImportsTransformersSelectCollection extends SelectCollection {
   protected $model = "imports_transformers";

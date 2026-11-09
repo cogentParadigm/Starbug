@@ -3,7 +3,8 @@ namespace Starbug\Imports\Read;
 
 use Starbug\Db\CollectionFactoryInterface;
 use Iterator;
-use Starbug\Imports\Import;
+use Starbug\Importer\Import;
+use Starbug\Importer\Read\Strategy;
 
 class CollectionStrategy extends Strategy {
   public function __construct(

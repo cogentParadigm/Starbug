@@ -8,7 +8,7 @@ use Starbug\Core\DisplayFactoryInterface;
 use Starbug\Core\FormDisplay;
 use Starbug\Core\FormHookFactoryInterface;
 use Starbug\Templates\TemplateInterface;
-use Starbug\Imports\Transform\Factory;
+use Starbug\Importer\Transform\Factory;
 
 class ImportsTransformersForm extends FormDisplay {
   public $model = "imports_transformers";
