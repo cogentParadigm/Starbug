@@ -12,6 +12,16 @@
   "extra": {
     "namespace": "Starbug\\Users"
   },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Users\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Starbug\\Users\\Tests\\": "tests/"
+    }
+  },
   "require": {
     "starbug/db": "*",
     "bjeavons/zxcvbn-php": "^1.0"

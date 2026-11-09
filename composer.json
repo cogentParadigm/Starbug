@@ -72,7 +72,13 @@
     "psr-4": {
       "Starbug\\App\\": "app/src/"
     },
-    "classmap":["core", "modules", "var", "features"]
+    "classmap":["core", "var", "features"]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Starbug\\Users\\Tests\\": "modules/users/tests/",
+      "Starbug\\Content\\Tests\\": "modules/content/tests/"
+    }
   },
   "scripts": {
     "pre-install-cmd": "mkdir -p var/tmp var/log var/public/uploads var/private/uploads",

@@ -12,6 +12,11 @@
   "extra": {
     "namespace": "Starbug\\Doctrine"
   },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Doctrine\\": "src/"
+    }
+  },
   "require": {
     "starbug/db": "*",
     "doctrine/dbal": "^2.8"

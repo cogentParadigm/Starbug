@@ -12,6 +12,16 @@
   "extra": {
     "namespace": "Starbug\\Content"
   },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Content\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Starbug\\Content\\Tests\\": "tests/"
+    }
+  },
   "require": {
     "starbug/db": "*",
     "starbug/files": "*",

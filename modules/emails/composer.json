@@ -12,6 +12,11 @@
   "extra": {
     "namespace": "Starbug\\Emails"
   },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Emails\\": "src/"
+    }
+  },
   "require": {
     "phpmailer/phpmailer": "^6.8.0",
     "starbug/db": "*",

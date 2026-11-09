@@ -12,6 +12,11 @@
   "extra": {
     "namespace": "Starbug\\Log"
   },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Log\\": "src/"
+    }
+  },
   "require": {
     "psr/log": "^1.0",
     "monolog/monolog": "^2.5",

@@ -12,6 +12,11 @@
   "extra": {
     "namespace": "Starbug\\Css"
   },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Css\\": "src/"
+    }
+  },
   "require": {
     "starbug/templates": "^1.0"
   }
