@@ -10,7 +10,8 @@ use Starbug\Db\DatabaseInterface;
 return [
   DatabaseInterface::class => autowire(Database::class)
     ->method('setTimeZone', get('time_zone'))
-    ->method('setDatabase', get("databases.active")),
+    ->method('setDatabase', get("databases.active"))
+    ->method('setLogger', get('db.logger')),
   'db.schema.migrations' => add([
     get('Starbug\Doctrine\Schema\Migrator')
   ])

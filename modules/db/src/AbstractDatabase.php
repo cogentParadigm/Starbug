@@ -2,11 +2,16 @@
 namespace Starbug\Db;
 
 use Starbug\Db\Query\BuilderFactory;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 use Starbug\Bundle\Bundle;
 use Starbug\Db\Query\BuilderInterface;
-use Starbug\Log\LoggerFactory;
 
-abstract class AbstractDatabase implements DatabaseInterface {
+abstract class AbstractDatabase implements DatabaseInterface, LoggerAwareInterface {
+
+  use LoggerAwareTrait;
+
   public $errors;
   /**
    * Holds the number of records returned by last query.
@@ -53,7 +58,6 @@ abstract class AbstractDatabase implements DatabaseInterface {
   protected $models;
   protected $insertIds = [];
   protected $timezone = false;
-  protected $logger;
 
   const PHASE_VALIDATION = 0;
   const PHASE_STORE = 1;
@@ -62,13 +66,12 @@ abstract class AbstractDatabase implements DatabaseInterface {
   const PHASE_AFTER_DELETE = 4;
 
   public function __construct(
-    protected BuilderFactory $queryBuilderFactory,
-    LoggerFactory $loggerFactory
+    protected BuilderFactory $queryBuilderFactory
   ) {
     $this->queryBuilderFactory = $queryBuilderFactory;
     $this->queue = new QueryQueue();
     $this->errors = new Bundle();
-    $this->logger = $loggerFactory->create("db");
+    $this->logger = new NullLogger();
   }
 
   public function getPrefix() {

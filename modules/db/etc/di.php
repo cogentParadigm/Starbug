@@ -1,7 +1,9 @@
 <?php
 namespace Starbug\Db;
 
+use Psr\Log\NullLogger;
 use function DI\autowire;
+use function DI\create;
 use function DI\get;
 use function DI\add;
 use DI;
@@ -54,9 +56,11 @@ return [
   "Starbug\Db\*Interface" => autowire("Starbug\Db\*"),
   'Starbug\Db\Schema\*Interface' => autowire('Starbug\Db\Schema\*'),
   'Starbug\Db\Query\*Interface' => autowire('Starbug\Db\Query\*'),
+  "db.logger" => create(NullLogger::class),
   Database::class => autowire()
     ->method('setTimeZone', get('time_zone'))
-    ->method('setDatabase', get("databases.active")),
+    ->method('setDatabase', get("databases.active"))
+    ->method('setLogger', get('db.logger')),
   'Starbug\Db\Schema\SchemaInterface' => function (ContainerInterface $c) {
     $schema = $c->get('Starbug\Db\Schema\Schema');
     $hooks = $c->get('db.schema.hooks');

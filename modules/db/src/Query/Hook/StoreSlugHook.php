@@ -2,7 +2,6 @@
 namespace Starbug\Db\Query\Hook;
 
 use Starbug\Macro\MacroInterface;
-use Starbug\Core\InputFilterInterface;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Query\ExecutorHook;
 use Starbug\Db\Schema\SchemaInterface;
@@ -11,7 +10,6 @@ class StoreSlugHook extends ExecutorHook {
   public function __construct(
     protected DatabaseInterface $db,
     protected MacroInterface $macro,
-    protected InputFilterInterface $filter,
     protected SchemaInterface $schema
   ) {
   }
@@ -22,7 +20,7 @@ class StoreSlugHook extends ExecutorHook {
     if (empty($value) && $query->hasValue($argument)) {
       $value = $query->getValue($argument);
 
-      $value = strtolower(str_replace(" ", "-", $this->filter->normalize($value)));
+      $value = strtolower(str_replace(" ", "-", preg_replace("/[^a-zA-Z0-9 \-_]/", "", $value)));
 
       $field = $this->schema->getColumn($query->model, $column);
       if (!empty($field["pattern"])) {

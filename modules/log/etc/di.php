@@ -66,6 +66,9 @@ return [
     ->constructorParameter("handlers", get("log.handlers.active")),
   LoggerFactory::class => autowire()
     ->constructorParameter("handlers", get("log.handlers.active")),
+  "db.logger" => function (ContainerInterface $container) {
+    return $container->get(LoggerFactory::class)->create("db");
+  },
   Run::class => decorate(function ($whoops, $container) {
     $textHandler = new PlainTextHandler($container->get(LoggerInterface::class));
     $whoops->appendHandler($textHandler);
