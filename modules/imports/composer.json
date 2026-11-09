@@ -5,8 +5,14 @@
   "extra": {
     "namespace": "Starbug\\Imports"
   },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Imports\\": "src/"
+    }
+  },
   "require": {
-    "starbug/state": "*",
+    "ext-yaml": "*",
+    "starbug/importer": "^0.9",
     "starbug/db": "*",
     "starbug/log": "*",
     "phpoffice/phpspreadsheet": "^1.12"
