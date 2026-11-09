@@ -51,7 +51,6 @@ These are some of the lower level packages included.
 - starbug/modules:https://github.com/cogentParadigm/starbug-modules - A module system on top of composer.
 - starbug/di:https://github.com/cogentParadigm/starbug-di - Initializes a dependency injection container and allows modular configuration.
 - starbug/config:https://github.com/cogentParadigm/starbug-config - Modular configuration data loader.
-- starbug/state:modules/state - Persistent state management.
 - starbug/log:modules/log - Logging with PSR-3 and Monolog.
 - starbug/queue:https://github.com/cogentParadigm/starbug-queue - Background queue abstraction library.
 - starbug/auth:https://github.com/cogentParadigm/starbug-auth - Authentication library.

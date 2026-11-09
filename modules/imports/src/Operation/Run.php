@@ -4,11 +4,11 @@ namespace Starbug\Imports\Operation;
 use Starbug\Db\Operation\Save;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Bundle\BundleInterface;
-use Starbug\Imports\Import;
-use Starbug\Imports\Importer;
+use Starbug\Importer\Import;
+use Starbug\Importer\Importer;
+use Starbug\Importer\Read\TabularSpreadsheetStrategy;
 use Starbug\Imports\OperationsRepository;
-use Starbug\Imports\Read\TabularSpreadsheetStrategy;
-use Starbug\Imports\Write\DatabaseStrategy;
+use Starbug\Db\Importer\Write\DatabaseStrategy;
 
 class Run extends Save {
   public function __construct(

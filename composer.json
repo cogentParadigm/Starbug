@@ -50,7 +50,6 @@
     "starbug/content": "dev-main",
     "starbug/storm": "^1.0.0",
     "starbug/redis": "dev-main",
-    "starbug/state": "dev-main",
     "starbug/log": "dev-main",
     "starbug/imports": "dev-main",
     "starbug/menus": "dev-main",

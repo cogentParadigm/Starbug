@@ -1,9 +1,10 @@
 <?php
-namespace Starbug\Imports\Write;
+namespace Starbug\Db\Importer\Write;
 
 use Starbug\Db\DatabaseInterface;
 use Exception;
-use Starbug\Imports\Read\StrategyInterface as ReadStrategyInterface;
+use Starbug\Importer\Read\StrategyInterface as ReadStrategyInterface;
+use Starbug\Importer\Write\StrategyInterface;
 use Starbug\Operation\OperationInterface;
 
 /**

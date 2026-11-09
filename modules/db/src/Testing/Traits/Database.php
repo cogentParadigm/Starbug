@@ -5,10 +5,10 @@ use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Operation\Migrate;
-use Starbug\Imports\Import;
-use Starbug\Imports\Importer;
-use Starbug\Imports\Read\YamlFixtureStrategy;
-use Starbug\Imports\Write\FixtureStrategy;
+use Starbug\Importer\Import;
+use Starbug\Importer\Importer;
+use Starbug\Db\Importer\Read\YamlFixtureStrategy;
+use Starbug\Db\Importer\Write\FixtureStrategy;
 use Starbug\Testing\Attribute\Fixture;
 
 /**

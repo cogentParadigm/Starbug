@@ -6,7 +6,9 @@ use function DI\get;
 use function DI\add;
 use DI;
 use Psr\Container\ContainerInterface;
+use Psr\SimpleCache\CacheInterface;
 use Starbug\Db\Helper\SchemaHelper;
+use Starbug\Db\Migration\State;
 use Starbug\Db\Query\Hook\StoreAddslashesHook;
 use Starbug\Db\Query\Hook\StoreAliasHook;
 use Starbug\Db\Query\Hook\StoreConfirmHook;
@@ -41,9 +43,14 @@ use Starbug\Db\Script\Query;
 use Starbug\Db\Script\QueryCollection;
 use Starbug\Db\Script\Remove;
 use Starbug\Db\Script\Store;
+use Starbug\Db\SimpleCache\DatabaseCache;
 
 return [
   "db" => "default",
+  CacheInterface::class => autowire(DatabaseCache::class),
+  "db.schema.migrations" => add([
+    get(State::class)
+  ]),
   "Starbug\Db\*Interface" => autowire("Starbug\Db\*"),
   'Starbug\Db\Schema\*Interface' => autowire('Starbug\Db\Schema\*'),
   'Starbug\Db\Query\*Interface' => autowire('Starbug\Db\Query\*'),

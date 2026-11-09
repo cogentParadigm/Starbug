@@ -1,8 +1,8 @@
 <?php
-namespace Starbug\Imports\Write;
+namespace Starbug\Db\Importer\Write;
 
 use Exception;
-use Starbug\Imports\Read\StrategyInterface as ReadStrategyInterface;
+use Starbug\Importer\Read\StrategyInterface as ReadStrategyInterface;
 
 class FixtureStrategy extends DatabaseStrategy {
   public function run(ReadStrategyInterface $readStrategy, $options = []) {

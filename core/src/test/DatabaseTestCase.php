@@ -3,10 +3,10 @@ namespace Starbug\Core;
 
 use PHPUnit\Framework\TestCase;
 use Starbug\Db\Operation\Migrate;
-use Starbug\Imports\Import;
-use Starbug\Imports\Importer;
-use Starbug\Imports\Read\YamlFixtureStrategy;
-use Starbug\Imports\Write\FixtureStrategy;
+use Starbug\Importer\Import;
+use Starbug\Importer\Importer;
+use Starbug\Db\Importer\Read\YamlFixtureStrategy;
+use Starbug\Db\Importer\Write\FixtureStrategy;
 
 /**
  * @deprecated Use \Starbug\Testing\DatabaseTestCase instead.

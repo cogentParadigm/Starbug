@@ -1,7 +1,8 @@
 <?php
-namespace Starbug\Imports\Read;
+namespace Starbug\Db\Importer\Read;
 
 use Iterator;
+use Starbug\Importer\Read\FileStrategy;
 
 class YamlFixtureStrategy extends FileStrategy {
   protected $currentTable;
