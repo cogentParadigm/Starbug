@@ -4,20 +4,14 @@ namespace Starbug\Core;
 use Starbug\Auth\Identity;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Db\DatabaseInterface;
+use Starbug\Db\Testing\DatabaseTestCase;
+use Starbug\Testing\Attribute\Fixture;
 
-/**
- * The Fixture class. Fixtures hold data sets used by the testing harness.
- */
+#[Fixture('core/app/tests/fixture.yml')]
 class StoreTest extends DatabaseTestCase {
 
   protected DatabaseInterface $db;
   protected SessionHandlerInterface $session;
-
-  protected function getDataSets() {
-    return [
-      $this->createYamlDataSet(dirname(__FILE__)."/../fixture.yml")
-    ];
-  }
 
   public function setUp() : void {
     parent::setUp();

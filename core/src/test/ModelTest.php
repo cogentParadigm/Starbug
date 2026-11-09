@@ -2,11 +2,11 @@
 namespace Starbug\Core;
 
 use Starbug\Db\DatabaseInterface;
+use Starbug\Db\Testing\DatabaseTestCase;
 
 class ModelTest extends DatabaseTestCase {
 
   public $model;
-  protected $db;
   protected $operations;
 
   public function setUp(): void {
