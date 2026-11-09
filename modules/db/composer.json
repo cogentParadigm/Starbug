@@ -16,24 +16,25 @@
     "php": ">=8.0",
     "psr/log": "^1.0 || ^2.0 || ^3.0",
     "psr/simple-cache": "^1.0 || ^2.0 || ^3.0",
-    "starbug/bundle": "^1.0",
-    "starbug/importer": "^0.10"
+    "starbug/bundle": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.0",
     "starbug/auth": "^1.0",
     "starbug/devel": "^1.5",
+    "starbug/importer": "^0.10",
     "starbug/testing": "^1.1"
   },
   "suggest": {
-    "starbug/operation": "Operation-backed columns via StoreOperationHook.",
+    "ext-yaml": "YAML fixture loading via Importer\\Read\\YamlFixtureStrategy.",
     "starbug/auth": "Session-aware password, ownership, and action hooks.",
     "starbug/files": "File upload handling via StoreUploadHook.",
-    "starbug/resource-locator": "Collection resolution via ResourceLocatorInterface.",
-    "starbug/users": "Password strength validation via StorePasswordHook (provides zxcvbn-php).",
+    "starbug/importer": "Import write strategies via Importer\\Write\\DatabaseStrategy and YAML fixtures in the testing trait.",
     "starbug/macro": "Token replacement in column patterns via StoreSlugHook.",
-    "ext-yaml": "YAML fixture loading via Importer\\Read\\YamlFixtureStrategy.",
-    "starbug/testing": "DatabaseTestCase and WebDatabaseTestCase bases."
+    "starbug/operation": "Operation-backed columns via StoreOperationHook.",
+    "starbug/resource-locator": "Collection resolution via ResourceLocatorInterface.",
+    "starbug/testing": "DatabaseTestCase and WebDatabaseTestCase bases.",
+    "starbug/users": "Password strength validation via StorePasswordHook (provides zxcvbn-php)."
   },
   "autoload": {
     "psr-4": {
