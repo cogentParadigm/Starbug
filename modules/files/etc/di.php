@@ -10,10 +10,14 @@ use Starbug\Files\Storage\Filesystem;
 use Starbug\Files\Storage\Adapter\Local;
 use Starbug\Files\Storage\Adapter\LocalPrivate;
 use Starbug\Files\Command\CleanupDatabase;
+use Starbug\Files\Query\Hook\StoreUploadHook;
 use Starbug\Files\Command\CleanupFilesystem;
 use Starbug\Http\UriBuilder;
 
 return [
+  "db.query.executor.hooks" => add([
+    "upload" => StoreUploadHook::class
+  ]),
   "route.providers" => add([
     get("Starbug\Files\RouteProvider")
   ]),

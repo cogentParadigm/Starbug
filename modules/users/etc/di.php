@@ -5,6 +5,8 @@ use function DI\autowire;
 use function DI\add;
 use function DI\get;
 use DI;
+use Starbug\Users\Query\Hook\StoreOwnerHook;
+use Starbug\Users\Query\Hook\StorePasswordHook;
 
 return [
   "route.providers" => add([
@@ -15,6 +17,10 @@ return [
   ]),
   "passwordStrength.passingScore" => 3,
   "passwordStrength.performStrengthTests" => true,
-  "Starbug\Db\Query\Hook\StorePasswordHook" => autowire()->constructorParameter('passingScore', get('passwordStrength.passingScore'))
-    ->constructorParameter('performStrengthTests', get('passwordStrength.performStrengthTests'))
+  StorePasswordHook::class => autowire()->constructorParameter('passingScore', get('passwordStrength.passingScore'))
+    ->constructorParameter('performStrengthTests', get('passwordStrength.performStrengthTests')),
+  "db.query.executor.hooks" => add([
+    "owner" => StoreOwnerHook::class,
+    "password" => StorePasswordHook::class
+  ])
 ];

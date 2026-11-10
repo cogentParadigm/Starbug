@@ -11,7 +11,9 @@
         "starbug-custom-module": "module",
         "starbug-custom-theme": "theme"
       },
-      "parameters": ["namespace"],
+      "parameters": [
+        "namespace"
+      ],
       "key": "starbug"
     }
   },
@@ -36,12 +38,12 @@
     "starbug/macro": "^0.9",
     "starbug/config": "^0.9.0",
     "masterexploder/phpthumb": "dev-master",
-    "ezyang/htmlpurifier":"^4.13",
+    "ezyang/htmlpurifier": "^4.13",
     "wp-cli/php-cli-tools": "^0.10.5",
     "league/flysystem": "^1.0",
     "litipk/flysystem-fallback-adapter": "^0.1.2",
     "twistor/flysystem-http": "^0.2.0",
-    "starbug/db": "^0.10",
+    "starbug/db": "^0.11",
     "starbug/doctrine": "dev-main",
     "starbug/users": "dev-main",
     "starbug/files": "dev-main",
@@ -72,7 +74,11 @@
     "psr-4": {
       "Starbug\\App\\": "app/src/"
     },
-    "classmap":["core", "var", "features"]
+    "classmap": [
+      "core",
+      "var",
+      "features"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

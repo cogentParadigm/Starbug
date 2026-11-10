@@ -23,7 +23,8 @@
     }
   },
   "require": {
-    "starbug/db": "*",
-    "bjeavons/zxcvbn-php": "^1.0"
+    "bjeavons/zxcvbn-php": "^1.0",
+    "starbug/auth": "^1.0",
+    "starbug/db": "*"
   }
 }

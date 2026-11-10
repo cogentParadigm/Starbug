@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "290cb0396fa3b2a7200a2f290bb26d2d",
+    "content-hash": "bc192aa7ecf358cc76a11a605184562f",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3279,16 +3279,16 @@
         },
         {
             "name": "starbug/db",
-            "version": "v0.10.0",
+            "version": "v0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-db.git",
-                "reference": "26746b8acdc49d7d7786bf34b2666ef1eb63e443"
+                "reference": "845418492fdea08e65d3fe002af03b8af14f7761"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-db/zipball/26746b8acdc49d7d7786bf34b2666ef1eb63e443",
-                "reference": "26746b8acdc49d7d7786bf34b2666ef1eb63e443",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-db/zipball/845418492fdea08e65d3fe002af03b8af14f7761",
+                "reference": "845418492fdea08e65d3fe002af03b8af14f7761",
                 "shasum": ""
             },
             "require": {
@@ -3306,14 +3306,12 @@
             },
             "suggest": {
                 "ext-yaml": "YAML fixture loading via Importer\\Read\\YamlFixtureStrategy.",
-                "starbug/auth": "Session-aware password, ownership, and action hooks.",
-                "starbug/files": "File upload handling via StoreUploadHook.",
+                "starbug/auth": "Permission-scoped action queries via Query\\Extensions\\Action.",
                 "starbug/importer": "Import write strategies via Importer\\Write\\DatabaseStrategy and YAML fixtures in the testing trait.",
                 "starbug/macro": "Token replacement in column patterns via StoreSlugHook.",
                 "starbug/operation": "Operation-backed columns via StoreOperationHook.",
                 "starbug/resource-locator": "Collection resolution via ResourceLocatorInterface.",
-                "starbug/testing": "DatabaseTestCase and WebDatabaseTestCase bases.",
-                "starbug/users": "Password strength validation via StorePasswordHook (provides zxcvbn-php)."
+                "starbug/testing": "DatabaseTestCase and WebDatabaseTestCase bases."
             },
             "type": "library",
             "extra": {
@@ -3340,9 +3338,9 @@
             "description": "Starbug database module.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-db/issues",
-                "source": "https://github.com/cogentParadigm/starbug-db/tree/v0.10.0"
+                "source": "https://github.com/cogentParadigm/starbug-db/tree/v0.11.0"
             },
-            "time": "2026-11-09T06:10:12+00:00"
+            "time": "2026-11-09T15:37:50+00:00"
         },
         {
             "name": "starbug/di",
@@ -4388,10 +4386,11 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/users",
-                "reference": "f78d0f26511a1b02099cd8f613c1ff47b34a3509"
+                "reference": "d45c97c029a8eaae963448df1e21bcd2c0e1b7bc"
             },
             "require": {
                 "bjeavons/zxcvbn-php": "^1.0",
+                "starbug/auth": "^1.0",
                 "starbug/db": "*"
             },
             "type": "starbug-module",
