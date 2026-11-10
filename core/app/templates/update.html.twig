@@ -10,5 +10,5 @@
   {% endif %}
   {% set formParams = formParams|merge({"operation": action ?? "create", "id": id}) %}
   {% set formParams = request.getQueryParams()|merge(formParams) %}
-  {{ helper("displays").render(form ?? ((model|title) ~ "Form"), formParams) }}
+  {{ helper("displays").render(form, formParams) }}
 {% endblock %}

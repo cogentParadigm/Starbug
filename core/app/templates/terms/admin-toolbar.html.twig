@@ -4,5 +4,5 @@
   </a>
   <a class="btn btn-default" href="{{ helper("url").build(request.getUri().getPath() ~ "/create?new=true") }}">New Taxonomy <b class="fa fa-plus"></b></a>
 </div>
-{{ helper("displays").render("SearchForm", {"model":model}) }}
+{{ helper("displays").render("Starbug\\Core\\SearchForm", {"model":model}) }}
 <br/>

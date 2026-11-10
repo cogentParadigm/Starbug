@@ -5,5 +5,5 @@
 {% endif %}
 {% block title %}{{ form_header }}{% endblock %}
 {% block body %}
-    {{ helper("displays").render(form ?? "DeleteForm", {"id": id, "model": model}) }}
+    {{ helper("displays").render(form ?? "Starbug\\Core\\DeleteForm", {"id": id, "model": model}) }}
 {% endblock %}

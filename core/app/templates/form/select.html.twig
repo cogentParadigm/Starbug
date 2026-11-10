@@ -1,4 +1,4 @@
 {% if attributes.multiple %}
   {% set attributes = attributes|merge({"name": attributes.name ~ "[]"}) %}
 {% endif %}
-{{ helper("displays").render("DropdownDisplay", {"value": value, "attributes": attributes, "model": from, "collection": query, "options": options, "optional": optional, "other_option": other_option}) }}
+{{ helper("displays").render("Starbug\\Core\\DropdownDisplay", {"value": value, "attributes": attributes, "model": from, "collection": query, "options": options, "optional": optional, "other_option": other_option}) }}

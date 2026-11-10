@@ -16,6 +16,9 @@ class RouteProvider extends AdminRouteProvider {
       "form" => SettingsForm::class
     ])->onPost(SaveSettings::class);
 
-    $this->addCrud($routes, "settings_categories");
+    $this->addCrud($routes, "settings_categories", [
+      "grid" => SettingsCategoriesGrid::class,
+      "form" => SettingsCategoriesForm::class
+    ]);
   }
 }

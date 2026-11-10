@@ -16,7 +16,10 @@ use Starbug\Menus\Operation\DeleteMenus;
 class RouteProvider extends AdminRouteProvider {
 
   public function configure(Route $routes) {
-    $menus = $this->addCrud($routes, "menus");
+    $menus = $this->addCrud($routes, "menus", [
+      "grid" => MenusGrid::class,
+      "form" => MenusForm::class
+    ]);
     $this->addStatefulRedirects($menus["list"], $menus["list"]->getPath()."/menu/{{ row.menu }}");
 
     $menus["list"]->addRoute("/menu/{menuName}", ViewController::class, [

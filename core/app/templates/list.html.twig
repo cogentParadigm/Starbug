@@ -15,7 +15,7 @@
 {% block title %}{{ listHeader }}{% endblock %}
 {% block body %}
     {{ include([model ~ "/admin-toolbar.html.twig", "admin-toolbar.html.twig"]) }}
-  {{ helper("displays").render(grid ?? ((model|title) ~ "Grid"), listParams) }}
+  {{ helper("displays").render(grid, listParams) }}
 {% endblock %}
 
 {% block after %}
