@@ -14,7 +14,8 @@
   },
   "require": {
     "starbug/db": "*",
-    "starbug/files": "*"
+    "starbug/files": "*",
+    "starbug/users": "*"
   },
   "autoload": {
     "psr-4": {
