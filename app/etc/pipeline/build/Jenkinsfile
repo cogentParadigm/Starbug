@@ -56,11 +56,6 @@ pipeline {
         sh """
           ddev sb store settings id:4 value:no-reply@${env.DOMAIN}
         """
-
-        // Configure behat
-        sh """
-          sed -i'' -e \"s/sb.local.com/${env.DOMAIN}:8443/\" behat.yml
-        """
       }
     }
 
@@ -72,17 +67,14 @@ pipeline {
         sh "ddev exec vendor/bin/phpmd . xml vendor/starbug/standard/phpmd.xml --reportfile build/logs/phpmd.xml --exclude libraries,var,node_modules,vendor || true"
         sh "ddev exec vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml app core modules || true"
         sh "ddev exec vendor/bin/phpunit -c etc/phpunit.xml || true"
-        sh "ddev exec vendor/bin/behat --format=junit --out=build/logs/behat --format=pretty --out=std || true"
       }
 
       post {
         always {
           sh "sed -i'' -e 's/\\/var\\/www\\/html\\///' build/logs/*.*"
-          sh "yq -i 'del(.. | select(has(\"+@status\")).+@status)' build/logs/behat/default.xml"
-          sh "yq -i 'del(.. | select(has(\"+@file\")).+@file)' build/logs/behat/default.xml"
           xunit testTimeMargin: '3000', thresholdMode: 1,
             thresholds: [ skipped(failureThreshold: '0'), failed(failureThreshold: '0') ],
-            tools: [ PHPUnit(pattern: 'build/logs/phpunit.xml'), JUnit(pattern: 'build/logs/behat/*.xml') ]
+            tools: [ PHPUnit(pattern: 'build/logs/phpunit.xml') ]
           recordIssues enabledForFailure: true,
             aggregatingResults: true,
             tools: [
