@@ -1,6 +1,6 @@
 <?php
 {% macro env(value, variable, defaultValue) %}
-  {% if value %}"{{ value }}"{% else %}getenv("{{ variable }}") ?: "{{ defaultValue}}"{% endif %}
+  {% if value %}'{{ value|replace({"\\": "\\\\", "'": "\\'"})|raw }}'{% else %}getenv("{{ variable }}") ?: "{{ defaultValue}}"{% endif %}
 {% endmacro %}
 
 {% import _self as macros %}
