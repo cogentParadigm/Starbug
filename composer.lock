@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "656a7d78fc896258bf1ed21dfbd540b0",
+    "content-hash": "e3d2603a00bf09b3849720ee2b2d4419",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3473,20 +3473,21 @@
         },
         {
             "name": "starbug/dojo",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-dojo.git",
-                "reference": "7a4d2fb6d3bc8b7b7c0845efc61a83fde71f0bb4"
+                "reference": "cc431de600e4855189888a01b294b65c4577cfd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-dojo/zipball/7a4d2fb6d3bc8b7b7c0845efc61a83fde71f0bb4",
-                "reference": "7a4d2fb6d3bc8b7b7c0845efc61a83fde71f0bb4",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-dojo/zipball/cc431de600e4855189888a01b294b65c4577cfd0",
+                "reference": "cc431de600e4855189888a01b294b65c4577cfd0",
                 "shasum": ""
             },
             "require": {
                 "starbug/config": "*",
+                "starbug/display": "^0.9",
                 "starbug/webpack": "*"
             },
             "type": "starbug-module",
@@ -3512,9 +3513,9 @@
             "description": "Dojo module for Starbug.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-dojo/issues",
-                "source": "https://github.com/cogentParadigm/starbug-dojo/tree/v1.0.0"
+                "source": "https://github.com/cogentParadigm/starbug-dojo/tree/v1.1.0"
             },
-            "time": "2025-12-29T23:21:35+00:00"
+            "time": "2026-11-13T22:46:18+00:00"
         },
         {
             "name": "starbug/emails",
