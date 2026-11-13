@@ -28,6 +28,7 @@ return RectorConfig::configure()
         'Starbug\Core\Operation\Save' => 'Starbug\Db\Operation\Save',
         'Starbug\Core\Operation\Delete' => 'Starbug\Db\Operation\Delete',
         'Starbug\Core\Operation\SoftDelete' => 'Starbug\Db\Operation\SoftDelete',
+        'Starbug\Core\SelectCollection' => 'Starbug\Db\Collection\SelectCollection',
     ])
     // Route providers reference operations as raw strings (->onPost("Class\Name")),
     // invisible to class renames.
