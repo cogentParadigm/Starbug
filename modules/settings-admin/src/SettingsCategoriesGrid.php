@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Settings\Admin;
 
-use Starbug\Core\GridDisplay;
+use Starbug\Dojo\Display\GridDisplay;
 
 class SettingsCategoriesGrid extends GridDisplay {
   public $model = "settings_categories";

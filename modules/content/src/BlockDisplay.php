@@ -2,7 +2,7 @@
 namespace Starbug\Content;
 
 use Starbug\Macro\MacroInterface;
-use Starbug\Core\Display;
+use Starbug\Display\Display;
 use Starbug\Templates\TemplateInterface;
 
 class BlockDisplay extends Display {

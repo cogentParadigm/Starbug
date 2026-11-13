@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Payments\Gateways\Admin;
 
-use Starbug\Core\GridDisplay;
+use Starbug\Dojo\Display\GridDisplay;
 
 class PaymentGatewaysGrid extends GridDisplay {
   public $model = "payment_gateways";

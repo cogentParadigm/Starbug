@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Orders\Admin;
 
-use Starbug\Core\SearchForm;
+use Starbug\Display\SearchForm;
 
 class OrdersSearchForm extends SearchForm {
   protected function buildPrimaryControls() {

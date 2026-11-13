@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Intl\Display;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class ProvincesForm extends FormDisplay {
   public $model = "provinces";

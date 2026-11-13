@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bc192aa7ecf358cc76a11a605184562f",
+    "content-hash": "656a7d78fc896258bf1ed21dfbd540b0",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3386,6 +3386,57 @@
             "time": "2026-06-02T00:04:08+00:00"
         },
         {
+            "name": "starbug/display",
+            "version": "v0.9.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-display.git",
+                "reference": "54969c66eafe4f524cedb70bf91d6efab5c6257f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-display/zipball/54969c66eafe4f524cedb70bf91d6efab5c6257f",
+                "reference": "54969c66eafe4f524cedb70bf91d6efab5c6257f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0",
+                "psr/container": "^1.0|^2.0",
+                "psr/http-message": "^1.0",
+                "starbug/bundle": "^1.0",
+                "starbug/db": "^0.11",
+                "starbug/templates": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "starbug": {
+                    "type": "module",
+                    "namespace": "Starbug\\Display"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Display\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Display and form rendering framework for Starbug.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-display/issues",
+                "source": "https://github.com/cogentParadigm/starbug-display/tree/v0.9.3"
+            },
+            "time": "2026-11-13T20:56:47+00:00"
+        },
+        {
             "name": "starbug/doctrine",
             "version": "dev-main",
             "dist": {
@@ -4251,17 +4302,20 @@
         },
         {
             "name": "starbug/storm",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-storm.git",
-                "reference": "5191dd4e53e94bd60ef0e4c5268bc53360da2591"
+                "reference": "6b1f058026d04859075f9d93fd1f80151975b0e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/5191dd4e53e94bd60ef0e4c5268bc53360da2591",
-                "reference": "5191dd4e53e94bd60ef0e4c5268bc53360da2591",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-storm/zipball/6b1f058026d04859075f9d93fd1f80151975b0e6",
+                "reference": "6b1f058026d04859075f9d93fd1f80151975b0e6",
                 "shasum": ""
+            },
+            "require": {
+                "starbug/display": "^0.9"
             },
             "type": "starbug-theme",
             "extra": {
@@ -4285,26 +4339,27 @@
             "description": "Administrative theme for Starbug.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-storm/issues",
-                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v1.0.0"
+                "source": "https://github.com/cogentParadigm/starbug-storm/tree/v1.0.1"
             },
-            "time": "2025-12-29T23:18:27+00:00"
+            "time": "2026-11-13T21:07:22+00:00"
         },
         {
             "name": "starbug/tachyons",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-tachyons.git",
-                "reference": "d8ff88fb2fb6fc20f4d082fd85846bfeccc2c89e"
+                "reference": "bdc5889e510c34260fc786f6152d05b7483b3e46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-tachyons/zipball/d8ff88fb2fb6fc20f4d082fd85846bfeccc2c89e",
-                "reference": "d8ff88fb2fb6fc20f4d082fd85846bfeccc2c89e",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-tachyons/zipball/bdc5889e510c34260fc786f6152d05b7483b3e46",
+                "reference": "bdc5889e510c34260fc786f6152d05b7483b3e46",
                 "shasum": ""
             },
             "require": {
                 "starbug/db": "*",
+                "starbug/display": "^0.9",
                 "starbug/menus": "*",
                 "starbug/routing": "^1.0",
                 "starbug/webpack": "*"
@@ -4331,9 +4386,9 @@
             "description": "Tachyons theme for Starbug.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-tachyons/issues",
-                "source": "https://github.com/cogentParadigm/starbug-tachyons/tree/v1.1.0"
+                "source": "https://github.com/cogentParadigm/starbug-tachyons/tree/v1.1.1"
             },
-            "time": "2025-12-29T23:16:05+00:00"
+            "time": "2026-11-13T21:07:24+00:00"
         },
         {
             "name": "starbug/templates",

@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Orders\Admin;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class OrdersForm extends FormDisplay {
   public $model = "orders";

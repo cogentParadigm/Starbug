@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Content\Form;
 
-use Starbug\Core\FormHook;
+use Starbug\Display\Hook\FormHook;
 
 class FormBlocksHook extends FormHook {
   public function build($form, &$control, &$field) {

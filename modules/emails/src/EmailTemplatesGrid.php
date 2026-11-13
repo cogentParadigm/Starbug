@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Emails;
 
-use Starbug\Core\GridDisplay;
+use Starbug\Dojo\Display\GridDisplay;
 
 class EmailTemplatesGrid extends GridDisplay {
   public $model = "email_templates";

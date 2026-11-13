@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Products\Admin\Categories;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class ProductCategoriesForm extends FormDisplay {
   public $model = "product_categories";

@@ -4,9 +4,9 @@ namespace Starbug\Intl\Display;
 use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Db\DatabaseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\DisplayFactoryInterface;
-use Starbug\Core\FormDisplay;
-use Starbug\Core\FormHookFactoryInterface;
+use Starbug\Display\DisplayFactoryInterface;
+use Starbug\Display\FormDisplay;
+use Starbug\Display\Hook\FormHookFactoryInterface;
 use Starbug\Intl\TranslationInterface;
 use Starbug\Templates\TemplateInterface;
 

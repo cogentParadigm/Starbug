@@ -2,9 +2,9 @@
 namespace Starbug\Log\Display;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\DisplayFactoryInterface;
-use Starbug\Core\FormHookFactoryInterface;
-use Starbug\Core\SearchForm;
+use Starbug\Display\DisplayFactoryInterface;
+use Starbug\Display\Hook\FormHookFactoryInterface;
+use Starbug\Display\SearchForm;
 use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Templates\TemplateInterface;

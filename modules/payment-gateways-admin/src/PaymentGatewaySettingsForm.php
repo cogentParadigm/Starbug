@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Payments\Gateways\Admin;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class PaymentGatewaySettingsForm extends FormDisplay {
   public $model = "payment_gateway_settings";

@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Menus\Display;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class MenusForm extends FormDisplay {
   public $model = "menus";

@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Products\Admin\ProductTags;
 
-use Starbug\Core\GridDisplay;
+use Starbug\Dojo\Display\GridDisplay;
 
 class ProductTagsGrid extends GridDisplay {
   public $model = "product_tags";

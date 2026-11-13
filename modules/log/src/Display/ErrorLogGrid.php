@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Log\Display;
 
-use Starbug\Core\GridDisplay;
+use Starbug\Dojo\Display\GridDisplay;
 
 class ErrorLogGrid extends GridDisplay {
   public $model = "error_log";

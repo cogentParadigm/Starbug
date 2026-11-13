@@ -69,37 +69,16 @@ return [
     get('Starbug\Core\SchemaHook')
   ],
   "template.helpers" => [
-    "breadcrumbs" => BreadcrumbsHelper::class,
     "collections" => CollectionsHelper::class,
     "config" => ConfigHelper::class,
     "csrf" => CsrfHelper::class,
     "db" => DbHelper::class,
-    "displays" => DisplaysHelper::class,
     "filesystems" => FilesystemsHelper::class,
     "filter" => FilterHelper::class,
     "images" => ImagesHelper::class,
     "request" => RequestHelper::class,
     "session" => SessionHelper::class,
     "url" => UrlHelper::class
-  ],
-  "form.hooks" => [
-    "category_select" => FormCategorySelectHook::class,
-    "checkbox" => FormCheckboxHook::class,
-    "file" => FormFileHook::class,
-    "hidden" => FormHiddenHook::class,
-    "html" => FormHtmlHook::class,
-    "input" => FormInputHook::class,
-    "multiple_category_select" => FormMultipleCategorySelectHook::class,
-    "multiple_select" => FormMultipleSelectHook::class,
-    "password" => FormPasswordHook::class,
-    "radio" => FormRadioHook::class,
-    "radio_select" => FormRadioSelectHook::class,
-    "select" => FormSelectHook::class,
-    "submit" => FormSubmitHook::class,
-    "tag_select" => FormTagSelectHook::class,
-    "template" => FormTemplateHook::class,
-    "textarea" => FormTextareaHook::class,
-    "text" => FormTextHook::class
   ],
   "macro.hooks" => add([
     "site" => MacroSiteHook::class,
@@ -122,6 +101,4 @@ return [
   "Starbug\Bundle\*Interface" => autowire("Starbug\Bundle\*"),
   "Starbug\Operation\*Interface" => autowire("Starbug\Operation\*"),
   "Starbug\Core\SettingsForm" => autowire()->method("setDatabase", get("Starbug\Db\DatabaseInterface")),
-  FormHookFactoryInterface::class => autowire(FormHookFactory::class)
-    ->constructorParameter("hooks", get("form.hooks"))
 ];

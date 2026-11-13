@@ -2,9 +2,9 @@
 namespace Starbug\Settings\Admin;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\DisplayFactoryInterface;
-use Starbug\Core\FormDisplay;
-use Starbug\Core\FormHookFactoryInterface;
+use Starbug\Display\DisplayFactoryInterface;
+use Starbug\Display\FormDisplay;
+use Starbug\Display\Hook\FormHookFactoryInterface;
 use Starbug\Templates\TemplateInterface;
 use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Db\DatabaseInterface;

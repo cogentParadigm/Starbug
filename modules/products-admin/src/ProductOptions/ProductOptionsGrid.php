@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Products\Admin\ProductOptions;
 
-use Starbug\Core\GridDisplay;
+use Starbug\Dojo\Display\GridDisplay;
 
 class ProductOptionsGrid extends GridDisplay {
   public $model = "product_options";

@@ -2,10 +2,10 @@
 namespace Starbug\Products\Admin\ProductOptions;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\DisplayFactoryInterface;
+use Starbug\Display\DisplayFactoryInterface;
 use Starbug\Db\DatabaseInterface;
-use Starbug\Core\FormDisplay;
-use Starbug\Core\FormHookFactoryInterface;
+use Starbug\Display\FormDisplay;
+use Starbug\Display\Hook\FormHookFactoryInterface;
 use Starbug\Db\CollectionFactoryInterface;
 use Starbug\Db\Schema\SchemerInterface;
 use Starbug\Templates\TemplateInterface;

@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Users\Display;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class UsersForm extends FormDisplay {
   public $model = "users";

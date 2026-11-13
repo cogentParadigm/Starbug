@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Display\FormDisplay;
+
 class LoginForm extends FormDisplay {
   public $model = "users";
   public $defaultAction = "login";

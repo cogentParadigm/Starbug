@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Imports;
 
-use Starbug\Core\GridDisplay;
+use Starbug\Dojo\Display\GridDisplay;
 
 class ImportGroupsGrid extends GridDisplay {
   public $model = "import_groups";

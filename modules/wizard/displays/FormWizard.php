@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Wizard;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class FormWizard extends FormDisplay {
   protected array $steps = [];

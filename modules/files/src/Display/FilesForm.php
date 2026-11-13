@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Files\Display;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class FilesForm extends FormDisplay {
   public $model = "files";

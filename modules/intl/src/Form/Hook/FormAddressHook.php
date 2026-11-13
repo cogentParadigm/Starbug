@@ -2,7 +2,7 @@
 namespace Starbug\Intl\Form\Hook;
 
 use Starbug\Db\DatabaseInterface;
-use Starbug\Core\FormHook;
+use Starbug\Display\Hook\FormHook;
 
 class FormAddressHook extends FormHook {
   public function __construct(

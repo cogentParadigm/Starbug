@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Orders\Admin;
 
-use Starbug\Core\GridDisplay;
+use Starbug\Dojo\Display\GridDisplay;
 
 class OrdersGrid extends GridDisplay {
   public $model = "orders";

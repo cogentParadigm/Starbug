@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Settings\Admin;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class SettingsCategoriesForm extends FormDisplay {
   public $model = "settings_categories";

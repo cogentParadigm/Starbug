@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Content;
 
-use Starbug\Admin\Db\Query\FormCollection;
+use Starbug\Display\Collection\FormCollection;
 
 class PagesFormCollection extends FormCollection {
   public function build($query, $ops) {

@@ -2,7 +2,7 @@
 namespace Starbug\Emails;
 
 use Exception;
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class EmailTemplatesForm extends FormDisplay {
   public $model = "email_templates";

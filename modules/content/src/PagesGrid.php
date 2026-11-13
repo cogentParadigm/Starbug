@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Content;
 
-use Starbug\Core\GridDisplay;
+use Starbug\Dojo\Display\GridDisplay;
 
 class PagesGrid extends GridDisplay {
   public $model = "pages";

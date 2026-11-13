@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Imports;
 
-use Starbug\Admin\Db\Query\FormCollection;
+use Starbug\Display\Collection\FormCollection;
 
 class ImportGroupsFormCollection extends FormCollection {
   protected $model = "import_groups";

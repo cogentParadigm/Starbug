@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\ShippingMethods\Admin;
 
-use Starbug\Core\GridDisplay;
+use Starbug\Dojo\Display\GridDisplay;
 
 class ShippingMethodsGrid extends GridDisplay {
   public $model = "shipping_methods";

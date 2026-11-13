@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Intl\Display;
 
-use Starbug\Core\GridDisplay;
+use Starbug\Dojo\Display\GridDisplay;
 
 class ProvincesGrid extends GridDisplay {
   public $model = "provinces";

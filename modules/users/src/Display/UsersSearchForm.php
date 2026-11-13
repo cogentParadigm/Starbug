@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Users\Display;
 
-use Starbug\Core\SearchForm;
+use Starbug\Display\SearchForm;
 
 class UsersSearchForm extends SearchForm {
   protected function buildPrimaryControls() {

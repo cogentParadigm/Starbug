@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Products\Admin\ProductTags;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class ProductTagsForm extends FormDisplay {
   public $model = "product_tags";

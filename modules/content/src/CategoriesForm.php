@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Content;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class CategoriesForm extends FormDisplay {
   public $model = "categories";

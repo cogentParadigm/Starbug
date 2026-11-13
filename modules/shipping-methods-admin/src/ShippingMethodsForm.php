@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\ShippingMethods\Admin;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class ShippingMethodsForm extends FormDisplay {
   public $model = "shipping_methods";

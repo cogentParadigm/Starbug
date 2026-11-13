@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Content;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 use Starbug\Db\Collection\SelectCollection;
 
 class PagesForm extends FormDisplay {

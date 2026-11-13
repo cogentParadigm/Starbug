@@ -1,7 +1,8 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Dojo\Display;
 
 use Starbug\Db\CollectionFactoryInterface;
+use Starbug\Display\ItemDisplay;
 use Starbug\Dojo\Service\DojoConfiguration;
 use Starbug\Templates\TemplateInterface;
 

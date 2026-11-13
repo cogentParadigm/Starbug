@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Content;
 
-use Starbug\Core\FormDisplay;
+use Starbug\Display\FormDisplay;
 
 class TagsForm extends FormDisplay {
   public $model = "tags";
