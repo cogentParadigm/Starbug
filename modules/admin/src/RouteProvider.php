@@ -21,11 +21,6 @@ class RouteProvider implements RouteProviderInterface {
       "menu" => "admin",
       "view" => "admin.html"
     ]);
-
-    // Robots
-    $routes->addRoute("robots.{format:txt}", ViewController::class, [
-      "view" => "robots.txt"
-    ]);
   }
   protected function addCrudRoutes(Route $routes, $model) {
     $routes->setController(ViewController::class);

@@ -1,6 +1,8 @@
 <?php
 
 use Psr\Container\ContainerInterface;
+use Starbug\Http\RobotsMiddleware;
+use Starbug\Settings\SettingsInterface;
 
 use function DI\autowire;
 use function DI\get;
@@ -33,6 +35,7 @@ return [
   "application.middleware" => function (ContainerInterface $container) {
     $env = $container->get("environment");
     return [
+      RobotsMiddleware::class,
       "Middlewares\Https",
       "Starbug\Http\BaseUrlMiddleware",
       "Middlewares\CachePrevention",
@@ -49,6 +52,9 @@ return [
       "Starbug\Operation\Http\OperationMiddleware",
       "Starbug\Routing\ControllerMiddleware"
     ];
+  },
+  RobotsMiddleware::class => function (ContainerInterface $container) {
+    return new RobotsMiddleware((bool) $container->get(SettingsInterface::class)->get("seo_hide"));
   },
   "Psr\Http\Server\RequestHandlerInterface" => autowire("Middleland\Dispatcher")
     ->constructorParameter("middleware", get("application.middleware"))

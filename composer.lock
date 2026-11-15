@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "233d11ed4d15baf1a1597a7cb88dfee9",
+    "content-hash": "61d5d54d0a4f9dcdcfcf3b2eb48520c3",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3648,16 +3648,16 @@
         },
         {
             "name": "starbug/http",
-            "version": "v0.9.15",
+            "version": "v0.9.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-http.git",
-                "reference": "5662ab89fc9c80a58644b3a5045faf291398bb42"
+                "reference": "8ca5b459da19232cb0cb774a25a5a20a87ec9dc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/5662ab89fc9c80a58644b3a5045faf291398bb42",
-                "reference": "5662ab89fc9c80a58644b3a5045faf291398bb42",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/8ca5b459da19232cb0cb774a25a5a20a87ec9dc3",
+                "reference": "8ca5b459da19232cb0cb774a25a5a20a87ec9dc3",
                 "shasum": ""
             },
             "require": {
@@ -3695,9 +3695,10 @@
             "description": "Basic HTTP message components.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-http/issues",
-                "source": "https://github.com/cogentParadigm/starbug-http/tree/v0.9.15"
+                "source": "https://github.com/cogentParadigm/starbug-http/tree/v0.9.16"
             },
-            "time": "2025-02-25T15:00:43+00:00"
+            "time": "2026-11-15T21:24:29+00:00",
+            "published-time": "2026-11-15T21:24:34+00:00"
         },
         {
             "name": "starbug/importer",

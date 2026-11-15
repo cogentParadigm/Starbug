@@ -32,7 +32,7 @@
     "starbug/modules": "^1.0",
     "starbug/bundle": "^1.0",
     "starbug/resource-locator": "^0.9",
-    "starbug/http": "^0.9.14",
+    "starbug/http": "^0.9.16",
     "starbug/auth": "^1.0",
     "starbug/operation": "^0.8",
     "starbug/macro": "^0.9",
