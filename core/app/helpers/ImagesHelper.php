@@ -1,6 +1,8 @@
 <?php
 namespace Starbug\Core;
 
+use Starbug\Files\ImagesInterface;
+
 class ImagesHelper {
   public function __construct(
     protected ImagesInterface $target

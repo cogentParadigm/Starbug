@@ -18,6 +18,7 @@
     "starbug/log": "*",
     "phpoffice/phpspreadsheet": "^1.12",
     "starbug/routing": "^1.0",
-    "starbug/admin": "*"
+    "starbug/admin": "*",
+    "starbug/display": "^0.9"
   }
 }

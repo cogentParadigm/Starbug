@@ -13,15 +13,21 @@
     "namespace": "Starbug\\Files"
   },
   "require": {
+    "league/flysystem": "^1.0",
+    "masterexploder/phpthumb": "dev-master",
     "starbug/admin": "*",
     "starbug/api": "^0.9",
     "starbug/db": "*",
     "starbug/routing": "^1.0",
-    "xantios/mimey": "^2.1.0"
+    "xantios/mimey": "^2.1.0",
+    "starbug/display": "^0.9"
   },
   "autoload": {
     "psr-4": {
       "Starbug\\Files\\": "src/"
     }
+  },
+  "suggest": {
+    "ext-imagick": "Image processing via the Images implementation."
   }
 }

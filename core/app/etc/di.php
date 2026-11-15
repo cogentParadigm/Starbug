@@ -50,8 +50,6 @@ return [
   "Psr\Http\Message\ServerRequestInterface" => function (ContainerInterface $container) {
     return new ServerRequest("GET", $container->get("website_host").$container->get("website_url"));
   },
-  'Starbug\Core\ImagesInterface' => autowire('Starbug\Core\Images')
-    ->constructorParameter('base_directory', get('base_directory')),
   'db.schema.hooks' => [
     get('Starbug\Core\SchemaHook')
   ],

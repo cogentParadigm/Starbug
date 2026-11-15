@@ -16,7 +16,8 @@
     "starbug/products": "*",
     "starbug/menus": "*",
     "starbug/wizard": "*",
-    "starbug/admin": "*"
+    "starbug/admin": "*",
+    "starbug/display": "^0.9"
   },
   "autoload": {
     "psr-4": {

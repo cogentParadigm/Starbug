@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Files;
 
 use Imagick;
 use PHPThumb\GD;

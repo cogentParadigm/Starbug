@@ -9,7 +9,7 @@ use Starbug\Routing\Controller;
 use League\Flysystem\MountManager;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\ImagesInterface;
+use Starbug\Files\ImagesInterface;
 use Starbug\Files\FileUploaderInterface;
 
 class UploadController extends Controller {

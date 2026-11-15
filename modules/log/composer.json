@@ -22,6 +22,7 @@
     "monolog/monolog": "^2.5",
     "filp/whoops": "^2.9",
     "starbug/routing": "^1.0",
-    "starbug/admin": "*"
+    "starbug/admin": "*",
+    "starbug/display": "^0.9"
   }
 }

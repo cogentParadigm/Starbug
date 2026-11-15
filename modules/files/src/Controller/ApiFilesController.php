@@ -4,7 +4,7 @@ namespace Starbug\Files\Controller;
 use League\Flysystem\MountManager;
 use Starbug\Api\ApiRequest;
 use Starbug\Api\Controller\CollectionController;
-use Starbug\Core\ImagesInterface;
+use Starbug\Files\ImagesInterface;
 
 class ApiFilesController extends CollectionController {
   protected $model = "files";

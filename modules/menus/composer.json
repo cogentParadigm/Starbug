@@ -17,7 +17,8 @@
     "starbug/files": "*",
     "starbug/routing": "^1.0",
     "starbug/admin": "*",
-    "starbug/users": "*"
+    "starbug/users": "*",
+    "starbug/display": "^0.9"
   },
   "autoload": {
     "psr-4": {

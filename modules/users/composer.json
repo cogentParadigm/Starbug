@@ -28,6 +28,7 @@
     "starbug/api": "^0.9",
     "starbug/auth": "^1.0",
     "starbug/db": "*",
-    "starbug/routing": "^1.0"
+    "starbug/routing": "^1.0",
+    "starbug/display": "^0.9"
   }
 }

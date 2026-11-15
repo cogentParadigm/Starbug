@@ -15,6 +15,8 @@ use Starbug\Files\Command\CleanupFilesystem;
 use Starbug\Http\UriBuilder;
 
 return [
+  'Starbug\\Files\\ImagesInterface' => autowire('Starbug\\Files\\Images')
+    ->constructorParameter('base_directory', get('base_directory')),
   "db.query.executor.hooks" => add([
     "upload" => StoreUploadHook::class
   ]),

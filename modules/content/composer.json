@@ -28,6 +28,10 @@
     "starbug/macro": "^0.9",
     "starbug/menus": "*",
     "starbug/routing": "^1.0",
-    "starbug/admin": "*"
+    "starbug/admin": "*",
+    "starbug/display": "^0.9"
+  },
+  "require-dev": {
+    "starbug/users": "*"
   }
 }

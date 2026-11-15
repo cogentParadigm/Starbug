@@ -5,7 +5,6 @@ use Exception;
 use League\Flysystem\MountManager;
 use Mimey\MimeTypes;
 use Psr\Http\Message\UploadedFileInterface;
-use Starbug\Core\ImagesInterface;
 use Starbug\Core\InputFilterInterface;
 
 class FileUploader implements FileUploaderInterface {

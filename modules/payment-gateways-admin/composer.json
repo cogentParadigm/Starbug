@@ -15,7 +15,8 @@
   "require": {
     "starbug/payments": "*",
     "starbug/menus": "*",
-    "starbug/admin": "*"
+    "starbug/admin": "*",
+    "starbug/display": "^0.9"
   },
   "autoload": {
     "psr-4": {

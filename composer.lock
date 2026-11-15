@@ -3267,15 +3267,19 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/content",
-                "reference": "eb9caf399c622b089a89334a54fb715891b141fe"
+                "reference": "a0ac0963769410e1c9f61152231779057baf6844"
             },
             "require": {
                 "starbug/admin": "*",
                 "starbug/db": "*",
+                "starbug/display": "^0.9",
                 "starbug/files": "*",
                 "starbug/macro": "^0.9",
                 "starbug/menus": "*",
                 "starbug/routing": "^1.0"
+            },
+            "require-dev": {
+                "starbug/users": "*"
             },
             "type": "starbug-module",
             "extra": {
@@ -3497,7 +3501,8 @@
                 "issues": "https://github.com/cogentParadigm/starbug-display/issues",
                 "source": "https://github.com/cogentParadigm/starbug-display/tree/v0.9.3"
             },
-            "time": "2026-11-13T20:56:47+00:00"
+            "time": "2026-11-13T20:56:47+00:00",
+            "published-time": "2026-11-13T20:56:52+00:00"
         },
         {
             "name": "starbug/doctrine",
@@ -3586,12 +3591,13 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/emails",
-                "reference": "79073ac38a7ea54a340b37e8d19f0b65371f25b2"
+                "reference": "18d1039a58b841bd301c699961249bad44243557"
             },
             "require": {
                 "phpmailer/phpmailer": "^6.8.0",
                 "starbug/admin": "*",
                 "starbug/db": "*",
+                "starbug/display": "^0.9",
                 "starbug/macro": "^0.9",
                 "starbug/routing": "^1.0"
             },
@@ -3668,14 +3674,20 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/files",
-                "reference": "5d6c8c1e0ff73d3d357b1e1d05f08630a672a35e"
+                "reference": "75fe9fa96424c531e2d4220ddb158b27a8b5c556"
             },
             "require": {
+                "league/flysystem": "^1.0",
+                "masterexploder/phpthumb": "dev-master",
                 "starbug/admin": "*",
                 "starbug/api": "^0.9",
                 "starbug/db": "*",
+                "starbug/display": "^0.9",
                 "starbug/routing": "^1.0",
                 "xantios/mimey": "^2.1.0"
+            },
+            "suggest": {
+                "ext-imagick": "Image processing via the Images implementation."
             },
             "type": "starbug-module",
             "extra": {
@@ -3865,13 +3877,14 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/imports",
-                "reference": "54694b73b2e5834370dba720d9aefb48a22856c4"
+                "reference": "6575df8419799e787178d7462265fb7c1f0cf52c"
             },
             "require": {
                 "ext-yaml": "*",
                 "phpoffice/phpspreadsheet": "^1.12",
                 "starbug/admin": "*",
                 "starbug/db": "*",
+                "starbug/display": "^0.9",
                 "starbug/importer": "^0.10",
                 "starbug/importer-spreadsheet": "^0.9",
                 "starbug/log": "*",
@@ -3897,13 +3910,14 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/log",
-                "reference": "a13cdbd672b6c95fc2aafe7cec6e681c1d1f0b7f"
+                "reference": "cb37458bc9a04baa2860151ac7d57793af932113"
             },
             "require": {
                 "filp/whoops": "^2.9",
                 "monolog/monolog": "^2.5",
                 "psr/log": "^1.0",
                 "starbug/admin": "*",
+                "starbug/display": "^0.9",
                 "starbug/routing": "^1.0"
             },
             "type": "starbug-module",
@@ -3984,11 +3998,12 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/menus",
-                "reference": "9352697fd8495fd6a9430f53d83ac6f8f4833eaf"
+                "reference": "d94a10a17bfad390b3da7171670564331cc63340"
             },
             "require": {
                 "starbug/admin": "*",
                 "starbug/db": "*",
+                "starbug/display": "^0.9",
                 "starbug/files": "*",
                 "starbug/routing": "^1.0",
                 "starbug/users": "*"
@@ -4354,10 +4369,11 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/settings-admin",
-                "reference": "01178452d9564a67cb092568c04ebb5116f54b03"
+                "reference": "0a27a2fabd48b35499798568388ac29b82dd3c3e"
             },
             "require": {
                 "starbug/admin": "*",
+                "starbug/display": "^0.9",
                 "starbug/menus": "*",
                 "starbug/settings": "*"
             },
@@ -4528,7 +4544,7 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/users",
-                "reference": "8deb5a49c8256b4414eca626257327cb730fa732"
+                "reference": "9bb408a377bbfd1cbc8425f93198ca62648f6f50"
             },
             "require": {
                 "bjeavons/zxcvbn-php": "^1.0",
@@ -4536,6 +4552,7 @@
                 "starbug/api": "^0.9",
                 "starbug/auth": "^1.0",
                 "starbug/db": "*",
+                "starbug/display": "^0.9",
                 "starbug/routing": "^1.0"
             },
             "type": "starbug-module",
