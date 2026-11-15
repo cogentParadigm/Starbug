@@ -9,7 +9,10 @@ class RouteProvider extends AdminRouteProvider {
 
   public function configure(Route $routes) {
     $admin = $routes->getRoute("admin");
-    $this->addCrudRoutes($admin->addRoute("/email-templates"), "email_templates");
+    $this->addCrudRoutes($admin->addRoute("/email-templates"), "email_templates")->setOptions([
+      "grid" => EmailTemplatesGrid::class,
+      "form" => EmailTemplatesForm::class
+    ]);
 
     $api = $routes->getRoute("api");
     $this->addAdminApiRoute($api->addRoute("/email-templates/admin.{format:csv|json}"), "email_templates");

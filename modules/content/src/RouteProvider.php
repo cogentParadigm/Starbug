@@ -9,9 +9,18 @@ class RouteProvider extends AdminRouteProvider {
 
   public function configure(Route $routes) {
     $admin = $routes->getRoute("admin");
-    $this->addCrudRoutes($admin->addRoute("/pages"), "pages");
-    $this->addCrudRoutes($admin->addRoute("/categories"), "categories");
-    $this->addCrudRoutes($admin->addRoute("/tags"), "tags");
+    $this->addCrudRoutes($admin->addRoute("/pages"), "pages")->setOptions([
+      "grid" => PagesGrid::class,
+      "form" => PagesForm::class
+    ]);
+    $this->addCrudRoutes($admin->addRoute("/categories"), "categories")->setOptions([
+      "grid" => CategoriesGrid::class,
+      "form" => CategoriesForm::class
+    ]);
+    $this->addCrudRoutes($admin->addRoute("/tags"), "tags")->setOptions([
+      "grid" => TagsGrid::class,
+      "form" => TagsForm::class
+    ]);
 
     $routes->addRoute("pages/view/{id:[0-9]+}", "Starbug\Content\PagesController");
 
