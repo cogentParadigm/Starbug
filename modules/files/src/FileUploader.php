@@ -5,7 +5,6 @@ use Exception;
 use League\Flysystem\MountManager;
 use Mimey\MimeTypes;
 use Psr\Http\Message\UploadedFileInterface;
-use Starbug\Core\InputFilterInterface;
 
 class FileUploader implements FileUploaderInterface {
   protected $extensions = [
@@ -19,7 +18,6 @@ class FileUploader implements FileUploaderInterface {
     protected FilesRepository $repository,
     protected MountManager $filesystems,
     protected ImagesInterface $images,
-    protected InputFilterInterface $filter,
     protected MimeTypes $mimeTypes
   ) {
   }
@@ -33,7 +31,7 @@ class FileUploader implements FileUploaderInterface {
     if ($error > 0) {
       throw new Exception("Uploaded file error: ".$error);
     }
-    $record["filename"] = $this->filter->normalize(str_replace(" ", "_", $filename), "a-zA-Z0-9\-_\.");
+    $record["filename"] = preg_replace("/[^a-zA-Z0-9\-_\\.]/", "", str_replace(" ", "_", $filename));
     $record["mime_type"] = $this->getMimeFromExtension($record["filename"]);
     if (!$this->mimeIsValid($tmpName, $record["mime_type"])) {
       throw new Exception("Incorrect file type. Expected {$record["mime_type"]}, but detected {$this->getMimeFromFile($tmpName)}.");

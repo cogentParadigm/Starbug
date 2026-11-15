@@ -3,12 +3,12 @@ namespace Starbug\Content\Query;
 
 use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Query\ExecutorHook;
-use Starbug\Core\InputFilterInterface;
+use Starbug\Display\Filter;
 
 class StoreBlocksHook extends ExecutorHook {
   public function __construct(
     protected DatabaseInterface $db,
-    protected InputFilterInterface $filter
+    protected Filter $filter
   ) {
   }
   public function validate($query, $key, $value, $column, $argument) {

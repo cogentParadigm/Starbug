@@ -59,7 +59,6 @@ return [
     "csrf" => CsrfHelper::class,
     "db" => DbHelper::class,
     "filesystems" => FilesystemsHelper::class,
-    "filter" => FilterHelper::class,
     "images" => ImagesHelper::class,
     "request" => RequestHelper::class,
     "session" => SessionHelper::class,

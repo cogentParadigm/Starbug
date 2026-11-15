@@ -6,18 +6,15 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Comparator;
 use Starbug\Db\Schema\AbstractMigration;
 use Starbug\Db\Schema\SchemaInterface;
-use Starbug\Core\Generator\Generator;
 use Starbug\Bundle\BundleInterface;
 
 class Migrator extends AbstractMigration {
   public function __construct(
     protected DatabaseInterface $db,
-    protected SchemaInterface $schema,
-    protected Generator $generator
+    protected SchemaInterface $schema
   ) {
     $this->db = $db;
     $this->schema = $schema;
-    $this->generator = $generator;
   }
   public function migrate() {
     $conn = $this->db->getConnection();

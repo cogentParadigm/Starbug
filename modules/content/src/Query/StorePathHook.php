@@ -4,15 +4,13 @@ namespace Starbug\Content\Query;
 use Starbug\Macro\MacroInterface;
 use Starbug\Db\DatabaseInterface;
 use Starbug\Db\Query\ExecutorHook;
-use Starbug\Core\InputFilterInterface;
 use Starbug\Db\Schema\SchemaInterface;
 
 class StorePathHook extends ExecutorHook {
   public function __construct(
     protected DatabaseInterface $db,
     protected SchemaInterface $schema,
-    protected MacroInterface $macro,
-    protected InputFilterInterface $filter
+    protected MacroInterface $macro
   ) {
   }
   public function emptyBeforeInsert($query, $column, $argument) {
@@ -52,7 +50,7 @@ class StorePathHook extends ExecutorHook {
     $pattern = $this->schema->getColumn($query->model, $column)["pattern"];
     $data = [$query->model => $query->getValues()];
     $value = $this->macro->replace($pattern, $data);
-    $value = strtolower(str_replace(" ", "-", $this->filter->normalize($value, 'a-zA-Z0-9 \-_\/')));
+    $value = strtolower(str_replace(" ", "-", preg_replace("/[^a-zA-Z0-9 \-_\\/]/", "", $value)));
 
     if (false !== $path) {
       $path = $this->macro->replace($path, $data);
