@@ -15,7 +15,8 @@
   "require": {
     "starbug/products": "*",
     "starbug/menus": "*",
-    "starbug/wizard": "*"
+    "starbug/wizard": "*",
+    "starbug/admin": "*"
   },
   "autoload": {
     "psr-4": {

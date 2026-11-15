@@ -2,7 +2,7 @@
 namespace Starbug\Imports;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Routing\Route;
 use Starbug\Imports\Admin\ImportsCollection;
 use Starbug\Imports\Admin\ImportsFieldsForm;

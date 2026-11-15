@@ -3,7 +3,7 @@ namespace Starbug\Menus;
 
 use Starbug\Db\Operation\Save;
 use Starbug\Db\Operation\Delete;
-use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Routing\Controller\ViewController;
 use Starbug\Routing\Route;
 use Starbug\Menus\Collection\MenusAdminCollection;

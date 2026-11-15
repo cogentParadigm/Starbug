@@ -14,7 +14,8 @@
   },
   "require": {
     "starbug/settings": "*",
-    "starbug/menus": "*"
+    "starbug/menus": "*",
+    "starbug/admin": "*"
   },
   "autoload": {
     "psr-4": {

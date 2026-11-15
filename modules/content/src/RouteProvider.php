@@ -2,7 +2,7 @@
 namespace Starbug\Content;
 
 use Starbug\Db\Collection\SelectCollection;
-use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Routing\Route;
 
 class RouteProvider extends AdminRouteProvider {

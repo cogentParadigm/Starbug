@@ -12,6 +12,10 @@
   "extra": {
     "namespace": "Starbug\\Intl"
   },
+  "require": {
+    "starbug/routing": "^1.0",
+    "starbug/admin": "*"
+  },
   "autoload": {
     "psr-4": {
       "Starbug\\Intl\\": "src/"

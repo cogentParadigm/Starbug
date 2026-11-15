@@ -18,6 +18,7 @@
     }
   },
   "require": {
+    "starbug/routing": "^1.0",
     "starbug/templates": "^1.0"
   }
 }

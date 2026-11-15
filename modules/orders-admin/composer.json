@@ -14,7 +14,8 @@
   },
   "require": {
     "starbug/orders": "*",
-    "starbug/menus": "*"
+    "starbug/menus": "*",
+    "starbug/admin": "*"
   },
   "autoload": {
     "psr-4": {

@@ -8,7 +8,6 @@ use function DI\add;
 use Psr\Container\ContainerInterface;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
-use Starbug\Routing\FastRouteStorage;
 use Starbug\Core\Script\Generate;
 use Starbug\Core\Script\ListScripts;
 use Starbug\Core\Script\Setup;
@@ -22,11 +21,6 @@ return [
   "time_zone" => "UTC",
   "hmac_key" => "",
   "cli" => false,
-  "route.providers" => [
-    get("Starbug\Core\Admin\RouteProvider"),
-    get("Starbug\Core\Api\RouteProvider")
-  ],
-  "Starbug\Routing\Configuration" => autowire()->method("addProviders", get("route.providers")),
   'Starbug\Core\*Interface' => autowire('Starbug\Core\*'),
   'Starbug\Config\*Interface' => autowire('Starbug\Config\*'),
   'Starbug\Http\*Interface' => autowire('Starbug\Http\*'),
@@ -56,13 +50,6 @@ return [
   "Psr\Http\Message\ServerRequestInterface" => function (ContainerInterface $container) {
     return new ServerRequest("GET", $container->get("website_host").$container->get("website_url"));
   },
-  "FastRoute\Dispatcher" => function (ContainerInterface $c) {
-    $config = $c->get("Starbug\Routing\Configuration");
-    return FastRouteStorage::createDispatcher($config);
-  },
-  'Starbug\Routing\RouterInterface' => autowire('Starbug\Routing\Router')
-    ->method('addStorage', get(FastRouteStorage::class)),
-  'Starbug\Routing\*Interface' => autowire('Starbug\Routing\*'),
   'Starbug\Core\ImagesInterface' => autowire('Starbug\Core\Images')
     ->constructorParameter('base_directory', get('base_directory')),
   'db.schema.hooks' => [

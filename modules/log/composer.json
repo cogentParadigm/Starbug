@@ -20,6 +20,8 @@
   "require": {
     "psr/log": "^1.0",
     "monolog/monolog": "^2.5",
-    "filp/whoops": "^2.9"
+    "filp/whoops": "^2.9",
+    "starbug/routing": "^1.0",
+    "starbug/admin": "*"
   }
 }

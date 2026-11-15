@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Files;
 
-use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Routing\Route;
 use Starbug\Files\Collection\AdminFilesCollection;
 use Starbug\Files\Collection\FilesSelectCollection;

@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Core\Admin;
+namespace Starbug\Admin;
 
 use Starbug\Admin\Db\Query\AdminCollection;
 use Starbug\Db\Collection\SelectCollection;
@@ -9,14 +9,10 @@ use Starbug\Routing\Controller\ViewController;
 use Starbug\Routing\Route;
 use Starbug\Routing\RouteProviderInterface;
 use Starbug\Imports\Admin\ImportsGrid;
-use Starbug\Routing\Controller;
-use Starbug\Users\Operation\UpdateProfile;
 
 class RouteProvider implements RouteProviderInterface {
 
   public function configure(Route $routes) {
-    $routes->addRoute("missing", [Controller::class, "missing"]);
-    $routes->addRoute("forbidden", [Controller::class, "forbidden"]);
     // admin group
     $admin = $routes->addRoute("admin", ViewController::class, [
       "title" => "Admin",
@@ -25,14 +21,6 @@ class RouteProvider implements RouteProviderInterface {
       "menu" => "admin",
       "view" => "admin.html"
     ]);
-
-    // Profile
-    $routes->addRoute("profile", ViewController::class, [
-      "view" => "profile.html",
-      "groups" => "user"
-    ])
-    ->resolve("id", "Starbug\Routing\Resolvers\UserId")
-    ->onPost(UpdateProfile::class);
 
     // Robots
     $routes->addRoute("robots.{format:txt}", ViewController::class, [

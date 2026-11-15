@@ -25,6 +25,8 @@
   "require": {
     "bjeavons/zxcvbn-php": "^1.0",
     "starbug/auth": "^1.0",
-    "starbug/db": "*"
+    "starbug/db": "*",
+    "starbug/routing": "^1.0",
+    "starbug/admin": "*"
   }
 }

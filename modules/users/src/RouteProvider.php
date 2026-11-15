@@ -4,8 +4,9 @@ namespace Starbug\Users;
 use Starbug\Db\Collection\SelectCollection;
 use Starbug\Db\Operation\Save;
 use Starbug\Db\Operation\SoftDelete;
-use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Routing\Route;
+use Starbug\Users\Operation\UpdateProfile;
 use Starbug\Routing\Controller\ViewController;
 use Starbug\Users\Collection\AdminUsersCollection;
 use Starbug\Users\Controller\LoginController;
@@ -62,5 +63,12 @@ class RouteProvider extends AdminRouteProvider {
     $routes->addRoute("reset-password/submitted", ViewController::class, [
       "view" => "reset-password/submitted.html"
     ]);
+
+    $routes->addRoute("profile", ViewController::class, [
+      "view" => "profile.html",
+      "groups" => "user"
+    ])
+    ->resolve("id", "Starbug\Routing\Resolvers\UserId")
+    ->onPost(UpdateProfile::class);
   }
 }

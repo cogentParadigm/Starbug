@@ -26,6 +26,8 @@
     "starbug/db": "*",
     "starbug/files": "*",
     "starbug/macro": "^0.9",
-    "starbug/menus": "*"
+    "starbug/menus": "*",
+    "starbug/routing": "^1.0",
+    "starbug/admin": "*"
   }
 }

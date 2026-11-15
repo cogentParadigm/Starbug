@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Payments\Gateways\Admin;
 
-use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Routing\Controller\ViewController;
 use Starbug\Routing\Resolvers\RowById;
 use Starbug\Routing\Route;

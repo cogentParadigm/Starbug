@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Intl;
 
-use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Db\Collection\SelectCollection;
 use Starbug\Routing\Route;
 use Starbug\Intl\Collection\ProvincesSelectCollection;

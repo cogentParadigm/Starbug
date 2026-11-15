@@ -1,7 +1,7 @@
 <?php
 namespace Starbug\Log;
 
-use Starbug\Core\Admin\RouteProvider as AdminRouteProvider;
+use Starbug\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Db\Collection\SelectCollection;
 use Starbug\Routing\Controller\ViewController;
 use Starbug\Routing\Route;

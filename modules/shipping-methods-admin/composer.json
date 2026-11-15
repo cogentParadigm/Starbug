@@ -14,7 +14,8 @@
   },
   "require": {
     "starbug/shipping-methods": "*",
-    "starbug/menus": "*"
+    "starbug/menus": "*",
+    "starbug/admin": "*"
   },
   "autoload": {
     "psr-4": {

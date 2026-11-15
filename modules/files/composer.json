@@ -14,6 +14,8 @@
   },
   "require": {
     "starbug/db": "*",
+    "starbug/routing": "^1.0",
+    "starbug/admin": "*",
     "xantios/mimey": "^2.1.0"
   },
   "autoload": {

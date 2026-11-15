@@ -12,6 +12,13 @@
   "extra": {
     "namespace": "Starbug\\Admin"
   },
+  "require": {
+    "starbug/db": "^0.11",
+    "starbug/routing": "^1.0"
+  },
+  "suggest": {
+    "starbug/imports": "Adds the per-model import screen to admin lists."
+  },
   "autoload": {
     "psr-4": {
       "Starbug\\Admin\\": "src/"
