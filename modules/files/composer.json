@@ -13,9 +13,10 @@
     "namespace": "Starbug\\Files"
   },
   "require": {
+    "starbug/admin": "*",
+    "starbug/api": "^0.9",
     "starbug/db": "*",
     "starbug/routing": "^1.0",
-    "starbug/admin": "*",
     "xantios/mimey": "^2.1.0"
   },
   "autoload": {

@@ -30,13 +30,13 @@ class RouteProvider extends AdminRouteProvider {
     $api = $routes->getRoute("api");
     $this->addApiRoute($api->addRoute("/groups/select.json"), "groups", SelectCollection::class);
 
-    $api->addRoute("/users/admin.{format:csv|json}", "Starbug\Core\ApiUsersController", [
+    $api->addRoute("/users/admin.{format:csv|json}", "Starbug\Users\Controller\ApiUsersController", [
       "collection" => AdminUsersCollection::class,
       "model" => "users"
     ])
     ->onPost(Save::class)
     ->onDelete(SoftDelete::class);
-    $api->addRoute("/users/select.json", "Starbug\Core\ApiUsersController", ["collection" => SelectCollection::class]);
+    $api->addRoute("/users/select.json", "Starbug\Users\Controller\ApiUsersController", ["collection" => SelectCollection::class]);
 
     $routes->addRoute("login", [LoginController::class, "defaultAction"])
       ->onPost("Starbug\Users\Operation\Login");

@@ -1,7 +1,7 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Users\Controller;
 
-use Starbug\Core\Controller\CollectionController;
+use Starbug\Api\Controller\CollectionController;
 
 class ApiUsersController extends CollectionController {
   protected $model = "users";

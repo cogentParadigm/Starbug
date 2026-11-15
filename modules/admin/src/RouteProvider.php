@@ -71,7 +71,7 @@ class RouteProvider implements RouteProviderInterface {
   }
 
   protected function addApiRoute(Route $route, $model, $collection, $options = []) {
-    $route->setController("Starbug\Core\Controller\CollectionController");
+    $route->setController("Starbug\Api\Controller\CollectionController");
     $route->setOptions($options + compact('model', 'collection'));
     return $route;
   }

@@ -13,6 +13,7 @@
     "namespace": "Starbug\\Admin"
   },
   "require": {
+    "starbug/api": "^0.9",
     "starbug/db": "^0.11",
     "starbug/routing": "^1.0"
   },

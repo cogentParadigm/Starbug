@@ -2,8 +2,8 @@
 namespace Starbug\Files\Controller;
 
 use League\Flysystem\MountManager;
-use Starbug\Core\ApiRequest;
-use Starbug\Core\Controller\CollectionController;
+use Starbug\Api\ApiRequest;
+use Starbug\Api\Controller\CollectionController;
 use Starbug\Core\ImagesInterface;
 
 class ApiFilesController extends CollectionController {
