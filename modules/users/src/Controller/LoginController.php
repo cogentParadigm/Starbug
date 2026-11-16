@@ -14,7 +14,7 @@ class LoginController extends Controller {
     protected ServerRequestInterface $request
   ) {
   }
-  public function defaultAction() {
+  public function __invoke($view = "login.html") {
     if ($this->session->loggedIn()) {
       $redirectPath = "";
       if ($this->session->loggedIn('admin') || $this->session->loggedIn('root')) {
@@ -26,7 +26,7 @@ class LoginController extends Controller {
       }
       return $this->redirect($redirectPath);
     } else {
-      return $this->render("login.html");
+      return $this->render($view);
     }
   }
   public function logout() {

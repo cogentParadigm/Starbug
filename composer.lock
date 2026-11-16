@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4585f1bdde99a9ac379dbd25f9b336f0",
+    "content-hash": "ca4761fc8ceedbdd0e73576af1117360",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3832,16 +3832,16 @@
         },
         {
             "name": "starbug/db",
-            "version": "v0.12.0",
+            "version": "v0.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-db.git",
-                "reference": "c0816b692e76e87b3e88d100532fcb4b075ba11a"
+                "reference": "4efd35255d4d497f0c2ad5f18cc915fc41838af8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-db/zipball/c0816b692e76e87b3e88d100532fcb4b075ba11a",
-                "reference": "c0816b692e76e87b3e88d100532fcb4b075ba11a",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-db/zipball/4efd35255d4d497f0c2ad5f18cc915fc41838af8",
+                "reference": "4efd35255d4d497f0c2ad5f18cc915fc41838af8",
                 "shasum": ""
             },
             "require": {
@@ -3891,10 +3891,10 @@
             "description": "Starbug database module.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-db/issues",
-                "source": "https://github.com/cogentParadigm/starbug-db/tree/v0.12.0"
+                "source": "https://github.com/cogentParadigm/starbug-db/tree/v0.12.1"
             },
-            "time": "2026-11-16T14:32:39+00:00",
-            "published-time": "2026-11-16T14:34:06+00:00"
+            "time": "2026-11-16T21:43:25+00:00",
+            "published-time": "2026-11-16T21:43:36+00:00"
         },
         {
             "name": "starbug/di",
@@ -5396,16 +5396,16 @@
         },
         {
             "name": "starbug/users",
-            "version": "v0.9.1",
+            "version": "v0.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-users.git",
-                "reference": "087223856e5dc7b0050ca683a43ac92e12a4685e"
+                "reference": "b7cebf76a3a367dbe5507315fb68bc12aa2471dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-users/zipball/087223856e5dc7b0050ca683a43ac92e12a4685e",
-                "reference": "087223856e5dc7b0050ca683a43ac92e12a4685e",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-users/zipball/b7cebf76a3a367dbe5507315fb68bc12aa2471dc",
+                "reference": "b7cebf76a3a367dbe5507315fb68bc12aa2471dc",
                 "shasum": ""
             },
             "require": {
@@ -5444,23 +5444,23 @@
             "description": "Starbug users module.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-users/issues",
-                "source": "https://github.com/cogentParadigm/starbug-users/tree/v0.9.1"
+                "source": "https://github.com/cogentParadigm/starbug-users/tree/v0.10.3"
             },
-            "time": "2026-11-16T18:52:34+00:00",
-            "published-time": "2026-11-16T18:53:43+00:00"
+            "time": "2026-11-16T22:03:51+00:00",
+            "published-time": "2026-11-16T22:03:55+00:00"
         },
         {
             "name": "starbug/users-admin",
-            "version": "v0.9.1",
+            "version": "v0.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-users-admin.git",
-                "reference": "f776775eb293cbea1f398396f3e3a397b6641fd0"
+                "reference": "5898c35a3fde80c1aa47fb5a64685d04c3f4d167"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-users-admin/zipball/f776775eb293cbea1f398396f3e3a397b6641fd0",
-                "reference": "f776775eb293cbea1f398396f3e3a397b6641fd0",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-users-admin/zipball/5898c35a3fde80c1aa47fb5a64685d04c3f4d167",
+                "reference": "5898c35a3fde80c1aa47fb5a64685d04c3f4d167",
                 "shasum": ""
             },
             "require": {
@@ -5470,7 +5470,7 @@
                 "starbug/display": "^0.9",
                 "starbug/dojo": "^1.1",
                 "starbug/routing": "^1.0",
-                "starbug/users": "^0.9.1"
+                "starbug/users": "^0.9.1 || ^0.10"
             },
             "type": "starbug-module",
             "extra": {
@@ -5494,10 +5494,10 @@
             "description": "Admin screens for user management.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-users-admin/issues",
-                "source": "https://github.com/cogentParadigm/starbug-users-admin/tree/v0.9.1"
+                "source": "https://github.com/cogentParadigm/starbug-users-admin/tree/v0.9.2"
             },
-            "time": "2026-11-16T18:56:06+00:00",
-            "published-time": "2026-11-16T19:04:11+00:00"
+            "time": "2026-11-16T21:28:10+00:00",
+            "published-time": "2026-11-16T21:28:15+00:00"
         },
         {
             "name": "starbug/webpack",

@@ -13,7 +13,7 @@
     "namespace": "Starbug\\Users\\Admin"
   },
   "require": {
-    "starbug/users": "^0.9.1",
+    "starbug/users": "^0.9.1 || ^0.10",
     "starbug/admin": "^0.9",
     "starbug/api": "^0.9",
     "starbug/display": "^0.9",

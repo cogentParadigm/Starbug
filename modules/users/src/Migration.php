@@ -11,13 +11,22 @@ class Migration extends AbstractMigration {
       ["email", "type" => "string", "length" => "128", "unique" => "", "null" => true],
       ["password", "type" => "password", "confirm" => "password_confirm", "optional_update" => ""],
       ["last_visit", "type" => "datetime", "default" => "NULL", "null" => true],
-      ["password_token", "type" => "string", "default" => ""]
+      ["password_token", "type" => "string", "default" => ""],
+      ["auth_method", "type" => "string", "null" => true, "default" => "NULL"]
     );
     $this->schema->addTable(["sessions"],
       ["users_id", "type" => "int", "references" => "users id", "update" => "cascade", "delete" => "cascade"],
       ["token", "type" => "string"],
       ["expires", "type" => "datetime"]
     );
+    $this->schema->addTable(["login_tokens"],
+      ["users_id", "type" => "int", "references" => "users id", "update" => "cascade", "delete" => "cascade"],
+      ["token_hash", "type" => "string", "length" => "255"],
+      ["expires", "type" => "datetime"],
+      ["consumed", "type" => "boolean", "default" => "0"],
+      ["ip_address", "type" => "string", "length" => "45", "null" => true, "default" => "NULL"]
+    );
+    $this->schema->addIndex("login_tokens", ["token_hash"]);
     $this->schema->addTable(["groups", "label_select" => "groups.name"],
       ["name", "type" => "string", "length" => "128", "unique" => ""],
       ["slug", "type" => "string", "length" => "128", "unique" => "", "slug" => "name"],
@@ -55,6 +64,14 @@ class Migration extends AbstractMigration {
       [
         "subject" => "Your [site:name] password reset request",
         "body" => '<p>Follow this link to reset your password: [user:password-reset-link].<br />Click <a href="[url:login]">here</a> to return to the login page.</p>'
+      ]
+    );
+    $this->schema->addRow(
+      "email_templates",
+      ["name" => "Login Link"],
+      [
+        "subject" => "Log in to [site:name]",
+        "body" => '<p>Click the link below to sign in. This link expires in 15 minutes.<br/><br/><a href="[user:login-link]">[user:login-link]</a></p>'
       ]
     );
     $this->schema->addRow(

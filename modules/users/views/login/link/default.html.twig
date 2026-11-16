@@ -1,0 +1,16 @@
+{% if helper("request").hasParameter("to") %}
+  {% do helper("request").setParameter("to", helper("url").build(helper("request").getParameter("to"))) %}
+{% endif %}
+<div class="measure-wide">
+  <h2>Login</h2>
+  <p>Enter your email address below and we'll send you a link to log in.</p>
+  {{ helper("displays").render("Starbug\\Users\\Display\\LoginLinkForm", {"url":helper("request").getParameter("to")}) }}
+  <div class="f8 mt3">
+    {% set queryParams = helper("request").getQueryParams() %}
+    {% set queryString = queryParams|url_encode %}
+    {% if queryString != "" %}
+      {% set queryString = "?" ~ queryString %}
+    {% endif %}
+    <p><a href="{{ helper('url').build('login/password' ~ queryString) }}" class="underline">Use a password instead</a></p>
+  </div>
+</div>

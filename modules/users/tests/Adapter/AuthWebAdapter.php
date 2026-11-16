@@ -12,7 +12,7 @@ use Starbug\Testing\WebAdapter;
 class AuthWebAdapter extends WebAdapter implements AuthAdapterInterface {
 
   public function login(array $credentials): void {
-    $this->driver->submitForm('login', $credentials);
+    $this->driver->submitForm('login/password', $credentials);
   }
 
   public function logout(): void {
@@ -34,6 +34,6 @@ class AuthWebAdapter extends WebAdapter implements AuthAdapterInterface {
    * Navigate to the login page.
    */
   public function goToLogin(): void {
-    $this->visit('login');
+    $this->visit('login/password');
   }
 }

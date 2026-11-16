@@ -1,0 +1,11 @@
+<div class="measure-wide">
+  <p>Check your email inbox! We sent you a secure login link. Click the link to sign in.</p>
+  <div class="f8 mt3">
+    {% set queryParams = helper("request").getQueryParams() %}
+    {% set queryString = queryParams|url_encode %}
+    {% if queryString != "" %}
+      {% set queryString = "?" ~ queryString %}
+    {% endif %}
+    <p><a href="{{ helper('url').build('login/link' ~ queryString) }}" class="underline">Resend email</a></p>
+  </div>
+</div>

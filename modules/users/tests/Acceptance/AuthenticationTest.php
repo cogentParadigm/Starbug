@@ -43,7 +43,7 @@ class AuthenticationTest extends WebDatabaseTestCase {
   public function testFailedLogin(): void {
     $this->auth->login('root', 'wrong-password');
 
-    $this->assertPathEquals('/login');
+    $this->assertPathEquals('/login/password');
     $this->assertPageContains('That email and password combination was not found');
     $this->auth->assertAnonymous();
   }
