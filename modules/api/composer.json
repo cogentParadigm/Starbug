@@ -17,7 +17,7 @@
     "guzzlehttp/psr7": "^1.7 || ^2.0",
     "psr/http-factory": "^1.0",
     "psr/http-message": "^1.0",
-    "starbug/db": "^0.11",
+    "starbug/db": "^0.11 || ^0.12",
     "starbug/routing": "^1.0"
   },
   "autoload": {

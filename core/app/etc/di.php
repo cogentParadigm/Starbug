@@ -50,9 +50,6 @@ return [
   "Psr\Http\Message\ServerRequestInterface" => function (ContainerInterface $container) {
     return new ServerRequest("GET", $container->get("website_host").$container->get("website_url"));
   },
-  'db.schema.hooks' => [
-    get('Starbug\Core\SchemaHook')
-  ],
   "template.helpers" => [
     "collections" => CollectionsHelper::class,
     "config" => ConfigHelper::class,
