@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dd130e9ec60ac8d5f70081c229fb0231",
+    "content-hash": "40989d2e3eee517b54169b6881668492",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -60,7 +60,8 @@
                 "issues": "https://github.com/bjeavons/zxcvbn-php/issues",
                 "source": "https://github.com/bjeavons/zxcvbn-php/tree/1.4.2"
             },
-            "time": "2025-02-24T16:47:20+00:00"
+            "time": "2025-02-24T16:47:20+00:00",
+            "published-time": "2025-02-24T16:48:24+00:00"
         },
         {
             "name": "composer/installers",
@@ -744,16 +745,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.18.4",
+            "version": "2.19.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "d2102955e48b9fd9ab24280a7ad12ed552752c4d"
+                "reference": "d5480d53f10069dc4620a39f87e38e8945d47322"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/d2102955e48b9fd9ab24280a7ad12ed552752c4d",
-                "reference": "d2102955e48b9fd9ab24280a7ad12ed552752c4d",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/d5480d53f10069dc4620a39f87e38e8945d47322",
+                "reference": "d5480d53f10069dc4620a39f87e38e8945d47322",
                 "shasum": ""
             },
             "require": {
@@ -762,8 +763,8 @@
             },
             "require-dev": {
                 "mockery/mockery": "^1.0",
-                "phpunit/phpunit": "^7.5.20 || ^8.5.8 || ^9.3.3",
-                "symfony/var-dumper": "^4.0 || ^5.0"
+                "phpunit/phpunit": "^7.5.20 || ^8.5.8 || ^9.3.3 || ^10.5.58",
+                "symfony/var-dumper": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0"
             },
             "suggest": {
                 "symfony/var-dumper": "Pretty print complex values better with var-dumper available",
@@ -803,7 +804,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.18.4"
+                "source": "https://github.com/filp/whoops/tree/2.19.3"
             },
             "funding": [
                 {
@@ -811,7 +812,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-08T12:00:00+00:00"
+            "time": "2026-11-09T23:30:17+00:00",
+            "published-time": "2026-11-09T23:32:45+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1873,7 +1875,8 @@
                 "issues": "https://github.com/masterexploder/PHPThumb/issues",
                 "source": "https://github.com/masterexploder/PHPThumb/tree/master"
             },
-            "time": "2019-08-06T20:38:22+00:00"
+            "time": "2019-08-06T20:38:22+00:00",
+            "published-time": "2025-09-01T23:00:16+00:00"
         },
         {
             "name": "micheh/psr7-cache",
@@ -2164,16 +2167,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "2.10.0",
+            "version": "2.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "5cf826f2991858b54d5c3809bee745560a1042a7"
+                "reference": "bf2403f591c5a431b6e0e1170cbadd3d64499564"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/5cf826f2991858b54d5c3809bee745560a1042a7",
-                "reference": "5cf826f2991858b54d5c3809bee745560a1042a7",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bf2403f591c5a431b6e0e1170cbadd3d64499564",
+                "reference": "bf2403f591c5a431b6e0e1170cbadd3d64499564",
                 "shasum": ""
             },
             "require": {
@@ -2191,7 +2194,7 @@
                 "graylog2/gelf-php": "^1.4.2 || ^2@dev",
                 "guzzlehttp/guzzle": "^7.4",
                 "guzzlehttp/psr7": "^2.2",
-                "mongodb/mongodb": "^1.8",
+                "mongodb/mongodb": "^1.8 || ^2.0",
                 "php-amqplib/php-amqplib": "~2.4 || ^3",
                 "phpspec/prophecy": "^1.15",
                 "phpstan/phpstan": "^1.10",
@@ -2250,7 +2253,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/2.10.0"
+                "source": "https://github.com/Seldaek/monolog/tree/2.11.1"
             },
             "funding": [
                 {
@@ -2262,7 +2265,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-12T12:43:37+00:00"
+            "time": "2026-09-02T07:57:24+00:00",
+            "published-time": "2026-09-02T09:39:43+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -2630,7 +2634,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-15T16:49:08+00:00"
+            "time": "2025-10-15T16:49:08+00:00",
+            "published-time": "2025-10-15T16:49:35+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",
@@ -4023,16 +4028,22 @@
         },
         {
             "name": "starbug/emails",
-            "version": "dev-main",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-emails.git",
+                "reference": "dbc459ca1969327a14342903cc94d1bba010b43d"
+            },
             "dist": {
-                "type": "path",
-                "url": "./modules/emails",
-                "reference": "18d1039a58b841bd301c699961249bad44243557"
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-emails/zipball/dbc459ca1969327a14342903cc94d1bba010b43d",
+                "reference": "dbc459ca1969327a14342903cc94d1bba010b43d",
+                "shasum": ""
             },
             "require": {
                 "phpmailer/phpmailer": "^6.8.0",
-                "starbug/admin": "*",
-                "starbug/db": "*",
+                "starbug/admin": "^0.9",
+                "starbug/db": "^0.12",
                 "starbug/display": "^0.9",
                 "starbug/macro": "^0.9",
                 "starbug/routing": "^1.0"
@@ -4046,6 +4057,7 @@
                     "Starbug\\Emails\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -4056,9 +4068,12 @@
                 }
             ],
             "description": "Starbug emails module.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-emails/issues",
+                "source": "https://github.com/cogentParadigm/starbug-emails/tree/v0.9.0"
+            },
+            "time": "2026-11-16T15:41:19+00:00",
+            "published-time": "2026-11-16T15:48:09+00:00"
         },
         {
             "name": "starbug/event-dispatcher",
@@ -4110,20 +4125,26 @@
         },
         {
             "name": "starbug/files",
-            "version": "dev-main",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-files.git",
+                "reference": "27812357f580e88fb81391cd1421a47ccbee610b"
+            },
             "dist": {
-                "type": "path",
-                "url": "./modules/files",
-                "reference": "0ffa560cb1215cac00753f2ab5f8c6631a58a735"
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-files/zipball/27812357f580e88fb81391cd1421a47ccbee610b",
+                "reference": "27812357f580e88fb81391cd1421a47ccbee610b",
+                "shasum": ""
             },
             "require": {
                 "elgigi/flysystem-useful-adapters": "^1.1",
                 "league/flysystem": "^3.18",
                 "masterexploder/phpthumb": "dev-master",
                 "ntzrbtr/flysystem-http": "^2.0",
-                "starbug/admin": "*",
+                "starbug/admin": "^0.9",
                 "starbug/api": "^0.9",
-                "starbug/db": "*",
+                "starbug/db": "^0.12",
                 "starbug/display": "^0.9",
                 "starbug/routing": "^1.0",
                 "xantios/mimey": "^2.1.0"
@@ -4140,6 +4161,7 @@
                     "Starbug\\Files\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -4150,9 +4172,12 @@
                 }
             ],
             "description": "Starbug files module.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-files/issues",
+                "source": "https://github.com/cogentParadigm/starbug-files/tree/v0.9.0"
+            },
+            "time": "2026-11-16T15:41:19+00:00",
+            "published-time": "2026-11-16T15:48:10+00:00"
         },
         {
             "name": "starbug/http",
@@ -4348,17 +4373,24 @@
         },
         {
             "name": "starbug/log",
-            "version": "dev-main",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-log.git",
+                "reference": "0e35f9d78fa753b6ddc56e17254f6ed65d8b11f3"
+            },
             "dist": {
-                "type": "path",
-                "url": "./modules/log",
-                "reference": "cb37458bc9a04baa2860151ac7d57793af932113"
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-log/zipball/0e35f9d78fa753b6ddc56e17254f6ed65d8b11f3",
+                "reference": "0e35f9d78fa753b6ddc56e17254f6ed65d8b11f3",
+                "shasum": ""
             },
             "require": {
                 "filp/whoops": "^2.9",
                 "monolog/monolog": "^2.5",
                 "psr/log": "^1.0",
-                "starbug/admin": "*",
+                "starbug/admin": "^0.9",
+                "starbug/db": "^0.12",
                 "starbug/display": "^0.9",
                 "starbug/routing": "^1.0"
             },
@@ -4371,6 +4403,7 @@
                     "Starbug\\Log\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -4381,9 +4414,12 @@
                 }
             ],
             "description": "Starbug logging module.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-log/issues",
+                "source": "https://github.com/cogentParadigm/starbug-log/tree/v0.9.0"
+            },
+            "time": "2026-11-16T15:41:19+00:00",
+            "published-time": "2026-11-16T15:48:10+00:00"
         },
         {
             "name": "starbug/macro",
@@ -4432,7 +4468,8 @@
                 "issues": "https://github.com/cogentParadigm/starbug-macro/issues",
                 "source": "https://github.com/cogentParadigm/starbug-macro/tree/v0.9.0"
             },
-            "time": "2026-11-06T22:41:30+00:00"
+            "time": "2026-11-06T22:41:30+00:00",
+            "published-time": "2026-11-06T23:52:36+00:00"
         },
         {
             "name": "starbug/menus",
@@ -5018,18 +5055,24 @@
         },
         {
             "name": "starbug/users",
-            "version": "dev-main",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-users.git",
+                "reference": "de4834acf10ffb11a8e1646451d65f2563c25949"
+            },
             "dist": {
-                "type": "path",
-                "url": "./modules/users",
-                "reference": "9bb408a377bbfd1cbc8425f93198ca62648f6f50"
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-users/zipball/de4834acf10ffb11a8e1646451d65f2563c25949",
+                "reference": "de4834acf10ffb11a8e1646451d65f2563c25949",
+                "shasum": ""
             },
             "require": {
                 "bjeavons/zxcvbn-php": "^1.0",
-                "starbug/admin": "*",
+                "starbug/admin": "^0.9",
                 "starbug/api": "^0.9",
                 "starbug/auth": "^1.0",
-                "starbug/db": "*",
+                "starbug/db": "^0.12",
                 "starbug/display": "^0.9",
                 "starbug/routing": "^1.0"
             },
@@ -5042,11 +5085,7 @@
                     "Starbug\\Users\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Starbug\\Users\\Tests\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -5057,9 +5096,12 @@
                 }
             ],
             "description": "Starbug users module.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-users/issues",
+                "source": "https://github.com/cogentParadigm/starbug-users/tree/v0.9.0"
+            },
+            "time": "2026-11-16T15:41:19+00:00",
+            "published-time": "2026-11-16T15:48:10+00:00"
         },
         {
             "name": "starbug/webpack",
@@ -5782,7 +5824,8 @@
                 "issues": "https://github.com/Xantios/mimey/issues",
                 "source": "https://github.com/Xantios/mimey/tree/v2.2.0"
             },
-            "time": "2021-06-12T14:33:14+00:00"
+            "time": "2021-06-12T14:33:14+00:00",
+            "published-time": "2021-06-12T14:36:00+00:00"
         }
     ],
     "packages-dev": [
@@ -13468,13 +13511,9 @@
     "stability-flags": {
         "masterexploder/phpthumb": 20,
         "starbug/content": 20,
-        "starbug/emails": 20,
-        "starbug/files": 20,
         "starbug/imports": 20,
-        "starbug/log": 20,
         "starbug/menus": 20,
-        "starbug/settings-admin": 20,
-        "starbug/users": 20
+        "starbug/settings-admin": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

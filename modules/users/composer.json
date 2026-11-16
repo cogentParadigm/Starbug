@@ -24,10 +24,10 @@
   },
   "require": {
     "bjeavons/zxcvbn-php": "^1.0",
-    "starbug/admin": "*",
+    "starbug/admin": "^0.9",
     "starbug/api": "^0.9",
     "starbug/auth": "^1.0",
-    "starbug/db": "*",
+    "starbug/db": "^0.12",
     "starbug/routing": "^1.0",
     "starbug/display": "^0.9"
   }
