@@ -44,18 +44,17 @@ class FileUploader implements FileUploaderInterface {
         $fs->delete($writePath);
       }
       $stream = fopen($tmpName, "r+");
-      $success = $fs->writeStream($writePath, $stream);
-      if (is_resource($stream)) {
-        fclose($stream);
-      }
-      if ($success) {
-        if (in_array($record['mime_type'], ["image/gif", "image/jpeg", "image/png"])) {
-          $this->images->thumb($record["location"]."://".$record["id"]."_".$record['filename'], ["w" => 100, "h" => 100]);
+      try {
+        $fs->writeStream($writePath, $stream);
+      } finally {
+        if (is_resource($stream)) {
+          fclose($stream);
         }
-        return $record;
-      } else {
-        throw new Exception("File could not be moved");
       }
+      if (in_array($record['mime_type'], ["image/gif", "image/jpeg", "image/png"])) {
+        $this->images->thumb($record["location"]."://".$record["id"]."_".$record['filename'], ["w" => 100, "h" => 100]);
+      }
+      return $record;
     }
     return null;
   }

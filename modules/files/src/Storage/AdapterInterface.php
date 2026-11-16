@@ -1,8 +1,8 @@
 <?php
 namespace Starbug\Files\Storage;
 
-use League\Flysystem\AdapterInterface as ParentInterface;
+use League\Flysystem\FilesystemAdapter;
 
-interface AdapterInterface extends ParentInterface {
+interface AdapterInterface extends FilesystemAdapter {
   public function getUrl($path, $absolute = false);
 }

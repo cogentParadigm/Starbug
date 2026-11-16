@@ -1,12 +1,16 @@
 <?php
 namespace Starbug\Files\Storage\Adapter;
 
+use Netzarbeiter\FlysystemHttp\HttpAdapterStream;
 use Starbug\Files\Storage\AdapterInterface;
 use Starbug\Http\UriBuilderInterface;
-use Twistor\Flysystem\Http\HttpAdapter as ParentAdapter;
 
-class HttpAdapter extends ParentAdapter implements AdapterInterface {
-  protected $uri;
+/**
+ * Read-only adapter over HTTP, so a local filesystem can proxy files from
+ * another environment, such as published files on a stage server.
+ */
+class HttpAdapter extends HttpAdapterStream implements AdapterInterface {
+  protected ?UriBuilderInterface $uri = null;
   public function setUriBuilder(UriBuilderInterface $uri) {
     $this->uri = $uri;
   }

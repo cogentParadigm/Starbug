@@ -5,13 +5,14 @@ use function DI\add;
 use function DI\get;
 use function DI\autowire;
 use Psr\Container\ContainerInterface;
-use League\Flysystem\MountManager;
 use Starbug\Files\Storage\Filesystem;
+use Starbug\Files\Storage\MountManager;
 use Starbug\Files\Storage\Adapter\Local;
 use Starbug\Files\Storage\Adapter\LocalPrivate;
 use Starbug\Files\Command\CleanupDatabase;
-use Starbug\Files\Query\Hook\StoreUploadHook;
 use Starbug\Files\Command\CleanupFilesystem;
+use Starbug\Files\Helper\FilesystemsHelper;
+use Starbug\Files\Query\Hook\StoreUploadHook;
 use Starbug\Http\UriBuilder;
 
 return [
@@ -22,6 +23,9 @@ return [
   ]),
   "route.providers" => add([
     get("Starbug\Files\RouteProvider")
+  ]),
+  "template.helpers" => add([
+    "filesystems" => FilesystemsHelper::class
   ]),
   'filesystem.adapters' => ['default', 'public', 'private', 'tmp'],
   'filesystem.adapter.default' => 'public',
@@ -55,22 +59,24 @@ return [
     $adapter->setUriBuilder($builder);
     return $adapter;
   },
-  'League\Flysystem\MountManager' => function (ContainerInterface $c) {
-    $manager = new MountManager();
-    $adapters = $c->get("filesystem.adapters");
-    foreach ($adapters as $prefix) {
+  'filesystems.instances' => function (ContainerInterface $c) {
+    $filesystems = [];
+    foreach ($c->get("filesystem.adapters") as $prefix) {
       $adapter = $c->get('filesystem.adapter.'.$prefix);
       $config = $c->has('filesystem.config.'.$prefix) ? $c->get('filesystem.config.'.$prefix) : [];
       if (is_string($adapter)) {
         $adapter = $c->get("filesystem.adapter.".$adapter);
       }
-      $manager->mountFilesystem($prefix, new Filesystem($adapter, $config));
+      $filesystems[$prefix] = new Filesystem($adapter, $config);
     }
-    return $manager;
+    return $filesystems;
   },
+  MountManager::class => function (ContainerInterface $c) {
+    return new MountManager($c->get("filesystems.instances"));
+  },
+  "League\Flysystem\MountManager" => get(MountManager::class),
   'Starbug\Files\Storage\FilesystemInterface' => function (ContainerInterface $c) {
-    $manager = $c->get("League\Flysystem\MountManager");
-    return $manager->getFilesystem("default");
+    return $c->get("filesystems.instances")["default"];
   },
   'db.schema.migrations' => add([
     get('Starbug\Files\Migration')

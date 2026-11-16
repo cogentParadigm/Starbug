@@ -1,7 +1,7 @@
 <?php
-namespace Starbug\Core;
+namespace Starbug\Files\Helper;
 
-use League\Flysystem\MountManager;
+use Starbug\Files\Storage\MountManager;
 
 class FilesystemsHelper {
   public function __construct(

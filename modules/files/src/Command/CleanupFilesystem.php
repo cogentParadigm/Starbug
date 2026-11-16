@@ -96,11 +96,11 @@ class CleanupFilesystem {
     $contents = $fs->listContents($directory, false);
 
     foreach ($contents as $item) {
-      $path = isset($item['path']) ? $item['path'] : '';
+      $path = $item->path();
 
-      if (isset($item['type']) && $item['type'] === 'file') {
+      if ($item->isFile()) {
         $results[] = $path;
-      } elseif ($recurse && isset($item['type']) && $item['type'] === 'dir') {
+      } elseif ($recurse && $item->isDir()) {
         $subResults = $this->listFilesRecursively($fs, $path);
         $results = array_merge($results, $subResults);
       }

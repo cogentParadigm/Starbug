@@ -1,12 +1,12 @@
 <?php
 namespace Starbug\Files\Storage\Adapter;
 
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Starbug\Files\Storage\AdapterInterface;
-use League\Flysystem\Adapter\Local as ParentAdapter;
 use Starbug\Http\UriBuilderInterface;
 
-class Local extends ParentAdapter implements AdapterInterface {
-  protected $uri;
+class Local extends LocalFilesystemAdapter implements AdapterInterface {
+  protected ?UriBuilderInterface $uri = null;
   public function setUriBuilder(UriBuilderInterface $uri) {
     $this->uri = $uri;
   }

@@ -58,7 +58,6 @@ return [
     "config" => ConfigHelper::class,
     "csrf" => CsrfHelper::class,
     "db" => DbHelper::class,
-    "filesystems" => FilesystemsHelper::class,
     "images" => ImagesHelper::class,
     "request" => RequestHelper::class,
     "session" => SessionHelper::class,

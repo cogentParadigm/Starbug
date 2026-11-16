@@ -2,15 +2,14 @@
 namespace Starbug\Files\Storage;
 
 use League\Flysystem\Filesystem as ParentFilesystem;
-use League\Flysystem\Util;
+use League\Flysystem\WhitespacePathNormalizer;
 
 class Filesystem extends ParentFilesystem implements FilesystemInterface {
-  // override constructor to enforce Starbug\Files\Storage\AdapterInterface
-  public function __construct(AdapterInterface $adapter, $config = null) {
-    parent::__construct($adapter, $config);
+  public function __construct(protected AdapterInterface $storageAdapter, array $config = []) {
+    parent::__construct($storageAdapter, $config);
   }
   public function getUrl($path, $absolute = false) {
-    $path = Util::normalizePath($path);
-    return $this->getAdapter()->getUrl($path, $absolute);
+    $path = (new WhitespacePathNormalizer())->normalizePath($path);
+    return $this->storageAdapter->getUrl($path, $absolute);
   }
 }

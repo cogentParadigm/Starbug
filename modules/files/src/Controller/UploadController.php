@@ -57,7 +57,7 @@ class UploadController extends Controller {
           $_post['width'] = $width;
           $_post['height'] = $height;
           $_post['type'] = pathinfo($_post['name'], PATHINFO_EXTENSION);
-          $_post['size'] = $this->filesystems->getFilesystem($record["location"])->getSize($_post['name']);
+          $_post['size'] = $this->filesystems->getFilesystem($record["location"])->fileSize($_post['name']);
           $_post['image'] = $image;
           $_post['owner'] = $this->session->getUserId();
           $htmldata[] = $_post;

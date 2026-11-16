@@ -91,7 +91,7 @@ class Images implements ImagesInterface {
     $dir = $dimensions['w']."x".$dimensions['h']."a".$dimensions['a'];
     $target = $dir."/".$filename;
     if (!$this->filesystems->has($filesystem."://thumbnails/".$target) || $dimensions['f']) {
-      $this->filesystems->put("tmp://images/".$filename, $this->filesystems->read($url));
+      $this->filesystems->write("tmp://images/".$filename, $this->filesystems->read($url));
       $thumb = new GD($this->base_directory."/var/tmp/images/".$filename);
       if (function_exists("exif_read_data")) {
         $exif = @exif_read_data($this->base_directory."/var/tmp/images/".$filename);
@@ -111,7 +111,7 @@ class Images implements ImagesInterface {
         $thumb->resize($dimensions['w'], $dimensions['h']);
       }
       if (!$this->filesystems->has("tmp://thumbnails/".$dir)) {
-        $this->filesystems->createDir("tmp://thumbnails/".$dir);
+        $this->filesystems->createDirectory("tmp://thumbnails/".$dir);
       }
       $thumb->save($this->base_directory."/var/tmp/thumbnails/".$target);
       $this->filesystems->move("tmp://thumbnails/".$target, $filesystem."://thumbnails/".$target);
