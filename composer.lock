@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad3d8393f590473743c94de1be59c76d",
+    "content-hash": "40f0c75755c00094a475974e172261ca",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3703,25 +3703,35 @@
         },
         {
             "name": "starbug/css",
-            "version": "dev-main",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-css.git",
+                "reference": "c9518ca20b80360a7fa389cb6e938be44a903931"
+            },
             "dist": {
-                "type": "path",
-                "url": "./modules/css",
-                "reference": "e59674df7aa95ef02c0bcd0b59671ce8e690d4d5"
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-css/zipball/c9518ca20b80360a7fa389cb6e938be44a903931",
+                "reference": "c9518ca20b80360a7fa389cb6e938be44a903931",
+                "shasum": ""
             },
             "require": {
                 "starbug/routing": "^1.0",
                 "starbug/templates": "^1.0"
             },
-            "type": "starbug-module",
+            "type": "library",
             "extra": {
-                "namespace": "Starbug\\Css"
+                "starbug": {
+                    "type": "module",
+                    "namespace": "Starbug\\Css"
+                }
             },
             "autoload": {
                 "psr-4": {
                     "Starbug\\Css\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -3731,10 +3741,13 @@
                     "homepage": "https://github.com/cogentParadigm"
                 }
             ],
-            "description": "Starbug css module.",
-            "transport-options": {
-                "relative": true
-            }
+            "description": "Stylesheet discovery and the css template helper.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-css/issues",
+                "source": "https://github.com/cogentParadigm/starbug-css/tree/v0.9.0"
+            },
+            "time": "2026-11-16T14:39:30+00:00",
+            "published-time": "2026-11-16T14:42:47+00:00"
         },
         {
             "name": "starbug/db",
@@ -13410,7 +13423,6 @@
         "masterexploder/phpthumb": 20,
         "starbug/admin": 20,
         "starbug/content": 20,
-        "starbug/css": 20,
         "starbug/doctrine": 20,
         "starbug/emails": 20,
         "starbug/files": 20,

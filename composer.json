@@ -45,7 +45,7 @@
     "starbug/users": "dev-main",
     "starbug/files": "dev-main",
     "starbug/emails": "dev-main",
-    "starbug/css": "dev-main",
+    "starbug/css": "^0.9",
     "starbug/content": "dev-main",
     "starbug/storm": "^1.0.1",
     "starbug/redis": "^0.9",
