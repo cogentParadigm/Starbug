@@ -60,7 +60,7 @@
     "starbug/settings-admin": "dev-main",
     "starbug/tachyons": "^1.1.3",
     "starbug/routing": "^1.1.1",
-    "starbug/templates": "^1.0",
+    "starbug/templates": "^1.1.0",
     "starbug/admin": "dev-main",
     "starbug/webpack": "^1.0.0",
     "starbug/dojo": "^1.1.0",

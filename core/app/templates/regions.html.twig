@@ -1,4 +1,0 @@
-{% set regions = helper('config').get('info.regions', ('themes/' ~ helper("css").getTheme())) %}
-{% for region in regions %}
-  {{ include('region.html.twig', {'region': region}) }}
-{% endfor %}

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3fa9b0476abda108ba71d250965e7d9b",
+    "content-hash": "1c72915699aceaa0b37176d0313bdf28",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -4494,16 +4494,16 @@
         },
         {
             "name": "starbug/templates",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-templates.git",
-                "reference": "771849717046620648bcb78b8ff0b8ae9a6338f2"
+                "reference": "652a24e7988038246e0eea22698c9e227d3ea214"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-templates/zipball/771849717046620648bcb78b8ff0b8ae9a6338f2",
-                "reference": "771849717046620648bcb78b8ff0b8ae9a6338f2",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-templates/zipball/652a24e7988038246e0eea22698c9e227d3ea214",
+                "reference": "652a24e7988038246e0eea22698c9e227d3ea214",
                 "shasum": ""
             },
             "require": {
@@ -4534,9 +4534,10 @@
             "description": "A template rendering module for Starbug PHP framework integrating Twig.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-templates/issues",
-                "source": "https://github.com/cogentParadigm/starbug-templates/tree/v1.0.0"
+                "source": "https://github.com/cogentParadigm/starbug-templates/tree/v1.1.0"
             },
-            "time": "2025-10-23T18:45:21+00:00"
+            "time": "2026-11-16T01:09:38+00:00",
+            "published-time": "2026-11-16T01:11:35+00:00"
         },
         {
             "name": "starbug/users",
