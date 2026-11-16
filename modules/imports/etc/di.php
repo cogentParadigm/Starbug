@@ -17,9 +17,6 @@ use Starbug\Imports\Transform\Lookup;
 use Starbug\Log\LoggerFactory;
 
 return [
-  "route.providers" => add([
-    get(RouteProvider::class)
-  ]),
   "importer.operations" => [
     "import" => [
       "name" => "Import",

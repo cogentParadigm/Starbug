@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Imports\Operation;
+namespace Starbug\Imports\Admin\Operation;
 
 use Starbug\Db\Operation\Save;
 use Starbug\Db\DatabaseInterface;

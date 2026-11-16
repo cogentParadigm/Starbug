@@ -12,15 +12,14 @@
   },
   "require": {
     "ext-yaml": "*",
-    "starbug/importer": "^0.10",
-    "starbug/importer-spreadsheet": "^0.9",
+    "league/flysystem": "^3.18",
+    "phpoffice/phpspreadsheet": "^1.12",
+    "psr/container": "^1.0 || ^2.0",
     "starbug/db": "^0.12",
     "starbug/files": "^0.9",
-    "league/flysystem": "^3.18",
+    "starbug/importer": "^0.10",
+    "starbug/importer-spreadsheet": "^0.9",
     "starbug/log": "^0.9 || ^0.10",
-    "phpoffice/phpspreadsheet": "^1.12",
-    "starbug/routing": "^1.0",
-    "starbug/admin": "^0.9",
-    "starbug/display": "^0.9"
+    "starbug/operation": "^0.8"
   }
 }

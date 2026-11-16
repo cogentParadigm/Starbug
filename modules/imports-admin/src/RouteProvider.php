@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Imports;
+namespace Starbug\Imports\Admin;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Admin\RouteProvider as AdminRouteProvider;
@@ -11,7 +11,7 @@ use Starbug\Imports\Admin\ImportsGrid;
 use Starbug\Imports\Admin\ImportsTransformersForm;
 use Starbug\Imports\Admin\ImportsTransformersSelectCollection;
 use Starbug\Imports\Operation\Run;
-use Starbug\Imports\Operation\SaveTransformer;
+use Starbug\Imports\Admin\Operation\SaveTransformer;
 use Starbug\Routing\Controller\ViewController;
 
 class RouteProvider extends AdminRouteProvider {

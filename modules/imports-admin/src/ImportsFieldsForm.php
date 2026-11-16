@@ -45,7 +45,7 @@ class ImportsFieldsForm extends FormDisplay {
     $this->parseSource($options);
     $this->add(["source", "input_type" => "select", "options" => $this->source_values]);
     $dest_ops = ["destination", "input_type" => "select", "model" => $options["model"]];
-    $dest_ops["resolve_options"] = ImportsFieldOptions::class;
+    $dest_ops["resolve_options"] = \Starbug\Imports\ImportsFieldOptions::class;
     $this->add($dest_ops);
     $this->add(["update_key", "input_type" => "checkbox", "value" => "1", "label" => "Use this field as a key to update records"]);
   }

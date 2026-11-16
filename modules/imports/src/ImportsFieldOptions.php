@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Imports\Admin;
+namespace Starbug\Imports;
 
 use Starbug\Db\Schema\SchemerInterface;
 

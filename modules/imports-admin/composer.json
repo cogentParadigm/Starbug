@@ -1,0 +1,30 @@
+{
+  "name": "starbug/imports-admin",
+  "type": "starbug-module",
+  "description": "Admin screens for imports.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Imports\\Admin"
+  },
+  "require": {
+    "starbug/imports": "^0.9.2",
+    "starbug/admin": "^0.9",
+    "starbug/api": "^0.9",
+    "starbug/display": "^0.9",
+    "starbug/dojo": "^1.1",
+    "starbug/routing": "^1.0",
+    "starbug/db": "^0.12",
+    "starbug/operation": "^0.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Imports\\Admin\\": "src/"
+    }
+  }
+}
