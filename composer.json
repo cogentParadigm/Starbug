@@ -41,7 +41,7 @@
     "ezyang/htmlpurifier": "^4.13",
     "wp-cli/php-cli-tools": "^0.10.5",
     "starbug/db": "^0.12",
-    "starbug/doctrine": "dev-main",
+    "starbug/doctrine": "^0.9",
     "starbug/users": "dev-main",
     "starbug/files": "dev-main",
     "starbug/emails": "dev-main",

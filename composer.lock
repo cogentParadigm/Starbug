@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "40f0c75755c00094a475974e172261ca",
+    "content-hash": "eac5aded47bfdeb228cd30a74df7a286",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -380,7 +380,8 @@
                 }
             ],
             "abandoned": true,
-            "time": "2022-05-20T20:07:39+00:00"
+            "time": "2022-05-20T20:07:39+00:00",
+            "published-time": "2022-05-20T20:14:47+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -489,7 +490,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-02T20:28:55+00:00"
+            "time": "2022-05-02T20:28:55+00:00",
+            "published-time": "2022-05-02T20:30:35+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -630,7 +632,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-10-12T20:51:15+00:00"
+            "time": "2022-10-12T20:51:15+00:00",
+            "published-time": "2022-10-12T21:53:20+00:00"
         },
         {
             "name": "elgigi/flysystem-useful-adapters",
@@ -3913,25 +3916,35 @@
         },
         {
             "name": "starbug/doctrine",
-            "version": "dev-main",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-doctrine.git",
+                "reference": "61146447cf6551b92cf94a915b145c46ce7d8d8c"
+            },
             "dist": {
-                "type": "path",
-                "url": "./modules/doctrine",
-                "reference": "94e99fcd242bf377c855b9ac1d164b5b89651931"
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-doctrine/zipball/61146447cf6551b92cf94a915b145c46ce7d8d8c",
+                "reference": "61146447cf6551b92cf94a915b145c46ce7d8d8c",
+                "shasum": ""
             },
             "require": {
                 "doctrine/dbal": "^2.8",
-                "starbug/db": "*"
+                "starbug/db": "^0.12"
             },
-            "type": "starbug-module",
+            "type": "library",
             "extra": {
-                "namespace": "Starbug\\Doctrine"
+                "starbug": {
+                    "type": "module",
+                    "namespace": "Starbug\\Doctrine"
+                }
             },
             "autoload": {
                 "psr-4": {
                     "Starbug\\Doctrine\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -3942,9 +3955,12 @@
                 }
             ],
             "description": "Doctrine based implementations of database module interfaces.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-doctrine/issues",
+                "source": "https://github.com/cogentParadigm/starbug-doctrine/tree/v0.9.0"
+            },
+            "time": "2026-11-16T15:01:06+00:00",
+            "published-time": "2026-11-16T15:03:17+00:00"
         },
         {
             "name": "starbug/dojo",
@@ -13423,7 +13439,6 @@
         "masterexploder/phpthumb": 20,
         "starbug/admin": 20,
         "starbug/content": 20,
-        "starbug/doctrine": 20,
         "starbug/emails": 20,
         "starbug/files": 20,
         "starbug/imports": 20,
