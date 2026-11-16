@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eac5aded47bfdeb228cd30a74df7a286",
+    "content-hash": "dd130e9ec60ac8d5f70081c229fb0231",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3388,15 +3388,21 @@
         },
         {
             "name": "starbug/admin",
-            "version": "dev-main",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-admin.git",
+                "reference": "b93d2f4735c4d8f76f075a0cc05785d0d2594d66"
+            },
             "dist": {
-                "type": "path",
-                "url": "./modules/admin",
-                "reference": "1c6fa0b6e2927ca6fa68438eb27fa16eddd2e902"
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-admin/zipball/b93d2f4735c4d8f76f075a0cc05785d0d2594d66",
+                "reference": "b93d2f4735c4d8f76f075a0cc05785d0d2594d66",
+                "shasum": ""
             },
             "require": {
                 "starbug/api": "^0.9",
-                "starbug/db": "^0.11 || ^0.12",
+                "starbug/db": "^0.12",
                 "starbug/routing": "^1.0"
             },
             "suggest": {
@@ -3411,6 +3417,7 @@
                     "Starbug\\Admin\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -3421,9 +3428,12 @@
                 }
             ],
             "description": "Starbug core administration module.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-admin/issues",
+                "source": "https://github.com/cogentParadigm/starbug-admin/tree/v0.9.0"
+            },
+            "time": "2026-11-16T15:21:16+00:00",
+            "published-time": "2026-11-16T15:27:40+00:00"
         },
         {
             "name": "starbug/api",
@@ -4602,14 +4612,20 @@
         },
         {
             "name": "starbug/queues",
-            "version": "dev-main",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-queues.git",
+                "reference": "3d96bf54727cc18e51dfaa902c5c74b282d3c948"
+            },
             "dist": {
-                "type": "path",
-                "url": "./modules/queues",
-                "reference": "5545d235dfbcf4e95d8084ede6d772ada98163e0"
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-queues/zipball/3d96bf54727cc18e51dfaa902c5c74b282d3c948",
+                "reference": "3d96bf54727cc18e51dfaa902c5c74b282d3c948",
+                "shasum": ""
             },
             "require": {
-                "starbug/db": "*",
+                "starbug/db": "^0.12",
                 "starbug/queue": "^0.8.0"
             },
             "type": "starbug-module",
@@ -4621,6 +4637,7 @@
                     "Starbug\\Queues\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -4631,9 +4648,12 @@
                 }
             ],
             "description": "Starbug queues module.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-queues/issues",
+                "source": "https://github.com/cogentParadigm/starbug-queues/tree/v0.9.0"
+            },
+            "time": "2026-11-16T15:21:16+00:00",
+            "published-time": "2026-11-16T15:27:39+00:00"
         },
         {
             "name": "starbug/redis",
@@ -4778,14 +4798,20 @@
         },
         {
             "name": "starbug/settings",
-            "version": "dev-main",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-settings.git",
+                "reference": "6232dc9b51b5496aa0c27cb1e239a77ca59f943a"
+            },
             "dist": {
-                "type": "path",
-                "url": "./modules/settings",
-                "reference": "7afb57123fe9041f10a78ec3018bc419e9a9a124"
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-settings/zipball/6232dc9b51b5496aa0c27cb1e239a77ca59f943a",
+                "reference": "6232dc9b51b5496aa0c27cb1e239a77ca59f943a",
+                "shasum": ""
             },
             "require": {
-                "starbug/db": "*"
+                "starbug/db": "^0.12"
             },
             "type": "starbug-module",
             "extra": {
@@ -4796,6 +4822,7 @@
                     "Starbug\\Settings\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -4806,9 +4833,12 @@
                 }
             ],
             "description": "Starbug settings module.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-settings/issues",
+                "source": "https://github.com/cogentParadigm/starbug-settings/tree/v0.9.0"
+            },
+            "time": "2026-11-16T15:21:16+00:00",
+            "published-time": "2026-11-16T15:27:51+00:00"
         },
         {
             "name": "starbug/settings-admin",
@@ -13437,15 +13467,12 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "masterexploder/phpthumb": 20,
-        "starbug/admin": 20,
         "starbug/content": 20,
         "starbug/emails": 20,
         "starbug/files": 20,
         "starbug/imports": 20,
         "starbug/log": 20,
         "starbug/menus": 20,
-        "starbug/queues": 20,
-        "starbug/settings": 20,
         "starbug/settings-admin": 20,
         "starbug/users": 20
     },

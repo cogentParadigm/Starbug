@@ -13,7 +13,7 @@
     "namespace": "Starbug\\Settings"
   },
   "require": {
-    "starbug/db": "*"
+    "starbug/db": "^0.12"
   },
   "autoload": {
     "psr-4": {

@@ -14,7 +14,7 @@
   },
   "require": {
     "starbug/api": "^0.9",
-    "starbug/db": "^0.11 || ^0.12",
+    "starbug/db": "^0.12",
     "starbug/routing": "^1.0"
   },
   "suggest": {
