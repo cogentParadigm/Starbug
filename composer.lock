@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a759168bbeb43c7ed70f459aa0e7f028",
+    "content-hash": "3083569a2cfae8192e26071081522563",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -4040,25 +4040,23 @@
         },
         {
             "name": "starbug/emails",
-            "version": "v0.9.0",
+            "version": "v0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-emails.git",
-                "reference": "dbc459ca1969327a14342903cc94d1bba010b43d"
+                "reference": "c5155bd267f91ef751259b52feaad5326c6cfb6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-emails/zipball/dbc459ca1969327a14342903cc94d1bba010b43d",
-                "reference": "dbc459ca1969327a14342903cc94d1bba010b43d",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-emails/zipball/c5155bd267f91ef751259b52feaad5326c6cfb6d",
+                "reference": "c5155bd267f91ef751259b52feaad5326c6cfb6d",
                 "shasum": ""
             },
             "require": {
                 "phpmailer/phpmailer": "^6.8.0",
-                "starbug/admin": "^0.9",
                 "starbug/db": "^0.12",
-                "starbug/display": "^0.9",
                 "starbug/macro": "^0.9",
-                "starbug/routing": "^1.0"
+                "starbug/settings": "^0.9"
             },
             "type": "starbug-module",
             "extra": {
@@ -4082,10 +4080,59 @@
             "description": "Starbug emails module.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-emails/issues",
-                "source": "https://github.com/cogentParadigm/starbug-emails/tree/v0.9.0"
+                "source": "https://github.com/cogentParadigm/starbug-emails/tree/v0.10.0"
             },
-            "time": "2026-11-16T15:41:19+00:00",
-            "published-time": "2026-11-16T15:48:09+00:00"
+            "time": "2026-11-16T17:48:29+00:00",
+            "published-time": "2026-11-16T17:50:52+00:00"
+        },
+        {
+            "name": "starbug/emails-admin",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-emails-admin.git",
+                "reference": "599467dc11465e3919c67d9ac2012a0be00dcf4d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-emails-admin/zipball/599467dc11465e3919c67d9ac2012a0be00dcf4d",
+                "reference": "599467dc11465e3919c67d9ac2012a0be00dcf4d",
+                "shasum": ""
+            },
+            "require": {
+                "starbug/admin": "^0.9",
+                "starbug/db": "^0.12",
+                "starbug/display": "^0.9",
+                "starbug/dojo": "^1.1",
+                "starbug/emails": "^0.10",
+                "starbug/routing": "^1.0"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Emails\\Admin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Emails\\Admin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Admin screens for email templates.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-emails-admin/issues",
+                "source": "https://github.com/cogentParadigm/starbug-emails-admin/tree/v0.9.0"
+            },
+            "time": "2026-11-16T17:48:35+00:00",
+            "published-time": "2026-11-16T17:51:05+00:00"
         },
         {
             "name": "starbug/event-dispatcher",

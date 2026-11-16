@@ -21,8 +21,6 @@
     "phpmailer/phpmailer": "^6.8.0",
     "starbug/db": "^0.12",
     "starbug/macro": "^0.9",
-    "starbug/routing": "^1.0",
-    "starbug/admin": "^0.9",
-    "starbug/display": "^0.9"
+    "starbug/settings": "^0.9"
   }
 }

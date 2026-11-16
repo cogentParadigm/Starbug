@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Emails;
+namespace Starbug\Emails\Admin;
 
 use Exception;
 use Starbug\Display\FormDisplay;

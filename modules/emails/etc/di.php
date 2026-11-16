@@ -9,9 +9,6 @@ use DI;
 return [
   "emails.whitelist.enabled" => false,
   "emails.whitelist" => [],
-  "route.providers" => add([
-    get(RouteProvider::class)
-  ]),
   "db.schema.migrations" => add([
     get(Migration::class)
   ]),

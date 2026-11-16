@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Emails;
+namespace Starbug\Emails\Admin;
 
 use Starbug\Dojo\Display\GridDisplay;
 
