@@ -14,11 +14,13 @@
     "ext-yaml": "*",
     "starbug/importer": "^0.10",
     "starbug/importer-spreadsheet": "^0.9",
-    "starbug/db": "*",
-    "starbug/log": "*",
+    "starbug/db": "^0.12",
+    "starbug/files": "^0.9",
+    "league/flysystem": "^3.18",
+    "starbug/log": "^0.9",
     "phpoffice/phpspreadsheet": "^1.12",
     "starbug/routing": "^1.0",
-    "starbug/admin": "*",
+    "starbug/admin": "^0.9",
     "starbug/display": "^0.9"
   }
 }
