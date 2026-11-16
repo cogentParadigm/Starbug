@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Users\Tests\Adapter;
+namespace Starbug\Users\Admin\Tests\Adapter;
 
 use Starbug\Admin\Testing\Adapter\CrudWebAdapter;
 

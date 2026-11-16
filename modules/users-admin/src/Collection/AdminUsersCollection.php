@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Users\Collection;
+namespace Starbug\Users\Admin\Collection;
 
 use Starbug\Admin\Db\Query\AdminCollection;
 

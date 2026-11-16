@@ -1,14 +1,14 @@
 <?php
-namespace Starbug\Users\Tests\Acceptance\Developer;
+namespace Starbug\Users\Admin\Tests\Acceptance\Developer;
 
 use DI\Attribute\Inject;
 use Starbug\Db\Testing\DatabaseTestCase;
 use Starbug\Testing\Attribute\Bind;
 use Starbug\Testing\Attribute\Fixture;
-use Starbug\Users\Tests\Acceptance\Traits\UserManagementCrudTestCases;
-use Starbug\Users\Tests\Adapter\UserManagementAdapterInterface;
-use Starbug\Users\Tests\Adapter\UserManagementShellAdapter;
-use Starbug\Users\Tests\Domain\UserManagement;
+use Starbug\Users\Admin\Tests\Acceptance\Traits\UserManagementCrudTestCases;
+use Starbug\Users\Admin\Tests\Adapter\UserManagementAdapterInterface;
+use Starbug\Users\Admin\Tests\Adapter\UserManagementShellAdapter;
+use Starbug\Users\Admin\Tests\Domain\UserManagement;
 
 /**
  * Shell-based acceptance tests for user management.

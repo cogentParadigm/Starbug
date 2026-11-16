@@ -1,0 +1,34 @@
+{
+  "name": "starbug/users-admin",
+  "type": "starbug-module",
+  "description": "Admin screens for user management.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Users\\Admin"
+  },
+  "require": {
+    "starbug/users": "^0.9.1",
+    "starbug/admin": "^0.9",
+    "starbug/api": "^0.9",
+    "starbug/display": "^0.9",
+    "starbug/dojo": "^1.1",
+    "starbug/routing": "^1.0",
+    "starbug/db": "^0.12"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Users\\Admin\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Starbug\\Users\\Admin\\Tests\\": "tests/"
+    }
+  }
+}

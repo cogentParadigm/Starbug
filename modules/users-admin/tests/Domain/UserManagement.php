@@ -1,8 +1,8 @@
 <?php
-namespace Starbug\Users\Tests\Domain;
+namespace Starbug\Users\Admin\Tests\Domain;
 
 use Starbug\Testing\Domain\Crud;
-use Starbug\Users\Tests\Adapter\UserManagementAdapterInterface;
+use Starbug\Users\Admin\Tests\Adapter\UserManagementAdapterInterface;
 
 /**
  * Domain interaction for user management.

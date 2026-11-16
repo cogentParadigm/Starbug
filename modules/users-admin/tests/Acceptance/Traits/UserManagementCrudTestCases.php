@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Users\Tests\Acceptance\Traits;
+namespace Starbug\Users\Admin\Tests\Acceptance\Traits;
 
 use Starbug\Db\Testing\Traits\DatabaseAssertions;
 

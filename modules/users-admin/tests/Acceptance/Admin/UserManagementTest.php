@@ -1,12 +1,12 @@
 <?php
-namespace Starbug\Users\Tests\Acceptance\Admin;
+namespace Starbug\Users\Admin\Tests\Acceptance\Admin;
 
 use DI\Attribute\Inject;
 use Starbug\Db\Testing\WebDatabaseTestCase;
 use Starbug\Testing\Attribute\Fixture;
-use Starbug\Users\Tests\Acceptance\Traits\UserManagementCrudTestCases;
+use Starbug\Users\Admin\Tests\Acceptance\Traits\UserManagementCrudTestCases;
 use Starbug\Users\Tests\Domain\Authentication;
-use Starbug\Users\Tests\Domain\UserManagement;
+use Starbug\Users\Admin\Tests\Domain\UserManagement;
 
 /**
  * Web-based acceptance tests for user management.

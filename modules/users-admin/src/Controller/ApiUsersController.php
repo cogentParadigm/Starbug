@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Users\Controller;
+namespace Starbug\Users\Admin\Controller;
 
 use Starbug\Api\Controller\CollectionController;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Users\Display;
+namespace Starbug\Users\Admin\Display;
 
 use Starbug\Dojo\Display\GridDisplay;
 

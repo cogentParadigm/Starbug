@@ -24,11 +24,16 @@
   },
   "require": {
     "bjeavons/zxcvbn-php": "^1.0",
-    "starbug/admin": "^0.9",
-    "starbug/api": "^0.9",
+    "guzzlehttp/psr7": "^1.7 || ^2.0",
+    "psr/http-message": "^1.0",
     "starbug/auth": "^1.0",
+    "starbug/bundle": "^1.0",
     "starbug/db": "^0.12",
-    "starbug/routing": "^1.0",
-    "starbug/display": "^0.9"
+    "starbug/display": "^0.9",
+    "starbug/emails": "^0.10",
+    "starbug/http": "^0.9.17",
+    "starbug/operation": "^0.8",
+    "starbug/queue": "^0.8.0",
+    "starbug/routing": "^1.0"
   }
 }
