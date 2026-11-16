@@ -17,12 +17,9 @@
     "elgigi/flysystem-useful-adapters": "^1.1",
     "ntzrbtr/flysystem-http": "^2.0",
     "masterexploder/phpthumb": "dev-master",
-    "starbug/admin": "^0.9",
-    "starbug/api": "^0.9",
     "starbug/db": "^0.12",
     "starbug/routing": "^1.0",
-    "xantios/mimey": "^2.1.0",
-    "starbug/display": "^0.9"
+    "xantios/mimey": "^2.1.0"
   },
   "autoload": {
     "psr-4": {

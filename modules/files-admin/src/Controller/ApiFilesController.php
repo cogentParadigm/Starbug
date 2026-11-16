@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Files\Controller;
+namespace Starbug\Files\Admin\Controller;
 
 use League\Flysystem\MountManager;
 use Starbug\Api\ApiRequest;

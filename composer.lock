@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "84f090f6fd32382fa3563d2aeea5aa2e",
+    "content-hash": "c76f06d2f00487632229156ea9e2ce4a",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -4184,16 +4184,16 @@
         },
         {
             "name": "starbug/files",
-            "version": "v0.9.0",
+            "version": "v0.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-files.git",
-                "reference": "27812357f580e88fb81391cd1421a47ccbee610b"
+                "reference": "6ec7ccd9da358a0eb004d972cce35aa501af395c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-files/zipball/27812357f580e88fb81391cd1421a47ccbee610b",
-                "reference": "27812357f580e88fb81391cd1421a47ccbee610b",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-files/zipball/6ec7ccd9da358a0eb004d972cce35aa501af395c",
+                "reference": "6ec7ccd9da358a0eb004d972cce35aa501af395c",
                 "shasum": ""
             },
             "require": {
@@ -4201,10 +4201,7 @@
                 "league/flysystem": "^3.18",
                 "masterexploder/phpthumb": "dev-master",
                 "ntzrbtr/flysystem-http": "^2.0",
-                "starbug/admin": "^0.9",
-                "starbug/api": "^0.9",
                 "starbug/db": "^0.12",
-                "starbug/display": "^0.9",
                 "starbug/routing": "^1.0",
                 "xantios/mimey": "^2.1.0"
             },
@@ -4233,10 +4230,59 @@
             "description": "Starbug files module.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-files/issues",
-                "source": "https://github.com/cogentParadigm/starbug-files/tree/v0.9.0"
+                "source": "https://github.com/cogentParadigm/starbug-files/tree/v0.9.2"
             },
-            "time": "2026-11-16T15:41:19+00:00",
-            "published-time": "2026-11-16T15:48:10+00:00"
+            "time": "2026-11-16T18:19:43+00:00",
+            "published-time": "2026-11-16T18:26:12+00:00"
+        },
+        {
+            "name": "starbug/files-admin",
+            "version": "v0.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-files-admin.git",
+                "reference": "75651efe2f152b59ffad44e2c1b912aff14a2363"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-files-admin/zipball/75651efe2f152b59ffad44e2c1b912aff14a2363",
+                "reference": "75651efe2f152b59ffad44e2c1b912aff14a2363",
+                "shasum": ""
+            },
+            "require": {
+                "starbug/admin": "^0.9",
+                "starbug/api": "^0.9",
+                "starbug/db": "^0.12",
+                "starbug/display": "^0.9",
+                "starbug/files": "^0.9.2",
+                "starbug/routing": "^1.0"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Files\\Admin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Files\\Admin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Admin screens for the media library.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-files-admin/issues",
+                "source": "https://github.com/cogentParadigm/starbug-files-admin/tree/v0.9.1"
+            },
+            "time": "2026-11-16T18:19:59+00:00",
+            "published-time": "2026-11-16T18:26:15+00:00"
         },
         {
             "name": "starbug/http",

@@ -1,0 +1,28 @@
+{
+  "name": "starbug/files-admin",
+  "type": "starbug-module",
+  "description": "Admin screens for the media library.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Files\\Admin"
+  },
+  "require": {
+    "starbug/files": "^0.9.2",
+    "starbug/admin": "^0.9",
+    "starbug/api": "^0.9",
+    "starbug/display": "^0.9",
+    "starbug/routing": "^1.0",
+    "starbug/db": "^0.12"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Files\\Admin\\": "src/"
+    }
+  }
+}

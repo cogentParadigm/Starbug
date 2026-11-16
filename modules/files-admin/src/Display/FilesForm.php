@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Files\Display;
+namespace Starbug\Files\Admin\Display;
 
 use Starbug\Display\FormDisplay;
 
