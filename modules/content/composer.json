@@ -23,12 +23,12 @@
     }
   },
   "require": {
-    "starbug/db": "*",
-    "starbug/files": "*",
+    "starbug/db": "^0.12",
+    "starbug/files": "^0.9",
     "starbug/macro": "^0.9",
-    "starbug/menus": "*",
+    "starbug/menus": "^0.9",
     "starbug/routing": "^1.0",
-    "starbug/admin": "*",
+    "starbug/admin": "^0.9",
     "starbug/display": "^0.9"
   },
   "require-dev": {

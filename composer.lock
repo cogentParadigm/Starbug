@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "84191b1cc2923f369357bc11e32fc432",
+    "content-hash": "270508ce262f3ccf18be3d18f7b03753",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3680,19 +3680,25 @@
         },
         {
             "name": "starbug/content",
-            "version": "dev-main",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-content.git",
+                "reference": "b3ee6f8acca318b26609169b2f3a87203f19e136"
+            },
             "dist": {
-                "type": "path",
-                "url": "./modules/content",
-                "reference": "a0ac0963769410e1c9f61152231779057baf6844"
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-content/zipball/b3ee6f8acca318b26609169b2f3a87203f19e136",
+                "reference": "b3ee6f8acca318b26609169b2f3a87203f19e136",
+                "shasum": ""
             },
             "require": {
-                "starbug/admin": "*",
-                "starbug/db": "*",
+                "starbug/admin": "^0.9",
+                "starbug/db": "^0.12",
                 "starbug/display": "^0.9",
-                "starbug/files": "*",
+                "starbug/files": "^0.9",
                 "starbug/macro": "^0.9",
-                "starbug/menus": "*",
+                "starbug/menus": "^0.9",
                 "starbug/routing": "^1.0"
             },
             "require-dev": {
@@ -3707,11 +3713,7 @@
                     "Starbug\\Content\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Starbug\\Content\\Tests\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -3722,9 +3724,12 @@
                 }
             ],
             "description": "Starbug content module.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-content/issues",
+                "source": "https://github.com/cogentParadigm/starbug-content/tree/v0.9.0"
+            },
+            "time": "2026-11-16T16:11:51+00:00",
+            "published-time": "2026-11-16T16:14:54+00:00"
         },
         {
             "name": "starbug/css",
@@ -4910,17 +4915,23 @@
         },
         {
             "name": "starbug/settings-admin",
-            "version": "dev-main",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-settings-admin.git",
+                "reference": "85bb62d5ccf723f2e4de2b69437fd00ca4820948"
+            },
             "dist": {
-                "type": "path",
-                "url": "./modules/settings-admin",
-                "reference": "0a27a2fabd48b35499798568388ac29b82dd3c3e"
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-settings-admin/zipball/85bb62d5ccf723f2e4de2b69437fd00ca4820948",
+                "reference": "85bb62d5ccf723f2e4de2b69437fd00ca4820948",
+                "shasum": ""
             },
             "require": {
-                "starbug/admin": "*",
+                "starbug/admin": "^0.9",
                 "starbug/display": "^0.9",
-                "starbug/menus": "*",
-                "starbug/settings": "*"
+                "starbug/menus": "^0.9",
+                "starbug/settings": "^0.9"
             },
             "type": "starbug-module",
             "extra": {
@@ -4931,6 +4942,7 @@
                     "Starbug\\Settings\\Admin\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -4941,9 +4953,12 @@
                 }
             ],
             "description": "Admin UI for Starbug settings module.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-settings-admin/issues",
+                "source": "https://github.com/cogentParadigm/starbug-settings-admin/tree/v0.9.0"
+            },
+            "time": "2026-11-16T16:11:51+00:00",
+            "published-time": "2026-11-16T16:15:06+00:00"
         },
         {
             "name": "starbug/storm",
@@ -13542,9 +13557,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "masterexploder/phpthumb": 20,
-        "starbug/content": 20,
-        "starbug/settings-admin": 20
+        "masterexploder/phpthumb": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -13,9 +13,9 @@
     "namespace": "Starbug\\Settings\\Admin"
   },
   "require": {
-    "starbug/settings": "*",
-    "starbug/menus": "*",
-    "starbug/admin": "*",
+    "starbug/settings": "^0.9",
+    "starbug/menus": "^0.9",
+    "starbug/admin": "^0.9",
     "starbug/display": "^0.9"
   },
   "autoload": {
