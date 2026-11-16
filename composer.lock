@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c76f06d2f00487632229156ea9e2ce4a",
+    "content-hash": "0900f2361ed8b304122f2c985cd322fe",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3680,16 +3680,16 @@
         },
         {
             "name": "starbug/content",
-            "version": "v0.9.0",
+            "version": "v0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-content.git",
-                "reference": "b3ee6f8acca318b26609169b2f3a87203f19e136"
+                "reference": "6a8e233800e207d545be7cd707622dd66ac4783d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-content/zipball/b3ee6f8acca318b26609169b2f3a87203f19e136",
-                "reference": "b3ee6f8acca318b26609169b2f3a87203f19e136",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-content/zipball/6a8e233800e207d545be7cd707622dd66ac4783d",
+                "reference": "6a8e233800e207d545be7cd707622dd66ac4783d",
                 "shasum": ""
             },
             "require": {
@@ -3699,6 +3699,7 @@
                 "starbug/files": "^0.9",
                 "starbug/macro": "^0.9",
                 "starbug/menus": "^0.9",
+                "starbug/menus-admin": "^0.9",
                 "starbug/routing": "^1.0"
             },
             "require-dev": {
@@ -3726,10 +3727,10 @@
             "description": "Starbug content module.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-content/issues",
-                "source": "https://github.com/cogentParadigm/starbug-content/tree/v0.9.0"
+                "source": "https://github.com/cogentParadigm/starbug-content/tree/v0.9.1"
             },
-            "time": "2026-11-16T16:11:51+00:00",
-            "published-time": "2026-11-16T16:14:54+00:00"
+            "time": "2026-11-16T18:36:42+00:00",
+            "published-time": "2026-11-16T18:36:53+00:00"
         },
         {
             "name": "starbug/css",
@@ -4647,25 +4648,21 @@
         },
         {
             "name": "starbug/menus",
-            "version": "v0.9.0",
+            "version": "v0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-menus.git",
-                "reference": "425ec907bc4aa0d0a23b141cf1f226925df306f6"
+                "reference": "af90f9e4dd85e73aba2785e8adeac6d16b5d4b99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-menus/zipball/425ec907bc4aa0d0a23b141cf1f226925df306f6",
-                "reference": "425ec907bc4aa0d0a23b141cf1f226925df306f6",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-menus/zipball/af90f9e4dd85e73aba2785e8adeac6d16b5d4b99",
+                "reference": "af90f9e4dd85e73aba2785e8adeac6d16b5d4b99",
                 "shasum": ""
             },
             "require": {
-                "starbug/admin": "^0.9",
-                "starbug/db": "^0.12",
-                "starbug/display": "^0.9",
-                "starbug/files": "^0.9",
-                "starbug/routing": "^1.0",
-                "starbug/users": "^0.9"
+                "starbug/bundle": "^1.0",
+                "starbug/db": "^0.12"
             },
             "type": "starbug-module",
             "extra": {
@@ -4689,10 +4686,59 @@
             "description": "Starbug menus module.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-menus/issues",
-                "source": "https://github.com/cogentParadigm/starbug-menus/tree/v0.9.0"
+                "source": "https://github.com/cogentParadigm/starbug-menus/tree/v0.9.1"
             },
-            "time": "2026-11-16T15:53:24+00:00",
-            "published-time": "2026-11-16T15:55:46+00:00"
+            "time": "2026-11-16T18:33:08+00:00",
+            "published-time": "2026-11-16T18:34:45+00:00"
+        },
+        {
+            "name": "starbug/menus-admin",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-menus-admin.git",
+                "reference": "0f7c0dcd0dd0d5bca1950cdc09c5131ba5d63021"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-menus-admin/zipball/0f7c0dcd0dd0d5bca1950cdc09c5131ba5d63021",
+                "reference": "0f7c0dcd0dd0d5bca1950cdc09c5131ba5d63021",
+                "shasum": ""
+            },
+            "require": {
+                "starbug/admin": "^0.9",
+                "starbug/db": "^0.12",
+                "starbug/display": "^0.9",
+                "starbug/dojo": "^1.1",
+                "starbug/menus": "^0.9.1",
+                "starbug/routing": "^1.0"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Menus\\Admin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Menus\\Admin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Admin screens for menu management.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-menus-admin/issues",
+                "source": "https://github.com/cogentParadigm/starbug-menus-admin/tree/v0.9.0"
+            },
+            "time": "2026-11-16T18:33:17+00:00",
+            "published-time": "2026-11-16T18:34:58+00:00"
         },
         {
             "name": "starbug/modules",

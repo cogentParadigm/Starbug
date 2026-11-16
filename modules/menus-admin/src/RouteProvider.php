@@ -1,16 +1,16 @@
 <?php
-namespace Starbug\Menus;
+namespace Starbug\Menus\Admin;
 
 use Starbug\Db\Operation\Save;
 use Starbug\Db\Operation\Delete;
 use Starbug\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Routing\Controller\ViewController;
 use Starbug\Routing\Route;
-use Starbug\Menus\Collection\MenusAdminCollection;
+use Starbug\Menus\Admin\Collection\MenusAdminCollection;
 use Starbug\Menus\Collection\MenusTreeCollection;
-use Starbug\Menus\Display\MenusForm;
-use Starbug\Menus\Display\MenusGrid;
-use Starbug\Menus\Display\MenusTreeGrid;
+use Starbug\Menus\Admin\Display\MenusForm;
+use Starbug\Menus\Admin\Display\MenusGrid;
+use Starbug\Menus\Admin\Display\MenusTreeGrid;
 use Starbug\Menus\Operation\DeleteMenus;
 
 class RouteProvider extends AdminRouteProvider {

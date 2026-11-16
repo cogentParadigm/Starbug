@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Menus\Collection;
+namespace Starbug\Menus\Admin\Collection;
 
 use Starbug\Db\Collection;
 

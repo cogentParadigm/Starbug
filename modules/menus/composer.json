@@ -13,12 +13,8 @@
     "namespace": "Starbug\\Menus"
   },
   "require": {
-    "starbug/db": "^0.12",
-    "starbug/files": "^0.9",
-    "starbug/routing": "^1.0",
-    "starbug/admin": "^0.9",
-    "starbug/users": "^0.9",
-    "starbug/display": "^0.9"
+    "starbug/bundle": "^1.0",
+    "starbug/db": "^0.12"
   },
   "autoload": {
     "psr-4": {
