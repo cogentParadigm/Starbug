@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3083569a2cfae8192e26071081522563",
+    "content-hash": "84f090f6fd32382fa3563d2aeea5aa2e",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -4401,16 +4401,16 @@
         },
         {
             "name": "starbug/imports",
-            "version": "v0.9.0",
+            "version": "v0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-imports.git",
-                "reference": "f87d01b9146e9c09af06c3f56a9b6740723b90c1"
+                "reference": "632b7f01df985a26a3eafa98e468ce04a6eb2c14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-imports/zipball/f87d01b9146e9c09af06c3f56a9b6740723b90c1",
-                "reference": "f87d01b9146e9c09af06c3f56a9b6740723b90c1",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-imports/zipball/632b7f01df985a26a3eafa98e468ce04a6eb2c14",
+                "reference": "632b7f01df985a26a3eafa98e468ce04a6eb2c14",
                 "shasum": ""
             },
             "require": {
@@ -4423,7 +4423,7 @@
                 "starbug/files": "^0.9",
                 "starbug/importer": "^0.10",
                 "starbug/importer-spreadsheet": "^0.9",
-                "starbug/log": "^0.9",
+                "starbug/log": "^0.9 || ^0.10",
                 "starbug/routing": "^1.0"
             },
             "type": "starbug-module",
@@ -4439,33 +4439,38 @@
             "description": "Imports module.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-imports/issues",
-                "source": "https://github.com/cogentParadigm/starbug-imports/tree/v0.9.0"
+                "source": "https://github.com/cogentParadigm/starbug-imports/tree/v0.9.1"
             },
-            "time": "2026-11-16T15:53:24+00:00",
-            "published-time": "2026-11-16T15:58:25+00:00"
+            "time": "2026-11-16T18:04:50+00:00",
+            "published-time": "2026-11-16T18:06:02+00:00"
         },
         {
             "name": "starbug/log",
-            "version": "v0.9.0",
+            "version": "v0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-log.git",
-                "reference": "0e35f9d78fa753b6ddc56e17254f6ed65d8b11f3"
+                "reference": "2bd2ca55c6a70c528e976d3030e423bd442bc06d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-log/zipball/0e35f9d78fa753b6ddc56e17254f6ed65d8b11f3",
-                "reference": "0e35f9d78fa753b6ddc56e17254f6ed65d8b11f3",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-log/zipball/2bd2ca55c6a70c528e976d3030e423bd442bc06d",
+                "reference": "2bd2ca55c6a70c528e976d3030e423bd442bc06d",
                 "shasum": ""
             },
             "require": {
+                "doctrine/dbal": "^2.8",
                 "filp/whoops": "^2.9",
+                "guzzlehttp/guzzle": "^7.0",
+                "guzzlehttp/psr7": "^1.7 || ^2.0",
+                "laminas/laminas-httphandlerrunner": "^2.0",
                 "monolog/monolog": "^2.5",
+                "psr/container": "^1.0 || ^2.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0",
                 "psr/log": "^1.0",
-                "starbug/admin": "^0.9",
                 "starbug/db": "^0.12",
-                "starbug/display": "^0.9",
-                "starbug/routing": "^1.0"
+                "starbug/templates": "^1.0"
             },
             "type": "starbug-module",
             "extra": {
@@ -4489,10 +4494,60 @@
             "description": "Starbug logging module.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-log/issues",
-                "source": "https://github.com/cogentParadigm/starbug-log/tree/v0.9.0"
+                "source": "https://github.com/cogentParadigm/starbug-log/tree/v0.10.0"
             },
-            "time": "2026-11-16T15:41:19+00:00",
-            "published-time": "2026-11-16T15:48:10+00:00"
+            "time": "2026-11-16T18:02:14+00:00",
+            "published-time": "2026-11-16T18:04:08+00:00"
+        },
+        {
+            "name": "starbug/log-admin",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-log-admin.git",
+                "reference": "170b5a65e450e951676dc93130666abd7061fda1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-log-admin/zipball/170b5a65e450e951676dc93130666abd7061fda1",
+                "reference": "170b5a65e450e951676dc93130666abd7061fda1",
+                "shasum": ""
+            },
+            "require": {
+                "psr/http-message": "^1.0",
+                "starbug/admin": "^0.9",
+                "starbug/db": "^0.12",
+                "starbug/display": "^0.9",
+                "starbug/dojo": "^1.1",
+                "starbug/log": "^0.10",
+                "starbug/routing": "^1.0"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Log\\Admin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Log\\Admin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Admin screens for the error log.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-log-admin/issues",
+                "source": "https://github.com/cogentParadigm/starbug-log-admin/tree/v0.9.0"
+            },
+            "time": "2026-11-16T18:02:22+00:00",
+            "published-time": "2026-11-16T18:04:21+00:00"
         },
         {
             "name": "starbug/macro",

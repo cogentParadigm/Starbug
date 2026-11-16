@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Log\Display;
+namespace Starbug\Log\Admin\Display;
 
 use Starbug\Dojo\Display\GridDisplay;
 

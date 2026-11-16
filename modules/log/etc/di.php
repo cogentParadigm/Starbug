@@ -36,9 +36,6 @@ return [
     $env = $container->has("databases.default") ? $container->get("log.environment") : "bootstrap";
     return $container->get("log.handlers.".$env);
   },
-  "route.providers" => add([
-    get("Starbug\Log\RouteProvider")
-  ]),
   "db.schema.migrations" => add([
     get("Starbug\Log\Migration")
   ]),

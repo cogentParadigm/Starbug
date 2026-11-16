@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Log\Display;
+namespace Starbug\Log\Admin\Display;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Display\DisplayFactoryInterface;

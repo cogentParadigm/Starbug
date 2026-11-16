@@ -1,13 +1,13 @@
 <?php
-namespace Starbug\Log;
+namespace Starbug\Log\Admin;
 
 use Starbug\Admin\RouteProvider as AdminRouteProvider;
 use Starbug\Db\Collection\SelectCollection;
 use Starbug\Routing\Controller\ViewController;
 use Starbug\Routing\Route;
-use Starbug\Log\Collection\AdminErrorLogCollection;
-use Starbug\Log\Display\ErrorLogGrid;
-use Starbug\Log\Display\ErrorLogSearchForm;
+use Starbug\Log\Admin\Collection\AdminErrorLogCollection;
+use Starbug\Log\Admin\Display\ErrorLogGrid;
+use Starbug\Log\Admin\Display\ErrorLogSearchForm;
 
 class RouteProvider extends AdminRouteProvider {
 
