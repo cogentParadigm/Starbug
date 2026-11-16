@@ -15,12 +15,14 @@
   },
   "require": {
     "starbug/config": "*",
-    "starbug/display": "^0.9",
     "starbug/webpack": "*"
   },
   "autoload": {
     "psr-4": {
       "Starbug\\Dojo\\": "src/"
     }
+  },
+  "suggest": {
+    "starbug/display": "Renders the dgrid based grid display."
   }
 }
