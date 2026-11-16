@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c72915699aceaa0b37176d0313bdf28",
+    "content-hash": "cd0b2f6f367865ebc340d92eb640fedb",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3454,16 +3454,16 @@
         },
         {
             "name": "starbug/display",
-            "version": "v0.9.7",
+            "version": "v0.9.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-display.git",
-                "reference": "81c9ca7d38fb4be06685269d49568861f3e09de3"
+                "reference": "48ce7a0c2b8cec0d56a2541ae06bda3afbe0a585"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-display/zipball/81c9ca7d38fb4be06685269d49568861f3e09de3",
-                "reference": "81c9ca7d38fb4be06685269d49568861f3e09de3",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-display/zipball/48ce7a0c2b8cec0d56a2541ae06bda3afbe0a585",
+                "reference": "48ce7a0c2b8cec0d56a2541ae06bda3afbe0a585",
                 "shasum": ""
             },
             "require": {
@@ -3499,10 +3499,10 @@
             "description": "Display and form rendering framework for Starbug.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-display/issues",
-                "source": "https://github.com/cogentParadigm/starbug-display/tree/v0.9.7"
+                "source": "https://github.com/cogentParadigm/starbug-display/tree/v0.9.8"
             },
-            "time": "2026-11-15T23:04:20+00:00",
-            "published-time": "2026-11-15T23:17:25+00:00"
+            "time": "2026-11-16T01:43:00+00:00",
+            "published-time": "2026-11-16T01:47:49+00:00"
         },
         {
             "name": "starbug/doctrine",
