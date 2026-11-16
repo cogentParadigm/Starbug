@@ -31,8 +31,8 @@
     <testsuite name="core">
       <directory>../core/app/tests/</directory>
     </testsuite>
-    <testsuite name="content">
-      <directory>../modules/content/tests/</directory>
+    <testsuite name="content-admin">
+      <directory>../modules/content-admin/tests/</directory>
     </testsuite>
     <testsuite name="users">
       <directory>../modules/users/tests/</directory>

@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Content\Tests\Acceptance\Admin;
+namespace Starbug\Content\Admin\Tests\Acceptance\Admin;
 
 use DI\Attribute\Inject;
 use Starbug\Db\Testing\WebDatabaseTestCase;
@@ -13,7 +13,7 @@ use Starbug\Users\Tests\Domain\Authentication;
  * Covers page CRUD through the admin web UI.
  */
 #[Fixture('app/fixtures/db/reset.yml')]
-#[Fixture('modules/content/tests/fixtures/db/pages.yml')]
+#[Fixture('modules/content-admin/tests/fixtures/db/pages.yml')]
 class PageManagementTest extends WebDatabaseTestCase {
 
   #[Inject]

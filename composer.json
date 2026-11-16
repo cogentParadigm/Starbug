@@ -45,7 +45,8 @@
     "starbug/emails": "^0.10",
     "starbug/emails-admin": "^0.9",
     "starbug/css": "^0.9",
-    "starbug/content": "^0.9.1",
+    "starbug/content": "^0.9.2",
+    "starbug/content-admin": "^0.9.2",
     "starbug/storm": "^1.0.1",
     "starbug/redis": "^0.9",
     "starbug/log": "^0.10",
@@ -84,7 +85,8 @@
     "psr-4": {
       "Starbug\\Users\\Tests\\": "modules/users/tests/",
       "Starbug\\Content\\Tests\\": "modules/content/tests/",
-      "Starbug\\Users\\Admin\\Tests\\": "modules/users-admin/tests/"
+      "Starbug\\Users\\Admin\\Tests\\": "modules/users-admin/tests/",
+      "Starbug\\Content\\Admin\\Tests\\": "modules/content-admin/tests/"
     }
   },
   "scripts": {

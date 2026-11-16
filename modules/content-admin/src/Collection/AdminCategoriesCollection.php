@@ -1,17 +1,17 @@
 <?php
-namespace Starbug\Content;
+namespace Starbug\Content\Admin\Collection;
 
 use Starbug\Db\Collection;
 
-class AdminTagsCollection extends Collection {
+class AdminCategoriesCollection extends Collection {
   public function build($query, $ops) {
-    $query->select("tags.*,(SELECT COUNT(*) FROM ".$this->db->prefix("tags")." as c WHERE c.parent=tags.id) as children");
+    $query->select("categories.*,(SELECT COUNT(*) FROM ".$this->db->prefix("categories")." as c WHERE c.parent=categories.id) as children");
     if (!empty($ops['parent'])) {
       $query->condition("parent", $ops['parent']);
     } else {
-      $query->condition("tags.parent", 0);
+      $query->condition("categories.parent", 0);
     }
-    $query->sort("tags.position");
+    $query->sort("categories.position");
     return $query;
   }
   public function filterRows($rows) {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cbe5c8a0caed5726c4232675193a81c6",
+    "content-hash": "42e566011d481b852e833815784b0066",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3680,27 +3680,27 @@
         },
         {
             "name": "starbug/content",
-            "version": "v0.9.1",
+            "version": "v0.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-content.git",
-                "reference": "6a8e233800e207d545be7cd707622dd66ac4783d"
+                "reference": "b4665c5522272c4ecb2e246be545b6687f16a07d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-content/zipball/6a8e233800e207d545be7cd707622dd66ac4783d",
-                "reference": "6a8e233800e207d545be7cd707622dd66ac4783d",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-content/zipball/b4665c5522272c4ecb2e246be545b6687f16a07d",
+                "reference": "b4665c5522272c4ecb2e246be545b6687f16a07d",
                 "shasum": ""
             },
             "require": {
-                "starbug/admin": "^0.9",
+                "starbug/auth": "^1.0",
                 "starbug/db": "^0.12",
                 "starbug/display": "^0.9",
                 "starbug/files": "^0.9",
                 "starbug/macro": "^0.9",
                 "starbug/menus": "^0.9",
-                "starbug/menus-admin": "^0.9",
-                "starbug/routing": "^1.0"
+                "starbug/routing": "^1.0",
+                "starbug/templates": "^1.0"
             },
             "require-dev": {
                 "starbug/users": "*"
@@ -3727,10 +3727,60 @@
             "description": "Starbug content module.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-content/issues",
-                "source": "https://github.com/cogentParadigm/starbug-content/tree/v0.9.1"
+                "source": "https://github.com/cogentParadigm/starbug-content/tree/v0.9.2"
             },
-            "time": "2026-11-16T18:36:42+00:00",
-            "published-time": "2026-11-16T18:36:53+00:00"
+            "time": "2026-11-16T19:07:35+00:00",
+            "published-time": "2026-11-16T19:11:23+00:00"
+        },
+        {
+            "name": "starbug/content-admin",
+            "version": "v0.9.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cogentParadigm/starbug-content-admin.git",
+                "reference": "5877c161da5dec269d0b4e8953ea2d72636f9563"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-content-admin/zipball/5877c161da5dec269d0b4e8953ea2d72636f9563",
+                "reference": "5877c161da5dec269d0b4e8953ea2d72636f9563",
+                "shasum": ""
+            },
+            "require": {
+                "starbug/admin": "^0.9",
+                "starbug/content": "^0.9.2",
+                "starbug/db": "^0.12",
+                "starbug/display": "^0.9",
+                "starbug/dojo": "^1.1",
+                "starbug/menus-admin": "^0.9",
+                "starbug/routing": "^1.0"
+            },
+            "type": "starbug-module",
+            "extra": {
+                "namespace": "Starbug\\Content\\Admin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Starbug\\Content\\Admin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ali Gangji",
+                    "homepage": "https://github.com/cogentParadigm"
+                }
+            ],
+            "description": "Admin screens for pages, categories and tags.",
+            "support": {
+                "issues": "https://github.com/cogentParadigm/starbug-content-admin/issues",
+                "source": "https://github.com/cogentParadigm/starbug-content-admin/tree/v0.9.2"
+            },
+            "time": "2026-11-16T19:17:29+00:00",
+            "published-time": "2026-11-16T19:17:39+00:00"
         },
         {
             "name": "starbug/css",

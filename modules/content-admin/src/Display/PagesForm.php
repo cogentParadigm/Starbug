@@ -1,13 +1,14 @@
 <?php
-namespace Starbug\Content;
+namespace Starbug\Content\Admin\Display;
 
+use Starbug\Content\Admin\Collection\PagesFormCollection;
 use Starbug\Display\FormDisplay;
 use Starbug\Db\Collection\SelectCollection;
 
 class PagesForm extends FormDisplay {
   public $model = "pages";
   public $cancel_url = "admin/pages";
-  public $collection = "PagesForm";
+  public $collection = PagesFormCollection::class;
   public function buildDisplay($options) {
     $options += ["tab" => ""];
     // layout

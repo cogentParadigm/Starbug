@@ -1,5 +1,5 @@
 <?php
-namespace Starbug\Content;
+namespace Starbug\Content\Admin\Collection;
 
 use Starbug\Display\Collection\FormCollection;
 

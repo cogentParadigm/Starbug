@@ -23,14 +23,14 @@
     }
   },
   "require": {
+    "starbug/auth": "^1.0",
     "starbug/db": "^0.12",
+    "starbug/display": "^0.9",
     "starbug/files": "^0.9",
     "starbug/macro": "^0.9",
     "starbug/menus": "^0.9",
-    "starbug/menus-admin": "^0.9",
     "starbug/routing": "^1.0",
-    "starbug/admin": "^0.9",
-    "starbug/display": "^0.9"
+    "starbug/templates": "^1.0"
   },
   "require-dev": {
     "starbug/users": "*"
