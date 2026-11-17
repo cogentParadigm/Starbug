@@ -30,8 +30,6 @@ return [
     ->constructorParameter("key", get("hmac_key")),
   "Starbug\Auth\Http\CsrfExchangeInterface" => autowire("Starbug\Auth\Http\CookieCsrfExchange")
     ->constructorParameter("path", get("website_url")),
-  "Starbug\Auth\SessionHandlerInterface" => autowire("Starbug\Auth\SessionHandler")
-    ->method("addHook", get("Starbug\Auth\Http\CsrfHandlerInterface")),
   "Starbug\Auth\*Interface" => autowire("Starbug\Auth\*"),
   "Starbug\Auth\Http\CsrfHandlerInterface" => autowire("Starbug\Auth\Http\CsrfHandler")
   ->constructorParameter("key", get("hmac_key")),

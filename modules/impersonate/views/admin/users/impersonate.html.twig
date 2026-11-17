@@ -1,0 +1,6 @@
+{% extends "panel." ~ route.getOption("format")|default("html") ~ ".twig" %}
+
+{% block title %}{{ form_header ?? "Impersonate User" }}{% endblock %}
+{% block body %}
+    {{ helper("displays").render(form, {"id": id, "model": model}) }}
+{% endblock %}

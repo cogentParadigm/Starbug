@@ -13,13 +13,14 @@
     "namespace": "Starbug\\Users\\Admin"
   },
   "require": {
-    "starbug/users": "^0.9.1 || ^0.10",
     "starbug/admin": "^0.9",
     "starbug/api": "^0.9",
+    "starbug/db": "^0.12",
     "starbug/display": "^0.9",
     "starbug/dojo": "^1.1",
+    "starbug/modules": "^1.1.1",
     "starbug/routing": "^1.0",
-    "starbug/db": "^0.12"
+    "starbug/users": "^0.9.1 || ^0.10"
   },
   "autoload": {
     "psr-4": {
@@ -30,5 +31,8 @@
     "psr-4": {
       "Starbug\\Users\\Admin\\Tests\\": "tests/"
     }
+  },
+  "suggest": {
+    "starbug/impersonate": "Adds the impersonate action to the users list."
   }
 }

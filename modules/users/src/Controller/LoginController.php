@@ -2,6 +2,7 @@
 namespace Starbug\Users\Controller;
 
 use GuzzleHttp\Psr7\Uri;
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Auth\SessionHandlerInterface;
 use Starbug\Routing\Controller;
@@ -34,7 +35,11 @@ class LoginController extends Controller {
     return $this->redirect("");
   }
   protected function filterRedirectPath($input, $default = "") {
-    $uri = new Uri($input);
+    try {
+      $uri = new Uri($input);
+    } catch (InvalidArgumentException $e) {
+      return $default;
+    }
     if (!Uri::isAbsolutePathReference($uri) || Uri::isRelativePathReference($uri)) {
       return $default;
     }
