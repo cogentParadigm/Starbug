@@ -43,7 +43,7 @@
     "starbug/emails-admin": "^0.9",
     "starbug/files": "^0.9.2",
     "starbug/files-admin": "^0.9.1",
-    "starbug/http": "^0.9.17",
+    "starbug/http": "^0.9.18",
     "starbug/impersonate": "^0.9.1",
     "starbug/imports": "^0.9.2",
     "starbug/imports-admin": "^0.9",

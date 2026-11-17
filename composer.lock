@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "042fb8b5d02a8661c291abde9d4c50c6",
+    "content-hash": "0cbf92c9fc964dbd8b617ffb23762e0a",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -4340,16 +4340,16 @@
         },
         {
             "name": "starbug/http",
-            "version": "v0.9.17",
+            "version": "v0.9.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-http.git",
-                "reference": "f9758e03c721fdb8c0974175ba58fd46cd083c91"
+                "reference": "1f3f80408ab1f66560b46b8805ac83f7b2180ab2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/f9758e03c721fdb8c0974175ba58fd46cd083c91",
-                "reference": "f9758e03c721fdb8c0974175ba58fd46cd083c91",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-http/zipball/1f3f80408ab1f66560b46b8805ac83f7b2180ab2",
+                "reference": "1f3f80408ab1f66560b46b8805ac83f7b2180ab2",
                 "shasum": ""
             },
             "require": {
@@ -4369,6 +4369,12 @@
                 "starbug/devel": "^1.0"
             },
             "type": "library",
+            "extra": {
+                "starbug": {
+                    "type": "module",
+                    "namespace": "Starbug\\Http"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Starbug\\Http\\": "src/"
@@ -4387,10 +4393,10 @@
             "description": "Basic HTTP message components.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-http/issues",
-                "source": "https://github.com/cogentParadigm/starbug-http/tree/v0.9.17"
+                "source": "https://github.com/cogentParadigm/starbug-http/tree/v0.9.18"
             },
-            "time": "2026-11-16T04:47:29+00:00",
-            "published-time": "2026-11-16T04:47:42+00:00"
+            "time": "2026-11-17T07:59:55+00:00",
+            "published-time": "2026-11-17T08:03:45+00:00"
         },
         {
             "name": "starbug/impersonate",

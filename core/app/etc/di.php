@@ -6,13 +6,12 @@ use function DI\autowire;
 use function DI\factory;
 use function DI\add;
 use Psr\Container\ContainerInterface;
-use GuzzleHttp\Psr7\ServerRequest;
-use Psr\Http\Message\ServerRequestInterface;
 use Starbug\Core\Script\Generate;
 use Starbug\Core\Script\ListScripts;
 use Starbug\Core\Script\Setup;
-use Starbug\Http\UriBuilder;
 use Starbug\ResourceLocator\ResourceLocator;
+use Starbug\Http\Helper\RequestHelper;
+use Starbug\Http\Helper\UrlHelper;
 use Starbug\Auth\Helper\CsrfHelper;
 use Starbug\Auth\Helper\SessionHelper;
 
@@ -25,22 +24,6 @@ return [
   "cli" => false,
   'Starbug\Core\*Interface' => autowire('Starbug\Core\*'),
   'Starbug\Config\*Interface' => autowire('Starbug\Config\*'),
-  'Starbug\Http\*Interface' => autowire('Starbug\Http\*'),
-  "Starbug\Http\UriBuilderInterface" => factory(function (ContainerInterface $container, $siteUrl) {
-    $request = $container->get("Psr\Http\Message\ServerRequestInterface");
-    $baseUri = $request->getUri()
-      ->withPath($siteUrl)
-      ->withQuery("")
-      ->withFragment("");
-    return new UriBuilder($baseUri);
-  })->parameter("siteUrl", get("website_url")),
-  "Psr\Http\Message\UriInterface" => factory(function (ContainerInterface $container, ServerRequestInterface $request) {
-    return $request->getUri();
-  }),
-  "Psr\Http\Message\ResponseFactoryInterface" => autowire("Http\Factory\Guzzle\ResponseFactory"),
-  "Psr\Http\Message\ServerRequestInterface" => function (ContainerInterface $container) {
-    return new ServerRequest("GET", $container->get("website_host").$container->get("website_url"));
-  },
   "template.helpers" => [
     "collections" => CollectionsHelper::class,
     "config" => ConfigHelper::class,
@@ -66,9 +49,6 @@ return [
     $locator->setPaths(array_column($modules, "path"));
     return $locator;
   },
-  "Middlewares\Https" => autowire()
-    ->constructorParameter("responseFactory", get("Http\Factory\Guzzle\ResponseFactory"))
-    ->method("includeSubdomains"),
   "Starbug\Bundle\*Interface" => autowire("Starbug\Bundle\*"),
   "Starbug\Operation\*Interface" => autowire("Starbug\Operation\*"),
   "Starbug\Core\SettingsForm" => autowire()->method("setDatabase", get("Starbug\Db\DatabaseInterface")),
