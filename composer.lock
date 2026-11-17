@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c1bd68dff9762a87462a371c6341af2",
+    "content-hash": "042fb8b5d02a8661c291abde9d4c50c6",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3500,16 +3500,16 @@
         },
         {
             "name": "starbug/auth",
-            "version": "v1.1.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-auth.git",
-                "reference": "83617798d0a3171a8b4c38bbca5e18d1a5148947"
+                "reference": "c2263b241f4ae6262c8acb6f2fff3cdaa51a0b62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-auth/zipball/83617798d0a3171a8b4c38bbca5e18d1a5148947",
-                "reference": "83617798d0a3171a8b4c38bbca5e18d1a5148947",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-auth/zipball/c2263b241f4ae6262c8acb6f2fff3cdaa51a0b62",
+                "reference": "c2263b241f4ae6262c8acb6f2fff3cdaa51a0b62",
                 "shasum": ""
             },
             "require-dev": {
@@ -3542,10 +3542,10 @@
             "description": "Authentication layer for Starbug framework.",
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-auth/issues",
-                "source": "https://github.com/cogentParadigm/starbug-auth/tree/v1.1.0"
+                "source": "https://github.com/cogentParadigm/starbug-auth/tree/v1.2.1"
             },
-            "time": "2026-11-17T07:11:49+00:00",
-            "published-time": "2026-11-17T07:11:57+00:00"
+            "time": "2026-11-17T07:53:08+00:00",
+            "published-time": "2026-11-17T07:55:18+00:00"
         },
         {
             "name": "starbug/bundle",

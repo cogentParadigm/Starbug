@@ -13,6 +13,8 @@ use Starbug\Core\Script\ListScripts;
 use Starbug\Core\Script\Setup;
 use Starbug\Http\UriBuilder;
 use Starbug\ResourceLocator\ResourceLocator;
+use Starbug\Auth\Helper\CsrfHelper;
+use Starbug\Auth\Helper\SessionHelper;
 
 return [
   "environment" => "development",
@@ -24,15 +26,6 @@ return [
   'Starbug\Core\*Interface' => autowire('Starbug\Core\*'),
   'Starbug\Config\*Interface' => autowire('Starbug\Config\*'),
   'Starbug\Http\*Interface' => autowire('Starbug\Http\*'),
-  "Starbug\Auth\*RepositoryInterface" => autowire("Starbug\Auth\Repository\*Repository"),
-  "Starbug\Auth\SessionExchangeInterface" => autowire("Starbug\Auth\Http\CookieSessionExchange")
-    ->constructorParameter("path", get("website_url"))
-    ->constructorParameter("key", get("hmac_key")),
-  "Starbug\Auth\Http\CsrfExchangeInterface" => autowire("Starbug\Auth\Http\CookieCsrfExchange")
-    ->constructorParameter("path", get("website_url")),
-  "Starbug\Auth\*Interface" => autowire("Starbug\Auth\*"),
-  "Starbug\Auth\Http\CsrfHandlerInterface" => autowire("Starbug\Auth\Http\CsrfHandler")
-  ->constructorParameter("key", get("hmac_key")),
   "Starbug\Http\UriBuilderInterface" => factory(function (ContainerInterface $container, $siteUrl) {
     $request = $container->get("Psr\Http\Message\ServerRequestInterface");
     $baseUri = $request->getUri()
