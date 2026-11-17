@@ -4933,22 +4933,30 @@
         },
         {
             "name": "starbug/queue",
-            "version": "v0.8.0",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cogentParadigm/starbug-queue.git",
-                "reference": "569e543095e655f5715d4a7f348be839666bc19a"
+                "reference": "7fe61fb280eb72dfd3252116cf28ff6821be69b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cogentParadigm/starbug-queue/zipball/569e543095e655f5715d4a7f348be839666bc19a",
-                "reference": "569e543095e655f5715d4a7f348be839666bc19a",
+                "url": "https://api.github.com/repos/cogentParadigm/starbug-queue/zipball/7fe61fb280eb72dfd3252116cf28ff6821be69b6",
+                "reference": "7fe61fb280eb72dfd3252116cf28ff6821be69b6",
                 "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0"
             },
             "require-dev": {
                 "pda/pheanstalk": "^4.0",
                 "predis/predis": "^1.1",
                 "starbug/devel": "^1.0"
+            },
+            "suggest": {
+                "pda/pheanstalk": "Required by the beanstalkd driver.",
+                "predis/predis": "Required by the predis driver.",
+                "starbug/db": "Required by the sql driver."
             },
             "type": "library",
             "autoload": {
@@ -4973,10 +4981,10 @@
             ],
             "support": {
                 "issues": "https://github.com/cogentParadigm/starbug-queue/issues",
-                "source": "https://github.com/cogentParadigm/starbug-queue/tree/v0.8.0"
+                "source": "https://github.com/cogentParadigm/starbug-queue/tree/v0.8.1"
             },
-            "time": "2021-02-11T04:16:36+00:00",
-            "published-time": "2021-02-11T04:20:13+00:00"
+            "time": "2026-11-17T01:54:34+00:00",
+            "published-time": "2026-11-17T02:01:10+00:00"
         },
         {
             "name": "starbug/queues",
