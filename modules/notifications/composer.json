@@ -1,0 +1,29 @@
+{
+  "name": "starbug/notifications",
+  "type": "starbug-module",
+  "description": "Notifications, delivered through channels and handlers.",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Ali Gangji",
+      "homepage": "https://github.com/cogentParadigm"
+    }
+  ],
+  "extra": {
+    "namespace": "Starbug\\Notifications"
+  },
+  "require": {
+    "psr/container": "^1.0 || ^2.0",
+    "psr/log": "^1.0",
+    "starbug/bundle": "^1.0",
+    "starbug/db": "^0.12",
+    "starbug/emails": "^0.10",
+    "starbug/log": "^0.9 || ^0.10",
+    "starbug/queue": "^0.8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starbug\\Notifications\\": "src/"
+    }
+  }
+}
